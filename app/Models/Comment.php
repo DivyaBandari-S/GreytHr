@@ -13,5 +13,6 @@ class Comment extends Model
         'first_name',
         'last_name',
         'comment',
+        'image'
     ];
 }

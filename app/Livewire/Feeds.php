@@ -19,14 +19,14 @@ use App\Models\Addcomment;
 class Feeds extends Component
 {
 
-    public $selectedEmoji = ''; 
+  
     public $showEmojiPicker = false;
     public $employeeId;
     public $employees;
     public $combinedData;
     public $monthAndDay;
     public $currentCardEmpId;
-    public $emojis;
+  
     public $comments = [];
     public $newComment = '';
     public $employeeDetails;
@@ -34,10 +34,22 @@ class Feeds extends Component
     public $emp_id;
     public $addcomments;
 
+    public $selectedEmoji = null;
+    public $emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '😣', '😖', '😫', '😩', '😤', '😠', '😡', '🤬', '😈', '👿', '💀', '☠️', '💩', '🤡', '👹', '👺', '👻', '👽', '👾', '🤖', '🎃', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾'];
+
     protected $rules = [
         'newComment' => 'required|string',
     ];
+    public function toggleEmojiPicker()
+    {
+        $this->showEmojiPicker = !$this->showEmojiPicker;
+    }
 
+    public function selectEmoji($emoji)
+    {
+        $this->selectedEmoji = $emoji;
+        $this->showEmojiPicker = false; // Hide emoji picker after selection
+    }
     public function mount()
     {
         
@@ -159,15 +171,7 @@ public function createcomment($emp_id)
         'employees' => $this->employeeDetails,'emojis' => $emojis
     ]);
 }
-public function toggleEmojiPicker()
-    {
-        $this->showEmojiPicker = !$this->showEmojiPicker;
-    }
 
-    public function selectEmoji($emoji)
-    {
-        $this->selectedEmoji = $emoji;
-    }
 
     public function saveEmoji()
     {

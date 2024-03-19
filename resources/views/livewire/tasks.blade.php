@@ -110,19 +110,21 @@
                                             <textarea class="form-control" id="comment" wire:model.defer="newComment"></textarea>
                                             @error('newComment') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <button type="submit" class="btn btn-primary btn-sm" style="font-size:12px;">Submit</button>
                                     </form>
                                     <div style="max-height: 300px;overflow-y:auto;">
                                     @if ($taskComments->count() > 0)
                                     @foreach($taskComments as $comment)
                                             <div class="comment mb-4 mt-2">
                                                 <div class="d-flex align-items-center gap-5">
-                                                    <div class="col-md-6 p-0 comment-details" >
+                                                    <div class="col-md-4 p-0 comment-details" >
                                                         <p style="color: #000;font-size:12px;font-weight:500;margin-bottom:0;">{{ $comment->employee->full_name }}
-                                                        <span style="color: #778899;font-size:10px;font-weight:normal;margin-left:15px;">{{ $comment->created_at->diffForHumans() }}</span>
                                                         </p>
                                                     </div>
-                                                    <div class=" col-md-3 p-0 comment-actions">
+                                                    <div class=" col-md-3 p-0 comment-time">
+                                                    <span style="color: #778899;font-size:10px;font-weight:normal;margin-left:15px;">{{ $comment->created_at->diffForHumans() }}</span>
+                                                    </div>
+                                                    <div class=" col-md-2 p-0 comment-actions">
                                                         <button class="comment-btn" wire:click="openEditCommentModal({{ $comment->id }})"> <i class="fas fa-edit" style="color: #778899;height:7px;width:7px;"></i></button>
                                                         <button class="comment-btn" wire:click="deleteComment({{ $comment->id }})"><i class="fas fa-trash" style="color: #778899;height:7px;width:7px;"></i></button>
                                                     </div>
@@ -132,10 +134,11 @@
                                                         <!-- Input field for editing -->
                                                         <input class="form-control" wire:model.defer="newComment" type="text">
                                                         <!-- Button to update comment -->
-                                                        <button class="update-btn" wire:click="updateComment({{ $comment->id }})">Update</button>
+                                                        <button class="update-btn p-1" wire:click="updateComment({{ $comment->id }})">Update</button>
+                                                        <button class="btn btn-secondary p-1 m-0" wire:click="cancelEdit" style="font-size: 12px;">Cancel</button>
                                                     @else
                                                         <!-- Display comment content -->
-                                                        <p style="margin-bottom: 0;font-size:12px;">{{ ucfirst($comment->comment) }}</p>
+                                                        <p style="margin-bottom: 0;font-size:12px;color:#515963;">{{ ucfirst($comment->comment) }}</p>
                                                     @endif
                                                 </div>
                                             </div>
@@ -221,7 +224,7 @@
                             <div class="task-container">
                                 <!-- Task Name -->
                                 <div class="form-group" style="margin-top: 10px;">
-                                    <label for="task_name" style="font-size: 12px;color:#778899;">Task Name*</label>
+                                    <label for="task_name" style="font-size: 13px;color:#778899;">Task Name*</label>
                                     <br>
                                     <input type="text" wire:model="task_name" class="placeholder-small" placeholder="Enter task name" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;">
                                 </div>
@@ -229,7 +232,7 @@
 
                                 <!-- Assignee -->
                                 <div class="form-group" style="margin-top: 20px;color:grey;font-size:12px">
-                                    <label for="assignee" style="font-size: 12px;color:#778899">Assignee</label>
+                                    <label for="assignee" style="font-size: 13px;color:#778899">Assignee</label>
                                     <br>
                                     <i wire:click="forAssignee" class="fas fa-user icon" id="profile-icon"></i>
                                     @if($showRecipients)
@@ -249,7 +252,7 @@
                                                 <i style="text-align: center;" class="fa fa-search"></i>
                                             </button>
                                             <button wire:click="closeAssignee" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                                <span aria-hidden="true" style="color: white; font-size: 18px;">×</span>
                                             </button>
                                         </div>
                                     </div>
@@ -290,11 +293,11 @@
                                 @endif
                                 <!-- Priority -->
                                 <div class="priority-container" style="margin-top: 20px;">
-                                    <div class="row">
+                                    <div class="row ">
                                         <div class="col-md-4">
-                                            <label for="priority" style="font-size: 12px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Priority*</label>
+                                            <label for="priority" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Priority*</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 mt-1">
                                             <div id="priority" style="display: flex; align-items: center; margin-top: 0px;">
                                                 <div class="priority-option" style="margin-left: 0px; padding: 0;">
                                                     <input type="radio" id="low-priority" name="priority" wire:model="priority" value="low">
@@ -315,9 +318,9 @@
                                 @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
                                 <!-- Due Date -->
                                 <div class="form-group" style="margin-top: 20px;">
-                                    <label class="form-label" style="font-size: 14px;">Due Date</label>
+                                    <label class="form-label" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Due Date</label>
                                     <br>
-                                    <input type="date" wire:model="due_date" style="width: 100%; font-size: 12px;" min="<?= date('Y-m-d'); ?>" value="<?= date('Y-m-d'); ?>">
+                                    <input type="date" wire:model="due_date" class="placeholder-small" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;" min="<?= date('Y-m-d'); ?>" value="<?= date('Y-m-d'); ?>">
 
                                 </div>
 
@@ -325,14 +328,14 @@
 
                                 <!-- Tags -->
                                 <div class="form-group" style="margin-top: 20px;">
-                                    <label for="tags" style="font-size: 14px;">Tags</label>
+                                    <label for="tags" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Tags</label>
                                     <br>
-                                    <input type="text" wire:model="tags" placeholder="Enter tags" style="width: 100%;font-size:12px">
+                                    <input type="text" wire:model="tags" placeholder="Enter tags" class="placeholder-small" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;">
                                 </div>
                                 @error('tags') <span class="text-danger">{{ $message }}</span> @enderror
 
                                 <div class="form-group" style="margin-top: 20px; color: grey; font-size: 12px">
-                                    <label for="assignee" style="font-size: 14px; color: black">Followers</label>
+                                    <label for="assignee" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Followers</label>
                                     <br>
                                     <i wire:click="forFollowers" class="fas fa-user icon" id="profile-icon"></i>
                                     @if($showFollowers)
@@ -394,23 +397,23 @@
                                 </div>
                                 @endif
                                 <div class="form-group" style="margin-top: 20px;">
-                                    <label for="Subject" style="font-size: 14px;">Subject</label>
+                                    <label for="Subject" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Subject</label>
                                     <br>
-                                    <input wire:model="subject" placeholder="Enter Subject.." rows="4" style="width: 100%;font-size:12px"></input>
+                                    <input wire:model="subject" class="placeholder-small" placeholder="Enter Subject.." rows="4" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"></input>
                                 </div>
                                 @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                                 <!-- Description -->
                                 <div class="form-group" style="margin-top: 20px;">
-                                    <label for="description" style="font-size: 14px;">Description</label>
+                                    <label for="description" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Description</label>
                                     <br>
-                                    <textarea wire:model="description" placeholder="Add a description.." rows="4" style="width: 100%;font-size:12px"></textarea>
+                                    <textarea wire:model="description" placeholder="Add a description.." rows="4" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"></textarea>
                                 </div>
                                 @error('description') <span class="text-danger">{{ $message }}</span> @enderror
 
                                 <!-- File Input -->
                                 <div class="row">
                                     <div class="col">
-                                        <label for="fileInput" style="cursor: pointer; font-size: 14px;">
+                                        <label for="fileInput" style="cursor: pointer; font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">
                                             <i class="fa fa-paperclip"></i> Attach Image
                                         </label>
                                     </div>

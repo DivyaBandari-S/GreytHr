@@ -45,63 +45,71 @@ class SalaryRevisions extends Component
             } else {
                 $revision->duration = ['months' => 0, 'days' => 0]; // Handle the case where dates are missing or invalid
             }
- 
-            $this->years = [];
-            $this->salaries = [];
- 
+            $labels = [];
+            $revisedSalaries = [];
+            $previousSalaries = [];
+            
             foreach ($this->salaryRevisions as $revision) {
                 $lastRevisionDate = \Carbon\Carbon::parse($revision->last_revision_period);
                 $presentRevisionDate = \Carbon\Carbon::parse($revision->present_revision_period);
- 
-                // Calculate the range of years between last and present revision dates
-                $yearRange = range($lastRevisionDate->year, $presentRevisionDate->year);
- 
-                // Add the year range to the years array
-                $this->years[] = $yearRange;
- 
-                // For salaries, you can add the same salary for each year in the range
-                $salary = $revision->revised_monthly_ctc;
-                $this->salaries[] = array_fill(0, count($yearRange), $salary);
+            
+                // Format dates as "Day Month Year"
+                $lastFormattedDate = $lastRevisionDate->format('j F Y');
+                $presentFormattedDate = $presentRevisionDate->format('j F Y');
+            
+                // Add labels
+                $labels[] = $lastFormattedDate;
+                $labels[] = $presentFormattedDate;
+            
+                // // Add salaries
+                // $revisedSalaries[] = $revision->revised_monthly_ctc;
+                // $previousSalaries[] = $revision->previous_monthly_ctc;
+                // Add salaries
+                $salaries[] = $revision->previous_monthly_ctc; // Add previous salary
+                $salaries[] = $revision->revised_monthly_ctc; // Add revised salary
             }
- 
-            // Flatten the arrays to have a flat list of years and salaries
-            $this->years = array_merge(...$this->years);
-            $this->salaries = array_merge(...$this->salaries);
-          foreach ($this->years as $key => $year) {
-                      $data[] = ['year' => $year, 'salary' => $this->salaries[$key]];
-                    }
- 
-                    $this->chartData = [
-                        'labels' => array_column($data, 'year'),
-                        'datasets' => [
-                            [
-                                'label' => 'Salary',
-                                'data' => array_column($data, 'salary'),
-                                'borderColor' => 'blue',
-                                'fill' => false,
+            
+            $this->chartData = [
+                'labels' => $labels,
+                'datasets' => [
+                    [
+                        'label' => 'Salary',
+                        'data' => $salaries,
+                        'borderColor' => 'rgba(54, 162, 235, 1)', // Blue color
+                        'fill' => false,
+                    ],
+                ],
+            ];
+            
+            $this->chartOptions = [
+                'responsive' => true,
+                'scales' => [
+                    'xAxes' => [
+                        [
+                            'ticks' => [
+                                'beginAtZero' => true
                             ],
-                        ],
-                    ];
- 
-                    $this->chartOptions = [
-                        'responsive' => true,
-                        'scales' => [
-                            'x' => [
+                            'scaleLabel' => [
                                 'display' => true,
-                                'title' => [
-                                    'display' => true,
-                                    'text' => 'Year',
-                                ],
+                                'labelString' => 'Date (Day Month Year)'
+                            ]
+                        ]
+                    ],
+                    'yAxes' => [
+                        [
+                            'ticks' => [
+                                'beginAtZero' => true
                             ],
-                            'y' => [
+                            'scaleLabel' => [
                                 'display' => true,
-                                'title' => [
-                                    'display' => true,
-                                    'text' => 'Salary',
-                                ],
-                            ],
-                        ],
-                    ];
+                                'labelString' => 'Salary'
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+ 
+           
         });
 
         return view('livewire.salary-revisions', [
