@@ -245,6 +245,10 @@ class Tasks extends Component
         session()->flash('message', 'Comment deleted successfully.');
         $this->fetchTaskComments($this->taskId);
     }
+    public function cancelEdit()
+    {
+        $this->editCommentId = null;
+    }
 
     public $taskComments = []; // Variable to hold comments for the modal
 

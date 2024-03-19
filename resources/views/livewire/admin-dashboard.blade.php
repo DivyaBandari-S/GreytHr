@@ -29,38 +29,44 @@
                         <div class="row m-0">
                             <div class="col-md-4 mb-4">
                                 <div class="row m-0 avaPosCard">
-                                    <div class="col-8 p-0 pb-5 pt-3">
-                                        <h3 class="m-0">24</h3>
+                                    <div class="d-flex align-items-center justify-content-center mb-4 p-0">
+                                        <div class="col-8 m-0 p-0" style="text-align: start;">
+                                            <h4 class="countOfNum m-0 p-0">24</h4>
+                                        </div>
+                                        <div class="col-4 p-0" >
+                                            <img src="{{ asset('images/admin_banner.png') }}" alt="Image Description" style="width: 3em;">
+                                        </div>
                                     </div>
-                                    <div class="col-4 p-0 pb-5 pt-3" style="text-align: right">
-                                        <img src="{{ asset('images/admin_banner.png') }}" alt="Image Description" style="width: 3em;">
-                                    </div>
-                                    <p class="p-0">Available Position</p>
-                                    <span class="p-0 pb-3" style="color: #7c7c7c;">4 Urgently needed</span>
+                                    <p class="p-0 subHeading">Available Position</p>
+                                    <span class="p-0 pb-3" style="color: #7c7c7c;font-size:12px;">4 Urgently needed</span>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
                                 <div class="row m-0 jobOpenCard">
-                                    <div class="col-8 p-0 pb-5 pt-3">
-                                        <h3 class="m-0">4</h3>
+                                    <div class="d-flex align-items-center justify-content-center mb-4 p-0">
+                                    <div class="col-8 m-0 p-0" style="text-align: start;">
+                                        <h4 class=" countOfNum m-0 p-0">4</h4>
                                     </div>
-                                    <div class="col-4 p-0 pb-5 pt-3" style="text-align: right">
+                                    <div class="col-4 p-0 " >
                                         <img src="{{ asset('images/admin_banner.png') }}" alt="Image Description" style="width: 3em;">
                                     </div>
-                                    <p class="p-0">Job Open</p>
-                                    <span class="p-0 pb-3" style="color: #7c7c7c;">4 Active hiring</span>
+                                    </div>
+                                    <p class="p-0 subHeading">Job Open</p>
+                                    <span class="p-0 pb-3" style="color: #7c7c7c;font-size:12px;">4 Active hiring</span>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
                                 <div class="row m-0 newEpmCard">
-                                    <div class="col-8 p-0 pb-5 pt-3">
-                                        <h3 class="m-0">10</h3>
+                                    <div class="d-flex align-items-center justify-content-center mb-4 p-0">
+                                    <div class="col-8 p-0 m-0" style="text-align: start;">
+                                        <h4 class="countOfNum m-0">10</h4>
                                     </div>
-                                    <div class="col-4 p-0 pb-5 pt-3" style="text-align: right">
+                                    <div class="col-4 p-0 " style="text-align: right">
                                         <img src="{{ asset('images/admin_banner.png') }}" alt="Image Description" style="width: 3em;">
                                     </div>
-                                    <p class="p-0">New Employees</p>
-                                    <span class="p-0 pb-3" style="color: #7c7c7c;">4 Department</span>
+                                    </div>
+                                    <p class="p-0  subHeading">New Employees</p>
+                                    <span class="p-0 pb-3" style="color: #7c7c7c;font-size:12px;">4 Department</span>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +75,7 @@
                                 <div class="row m-0 totalEmpCard">
                                     <div class="col-8 p-0 pb-5 pt-3">
                                         <p>Total Employees</p>
-                                        <h3>150+</h3>
+                                        <h3 class="countOfNum">150+</h3>
                                     </div>
                                     <div class="col-4 p-0 pb-5 pt-3" style="text-align: right">
                                         <img src="{{ asset('images/admin_banner.png') }}" alt="Image Description" style="width: 3em;">
@@ -80,7 +86,7 @@
                                 <div class="row m-0 hrReqCard">
                                     <div class="col-8 p-0 pb-5 pt-3">
                                         <p>HR Requests</p>
-                                        <h3>15</h3>
+                                        <h3 class="countOfNum">15</h3>
                                     </div>
                                     <div class="col-4 p-0 pb-5 pt-3" style="text-align: right">
                                         <img src="{{ asset('images/admin_banner.png') }}" alt="Image Description" style="width: 3em;">
@@ -89,7 +95,7 @@
                             </div>
                         </div>
                         <div class="row ms-3 me-3 annocmentCard">
-                            <h3 class="mt-2">Announcement</h3>
+                            <h5 class="mt-2">Announcement</h5>
                             <div class="m-0 mb-3 row totalEmpCard" style="padding: 10px 0px;">
                                 <div class="col-8">
                                     <p class="m-0">Outing schedule for every departement</p>
@@ -120,7 +126,7 @@
                         </div>
 
                         <div class="row ms-3 me-3">
-                            <h3 class="mt-3 p-0">Help Links</h3>
+                            <h5 class="mt-3 p-0">Help Links</h5>
                             <div class="m-0 p-0">
                                 <span class="helpChip">attune global Community</span>
                                 <span class="helpChip">Statutory Compliances</span>
@@ -134,11 +140,13 @@
                     </div>
                     <div class="col-md-4">
                         <div class="row m-0 mb-4 annocmentCard" style="padding: 10px 15px;">
-                            <div class="col-8 p-0 pb-5">
-                                <h3 class="m-0">Recently Activity</h3>
-                            </div>
-                            <div class="col-4 p-0 pb-5" style="text-align: right">
-                                <img src="{{ asset('images/admin_banner.png') }}" alt="Image Description" style="width: 3em;">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div style="text-align: center;">
+                                    <h6 class="m-0 pt-1" >Recently Activity</h6>
+                                </div>
+                                <div >
+                                    <img src="{{ asset('images/admin_banner.png') }}" alt="Image Description" style="width: 3em;">
+                                </div>
                             </div>
                             <p class="p-0 m-0" style="font-size: 16px;">You Posted a New Job</p>
                             <p class="p-0 pb-3" style="color: #7c7c7c; font-size: 12px;">10.40 AM, Fri 10 Dec 2023</p>
@@ -146,7 +154,7 @@
                         </div>
 
                         <div class="row m-0 mb-4 annocmentCard">
-                            <h3 class="mt-2">Upcoming Schedule</h3>
+                            <h5 class="mt-2">Upcoming Schedule</h5>
                             <p>Priority</p>
                             <div class="m-0 mb-3 row totalEmpCard" style="padding: 10px 0px;">
                                 <div class="col-8">

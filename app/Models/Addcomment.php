@@ -13,5 +13,7 @@ class Addcomment extends Model
         'first_name',
         'last_name',
         'addcomment',
+        'image'
     ];
+
 }
