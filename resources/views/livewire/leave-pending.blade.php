@@ -1,7 +1,17 @@
 <div>
 
     <div class="detail-container ">
-        <div class="header" style="font-size: 10px; font-weight: 500; text-align:start; margin-left:150px; ">
+        <div class="row m-0 p-0">
+            <div class="col-md-4 p-0 m-0 mb-2 ">
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                    <ol class="breadcrumb " style="font-size: 14px;background:none;font-weight:500;">
+                        <li class="breadcrumb-item"><a href="{{ route('leave-page') }}">Go Back</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Review - Review Leave</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="header-details" style="font-size: 10px; font-weight: 500; text-align:start; margin-left:150px; ">
             <h6 >Leave Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </h6>
         </div>
         <div class="approved-leave d-flex gap-3">
@@ -20,12 +30,12 @@
                             </span>
                             @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                                 <span style="color: #333; font-weight: 500; text-transform: uppercase;">
-                                    {{ $this->leaveRequest->employee->first_name }} {{ $this->leaveRequest->employee->last_name }}
+                                    {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name))}}
                                 </span>
                                 @elseif(!empty($leaveRequest['applying_to']))
                                 @foreach($leaveRequest['applying_to'] as $applyingTo)
                                     <span style="color: #333; font-weight: 500;font-size:12px; text-transform:uppercase;">
-                                        {{ $applyingTo['report_to'] }}
+                                    {{ ucwords(strtolower($applyingTo['report_to'])) }}
                                     </span>
                                 @endforeach
                             @endif
@@ -73,13 +83,21 @@
                     <div class="leave">
                         <div class="pay-bal">
                             <span style=" font-size: 12px; font-weight: 500;">Balance:</span>
-                            @if(!empty($leaveBalances))
-                                @if($leaveRequest->leave_type === 'Sick Leave')
-                                <span style=" font-size: 12px; font-weight: 500;">{{ $leaveBalances['sickLeaveBalance'] }}</span>
-                                @elseif($leaveRequest->leave_type === 'Causal Leave Probation')
-                                <span style=" font-size: 12px; font-weight: 500;">{{ $leaveBalances['casualLeaveBalance'] }}</span>
-                                @elseif($leaveRequest->leave_type === 'Loss Of Pay')
-                                <span style=" font-size: 12px; font-weight: 500;">{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                            @if($leaveBalances)
+                                @if($leaveRequest->leave_type === 'Sick Leave' && isset($leaveBalances['sickLeaveBalance']))
+                                    <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['sickLeaveBalance'] }}</span>
+                                @elseif($leaveRequest->leave_type === 'Causal Leave Probation' && isset($leaveBalances['casualProbationLeaveBalance']))
+                                    <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
+                                @elseif($leaveRequest->leave_type === 'Causal Leave' && isset($leaveBalances['casualLeaveBalance']))
+                                    <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['casualLeaveBalance'] }}</span>
+                                @elseif($leaveRequest->leave_type === 'Loss of Pay' && isset($leaveBalances['lossOfPayBalance']))
+                                    <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                                @elseif($leaveRequest->leave_type === 'Marriage Leave' && isset($leaveBalances['marriageLeaveBalance']))
+                                    <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
+                                @elseif($leaveRequest->leave_type === 'Maternity Leave' && isset($leaveBalances['maternityLeaveBalance']))
+                                    <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['maternityLeaveBalance'] }}</span>
+                                @elseif($leaveRequest->leave_type === 'Petarnity Leave' && isset($leaveBalances['paternityLeaveBalance']))
+                                    <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['paternityLeaveBalance'] }}</span>
                                 @endif
                             @endif
                         </div>
@@ -94,7 +112,8 @@
            <p><span style="color: #333; font-weight: 500; font-size:12px;">Details</span></p>
            @if(is_array($leaveRequest['applying_to']) || is_object($leaveRequest['applying_to']))
             @foreach($leaveRequest['applying_to'] as $applyingTo)
-            <p style=" font-size: 12px; "><span style="color: #778899; font-size: 12px; font-weight: 400;padding-right: 58px;">Applying to</span>{{ $applyingTo['report_to'] }}</p>
+            <p style=" font-size: 12px; "><span style="color: #778899; font-size: 12px; font-weight: 400;padding-right: 58px;">Applying to</span>{{ ucwords(strtolower($applyingTo['report_to'])) }}
+        </p>
             @endforeach
             @endif
              <div style="display:flex; flex-direction:row;">
@@ -107,7 +126,7 @@
                     <p style="font-size: 0.975rem; font-weight: 500;">
                         <span style="color: #778899; font-size: 12px; font-weight: 400; padding-right: 90px;">CC to</span>
                         @foreach($leaveRequest->cc_to as $ccToItem)
-                            {{ $ccToItem['full_name'] }} (#{{ $ccToItem['emp_id'] }})
+                           <span style="font-size: 12px;"> {{ ucwords(strtolower($ccToItem['full_name'] ))}} (#{{ $ccToItem['emp_id'] }})</span>
                             @if(!$loop->last)
                                 ,
                             @endif
@@ -133,14 +152,14 @@
                     @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                         Withdrawn <br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
                         <span style="color: #778899; font-weight: 500; text-transform: uppercase;">
-                            {{ $this->leaveRequest->employee->first_name }}  {{ $this->leaveRequest->employee->last_name }}
+                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
                         </span>
                     @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
                         Approved  <br>by
                         @if(!empty($leaveRequest['applying_to']))
                             @foreach($leaveRequest['applying_to'] as $applyingTo)
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;text-align:start;">
-                                    {{ $applyingTo['report_to'] }}
+                                {{ ucwords(strtolower($applyingTo['report_to'])) }}
                                 </span>
                             @endforeach
                             @else

@@ -128,7 +128,7 @@ class LeaveCalender extends Component
 
         $this->filterCriteria = $value;
 
-        $this->loadLeaveTransactions($this->selectedDate);
+        $this->generateCalendar();
     }
 
     public function resetFilter()
@@ -301,27 +301,39 @@ class LeaveCalender extends Component
             $leaveCount = $leaveTransactions->count();
             $this->leaveTransactions = $leaveTransactions;
         } elseif ($this->filterCriteria === 'MyTeam') {
-            $teamMembersIds = EmployeeDetails::where('manager_id', $employeeId)->pluck('emp_id');
-            $leaveTransactions = LeaveRequest::with('employee')
-                ->whereIn('emp_id', $teamMembersIds)
-                ->where('from_date', '<=', $dateFormatted)
-                ->where('to_date', '>=', $dateFormatted)
-                ->where('status', 'approved')
-                ->where(function ($query) {
-                    $query->whereHas('employee', function ($q) {
-                        $q->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                            ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-                    });
-                })
-                ->get();
+            // Retrieve the manager ID and company ID of the logged-in employee
+            $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
 
-            $leaveCount = $leaveTransactions->count();
-            $this->leaveTransactions = $leaveTransactions;
-        } else {
-            $this->leaveTransactions = null;
+            $companyId = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+
+            // Retrieve the emp_id of employees with the same manager_id and company_id
+            $teamMembersIds = EmployeeDetails::where('manager_id', $managerId)
+                ->where('company_id', $companyId)
+                ->pluck('emp_id')
+                ->toArray();
+
+            // Retrieve leave requests for team members for the selected date
+            $leaveTransactionsOfTeam = LeaveRequest::with('employee')
+                ->whereIn('emp_id', $teamMembersIds)
+                ->whereDate('from_date', '<=', $dateFormatted)
+                ->whereDate('to_date', '>=', $dateFormatted)
+                ->where('status', 'approved');
+                $leaveTransactionsOfTeam->where(function ($query) {
+                    $query->where('emp_id', 'like', '%' . $this->searchTerm . '%')
+                        ->orWhereHas('employee', function ($query) {
+                            $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
+                               ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
+                        });
+                });
+
+            $leaveTransactionsOfTeam = $leaveTransactionsOfTeam->get();
+            $leaveCount = $leaveTransactionsOfTeam->count();
+            $this->leaveTransactions = $leaveTransactionsOfTeam;
         }
 
         return $leaveCount;
+
     }
 
 
@@ -468,19 +480,19 @@ class LeaveCalender extends Component
     }
     public function downloadexcelforLeave()
     {
-       
         $userId = Auth::id();
         $user = EmployeeDetails::find($userId);
         $managerId = $user->manager_id;
         $startDate = Carbon::create($this->year, $this->month, 1)->startOfMonth();
- 
+
         // Ending date of the current month and year
         $endDate = Carbon::create($this->year, $this->month, 1)->endOfMonth();
- 
+
         // Format the dates as per your requirement
         $formattedStartDate = $startDate->toDateString();
-     
+
         $formattedEndDate = $endDate->toDateString();
+
         if($this->filterCriteria=='MyTeam')
         {
                $employeesOnLeave = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
@@ -500,9 +512,10 @@ class LeaveCalender extends Component
                 ->select('employee_details.first_name', 'employee_details.last_name','leave_applications.from_date','leave_applications.to_date','leave_applications.leave_type','employee_details.emp_id')
                 ->get();
         }
-        else if($this->filterCriteria=='Me')
+        elseif($this->filterCriteria=='Me')
         {
                 $employeesOnLeave = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+
                 ->where(function ($query) use ($formattedStartDate, $formattedEndDate) {
                     $query->whereBetween('from_date', [$formattedStartDate, $formattedEndDate])
                         ->orWhereBetween('to_date', [$formattedStartDate, $formattedEndDate])
@@ -519,17 +532,18 @@ class LeaveCalender extends Component
                 ->where('employee_details.emp_id', $userId)
                 ->select('employee_details.first_name', 'employee_details.last_name', 'leave_applications.from_date', 'leave_applications.to_date', 'leave_applications.leave_type', 'employee_details.emp_id')
                 ->get();
+
         }
 // Now $employeesOnLeave contains employee first_name and last_name for the specified conditions
           $companyName = EmployeeDetails::join('companies', 'employee_details.company_id', '=', 'companies.company_id')
             ->where('employee_details.emp_id', $userId)
             ->value('companies.company_name');
-           
+
             $companyDetails = EmployeeDetails::join('companies', 'employee_details.company_id', '=', 'companies.company_id')
             ->where('employee_details.emp_id', $userId)
             ->select('companies.company_address1', 'companies.company_address2')
             ->first();
-       
+
         if ($companyDetails) {
             $companyAddress1 = $companyDetails->company_address1;
             $companyAddress2 = $companyDetails->company_address2;
@@ -542,32 +556,31 @@ class LeaveCalender extends Component
           $data[]=[$concatenatedAddress];
           if($this->filterCriteria=='Me')
           {
-               $data[]=['My Leave '.Carbon::createFromFormat('Y-m-d', $formattedStartDate)->format('d M Y'). 'to '.\Carbon\Carbon::createFromFormat('Y-m-d', $formattedEndDate)->format('d M Y')];
+               $data[]=['My Leave '.Carbon::createFromFormat('Y-m-d', $formattedStartDate)->format('d M Y'). 'to '.Carbon::createFromFormat('Y-m-d', $formattedEndDate)->format('d M Y')];
           }
           else if($this->filterCriteria=='MyTeam')
           {
-               $data[]=['My Team Leave '.Carbon::createFromFormat('Y-m-d', $formattedStartDate)->format('d M Y'). 'to '.\Carbon\Carbon::createFromFormat('Y-m-d', $formattedEndDate)->format('d M Y')];
+               $data[]=['My Team Leave '.Carbon::createFromFormat('Y-m-d', $formattedStartDate)->format('d M Y'). 'to '.Carbon::createFromFormat('Y-m-d', $formattedEndDate)->format('d M Y')];
           }
-             
+
         //   $data[] = ['Early Employees on ' .  $formattedDate, '', '', ''];
           $data[] = ['Employee No', 'Name of the Employee', 'Type', 'Days','From Date','To Date','Remarks'];
- 
+
           foreach($employeesOnLeave as $eol)
           {
             $fromDate = Carbon::parse($eol->from_date);
             $toDate = Carbon::parse($eol->to_date);
-           
             $numberOfDays = $fromDate->diffInDays($toDate, false);
             $numberOfDays= $numberOfDays+1;
             $numberOfDaysFloat = (float) $numberOfDays;
-            $data[] = [$eol->emp_id, $eol->first_name.'  '.$eol->last_name,$eol->leave_type,$numberOfDaysFloat,\Carbon\Carbon::createFromFormat('Y-m-d', $eol->from_date)->format('d M Y'),\Carbon\Carbon::createFromFormat('Y-m-d', $eol->to_date)->format('d M Y'),' '];
+            $data[] = [$eol->emp_id, $eol->first_name.'  '.$eol->last_name,$eol->leave_type,$numberOfDaysFloat,$fromDate->format('d M,Y'),$toDate->format('d M,Y'),' '];
           }
-   
+
        $filePath = storage_path('app/leaveApplications.xlsx');
-   
+
         SimpleExcelWriter::create($filePath)->addRows($data);
-   
+
         return response()->download($filePath, 'leaveApplications.xlsx');
- 
+
     }
 }

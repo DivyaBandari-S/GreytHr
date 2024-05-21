@@ -1,13 +1,4 @@
 <div>
-    <x-loading-indicator/>
-
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Task Form</title>
-
         <div class="container" style="margin-top:15px;width:100%; height: 450px; border: 1px solid silver; border-radius: 5px;background-color:white">
             <div class="row">
                 <div class="col" style="margin-left:35%;margin-top:15px">
@@ -30,62 +21,77 @@
                 </div>
             </div>
             @if ($activeTab == "open")
-            <div class="card-body" style="background-color:white;width:100%;margin-top:30px;border-radius:5px;overflow-y:auto;max-height:300px;overflow-x:hidden">
+            <div class="card-body" style="background-color:white;width:100%;margin-top:30px;border-radius:5px;overflow-y:auto;max-height:350px;overflow-x:hidden">
                 @if ($records->isEmpty())
                 <div style="text-align: center">
                     <img style="width: 10em" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="">
                 </div>
                 @else
                 <div class="table-responsive">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background-color: rgb(2, 17, 79); color: white;">
-                                <th style="padding: 10px; font-size: 12px; text-align: center; width: auto">Assigned By</th>
-                                <th style="padding: 10px; font-size: 12px; text-align: center; width: auto">Task Name</th>
-                                <th style="padding: 10px; font-size: 12px; text-align: center; width: auto">Assigneed to</th>
-                                <th style="padding: 10px; font-size: 12px; text-align: center;width: auto">Priority</th>
-                                <th style="padding: 10px; font-size: 12px; text-align: center;width: auto">Due Date</th>
-                                <th style="padding: 10px; font-size: 12px; text-align: center;width: auto">Subject</th>
-                                <th style="padding: 10px; font-size: 12px; text-align: center;width: auto">Description</th>
-                                <th style="padding: 10px; font-size: 12px; text-align: center;width: auto">Attach File</th>
-                                <th style="padding: 10px; font-size: 12px; text-align: start; width: auto">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($records as $record)
-                            @if($record->status=="Open")
-                            <tr>
-                                <td style="padding: 10px; font-size: 12px; text-align: center; width: 100px;text-transform: capitalize;">{{ $record->emp->first_name }} {{ $record->emp->last_name }} <br> <strong style="font-size: 10px;">({{$record->emp_id}})</strong></td>
-                                <td style="padding: 10px; font-size: 12px; text-align: center; width: 100px;text-transform: capitalize;">{{ $record->task_name }}</td>
-                                <td style="padding: 10px; font-size: 12px; text-align: center;width: 100px;text-transform: capitalize;">{{ $record->assignee }}</td>
-                                <td style="padding: 10px; font-size: 12px; text-align: center;width: 100px;text-transform: capitalize;">{{ $record->priority }}</td>
-                                <td style="padding: 10px; font-size: 12px; text-align: center; width: 100px"> {{ \Carbon\Carbon::parse($record->due_date)->format('d-M-y') }}</td>
-                                <td style="padding: 10px; font-size: 12px; text-align: center; width: 100px;text-transform: capitalize;">{{ $record->subject }}</td>
-                                <td style="padding: 10px; font-size: 12px; text-align: center;width: 100px;text-transform: capitalize;">{{ $record->description }}</td>
-                                <td style="padding: 10px; font-size: 12px; text-align: center;width: 100px">
-                                    @if ($record->file_path)
-                                    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF;text-transform: capitalize;">View File</a>
-                                    @else
-                                    N/A
-                                    @endif
-                                </td>
-                                <td>
-                                @foreach ($record->comments ?? [] as $comment)
-                                    {{ $comment->comment }}
-                                @endforeach
-                                    <!-- Add Comment link to trigger modal -->
-                                    <button type="button" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModalCenter" style="font-size:12px;" >
-                                        Add Comment
-                                    </button>
-                                    <button wire:click="openForTasks('{{$record->id}}')" style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; padding:2px;width:80px">Close</button>
-                                </td>
-                            </tr>
-                            @endif
-                            @endforeach
-                        </tbody>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: rgb(2, 17, 79); color: white;">
+                            <th style="padding: 10px; font-size: 12px; text-align: start; width: 60%">Task Name</th>
+                            <th style="padding: 10px; font-size: 12px; text-align: start;width: 30%">Assignee</th>
+                            <th style="padding: 10px; font-size: 12px; text-align: center; width: 30%">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($records as $record)
+                        @if($record->status=="Open")
+                        <tr>
+                            <td colspan="3 m-0 p-0" style="background-color: #fff;padding:10px 0;margin:0;">
+                                <div class="accordion m-0 m-auto p-0 border-none" style="width: 100%;  color: #778899;border:none">
+                                    <div class="accordion-title p-0 m-0 border-none font-weight-500" onclick="toggleAccordion(this)" >
+                                        <!-- Content for accordion title -->
+                                    <div class="col-6"> {{ ucfirst($record->task_name) }}</div>
+                                        <div class="col-3 text-center">{{ucwords(strtolower($record->assignee))}}</div>
+                                        <div class="col-3 text-end">@foreach ($record->comments ?? [] as $comment)
+                                                        {{ $comment->comment }}
+                                                        @endforeach
+                                                        <!-- Add Comment link to trigger modal -->
+                                                        <button type="button" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" class="submit-btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModalCenter" style="font-size:12px;">Add Comment</button>
+                                                        <button wire:click="openForTasks('{{ $record->id }}')" style="border:1px solid rgb(2, 17, 79);width:80px" class="cancel-btn">Close</button></div>
+                                    </div>
+                                    <div class="accordion-content" style="display: none;padding:0 10px;">
+                                        <!-- Content for accordion body -->
+                                        <table class="rounded border" style="margin-top:20px;width: 100%; border-collapse: collapse; ">
+                                        <thead class="py-0" style=" background-color: #ecf9ff;    box-shadow: 1px 0px 2px 0px rgba(0, 0, 0, 0.2);border-bottom: 1px solid #ccc;padding:5px;">
+                                            <tr style=" color: #778899;">
+                                                <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Priority</th>
+                                                <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Due Date</th>
+                                                <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Subject</th>
+                                                <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Description</th>
+                                                <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Attach</th>
+                                            </tr>
 
-                    </table>
-                    <!-- Add Comment Modal -->
+                                        </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border:none;width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ $record->priority }}</td>
+                                                    <td style="border:none;width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ \Carbon\Carbon::parse($record->due_date)->format('d-M-y') }}</td>
+                                                    <td style="border:none;width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ ucfirst($record->subject) }}</td>
+                                                    <td style="border:none;width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ ucfirst($record->description) }}</td>
+                                                    <td style="border:none;width: 20%;padding: 10px; font-size: 12px; text-align: start;">
+                                                        @if ($record->file_path)
+                                                        <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF;">View File</a>
+                                                        @else
+                                                        N/A
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endif
+                        @endforeach
+                    </tbody>
+                </table>
+
+                           <!-- Add Comment Modal -->
                     <div wire:ignore.self class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
@@ -110,7 +116,7 @@
                                             <textarea class="form-control" id="comment" wire:model.defer="newComment"></textarea>
                                             @error('newComment') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
-                                        <button type="submit" class="btn btn-primary btn-sm" style="font-size:12px;">Submit</button>
+                                        <button type="submit" class="submit-btn btn-primary btn-sm" style="font-size:12px;">Submit</button>
                                     </form>
                                     <div style="max-height: 300px;overflow-y:auto;">
                                     @if ($taskComments->count() > 0)
@@ -158,55 +164,74 @@
             @if ($activeTab == "completed")
             <div class="card-body" style="background-color:white;width:100%;margin-top:30px;border-radius:5px;overflow-y:auto;max-height:300px;overflow-x:hidden">
 
-
                 @if ($records->isEmpty())
                 <div style="text-align: center">
                     <img style="width:10em" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="">
                 </div>
                 @else
                 <div class="table-responsive">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background-color: rgb(2, 17, 79); color: white;">
-                                <th style="padding: 10px;font-size:12px;text-align:center;width:100px">Assigned By</th>
-                                <th style="padding: 10px;font-size:12px;text-align:center;width:100px">Task Name</th>
-                                <th style="padding: 10px;font-size:12px;text-align:center;width:100px">Assigneed to</th>
-                                <th style="padding: 10px;font-size:12px;text-align:center;width:100px">Priority</th>
-                                <th style="padding: 10px;font-size:12px;text-align:center;width:100px">Due Date</th>
-                                <th style="padding: 10px;font-size:12px;text-align:center;width:100px">Subject</th>
-                                <th style="padding: 10px;font-size:12px;text-align:center;width:100px">Description</th>
-                                <th style="padding: 10px;font-size:12px;text-align:center;width:100px">Attch File</th>
-                                <th style="padding: 10px;font-size:12px;text-align:center;width:100px">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($records as $record)
-                            @if($record->status=="Completed")
-                            <tr>
-                                <td style="padding: 10px;font-size:12px;text-align:center;width:100px;text-transform: capitalize;">{{ $record->emp->first_name }} {{ $record->emp->last_name }} <br> <strong style="font-size:10px">#({{$record->emp_id}})</strong>
-                                </td>
-                                <td style="padding: 10px;font-size:12px;text-align:center;width:100px;text-transform: capitalize;">{{ $record->task_name }}</td>
-                                <td style="padding: 10px;font-size:12px;text-align:center;width:100px;text-transform: capitalize;">{{ $record->assignee }}</td>
-                                <td style="padding: 10px;font-size:12px;text-align:center;width:100px;text-transform: capitalize;">{{ $record->priority }}</td>
-                                <td style="padding: 10px;font-size:12px;text-align:center;width:100px">{{ \Carbon\Carbon::parse($record->due_date)->format('d-M-y') }} </td>
-                                <td style="padding: 10px;font-size:12px;text-align:center;width:100px;text-transform: capitalize;">{{ $record->subject }}</td>
-                                <td style="padding: 10px;font-size:12px;text-align:center;width:100px;text-transform: capitalize;">{{ $record->description }}</td>
-                                <td style="padding: 10px;font-size:12px;text-align:center;width:100px">
-                                    @if ($record->file_path)
-                                    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF;text-transform: capitalize;">View File</a>
-                                    @else
-                                    N/A
-                                    @endif
-                                </td>
-                                <td style="padding: 10px;font-size:12px;text-align:center;">
-                                    <button wire:click="closeForTasks('{{$record->id}}')" style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; padding:4px;width:80px">Open</button>
-                                </td>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: rgb(2, 17, 79); color: white;">
+                            <th style="padding: 10px; font-size: 12px; text-align: start; width: 60%">Task Name</th>
+                            <th style="padding: 10px; font-size: 12px; text-align: start;width: 30%">Assignee</th>
+                            <th style="padding: 10px; font-size: 12px; text-align: center; width: 30%">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($records as $record)
+                        @if($record->status=="Completed")
+                        <tr>
+                            <td colspan="3 m-0 p-0" style="background-color: #fff;padding:10px 0;margin:0;">
+                                <div class="accordion m-0 m-auto p-0 border-none" style="width: 100%;  color: #778899;border:none">
+                                    <div class="accordion-title p-0 m-0 border-none font-weight-500" onclick="toggleAccordion(this)" >
+                                        <!-- Content for accordion title -->
+                                    <div class="col-6"> {{ ucfirst($record->task_name) }}</div>
+                                        <div class="col-3 text-center">{{ucwords(strtolower($record->assignee))}}</div>
+                                        <div class="col-3 text-end">@foreach ($record->comments ?? [] as $comment)
+                                                        {{ $comment->comment }}
+                                                        @endforeach
+                                                        <!-- Add Comment link to trigger modal -->
+                                                        <button type="button" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModalCenter" style="font-size:12px;">Add Comment</button>
+                                                        <button wire:click="closeForTasks('{{ $record->id }}')" style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; padding:2px;width:80px">Reopen</button></div>
+                                    </div>
+                                    <div class="accordion-content" style="display: none;">
+                                        <!-- Content for accordion body -->
+                                        <table style="margin-top:20px;width: 100%; border-collapse: collapse;padding:10px; ">
+                                        <thead style=" background-color: #ecf9ff;">
+                                            <tr style=" color: #778899;">
+                                                <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Priority</th>
+                                                <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Due Date</th>
+                                                <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Subject</th>
+                                                <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Description</th>
+                                                <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Attach</th>
+                                            </tr>
 
-                            </tr>
-                            @endif
-                            @endforeach
-                        </tbody>
-                    </table>
+                                        </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ $record->priority }}</td>
+                                                    <td style="width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ \Carbon\Carbon::parse($record->due_date)->format('d-M-y') }}</td>
+                                                    <td style="width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ ucfirst($record->subject) }}</td>
+                                                    <td style="width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ ucfirst($record->description) }}</td>
+                                                    <td style="width: 20%;padding: 10px; font-size: 12px; text-align: start;">
+                                                        @if ($record->file_path)
+                                                        <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF;">View File</a>
+                                                        @else
+                                                        N/A
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endif
+                        @endforeach
+                    </tbody>
+                </table>
                 </div>
                 @endif
             </div>
@@ -244,7 +269,7 @@
                                 </div>
                                 @error('assignee') <span class="text-danger">{{ $message }}</span> @enderror
                                 @if($assigneeList)
-                                <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px">
+                                <div style="border-radius:5px;background-color:grey;padding:8px;width:350px;margin-top:10px;max-height:250px;overflow-y:auto; ">
                                     <div class="input-group" style="margin-bottom: 10px;">
                                         <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                                         <div class="input-group-append">
@@ -257,38 +282,33 @@
                                         </div>
                                     </div>
                                     @if ($peopleData->isEmpty())
-                                    <div class="container" style="text-align: center; color: white;font-size:12px"> No
-                                        People Found
-                                    </div>
+                                        <div class="container" style="text-align: center; color: white; font-size: 12px;">No People Found</div>
                                     @else
-                                    @foreach($peopleData as $people)
-                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
+                                        @foreach($peopleData as $people)
+                                            <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                        <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <img class="profile-image" src="{{
+                                                            !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL) ? $people->image :
+                                                            (!empty($people->image) ? Storage::url($people->image) :
+                                                            ($people->gender == 'Male' ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png' :
+                                                            'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0')) }}" alt="">
+                                                    </div>
+
+                                                    <div class="col">
+                                                        <h6 class="username" style="font-size: 12px; color: white;">
+                                                            {{ ucwords(strtolower($people->first_name )) }} {{ ucwords(strtolower($people->last_name )) }}
+                                                        </h6>
+                                                        <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-auto">
-                                                @if($people->image=="")
-                                                @if($people->gender=="Male")
-                                                <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Profile Image">
-                                                @elseif($people->gender=="Female")
-                                                <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="Profile Image">
-                                                @endif
-                                                @else
-                                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="Profile Image">
-                                                @endif
-                                            </div>
-                                            <div class="col">
-                                                <h6 class="username" style="font-size: 12px; color: white;">
-                                                    {{ $people->first_name }} {{ $people->last_name }}
-                                                </h6>
-                                                <p class="mb-0" style="font-size: 12px; color: white;">
-                                                    (#{{ $people->emp_id }})</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endforeach
+                                        @endforeach
                                     @endif
+
                                 </div>
                                 @endif
                                 <!-- Priority -->
@@ -349,7 +369,7 @@
 
                                 @error('followers') <span class="text-danger">{{ $message }}</span> @enderror
                                 @if($followersList)
-                                <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px">
+                                <div style="border-radius:5px;background-color:grey;padding:8px;width:350px;margin-top:10px;max-height:250px;overflow-y:auto;">
                                     <div class="input-group" style="margin-bottom: 10px;">
                                         <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                                         <div class="input-group-append">
@@ -373,19 +393,15 @@
                                                 <input type="checkbox" wire:model="selectedPeopleForFollowers" value="{{ $people->emp_id }}">
                                             </div>
                                             <div class="col-auto">
-                                                @if($people->image=="")
-                                                @if($people->gender=="Male")
-                                                <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Profile Image">
-                                                @elseif($people->gender=="Female")
-                                                <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="Profile Image">
-                                                @endif
-                                                @else
-                                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="Profile Image">
-                                                @endif
+                                            <img class="profile-image" src="{{
+                                                            !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL) ? $people->image :
+                                                            (!empty($people->image) ? Storage::url($people->image) :
+                                                            ($people->gender == 'Male' ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png' :
+                                                            'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0')) }}" alt="">
                                             </div>
                                             <div class="col">
                                                 <h6 class="username" style="font-size: 12px; color: white;">
-                                                    {{ $people->first_name }} {{ $people->last_name }}
+                                                    {{ ucwords(strtolower($people->first_name )) }} {{ ucwords(strtolower($people->last_name )) }}
                                                 </h6>
                                                 <p class="mb-0" style="font-size: 12px; color: white;">
                                                     (#{{ $people->emp_id }})</p>
@@ -419,11 +435,8 @@
                                     </div>
                                 </div>
 
-                                <div wire:loading wire:target="image" class="text-primary" role="status">
-                                    Uploading...
-                                </div>
 
-                                <input style="font-size: 12px;" wire:model="image" wire:loading.attr="disabled" type="file" accept="image/*">
+                                <input style="font-size: 12px;" wire:model="image"  type="file" accept="image/*">
 
                                 @if ($image)
                                 <div>
@@ -442,10 +455,10 @@
                                         </div> -->
                             </div>
                         </div>
-                        <div style="text-align: center;margin-bottom:10px">
-                            <button wire:click="close" class="btn btn-danger btn-medium" type="button" name="link" style="background-color: #FF3D57; color: white; width: 100px;font-size:13px">Cancel</button>
-                            <button wire:click="submit" class="btn btn-success btn-medium" type="button" name="link" style="background-color: #4CAF50; color: white;font-size:13px">Save
-                                Changes</button>
+                        <div style="text-align: center;margin-bottom:10px;">
+                            <button wire:click="submit" class="submit-btn" type="button" name="link" >Save
+                                </button>
+                            <button wire:click="close" class=" cancel-btn" type="button" name="link" style="border:1px solid rgb(2, 17, 79)" >Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -454,5 +467,25 @@
             @endif
             </body>
 
-    </html>
 </div>
+<script>
+
+    function toggleAccordion(element) {
+
+            const accordionBody = element.nextElementSibling;
+
+            if (accordionBody.style.display === 'block') {
+
+                accordionBody.style.display = 'none';
+
+                element.classList.remove('active'); // Remove active class
+
+            } else {
+
+                accordionBody.style.display = 'block';
+
+                element.classList.add('active'); // Add active class
+
+            }
+    }
+</script>

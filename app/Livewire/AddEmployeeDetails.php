@@ -357,7 +357,7 @@ class AddEmployeeDetails extends Component
     
     public function render()
     {
-        
+
         $hrEmail = auth()->guard('hr')->user()->company_id;
         $this->companieIds = Company::where('company_id', $hrEmail)->get();
         $hrEmail = auth()->guard('hr')->user()->company_id;

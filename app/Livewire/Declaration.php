@@ -6,6 +6,11 @@ use Livewire\Component;
 
 class Declaration extends Component
 {
+    public $showDetails = true;
+    public function toggleDetails()
+    {
+        $this->showDetails = !$this->showDetails;
+    }
     public function render()
     {
         return view('livewire.declaration');

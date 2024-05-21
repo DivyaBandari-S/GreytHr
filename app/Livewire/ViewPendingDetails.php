@@ -42,10 +42,14 @@ class ViewPendingDetails extends Component
                     ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
             })
             ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            ->orderBy('created_at', 'desc')
             ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
         $matchingLeaveApplications = [];
 
         foreach ($this->leaveRequests as $leaveRequest) {
+            $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
+            $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
+
             $applyingToJson = trim($leaveRequest->applying_to);
             $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
 
@@ -84,8 +88,8 @@ class ViewPendingDetails extends Component
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
-            $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $fromDate . ' 00:00:00');
-            $endDate = Carbon::createFromFormat('Y-m-d H:i:s', $toDate . ' 00:00:00');
+            $startDate = Carbon::parse($fromDate);
+            $endDate = Carbon::parse($toDate);
             // Check if the start and end sessions are different on the same day
             if (
                 $startDate->isSameDay($endDate) &&

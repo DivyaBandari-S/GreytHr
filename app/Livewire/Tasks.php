@@ -137,13 +137,9 @@ class Tasks extends Component
         ]); // Validate the image file
         if ($this->image) {
             $this->isLoadingImage = true;
-            $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-
-            $this->image->storeAs('public/tasks-images', $fileName);
-
-            $this->image = 'tasks-images/' . $fileName;
-            
-           $this->isLoadingImage = false;
+             if ($this->image instanceof \Illuminate\Http\UploadedFile) {
+                $imagePath = $this->image->store('tasks-images', 'public');
+            $this->isLoadingImage = false;
             
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -159,12 +155,12 @@ class Tasks extends Component
             'followers' => $this->followers,
             'subject' => $this->subject,
             'description' => $this->description,
-            'file_path' => $this->image,
+            'file_path' => $imagePath,
         ]);
         $this->reset();
         return redirect()->to('/tasks');
     }
-
+    }
     public function show()
     {
         $this->showDialog = true;
@@ -273,7 +269,11 @@ class Tasks extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = Auth::user()->company_id;
         $this->fetchTaskComments($this->taskId);
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+        ->orderBy('first_name')
+        ->orderBy('last_name')
+        ->get();
+
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->record = Task::all();
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';

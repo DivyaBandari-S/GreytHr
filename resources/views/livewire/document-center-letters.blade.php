@@ -157,21 +157,21 @@
                     <table class="table-start">
                         <thead class="table-header">
                             <tr style="background-color: rgb(2,17,79);color:white;padding:8px">
-                                <th style="padding: 8px;">Employee ID</th>
-                                <th>Letter Type</th>
-                                <th>Priority</th>
-                                <th>Reason</th>
-                                <th>Status</th>
+                                <th style="padding: 8px;width:20%;">Employee ID</th>
+                                <th style="width:20%;" >Letter Type</th>
+                                <th style="width:20%;">Priority</th>
+                                <th style="width:20%;">Reason</th>
+                                <th style="width:20%;">Status</th>
                             </tr>
                         </thead>
                         <tbody class="table-body">
                             @forelse ($allRequests->where('status', 'Pending') as $request)
                             <tr>
-                                <td>{{$request->emp_id}}</td>
-                                <td>{{$request->letter_type}}</td>
-                                <td>{{$request->priority}}</td>
-                                <td>{{$request->reason}}</td>
-                                <td>{{$request->status}}</td>
+                                <td style="width:20%;">{{$request->emp_id}}</td>
+                                <td style="width:20%;">{{$request->letter_type}}</td>
+                                <td style="width:20%;">{{$request->priority}}</td>
+                                <td style="width:20%;"> {{$request->reason}}</td>
+                                <td style="width:20%;">{{$request->status}}</td>
                             </tr>
                             @empty
                             <tr>

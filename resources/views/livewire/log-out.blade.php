@@ -18,24 +18,19 @@
             width: 90px;
             background-color: #333;
             color: orange;
-            /* Set default color to red */
             text-align: center;
             border-radius: 6px;
             padding: 5px;
             position: absolute;
             z-index: 1;
             top: 3  0px;
-            /* Position the tooltip below the icon */
-          margin-left:-30px;
-            /* Center the tooltip horizontally */
+            margin-left:-30px;
             opacity: 0;
             transition: opacity 0.3s;
         }
 
-        /* Show the tooltip on hover */
         .logout-icon-container:hover i {
             color: orange;
-            /* Change the color on hover to red */
         }
 
         .logout-icon-container:hover .tooltip {
@@ -46,7 +41,6 @@
         .tooltip {
             margin-left: 10px;
             color: orange;
-            /* Adjust the margin to move the tooltip to the right */
         }
     </style>
 
@@ -54,5 +48,4 @@
         <i wire:click="handleLogout" class="fas fa-sign-out-alt"></i>
         <div class="tooltip">Logout</div>
     </div>
-    <script src="{{ asset('vendor/livewire/livewire.js') }}" defer></script>
 </div>

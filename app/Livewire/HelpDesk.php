@@ -28,6 +28,7 @@ class HelpDesk extends Component
     public $priority;
     public $records;
     public $image;
+    public $mobile;
     public $selectedPeopleNames = [];
     public $employeeDetails;
     public $showDialog = false;
@@ -104,6 +105,9 @@ class HelpDesk extends Component
             'file_path' => $this->image,
             'cc_to' => $this->cc_to,
             'priority' => $this->priority,
+            'mail' =>'N/A',
+            'mobile' => 'N/A',
+            'distributor_name' => 'N/A',
         ]);
 
         $this->reset();
@@ -176,7 +180,10 @@ class HelpDesk extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = Auth::user()->company_id;
 
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+        ->orderBy('first_name')
+        ->orderBy('last_name')
+        ->get();
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->record = HelpDesks::all();
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';

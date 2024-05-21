@@ -23,6 +23,9 @@ class LeavePage extends Component
     public $employeeDetails = [];
     public $employeeId;
     public $leaveRequests;
+    public $leaveRequest;
+
+    public $leavePendingRequest;
     public $leavePending;
     public function mount()
     {
@@ -33,12 +36,12 @@ class LeavePage extends Component
             ->whereIn('status', ['approved', 'rejected', 'Withdrawn'])
             ->orderBy('created_at', 'desc')
             ->get();
+
         // Fetch pending leave requests for the logged-in user and company
         $this->leavePending = LeaveRequest::where('emp_id', $employeeId)
             ->where('status', 'pending')
             ->orderBy('created_at', 'desc')
             ->get();
-
         // Format the date properties
         foreach ($this->leaveRequests as $leaveRequest) {
             $leaveRequest->formatted_from_date = Carbon::parse($leaveRequest->from_date)->format('d-m-Y');
@@ -46,8 +49,8 @@ class LeavePage extends Component
         }
 
         foreach ($this->leavePending as $leaveRequest) {
-            $leaveRequest->formatted_from_date = Carbon::parse($leaveRequest->from_date)->format('d-m-Y');
-            $leaveRequest->formatted_to_date = Carbon::parse($leaveRequest->to_date)->format('d-m-Y');
+            $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
+            $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
         }
     }
 
@@ -61,8 +64,8 @@ class LeavePage extends Component
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
-            $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $fromDate . ' 00:00:00');
-            $endDate = Carbon::createFromFormat('Y-m-d H:i:s', $toDate . ' 00:00:00');
+            $startDate = Carbon::parse($fromDate);
+            $endDate = Carbon::parse($toDate);
             // Check if the start and end sessions are different on the same day
             if (
                 $startDate->isSameDay($endDate) &&
@@ -144,8 +147,8 @@ class LeavePage extends Component
         $leaveRequest->status = 'Withdrawn';
         $leaveRequest->save();
         $leaveRequest->touch();
-
         session()->flash('message', 'Leave application Withdrawn .');
+        return redirect()->to('/leave-page');
     }
 
 

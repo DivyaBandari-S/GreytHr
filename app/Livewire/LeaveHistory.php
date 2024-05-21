@@ -108,6 +108,8 @@ class LeaveHistory extends Component
                 // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
+                }else{
+                    $totalDays += 0.5;
                 }
             }elseif($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)){
                 if ($this->getSessionNumber($fromSession) !== 1) {

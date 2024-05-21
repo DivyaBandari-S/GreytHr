@@ -9,7 +9,7 @@
 
     <div class="row m-0">
         <!-- Left Side (Login Form) -->
-        <div class="col-md-6 p-5">
+        <div class="col-md-6 p-5 ">
             <div class="logo text-center mb-4">
             </div>
             @if (Session::has('success'))
@@ -28,7 +28,7 @@
             </div>
             @endif
 
-            <form wire:submit.prevent="empLogin" class="login-form-with-shadow" style="margin-top: 0px; background-color: rgb(255 255 255 / 18%); backdrop-filter: blur(36px);">
+            <form wire:submit.prevent="empLogin" class="login-form-with-shadow" style="margin-top: 0px; background-color: #f2f2f6; backdrop-filter: blur(36px);">
                 <div class="logo text-center mb-1" style="padding-top: 20px;">
                     <img src="{{ asset('images/hr_new_blue.png') }}" alt="Company Logo" style="width: 14em; margin-bottom: 10px;">
                 </div>

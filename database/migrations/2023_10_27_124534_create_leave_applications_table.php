@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('leave_applications', function (Blueprint $table) {
             $table->id();
             $table->string('emp_id');
-            $table->enum('leave_type', ['Causal Leave Probation ', 'Maternity Leave', 'Loss Of Pay','Sick Leave'],255);
+            $table->enum('leave_type', ['Causal Leave Probation ', 'Maternity Leave', 'Loss Of Pay','Sick Leave','Marriage Leave','Causal Leave','Petarnity Leave']);
             $table->date('from_date');
             $table->string('from_session');
             $table->string('to_session');

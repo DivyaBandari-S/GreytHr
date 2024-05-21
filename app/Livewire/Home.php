@@ -193,6 +193,7 @@ class Home extends Component
     public function close()
     {
         $this->showAlertDialog = false;
+        return redirect()->to('/');
     }
     public function toggleSalary()
     {
@@ -311,6 +312,7 @@ class Home extends Component
             ->orderBy('created_at', 'desc')
             ->get();
         $this->upcomingLeaveApplications = count($this->upcomingLeaveRequests);
+
         //team on leave for attendance
         $currentDate = Carbon::today();
         $this->teamOnLeaveRequests = LeaveRequest::with('employee')
@@ -390,12 +392,13 @@ class Home extends Component
             ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
             ->count();
         $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
-        $swipes_early = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
+        $swipes_early = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate,$approvedLeaveRequests) {
             $query->selectRaw('MIN(id)')
                 ->from('swipe_records')
                 ->whereIn('emp_id', $employees->pluck('emp_id'))
+                ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
                 ->whereDate('created_at', $currentDate)
-                ->whereRaw("swipe_time < '10:00:00'") // Add this condition to filter swipes before 10:00 AM
+                ->whereRaw("swipe_time < '10:01:00'") // Add this condition to filter swipes before 10:00 AM
                 ->groupBy('emp_id');
         })
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
@@ -404,13 +407,14 @@ class Home extends Component
 
         $swipes_early1 = $swipes_early->count();
 
-        $swipes_late = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
+        $swipes_late = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate,$approvedLeaveRequests) {
             $query->selectRaw('MIN(id)')
                 ->from('swipe_records')
                 ->where('in_or_out', 'IN')
                 ->whereIn('emp_id', $employees->pluck('emp_id'))
+                ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
                 ->whereDate('created_at', $currentDate)
-                ->whereRaw("swipe_time > '10:00:00'") // Add this condition to filter swipes before 10:00 AM
+                ->whereRaw("swipe_time > '10:01:00'") // Add this condition to filter swipes before 10:00 AM
                 ->groupBy('emp_id');
         })
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')

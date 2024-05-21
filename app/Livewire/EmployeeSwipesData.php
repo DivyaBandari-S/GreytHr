@@ -17,11 +17,13 @@ namespace App\Livewire;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SwipeRecord;
 use App\Models\EmployeeDetails;
+use App\Models\LeaveRequest;
 use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
+use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class EmployeeSwipesData extends Component
 {
@@ -31,7 +33,7 @@ class EmployeeSwipesData extends Component
     public $endDate;
 
     public $search;
-
+    public $sw_ipes;
     public $notFound;
     public $selectedEmployee;
     public $deviceId;
@@ -41,6 +43,7 @@ class EmployeeSwipesData extends Component
 
     public $flag = false;
     public $swipeTime = '';
+    public $searchtest = 0;
 
     public function checkDates()
     {
@@ -101,29 +104,33 @@ class EmployeeSwipesData extends Component
             $this->status = '-';
         }
     }
-
+    Public $empid;
     public function testMethod()
     {
-
+         $this->searchtest = 1;
         $currentDate = now()->toDateString();
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
         $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
-        $this->swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
-            $query->selectRaw('MIN(id)')
-                ->from('swipe_records')
-                ->whereIn('emp_id', $employees->pluck('emp_id'))
-                ->whereDate('created_at', $currentDate)
-                ->groupBy('emp_id');
-        })
-            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->when($this->search, function ($query) {
-                $query->where(function ($subQuery) {
-                    $subQuery->where('first_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-            ->get();
+         // Start building the query to retrieve swipe records
+         $query = SwipeRecord::join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+         ->where('swipe_records.created_at', '>=', $this->startDate) // Filter by current month
+         ->where('swipe_records.created_at', '<=', $this->endDate)   // Filter by current month
+         ->orderBy('swipe_records.created_at', 'desc');
+ 
+         if ($this->empid) {
+             $query->where('swipe_records.emp_id', $this->empid);
+         }
+ 
+         if ($this->search) {
+             $query->where(function ($subQuery) {
+                 $subQuery->where('first_name', 'like', '%' . $this->search . '%')
+                     ->orWhere('last_name', 'like', '%' . $this->search . '%');
+             });
+         }
+ 
+         // Execute the query and retrieve swipe records
+         $this->sw_ipes = $query->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+             ->get();
     }
     public function showEmployeeDetails($empId)
     {
@@ -137,6 +144,21 @@ class EmployeeSwipesData extends Component
         $this->loggedInEmpId1 = EmployeeDetails::where('emp_id', Auth::guard('emp')->user()->emp_id)->get();
         $this->loggedInEmpId1 = EmployeeDetails::where('emp_id', Auth::guard('emp')->user()->emp_id)->get();
         $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+        $approvedLeaveRequests=LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+        ->where('leave_applications.status', 'approved')
+        ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+        ->whereDate('from_date', '<=', $currentDate)
+        ->whereDate('to_date', '>=', $currentDate)
+        ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
+        ->map(function ($leaveRequest) {
+            // Calculate the number of days between from_date and to_date
+            $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
+            $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
+     
+            $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
+     
+            return $leaveRequest;
+        });
         if ($this->startDate && $this->endDate) {
             $prev_date = $this->startDate;
             $next_date = $this->endDate;
@@ -151,16 +173,15 @@ class EmployeeSwipesData extends Component
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
                 ->get();
         } else {
-            $this->swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
-                $query->selectRaw('MIN(id)')
-                    ->from('swipe_records')
-                    ->whereIn('emp_id', $employees->pluck('emp_id'))
-                    ->whereDate('created_at', $currentDate)
-                    ->groupBy('emp_id');
-            })
-                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-                ->get();
+            $this->swipes = SwipeRecord::select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+            ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id')) // Specify swipe_records.emp_id
+            ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id')) // Specify swipe_records.emp_id
+            ->whereDate('swipe_records.created_at', $currentDate)
+            ->orderBy('employee_details.first_name')
+            ->get();
+        
+
         }
         $data = [
             ['LIST OF PRESENT EMPLOYEES'],
@@ -172,43 +193,32 @@ class EmployeeSwipesData extends Component
             $swipeTime1 = Carbon::parse($employee['created_at'])->format('d-m-Y'); // Format the date
             $data[] = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name'], '=TEXT("' . $swipeTime1 . '","DD-MM-YYYY")', $employee['swipe_time'], '10:00 am to 07:00pm', $employee['in_or_out'], '-', '-'];
         }
-        // Create a temporary file
-        $tempFilePath = storage_path('app/public/' . Str::random(16) . '.csv');
+        $filePath = storage_path('app/todays_present_employees.xlsx');
+    
+        SimpleExcelWriter::create($filePath)->addRows($data);  
 
-        // Open the file for writing
-        $file = fopen($tempFilePath, 'w');
-
-        // Write the data to the file
-        foreach ($data as $row) {
-            fputcsv($file, $row);
-        }
-
-        // Close the file
-        fclose($file);
-
-        // Set the response headers for download
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="TODAY_PRESENT_EMPLOYEES"',
-        ];
-
-        // Return the response with the file and headers
-        return response()->stream(
-            function () use ($tempFilePath) {
-                readfile($tempFilePath);
-                // Delete the file after it has been streamed
-                File::delete($tempFilePath);
-            },
-            200,
-            $headers
-        );
+       return response()->download($filePath, 'todays_present_employees.xlsx');
     }
-
     public function render()
     {
         $currentDate = now()->toDateString();
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
         $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+        $approvedLeaveRequests=LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+        ->where('leave_applications.status', 'approved')
+        ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+        ->whereDate('from_date', '<=', $currentDate)
+        ->whereDate('to_date', '>=', $currentDate)
+        ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
+        ->map(function ($leaveRequest) {
+            // Calculate the number of days between from_date and to_date
+            $fromDate = Carbon::parse($leaveRequest->from_date);
+            $toDate = Carbon::parse($leaveRequest->to_date);
+     
+            $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
+     
+            return $leaveRequest;
+        });
 
         if ($this->startDate && $this->endDate) {
             $prev_date = $this->startDate;
@@ -225,17 +235,25 @@ class EmployeeSwipesData extends Component
                 ->orderBy('created_at')
                 ->get();
         } else {
-            $this->swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
-                $query->selectRaw('MIN(id)')
-                    ->from('swipe_records')
-                    ->whereIn('emp_id', $employees->pluck('emp_id'))
-                    ->whereDate('created_at', $currentDate)
-                    ->groupBy('emp_id');
-            })
-                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-                ->orderBy('first_name')
-                ->get();
+            // $this->swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
+            //     $query->selectRaw('MIN(id)')
+            //         ->from('swipe_records')
+            //         ->whereIn('emp_id', $employees->pluck('emp_id'))
+            //         ->whereDate('created_at', $currentDate)
+            //         ->groupBy('emp_id');
+            // })
+            //     ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+            //     ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+            //     ->orderBy('first_name')
+            //     ->get();
+            $this->swipes = SwipeRecord::select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+            ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id')) // Specify swipe_records.emp_id
+            ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id')) // Specify swipe_records.emp_id
+            ->whereDate('swipe_records.created_at', $currentDate)
+            ->orderBy('employee_details.first_name')
+            ->get();
+
         }
         $nameFilter = $this->search; // Assuming $this->search contains the name filter
         $this->swipes = $this->swipes->filter(function ($swipe) use ($nameFilter) {
@@ -246,10 +264,10 @@ class EmployeeSwipesData extends Component
         } else {
             $this->notFound = false;
         }
-
+     
 
         $todaySwipeIN = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $currentDate)
-            ->where('in_or_out', 'IN')
+
             ->first();
 
         if ($todaySwipeIN) {
@@ -258,6 +276,6 @@ class EmployeeSwipesData extends Component
             $this->swipeTime = $todaySwipeIN->swipe_time;
         }
 
-        return view('livewire.employee-swipes-data', ['LoggedInEmpId1' => $this->loggedInEmpId1, 'SignedInEmployees' => $this->swipes, 'SwipeTime' => $this->swipeTime]);
+        return view('livewire.employee-swipes-data', ['LoggedInEmpId1' => $this->loggedInEmpId1, 'SignedInEmployees' => $this->swipes, 'SwipeTime' => $this->swipeTime, 'SWIPES'=>$this->sw_ipes]);
     }
 }

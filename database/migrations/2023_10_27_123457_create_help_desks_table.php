@@ -14,12 +14,15 @@ return new class extends Migration
         Schema::create('help_desks', function (Blueprint $table) {
             $table->id();
             $table->string('emp_id');
-            $table->string('category'); // Name of the category
-            $table->string('subject'); // Subject field
-            $table->text('description'); // Description field
+            $table->string('category'); 
+            $table->string('mail'); 
+            $table->string('distributor_name'); 
+            $table->string('mobile');
+            $table->string('subject');
+            $table->text('description'); 
             $table->string('file_path')->nullable(); // Path to attached file (nullable)
             $table->string('cc_to')->nullable(); // CC to field (nullable)
-            $table->string('status')->default('Open'); // CC to field (nullable)
+            $table->string('status')->default('Recent'); // CC to field (nullable)
             $table->enum('priority', ['High', 'Medium', 'Low']); // Priority field with enum values 
             $table->timestamps();
 

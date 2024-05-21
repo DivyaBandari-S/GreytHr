@@ -31,10 +31,17 @@ class ApprovedDetails extends Component
     public $leaveRequest;
     public $selectedYear;
     public $leaveBalances;
+    public $selectedWeek;
+    public $startOfWeek;
+    public $leaveApplications;
+    public $leaveCount;
+    public $endOfWeek;
 
     public function mount($leaveRequestId)
     {
         // Fetch leave request details based on $leaveRequestId with employee details
+        $this->selectedWeek = 'this_week';
+        $this->setWeekDates();
         $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
         $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
         $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
@@ -45,7 +52,6 @@ class ApprovedDetails extends Component
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
-
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
             // Check if the start and end sessions are different on the same day
@@ -129,10 +135,68 @@ class ApprovedDetails extends Component
     {
         return (int) str_replace('Session ', '', $session);
     }
+    public function setWeekDates()
+    {
+        if ($this->selectedWeek === 'this_week') {
+            $this->startOfWeek = Carbon::now()->startOfWeek()->format('Y-m-d');
+            $this->endOfWeek = Carbon::now()->endOfWeek()->format('Y-m-d');
+        } elseif ($this->selectedWeek === 'next_week') {
+            $this->startOfWeek = Carbon::now()->addWeek()->startOfWeek()->format('Y-m-d');
+            $this->endOfWeek = Carbon::now()->addWeek()->endOfWeek()->format('Y-m-d');
+        } elseif ($this->selectedWeek === 'last_week') {
+            $this->startOfWeek = Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d');
+            $this->endOfWeek = Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d');
+        }  elseif ($this->selectedWeek === 'this_month') {
+            $this->startOfWeek = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $this->endOfWeek = Carbon::now()->endOfMonth()->format('Y-m-d');
+        } elseif ($this->selectedWeek === 'next_month') {
+            $this->startOfWeek = Carbon::now()->addMonth()->startOfMonth()->format('Y-m-d');
+            $this->endOfWeek = Carbon::now()->addMonth()->endOfMonth()->format('Y-m-d');
+        } elseif ($this->selectedWeek === 'last_month') {
+            $this->startOfWeek = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
+            $this->endOfWeek = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
+        }else {
+
+        }
+        // Fetch leave applications based on the selected week
+        $this->fetchLeaveApplications();
+    }
+
+    public function updatedSelectedWeek()
+    {
+        $this->setWeekDates();
+    }
+    public function fetchLeaveApplications()
+    {
+        // Fetch leave applications where status is approved, rejected, or withdrawn
+        // and emp_id matches the logged-in employee's ID, and the leave period overlaps with the selected week
+        $this->leaveApplications = LeaveRequest::whereIn('status', ['approved'])
+            ->where('emp_id', auth()->guard('emp')->user()->emp_id)
+            ->where(function($query) {
+                $query->whereBetween('from_date', [$this->startOfWeek, $this->endOfWeek])
+                      ->orWhereBetween('to_date', [$this->startOfWeek, $this->endOfWeek])
+                      ->orWhere(function($query) {
+                          $query->where('from_date', '<', $this->startOfWeek)
+                                ->where('to_date', '>', $this->endOfWeek);
+                      });
+            })
+            ->get();
+            $this->leaveCount =  $this->leaveApplications->count();
+    }
 
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
+        $employeeDetails = DB::table('employee_details')
+            ->select(DB::raw("CONCAT(first_name, ' ', last_name) AS employee_name"))
+            ->where('emp_id', $employeeId)
+            ->first();
+
+        if ($employeeDetails) {
+            $employeeName = ucwords(strtolower($employeeDetails->employee_name));
+        } else {
+            $employeeName = 'Unknown';
+        }
         // Call the getLeaveBalances function to get leave balances
         $leaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
 
@@ -152,6 +216,7 @@ class ApprovedDetails extends Component
         return view('livewire.approved-details', [
             'leaveRequest' => $this->leaveRequest,
             'leaveBalances' => $this->leaveBalances,
+            'employeeName' => $employeeName
         ]);
     }
 }

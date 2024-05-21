@@ -14,26 +14,25 @@
             }, 1000);
         </script>
     @endif
-
-
         </div>
         <div class="content">
             <div class="row m-0 mb-3 fade-in-section">
                 <div class="col-md-6 mb-4">
-                <div class="homeCard4" style="height: 20em; padding: 1em 10px; background: url('images/home_banner_bg.gif') no-repeat center #ffffff;">
-                        <div class="greeat">
+                    <div class="homeCard4" style="height: 20em; padding: 1em 20px; background: url('images/home_banner_bg.gif') no-repeat center #ffffff;">
+                        <div class="greet">
                         @if($this->greetingText)
-                        <h1 class="greet-text text-secondary-500 pb-1.5x" style="font-size: 30px; font-family: montserrat;;color:rgb(2, 17, 79); font-weight: 600;">{{$greetingText}}</h1>
+                            <h1 class="greet-text text-secondary-500 pb-1.5x" style="font-size: 30px; font-family: montserrat;;color:rgb(2, 17, 79); font-weight: 600;">{{$greetingText}}</h1>
                         @endif
                         </div>
-<!--
-                        <div>
+
+                        <!-- <div>
                             <carousel class="ng-star-inserted" style="width:470px">
                             </carousel>
                             <div class="quote-text" style="font-size:12px; line-height:1.6; font-weight: 600; color: #02114f;">
                             </div>
                             <div class="author-text" style="font-size:12px; line-height:1.6; font-weight: 600; color: #02114f;">
                             </div>
+                            
                         </div> -->
                     </div>
                 </div>
@@ -55,10 +54,10 @@
                         <div class="homeCard4">
                             <div style="color: black; padding:10px 15px;">
                                 <p style="font-size:12px;">{{$currentDate}}</p>
-                                <p style="margin-top: 10px; color: #9E9696; font-size: 12px;">
+                                <p style="margin-top: 10px; color: #778899; font-size: 12px;">
                                     {{$currentDay}} | 10:00 AM to 07:00 PM
                                 </p>
-                                <div style="font-size: 14px; display: flex">
+                                <div style="font-size: 14px; display: flex;margin-top:2em;">
                                     <img src="/images/stopwatch.png" class="me-4" alt="Image Description" style="width: 2.7em;">
                                     <p id="current-time" style="margin: auto 0;"></p>
                                 </div>
@@ -75,8 +74,8 @@
                                     updateTime();
                                     setInterval(updateTime, 1000);
                                 </script>
-                                <div class="A" style="display: flex;flex-direction:row;justify-content:space-between; align-items:center;margin-top:2.5em;">
-                                    <a style="width:40%;font-size:12px;cursor: pointer;color:blue" wire:click="open">View Swipes</a>
+                                <div class="A" style="display: flex;flex-direction:row;justify-content:space-between; align-items:center;margin-top:2em">
+                                    <a style="width:50%;font-size:11px;cursor: pointer;color:blue" wire:click="open">View Swipes</a>
                                     <button  id="signButton" style="color: white; width: 80px; height: 26px;font-size:10px; background-color: rgb(2, 17, 79); border: 1px solid #CFCACA; border-radius: 5px; " wire:click="toggleSignState">
                                         @if($swipes)
                                         @if ($swipes->in_or_out=="OUT")
@@ -94,6 +93,7 @@
                     </div>
                 </div>
 
+                @if($ismanager)
                 <div class="col-md-3 mb-4 fade-in-section">
                     <div class="home-hover">
                         <div class="reviews">
@@ -103,10 +103,10 @@
                                         <p style="font-size:12px;color:#778899;font-weight:500;">  Review</p>
                                     </div>
                                     <div >
-                                        <a href="/employees-review" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
+                                        <a href="/navigate-to-helpdesk" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
                                     </div>
                                 </div>
-                            @if(($this->count) > 0)
+                                @if(($this->count) > 0)
                                     <div class="notify d-flex justify-content-between  px-3">
                                         <p style="color: black; font-size: 12px; font-weight: 500;">
                                             {{$count}} <br>
@@ -114,14 +114,14 @@
                                         </p>
                                         <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg" alt="" style="height: 40px; width: 40px;">
                                     </div>
-                                    <div class="leave-display d-flex border-top p-3 gap-2" >
+                                    <div class="leave-display d-flex border-top p-3 gap-1" >
                                     @php
                                         function getRandomColor() {
                                             $colors = ['#FFD1DC', '#B0E57C', '#ADD8E6', '#E6E6FA', '#FFB6C1'];
                                                 return $colors[array_rand($colors)];
                                         }
                                     @endphp
-                                    @for ($i = 0; $i < min($count, 4); $i++)
+                                    @for ($i = 0; $i < min($count, 3); $i++)
                                         <?php
                                         $leaveRequest = $this->leaveApplied[$i]['leaveRequest'] ?? null;
                                         if ($leaveRequest && $leaveRequest->employee) {
@@ -140,18 +140,17 @@
                                         }
                                         ?>
                                     @endfor
-
-                                        @if ($count > 4)
-                                            <div class="circle-notify d-flex flex-column mt-3" style="cursor:pointer; align-items:center;">
-                                                <a href="#" style="color:blue;font-size:10px">+{{ $count - 4 }}</a>
-                                                <p style="color:blue;font-size:10px;margin-top:-5px;"><span class="remaining" >More</span></p>
+                                        @if ($count > 3)
+                                            <div class="circle-notify d-flex flex-column mt-3" style="cursor:pointer; align-items:center;" data-toggle="modal" data-target="#exampleModalCenter">
+                                                <a href=" " style="color:blue;font-size:10px">+{{ $count - 3}}</a>
+                                                <p style="color:blue;font-size:10px;margin-top:-5px;"><span class="remaining">More</span></p>
                                             </div>
                                         @endif
                                     </div>
                                 @else
                                     <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
                                         <img src="/images/not_found.png" alt="Image Description" style="width: 7em;">
-                                        <p style="color: #677A8E; font-size: 12px; ">
+                                        <p style="color: #677A8E; font-size: 12px; text-align:center;">
                                             Hurrah! You've nothing to review.
                                         </p>
                                     </div>
@@ -160,6 +159,46 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="exampleModalLongTitle" style="color:#fff;background:rgb(2, 17, 79);">Leave Requests</h6>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body d-flex">
+                                @if($count > 3)
+                                @for ($i = 3; $i <= $count; $i++)
+
+                                        <?php
+                                        $leaveRequest = $this->leaveApplied[$i]['leaveRequest'] ?? null;
+                                        if ($leaveRequest && $leaveRequest->employee) {
+                                            $firstName = $leaveRequest->employee->first_name;
+                                            $lastName = $leaveRequest->employee->last_name;
+                                            $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
+                                        ?>
+                                    <div class=" d-flex flex-column mr-3">
+                                        <div class="circle d-flex" style="border-radius: 50%;width: 35px;height: 35px;align-items: center;justify-content: center;border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                            <span style="color: #778899; font-weight: 500; font-size: 11px;">{{ $initials }}</span>
+                                        </div>
+                                        <span style="display: block;font-size:10px;color:#778899;">Leave</span>
+                                    </div>
+
+                                        <?php
+                                        }
+                                        ?>
+                                    @endfor
+                                @endif
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="submit-btn" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
 
                 <div class="col-md-3 mb-4 fade-in-section">
                 <div class="home-hover">
@@ -207,20 +246,41 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-3 mb-4 fade-in-section">
+                <div class="home-hover">
+                        <div class="homeCard1" style="padding:10px 15px;">
+                            <div style="display:flex; justify-content:space-between;">
+                                <p style="font-size:12px;color:#778899;font-weight:500;">Time Sheet</p>
+                            </div>
+                            <div class="mt-2" style="display: flex;align-items:center;text-align:center;">
+                                <p style="font-size:12px;color:#778899;margin-top:5px;">
+                                    Kindly click on the "Submit" button below to submit your timesheet for this week.
+                                </p>
+                            </div>
+                            <div class="B mb-3" style="color:  #677A8E; font-size: 12px;display:flex;justify-content:center; margin-top: 15px;">
+                                <a href="/timesheet-page" class="button-link">
+                                    <button class="custom-btn" style="border:1px solid #fd2885;border-radius:5px;padding:4px 7px;color:#fd2885;font-weight:500;background:#fffbfd;">
+                                        Submit Timesheet
+                                    </button>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
 
                 <div class="col-md-3 mb-4 fade-in-section">
                     <div class="home-hover">
                         <div class="homeCard2" style="padding:10px 15px;justify-content:center;display: flex;flex-direction:column;">
                             <div>
-                                <p style="font-size:12px;color:#778899;font-weight:500;">IT Declaration</p>
+                                <p style="font-size:12px;color:#778899;font-weight:500;">Apply for a Leave</p>
                             </div>
-                            <div style="display: flex;gap:10px;margin-top:10px;">
-                                <img src="images/thumb-up.png" alt="Image Description" style="width: 5em;">
-                                <p style="font-size:12px;color:#778899;">Hurrah! Considered your IT declaration for Apr 2023.</p>
+                            <div class="mt-2" style="display: flex;align-items:center;text-align:center;">
+                                <p style="font-size:12px;color:#778899;margin-top:5px;">Kindly click on the "Apply" button below to submit your leave application.</p>
                             </div>
-                            <div class="B" style="color:  #677A8E;   font-size: 12px;display:flex;justify-content:end; margin-top: 2em;">
-                                <a href="/formdeclaration" class="button-link">
-                                    <button class="custom-btn" style="width:60px;border:1px solid #058383;border-radius:5px;padding:3px 5px;color:#058383;background:#fff;">View</button>
+                            <div class="B mb-3" style="color:  #677A8E; font-size: 12px;display:flex;justify-content:center; margin-top: 15px;">
+                                <a href="/leave-page" class="button-link">
+                                    <button class="custom-btn" style="width:100px;border:1px solid #058383;border-radius:5px;padding:4px 7px;color:#058383;font-weight:500;background:#e6f2f2;">Apply</button>
                                 </a>
                             </div>
                         </div>
@@ -228,7 +288,7 @@
                 </div>
 
                 @if($ismanager)
-                <div class="col-md-8 mb-4 fade-in-section">
+                <div class="col-md-6 mb-4 fade-in-section">
                     <div class="home-hover">
                         <div class="homeCard6" style="padding:10px 15px;">
                             <div style="color: #677A8E;  font-weight:500; display:flex;justify-content:space-between;">
@@ -247,7 +307,7 @@
                                                             return $colors[array_rand($colors)];
                                                         }
                                                 @endphp 
-                                            @for ($i = 0; $i < min($CountAbsentEmployees, 4); $i++)
+                                            @for ($i = 0; $i < min($CountAbsentEmployees, 9); $i++)
                                             @if(isset($AbsentEmployees[$i]))
                                             @php
                                                 $employee = $AbsentEmployees[$i];
@@ -255,16 +315,16 @@
                                                 $randomColorAbsent = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
                                             @endphp
 
-                                            <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ $employee['first_name'] }} {{ $employee['last_name'] }}">
+                                            <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
                                                 <span class="initials">
                                                     {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
                                                 </span>
                                             </div>
                                         @endif
                                     @endfor
-                                        @if ($CountAbsentEmployees > 4)
+                                        @if ($CountAbsentEmployees > 9)
                                         <div class="circle-notify" style="color:blue;cursor:pointer;display:flex;flex-direction:column;align-items:center;margin-top:10px;">
-                                            <a href="#" style="color:blue;font-size:10px;">+{{ $CountAbsentEmployees - 4 }}</a>
+                                            <a href="#" style="color:blue;font-size:10px;">+{{ $CountAbsentEmployees - 9 }}</a>
                                             <p style="font-size:10px;margin-top:-5px;"><span class="remaining" >More</span></p>
                                         </div>
                                         @endif
@@ -283,22 +343,22 @@
                                                             return $colors[array_rand($colors)];
                                                         }
                                             @endphp
-                                            @for ($i = 0; $i < min($CountLateSwipes, 4); $i++)            
+                                            @for ($i = 0; $i < min($CountLateSwipes, 9); $i++)
                                                 @php
                                                     $employee = $LateSwipes[$i];
                                                 @endphp
                                             
-                                                @if(isset($LateSwipes[$i]))                   
-                                            <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ $employee['first_name'] }} {{ $employee['last_name'] }}">
+                                                @if(isset($LateSwipes[$i]))
+                                            <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
                                                     <span class="initials">
                                                         {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
                                                     </span>
                                                 </div>
                                                 @endif
                                             @endfor
-                                        @if ($CountLateSwipes > 4)
+                                        @if ($CountLateSwipes > 9)
                                         <div class="circle-notify" style="color:blue;cursor:pointer;display:flex;flex-direction:column;align-items:center;margin-top:10px;">
-                                            <a href="#" style="color:blue;font-size:0.725rem;">+{{ $CountLateSwipes - 4 }}</a>
+                                            <a href="#" style="color:blue;font-size:0.725rem;">+{{ $CountLateSwipes - 9 }}</a>
                                             <p style="font-size:0.725rem;margin-top:-5px;"><span class="remaining" >More</span></p>
                                         </div>
                                         @endif
@@ -317,8 +377,8 @@
                                                             $colors = ['#FFD1DC', '#D2E0FB', '#ADD8E6', '#E6E6FA', '#F1EAFF','#FFC5C5'];
                                                             return $colors[array_rand($colors)];
                                                         }
-                                            @endphp  
-                                            @for ($i = 0; $i < min($CountEarlySwipes, 4); $i++)
+                                            @endphp
+                                            @for ($i = 0; $i < min($CountEarlySwipes, 9); $i++)
                                             @if(isset($EarlySwipes[$i]))
                                             @php
                                                 $employee = $EarlySwipes[$i];
@@ -327,16 +387,16 @@
 
                                             @endphp
                                                 
-                                            <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ $employee['first_name'] }} {{ $employee['last_name'] }}">
+                                            <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
                                                 <span class="initials">
                                                     {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
                                                 </span>
                                             </div>
                                         @endif
                                     @endfor
-                                        @if ($CountEarlySwipes > 4)
+                                        @if ($CountEarlySwipes > 9)
                                         <div class="circle-notify" style="color:blue;cursor:pointer;display:flex;flex-direction:column;align-items:center;margin-top:10px;">
-                                            <a href="#" style="color:blue;font-size:0.725rem;">+{{ $CountEarlySwipes - 4 }}</a>
+                                            <a href="#" style="color:blue;font-size:0.725rem;">+{{ $CountEarlySwipes - 9 }}</a>
                                             <p style="font-size:0.725rem;margin-top:-5px;"><span class="remaining" >More</span></p>
                                         </div>
                                         @endif
@@ -351,7 +411,7 @@
 
                  <!-- TEAM ON LEAVE -->
                  @if($this->showLeaveApplies)
-                <div class="col-md-4 mb-4 fade-in-section">
+                <div class="col-md-3 mb-4 fade-in-section">
                     <div class="home-hover">
                         <div class="reviews">
                             <div class="homeCard4">
@@ -364,8 +424,8 @@
                                     </div>
                                 </div>
                                 @if(($this->teamCount) > 0)
-                                    <div class="team-Notify">
-                                        <p style="color: #778899; font-size: 12px; font-weight: 500;">
+                                    <div class="team-Notify px-3">
+                                        <p style="color: #778899; font-size: 11px; font-weight: 500;">
                                             Today({{$teamCount}}) </p>
                                             <div class="team-leave d-flex flex-row mr gap-3" >
                                                 @php
@@ -381,10 +441,10 @@
                                                             if ($teamLeave) {
                                                                 $initials = strtoupper(substr($teamLeave->employee->first_name, 0, 1) . substr($teamLeave->employee->last_name, 0, 1));
                                                         ?>
-                                                            <div class="circle-notify" style=" border-radius: 50%; background: #fcfdfe; padding: 7px 8px; border: 2px solid {{ getRandomLightColor() }};" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
-                                                                <span style="color:#778899;font-weight:500;font-size:12px;">{{$initials}}</span>
+                                                            <div class="circle-notify" style=" border-radius: 50%; background: #fcfdfe;     width: 35px;height: 35px;display: flex;align-items: center;justify-content: center; border: 2px solid {{ getRandomLightColor() }};" data-toggle="tooltip" data-placement="top" title="{{ucwords(strtolower($teamLeave->employee->first_name))}} {{ucwords(strtolower($teamLeave->employee->last_name))}}">
+                                                                <span style="color:#778899;font-weight:500;font-size:11px;">{{$initials}}</span>
                                                             </div>
-                                                            
+
                                                         <?php
                                                             }
                                                         ?>
@@ -392,15 +452,15 @@
                                                     @if ($teamCount > 4)
                                                         <div class="circle-notify" style="color:blue;cursor:pointer; margin-top:20px;display:flex;flex-direction:column;align-items:center;">
                                                         <a href="#" style="color:blue;font-size:0.725rem;">+{{ $teamCount - 4 }}</a>
-                                                        <p style="font-size:0.725rem;margin-top:-5px;"><span class="remaining" >More</span></p>
+                                                        <p style="font-size:10px;margin-top:-5px;"><span class="remaining" >More</span></p>
                                                         </div>
                                                     @endif
                                                 </div>
 
                                             <div style="margin-top:20px;">
-                                            <p style="color: #778899; font-size: 0.825rem; font-weight: 500;">
+                                            <p style="color: #778899; font-size: 11px; font-weight: 500;">
                                             This month({{$upcomingLeaveApplications}}) </p>
-                                            <p style="color: #778899; font-size: 0.825rem; font-weight: 400;"><a href="/team-on-leave-chart">Click here</a> to see who will be on leave in the upcoming days!</p>
+                                            <p style="color: #778899; font-size: 11px; font-weight: 400;"><a href="/team-on-leave-chart">Click here</a> to see who will be on leave in the upcoming days!</p>
                                             </div>
                                     </div>
                                 @else
@@ -528,19 +588,92 @@
                         </div>
                     </div>
                 </div>
+                @php
+                    $employeeId = auth()->guard('emp')->user()->emp_id;
+                    $totalTasksAssignedBy = \App\Models\Task::with('emp')
+                    ->where(function ($query) use ($employeeId) {
+                        $query->where('assignee', 'LIKE', "%($employeeId)%"); // Check if assignee contains employee ID
+                    })
+                    ->select('emp_id')
+                    ->get();
+                    $totalTasksCountAssignedBy = $totalTasksAssignedBy->count();
 
+                    $totalTasksAssignedTo = \App\Models\Task::with('emp')
+                    ->where('emp_id', $employeeId)
+                    ->select('emp_id')
+                    ->get();
+                    $totalTasksCountAssignedTo = $totalTasksAssignedTo->count();
+                    $totalTasksCount = $totalTasksCountAssignedTo + $totalTasksCountAssignedBy ;
+                    // Fetch task records with emp_id
+                    $taskRecords = \App\Models\Task::with('emp')
+                    ->where(function ($query) use ($employeeId) {
+                        $query->where('assignee', 'LIKE', "%($employeeId)%"); // Check if assignee contains employee ID
+                    })
+                    ->whereDate('created_at', now()->toDateString()) // Filter tasks created today
+                    ->select('emp_id')
+                    ->get();
+
+                    // Extract unique emp_ids
+                    $empIds = $taskRecords->pluck('emp_id')->unique()->toArray();
+
+                    // Fetch employee details based on emp_ids
+                    $employeeDetails = \App\Models\EmployeeDetails::whereIn('emp_id', $empIds)->get();
+
+                    // Create a string to hold first and last names
+                    $employeeNames = $employeeDetails->map(function ($employee) {
+                        return $employee->first_name . ' ' . $employee->last_name;
+                    })->implode(', ');
+
+                    // Count the number of records
+                    $taskCount = $taskRecords->count();
+                @endphp
                 <div class="col-md-4 mb-4 fade-in-section">
-                    <div class="home-hover">
+                    <div class="home-hover mb-4">
                         <div class="homeCard1">
-                            <div style="color: #677A8E;font-weight:500; margin-left: 20px;  margin-top: 10px;">
-                            <p style="font-size:12px;">Track</p>
-                            </div>
+                            <div class="d-flex justify-content-between px-3" style="color: #778899;font-weight:500;margin-top: 10px;">
+                            <p class="mb-0" style="font-size:12px;">Track</p>
+                            @if($totalTasksCount)
+                            <span class="mb-0" style="font-size:12px;"> Total tasks: {{ $totalTasksCount }}</span>
+                            @else
+                            <span class="mb-0" style="font-size:12px;"> Total tasks: 0</span>
+                            @endif
+                            @php
+                                $countAssignedByOpen = $totalTasksAssignedBy->where('status', 'Open')->count();
+                                $countAssignedToOpen = $totalTasksAssignedTo->where('status', 'Open')->count();
+                            @endphp
 
+                            @if ($countAssignedByOpen > 0 && $countAssignedToOpen > 0)
+                               pending tasks {{ $countAssignedByOpen + $countAssignedToOpen }}
+                            @endif
+
+                            </div>
+                            @if($taskCount > 0)
+                            <div class="p-2 px-3">
+                                <span  data-bs-toggle="tooltip" data-bs-placement="top" title="Task Requests: {{ ucwords(strtolower($employeeNames)) }}" style="color:#778899;font-size:12px;cursor:pointer;">New tasks: {{ $taskCount }}</span>
+                            </div>
+                            @else
                             <div style="text-align: center">
                                 <img src="images/track.png" alt="Image Description" style="width: 9em;">
                                 <div class="B" style="color: black; ">
                                     <p style="color: #677A8E; font-size: 11px; margin-top: 20px;">All good! You've nothing new to track.</p>
                                 </div>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="home-hover">
+                        <div class="homeCard2" style="padding:10px 15px;justify-content:center;display: flex;flex-direction:column;">
+                            <div>
+                                <p style="font-size:12px;color:#778899;font-weight:500;">IT Declaration</p>
+                            </div>
+                            <div style="display: flex;gap:10px;">
+                                <img src="images/thumb-up.png" alt="Image Description" style="width: 5em;">
+                                <p style="font-size:12px;color:#778899;margin-top:10px;">Hurrah! Considered your IT declaration for Apr 2023.</p>
+                            </div>
+                            <div class="B" style="color:  #677A8E;   font-size: 12px;display:flex;justify-content:end; margin-top: 1em;">
+                                <a href="/formdeclaration" class="button-link">
+                                    <button class="custom-btn" style="width:60px;border:1px solid #058383;border-radius:5px;padding:3px 5px;color:#058383;background:#fff;">View</button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -557,20 +690,20 @@
                             </div>
                             <div class="modal-body" style="max-height:500;overflow-y:auto">
                                 <div class="row">
-                                    <div class="col" style="font-size: 10px;">Date : <b>{{$currentDate}}</b></div>
-                                    <div class="col" style="font-size: 10px;">Shift Time : <b>10:00 to 19:00</b></div>
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Date : <span style="color: #000000;">{{$currentDate}}</span></div>
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Shift Time : <span style="color: #000000;">10:00 to 19:00</span></div>
                                 </div>
-                                <table class="swipes-table" style="width: 100%;">
-                                    <tr style="background-color: #f2f2f2;color:black">
-                                        <th style="font-size: 12px; text-align:center;padding:5px">Swipe Time</th>
-                                        <th style="font-size: 12px; text-align:center;padding:5px">Sign-In / Sign-Out</th>
+                                <table class="swipes-table mt-2 border" style="width: 100%;">
+                                    <tr style="background-color: #f6fbfc;">
+                                        <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Swipe Time</th>
+                                        <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Sign-In / Sign-Out</th>
                                     </tr>
 
                                     @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
                                     @foreach ($swipeDetails as $swipe)
-                                    <tr style="border:1px solid #f2f2f2;">
-                                        <td style="font-size: 10px; color: black;text-align:center;padding:5px">{{ $swipe->swipe_time }}</td>
-                                        <td style="font-size: 10px; color: black;text-align:center;padding:5px">{{ $swipe->in_or_out }}</td>
+                                    <tr style="border:1px solid #ccc;">
+                                        <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">{{ $swipe->swipe_time }}</td>
+                                        <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">{{ $swipe->in_or_out }}</td>
                                     </tr>
                                     @endforeach
                                     @else
@@ -617,46 +750,8 @@
         });
     }
 
-    // Event listener for scroll event
-    // window.addEventListener('scroll', checkFadeIn);
-    // document.getElementById("homeBody").onscroll = function() {checkFadeIn()};
-
     // Initial check on page load
     window.addEventListener('load', checkFadeIn);
-
-    // Function to change the quote text
-    function changeQuote() {
-        const quotes = [{
-                text: "Life is 10% what happens to us and 90% how we react to it.",
-                author: "Dennis P. Kimbro"
-            },
-            {
-                text: "Your new Employee Self Service portal is here. Watch the video to learn more.",
-                author: "Anonymous"
-            },
-            {
-                text: "Things usually work out in the end. What if they don't? That just means you haven't come to the end yet.",
-                author: "Jeanette Walls"
-            }
-            // Add more quotes here as needed
-        ];
-
-        const quoteElement = document.querySelector('.quote-text');
-        const authorElement = document.querySelector('.author-text');
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        const randomQuote = quotes[randomIndex];
-
-        quoteElement.textContent = randomQuote.text;
-        authorElement.textContent = `- ${randomQuote.author}`;
-    }
-
-    // Call the function to initially set the quote
-    changeQuote();
-
-    // Set an interval to change the quote every 5 seconds (5000 milliseconds)
-    setInterval(changeQuote, 5000);
-
-
     var combinedData = {
     datasets: [
         {

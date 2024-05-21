@@ -21,6 +21,7 @@ class Everyone extends Component
     public $employeeDetails;
     public $message = '';
     public $showFeedsDialog = false;
+   
 
     protected $rules = [
         'category' => 'required',
@@ -39,7 +40,7 @@ class Everyone extends Component
     }
     public function closeFeeds()
     {
-        $this->reset(['category', 'description', 'attachment']);
+        
         $this->message = '';
         $this->showFeedsDialog = false;
     }
@@ -73,6 +74,7 @@ class Everyone extends Component
         $attachmentPath = $this->attachment->store('attachments', 'public');
         $post->update(['attachment' => $attachmentPath]);
     }
+ 
     // Reset form fields and display messages
     $this->reset(['category', 'description', 'attachment']);
     $this->message = 'Post created successfully!';

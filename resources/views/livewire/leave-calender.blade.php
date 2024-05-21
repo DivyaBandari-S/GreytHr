@@ -1,476 +1,39 @@
 <div>
 
     <style>
-        /* Add your custom styles here */
-        body {
-            font-family: 'Montserrat', sans-serif;
-            overflow-y:hidden;
-        }
-        .container-leave {
-            padding: 0;
-            margin: 0;
-        }
+
         .table thead{
             border:none;
         }
- 
-        .table th {
-            text-align: center; /* Center days of the week */
-            height: 15px;
-            border: none;       
-            /* Adjust the height of days of the week cells */
-        }
- 
-        .table td:hover {
-            background-color: #ecf7fe; /* Hover background color */
-            cursor: pointer;
-        }
- 
-        /* Add styles for the navigation buttons */
-        .nav-btn {
-            background: none;
-            border: none;
-            color:#778899;
-            font-size:0.795rem;
-            margin-top: -6px;
-            cursor: pointer;
-        }
- 
-        .nav-btn:hover {
-            color: blue;
-        }
- 
-        /* Increase the size of tbody cells and align text to top-left */
-        .table tbody td {
-            width: 75px;
-            height: 80px;
-            border-color:#c5cdd4;
-            font-weight:500;
-            font-size: 13px; /* Adjust font size as needed */
-            vertical-align: top;
-            position: relative;
-            text-align: left;
-        }
- 
-        /* Add style for the current date cell */
-        .current-date {
-            background-color: #ff0000; /* Highlight color for the current date */
-            color: #fff; /* Text color for the current date */
-            font-weight: bold;
-        }
- 
-        .calendar-heading-container {
-            background:#fff;
-            padding:10px 10px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            /* Add spacing between heading and icons */
-        }
-        .calendar-heading-container h5{
-           font-size:0.975rem;
-           color:black;
-           font-weight:500;
-        }
- 
-        .table {
-            overflow-x: hidden; /* Add horizontal scrolling if the table overflows the container */
-        }
- 
-        .tol-calendar-legend {
-            display: flex;
-            font-size: 0.875rem;
-            width: 100%;
-            justify-content:space-between;
-            font-weight: 500;
-            color: #778899;
-        }
- 
-        /* CSS for legend circles */
-        .legend-circle {
-            display: inline-block;
-            width: 15px; /* Adjust the width as needed */
-            height: 15px; /* Adjust the height as needed */
-            border-radius: 50%;
-            text-align: center;
-            line-height: 15px; /* Vertically center the text */
-            margin-right: 2px; /* Add some spacing between the circle and text */
-            font-weight: bold; /* Make the text bold */
-            color: white; /* Text color */
-        }
- 
-        .circle-pale-yellow {
-            background-color: #ffeb3b; /* Define the yellow color */
-        }
- 
-        /* CSS for the pink circle */
-        .circle-pale-pink {
-            background-color: #d29be1; /* Define the pink color */
-        }
-        .accordion {
-        border: 1px solid #ccc;
-        border-radius:5px;
-        width: 100%; /* Adjust the width as needed */
-        top: 100px;
-     overflow-x: auto;
-        left:0;/* Adjust the top position as needed */
-      /* Adjust the right position as needed */
-      }
- 
-      .accordion-heading {
-        background-color: #fff;
-        cursor: pointer;
-      }
- 
-      .accordion-body {
-        background-color: #fff;
-        padding:0;
-        display: block;
-        width: 100%; overflow: auto;
-      }
- 
-      .accordion-content {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
- 
-      .accordion-title {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-      }
- 
-      .active .leave-container {
-        border-color: #3a9efd; /* Blue border when active */
-      }
- 
-      .accordion-button {
-        color: #DCDCDC;
-        border: 1px solid #DCDCDC;
-      }
- 
-      .active .accordion-button {
-        color: #3a9efd;
-        border: 1px solid #3a9efd;
-      }
- 
-      @media (max-width: 760px) {
- 
- 
-        .accordion {
-          width: 65%;
-          top: auto;
-          right: auto;
-          margin-top: 20px;
-        }
-      }
-             /* Styles for the container */
-  
- 
-        /* Styles for the button */
-        .filter-button {
-            padding: 3px;
-            margin-bottom:15px;
-            background-color: #fff;
-            color: #778899;
-            font-size:0.825rem;
-            width:150px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .filter-button:hover{
-          border:1px solid #007bff;
-        }
- 
-
-  
- 
-        /* Styles for dropdown items */
-    
-        .button-container{
-          display:flex;
-          padding:10px 15px;
-          justify-content:space-between;
- 
-        }
-        .custom-button{
-          padding: 2px;
-            margin-bottom:15px;
-            background-color:#3eb0f7;
-            color: #fff;
-            width:100px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-  
-        .search-input-leave input[type="text"] {
-            padding: 3px;
-            outline:none;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            color:#778899;
-            width: 220px; /* Adjust width as needed */
-        }
- 
-        /* Styles for the search icon */
-        .search-icon {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            color:#778899;
-            transform: translateY(-50%);
-            cursor: pointer;
-        }
- 
-        .search-icon::before {
-             /* Unicode character for a magnifying glass */
-            font-size: 16px;
-        }
-        .filter-container1{
-            display: flex;
-            background:#fff;
-            align-items:center;
-            height:31px;
-            width:30px;
-            border-radius:5px;
-            padding:5px;
-            border:1px solid #ccc;
-        }
- 
-        /* Styles for the filter group */
-        .filter-group {
-            display: flex;
-            align-items: center;
-        }
- 
-        /* Styles for the Font Awesome icon */
-        .fa-icon {
-            font-size: 14px;
-            color:#778899;
-             /* Add spacing between icon and text */
-        }
- 
-        .calendar-date {
-            color:black;
-            cursor: pointer;
-        }
- 
-        .event-details {
-            display:flex;
-            width:100%;
-            background:pink;
-            justify-content:end;
-            flex-direction:row;
-            padding: 0px;
-        }
-        .date-day{
-            width:40%;
-            display:flex;
-            text-align:center;
-            color:#778899;
-            padding:10px 15px;
-            justify-content:center;
-            border:1px solid #ccc;
-            background: #fff;
-        }
-        .holiday-con{
-            display:flex;
-            text-align:start;
-            justify-content:start;
-            align-items:center;
-            width:100%;
-            list-style:none;
-            padding:10px 15px;
-            border:1px solid #ccc;
-            background: #fff;
-        }
-     
         .table  .text{
             font-size:0.875rem;
             color:#778899;
             font-weight:600;
         }
-        .circle {
-            width: 12px; /* Adjust the width and height for your preferred circle size */
-        height: 12px;
-        border-radius: 50%; /* Make the element circular */
-        position: absolute; /* Position the circle absolutely */
-        top: 12px; /* Adjust top and right values for positioning */
-        right: 10px;
-        text-align: center;
-        line-height: 20px;
+        .table th {
+            text-align: center;
+            height: 15px;
+            border: none;       
         }
 
-        /* Define a class for circular cells with a pink background */
-        .circle.IRIS {
-            background-color: #d29be1;
+        .table td:hover {
+            background-color: #ecf7fe;
+            cursor: pointer;
         }
-        .circle-grey {
-        width: 20px; /* Adjust the width and height for your preferred circle size */
-        height: 20px;
-        color: black;
-        border-radius: 50%; /* Make the element circular */
-        position: absolute; /* Position the circle absolutely */
-        text-align: center;
-        background-color: #b7b7b7;
-        line-height: 15px; /* Match the height for center alignment */
-        top: 60%; /* Position the circle at 50% from the top */
-        left: 50%; /* Position the circle at 50% from the left */
-        transform: translate(-50%, -50%); /* Move the circle to the center */
-    }
-    .active-date {
-        background-color: #ecf7fe; /* Active and hover background color */
-        cursor: pointer;
-        border-color:1px solid  blue;
-    }
-
-    .sidebar {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  border-radius:5px;
-  z-index: 1;
-  top: 0;
-  right: 0; /* Position the sidebar to the right */
-  background-color: #fff;
-  overflow-x: hidden;
-  transition: width 0.5s;
-}
-
-.sidebar a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-  transition: 0.3s;
-}
-
-.sidebar a:hover {
-  color: #f1f1f1;
-}
-
-.sidebar .closebtn {
-  position: absolute;
-  left: 25px; /* Adjust the close button position */
-  font-size: 36px;
-  margin-left: 150px;
-  
-}
-
-.openbtn {
-  cursor: pointer;
-  display:flex;
-  justify-content:center;
-  background-color: #fff;
-  border: none;
-  width:20px;
-  z-index: 2;
-  right: 10px;
-  top: 10px;
-}
-
-.filter-container1:hover {
-  background-color: #f6faff;
-}
-.openbtn:hover {
-  background-color: #f6faff;
-}
-
-#main {
-  transition: margin-left .5s;
-  margin-right: 0;
-  padding-left: 0;
-}
-.header {
-    display: flex; align-items: center; background-color: #dce0e5; padding: 10px;
-}
-.header h6{
-  color:#778899;
-  font-weight:500;
-}
-.locations{
-    background:#fff;
-    font-size:0.825rem;
-    width:195px;
-    height:200px;
-    border-radius:5px;
-    border:1px solid #ccc;
-    box-shadow:1px 2px 1px 0 rgba(0,0,0,0.2);
-    position: absolute; top: 145px; left:35px;  padding: 10px; border: 1px solid #ccc;
-}
-.departments{
-    background:#fff;
-    font-size:0.825rem;
-    width:195px;
-    height:200px;
-    border-radius:5px;
-    border:1px solid #ccc;
-    box-shadow:1px 2px 1px 0 rgba(0,0,0,0.2);
-    position: absolute; top: 225px; left:35px;  padding: 10px; border: 1px solid #ccc;
-}
-.main-content{
-    background:#fff;
-    padding:15px 20px;
-    flex-grow: 1;
-}
-.loc-dropdown{
-    width:100%;
-    border:1px solid #ccc;
-    cursor:pointer;
-    text-align:center;
-    background:#fff;
-    padding:5px;
-    border-radius:5px;
-}
-.loc-dropdown p{
-   font-size:0.825rem;font-weight:500;color:#778899;margin-bottom:0;
-}
-.btn-2{
-    background:rgb(2, 17, 79);
-    color:#fff;
-    font-size:0.825rem;
-    padding:3px 10px;
-    border-radius:5px;
-    border:none;
-}
-.btn-3{
-    color:#778899;
-    padding:3px 10px;
-    background:#fff;
-    border:1px solid #ccc;
-    border-radius:5px;
-}
-.btn-3:hover{
-  background:#ebf5ff;
-}
-.btn-1{
-    color:rgb(2, 17, 79);
-    padding:3px 10px;
-    background:#fff;
-    font-size:0.825rem;
-    border:1px solid rgb(2, 17, 79);
-    border-radius:5px;
-}
-::placeholder {
-        font-size: 10px; /* Adjust the font size as needed */
-        color:#778899;
-    }
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-  .sidebar {padding-top: 15px;}
-  .sidebar a {font-size: 18px;}
-}
-       
+        .table tbody td {
+            width: 75px;
+            height: 80px;
+            border-color:#c5cdd4;
+            font-weight:500;
+            font-size: 13px;
+            vertical-align: top;
+            position: relative;
+            text-align: left;
+        }
     </style>
 
     <div class="container-leave" >
-        <div class="sidebar" style="width: {{ $showDialog ? '250px' : '0' }};display: flex; flex-direction: column; height: 100vh;">
+        <div class="sidebar-cal" style="width: {{ $showDialog ? '250px' : '0' }};display: flex; flex-direction: column; height: 100vh;">
             <div class="header">
                 <a href="javascript:void(0)" class="closebtn" wire:click="close" style="margin-right: 10px;">×</a>
                 <h6>Apply Filter</h6>
@@ -579,7 +142,7 @@
         </div>
 
 
-        <button class="custom-button" >
+        <button class="custom-button-leave" >
         <i class="fa fa-download" aria-hidden="true" wire:click="downloadexcelforLeave"></i>
         </button>
     </div>
@@ -616,9 +179,11 @@
                                                     $isWeekend = in_array($carbonDate->dayOfWeek, [0, 6]); // 0 for Sunday, 6 for Saturday
                                                     $isActiveDate = ($selectedDate === $carbonDate->toDateString());
                                                 @endphp
-                                        <td wire:click="dateClicked($event.target.textContent)" class="calendar-date{{ $selectedDate === $day['day'] ? ' active-date' : '' }}" data-date="{{ $day['day'] }}"
-                                                    style="color: {{ $isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black') : '#c5cdd4' }};">
-                                                
+                                                  <td wire:click="dateClicked($event.target.textContent)" class="calendar-date{{ $selectedDate === $day['day'] ? ' active-date' : '' }}" data-date="{{ $day['day'] }}"
+                                                    style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};"
+                                                    onclick="stopAccordionClosing(event)">
+
+
                                             @if ($day)
                                                 <div >
                                                     @if ($day['isToday'])
@@ -628,14 +193,14 @@
                                                     @else
                                                         {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
                                                     @endif
-                                                    <div class="circle{{ $day['isPublicHoliday'] ? ' IRIS' : '' }}">
+                                                    <div class="circle-holiday{{ $day['isPublicHoliday'] ? ' IRIS' : '' }}">
                                                         <!-- Render your content -->
                                                     </div>
                                                     @php
                                                         $leaveCount = $filterCriteria === 'Me' ? $day['leaveCountMe'] : $day['leaveCountMyTeam'];
                                                     @endphp
                                                     @if ($leaveCount > 0)
-                                                        <div class="circle-grey">
+                                                        <div class="circle-greys">
                                                             <!-- Render your grey circle -->
                                                             <span style="display: flex; justify-content: center; align-items: center;width:20px;height:20px;border-radius:50%;">
                                                                 {{ $leaveCount }}
@@ -707,32 +272,32 @@
                             <div class="filter-container1" >
                                 <div id="main" style="margin-left: {{ $showDialog ? '250px' : '0' }}">
                                     <button class="openbtn" wire:click="open">
-                                            <i class="fa-icon fas fa-filter"></i> 
+                                            <i class="fa-icon fas fa-filter"></i>
                                     </button>  
                                 </div>
                                 
                             </div>
                         </div>
-                
-                    <div class="accordion" >
-                         <div class="accordion-heading active" onclick="toggleAccordion(this)">
-                            <div class="accordion-title">
-                                <div class="accordion-content">
-                                   <span style="font-size: 16px; font-weight: 500;color:#778899;padding:10px 15px;">Leave transactions({{ count($this->leaveTransactions) }})</span>
+
+                    <div class="accordion rounded " >
+                         <div class="accordion-heading active rounded" >
+                            <div class="accordion-title p-2">
+                                <div class="accordion-content ">
+                                   <span style="font-size: 16px; font-weight: 500;color:#778899;">Leave transactions({{ count($this->leaveTransactions) }})</span>
                                 </div>
-                                <div class="accordion-button" style="border-radius: 50%; height: 0.5rem; width: 0.5rem; display: flex; justify-content: center; align-items: center;">
-                                        <!-- <i class="fas fa-chevron-down"></i> -->
-                                </div>
+                                <div class="arrow-btn" onclick="toggleAccordion(this)">
+                                  <i class="fa fa-angle-down"></i>
+                              </div>
                         </div>
                     </div>
-                     <div class="accordion-body">
-                       <div class="col-md-12 scroll-tabel" style="overflow-y:auto;max-height:320px; min-height:280px;padding:0;">
-                        <table class="leave-table" style="width: 100%; border-collapse: collapse; ;overflow: auto;">
+                     <div class="accordion-body rounded p-0 m-0">
+                       <div class="col-md-12 scroll-tabel" style="overflow-y:auto;max-height:320px; min-height:320px;padding:0;">
+                        <table class="leave-table p-2" style="width: 100%; border-collapse: collapse; ;overflow: auto;">
                             <thead style="background-color: #ecf7fc; text-align:start;  width:100%;">
                                 <tr>
-                                    <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:0.725rem;font-weight:normal;width: 40%;">Employee ID</th>
-                                    <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:0.725rem;font-weight:normal;width: 20%;">No of days</th>
-                                    <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:0.725rem;font-weight:normal;width: 40%;">From-To </th>
+                                    <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 40%;">Employee ID</th>
+                                    <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 20%;">No of days</th>
+                                    <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 40%;">From-To </th>
                                 </tr>
                             </thead>
                             <tbody >
@@ -745,27 +310,30 @@
                             @else
                             @if (!empty($selectedDate))
                                 @forelse($this->leaveTransactions as $transaction)
-                                    <tr style="border-bottom: 1px solid #ccc; font-size:0.725rem;text-align:start;">
-                                        <td style="padding: 20px 5px; border-top: 1px solid #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
-                                            <span style="color: black; font-size: 0.725rem; font-weight: 500;">
-                                                {{ $transaction->employee->first_name }} {{ $transaction->employee->last_name }}
-                                            </span>
-                                            <span style="font-size: 0.695rem; color: #778899;">
-                                                (#{{ $transaction->emp_id }}<br>{{ $transaction->employee->job_location }}, {{ $transaction->employee->job_title }})
+                                    <tr style="border-bottom: 1px solid #ccc; font-size:12px;text-align:start;">
+                                        <td style="padding: 20px 5px; border-top: 1px solid #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;width: 40%;">
+                                            <span style="color: black; font-size: 12px; font-weight: 500;cursor:pointer;" title="{{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }}: {{ $transaction->emp_id }}">
+                                                {{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }} <span style="font-size: 11px; color: #778899;">(#{{ $transaction->emp_id }})</span>
+                                            </span> <br>
+                                            <span style="font-size: 11px; color: #778899;white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;cursor:pointer;" title="{{ $transaction->employee->job_location }}, {{ $transaction->employee->job_title }}">
+                                                 {{ $transaction->employee->job_location }}, {{ $transaction->employee->job_title }}
                                             </span>
                                         </td>
 
-                                        <td style=" padding:20px 5px;border-top: 1px solid #ccc;font-weight:500;">{{ $this->calculateNumberOfDays($transaction->from_date, $transaction->from_session, $transaction->to_date, $transaction->to_session) }}</td>
-                                        <td style=" padding:20px 5px;border-top: 1px solid #ccc;">
-                                        @php
-                                            $fromDate = \Carbon\Carbon::createFromFormat('Y-m-d', $transaction->from_date)->format('d M');
-                                            $toDate = \Carbon\Carbon::createFromFormat('Y-m-d', $transaction->to_date)->format('d M');
-                                        @endphp
-                                            @if($fromDate === $toDate)
-                                              <span style="color:black;font-size:0.725rem;font-weight:500;"> {{ $fromDate }}</span>
+                                        <td style=" padding:20px 5px;border-top: 1px solid #ccc;font-weight:500;width: 20%;">{{ $this->calculateNumberOfDays($transaction->from_date, $transaction->from_session, $transaction->to_date, $transaction->to_session) }}</td>
+                                        <td style=" padding:20px 5px;border-top: 1px solid #ccc;width: 40%;">
+
+                                        @if($transaction->from_date === $transaction->to_date)
+                                                <span style="color:black;font-size:12px;font-weight:500;">{{ \Carbon\Carbon::parse($transaction->from_date)->format('d M') }}</span>
                                             @else
-                                                <span style="color:black;font-size:0.725rem;font-weight:500;">{{ $fromDate }} - {{ $toDate }} </span><br><span style="font-size:0.60rem;color:#778899;">{{$transaction->from_session}}&nbsp;&nbsp;&nbsp;&nbsp;{{$transaction->to_session}}</span>
+                                                <span style="color:black;font-size:12px;font-weight:500;">
+                                                    {{ \Carbon\Carbon::parse($transaction->from_date)->format('d M') }} - {{ \Carbon\Carbon::parse($transaction->to_date)->format('d M') }}
+                                                </span><br>
+                                                <span style="font-size:10px;color:#778899;">
+                                                    {{$transaction->from_session}}&nbsp;&nbsp;&nbsp;&nbsp;{{$transaction->to_session}}
+                                                </span>
                                             @endif
+
                                         </td>
                                     </tr>
                                   
@@ -773,7 +341,7 @@
                                     <tr>
                                         <td colspan="3">
                                             <div class="leave-trans" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                                <img src="/images/pending.png" alt="Pending Image" style="width: 100%; margin: 0 auto;">
+                                                <img src="/images/pending.png" alt="Pending Image" style="width: %; margin: 0 auto;">
                                                 <span style="font-size: 0.75rem; font-weight: 500; color:#778899;">No Employees are on leave</span>
                                             </div>
                                         </td>
@@ -799,24 +367,41 @@
                 </div>
             </div>
     </div>
- 
-    
+
+
     <script>
-        function toggleAccordion(element) {
-        const accordionBody = element.nextElementSibling;
+    function toggleAccordion(element) {
+        const accordionBody = element.closest('.accordion').querySelector('.accordion-body');
+        const arrowIcon = element.querySelector('i');
+
         if (accordionBody.style.display === 'block') {
-            // If accordion is already open, keep it open
-            element.classList.add('active'); // Add active class
-            element.closest('.wrapper').classList.add('fixed'); // Add fixed class
+            // If accordion is open, close it
+            accordionBody.style.display = 'none';
+            arrowIcon.classList.remove('fa-angle-up'); // Change arrow icon to indicate closing
+            arrowIcon.classList.add('fa-angle-down');
+            localStorage.setItem('accordionState', 'closed'); // Store state in local storage
         } else {
             // If accordion is closed, open it
             accordionBody.style.display = 'block';
-            element.classList.add('active'); // Add active class
-            element.closest('.wrapper').classList.add('fixed'); // Add fixed class
+            arrowIcon.classList.remove('fa-angle-down'); // Change arrow icon to indicate opening
+            arrowIcon.classList.add('fa-angle-up');
+            localStorage.setItem('accordionState', 'open'); // Store state in local storage
         }
     }
 
-    </script> 
+    // Check the accordion state on page load and set it accordingly
+    window.addEventListener('load', function() {
+        const accordionBodies = document.querySelectorAll('.accordion-body');
+        accordionBodies.forEach(body => {
+        body.style.display = 'block'; // Open the accordion body by default
+        const arrowIcon = body.previousElementSibling.querySelector('i');
+        arrowIcon.classList.remove('fa-angle-down'); // Change arrow icon to indicate opening
+        arrowIcon.classList.add('fa-angle-up');
+        localStorage.setItem('accordionState', 'open'); // Store state in local storage
+    });
+    });
 
- 
+</script>
+
+
 </div>

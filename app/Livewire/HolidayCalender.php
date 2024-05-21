@@ -1,10 +1,11 @@
 <?php
 // File Name                       : HolidayCalender.php
 // Description                     : This file contains the implementation of displaying the holiday list for a year
-// Creator                         : Bandari Divya
+// Creator                         : Bandari Divya,
+// Modified By                     : Venkata Naga Leela Adithya Ramisetty, Uttej Chilakala
 // Email                           : bandaridivya1@gmail.com
 // Organization                    : PayG.
-// Date                            : 2024-03-07
+// Date                            : 2024-03-26
 // Framework                       : Laravel (10.10 Version)
 // Programming Language            : PHP (8.1 Version)
 // Database                        : MySQL
@@ -18,66 +19,55 @@ use Illuminate\Support\Facades\DB;
 
 class HolidayCalender extends Component
 {
-    public $year;
-    public $currentYear = 'true';
-    public $previousYear = 'false';
-    public $nextYear = 'false';
-
+    public $selectedYear;
+    public $initialSelectedYear;
+    public $calendarData;
+    public $previousYear;
+    public $nextYear;
+    
     public function mount()
     {
         // Set the default year to the current year
-        $this->year = Carbon::now()->year;
-        $this->currentYear = true;
+        $this->selectedYear = Carbon::now()->year;
+        $this->initialSelectedYear = $this->selectedYear; // Store the initial selected year
+        $this->previousYear = $this->selectedYear - 1;
+        $this->nextYear = $this->selectedYear + 1;
+        $this->fetchCalendarData($this->selectedYear);
     }
-
-    public function selectYear($selectedYear)
+    
+    public function selectYear($selected_Year)
     {
-        // Set the flags based on the selected year
-        $this->year = $selectedYear;
-
-        if ($selectedYear == $this->year) {
-            $this->currentYear = true;
-            $this->previousYear = false;
-            $this->nextYear = false;
-        } elseif ($selectedYear == $this->year - 1) {
-            $this->currentYear = false;
-            $this->previousYear = true;
-            $this->nextYear = false;
-        } elseif ($selectedYear == $this->year + 1) {
-            $this->currentYear = false;
-            $this->previousYear = false;
-            $this->nextYear = true;
+        // Update the calendar data only if the selected year changes
+        if ($this->selectedYear != $selected_Year) {
+            $this->selectedYear = $selected_Year;
+            $this->fetchCalendarData($selected_Year);
         }
-
-        $this->render();
     }
-
-
-    public function render()
+    
+    public function fetchCalendarData($year)
     {
         try {
-            $currentYear = Carbon::now()->year;
+            // Fetch data for the selected year
+            $this->calendarData = HolidayCalendar::where('year', $year)->get();
+            $uniqueDates = $this->calendarData->unique('date');
 
-            // Fetch data for the current year
-            $calendarData = HolidayCalendar::where('year', $this->year)->get();
-
-            // Fetch data for the previous year
-            $calendarDataPrevious = HolidayCalendar::where('year', $currentYear - 1)->get();
-
-            // Fetch data for the next year
-            $calendarDataNext = HolidayCalendar::where('year', $currentYear + 1)->get();
-
-            // Merge the data for all years
-            $calendarData = $calendarData->concat($calendarDataPrevious)->concat($calendarDataNext);
+            // Update the calendar data with unique dates
+            $this->calendarData = $uniqueDates;
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message
             \Log::error('Error fetching calendar data: ' . $e->getMessage());
-
-            $calendarData = [];
+            $this->calendarData = [];
         }
+    }
 
+    public function render()
+    {
         return view('livewire.holiday-calender', [
-            'calendarData' => $calendarData,
+            //'selectedYear' => $this->selectedYear,
+            'previousYear' => $this->previousYear,
+            'nextYear' => $this->nextYear,
+            'calendarData' => $this->calendarData,
         ]);
     }
+
 }

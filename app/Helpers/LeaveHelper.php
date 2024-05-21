@@ -10,9 +10,8 @@ class LeaveHelper
     public static function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
-
-            $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $fromDate . ' 00:00:00');
-            $endDate = Carbon::createFromFormat('Y-m-d H:i:s', $toDate . ' 00:00:00');
+            $startDate = Carbon::parse($fromDate);
+            $endDate = Carbon::parse($toDate);
 
             // Check if the start and end sessions are different on the same day
             if (
@@ -79,12 +78,17 @@ class LeaveHelper
         // Fetch approved leave requests
         $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where('status', 'approved')
-            ->whereIn('leave_type', ['Causal Leave Probation', 'Sick Leave', 'Loss Of Pay'])
+            ->whereIn('leave_type', ['Causal Leave Probation', 'Loss Of Pay', 'Sick Leave', 'Causal Leave', 'Maternity Leave', 'Marriage Leave', 'Petarnity Leave'])
             ->get();
-        $totalCausalDays = 0;
+
+        $totalCasualDays = 0;
+        $totalCasualLeaveProbationDays = 0;
         $totalSickDays = 0;
         $totalLossOfPayDays = 0;
-    
+        $totalMaternityDays = 0;
+        $totalMarriageDays = 0;
+        $totalPaternityDays = 0;
+
         // Calculate the total number of days based on sessions for each approved leave request
         foreach ($approvedLeaveRequests as $leaveRequest) {
             $leaveType = $leaveRequest->leave_type;
@@ -95,21 +99,40 @@ class LeaveHelper
                 $leaveRequest->to_session
             );
             // Accumulate days based on leave type
-            if ($leaveType === 'Causal Leave Probation') {
-                $totalCausalDays += $days;
-            } elseif ($leaveType === 'Sick Leave') {
-                $totalSickDays += $days;
-            } elseif ($leaveType === 'Loss Of Pay') {
-                $totalLossOfPayDays += $days;
+            switch ($leaveType) {
+                case 'Causal Leave':
+                    $totalCasualDays += intval($days);
+                    break;
+                case 'Sick Leave':
+                    $totalSickDays += intval($days);
+                    break;
+                case 'Loss Of Pay':
+                    $totalLossOfPayDays += intval($days);
+                    break;
+                case 'Causal Leave Probation':
+                    $totalCasualLeaveProbationDays += intval($days);
+                    break;
+                case 'Maternity Leave':
+                    $totalMaternityDays += intval($days);
+                    break;
+                case 'Marriage Leave':
+                    $totalMarriageDays += intval($days);
+                    break;
+                case 'Petarnity Leave':
+                    $totalPaternityDays += intval($days);
+                    break;
             }
         }
-    
+
         return [
-            'totalCausalDays' => $totalCausalDays,
+            'totalCasualDays' => $totalCasualDays,
+            'totalCasualLeaveProbationDays' => $totalCasualLeaveProbationDays,
             'totalSickDays' => $totalSickDays,
             'totalLossOfPayDays' => $totalLossOfPayDays,
+            'totalMaternityDays' => $totalMaternityDays,
+            'totalMarriageDays' => $totalMarriageDays,
+            'totalPaternityDays' => $totalPaternityDays,
         ];
-
     }
-    
+
 }

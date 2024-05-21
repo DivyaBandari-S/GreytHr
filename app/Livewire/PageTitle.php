@@ -40,7 +40,12 @@ class PageTitle extends Component
             'people' => 'People',
             'profile.info' => 'Employee Information',
             'itdeclaration' => 'It Declaration',
-            'whoisin' => 'Who is in ?'
+            'whoisin' => 'Who is in ?',
+            'leave-history' => 'Leave - View Details',
+            'leave-pending' =>'Leave - View Details',
+            'approved-details' => 'Review - Leave',
+            'leave-page' => 'Leave Apply',
+            
         ];
         // Use the mapped title or fallback to the original route name
         return $routeTitleMap[$routeName] ?? ucwords(str_replace('-', ' ', $routeName));

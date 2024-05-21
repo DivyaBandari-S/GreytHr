@@ -3,38 +3,30 @@
     @foreach($employees as $employee)
     <div class="profile-container">
         <div>
-
-                @if($employee->image)
-            @php
-                $imageUrl = trim($employee->image);
-            @endphp
-            @if(Storage::disk('public')->exists('employee_image/' . $imageUrl))
-                <img class="profile-image" src="{{ asset('storage/employee_image/' . $imageUrl) }}" alt="Profile Image">
-            @else
-                <img class="profile-image" src="https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg" alt="Default Image">
-            @endif
+        @if($employee->image)
+            <div class="employee-profile-image-container" >
+                <img height="35px" width="35px" src="{{ asset('storage/' . $employee->image) }}"  style="border-radius:50%;">
+            </div>
         @else
-            <img class="profile-image" src="https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg" alt="Default Image">
+            <div class="employee-profile-image-container" >
+                <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+            </div>
         @endif
-
-
-
         </div>
-
-        <div class="emp-name">
-            <p style="font-size: 13px; color: white; max-width: 110px; word-wrap: break-word; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" class="username">
+        <div class="emp-name p-0">
+            <p style="font-size: 13px; color: white; max-width: 110px; word-wrap: break-word; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;margin-left:10px;" class="username">
                 {{ ucwords(strtolower($employee->first_name)) }}  {{ ucwords(strtolower($employee->last_name)) }}
             </p>
 
-            <a href="{{ route('profile.info') }}" class="nav-item-1" style="text-decoration: none;color: #EC9B3B;font-weight:500;font-size: 11px;" onclick="changePageTitle()">View My Info</a>
+            <a href="{{ route('profile.info') }}" class="nav-item-1" style="text-decoration: none;color: #EC9B3B;font-weight:500;font-size: 11px;margin-left:10px;" onclick="changePageTitle()">View My Info</a>
 
         </div>
 
-        <div class="mx-2">
+        <div class="p-0 m-0">
 
             <a href="/Settings" onclick="changePageTitle123()">
 
-                <i style="color: white;" class="fas fa-cog"></i>
+                <i style="color: white;    width: 16px;height: 16px;  margin-left: 10px;" class="fas fa-cog"></i>
 
             </a>
 

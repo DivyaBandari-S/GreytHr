@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\EmployeeDetails;
 
-
 class LeaveRequest extends Model
 {
     use HasFactory;
+
     protected $table = 'leave_applications';
     protected $fillable = [
         'emp_id',
@@ -21,22 +21,24 @@ class LeaveRequest extends Model
         'applying_to',
         'cc_to',
         'contact_details',
-        'reason',  
+        'reason',
         'file_paths'
         // Add other fields that you want to be fillable here
     ];
-  
+
+    protected $casts = [
+        'from_date' => 'datetime',
+        'to_date' => 'datetime',
+    ];
 
     public function employee()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
     }
 
-   // LeaveRequest.php
-
+    // Corrected relationship method name
     public function employeeDetails()
     {
-        return $this->belongsTo(EmployeeDetails::class, 'emp_id'); // Assuming employee_id is the foreign key
+        return $this->belongsTo(EmployeeDetails::class, 'emp_id');
     }
-
 }

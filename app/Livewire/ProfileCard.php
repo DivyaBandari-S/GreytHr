@@ -7,10 +7,16 @@ use App\Models\Finance;
 use App\Models\Hr;
 use App\Models\IT;
 use Livewire\Component;
+use App\Services\GoogleDriveService;
 
 class ProfileCard extends Component
 {
     public $hrDetails,$itDetails,$financeDetails,$employees;
+    public $fileId;
+
+    private $driveService;
+
+    public $imageContent;
     public function render()
     {
         if (auth()->guard('emp')->check()) {

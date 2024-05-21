@@ -1,4 +1,4 @@
-<div class="m-0 px-4">
+<div class="m-0 px-4" style="position: relative;">
     <div class="toggle-container">
         <style>
             /* Define your custom CSS classes */
@@ -26,8 +26,11 @@
                 border-radius: 5px;
             }
         </style>
+        <!-- leave-page.blade.php -->
+
+
         @if(session()->has('message'))
-        <div class="alert alert-success" style="display:flex; justify-content:space-between;">
+        <div class="alert alert-success" style="display:flex; justify-content:space-between;position:absolute;top:1%;right:50%;font-size:12px;">
             {{ session('message') }}
             <span class="close-btn" onclick="closeMessage()" style="cursor:pointer;">X</span>
         </div>
@@ -152,11 +155,11 @@
 
                     <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
-                        <div class="accordion-title p-2 rounded">
+                        <div class="accordion-title px-2 py-3 rounded">
 
                             <!-- Display leave details here based on $leaveRequest -->
 
-                            <div class="accordion-content">
+                            <div class="col accordion-content">
 
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;">Category</span>
 
@@ -164,7 +167,7 @@
 
                             </div>
 
-                            <div class="accordion-content">
+                            <div class="col accordion-content">
 
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;">Leave Type</span>
 
@@ -172,7 +175,7 @@
 
                             </div>
 
-                            <div class="accordion-content">
+                            <div class="col accordion-content">
 
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;">No. of Days</span>
 
@@ -187,7 +190,7 @@
 
                             <!-- Add other details based on your leave request structure -->
 
-                            <div class="accordion-content">
+                            <div class="col accordion-content">
 
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#cf9b17;">{{ strtoupper($leaveRequest->status) }}</span>
 
@@ -211,11 +214,11 @@
 
                             <span style="font-size: 11px;">
 
-                                <span style="font-size: 11px; font-weight: 500;">{{ $leaveRequest->formatted_from_date }} </span>
+                                <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }} </span>
 
                                 ( {{ $leaveRequest->from_session }} )to
 
-                                <span style="font-size: 11px; font-weight: 500;">{{ $leaveRequest->formatted_to_date }}</span>
+                                <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
 
                                 ( {{ $leaveRequest->to_session }} )
 
@@ -247,7 +250,7 @@
 
                                 <a href="{{ route('leave-history', ['leaveRequestId' => $leaveRequest->id]) }}">
 
-                                    <span style="color: #3a9efd; font-size: 12px; font-weight: 500;">View Details</span>
+                                    <span style="color: rgb(2,17,53); font-size: 12px; font-weight: 500;">View Details</span>
 
                                 </a>
                                 <button class="withdraw mb-2" wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
@@ -293,11 +296,11 @@
 
                     <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
-                        <div class="accordion-title px-2 py-2">
+                        <div class="accordion-title px-2 py-3">
 
                             <!-- Display leave details here based on $leaveRequest -->
 
-                            <div class="accordion-content">
+                            <div class="col accordion-content">
 
                                 <span style="color: #778899; font-size:12px; font-weight: 500;">Category</span>
 
@@ -305,7 +308,7 @@
 
                             </div>
 
-                            <div class="accordion-content">
+                            <div class="col accordion-content">
 
                                 <span style="color: #778899; font-size:12px; font-weight: 500;">Leave Type</span>
 
@@ -313,7 +316,7 @@
 
                             </div>
 
-                            <div class="accordion-content">
+                            <div class="col accordion-content">
 
                                 <span style="color: #778899; font-size:12px; font-weight: 500;">No. of Days</span>
 
@@ -331,7 +334,7 @@
 
 
 
-                            <div class="accordion-content">
+                            <div class="col accordion-content">
 
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
@@ -361,7 +364,7 @@
 
                         <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
 
-                        <div class="content p-1">
+                        <div class="content px-2">
 
                             <span style="color: #778899; font-size:12px; font-weight: 500;">Duration:</span>
 
@@ -379,7 +382,7 @@
 
                         </div>
 
-                        <div class="content p-1">
+                        <div class="content px-2">
 
                             <span style="color: #778899; font-size:12px; font-weight: 500;">Reason:</span>
 
@@ -391,7 +394,7 @@
 
                         <div style="display:flex; flex-direction:row; justify-content:space-between;">
 
-                            <div class="content p-1">
+                            <div class="content px-2 mb-2">
 
                                 <span style="color: #778899; font-size:12px; font-weight: 400;">Applied on:</span>
 
@@ -399,10 +402,10 @@
 
                             </div>
 
-                            <div class="content p-1">
+                            <div class="content px-2 mb-2">
 
                                 <a href="{{ route('leave-pending', ['leaveRequestId' => $leaveRequest->id]) }}">
-                                    <span style="color: #3a9efd; font-size:12px; font-weight: 500;">View Details</span>
+                                    <span style="color: rgb(2,17,53); font-size:12px; font-weight: 500;">View Details</span>
                                 </a>
 
                             </div>
@@ -478,7 +481,7 @@
             sideContainer.style.flexDirection = 'row'
             toggleOptions('leave', document.querySelector('.side a[data-section="leave"]'));
         }
-      
+
 
     }
 
@@ -505,7 +508,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Get the default link for 'leave'
     const defaultLink = document.querySelector('.side a[data-section="leave"]');
-    
+
     // Call toggleOptions with 'leave' and the default link
     toggleOptions('leave', defaultLink);
 });

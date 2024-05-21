@@ -1,53 +1,130 @@
-<div>
-   
-    <div class="bg-white m-0  rounded-md row">
-        <div class="col-md-1">
-        @foreach($employeeDetails as $employee)
-      
-        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset($employee->image) }}">
-
-@endforeach
+<div class="container mt-3" style="height:60px;">
+    <div class="row bg-white" style="height:80px">
+        <div class="col-md-1 mt-3" style="height:60px">
+            @foreach($employeeDetails as $employee)
+            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset($employee->image) }}">
+            @endforeach
         </div>
- 
-        <div class="col-md-11 mt-2 m-auto">
-            <!-- Placeholder for avatar -->
-            <p class="m-0">
-            @if(Auth::check())
-    <span class="text-base font-semibold">Hey {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</span>
-@else
-    <p>No employee details available.</p>
-@endif
-
+        <div class="col-md-10 mt-2 bg-white d-flex align-items-center justify-content-between">
+            <div>
+                @if(Auth::check())
+                <span class="text-base font-semibold">Hey {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</span>
+                @else
+                <p>No employee details available.</p>
+                @endif
                 <div class="text-xs">Ready to dive in?</div>
-            </p>
- 
+            </div>
+            <div>
+                <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20 h-20 p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;">
+                    <div class="w-6 h-6 rounded bg-purple-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                            <polyline points="13 2 13 9 20 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="row ml-2">
+                        <div class="text-left text-xs" wire:click="addFeeds">Create</div>
+                        <div class="text-left text-xs">Posts</div>
+                    </div>
+                </button>
+
+                @if($showFeedsDialog)
+            <!-- Modal -->
+            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                    <h5 class="modal-title">Creating a Post</h5>
+                    <button wire:click="closeFeeds" type="button" class="btn-close" aria-label="Close"></button>
+
+                </div>
+                        <!-- Modal Body -->
+                        <form wire:submit.prevent="submit">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="category">You are posting in:</label>
+                                    <select wire:model="category" class="form-select" id="category">
+                                        <option value="appreciations">Appreciations</option>
+                                        <option value="buy_sell_rent">Buy/Sell/Rent</option>
+                                        <option value="company_news">Company News</option>
+                                        <option value="events">Events</option>
+                                        <option value="everyone">Everyone</option>
+                                        <option value="hyderabad">Hyderabad</option>
+                                        <option value="US">US</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="content">Write something here:</label>
+                                    <textarea wire:model="description" class="form-control" id="content" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="attachment">Upload Attachment:</label>
+                                    <input wire:model="attachment" type="file" id="attachment" class="form-control-file">
+                                    @if ($attachment)
+                                    <p>File: {{ $attachment->getClientOriginalName() }}</p>
+                                    @endif
+                                    @if ($message)
+                                    <p>{{ $message }}</p>
+                                    @endif
+                                </div>
+                            </div>
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Post</button>
+                                <button wire:click="closeFeeds" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-backdrop fade show"></div>
+            @endif
         </div>
-    </div>
-    <div class="m-0 row">
-        <div class="col-md-3 p-0">
-            <div style="background:white;border:1px solid silver;border-radius:5px;margin-top:20px;" class="p-3">
-                <b>Filters</b>
- 
-                <hr style="background: grey; margin-top:5px">
-                <div>
-    <div class="radio-wrapper">
-        <input type="radio" name="my-input" id="yes" value="yes" checked />
-        <label class="radio-label" for="yes">All Activities</label>
-    </div>
-    <div class="radio-wrapper">
-        <input type="radio" name="my-input" id="no" value="no" />
-        <label class="radio-label" for="no">Posts</label>
     </div>
 </div>
+    <!-- Additional row -->
+    <div class="row mt-5 d-flex"  style="overflow-x: hidden;">
+        <div class="col-md-3 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:400;overflow-x: hidden;">
+
+        <p style="font-weight: 400;color:grey">Filters</p>
+        <hr style="width: 100%;border-bottom: 1px solid grey;">
 
 
-         
-            <div style="overflow-y:auto;max-height:300px;">
+<p style="font-weight: 400;color:grey">Activities</p>
+
+   <div class="activities">
+<label class="custom-radio-label">
+  <input type="radio" name="radio" value="activities" checked>
+ 
+
+  <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trello stroke-current text-salmon-400 stroke-1" style="width: 1rem; height: 1rem;margin-left:10px">
+  <circle cx="12" cy="12" r="12" fill="#F9D3BF" />
+  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+    <rect x="7" y="7" width="3" height="9"></rect>
+    <rect x="14" y="7" width="3" height="5"></rect>
+  </svg></span>
+  <span class="custom-radio-button bg-blue" style="margin-left:10px"></span>
+  All Activities
+</label>
+</div>
+<div class="posts" style="display:flex" >
+<label class="custom-radio-label" style="display:flex; align-items:center;">
+<input type="radio" name="radio" value="" checked><span>
+    <div class="icon-container"style="margin-left:10px"><circle cx="12" cy="12" r="12" fill="#F9D3BF" />
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file" >
+    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg></div>
+</span><span class="custom-radio-button bg-blue"style="margin-left:10px"></span>Posts</label></div>
+
+
+ 
+    <hr style="width: 100%;border-bottom: 1px solid grey;">
+    <div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
             <div class="row">
                         <div class="col " style="margin: 0px;">
                             <div class="input-group" >
-                                <input wire:model="search" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; " type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
-                                    <button wire:click="starredFilter" style=" height: 36px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="search-btn" type="button">
+                                <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; " type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
+                                    <button  style=" border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="search-btn" type="button">
                                         <i style="text-align: center;" class="fa fa-search"></i>
                                     </button>
                             </div>
@@ -56,7 +133,8 @@
  
                     <div class="w-full visible mt-1" style="margin-top:20px">
     <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;" onclick="toggleDropdown('dropdownContent1', 'arrowSvg1')">
-        <span class="text-xs leading-4 color-black" style="font-weight:bold">Groups</span>
+    <span class="text-xs leading-4" style="font-weight:bold; color: grey;">Groups</span>
+
         <span class="arrow-icon" id="arrowIcon1">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:black"> 
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -76,42 +154,47 @@
 </div>
 
  
-<div class="w-full visible mt-1" style="margin-top:20px">
-    <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')">
-        <span class="text-xs leading-4 color-black" style="font-weight:bold">Location</span>
-        <span class="arrow-icon" id="arrowIcon2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg2" style="color:black"> 
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-        </span>
-    </div>
-    <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
-        <ul style="font-size: 12px; margin: 0; padding: 0;">
-            
+<div class="w-full visible mt-1" style="margin-top: 20px;">
+        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
+            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Location</span>
+            <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg2" style="color: black;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </span>
+        </div>
+        <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
+            <ul style="font-size: 12px; margin: 0; padding: 0;">
+            <b class="menu-item"  style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">India</b>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Guntur</a>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hyderabad</a>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Doddaballapur</a>
-            <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</a>
+
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Tirupati</a>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Vijayawada</a>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Adilabad</a>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Trivandrum</a>
-           
+            <b class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</b>
+            <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">California</a>
+            <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> New York</a>
+            <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> Alaska</a>
+            <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hawaii</a>
+            <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> Texas</a>
         </ul>
     </div>
 </div>
 
-<div class="w-full visible mt-1" style="margin-top:20px">
-    <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')">
-        <span class="text-xs leading-4 color-black" style="font-weight:bold">Department</span>
-        <span class="arrow-icon" id="arrowIcon3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color:black"> 
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-        </span>
-    </div>
-    <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
-        <ul style="font-size: 12px; margin: 0; padding: 0;">
+<div class="w-full visible mt-1" style="margin-top: 20px;">
+        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
+            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Department</span>
+            <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color: black;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </span>
+        </div>
+        <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
+            <ul style="font-size: 12px; margin: 0; padding: 0;">
                           
                 
             
@@ -128,10 +211,10 @@
     </div>
                 </div>
             </div>
-        </div>
+      
 
-     </div>
-     
+
+    </div>
                 
         <div class="col-md-9" >
         <div id="eventsSection">
@@ -143,23 +226,85 @@
  
         </div>
     </div>
- 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <style>
+  /* Define the blue background color for the checked state */
+  .input[type="radio"]:checked + .custom-radio-button {
+    background-color: blue;
+  }
+  .feather {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.text-salmon-400 {
+  fill: salmon; /* Change the color as needed */
+}
+
+.stroke-1 {
+  stroke-width: 1px; /* Adjust the stroke width as needed */
+}
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #D8D8D8; /* You can change this to any desired background color */
+}
+
+.feather {
+  width: 1rem;
+  height: 1rem;
+  color: #6B46C1; /* You can change this to any desired icon color */
+}
+
+.activities:hover{
+    background-color: #e1e7f0;
+      height: 30px;
+      width: 100%;
+}
+
+.posts:hover{
+    background-color: #e1e7f0;
+      height: 30px;
+      width: 100%;
+}
+</style>
+   <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
- 
- 
- 
+<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <script>
-    function toggleEmojiDiv(index) {
-        var div = document.getElementById('myEmojiDiv_' + index);
-        if (div.style.display === 'none') {
-            div.style.display = 'block';
+ document.addEventListener('livewire:load', function () {
+        // Listen for clicks on emoji triggers and toggle the emoji list
+        document.querySelectorAll('.emoji-trigger').forEach(trigger => {
+            trigger.addEventListener('click', function () {
+                var index = this.dataset.index;
+                var emojiList = document.getElementById('emoji-list-' + index);
+                emojiList.style.display = (emojiList.style.display === "none" || emojiList.style.display === "") ? "block" : "none";
+            });
+        });
+    })
+
+        // Hide emoji list when an emoji is selected
+        document.querySelectorAll('.emoji-option').forEach(option => {
+            option.addEventListener('click', function () {
+                document.querySelectorAll('.emoji-list').forEach(list => {
+                    list.style.display = "none";
+                });
+            });
+        });
+
+    function showEmojiList(index) {
+        var emojiList = document.getElementById('emoji-list-' + index);
+        if (emojiList.style.display === "none" || emojiList.style.display === "") {
+            emojiList.style.display = "block";
         } else {
-            div.style.display = 'none';
+            emojiList.style.display = "none";
         }
     }
- 
+
     function comment(index) {
         var div = document.getElementById('replyDiv_' + index);
         if (div.style.display === 'none') {
@@ -168,7 +313,12 @@
             div.style.display = 'none';
         }
     }
+
  
+ 
+
+
+
     function subReply(index) {
         var div = document.getElementById('subReplyDiv_' + index);
         if (div.style.display === 'none') {
@@ -203,34 +353,13 @@
         replyDiv.toggle(); // Toggle display of clicked replyDiv
     }
  
-    // function comment(caller) {
-    //     var replyDiv = $(caller).siblings('.replyDiv');
-    //     $('.replyDiv').not(replyDiv).hide(); // Hide other replyDivs
-    //     replyDiv.toggle(); // Toggle display of clicked replyDiv
-    // }
-    </script>
- 
- 
-    <script>
+
     function react(reaction) {
         // Handle reaction logic here, you can send it to the server or perform any other action
         console.log('Reacted with: ' + reaction);
     }
     </script>
-    <script type="text/javascript">
-    $(document).ready(function() {
-        console.log("Document ready!");
- 
-        var emojiArea = $('#reaction-textarea').emojioneArea({
-            pickerPosition: 'bottom'
-        });
- 
-        $('#reaction-button').click(function() {
-            console.log("Reaction button clicked!");
-            $('#reaction-container').toggle();
-        });
-    });
-    </script>
+  
     <script>
     function addEmoji(emoji) {
         let inputEle = document.getElementById('input');
@@ -311,6 +440,50 @@
         });
     });
 </script>
+<script>
+
+function selectEmoji(emoji, empId) {
+        // Your existing logic to select an emoji
+        
+        // Toggle the emoji list visibility using the showEmojiList function
+        showEmojiList();
+    }
+    // Function to show the emoji list when clicking on the smiley emoji
+    function showEmojiList(index) {
+        var emojiList = document.getElementById('emoji-list-' + index);
+        if (emojiList.style.display === "none" ) {
+            emojiList.style.display = "block";
+        } else {
+            emojiList.style.display = "none";
+        }
+    }
+  
+
+
+</script>
+<script>
+
+function addEmoji(emoji_reaction, empId) {
+        // Your existing logic to select an emoji
+        
+        // Toggle the emoji list visibility using the showEmojiList function
+        showEmojiList();
+    }
+    // Function to show the emoji list when clicking on the smiley emoji
+    function showEmojiList(index) {
+        var emojiList = document.getElementById('emoji-list-' + index);
+        if (emojiList.style.display === "none" ) {
+            emojiList.style.display = "block";
+        } else {
+            emojiList.style.display = "none";
+        }
+    }
+  
+
+
+</script>
+
+
 <style>
  /* Define CSS for the menu items */
 .menu-item {
@@ -354,5 +527,143 @@ input[type="radio"] {
     vertical-align: middle;
 }
 
+/* Add this CSS to your main CSS file or in your Livewire component's style tag */
+:root {
+  --e-color-border: #e1e1e1;
+  --e-color-emoji-text: #666;
+  --e-color-border-emoji-hover: #e1e1e1;
+  --e-color-bg: #fff;
+  --e-bg-emoji-hover: #f8f8f8;
+  --e-size-emoji-text: 16px;
+  --e-width-emoji-img: 20px;
+  --e-height-emoji-img: 20px;
+  --e-max-width: 288px;
+}
 
 </style>
+
+
+
+<script>
+    document.addEventListener('livewire:load', function () {
+        // Listen for clicks on emoji triggers and toggle the emoji list
+        document.querySelectorAll('.emoji-trigger').forEach(trigger => {
+            trigger.addEventListener('click', function () {
+                var index = this.dataset.index;
+                var emojiList = document.getElementById('emoji-list-' + index);
+                emojiList.style.display = (emojiList.style.display === "none" || emojiList.style.display === "") ? "block" : "none";
+            });
+        });
+
+        // Hide emoji list when an emoji is selected
+        document.querySelectorAll('.emoji-option').forEach(option => {
+            option.addEventListener('click', function () {
+                document.querySelectorAll('.emoji-list').forEach(list => {
+                    list.style.display = "none";
+                });
+            });
+        });
+    });
+</script>
+
+
+<script>
+    document.addEventListener('click', function(event) {
+        const dropdowns = document.querySelectorAll('.cus-button');
+        dropdowns.forEach(function(dropdown) {
+            if (!dropdown.contains(event.target)) {
+                const dropdownContent = dropdown.nextElementSibling;
+                dropdownContent.style.display = 'none';
+            }
+        });
+    });
+
+    function toggleDropdown(dropdownId, arrowId) {
+        const dropdownContent = document.getElementById(dropdownId);
+        const arrowSvg = document.getElementById(arrowId);
+
+        if (dropdownContent.style.display === 'block') {
+            dropdownContent.style.display = 'none';
+            arrowSvg.classList.remove('arrow-rotate');
+        } else {
+            dropdownContent.style.display = 'block';
+            arrowSvg.classList.add('arrow-rotate');
+        }
+    }
+</script>
+
+<script>
+        document.addEventListener('click', function(event) {
+            const dropdowns = document.querySelectorAll('.cus-button');
+            dropdowns.forEach(function(dropdown) {
+                if (!dropdown.contains(event.target)) {
+                    const dropdownContent = dropdown.nextElementSibling;
+                    dropdownContent.style.display = 'none';
+                }
+            });
+        });
+
+        function toggleDropdown(dropdownId, arrowId) {
+            const dropdownContent = document.getElementById(dropdownId);
+            const arrowSvg = document.getElementById(arrowId);
+
+            if (dropdownContent.style.display === 'block') {
+                dropdownContent.style.display = 'none';
+                arrowSvg.classList.remove('arrow-rotate');
+            } else {
+                dropdownContent.style.display = 'block';
+                arrowSvg.classList.add('arrow-rotate');
+            }
+        }
+    </script>
+@push('scripts')
+<script src="dist/emoji-popover.umd.js"></script>
+<link rel="stylesheet" href="dist/style.css" />
+
+<script>
+document.addEventListener('livewire:load', function () {
+    const el = new EmojiPopover({
+        button: '.picker',
+        targetElement: '.emoji-picker',
+        emojiList: [
+            {
+                value: '🤣',
+                label: 'laugh and cry'
+            },
+            // Add more emoji objects here
+        ]
+    });
+
+    el.onSelect(l => {
+        document.querySelector(".emoji-picker").value += l;
+    });
+
+    // Toggle the emoji picker popover manually
+    document.querySelector('.picker').addEventListener('click', function () {
+        el.toggle();
+    });
+});
+</script>
+@endpush
+
+</div>
+<script>
+function filterDropdowns() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById('filterSearch');
+    filter = input.value.toUpperCase();
+    uls = document.querySelectorAll('.w-full.visible ul');
+    for (i = 0; i < uls.length; i++) {
+        ul = uls[i];
+        lis = ul.getElementsByTagName('a');
+        for (j = 0; j < lis.length; j++) {
+            a = lis[j];
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                lis[j].style.display = "";
+            } else {
+                lis[j].style.display = "none";
+            }
+        }
+    }
+}
+</script>

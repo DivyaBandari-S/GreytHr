@@ -57,4 +57,3 @@ class CheckAuth
     return $next($request);
   }
 }
- 

@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 use Livewire\Component;
 use App\Helpers\LeaveHelper;
 use App\Models\EmployeeDetails;
+use App\Models\EmployeeLeaveBalances;
 use App\Models\LeaveRequest;
 use PDF;
 
@@ -22,11 +23,16 @@ use PDF;
 class LeaveBalances extends Component
 {
     public $employeeDetails;
-    public $sickLeavePerYear = 12;
-    public $casualLeavePerYear = 12;
-    public $lossOfPayPerYear = 0;
+    public $casualLeavePerYear;
+    public $casualProbationLeavePerYear;
+    public $lossOfPayPerYear ;
+    public $marriageLeaves ;
+    public $maternityLeaves ;
+    public $paternityLeaves ;
+    public $sickLeavePerYear;
     public $sickLeaveBalance;
     public $casualLeaveBalance;
+    public $casualProbationLeaveBalance;
     public $lossOfPayBalance;
     public $leaveTransactions;
     public $leaveTypeModal = 'all';
@@ -40,52 +46,75 @@ class LeaveBalances extends Component
     public $consumedSickLeaves;
     public $consumedCasualLeaves;
     public $consumedLossOfPayLeaves;
+    public $consumedProbationLeaveBalance;
     public $sortBy = 'oldest_first';
     public $selectedYear;
 
-    public $totalCausalDays;
+    public $totalCasualDays;
     public $totalSickDays;
     public $totalLossOfPayDays;
+    public $totalCasualLeaveProbationDays;
     public $previousYear;
     public $nextYear;
+    public $currentYear;
     public $beforePreviousYear;
+
 
     public function mount()
     {
         $this->selectedYear = Carbon::now()->format('Y');
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        $this->currentYear = now()->year;
+        $this->employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
+        $this->sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Sick Leave', $this->currentYear);
+        $this->lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Loss Of Pay', $this->currentYear);
+        $this->casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Causal Leave', $this->currentYear);
+        $this->casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Causal Leave Probation', $this->currentYear);
+        $this->marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Marriage Leave', $this->currentYear);
+        $this->maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Maternity Leave', $this->currentYear);
+        $this->paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Petarnity Leave', $this->currentYear);
 
         // Check if employeeDetails is not null before accessing its properties
         if ($this->employeeDetails) {
+
             // Get the logged-in employee's approved leave days for sick, causal, and loss of pay leave
-            $leaveBalances = LeaveHelper::getApprovedLeaveDays($employeeId, $this->selectedYear);
+            $leaveBalances = LeaveHelper::getApprovedLeaveDays($this->employeeId, $this->selectedYear);
 
             // Use the returned values in your component
-            $this->totalCausalDays = $leaveBalances['totalCausalDays'];
+            $this->totalCasualDays = $leaveBalances['totalCasualDays'];
             $this->totalSickDays = $leaveBalances['totalSickDays'];
+            $this->totalCasualLeaveProbationDays = $leaveBalances['totalCasualLeaveProbationDays'];
             $this->totalLossOfPayDays = $leaveBalances['totalLossOfPayDays'];
+
             // Calculate leave balances
             $this->sickLeaveBalance = $this->sickLeavePerYear - $this->totalSickDays;
-            $this->casualLeaveBalance = $this->casualLeavePerYear - $this->totalCausalDays;
+            $this->casualLeaveBalance = $this->casualLeavePerYear - $this->totalCasualDays;
+            $this->casualProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->totalCasualLeaveProbationDays;
             $this->lossOfPayBalance = $this->lossOfPayPerYear - $this->totalLossOfPayDays;
             $this->consumedCasualLeaves = $this->casualLeavePerYear -  $this->casualLeaveBalance;
             $this->consumedSickLeaves = $this->sickLeavePerYear -  $this->sickLeaveBalance;
+            $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
         }
     }
 
     protected function getTubeColor($consumedLeaves, $leavePerYear, $leaveType)
     {
-        $percentage = ($consumedLeaves / $leavePerYear) * 100;
-
-        // Define color thresholds based on the percentage consumed and leave type
-        switch ($leaveType) {
-            case 'Sick Leave':
-                return $this->getSickLeaveColor($percentage);
-            case 'Causal Leave Probation':
-                return $this->getSickLeaveColor($percentage);
-            default:
-                return '#000000'; // Default color
+        // Check if $leavePerYear is greater than 0 to avoid division by zero
+        if ($leavePerYear > 0) {
+            $percentage = ($consumedLeaves / $leavePerYear) * 100;
+            // Define color thresholds based on the percentage consumed and leave type
+            switch ($leaveType) {
+                case 'Sick Leave':
+                    return $this->getSickLeaveColor($percentage);
+                case 'Causal Leave Probation':
+                    return $this->getSickLeaveColor($percentage);
+                case 'Causal Leave':
+                    return $this->getSickLeaveColor($percentage);
+                default:
+                    return '#000000';
+            }
+        } else {
+            return '#000000';
         }
     }
 
@@ -108,14 +137,24 @@ class LeaveBalances extends Component
         $this->leaveTransactions = $query->get();
     }
 
+    public $percentageCasual;
+    public $percentageSick;
+    public $percentageCasualProbation;
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
 
+        if($this->casualLeavePerYear>0){
+           $this->percentageCasual = ($this->consumedCasualLeaves / $this->casualLeavePerYear) * 100;
+        }
+        if($this->sickLeavePerYear>0){
+            $this->percentageSick = ($this->consumedSickLeaves / $this->sickLeavePerYear) * 100;
+         }
+         if($this->casualProbationLeavePerYear>0){
+            $this->percentageCasualProbation = ($this->consumedProbationLeaveBalance / $this->casualProbationLeavePerYear) * 100;
+         }
 
-        $percentageCasual = ($this->consumedCasualLeaves / $this->casualLeavePerYear) * 100;
 
-        $percentageSick = ($this->consumedSickLeaves / $this->sickLeavePerYear) * 100;
         $this->yearDropDown();
         // Check if employeeDetails is not null before accessing its properties
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -134,38 +173,52 @@ class LeaveBalances extends Component
                 'lossOfPayBalance' => $leaveBalances['lossOfPayBalance'],
                 'employeeDetails' => $this->employeeDetails,
                 'leaveTransactions' => $this->leaveTransactions,
-                'percentageCasual' => $percentageCasual,
-                'percentageSick' => $percentageSick,
+                'percentageCasual' => $this->percentageCasual,
+                'percentageSick' => $this->percentageSick,
+                'percentageCasualProbation' => $this->percentageCasualProbation
             ]);
         }
     }
 
     public static function getLeaveBalances($employeeId, $selectedYear)
     {
+        $selectedYear = now()->year;
         $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        $sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $selectedYear);
+        $casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Causal Leave', $selectedYear);
+        $casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Causal Leave Probation', $selectedYear);
+        $marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $selectedYear);
+        $maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $selectedYear);
+        $paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Petarnity Leave', $selectedYear);
+        $lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Loss Of Pay', $selectedYear);
 
         if (!$employeeDetails) {
             return null;
         }
 
-        $sickLeavePerYear = 12; // Assuming sick leaves for the specified year
-        $casualLeavePerYear = 12; // Assuming casual leaves for the specified year
-        $lossOfPayPerYear = 0; // Assuming loss of pay leaves for the specified year
-
-        // Get the logged-in employee's approved leave days for sick, causal, and loss of pay leave
-        $approvedLeaveDays = LeaveHelper::getApprovedLeaveDays($employeeId, $selectedYear);
-
+        // Get the logged-in employee's approved leave days for all leave types
+        $approvedLeaveDays = LeaveHelper::getApprovedLeaveDays($employeeId);
+        
         // Calculate leave balances
         $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];
-        $casualLeaveBalance = $casualLeavePerYear - $approvedLeaveDays['totalCausalDays'];
+        $casualLeaveBalance = $casualLeavePerYear - $approvedLeaveDays['totalCasualDays'];
         $lossOfPayBalance = $lossOfPayPerYear - $approvedLeaveDays['totalLossOfPayDays'];
+        $casualProbationLeaveBalance = $casualProbationLeavePerYear - $approvedLeaveDays['totalCasualLeaveProbationDays'];
+        $marriageLeaveBalance = $marriageLeaves - $approvedLeaveDays['totalMarriageDays'];
+        $maternityLeaveBalance = $maternityLeaves - $approvedLeaveDays['totalMaternityDays'];
+        $paternityLeaveBalance = $paternityLeaves - $approvedLeaveDays['totalPaternityDays'];
 
         return [
             'sickLeaveBalance' => $sickLeaveBalance,
             'casualLeaveBalance' => $casualLeaveBalance,
             'lossOfPayBalance' => $lossOfPayBalance,
+            'casualProbationLeaveBalance' => $casualProbationLeaveBalance,
+            'marriageLeaveBalance' => $marriageLeaveBalance,
+            'maternityLeaveBalance' => $maternityLeaveBalance,
+            'paternityLeaveBalance' => $paternityLeaveBalance,
         ];
     }
+
 
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
 

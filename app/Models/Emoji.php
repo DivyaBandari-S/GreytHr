@@ -11,5 +11,5 @@ class Emoji extends Model
     use HasFactory;
  // Replace 'your_table' with the actual table name
 
-    protected $fillable = ['selected_emoji'];
+ protected $fillable = ['emp_id', 'first_name', 'last_name', 'emoji'];
 }

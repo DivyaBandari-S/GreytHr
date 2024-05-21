@@ -53,33 +53,50 @@ class WhoIsInChart extends Component
       {
         $currentDate=$this->from_date;
       }
-      $swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
+      $approvedLeaveRequests=LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+      ->where('leave_applications.status', 'approved')
+      ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+      ->whereDate('from_date', '<=', $currentDate)
+      ->whereDate('to_date', '>=', $currentDate)
+      ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
+      ->map(function ($leaveRequest) {
+          // Calculate the number of days between from_date and to_date
+          $fromDate = Carbon::parse($leaveRequest->from_date);
+          $toDate = Carbon::parse($leaveRequest->to_date);
+
+          $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
+
+          return $leaveRequest;
+      });
+      $swipes = SwipeRecord::whereIn('id', function ($query) use ($employees,$approvedLeaveRequests,$currentDate) {
         $query->selectRaw('MIN(id)')
             ->from('swipe_records')
             ->whereIn('emp_id', $employees->pluck('emp_id'))
+            ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
             ->whereDate('created_at', $currentDate)
             ->groupBy('emp_id');
         })
         ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
         ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
         ->get();
+
     // Your data to be exported to Excel
     $data = [ ['List of Late Arrival Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
         ['Employee ID', 'Name','Sign In Time','Late By(HH:MM)'],
-   
+
     ];
     foreach ($swipes as $employee) {
-        $swipeTime = \Carbon\Carbon::parse($employee->swipe_time);
+        $swipeTime = Carbon::parse($employee->swipe_time);
         $swipeTime1 = Carbon::parse($employee['created_at'])->format('H:i:s');
-        $lateArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse('10:00'))->format('%H:%I');
-        $isLateBy10AM = $swipeTime->format('H:i') > '10:00';
+        $lateArrivalTime = $swipeTime->diff(Carbon::parse('10:00'))->format('%H:%I');
+        $isLateBy10AM = $swipeTime->format('H:i') >= '10:01';
         if($isLateBy10AM)
         {
           $data[] = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name'],$swipeTime1,$lateArrivalTime];
         }
     }
     $filePath = storage_path('app/late_employees.xlsx');
-    
+
     SimpleExcelWriter::create($filePath)->addRows($data);
 
     return response()->download($filePath, 'late_employees.xlsx');
@@ -97,41 +114,56 @@ class WhoIsInChart extends Component
    {
        $currentDate=$this->from_date;
    }
-   
-   
- 
-   $swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
+   $approvedLeaveRequests=LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+   ->where('leave_applications.status', 'approved')
+   ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+   ->whereDate('from_date', '<=', $currentDate)
+   ->whereDate('to_date', '>=', $currentDate)
+   ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
+   ->map(function ($leaveRequest) {
+       // Calculate the number of days between from_date and to_date
+       $fromDate = Carbon::parse($leaveRequest->from_date);
+       $toDate = Carbon::parse($leaveRequest->to_date);
+
+       $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
+
+       return $leaveRequest;
+   });
+
+
+   $swipes = SwipeRecord::whereIn('id', function ($query) use ($employees,$approvedLeaveRequests, $currentDate) {
        $query->selectRaw('MIN(id)')
            ->from('swipe_records')
            ->whereIn('emp_id', $employees->pluck('emp_id'))
+           ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
            ->whereDate('created_at', $currentDate)
            ->groupBy('emp_id');
    })
    ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
    ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
    ->get();
-   
+
    // Your data to be exported to Excel
    $data = [
     ['List of On Time Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
      ['Employee ID', 'Name','Sign In Time','Late By(HH:MM)'],
- 
+
    ];
    foreach ($swipes as $employee) {
-       $swipeTime = \Carbon\Carbon::parse($employee->swipe_time);
+       $swipeTime = Carbon::parse($employee->swipe_time);
        $swipeTime1 = Carbon::parse($employee['created_at'])->format('H:i:s');
-       $earlyArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse('10:00'))->format('%H:%I');
-       $isEarlyBy10AM = $swipeTime->format('H:i') < '10:00';
+       $earlyArrivalTime = $swipeTime->diff(Carbon::parse('10:00'))->format('%H:%I');
+       $isEarlyBy10AM = $swipeTime->format('H:i') < '10:01';
        if($isEarlyBy10AM)
        {
          $data[] = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name'], $swipeTime1,$earlyArrivalTime];
        }
    }
- 
+
         $filePath = storage_path('app/employees_on_time.xlsx');
-    
+
         SimpleExcelWriter::create($filePath)->addRows($data);
-    
+
         return response()->download($filePath, 'employees_on_time.xlsx');
   }
   public function downloadExcelForLeave()
@@ -157,8 +189,8 @@ class WhoIsInChart extends Component
       ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
       ->map(function ($leaveRequest) {
           // Calculate the number of days between from_date and to_date
-          $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
-          $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
+          $fromDate = Carbon::parse($leaveRequest->from_date);
+          $toDate = Carbon::parse($leaveRequest->to_date);
  
           $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
  
@@ -203,14 +235,14 @@ class WhoIsInChart extends Component
         ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
         ->map(function ($leaveRequest) {
             // Calculate the number of days between from_date and to_date
-            $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
-            $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
- 
+            $fromDate = Carbon::parse($leaveRequest->from_date);
+            $toDate = Carbon::parse($leaveRequest->to_date);
+
             $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
- 
+
             return $leaveRequest;
         });
-        
+
         $employees1 = EmployeeDetails::where('manager_id', $loggedInEmpId)
         ->select('emp_id', 'first_name', 'last_name')
         ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
@@ -221,31 +253,31 @@ class WhoIsInChart extends Component
         })
         ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
         ->get()->toArray();
-       
+
         // Your data to be exported to Excel
         $data = [ ['List of Absent Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
             ['Employee ID', 'Name'],
-       
+
         ];
         foreach ($employees1 as $employee) {
             $data[] = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name']];
         }
-   
+
         $filePath = storage_path('app/absent_employees.xlsx');
-    
+
         SimpleExcelWriter::create($filePath)->addRows($data);
-    
+
         return response()->download($filePath, 'absent_employees.xlsx');
     }
-   
- 
+
+
     public function searchFilters()
     {
     // Your logic to perform the search based on $this->search
     // Update the $results property with the search results
- 
+
     // Example:
- 
+
     $loggedInEmpId1 = Auth::guard('emp')->user()->emp_id;
     $this->results = EmployeeDetails::where(function ($query) use ($loggedInEmpId1) {
         $query->where('manager_id', $loggedInEmpId1)
@@ -255,7 +287,7 @@ class WhoIsInChart extends Component
                     ->orWhere('emp_id', 'like', '%' . $this->search . '%');
             });
     })->get();
-   
+
     }
     public function updateDate()
     {
@@ -267,31 +299,31 @@ class WhoIsInChart extends Component
          $this->search = '';
          $this->results = [];
     }
- 
- 
+
+
     public function render()
     {
-     
- 
-       
-       
+
+
+
+
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-       
- 
+
+
     // Apply search filter if a search term is provided
-   
- 
+
+
     // Fetch the employees based on the applied filters
-   
- 
+
+
         $employees=EmployeeDetails::where('manager_id',$loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
-     
+
         $employees2=EmployeeDetails::where('manager_id',$loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->count();
-       
-     
+
+
         if($this->isdatepickerclicked ==0)
         {
-         
+
             $currentDate = now()->toDateString();
         }
         else
@@ -306,14 +338,14 @@ class WhoIsInChart extends Component
         ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
         ->map(function ($leaveRequest) {
             // Calculate the number of days between from_date and to_date
-            $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
-            $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
- 
+            $fromDate = Carbon::parse($leaveRequest->from_date);
+            $toDate = Carbon::parse($leaveRequest->to_date);
+
             $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
- 
+
             return $leaveRequest;
         });
-       
+
     // Update $approvedLeaveRequests1 based on the selected date
     $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
         ->where('leave_applications.status', 'approved')
@@ -321,7 +353,7 @@ class WhoIsInChart extends Component
         ->whereDate('from_date', '<=', $currentDate)
         ->whereDate('to_date', '>=', $currentDate)
         ->count();
-       
+
         $employees1 = EmployeeDetails::where('manager_id', $loggedInEmpId)
         ->select('emp_id', 'first_name', 'last_name')
         ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
@@ -332,11 +364,11 @@ class WhoIsInChart extends Component
         })
         ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
         ->get();
-     
+
 // Output the SQL query for debugging
- 
-   
-         
+
+
+
 $employeesCount = EmployeeDetails::where('manager_id', $loggedInEmpId)
 ->select('emp_id', 'first_name', 'last_name')
 ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
@@ -347,48 +379,55 @@ $employeesCount = EmployeeDetails::where('manager_id', $loggedInEmpId)
 })
 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
 ->count();
- 
+
         // $currentDate = Carbon::now()->format('Y-m-d');
-   
-        $swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
+
+        $swipes = SwipeRecord::whereIn('id', function ($query) use ($employees,$approvedLeaveRequests,$currentDate) {
             $query->selectRaw('MIN(id)')
                 ->from('swipe_records')
                 ->whereIn('emp_id', $employees->pluck('emp_id'))
+                ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
                 ->whereDate('created_at', $currentDate)
+
                 ->groupBy('emp_id');
         })
+
         ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+
         ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
         ->get();
-       
-        $lateSwipesCount = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
-            $query->selectRaw('MIN(id)')
-                ->from('swipe_records')
-                ->whereIn('emp_id', $employees->pluck('emp_id'))
-                ->whereDate('created_at', $currentDate)
-                ->groupBy('emp_id');
-        })
-        ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-        ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-        ->where(function ($query) {
-            $query->whereTime('swipe_records.swipe_time', '>', '10:00:00'); // Assuming 'swipe_time' is a datetime column
-        })
-        ->count();
-        $earlySwipesCount = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
-            $query->selectRaw('MIN(id)')
-                ->from('swipe_records')
-                ->whereIn('emp_id', $employees->pluck('emp_id'))
-                ->whereDate('created_at', $currentDate)
-                ->groupBy('emp_id');
-        })
-        ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-        ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-        ->where(function ($query) {
-            $query->whereTime('swipe_records.swipe_time', '<', '10:00:00'); // Assuming 'swipe_time' is a datetime column
-        })
-        ->count();
-       
-       
+
+        $lateSwipesCount = SwipeRecord::whereIn('id', function ($query) use ($employees,$approvedLeaveRequests,$currentDate) {
+                   $query->selectRaw('MIN(id)')
+                       ->from('swipe_records')
+                       ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                       ->whereIn('emp_id', $employees->pluck('emp_id'))
+                       ->whereDate('created_at', $currentDate)
+                       ->groupBy('emp_id');
+               })
+               ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+               ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+               ->where(function ($query) {
+                   $query->whereTime('swipe_records.swipe_time', '>=', '10:01:00'); // Assuming 'swipe_time' is a datetime column
+               })
+               ->count();
+
+               $earlySwipesCount = SwipeRecord::whereIn('id', function ($query) use ($employees,$approvedLeaveRequests, $currentDate) {
+                           $query->selectRaw('MIN(id)')
+                               ->from('swipe_records')
+                               ->whereIn('emp_id', $employees->pluck('emp_id'))
+                               ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                               ->whereDate('created_at', $currentDate)
+                               ->groupBy('emp_id');
+                       })
+                       ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+                       ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+                       ->where(function ($query) {
+                           $query->whereTime('swipe_records.swipe_time', '<', '10:01:00'); // Assuming 'swipe_time' is a datetime column
+                       })
+                       ->count();
+
+
         $swipes2= SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
             $query->selectRaw('MIN(id)')
                 ->from('swipe_records')

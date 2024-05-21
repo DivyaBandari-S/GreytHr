@@ -96,6 +96,9 @@ width: 170px; */
 .text-regular{
     font-weight: 400;
 }
+.text{
+    color:#000;
+}
 
 .arrow-icon-attendance-info{
     position: absolute;
@@ -326,6 +329,7 @@ a {
         text-align: center; /* Center days of the week */
         height: 15px;
         border: none;
+        color: #778899;
         font-size: 12px;
     }
     .table-1 {
@@ -761,27 +765,11 @@ background-color: pink; /* Set the desired background color when clicked */
 .horizontal-line-attendance-info{
     width: 100%;
     /* Set the width to the desired value */
-    border-top: 1px solid #000;
+    border-top: 1px solid #ccc;
     /* You can adjust the color and thickness */
     margin: 0px 0;
     /* Adjust the margin as needed */
 }
-
-.horizontal-line1-attendance-info {
-    width: 100%;
-    /* Set the width to the desired value */
-    border-top: 1px solid #000;
-    /* You can adjust the color and thickness */
-    margin: 0px 0;
-    /* Adjust the margin as needed */
-}
-
-
-
-
-
-
-
 
 
 .horizontal-line2-attendance-info {
@@ -801,9 +789,9 @@ table {
 
 /* CSS for the table header (thead) */
 thead {
-
-    background-color: rgb(2, 17, 79);
-    color: white;
+    background-color: #eef7fa;
+    color: #778899;
+    border-top: 1px solid #ccc;
 }
 
 /* CSS for the table header cells (th) */
@@ -1422,7 +1410,7 @@ pointer-events: none;
             <div class="col-6" style="text-align: -webkit-right;">
                 <div class="toggle-box-attendance-info">
                     <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;"wire:click="showBars"></i>
-                    <i class="fas fa-bars" id="bars-icon"style="cursor:pointer;" wire:click="ffff"></i>
+                    <i class="fas fa-bars" id="bars-icon"style="cursor:pointer;" ></i>
                 </div>
             </div>
         </div>
@@ -1443,8 +1431,8 @@ pointer-events: none;
        
        
     @else($showMessage=="false")
-    <div class="row m-0">
-            <div class="col-sm-7 custom-scrollbar">
+    <div class="row m-0 p-0">
+            <div class="col-md-7 m-0 p-1 custom-scrollbar">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="calendar-heading-container">
                         <button wire:click="beforeMonth" class="nav-btn">&lt; Prev</button>
@@ -1455,7 +1443,7 @@ pointer-events: none;
                 <!-- Calendar -->
                 <div>
                     <table class="table-1 table-bordered">
-                        <thead>
+                        <thead class="calender-header bg-white">
                             <tr>
                                 <th class="text">Sun</th>
                                 <th class="text">Mon</th>
@@ -1687,22 +1675,22 @@ pointer-events: none;
                 <div class="container1" style="background-color:white;">
                     <!-- Content goes here -->
                     <div class="row m-0">
-                        <div class="col-2 pb-1 pt-1 p-0" style="border-right: 1px solid black; text-align: center;">
-                            <p class="mb-1" style="font-weight:bold;font-size:20px;">{{ \Carbon\Carbon::parse($CurrentDate)->format('d') }}</p>
-                            <p class="text-muted m-0" style="font-weight:600;font-size:14px;">
+                        <div class="col-2 pb-1 pt-1 p-0" style="border-right: 1px solid #ccc; text-align: center;">
+                            <p class="mb-1" style="font-weight:bold;font-size:14px;color:#778899;">{{ \Carbon\Carbon::parse($CurrentDate)->format('d') }}</p>
+                            <p class="m-0" style="font-weight:600;font-size:12px;color:#778899;">
                                 {{ \Carbon\Carbon::parse($CurrentDate)->format('D') }}
                             </p>
                         </div>
                         <div class="col-5 pb-1 pt-1">
-                            <p class="text-overflow mb-1" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-weight: 600;">
+                            <p class="text-overflow mb-1" style="font-size:12px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-weight: 500;">
                                 10:00 am to 07:00 pm</p>
-                            <p class="text-muted m-0" style="font-size:14px;">Shift:10:00 to
+                            <p class="text-muted m-0" style="font-size:12px;">Shift:10:00 to
                                 19:00</p>
                         </div>
                         <div class="col-5 pb-1 pt-1">
-                            <p class="mb-1" style="overflow: hidden;font-weight: 600;text-overflow: ellipsis;white-space: nowrap;">
+                            <p class="mb-1" style="font-size:12px;overflow: hidden;font-weight: 500;text-overflow: ellipsis;white-space: nowrap;font-weight: 500;">
                                 10:00 am to 07:00 pm</p>
-                            <p class="text-muted m-0" style="font-size:14px;">Attendance
+                            <p class="text-muted m-0" style="font-size:12px;">Attendance
                                 Scheme</p>
 
                         </div>
@@ -1905,7 +1893,7 @@ pointer-events: none;
                                 </tbody>
                                 <!-- Add table rows (tbody) and data here if needed -->
                                 @else
-                                <img src="https://gt-linckia.s3.amazonaws.com/static-ess-v6.3.0-prod-144/attendace_swipe_empty.svg" style="margin-top:30px;">
+                                <img src="whttps://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
                                 <div class="text-muted">No record Found</div>
                                 @endif
                             </table>

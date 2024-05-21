@@ -20,6 +20,7 @@ use App\Models\EmployeeDetails;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Mail\LeaveApplicationNotification;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 class LeaveApply extends Component
@@ -62,17 +63,49 @@ class LeaveApply extends Component
     public $selectedItems = [];
     public $managerFullName;
     public $loginEmpManagerId;
+    public $filteredCcRecipients;
     public $loginEmpManager;
+    public $errorMessage = '';
+    public $selectedYear;
+    public $leaveBalances = [];
+    public $showCcRecipents = false;
 
-
+    public $show_reporting = false;
+    public $showApplyingTo =true;
+    public $showNumberOfDays = false;
+    public $fromDate;
+    public $fromSession;
+    public $toSession;
+    public $toDate;
+    public $calculatedNumberOfDays = 0;
+    public $loginEmpManagerProfile;
+    public $differenceInMonths;
+    public $probationDetails;
+    protected $rules = [
+        'leave_type' => 'required',
+        'from_date' => 'required|date',
+        'from_session' => 'required',
+        'to_date' => 'required|date',
+        'to_session' => 'required',
+        'contact_details' => 'required',
+        'reason' => 'required',
+        'files.*' => 'nullable|file|max:10240',
+    ];
     public function mount()
     {
+        $this->searchTerm = '';
+        $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+        $this->probationDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
+        foreach ($this->probationDetails as $employee) {
+            if ($employee->hire_date) {
+                $hireDate = Carbon::parse($employee->hire_date);
+                $this->differenceInMonths = $hireDate->diffInMonths(Carbon::now());
+            }
+        }
         if ($this->applying_to) {
-
             $this->loginEmpManagerId = $this->applying_to->manager_id;
-
             // Retrieve the corresponding employee details for the manager
             $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
 
@@ -82,6 +115,7 @@ class LeaveApply extends Component
 
                 // Assign the full name to a property for later use
                 $this->loginEmpManager = $fullName;
+                $this->loginEmpManagerProfile = $managerDetails->image;
             } else {
 
                 $this->loginEmpManager = $this->applying_to->report_to;
@@ -97,7 +131,9 @@ class LeaveApply extends Component
         $this->employeeDetails = EmployeeDetails::where('company_id', $this->applying_to->company_id)
             ->where(function ($query) {
                 $query->where('company_name', 'like', '%' . $this->searchTerm . '%')
-                    ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%');
+                    ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
             })
             ->select('manager_id')
             ->groupBy('manager_id')
@@ -114,6 +150,7 @@ class LeaveApply extends Component
                 $fullName = ucwords(strtolower($employeeDetails->first_name)) . ' ' . ucwords(strtolower($employeeDetails->last_name));
                 $managers[] = [
                     'emp_id' => $employeeDetails->emp_id,
+                    'image' => $employeeDetails->image,
                     'full_name' => $fullName
                 ];
             }
@@ -131,40 +168,152 @@ class LeaveApply extends Component
             ->where('emp_id', '!=', $employeeId) // Exclude the current user
             ->where(function ($query) {
                 $query->where('company_name', 'like', '%' . $this->searchTerm . '%')
-                    ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%');
+                    ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
             })
-            ->groupBy('emp_id')
+            ->groupBy('emp_id','image')
             ->select(
-                'emp_id',
+                'emp_id','image',
                 DB::raw('MIN(CONCAT(first_name, " ", last_name)) as full_name')
             )
             ->orderBy('full_name')
             ->get();
     }
-    public function filterCcData()
+    public function handleSearch($type)
     {
+        if ($type === 'employees') {
+            $this->searchEmployees();
+        } elseif ($type === 'ccRecipients') {
+            $this->searchCCRecipients();
+        }
+    }
+
+    public function openCcRecipientsContainer(){
+         $this->showCcRecipents = true;
+         $this->searchCCRecipients();
+    }
+    public function closeCcRecipientsContainer(){
+        $this->showCcRecipents = !$this->showCcRecipents;
         $this->searchCCRecipients();
-    }
-    public function filterData()
+   }
+   public function handleFieldUpdate($field)
+   {
+       $this->showNumberOfDays = true;
+       if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session') {
+           $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
+       }
+
+   }
+
+    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
-        $this->searchEmployees();
+        try {
+            $startDate = Carbon::parse($fromDate);
+            $endDate = Carbon::parse($toDate);
+            // Check if the start and end sessions are different on the same day
+
+            if (
+                $startDate->isSameDay($endDate) &&
+                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
+            ) {
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                    return 0.5;
+                } else {
+                    // If either start or end date is a weekend, return 0
+                    return 0;
+                }
+            }
+            if (
+                $startDate->isSameDay($endDate) &&
+                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
+            ) {
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                    return 1;
+                } else {
+                    // If either start or end date is a weekend, return 0
+                    return 0;
+                }
+            }
+
+
+            $totalDays = 0;
+
+            while ($startDate->lte($endDate)) {
+                // Check if it's a weekday (Monday to Friday)
+                if ($startDate->isWeekday()) {
+                    $totalDays += 1;
+                }
+
+                // Move to the next day
+                $startDate->addDay();
+            }
+
+            // Deduct weekends based on the session numbers
+            if ($this->getSessionNumber($fromSession) > 1) {
+                $totalDays -= $this->getSessionNumber($fromSession) - 1; // Deduct days for the starting session
+            }
+            if ($this->getSessionNumber($toSession) < 2) {
+                $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
+            }
+            // Adjust for half days
+            if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
+                // If start and end sessions are the same, check if the session is not 1
+                if ($this->getSessionNumber($fromSession) !== 1) {
+                    $totalDays += 0.5; // Add half a day
+                }else{
+                    $totalDays += 0.5;
+                }
+            } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
+                if ($this->getSessionNumber($fromSession) !== 1) {
+                    $totalDays += 1; // Add half a day
+                }
+            } else {
+                $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
+            }
+
+            return $totalDays;
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
     }
+    private function getSessionNumber($session)
+    {
+        return (int) str_replace('Session ', '', $session);
+    }
+
+
     //method to apply for a leave
     public function leaveApply(){
-        $this->validate([
-            'leave_type' => 'required',
-            'from_date' => 'required|date',
-            'to_date' => 'required|date|after_or_equal:from_date',
-            'from_session' => 'required',
-            'to_session' => 'required',
-            'reason' => 'required',
-            'applying_to' => 'required',
-            'files.*' => 'required|mimes:pdf,excel,png,jpg|max:2048',
-            'contact_details' =>'required',
-        ]);
-    
+        $this->selectleave();
+        $this->searchCCRecipients();
+        $this->validate();
+            // Check for overlapping leave
+            $overlappingLeave = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
+            ->where(function ($query) {
+                $query->where(function ($q) {
+                    $q->where('from_date', '<=', $this->from_date)
+                        ->where('to_date', '>=', $this->from_date);
+                })->orWhere(function ($q) {
+                    $q->where('from_date', '<=', $this->to_date)
+                        ->where('to_date', '>=', $this->to_date);
+                })->orWhere(function ($q) {
+                    $q->where('from_date', '>=', $this->from_date)
+                        ->where('to_date', '<=', $this->to_date);
+                });
+            })
+            ->whereIn('status', ['approved', 'pending'])
+            ->exists();
+
+        // If overlapping leave is found, set the error message
+        if ($overlappingLeave) {
+            $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+            return;
+        }
         $filePaths = [];
-    
+
         if (isset($this->files)) {
             foreach ($this->files as $file) {
                 $fileName = uniqid() . '_' . $file->getClientOriginalName();
@@ -172,33 +321,35 @@ class LeaveApply extends Component
                 $filePaths[] = 'help-desk-files/' . $fileName;
             }
         }
-    
+
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-      
         $ccToDetails = [];
         foreach ($this->selectedPeople as $selectedEmployeeId) {
-            // Fetch additional details from EmployeeDetails table
-            $employeeDetails = EmployeeDetails::where('emp_id', $selectedEmployeeId)->first();
+            // Check if the employee ID already exists in ccToDetails
+            $existingIds = array_column($ccToDetails, 'emp_id');
+            if (!in_array($selectedEmployeeId, $existingIds)) {
+                // Fetch additional details from EmployeeDetails table
+                $employeeDetails = EmployeeDetails::where('emp_id', $selectedEmployeeId)->first();
     
-            // Concatenate first_name and last_name to get the full name
-            $fullName = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
+                // Concatenate first_name and last_name to get the full name
+                $fullName = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
     
-            $ccToDetails[] = [
-                'emp_id' => $selectedEmployeeId,
-                'full_name' => $fullName,
-            ];
-    
+                $ccToDetails[] = [
+                    'emp_id' => $selectedEmployeeId,
+                    'full_name' => $fullName,
+                ];
+            }
         }
-    
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $applyingToDetails = [];
-        
+
         if (empty($this->selectedManager)) {
             // No manager is selected, use default values
             $applyingToDetails[] = [
                 'manager_id' => $this->loginEmpManagerId,
                 'report_to' => $this->loginEmpManager,
+                'image' => $this->loginEmpManagerProfile
             ];
         } else {
             // Managers are selected, fetch details for each selected manager
@@ -232,83 +383,69 @@ class LeaveApply extends Component
         if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
             // Reset the component
             $this->reset();
-    
+
             session()->flash('message', 'Leave application submitted successfully!');
             return redirect()->to('/leave-page');
         } else {
             // Log an error if there's an issue with creating the LeaveRequest
             logger('Error creating LeaveRequest', ['emp_id' => $employeeId]);
-    
             session()->flash('error', 'Error submitting leave application. Please try again.');
             return redirect()->to('/leave-page');
         }
-    
+
     }
 
-    private function sendLeaveApplicationNotification($leaveRequest)
+    public function selectLeave()
     {
-        // Retrieve the manager's email
-        $managerEmail = $this->getManagersEmail($leaveRequest->emp_id);
-        
-        // Ensure $leaveRequest is an instance of LeaveRequest
-        if (!$leaveRequest instanceof \App\Models\LeaveRequest) {
-            logger('Invalid $leaveRequest instance', ['leave_request' => $leaveRequest]);
-            return;
+        $this->show_reporting = $this->leave_type !== 'default';
+        $this->showApplyingTo = false;
+        $this->selectedYear = Carbon::now()->format('Y');
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
+        // Retrieve all leave balances
+        $allLeaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
+        // Filter leave balances based on the selected leave type
+        switch ($this->leave_type) {
+            case 'Causal Leave Probation':
+                $this->leaveBalances = [
+                    'casualProbationLeaveBalance' => $allLeaveBalances['casualProbationLeaveBalance']
+                ];
+                break;
+                case 'Causal Leave':
+                    $this->leaveBalances = [
+                        'casualLeaveBalance' => $allLeaveBalances['casualLeaveBalance']
+                    ];
+                    break;
+            case 'Loss of Pay':
+                $this->leaveBalances = [
+                    'lossOfPayBalance' => $allLeaveBalances['lossOfPayBalance']
+                ];
+                break;
+            case 'Sick Leave':
+                $this->leaveBalances = [
+                    'sickLeaveBalance' => $allLeaveBalances['sickLeaveBalance']
+                ];
+                break;
+            case 'Maternity Leave':
+                $this->leaveBalances = [
+                    'maternityLeaveBalance' => $allLeaveBalances['maternityLeaveBalance']
+                ];
+                break;
+            case 'Paternity Leave':
+                $this->leaveBalances = [
+                    'paternityLeaveBalance' => $allLeaveBalances['paternityLeaveBalance']
+                ];
+                break;
+            case 'Marriage Leave':
+                $this->leaveBalances = [
+                    'marriageLeaveBalance' => $allLeaveBalances['marriageLeaveBalance']
+                ];
+                break;
+            default:
+                $this->leaveBalances = [];
+                break;
         }
-    
-        // Extract necessary details from $leaveRequest
-        $leaveDetails = [
-            'leave_type' => $leaveRequest->leave_type,
-            'from_date' => $leaveRequest->from_date,
-            // Add more details as needed
-        ];
-        // Set the sender and receiver dynamically
-$senderEmail =  $this->applying_to->email;
-$receiverEmail = $managerEmail;  // Set this based on your application logic
 
-// Set the sender and receiver in the mail configuration
-config([
-    'mail.from.address' => $senderEmail,
-    'mail.from.username' => $senderEmail,
-]);
-
-// Example usage in your Livewire component
-$mail = new LeaveApplicationNotification($leaveRequest, $receiverEmail);
-Mail::to($receiverEmail)->send($mail);
-
-    }
-    
-    private function getManagersEmail($employeeId)
-    {
-        // Fetch the employee details
-        $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-    
-        // Check if the applying_to field is not null and is an array
-        if ($employeeDetails && $employeeDetails->applying_to && is_array($employeeDetails->applying_to)) {
-            // Decode the applying_to field
-            $applyingToDetails = json_decode($employeeDetails->applying_to[]);
-    
-            // Loop through applyingToDetails to find the manager's email
-            foreach ($applyingToDetails as $applyingToDetail) {
-                if ($applyingToDetail->manager_id === $employeeId) {
-                    // Manager's email found
-                    return $this->getManagerEmailById($applyingToDetail->manager_id);
-                }
-            }
-        }
-    
-        // Default placeholder email or handle the situation when manager's email is not found
-        return 'bandaridivya1@gmail.com';
-    }
-    
-
-    private function getManagerEmailById($managerId)
-    {
-        // Fetch manager's email from the database based on $managerId
-        $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
-        
-        // Assuming you have an email field in the EmployeeDetails model
-        return $managerDetails ? $managerDetails->email : 'bandaridivya1@gmail.com';
     }
 
     public function render()
@@ -316,10 +453,10 @@ Mail::to($receiverEmail)->send($mail);
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $employeeGender = EmployeeDetails::where('emp_id', $employeeId)->select('gender')->first();
         return view('livewire.leave-apply',[
-           'employeeGender' => $employeeGender
+           'employeeGender' => $employeeGender,
+           'calculatedNumberOfDays' =>$this->calculatedNumberOfDays
         ]);
     }
 
- 
 }
 

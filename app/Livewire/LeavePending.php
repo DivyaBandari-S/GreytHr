@@ -35,7 +35,6 @@ class LeavePending extends Component
         // Fetch leave request details based on $leaveRequestId with employee details
         $this->selectedYear = Carbon::now()->format('Y');
         $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
-    
         $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
         $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
     }
@@ -43,7 +42,7 @@ class LeavePending extends Component
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
-        
+
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
             // Check if the start and end sessions are different on the same day
@@ -108,6 +107,8 @@ class LeavePending extends Component
                 // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
+                }else{
+                    $totalDays += 0.5;
                 }
             }elseif($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)){
                 if ($this->getSessionNumber($fromSession) !== 1) {

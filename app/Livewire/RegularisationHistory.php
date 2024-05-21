@@ -1,18 +1,40 @@
 <?php
 
 namespace App\Livewire;
+
+use App\Models\EmployeeDetails;
+use App\Models\RegularisationNew1;
 use App\Models\Regularisations;
 use Livewire\Component;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class RegularisationHistory extends Component
 {
     public $regularisationdescription;
- 
+    public $regularisationrequest;
+
+    public $regularisationEntries;
+    public $ManagerId;
+    public $ManagerName;
+    public $id;
+
+    public $totalEntries;
+
+   
+    public $empid;
+    public $empName;
     public $regularisationdescrip;
     public function mount($id)
     {
-        $this->regularisationdescription = Regularisations::find($id);
+        $this->empid = Auth::guard('emp')->user()->emp_id;
+        $this->empName = EmployeeDetails::where('emp_id', $this->empid)->first();
+        $this->regularisationrequest = RegularisationNew1::with('employee')->find($id);
+        $this->ManagerId=$this->regularisationrequest->employee->manager_id;
+        $this->ManagerName=EmployeeDetails::select('first_name','last_name')->where('emp_id',$this->ManagerId)->first();
+        $this->regularisationEntries = json_decode($this->regularisationrequest->regularisation_entries, true);
+        $this->regularisationEntries = array_reverse($this->regularisationEntries);
+        $this->totalEntries = count($this->regularisationEntries);
     }
 
     public function render()

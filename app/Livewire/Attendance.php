@@ -152,8 +152,8 @@ class Attendance extends Component
     }
     private function isEmployeePresentOnDate($date)
     {
-
-        return SwipeRecord::whereDate('created_at', $date)->exists();
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->exists();
     }
     private function isEmployeeLeaveOnDate($date, $employeeId)
     {

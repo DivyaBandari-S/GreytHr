@@ -336,4 +336,7 @@
             </div>
         </div>
 
+ 
+        @livewireScripts
+
     </div>

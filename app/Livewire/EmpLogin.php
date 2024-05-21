@@ -49,7 +49,7 @@ class EmpLogin extends Component
     }
     public function empLogin()
     {
- 
+
         try {
             $this->validate([
                 "form.emp_id" => 'required',
@@ -57,7 +57,7 @@ class EmpLogin extends Component
             ]);
 
             $this->showLoader = true;
- 
+
             if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/');
             } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {

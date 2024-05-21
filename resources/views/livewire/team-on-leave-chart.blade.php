@@ -1,32 +1,6 @@
-<div>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    
-    <style>
-        .text {
-            --tw-text-opacity: 1;
-            color: rgba(23, 30, 37);
-            font-size: 18px;
-        }
- 
-        #duration {
-        padding: 4px;
-        font-size: 14px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-top: 8px;
-        outline:none;
-        margin-bottom: 16px;
-    }
-    option{
-        background:#fff;
-    }
- 
-    </style>
-</head>
+<div style="width: 90%;margin:0 auto;">
 <body>
-    <div style="padding:10px 15px; width:90%;">
+    <div style="padding:10px 15px; width:80%; margin:0;">
         <label for="duration" style="color:#778899; font-weight:500;">Select Duration:</label>
         <select id="duration" wire:model="duration">
             <option value="this_month">This Month</option>
@@ -34,7 +8,7 @@
         </select>
     </div>
 
-   <div class="conatiner" style="width:90%;display:flex; flex-direction:column;margin:0 auto;border:1px solid #ccc;">
+   <div style="width:90%;display:flex; flex-direction:column;margin:0 auto;border:1px solid #ccc;">
     <!-- Other HTML content -->
     <div style="display:flex; flex-direction:row; background:white;padding:10px 15px; border-bottom:1px solid #ccc; gap:10px;">
         <p style="color:#778899; font-weight:500;">Duration Selected:</p>
@@ -96,6 +70,4 @@
 </div>
 
 </body>
-</html>
- 
 </div>

@@ -19,7 +19,7 @@
         <!-- Starred tab content -->
         <div class="row" style="margin-top: 15px">
             <!-- Search input and filter button -->
-            <div class="col" style="width: 150px; background-color: white; border-radius: 5px; height: auto; margin-right: 20px; padding: 5px;">
+            <div class="col" style="width: 150px; background-color: white; border-radius: 5px; margin-right: 20px; padding: 5px;">
                 <div class="container" style="margin-top: 10px">
                     <div class="row">
                         <div class="col" style="margin: 0px; padding: 0px">
@@ -43,17 +43,17 @@
                                 <div class="col-md-2">
                                     @if($people->profile == "")
                                     @if($people->emp->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Profile Image">
+                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
                                     @elseif($people->emp->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="Profile Image">
+                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
                                     @endif
                                     @else
-                                    <img class="profile-image" src="{{ Storage::url($people->profile) }}" alt="Profile Image">
+                                    <img class="profile-image" src="{{ Storage::url($people->profile) }}" alt="">
                                     @endif
 
                                 </div>
                                 <div class="col-md-5">
-                                    <h6 class="username" style="font-size: 12px; color: white;">{{ $people->name}}</h6>
+                                    <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->name)) }}</h6>
                                 </div>
                                 <div class="col-md-3">
                                     <p class="mb-0" style="font-size: 12px; color: white;font-size:8px">(#{{ $people->people_id }})</p>
@@ -80,12 +80,12 @@
                         <div class="col" style="margin-top: 50px;">
                             @if(empty($selectStarredPeoples->profile) || $selectStarredPeoples->profile == "")
                             @if($selectStarredPeoples->emp->gender == "Male")
-                            <img class="people-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Profile Image">
+                            <img class="people-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
                             @elseif($selectStarredPeoples->emp->gender == "Female")
                             <img class="people-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="Profile Image">
                             @endif
                             @else
-                            <img style="width: 150px;height: 150px;border-radius: 50%;" class="people-image" src="{{ Storage::url($selectStarredPeoples->profile) }}" alt="Profile Image">
+                            <img style="width: 100px;height: 100px;border-radius: 50%;background:#f9f9f9;" class="people-image" src="{{ Storage::url($selectStarredPeoples->profile) }}" alt="">
                             @endif
 
                         </div>
@@ -95,7 +95,7 @@
                                     <i class="fa fa-star" style="cursor: pointer; color: yellow;"></i>
                                 </button>
                             </a>
-                            <div>{{ optional($selectStarredPeoples)->name }}</div>
+                            <div>{{ ucwords(strtolower(optional($selectStarredPeoples)->name)) }}</div>
                             <strong>
                                 <div>(#{{ optional($selectStarredPeoples)->people_id }})</div>
                             </strong>
@@ -115,16 +115,15 @@
                 @endphp
                 <div class="row" style="font-size: 13px;">
                     <div class="row">
-
                         <div class="col" style="margin-top: 50px;">
                             @if(empty($firstStarredPerson->profile) || $firstStarredPerson->profile == "")
                             @if($firstStarredPerson->emp->gender == "Male")
-                            <img class="people-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Profile Image">
+                            <img class="people-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
                             @elseif($firstStarredPerson->emp->gender == "Female")
-                            <img class="people-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="Profile Image">
+                            <img class="people-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
                             @endif
                             @else
-                            <img style="width: 150px;height: 150px;border-radius: 50%;" class="people-image" src="{{ Storage::url($firstStarredPerson->profile) }}" alt="Profile Image">
+                            <img style="width: 100px;height: 100px;border-radius: 50%;background:#f9f9f9;" class="people-image" src="{{ Storage::url($firstStarredPerson->profile) }}" alt="">
                             @endif
                         </div>
                         <div class="col" style="margin-top: 50px; margin-right: 80px;">
@@ -132,7 +131,7 @@
                                     <i class="fa fa-star" style="cursor: pointer; color: yellow;"></i>
                                 </button></a>
 
-                            <div>{{ optional($firstStarredPerson)->name }}</div>
+                                <div>{{ ucwords(strtolower(optional($firstStarredPerson)->name)) }}</div>
                             <strong>
                                 <div>(#{{ optional($firstStarredPerson)->people_id }})</div>
                             </strong>
@@ -156,7 +155,7 @@
         <div class="row" style="margin-top: 15px; width: 100%;">
             <!-- Search input and filter button -->
             <div class="col" style="width: 150px; background-color: white; border-radius: 5px; height: auto; margin-right: 20px; padding: 5px;">
-                <div class="container" style="margin-top: 10px">
+                <div class="container" style="margin-top: 10px;">
                     <div class="row">
                         <div class="col" style="margin: 0px; padding: 0px">
                             <div class="input-group">
@@ -175,29 +174,31 @@
                     @if ($peopleData->isEmpty())
                     <div class="container" style="text-align: center; color: gray;">No People Found</div>
                     @else
-                    @foreach($peopleData as $people)
-                    <div wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="height:auto;cursor: pointer; background-color: {{ $selectedPerson && $selectedPerson->emp_id == $people->emp_id ? '#ccc' : 'grey' }}; padding: 5px; margin-bottom: 8px; width: 400px; border-radius: 5px;">
-                        <div class="row align-items-center">
-                            <div class="col-md-2">
-                                @if($people->image=="")
-                                @if($people->gender=="Male")
-                                <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Profile Image">
-                                @elseif($people->gender=="Female")
-                                <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="Profile Image">
-                                @endif
-                                @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="Profile Image">
-                                @endif
+                        <div class="px-2 " style="max-height:350px;overflow-y:auto;width: 85%;margin: 10px auto;">
+                        @foreach($peopleData as $people)
+                            <div wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="height:auto;cursor: pointer; background-color: {{ $selectedPerson && $selectedPerson->emp_id == $people->emp_id ? '#ccc' : 'grey' }}; padding: 5px; margin-bottom: 8px; width: 400px; border-radius: 5px;">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2">
+                                        @if($people->image=="")
+                                        @if($people->gender=="Male")
+                                        <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt=" ">
+                                        @elseif($people->gender=="Female")
+                                        <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
+                                        @endif
+                                        @else
+                                        <img class="profile-image"  src="{{ Storage::url($people->image) }}" alt="">
+                                        @endif
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="mb-0" style="font-size: 12px; color: white;font-size:8px">(#{{ $people->emp_id }})</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <h6 class="username" style="font-size: 12px; color: white;">{{ $people->first_name }} {{ $people->last_name }}</h6>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="mb-0" style="font-size: 12px; color: white;font-size:8px">(#{{ $people->emp_id }})</p>
-                            </div>
+                            @endforeach
                         </div>
-                    </div>
-                    @endforeach
                     @endif
                 </div>
             </div>
@@ -211,12 +212,12 @@
                         <div class="col" style="margin-top: 50px;">
                             @if(empty($selectedPerson->image) || $selectedPerson->image == "")
                             @if($selectedPerson->gender == "Male")
-                            <img class="people-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Profile Image">
+                            <img class="people-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
                             @elseif($selectedPerson->gender == "Female")
-                            <img class="people-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="Profile Image">
+                            <img class="people-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
                             @endif
                             @else
-                            <img style="width: 150px;height: 150px;border-radius: 50%;" class="people-image" src="{{ Storage::url($selectedPerson->image) }}" alt="Profile Image">
+                            <img style="width: 100px;height: 100px;border-radius: 50%;background:#f9f9f9;" class="people-image" src="{{ Storage::url($selectedPerson->image) }}" alt="">
                             @endif
 
                         </div>
@@ -234,7 +235,7 @@
                                 </button>
                             </a>
 
-                            <div>{{ optional($selectedPerson)->first_name }} {{ optional($selectedPerson)->last_name }}</div>
+                            <div>{{ ucwords(strtolower(optional($selectedPerson)->first_name )) }} {{ ucwords(strtolower(optional($selectedPerson)->last_name )) }}</div>
                             <strong>
                                 <div>(#{{ optional($selectedPerson)->emp_id }})</div>
                             </strong>
@@ -261,7 +262,7 @@
                     <div class="row">
 
                         <div class="col" style="margin-top: 50px;">
-                            <img style="width: 150px;height: 150px;border-radius: 50%;" class="people-image" src="{{ Storage::url(optional($firstPerson)->image) }}" alt="Profile Image">
+                            <img style="width: 100px;height: 100px;border-radius: 50%;width: 100px;height: 100px;border-radius: 50%;background:#f9f9f9;" class="people-image" src="{{ Storage::url(optional($firstPerson)->image) }}" alt="">
                         </div>
                         <div class="col" style="margin-top: 50px; margin-right: 80px;">
                             <a style="text-decoration: none;" wire:click="toggleStar('{{ optional($firstPerson)->emp_id }}')">
@@ -269,7 +270,7 @@
                                     <i class="fa fa-star{{ $starredPerson && $starredPerson->starred_status == 'starred' ? ' text-yellow' : ' text-gray' }}" style="cursor: pointer;"></i>
                                 </button>
                             </a>
-                            <div>{{ optional($firstPerson)->first_name }} {{ optional($firstPerson)->last_name }}</div>
+                            <div>{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</div>
                             <strong>
                                 <div>(#{{ optional($firstPerson)->emp_id }})</div>
                             </strong>
@@ -289,4 +290,3 @@
         @endif
     </div>
 </div>
-@livewireScripts

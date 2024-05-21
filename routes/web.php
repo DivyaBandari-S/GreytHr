@@ -4,6 +4,7 @@ use App\Livewire\Activities;
 use App\Livewire\ApprovedDetails;
 use App\Livewire\AddEmployeeDetails;
 use App\Livewire\AddHolidayList;
+use App\Livewire\ReviewClosedRegularisation;
 use App\Livewire\UpdateEmployeeDetails;
 use App\Livewire\Delegates;
 use App\Livewire\EmpLogin;
@@ -12,7 +13,7 @@ use App\Livewire\Everyone;
 use App\Livewire\Feeds;
 use App\Livewire\Catalog;
 
- 
+use App\Http\Controllers\GoogleDriveController;
 use App\Livewire\Attendance;
 use App\Livewire\AuthChecking;
 use App\Livewire\GoogleLogins;
@@ -27,6 +28,8 @@ use App\Livewire\EmployeeSwipes;
 use App\Livewire\AttendanceMusterData;
 use App\Livewire\AttendanceMuster;
 use App\Livewire\AttendenceMasterDataNew;
+use App\Livewire\Chat\Chat;
+use App\Livewire\Chat\Index;
 use App\Livewire\EmployeeSwipesData;
 use App\Livewire\HelpDesk;
 use App\Livewire\Home;
@@ -77,6 +80,12 @@ use App\Livewire\TeamOnAttendance;
 use App\Livewire\TeamOnAttendanceChart;
 use App\Livewire\ViewPendingDetails;
 use App\Livewire\Emojies;
+use App\Livewire\Employee;
+use App\Livewire\EmpTimeSheet;
+use App\Livewire\GrantLeaveBalance;
+use App\Livewire\ImageUpload;
+use App\Livewire\LeaveBalancesChart;
+use App\Livewire\ReviewPendingRegularisation;
 use Illuminate\Support\Facades\Route;
  
  
@@ -186,6 +195,7 @@ Route::middleware(['auth:hr'])->group(function () {
     Route::get('/whoisinhrchart', WhoisinChartHr::class)->name('whoisinhrchart');
     // Route::get('/hrleaveOverview', HrLeaveOverview::class)->name('hrleaveOverview');
     Route::get('/hrAttendanceOverview', HrAttendanceOverviewNew::class)->name('hrAttendanceOverview');
+    Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
     // Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
@@ -203,13 +213,17 @@ Route::middleware(['auth:admins'])->group(function () {
  
 });
  
- 
+
 Route::middleware(['auth:emp'])->group(function () {
+    Route::get('/google-redirect', [GoogleDriveController::class, 'auth'])
+    ->name('google-redirect');
+Route::get('/google-callback', [GoogleDriveController::class, 'callback'])
+    ->name('google-callback');
 
     Route::get('/', Home::class)->name('home');
     Route::get('/doc-forms', DocForms::class);
     Route::get('/LeaveBalanceAsOnADay', LeaveBalanaceAsOnADay::class);
- 
+
     // Attendance Routes
     Route::get('/Attendance', Attendance::class)->name('Attendance info');
     Route::get('/whoisinchart', WhoIsInChart::class)->name('whoisin');
@@ -222,21 +236,23 @@ Route::middleware(['auth:emp'])->group(function () {
     Route::get('/attendance-muster-data', AttendenceMasterDataNew::class)->name('attendance-muster-data');
     Route::get('/ProfileInfo', ProfileInfo::class)->name('profile.info');
     Route::get('/Settings', Settings::class)->name('settings');
- 
- 
+    Route::get('/review-pending-regularation/{id}',ReviewPendingRegularisation::class)->name('review-pending-regularation');
+    Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
+    Route::get('/timesheet-page', EmpTimeSheet::class)->name('time-sheet');
     //Feeds Module
     Route::get('/Feeds', Feeds::class)->name('feeds');
     Route::get('/events', Activities::class);
     Route::get('/everyone', Everyone::class);
- 
+
     //People module
     Route::get('/PeoplesList', Peoples::class)->name('people');
  
  
     //Helpdesk module
+
     Route::get('/HelpDesk', HelpDesk::class)->name('help-desk');
  
-Route::get('/catalog', Catalog::class);
+    Route::get('/catalog', Catalog::class);
  
     // Related salary module and ITdeclaration Document center
     Route::get('/payslip', Payroll::class);
@@ -268,14 +284,22 @@ Route::get('/catalog', Catalog::class);
     Route::get('/leave-pending/{leaveRequestId}', LeavePending::class)->name('leave-pending');
     Route::get('/team-on-leave', TeamOnLeave::class);
     Route::get('/team-on-leave-chart', TeamOnLeaveChart::class)->name('team-on-leave');
-   
- 
+    // Route::get('/leaveBalChart', LeaveBalancesChart::class)->name('leave-details');
+    Route::get('/navigate-to-helpdesk', [EmployeesReview::class, 'navigateToHelpdesk'])->name('navigate.to.helpdesk');
+
     // TODO module
     Route::get('/tasks', Tasks::class)->name('tasks');
     Route::get('/employees-review', EmployeesReview::class)->name('review');
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');
+
+    // ####################################### Chat Module Routes #########################endregion
+    Route::get('/chat',Index::class)->name('chat.index');
+    Route::get('/chat/{query}',Chat::class)->name('chat');
+    Route::get('/users',Employee::class)->name('employee');
+    Route::get('/image',ImageUpload::class)->name('image');
+    //*******************************************  End Of Chat Module Routes *************************/
 });
- 
+
 
 
 

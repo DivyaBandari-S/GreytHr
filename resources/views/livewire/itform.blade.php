@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html>
-
+ 
 <head>
-
+ 
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            
-
+           
+ 
         }
-
+ 
         .container {
             margin: 0 auto;
             width: 80%;
         }
-
+ 
         .header {
             text-align: center;
             font-size: 20px;
             font-weight: bold;
             margin-bottom: 20px;
         }
-
+ 
         .info {
             margin-bottom: 20px;
         }
-
+ 
         table {
             width: 100%;
             border-collapse: collapse;
         }
-
+ 
         table, th, td {
             border: 1px solid #000;
         }
-
+ 
         th, td {
             padding: 10px;
             text-align: center;
         }
-
+ 
         th {
             background-color: #f0f0f0;
         }
@@ -54,12 +54,12 @@
     @livewire('company-logo')
     </div>
     <p style="margin-left: 20px; font-size: 25px; font-weight: 500; font-family: 'Montserrat', sans-serif;">{{ $employeeData->company_name }}</p>
-
+ 
     </div>
     <div class="header" style="margin-left:15px">
             Income Tax Computation For The Financial Year 2023
         </div>
-
+ 
         <div class="info" style="margin-left:15px">
         <table style="font-size:10px">
     <tr>
@@ -79,7 +79,7 @@
     </tr>
    
 </table>
-
+ 
         </div>
         @foreach($salaryRevision as $employee)
         <p style="margin-left:20px">A) Earnings</p>
@@ -308,13 +308,13 @@
     </tr>
     <!-- Add more rows for other perquisites if needed -->
 </table>
-
-
+ 
+ 
         @endforeach
-
-
+ 
+ 
         <!-- Repeat the above structure for Deduction and Perquisites sections -->
-
+ 
         <div class="footer">
             <p>D:) Gross Salary (A+C): {{ number_format($employee->calculateTotalAllowance()*12, 2) }} </p>
         </div>
@@ -323,3 +323,4 @@
     @endforeach
 </body>
 </html>
+ 

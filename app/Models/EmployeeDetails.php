@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\LeaveRequest;
 use App\Models\SwipeRecord;
+use App\Models\Chating;
 
 class EmployeeDetails extends Authenticatable
 {
@@ -87,5 +88,12 @@ class EmployeeDetails extends Authenticatable
     public function starredPeople()
     {
         return $this->hasMany(StarredPeople::class, 'emp_id', 'emp_id');
+    }
+
+    public function conversations()
+    {
+       
+        return $this->hasMany(Chating::class,'sender_id')->orWhere('receiver_id',$this->emp_id)->whereNotDeleted();
+       
     }
 }
