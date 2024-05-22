@@ -16,7 +16,7 @@ use App\Models\LeaveRequest;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Log;
 
 class LeavePage extends Component
 {
@@ -57,14 +57,24 @@ class LeavePage extends Component
 
     public function hasPendingLeave()
     {
-        // Check if there are pending leave requests
-        return $this->leaveRequests->where('status', 'pending')->isNotEmpty();
+        try {
+            // Check if there are pending leave requests
+            return $this->leaveRequests->where('status', 'pending')->isNotEmpty();
+        } catch (\Exception $e) {
+            // Handle the exception, log it, or display an error message
+            Log::error('Error in hasPendingLeave method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while checking for pending leave requests. Please try again later.');
+            return false; // or any other appropriate action
+        }
     }
 
+    //used to calculate number of days
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
+
             $startDate = Carbon::parse($fromDate);
+
             $endDate = Carbon::parse($toDate);
             // Check if the start and end sessions are different on the same day
             if (
@@ -100,7 +110,6 @@ class LeavePage extends Component
                 if ($startDate->isWeekday()) {
                     $totalDays += 1;
                 }
-
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -138,16 +147,32 @@ class LeavePage extends Component
         return (int) str_replace('Session ', '', $session);
     }
 
+    //in this method we can withdraw applied leave application
     public function cancelLeave($leaveRequestId)
     {
-        // Find the leave request by ID
-        $leaveRequest = LeaveRequest::find($leaveRequestId);
-
-        // Update status to 'rejected'
-        $leaveRequest->status = 'Withdrawn';
-        $leaveRequest->save();
-        $leaveRequest->touch();
-        session()->flash('message', 'Leave application Withdrawn .');
+        try {
+            // Find the leave request by ID
+            $leaveRequest = LeaveRequest::find($leaveRequestId);
+            
+            // Check if leave request exists
+            if (!$leaveRequest) {
+                throw new \Exception("Leave request not found.");
+            }
+            
+            // Update status to 'Withdrawn'
+            $leaveRequest->status = 'Withdrawn';
+            $leaveRequest->save();
+            $leaveRequest->touch();
+            
+            // Flash success message
+            session()->flash('message', 'Leave application Withdrawn.');
+        } catch (\Exception $e) {
+            // Handle the exception, log it, or display an error message
+            Log::error('Error canceling leave: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while canceling leave request. Please try again later.');
+        }
+        
+        // Redirect back to leave page
         return redirect()->to('/leave-page');
     }
 

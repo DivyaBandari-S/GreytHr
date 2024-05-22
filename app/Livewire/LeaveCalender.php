@@ -43,24 +43,6 @@ class LeaveCalender extends Component
     public $selectedDepartments = [];
 
 
-    public function open()
-    {
-        $this->showDialog = true;
-    }
-
-    public function close()
-    {
-        $this->showDialog = false;
-    }
-    public function openLocations()
-    {
-        $this->showLocations = !$this->showLocations;
-    }
-
-    public function closeLocations()
-    {
-        $this->showLocations = false;
-    }
     public function toggleSelection($location)
     {
         if ($location === 'All') {
@@ -81,21 +63,6 @@ class LeaveCalender extends Component
                 $this->selectedLocations[] = $location;
             }
         }
-    }
-
-    public function isSelectedAll()
-    {
-        return in_array('All', $this->selectedLocations);
-    }
-
-    public function openDept()
-    {
-        $this->showDepartment = !$this->showDepartment;
-    }
-
-    public function closeDept()
-    {
-        $this->showDepartment = false;
     }
     public function toggleDeptSelection($dept)
     {
@@ -119,6 +86,39 @@ class LeaveCalender extends Component
         }
     }
 
+    public function isSelectedAll()
+    {
+        return in_array('All', $this->selectedLocations);
+    }
+
+    public function openDept()
+    {
+        $this->showDepartment = !$this->showDepartment;
+    }
+
+    public function open()
+    {
+        $this->showDialog = true;
+    }
+
+    public function close()
+    {
+        $this->showDialog = false;
+    }
+    public function openLocations()
+    {
+        $this->showLocations = !$this->showLocations;
+    }
+
+    public function closeLocations()
+    {
+        $this->showLocations = false;
+    }
+
+    public function closeDept()
+    {
+        $this->showDepartment = false;
+    }
     public function isSelecteDeptdAll()
     {
         return in_array('All', $this->selectedDepartments);
@@ -261,7 +261,6 @@ class LeaveCalender extends Component
     {
 
         $date = Carbon::create($this->year, $this->month, 1)->subMonth();
-
         $this->year = $date->year;
         $this->month = $date->month;
         $this->generateCalendar();
@@ -278,7 +277,6 @@ class LeaveCalender extends Component
     {
         $this->loadLeaveTransactions($this->selectedDate);
     }
-
 
     public function loadLeaveTransactions($date)
     {

@@ -195,8 +195,8 @@ class HelpDesk extends Component
             })
             ->orderBy('created_at', 'desc')
             ->get();
-        return view('livewire.help-desk', [
-            'peopleData' => $peopleData,
-        ]);
+            return view('livewire.help-desk', [
+                'peopleData' => $peopleData,
+            ]);
     }
 }

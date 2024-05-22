@@ -11,7 +11,7 @@ class Admin extends Authenticatable
     use Notifiable;
     use HasFactory;
     protected $table = 'admins'; // Adjust the table name accordingly
- 
+
     protected $fillable = [
         'admin_emp_id','image',
         'company_id', 'employee_name', 'designation', 'skills',
@@ -25,7 +25,7 @@ class Admin extends Authenticatable
         'salary' => 'decimal:2',
         'is_active' => 'boolean',
     ];
- 
+
     public function com()
     {
         return $this->belongsTo(Company::class, 'company_id', 'company_id');
