@@ -41,7 +41,7 @@
 
     <livewire:styles />
 
-    @vite(['public/app.css', 'public/app.js'])
+    @vite(['public/css/app.css', 'public/js/app.js'])
 
 
     <!-- Bootstrap -->
