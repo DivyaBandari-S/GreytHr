@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('phone_number');
             $table->string('email')->unique();
+            $table->string('company_email');
             $table->text('bio');
             $table->string('linkedin_profile')->nullable();
             $table->string('github_profile')->nullable();
