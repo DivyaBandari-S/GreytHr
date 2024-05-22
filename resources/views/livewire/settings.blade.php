@@ -65,21 +65,21 @@
                                             <div class="card" style="padding: 20px; text-align: left;">
                                                 <div class="form-group">
                                                     <label style="font-size: 12px;color:#778899;font-weight:500;" for="oldPassword">Old Password</label>
-                                                    <br><input class="form-control" style="font-size: 12px;" type="password" id="oldPassword" name="oldPassword" placeholder="Enter your old password" wire:model="oldPassword" wire:change="changePassword">
+                                                    <br><input class="form-control" style="font-size: 12px;" type="password" id="oldPassword" name="oldPassword" placeholder="Enter your old password" wire:model="oldPassword">
                                                     @error("oldPassword")
                                                     <p class="pt-2 px-1 text-danger" style="font-size:10px">{{ str_replace('oldPassword', 'Password', $message) }}</p>
                                                     @enderror
                                                 </div>
                                                 <div class="form-group">
                                                     <label style="font-size: 12px;color:#778899;font-weight:500;" for="newPassword">New Password</label>
-                                                    <br><input class="form-control" style="font-size: 12px;" type="password" id="newPassword" name="newPassword" placeholder="Enter your new password" wire:model="newPassword" wire:change="changePassword">
+                                                    <br><input class="form-control" style="font-size: 12px;" type="password" id="newPassword" name="newPassword" placeholder="Enter your new password" wire:model="newPassword">
                                                     @error("newPassword")
                                                     <p class="pt-2 px-1 text-danger" style="font-size:10px">{{ str_replace('newPassword', 'Password', $message) }}</p>
                                                     @enderror
                                                 </div>
                                                 <div class="form-group">
                                                     <label style="font-size: 12px;color:#778899;font-weight:500;" for="confirmNewPassword">Confirm New Password</label>
-                                                    <br><input class="form-control" style="font-size: 12px;" type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Enter your new password again" wire:model="confirmNewPassword" wire:change="changePassword">
+                                                    <br><input class="form-control" style="font-size: 12px;" type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Enter your new password again" wire:model="confirmNewPassword">
                                                     @error("confirmNewPassword")
                                                     <p class="pt-2 px-1 text-danger" style="font-size:10px">{{ str_replace('newPassword', 'Password', $message) }}</p>
                                                     @enderror
@@ -286,7 +286,7 @@
             </div>
             <div class="col-md-2"></div>
         </div>
-        
-        
+
+
         @endforeach
     </div>

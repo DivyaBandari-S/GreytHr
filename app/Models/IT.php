@@ -11,12 +11,12 @@ class IT extends Authenticatable
     use Notifiable;
     use HasFactory;
     protected $table = 'i_t'; // Adjust the table name accordingly
- 
+
     protected $fillable = [
         'it_emp_id','image',
         'company_id', 'employee_name', 'designation', 'skills',
         'experience_years', 'education', 'certifications', 'date_of_birth',
-        'address', 'phone_number', 'email', 'bio', 'linkedin_profile','password',
+        'address', 'phone_number', 'email', 'company_email', 'bio', 'linkedin_profile','password',
         'github_profile', 'salary', 'is_active'
     ];
 
