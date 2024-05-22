@@ -158,7 +158,7 @@
                             <!-- Add input fields for email and DOB verification -->
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" wire:model="email">
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email/company email" wire:model="email">
                                 @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
