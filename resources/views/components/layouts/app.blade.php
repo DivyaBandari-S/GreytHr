@@ -47,13 +47,14 @@
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+ <!-- SweetAlert2 CSS -->
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.x.x/dist/alpine.js" defer></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
@@ -69,7 +70,9 @@
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
+      <!-- SweetAlert2 CSS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.11.0/sweetalert2.min.js" integrity="sha512-Wi5Ms24b10EBwWI9JxF03xaAXdwg9nF51qFUDND/Vhibyqbelri3QqLL+cXCgNYGEgokr+GA2zaoYaypaSDHLg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- npm Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ asset('js/app.js') }}" defer data-turbolinks-track="reload"></script>
@@ -80,7 +83,7 @@
     <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></script>
 
     <script src="{{ asset('vendor/livewire/livewire.js') }}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Add these links to your HTML -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -1112,7 +1115,7 @@
 
                     <div class="col d-flex align-items-center mt-2">
                         <!-- <i class="fas fa-bars hideHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px; margin: 0px 10px; cursor: pointer;" onclick="myMenu()"></i>
-                        <i class="fas fa-bars showHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px;  cursor: pointer;" onclick="myMenuSmall()"></i> -->
+                            <i class="fas fa-bars showHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px;  cursor: pointer;" onclick="myMenuSmall()"></i> -->
                         <img src="/images/app-drawer.png" class="app-drawer-img hideHamburger" onclick="myMenu()">
                         <img src="/images/app-drawer.png" class="app-drawer-img showHamburger" onclick="myMenuSmall()">
                         <h6 class="mx-2 my-0" style="color: white; width: -webkit-fill-available;"> @livewire('page-title')
@@ -1130,8 +1133,9 @@
                             </div>
                             <div>
                                 <a href="/users" style="color: white; text-decoration: none;">
-                                    <i class="fa fa-comment" style="display: inline-block; vertical-align: middle;font-size: 20px; margin-left: 10px;"></i>
-                                  </a>
+                                    <i class="fa fa-comment"
+                                        style="display: inline-block; vertical-align: middle;font-size: 20px; margin-left: 10px;"></i>
+                                </a>
                             </div>
                             <div class="col dropdown mx-2 p-0">
 
@@ -1171,9 +1175,9 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content" style="background-color : transparent; border : none">
                         <!-- <div class="modal-header">
-            <h1 class="modal-title fs-5" id="navigateLoaderLabel">Modal title</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div> -->
+                <h1 class="modal-title fs-5" id="navigateLoaderLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div> -->
 
                         <div class="modal-body">
                             <div class="logo text-center mb-1" style="padding-top: 20px;">
@@ -1187,9 +1191,9 @@
                             </div>
                         </div>
                         <!-- <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Understood</button>
-        </div> -->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Understood</button>
+            </div> -->
                     </div>
                 </div>
             </div>
@@ -1492,7 +1496,7 @@
                 });
             });
         </script>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
