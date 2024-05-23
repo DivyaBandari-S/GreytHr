@@ -1,5 +1,18 @@
 <?php
 
+// File Name                       : EmpLogin.php
+// Description                     : This file contains the implementation after login change theire password,nick name etc.
+// Creator                         : Saragada Siva Kumar and Asapu Kiran Kumar
+// Email                           :
+// Organization                    : PayG.
+// Date                            : 2024-03-07
+// Framework                       : Laravel (10.10 Version)
+// Programming Language            : PHP (8.1 Version)
+// Database                        : MySQL
+// Models                          : EmployeeDetails,Hr,Finance,Admin,IT
+
+
+
 namespace App\Livewire;
 
 use App\Models\Admin;

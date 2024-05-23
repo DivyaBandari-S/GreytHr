@@ -1,5 +1,16 @@
 <?php
 
+// File Name                       : EmpLogin.php
+// Description                     : This file contains the implementation multi guard login
+// Creator                         : Saragada Siva Kumar
+// Email                           :
+// Organization                    : PayG.
+// Date                            : 2024-03-07
+// Framework                       : Laravel (10.10 Version)
+// Programming Language            : PHP (8.1 Version)
+// Database                        : MySQL
+// Models                          : EmployeeDetails,Hr,Finance,Admin,IT
+
 namespace App\Livewire;
 
 use Illuminate\Validation\Rule;
