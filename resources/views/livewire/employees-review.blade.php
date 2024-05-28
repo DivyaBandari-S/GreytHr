@@ -194,7 +194,6 @@
                 </div>
                 @endif
                 @endif
-
         </div>
 
         @elseif($currentSection === 'Confirmation')

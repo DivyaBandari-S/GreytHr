@@ -13,14 +13,14 @@
                     <span class="week-details-heading">Week : <span class="heading-value">{{ $currentWeek }}</span> </span>
                 </div>
                 <div class="emp-timesheet-profile d-flex align-items-center gap-1">
-                   @if($employeeDetails->image)
-                        <div class="employee-profile-image-container" >
-                            <img height="32" width="32" src="{{ asset('storage/' . $employeeDetails->image) }}"  style="border-radius:50%;">
-                        </div>
+                    @if($employeeDetails->image)
+                    <div class="employee-profile-image-container">
+                        <img height="32" width="32" src="{{ asset('storage/' . $employeeDetails->image) }}" style="border-radius:50%;">
+                    </div>
                     @else
-                        <div class="employee-profile-image-container" >
-                            <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="32" width="32" alt="Default Image">
-                        </div>
+                    <div class="employee-profile-image-container">
+                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="32" width="32" alt="Default Image">
+                    </div>
                     @endif
                     <span class="week-details-heading">{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }}</span>
                 </div>
@@ -39,49 +39,49 @@
         <div class="col">
             <div class="billable-hours d-flex gap-2">
                 <div class="d-flex justify-content-center align-items-center" style="width:32px;height:32px;border-radius:50%;background:#dffafe;">
-                 <img src="{{ asset('/images/clock-2.png') }}" alt="logo" height="20" width="20" style="border-radius:50%;">
+                    <img src="{{ asset('/images/clock-2.png') }}" alt="logo" height="20" width="20" style="border-radius:50%;">
                 </div>
-                 <div class="d-flex flex-column">
+                <div class="d-flex flex-column">
                     <span>Billable hours</span>
                     <span class="heading-value">40 hours 32 minutes</span>
-                 </div>
+                </div>
             </div>
         </div>
         <div class="col">
             <div class="billable-hours d-flex gap-2">
                 <div class="d-flex justify-content-center align-items-center" style="width:30px;height:30px;border-radius:50%;background:#d5f7e5;">
-                   <img src="{{ asset('/images/save-money.png') }}" alt="logo" height="18" width="19" style="border-radius:50%;">
+                    <img src="{{ asset('/images/save-money.png') }}" alt="logo" height="18" width="19" style="border-radius:50%;">
                 </div>
-                 <div class="d-flex flex-column">
+                <div class="d-flex flex-column">
                     <span>Non-Billable hours</span>
                     <span class="heading-value">10 hours 32 minutes</span>
-                 </div>
+                </div>
             </div>
         </div>
         <div class="col">
             <div class="billable-hours d-flex gap-2">
                 <div class="d-flex justify-content-center align-items-center" style="width:30px;height:30px;border-radius:50%;background:#fcd9d6;">
-                   <img src="{{ asset('/images/calendar.png') }}" alt="logo" height="18" width="19">
+                    <img src="{{ asset('/images/calendar.png') }}" alt="logo" height="18" width="19">
                 </div>
-                 <div class="d-flex flex-column">
+                <div class="d-flex flex-column">
                     <span>Submission Date</span>
                     <span class="heading-value">{{ $submissionDate }}</span>
-                 </div>
+                </div>
             </div>
         </div>
         <div class="col">
             <div class="billable-hours d-flex gap-2">
                 <div class="d-flex justify-content-center align-items-center" style="width:30px;height:30px;border-radius:50%;background:#fdead5;">
-                   <img src="{{ asset('/images/user.png') }}" alt="logo" height="19" width="19">
+                    <img src="{{ asset('/images/user.png') }}" alt="logo" height="19" width="19">
                 </div>
-                 <div class="d-flex flex-column">
+                <div class="d-flex flex-column">
                     <span>Approved By</span>
                     @if($managerNameOfLogin)
                     <span class="heading-value">{{ $managerNameOfLogin }}</span>
                     @else
                     <span class="heading-value">-</span>
                     @endif
-                 </div>
+                </div>
             </div>
         </div>
     </div>
@@ -97,7 +97,6 @@
                         <thead>
                             <tr>
                                 <th>Client</th>
-                                <th>Job</th>
                                 <th>Task</th>
                                 <th>Mon</th>
                                 <th>Tue</th>
@@ -114,34 +113,40 @@
                             <tr>
                                 @foreach($row as $index => $data)
                                 <td>
-                                    @if($index < 3)
-                                    <input type="text" class="placeholder-small" wire:model="rows.{{ $loop->parent->index }}.{{ $index }}" style="width:60px;outline:none;border:1px solid #ccc;padding:7px;border-radius:3px;" placeholder="Enter text..."/>
+                                    @if($index< 2)
+                                    t<input type="text" class="placeholder-small" wire:model="rows.{{ $loop->parent->index }}.{{ $index }}" style="width:60px;outline:none;border:1px solid #ccc;padding:7px;border-radius:3px;" placeholder="Enter text..." />
                                     @else
-                                        <input type="number" wire:model="rows.{{ $loop->parent->index }}.{{ $index }}" style="width:60px;outline:none;border:1px solid #ccc;padding:7px;border-radius:3px;"/>
+                                    <input type="number" wire:model="rows.{{ $loop->parent->index }}.{{ $index }}" style="width:60px;outline:none;border:1px solid #ccc;padding:7px;border-radius:3px;" />
                                     @endif
                                 </td>
                                 @endforeach
+
+                                <!-- If the number of columns in the body is less than the number of header columns, add empty cells to match the number of header columns -->
+                                @for($i = count($row); $i < 10; $i++) <td>
+                                    </td>
+                                    @endfor
                             </tr>
                             @endforeach
                         </tbody>
 
+
                         <tfoot class="border">
                             <tr>
-                                <td colspan="3" class="table-footer-header text-end px-2">Total for the week</td>
+                                <td colspan="2" class="table-footer-header text-end px-2">Total for the week</td>
                                 <td>40</td> <!-- Total for Monday -->
                                 <td>40</td> <!-- Total for Tuesday -->
                                 <td>40</td> <!-- Total for Wednesday -->
                                 <td>40</td> <!-- Total for Thursday -->
                                 <td>40</td> <!-- Total for Friday -->
-                                <td>0</td>  <!-- Total for Saturday -->
-                                <td>0</td>  <!-- Total for Sunday -->
+                                <td>0</td> <!-- Total for Saturday -->
+                                <td>0</td> <!-- Total for Sunday -->
                                 <td>100</td>
                             </tr>
                         </tfoot>
                     </table>
                     <div class="d-flex float-right mt-4">
-                      <a href="#" wire:click.prevent="addNewRow" style="font-size:12px;">+ Add New</a>
-                   </div>
+                        <a href="#" wire:click.prevent="addNewRow" style="font-size:12px;">+ Add New</a>
+                    </div>
                 </div>
             </div>
         </div>

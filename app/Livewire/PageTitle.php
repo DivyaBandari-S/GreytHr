@@ -11,6 +11,7 @@
 // Models                          : -
 namespace App\Livewire;
 
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Illuminate\Support\Facades\Route;
 
@@ -20,35 +21,48 @@ class PageTitle extends Component
 
     public function mount()
     {
-        // Fetch the title dynamically based on the current route
-        $this->pageTitle = $this->getTitleFromRoute();
+        try {
+            // Fetch the title dynamically based on the current route
+            $this->pageTitle = $this->getTitleFromRoute();
+        } catch (\Exception $e) {
+            Log::error('Error occurred in mount method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching page title.');
+        }
     }
 
     private function getTitleFromRoute()
     {
-        // Get the current route name
-        $routeName = Route::currentRouteName();
-
-        return $this->mapRouteToTitle($routeName);
+        try {
+            // Get the current route name
+            $routeName = Route::currentRouteName();
+            return $this->mapRouteToTitle($routeName);
+        } catch (\Exception $e) {
+            Log::error('Error occurred in getTitleFromRoute method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching page title.');
+        }
     }
 
     private function mapRouteToTitle($routeName)
     {
-        $routeTitleMap = [
-            'home' => 'Home',
-            'feeds' => 'Feeds',
-            'people' => 'People',
-            'profile.info' => 'Employee Information',
-            'itdeclaration' => 'It Declaration',
-            'whoisin' => 'Who is in ?',
-            'leave-history' => 'Leave - View Details',
-            'leave-pending' =>'Leave - View Details',
-            'approved-details' => 'Review - Leave',
-            'leave-page' => 'Leave Apply',
-            
-        ];
-        // Use the mapped title or fallback to the original route name
-        return $routeTitleMap[$routeName] ?? ucwords(str_replace('-', ' ', $routeName));
+        try {
+            $routeTitleMap = [
+                'home' => 'Home',
+                'feeds' => 'Feeds',
+                'people' => 'People',
+                'profile.info' => 'Employee Information',
+                'itdeclaration' => 'It Declaration',
+                'whoisin' => 'Who is in ?',
+                'leave-history' => 'Leave - View Details',
+                'leave-pending' =>'Leave - View Details',
+                'approved-details' => 'Review - Leave',
+                'leave-page' => 'Leave Apply',
+            ];
+            // Use the mapped title or fallback to the original route name
+            return $routeTitleMap[$routeName] ?? ucwords(str_replace('-', ' ', $routeName));
+        } catch (\Exception $e) {
+            Log::error('Error occurred in mapRouteToTitle method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while mapping route to title.');
+        }
     }
 
     public function render()
