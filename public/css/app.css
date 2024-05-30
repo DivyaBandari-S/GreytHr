@@ -1814,8 +1814,9 @@ td{
 
 .text-base {
     /* Font size */
-    font-size: 1.25rem;
-    /* Adjust as needed */
+    font-size: 14px;
+    color:#47515b;
+    font-weight: 600;
 }
 
 .font-semibold {
@@ -2645,7 +2646,7 @@ td{
 
     /* //catalog */
     .activeCatalog {
-        background-color: #02114f;
+        background-color: none;
         color: #fff;
     }
 
@@ -3864,6 +3865,36 @@ option{
     font-weight: 500;
     color: #47515b;
 }
+
 p::first-letter {
     text-transform: uppercase;
   }
+  .offcanvas{
+    font-family: "Montserrat", sans-serif;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+  }
+.offcanvasRightLabel{
+    color:#778899;
+    font-size: 500;
+}
+.lableCount{
+    color:#f2b13f;
+}
+.notification-text{
+    color: #9fabb7 ;
+    font-size: 11px;
+}
+.notification-head{
+    font-size:13px;
+}
+.notification-text-para{
+    color: #778899    ;
+    font-weight: normal;
+    font-size:11px;
+}
+.my-daterange-timesheet .month {
+    display: revert-layer !important;
+}
+.my-daterange-timesheet td {
+    padding: 1px !important;
+}

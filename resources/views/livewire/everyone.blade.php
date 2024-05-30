@@ -1,14 +1,19 @@
+<div class="px-4">
 <div class="container mt-3" style="height:60px;">
-    <div class="row bg-white" style="height:80px">
+    <div class="row bg-white border rounded" style="height:80px">
         <div class="col-md-1 mt-3" style="height:60px">
             @foreach($employeeDetails as $employee)
-            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/'. $employee->image) }}">
+            @if($employee->image)
+                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $employee->image) }}">
+                @else
+                    <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+                @endif
             @endforeach
         </div>
         <div class="col-md-10 mt-2 bg-white d-flex align-items-center justify-content-between">
             <div>
                 @if(Auth::check())
-                <span class="text-base font-semibold">Hey {{ ucwords(strtolower(Auth::user()->first_name)) }} {{ ucwords(strtolower(Auth::user()->last_name)) }}</span>
+                <span class="text-base">Hey {{ ucwords(strtolower(Auth::user()->first_name)) }} {{ ucwords(strtolower(Auth::user()->last_name)) }}</span>
                 @else
                 <p>No employee details available.</p>
                 @endif
@@ -291,7 +296,7 @@
                                 @livewire('company-logo')
                         </div>
                         <div class="col-6 m-auto"
-                            style="font-size: 13px; font-weight: normal; font-family: Open Sans, sans-serif; font-weight: 100px; color: #9E9696;text-align:end;">
+                            style="font-size: 13px; font-weight: normal;  font-weight: 100px; color: #9E9696;text-align:end;">
                             {{ $post->category }}
                         </div>
                     </div>
@@ -301,11 +306,18 @@
                         @endphp
                         @if($employee)
                         <div class="col-3">
+                            @if($employee->image)
+
                             <img style="border-radius: 50%;" height="50" width="50"
                                 src="{{ asset('storage/'. $employee->image) }}">
+                            @else
+                                <div class="employee-profile-image-container" >
+                                    <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                </div>
+                            @endif
                         </div>
                         <div class="col-9 m-auto" style="text-align: left">
-                        <p class="text-base m-0" style="margin-left: 20px; font-size: 14px;">
+                        <p class="text-base m-0" style="margin-left: 20px; font-size: 12px;">
     {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}
 </p>
 
@@ -318,10 +330,10 @@
 
                     <div class="row m-0 mb-3">
                         <div class="col-md-6">
-                        <img src="{{ asset('storage/' . $post->attachment) }}" alt="Post Image" style="width: 200px; height: 60px">
+                        <img src="{{ asset('storage/' . $post->attachment) }}" alt="" style="width: 200px; height: 60px">
                         </div>
                         <div class="col-md-6 m-auto">
-                            <p style="font-size: 14px; font-family: 'Open Sans', sans-serif; margin-top: 10px; font-weight: 100; color: #677A8E;">
+                            <p style="font-size: 12px; margin-top: 10px; font-weight: 100; color: #677A8E;">
                                 {{ $post->description }}
                             </p>
                         </div>
@@ -800,3 +812,5 @@ function filterDropdowns() {
     }
 }
 </script>
+
+</div>

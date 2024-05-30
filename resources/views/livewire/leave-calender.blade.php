@@ -13,7 +13,7 @@
         .table th {
             text-align: center;
             height: 15px;
-            border: none;       
+            border: none;
         }
 
         .table td:hover {

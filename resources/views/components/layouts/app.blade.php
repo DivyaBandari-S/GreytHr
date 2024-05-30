@@ -1144,11 +1144,49 @@
                             </div>
 
                             <div class="notification-icon ">
-                                <i style="color: white; position: relative;" class="fas mr-1 fa-bell">
+                            @php
+                                $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+                                        $matchingLeaveRequests = DB::table('leave_applications')
+                                            ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                                            ->select('employee_details.first_name', 'employee_details.last_name', 'leave_applications.leave_type', 'leave_applications.emp_id', 'leave_applications.reason')
+                                            ->where('leave_applications.status', 'pending')
+                                            ->where(function ($query) use ($loggedInEmpId) {
+                                                $query->whereJsonContains('leave_applications.applying_to', [['manager_id' => $loggedInEmpId]])
+                                                    ->orWhereJsonContains('leave_applications.cc_to', [['emp_id' => $loggedInEmpId]]);
+                                            })
+                                            ->get();
+
+                                        $matchingLeaveRequestsCount = $matchingLeaveRequests->count();
+
+                                @endphp
+                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="background:none;border:none;">
+                               <i style="color: white; position: relative;" class="fas mr-1 fa-bell">
                                     <span class="badge bg-danger"
-                                        style="position: absolute; top: -9px; right: -1px; font-size:10px;">4</span>
+                                        style="position: absolute; top: -9px; right: -1px; font-size:10px;">{{ $matchingLeaveRequestsCount }}</span>
                                 </i>
+                            </button>
                             </div>
+                            <hr style="color:grey;">
+                            <div class="offcanvas offcanvas-end " tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width:320px;background:#f5f8f9;">
+                                <div class="offcanvas-header d-flex justify-content-between align-items-center">
+                                    <h6 id="offcanvasRightLabel" class="offcanvasRightLabel">Notifications <span class="lableCount">({{ auth()->guard('emp')->user()->leaveRequests()->where('status', 'pending')->count() }})</span> </h6>
+                                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" style="font-size: 7px; width: 15px; height: 15px; border-radius: 50%; padding: 2px;border:1px solid #778899;">
+                                    </button>
+                                </div>
+                                <div class="offcanvas-body">
+                                @if ($mangerid)
+                                @foreach ($matchingLeaveRequests as $request)
+                                <div class="leave-request-container">
+                                    <div class="border rounded bg-white p-2" style="text-decoration:none;" title="{{ $request->leave_type }}">
+                                        <p class="mb-0 notification-text">EMPLOYEE LEAVE REQUESTS</p>
+                                        <a href="/employees-review" class="notification-head">{{ $request->first_name }} {{ $request->last_name }} (#{{ $request->emp_id }})</a>
+                                        <p class="mb-0 notification-text-para">Above employee applied a leave request of Reason : {{ ucfirst(strtolower($request->reason)) }} </p>
+                                    </div>
+                                </div>
+                                @endforeach
+                                @endif
+                                </div>
+                                </div>
                         @endauth
 
                         <div style="text-align:end;cursor:pointer; margin-right:10px;">

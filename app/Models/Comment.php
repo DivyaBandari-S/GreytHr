@@ -9,10 +9,12 @@ class Comment extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'card_id',
         'emp_id',
-        'first_name',
-        'last_name',
         'comment',
-        'image'
     ];
+    public function employee()
+    {
+        return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
+    }
 }
