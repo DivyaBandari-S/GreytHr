@@ -1,5 +1,16 @@
 <?php
 
+// File Name                       : EmpLogin.php
+// Description                     : This file contains the implementation multi guard login
+// Creator                         : Saragada Siva Kumar
+// Email                           :
+// Organization                    : PayG.
+// Date                            : 2024-03-07
+// Framework                       : Laravel (10.10 Version)
+// Programming Language            : PHP (8.1 Version)
+// Database                        : MySQL
+// Models                          : EmployeeDetails,Hr,Finance,Admin,IT
+
 namespace App\Livewire;
 
 use Illuminate\Validation\Rule;
@@ -38,6 +49,8 @@ class EmpLogin extends Component
         'password' => '',
     ];
     public $error = '';
+    public $verify_error = '';
+    public $pass_change_error = '';
     protected $messages = [
         'form.emp_id.required' => 'ID/Mail is required.',
         'form.password.required' => 'Password is required.',
@@ -206,19 +219,23 @@ class EmpLogin extends Component
         } catch (ValidationException $e) {
             // Handle validation errors
             //$this->showErrorModal = true;
-            $this->addError('email', 'There was a problem with your input. Please check and try again.');
+            // $this->addError('email', 'There was a problem with your input. Please check and try again.');
+            $this->verify_error="There was a problem with your input. Please check and try again.";
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database errors
             //$this->showErrorModal = true;
-            $this->addError('email', 'We are experiencing technical difficulties. Please try again later.');
+            // $this->addError('email', 'We are experiencing technical difficulties. Please try again later.');
+            $this->verify_error='We are experiencing technical difficulties. Please try again later.';
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
             // Handle server errors
             // $this->showErrorModal = true;
-            $this->addError('email', 'There is a server error. Please try again later.');
+            // $this->addError('email', 'There is a server error. Please try again later.');
+            $this->verify_error='There is a server error. Please try again later.';
         } catch (\Exception $e) {
             // Handle general errors
             // $this->showErrorModal = true;
-            $this->addError('email', 'An unexpected error occurred. Please try again.');
+            // $this->addError('email', 'An unexpected error occurred. Please try again.');
+            $this->verify_error='An unexpected error occurred. Please try again.';
         }
     }
 
@@ -308,19 +325,19 @@ class EmpLogin extends Component
         } catch (ValidationException $e) {
             // Handle validation errors
             // $this->passwordChangedModal = false;
-            $this->addError('newPassword', 'There was a problem with your input. Please check and try again.');
+            $this->pass_change_error='There was a problem with your input. Please check and try again.';
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database errors
             // $this->passwordChangedModal = false;
-            $this->addError('newPassword', 'We are experiencing technical difficulties. Please try again later.');
+            $this->pass_change_error='We are experiencing technical difficulties. Please try again later.';
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
             // Handle server errors
             // $this->passwordChangedModal = false;
-            $this->addError('newPassword', 'There is a server error. Please try again later.');
+            $this->pass_change_error= 'There is a server error. Please try again later.';
         } catch (\Exception $e) {
             // Handle general errors
             //$this->passwordChangedModal = false;
-            $this->addError('newPassword', 'An unexpected error occurred. Please try again.');
+            $this->pass_change_error= 'An unexpected error occurred. Please try again.';
         }
     }
 

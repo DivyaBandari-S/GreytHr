@@ -1,5 +1,18 @@
 <?php
 
+// File Name                       : EmpLogin.php
+// Description                     : This file contains the implementation after login change theire password,nick name etc.
+// Creator                         : Saragada Siva Kumar and Asapu Kiran Kumar
+// Email                           :
+// Organization                    : PayG.
+// Date                            : 2024-03-07
+// Framework                       : Laravel (10.10 Version)
+// Programming Language            : PHP (8.1 Version)
+// Database                        : MySQL
+// Models                          : EmployeeDetails,Hr,Finance,Admin,IT
+
+
+
 namespace App\Livewire;
 
 use App\Models\Admin;
@@ -34,6 +47,7 @@ class Settings extends Component
     public $newPassword;
     public $confirmNewPassword;
     public $passwordChanged = false;
+    public $error = '';
     public function editBiography()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -226,19 +240,19 @@ class Settings extends Component
             $this->passwordChanged = true;
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors
-            $this->addError('validation', 'There was an issue with your input. Please check and try again.');
+            $this->error='There was an issue with your input. Please check and try again.';
         } catch (\Illuminate\Auth\AuthenticationException $e) {
             // Handle authentication errors
-            $this->addError('auth', 'Authentication failed. Please try logging in again.');
+            $this->error= 'Authentication failed. Please try logging in again.';
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query errors
-            $this->addError('database', 'There was a problem with the database query. Please try again later.');
+            $this->error='There was a problem with the database query. Please try again later.';
         } catch (\PDOException $e) {
             // Handle database connection errors
-            $this->addError('database', 'Unable to connect to the database. Please check your database credentials and connection.');
+            $this->error='Unable to connect to the database. Please check your database credentials and connection.';
         } catch (\Exception $e) {
             // Handle general errors
-            $this->addError('general', 'An unexpected error occurred. Please try again later.');
+            $this->error='An unexpected error occurred. Please try again later.';
         }
     }
 
