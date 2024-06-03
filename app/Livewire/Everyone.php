@@ -36,7 +36,8 @@ class Everyone extends Component
     public function mount()
     {
         // Retrieve posts data and assign it to the $posts property
-        $this->posts = Post::all();
+        $this->posts = Post::orderBy('created_at', 'desc')->get();
+
     }
     public function closeFeeds()
     {
@@ -74,7 +75,7 @@ class Everyone extends Component
         $attachmentPath = $this->attachment->store('attachments', 'public');
         $post->update(['attachment' => $attachmentPath]);
     }
- 
+
     // Reset form fields and display messages
     $this->reset(['category', 'description', 'attachment']);
     $this->message = 'Post created successfully!';

@@ -14,6 +14,7 @@ use App\Models\Emoji;
 use Livewire\WithFileUploads;
 use App\Services\GoogleDriveService;
 use App\Models\Addcomment;
+use App\Models\Company;
 use App\Models\Post;
 
 class Feeds extends Component
@@ -53,6 +54,7 @@ class Feeds extends Component
 
     public $showFeedsDialog = false;
     public $showMessage = true;
+    public $empCompanyLogoUrl;
     public function closeMessage()
     {
         $this->showMessage = false;
@@ -103,7 +105,8 @@ class Feeds extends Component
         $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->storedemojis= Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->emojis= EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-
+                // Retrieve and set the company logo URL for the current employee
+                $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
     }
     public $isEmojiListVisible = false;
     public function showEmojiList()
@@ -143,7 +146,7 @@ class Feeds extends Component
     }
 }
 
-
+    
     // Method to add emoji
     public function add_emoji($emp_id)
     {
@@ -160,13 +163,13 @@ class Feeds extends Component
             'emoji' => $this->selectedEmoji ?? '',
         ]);
         
-
+      
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-
         // Optionally, show a flash message
         session()->flash('success', 'Emoji added successfully.');
+
     }
     public function createemoji($emp_id)
     {
@@ -182,14 +185,13 @@ class Feeds extends Component
             'last_name' => $user->last_name,
             'emoji_reaction' => $this->selectedEmojiReaction ?? '',
         ]);
-
+       
       
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         // Optionally, show a flash message
         session()->flash('message', 'Emoji added successfully.');
-
     }
 
     public function add_comment($emp_id)
@@ -211,8 +213,6 @@ class Feeds extends Component
                             ->orderByDesc('created_at')
                             ->get();
         session()->flash('message', 'Comment added successfully.');
-        $this->render();
-        $this->setCurrentCardEmpId($emp_id);
     }
     
 public function employee()
@@ -242,7 +242,7 @@ public function createcomment($emp_id)
                         ->get();
     // Flash a success message
     session()->flash('message', 'Comment added successfully.');
-    $this->render();
+    $this->combinedData = $this->combineAndSortData($this->employees);
 }
 public function upload()
 {
@@ -255,11 +255,9 @@ public function upload()
 }
 
 
-
 public function submit()
 {
     $this->validate( $this->newCommentRules);
-
     // Get the authenticated employee's ID
     $emp_id = Auth::user()->emp_id;
 
@@ -305,6 +303,18 @@ public function submit()
 
     public $fileId;
 
+// Method to fetch the company logo URL for the current employee
+private function getEmpCompanyLogoUrl()
+{
+    // Get the current authenticated employee's company ID
+    $empCompanyId = auth()->guard('emp')->user()->company_id;
+
+    // Assuming you have a Company model with a 'company_logo' attribute
+    $company = Company::where('company_id', $empCompanyId)->first();
+
+    // Return the company logo URL, or a default if not found
+    return $company ? $company->company_logo : asset('user.jpg');
+}
 
     public function render()
 {
@@ -316,6 +326,7 @@ public function submit()
     return view('livewire.feeds', [
         'comments' => $this->comments,
         'addcomments'=>$this->addcomments,
+        'empCompanyLogoUrl' => $this->empCompanyLogoUrl,
         'employees' => $this->employeeDetails,'emojis' => $emojis, 'storedEmojis' => $storedEmojis,
     ]);
 }
@@ -332,9 +343,10 @@ public function submit()
 
     private function combineAndSortData($employees)
     {
+
         $combinedData = [];
         $currentDate = Carbon::now();
-    
+
         foreach ($employees as $employee) {
             if ($employee->date_of_birth) {
                 $dateOfBirth = Carbon::parse($employee->date_of_birth);
@@ -347,7 +359,7 @@ public function submit()
                     ];
                 }
             }
-    
+
             if ($employee->hire_date) {
                 $hireDate = Carbon::parse($employee->hire_date);
                 // Check if the hire date is within the current month and up to the current date
@@ -360,12 +372,14 @@ public function submit()
                 }
             }
         }
-    
+
+
         // Sort the combined data by date in descending order
         usort($combinedData, function ($a, $b) {
             return $b['date'] <=> $a['date']; // Sort in descending order
         });
 
         return $combinedData;
+
     }
 }

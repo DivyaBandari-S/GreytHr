@@ -65,7 +65,10 @@ class EmployeeDetails extends Authenticatable
         'company_id',
         'is_starred',
         'status',
-        'skill_set'
+        'skill_set',
+        'job_mode',
+        'notice_period',
+        'extension'
     ];
     public function leaveRequests()
     {

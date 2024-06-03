@@ -89,7 +89,7 @@
             </div>
         </div>
         <!-- Additional row -->
-        <div class="row mt-5 d-flex" style="overflow-x: hidden;">
+        <div class="row mt-3 d-flex" style="overflow-x: hidden;">
 
             <div class="col-md-3 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:400;overflow-x: hidden;">
 
@@ -102,8 +102,6 @@
                 <div class="activities">
                     <label class="custom-radio-label">
                         <input type="radio" name="radio" value="activities" checked>
-
-
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trello stroke-current text-salmon-400 stroke-1" style="width: 1rem; height: 1rem; margin-left: 10px;">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                             <rect x="7" y="7" width="3" height="9"></rect>
@@ -125,8 +123,6 @@
                             </div>
                         </span><span class="custom-radio-button bg-blue" style="margin-left:10px;font-size:10px"></span> <span style="color:#778899;font-size:12px;font-weight:500;">Posts</span></label>
                 </div>
-
-
 
                 <hr style="width: 100%;border-bottom: 1px solid grey;">
                 <div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
@@ -162,7 +158,6 @@
                             </ul>
                         </div>
                     </div>
-
 
                     <div class="w-full visible mt-1" style="margin-top: 20px;">
                         <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
@@ -205,9 +200,6 @@
                         </div>
                         <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
                             <ul style="font-size: 12px; margin: 0; padding: 0;">
-
-
-
                                 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">HR</a>
                                 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations</a>
                                 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations Team</a>
@@ -221,21 +213,17 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
             <div class="col" style="max-height: 80vh; overflow-y: auto;scroll-behavior: smooth;">
-                <div class="col-md-8">
+                <div class="col-md-8 ">
                     @foreach ($combinedData as $index => $data)
                     @if ($data['type'] === 'date_of_birth' )
-
-                    <div class="birthday-card bg-dark">
+                    <div class="birthday-card  ">
                         <!-- Upcoming Birthdays List -->
-                        <div class="F" style="padding: 15px; background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top: 5px">
+                        <div class="F mb-4" style="padding: 15px; background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top: 5px">
                             <div class="row m-0">
                                 <div class="col-md-4 mb-2" style="text-align: center;">
-                                    @livewire('company-logo')
+                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo">
                                 </div>
                                 <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
                                     Group Events
@@ -475,7 +463,7 @@
                         $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
                         @endphp
                         @if($currentCardComments && $currentCardComments->count() > 0)
-                        <div class="m-0 mt-2 px-2" style="overflow-y:auto; max-height:200px;">
+                        <div class="m-0 mt-2 px-2" style="overflow-y:auto; max-height:150px;">
                             @foreach ($currentCardComments as $comment)
                             <div class="mb-3" style="display: flex;gap:10px;align-items:center;">
                                 @if($comment->employee->image)
@@ -503,12 +491,12 @@
                 </div>
             </div>
             @elseif ($data['type'] === 'hire_date' )
-            <div class="hire-card">
+            <div class="hire-card ">
                 <!-- Upcoming Hire Dates List -->
-                <div class="F" style="padding: 15px; background-color:white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top:5px">
+                <div class="F mb-4" style="padding: 15px; background-color:white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top:5px">
                     <div class="row m-0">
                         <div class="col-md-4 mb-2" style="text-align: center;">
-                            @livewire('company-logo')
+                        <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo">
                         </div>
                         <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
                             Group Events
@@ -774,9 +762,9 @@
                     $currentCardComments = $addcomments->where('card_id', $data['employee']->emp_id);
                     @endphp
                     @if($currentCardComments && $currentCardComments->count() > 0)
-                    <div class="m-0 px-2" style="overflow-y:auto; max-height:200px;"></div>
+                    <div class="m-0 px-2" style="overflow-y:auto; max-height:150px;"></div>
                     @foreach ($currentCardComments as $comment)
-                    <div class="mb-2" style="display: flex;gap:10px;align-items:center;">
+                    <div class="mb-3" style="display: flex;gap:10px;align-items:center;">
                         <img style="border-radius: 50%; " height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
                         <div class="comment" style="font-size: 10px;">
                             <b style="color:#778899;font-weight:500;font-size:10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>

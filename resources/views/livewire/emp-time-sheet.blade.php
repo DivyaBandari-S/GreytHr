@@ -111,7 +111,6 @@
                     <table class="timesheet-table rounded border mx-2">
                         <thead>
                             <tr>
-                                <th style='padding: 10px;'>Client<i class="fas fa-user-circle ms-2" style='width: auto; height: auto'></i></th>
                                 <!-- Removed the "Job" header -->
                                 <th style='padding: 0px;'>Task<i class="fas fa-tasks ms-2" style='width: auto; height: auto'></i></th>
                                 <th style='padding: 10px;'>Mon</th>
@@ -132,13 +131,6 @@
                                 <td>
                                     <!-- Client select menu or Task input field -->
                                     @if($index === 0)
-                                    <select class="form-select" aria-label="Client select menu" style="font-size: 12px; margin: 0px;width: 80px;">
-                                        <option selected>Choose client</option>
-                                        <option value="client1">Client 1</option>
-                                        <option value="client2">Client 2</option>
-                                        <option value="client3">Client 3</option>
-                                    </select>
-                                    @elseif($index === 1)
                                     <select class="form-select" aria-label="Task select menu" style="font-size: 12px; margin: 0px;width: 80px;">
                                         <option selected>Choose task</option>
                                         <option value="task1">Task 1</option>
@@ -154,7 +146,7 @@
                                     <!-- Buttons for actions -->
                                     <div>
                                         <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewTotalModal"><i class="far fa-eye" style="font-size: 12px;"></i></button>
-                                        <button class="btn btn-outline-danger btn-sm"><i class="far fa-trash-alt" style="font-size: 12px;"></i></button>
+                                        <button class="btn btn-outline-danger btn-sm" wire:click="deleteLastRow"><i class="far fa-trash-alt" style="font-size: 12px;"></i></button>
                                     </div>
                                 </td>
                             </tr>

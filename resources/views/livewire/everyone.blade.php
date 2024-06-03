@@ -89,7 +89,7 @@
     </div>
 </div>
     <!-- Additional row -->
-    <div class="row mt-5 d-flex"  style="overflow-x: hidden;">
+    <div class="row mt-3 d-flex"  style="overflow-x: hidden;">
         <div class="col-md-3 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:500px">
 
         <p style="font-weight: 400;color:grey">Filters</p>
@@ -141,7 +141,7 @@
     <span class="text-xs leading-4" style="font-weight:bold; color: grey;">Groups</span>
 
         <span class="arrow-icon" id="arrowIcon1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:black"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:black">
                 <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
         </span>
@@ -220,8 +220,8 @@
 
 
     </div>
-    <div class="menu col-md-9" style="text-align: -webkit-center;">
-            <div id="eventsSection" style="margin-top: 20px">
+    <div class="menu col-md-9" style="text-align: -webkit-center;max-height:100vh;overflow-y:auto;">
+            <div id="eventsSection" style="margin-top: 20px; ">
                 <!-- <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png"
                     alt="Empty Image" style="width: 300px; height: auto; display: block;"> -->
                 <p style="font-size:20px;font-weight:600">It feels empty here!</p>
@@ -230,12 +230,9 @@
                 <button
                     style="background:#6663ea;width:110px;height:30px;border:1px solid grey;border-radius:5px;color:white;"
                     wire:click="addFeeds">Create Post</button>
-        
-
-       
 
             <!-- Begin the form outside the .form-group div -->
-            @if($showFeedsDialog)
+    @if($showFeedsDialog)
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -248,7 +245,7 @@
                 </div>
                 <form wire:submit.prevent="submit">
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="form-group" style="text-align:start;e">
                             <label for="category">You are posting in:</label>
                             <select wire:model="category" class="form-select" id="category">
                                 <option value="appreciations">Appreciations</option>
@@ -287,7 +284,7 @@
 @endif
     </div>
     @foreach($posts as $post)
-            <div class="col-md-6">
+            <div class="col-md-6 ">
                 <!-- Upcoming Birthdays List -->
                 <div class="F"
                     style="background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top: 20px;">

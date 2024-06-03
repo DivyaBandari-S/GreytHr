@@ -8,6 +8,7 @@ use Livewire\Component;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EmpTimeSheet extends Component
 {
@@ -30,11 +31,25 @@ class EmpTimeSheet extends Component
     {
         if (!$this->addingRow) {
             $this->addingRow = true;
-            $this->rows[] = ['','',0, 0, 0, 0, 0, 0, 0, 0];
+            $this->rows[] = ['',0, 0, 0, 0, 0, 0, 0, 0];
             $employeeId = auth()->guard('emp')->user()->emp_id;
             session(["timesheet_rows_{$employeeId}" => $this->rows]);
         }
     }
+    public function deleteLastRow()
+    {
+        try {
+            array_pop($this->rows);
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            session(["timesheet_rows_{$employeeId}" => $this->rows]);
+            $this->addingRow = false; // Reset the addingRow flag
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to delete the last row');
+            // You can also log the error if needed
+            Log::error('Failed to delete the last row: ' . $e->getMessage());
+        }
+    }
+
     protected $rules = [
         'week_start_date' => 'required|date',
         'hours.*' => 'nullable|numeric|min:0',
@@ -64,8 +79,6 @@ class EmpTimeSheet extends Component
                 'sunday_hours' => $this->hours[6] ?? null,
                 'client_task_mapping' => json_encode($this->client_task_mapping),
             ];
-            dd($data);
-
             // Store the data in the database
             TimeSheet::create($data);
 
@@ -107,7 +120,7 @@ class EmpTimeSheet extends Component
             $this->rows = session("timesheet_rows_{$employeeId}");
         } else {
             $this->rows = [
-                ['','',0, 0, 0, 0, 0, 0, 0, 0],
+                ['',0, 0, 0, 0, 0, 0, 0, 0],
             ];
             session(["timesheet_rows_{$employeeId}" => $this->rows]);
         }
