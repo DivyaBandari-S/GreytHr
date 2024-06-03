@@ -8,12 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Addcomment extends Model
 {
     use HasFactory;
+    protected $table = 'add_comments';
     protected $fillable = [
         'emp_id',
-        'first_name',
-        'last_name',
+        'card_id',
         'addcomment',
-        'image'
     ];
 
+    public function employee()
+    {
+        return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
+    }
 }

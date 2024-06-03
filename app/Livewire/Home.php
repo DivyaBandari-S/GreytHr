@@ -64,7 +64,7 @@ class Home extends Component
     public $empIdWithoutHyphens;
     public $matchedData = [];
     public $swipedDataRecords;
-
+    public $showMessage = true;
     public $swipeDataOfEmployee;
     public function mount()
     {
@@ -148,6 +148,11 @@ class Home extends Component
             $this->greetingImage = 'night.jpeg';
             $this->greetingText = 'Good Night';
         }
+    }
+
+    public function hideMessage()
+    {
+        $this->showMessage = false;
     }
     public function determineSwipeDevice()
     {
@@ -506,6 +511,7 @@ class Home extends Component
         $this->grossPay = $sal->calculateTotalAllowance();
         $this->deductions = $sal->calculateTotalDeductions();
         $this->netPay = $this->grossPay - $this->deductions;
+
 
         // Pass the data to the view and return the view instance
         return view('livewire.home', [

@@ -1814,8 +1814,9 @@ td{
 
 .text-base {
     /* Font size */
-    font-size: 1.25rem;
-    /* Adjust as needed */
+    font-size: 14px;
+    color:#47515b;
+    font-weight: 600;
 }
 
 .font-semibold {
@@ -2645,7 +2646,7 @@ td{
 
     /* //catalog */
     .activeCatalog {
-        background-color: #02114f;
+        background-color: none;
         color: #fff;
     }
 
@@ -3801,4 +3802,150 @@ option{
     line-height: 1.5;
     margin-bottom: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+.employee-timesheet span{
+    margin-bottom: 0;
+    color: #778899;
+    font-size: 12px;
+    max-width: 100%;
+    overflow-x: auto;
+    font-weight: normal;
+}
+.employee-timesheet .week-details-heading{
+    margin-bottom: 0;
+    color: #778899;
+    font-size: 12px;
+    font-weight: 500;
+}
+.timesheet-table {
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.timesheet-table th,
+.timesheet-table td {
+    width: calc(100% / 10); /* Adjusted for 10 columns excluding the first one */
+    text-align: center;
+}
+.timesheet-table th:first-child,
+.timesheet-table td:first-child {
+    width: auto; /* Let the first column adjust its width based on content */
+}
+
+.timesheet-table thead th{
+    padding: 8px;
+    color: #778899;
+    font-weight: 600;
+    background-color: #f1f4f8 ;
+    border-bottom: 2px solid #dee2e6; /* Make header border thicker */
+}
+.timesheet-table td{
+    font-size: 12px;
+    color: #778899;
+    font-weight: normal;
+    border-bottom: 1px solid #dee2e6;
+}
+.time-sheet-heading{
+    color:#778899;
+    font-weight: 600;
+}
+.employee-timesheet .heading-value{
+    color: #000;
+    font-weight: 500;
+}
+.placeholder-timesheet{
+    color:#000;
+    font-size: 12px;
+}
+.basic-container{
+    border-radius: 10px;
+    display: flex;
+    border:1px solid #bbc3cc;
+    font-size: 12px;
+    font-weight: 500;
+    color: #47515b;
+}
+
+p::first-letter {
+    text-transform: uppercase;
+  }
+  .offcanvas{
+    font-family: "Montserrat", sans-serif;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+  }
+.offcanvasRightLabel{
+    color:#778899;
+    font-size: 14px;
+    font-size: 500;
+}
+.lableCount{
+    color:#f2b13f;
+    font-size: 14px;
+}
+.notification-text{
+    color: #9fabb7 ;
+    font-size: 11px;
+}
+.notification-head{
+    font-size:12px;
+}
+.notification-text-para{
+    color: #778899    ;
+    font-weight: normal;
+    font-size:11px;
+    max-height: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+}
+.my-daterange-timesheet .month {
+    display: revert-layer !important;
+}
+.my-daterange-timesheet td {
+    padding: 1px !important;
+}
+
+/* //log out */
+.logout-icon-container {
+    display: inline-block;
+    position: relative;
+}
+
+/* Style the logout icon */
+.logout-icon-container i {
+    color: #fff;
+    font-size: 15px;
+    transition: color 0.3s ease;
+}
+
+/* Style the tooltip */
+.logout-icon-container .tooltip {
+    visibility: hidden;
+    width: 90px;
+    background-color: #333;
+    color: orange;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 3  0px;
+    margin-left:-30px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.logout-icon-container:hover i {
+    color: orange;
+}
+
+.logout-icon-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip {
+    margin-left: 10px;
+    color: orange;
 }

@@ -7,6 +7,7 @@ use App\Notifications\MessageRead;
 use App\Notifications\MessageSent;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Models\EmployeeDetails;
 class ChatBox extends Component
 {
 

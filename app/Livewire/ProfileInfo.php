@@ -45,6 +45,7 @@ class ProfileInfo extends Component
             }
             $employee->image = $imagePath;
             $employee->save();
+            
         }
 
         $this->showSuccessMessage = true;

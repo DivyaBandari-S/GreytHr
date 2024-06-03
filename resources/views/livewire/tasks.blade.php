@@ -113,7 +113,9 @@
                                     <form wire:submit.prevent="addComment">
                                         <div class="form-group">
                                             <label for="comment" style="color: #778899;font-size:13px;font-weight:500;">Comment:</label>
-                                            <textarea class="form-control" id="comment" wire:model.defer="newComment"></textarea>
+                                           <p>
+                                           <textarea class="form-control" id="comment" wire:model.defer="newComment"></textarea>
+                                           </p>
                                             @error('newComment') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                         <button type="submit" class="submit-btn btn-primary btn-sm" style="font-size:12px;">Submit</button>
