@@ -87,11 +87,11 @@ class EmpLogin extends Component
             } elseif (Auth::guard('finance')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/financePage');
             } elseif (Auth::guard('it')->attempt(['it_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/itPage');
+                return redirect('/ithomepage');
             } elseif (Auth::guard('admins')->attempt(['admin_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/adminPage');
             } elseif (Auth::guard('it')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/itPage');
+                return redirect('/ithomepage');
             } else {
                 $this->error = "Invalid ID or Password. Please try again.";
             }

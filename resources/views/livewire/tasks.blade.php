@@ -440,12 +440,6 @@
 
                                 <input style="font-size: 12px;" wire:model="image"  type="file" accept="image/*">
 
-                                @if ($image)
-                                <div>
-                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                                </div>
-                                @endif
-
                                 @error('file_path')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror

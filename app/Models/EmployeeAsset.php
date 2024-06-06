@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class EmployeeAsset extends Model
 {
     use HasFactory;
-
+protected $table = 'employee_assets';
     protected $fillable = [
-        'emp_id',
+        'asset_id',
         'asset_tag',
         'status',
         'manufacturer',
@@ -40,6 +40,7 @@ class EmployeeAsset extends Model
         'one_drive',
         'mac_address',
         'laptop_received',
+        'laptop_received_date',
     ];
 
     public function employee()

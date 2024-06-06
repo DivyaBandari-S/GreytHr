@@ -398,6 +398,11 @@
                                 <i class="fas mr-1    fa-laptop" style="color:#6c7e90"></i> IT Requests
                             </a>
                         </li>
+                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                            <a class="nav-link" href="/emp-assets-details   " onclick="setActiveLink(this)">
+                                <i class="fas mr-1 fa-laptop" style="color:#6c7e90"></i> Employee Assets
+                            </a>
+                        </li>
                         @endauth
 
                         @auth('finance')

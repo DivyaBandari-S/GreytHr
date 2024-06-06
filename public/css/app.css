@@ -331,6 +331,9 @@ body {
     font-size: 12px;
     border: none;
 }
+.submit-btn:hover{
+    background-color: #272d48;
+}
 .cancel-btn{
     background-color: #fff;
     color: rgb(2, 17, 79);
@@ -529,7 +532,7 @@ button.close-button {
 /* Starting document center/letters module (Kumar Asapu)*/
 
 .confirmation-letter:hover {
-    background-color: rgb(122, 149, 255);
+    background-color: rgb(198, 205, 232);
     width: 98%;
     margin-left: 5px;
 }
@@ -3467,7 +3470,12 @@ select .yearSelect {
     text-align: start;
 }
 .card-text {
-    font-size: 0.725rem;
+    font-size: 9px;
+    padding: 2px 5px;
+    margin-bottom: 0px;
+    margin-top: 7px;
+    border-radius: 20px;
+    background-color: #f4f4f4;
 }
 .btn-start {
     display: flex;
@@ -3948,4 +3956,94 @@ p::first-letter {
 .tooltip {
     margin-left: 10px;
     color: orange;
+}
+
+
+/* ///chat styles */
+.employees-details-chat{
+    color: #333;
+    font-weight: 500;
+}
+.chat-employee-name{
+    color: #333;
+    font-size: 12px;
+    font-weight: 600;
+}
+.chat-emp-details{
+    color: #000;
+    font-size: 10px;
+}
+.chat-emp-head{
+    font-size: 10px;
+    color: #778899;
+}
+
+
+/* //it styles */
+.employee-asset-details {
+    margin: 0 auto;
+    border-collapse: collapse; /* Collapse table borders */
+}
+
+.employee-asset-details th,
+.employee-asset-details td {
+    width: 150px;
+    font-size: 12px;
+    color: #fff;
+    font-weight: 500;
+    border-bottom: 1px solid #ccc; /* Add horizontal borders */
+    padding: 7px; /* Add padding for better spacing */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Show ellipsis for hidden text */
+}
+
+.employee-asset-details td:first-child,
+.employee-asset-details th:first-child {
+    border-left: 1px solid #ccc; /* Add left border to first column */
+}
+
+.employee-asset-details td:last-child,
+.employee-asset-details th:last-child {
+    border-right: 1px solid #ccc; /* Add right border to last column */
+}
+
+.employee-asset-details thead {
+    background-color: rgb(2, 17, 79); /* Set background color for thead */
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to thead */
+}
+
+/* Set background color for even rows */
+.employee-asset-details tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+/* Set background color for odd rows */
+.employee-asset-details tbody tr:nth-child(odd) {
+    background-color: #f8f8f8;
+}
+.employee-asset-details th:nth-child(2)
+{
+    width: 250px;
+}
+
+.employee-asset-details td {
+    width: 150px;
+    padding: 10px;
+    font-size: 11px;
+    text-align: start;
+    color: #000;
+    font-weight: normal;
+}
+/* Hover effect for table rows */
+.employee-asset-details tbody tr:hover {
+    background-color: 
+    #f6fbff; /* Light gray background on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow on hover */
+}
+.asset-fields{
+    text-align: start;
 }

@@ -81,9 +81,11 @@ use App\Livewire\TeamOnAttendanceChart;
 use App\Livewire\ViewPendingDetails;
 use App\Livewire\Emojies;
 use App\Livewire\Employee;
+use App\Livewire\EmployeeAssetsDetails;
 use App\Livewire\EmpTimeSheet;
 use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
+use App\Livewire\ItDashboardPage;
 use App\Livewire\LeaveBalancesChart;
 use App\Livewire\ReviewPendingRegularisation;
 use Illuminate\Support\Facades\Route;
@@ -203,9 +205,11 @@ Route::middleware(['auth:hr'])->group(function () {
 Route::middleware(['auth:finance'])->group(function () {
     Route::get('/financePage', AuthChecking::class)->name('home');
 });
- 
+
 Route::middleware(['auth:it'])->group(function () {
-    Route::get('/itPage', AuthChecking::class)->name('home');
+    Route::get('/itPage', AuthChecking::class)->name('IT-requests');
+    Route::get('/emp-assets-details', EmployeeAssetsDetails::class)->name('employee-asset-details');
+    Route::get('/ithomepage', ItDashboardPage::class)->name('home');
 });
 
 Route::middleware(['auth:admins'])->group(function () {
@@ -258,7 +262,7 @@ Route::get('/google-callback', [GoogleDriveController::class, 'callback'])
     Route::get('/payslip', Payroll::class);
     Route::get('/slip', SalarySlips::class)->name('payslips');
     Route::get('/itdeclaration', Itdeclaration::class)->name('itdeclaration');
-    Route::get('/itstatement', Itstatement1::class)->name('IT-Statement'); 
+    Route::get('/itstatement', Itstatement1::class)->name('IT-Statement');
     Route::get('/plan-A', PlanA::class)->name('plan-a');
     Route::get('/document-center-letters', DocumentCenterLetters::class);
     Route::get('/delegates', Delegates::class)->name('work-flow-delegates');
