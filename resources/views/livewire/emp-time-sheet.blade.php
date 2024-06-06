@@ -1,216 +1,175 @@
-<div class="employee-timesheet bg-light p-0 my-0 mx-2 border" style="height:100vh;max-height:100vh; overflow-y:auto;">
-    <div class="emp-container px-4 d-flex justify-content-between mt-3 mb-2">
-        <p class="mb-0 time-sheet-heading">Timesheets</p>
-        <div style="position: relative;">
-            <input class="form-control" type="text" name="searchfield" placeholder="Search..." style="padding-left: 30px;outline:none;border:1px solid #ccc;border-radius:5px;">
-            <i class="fas fa-search" style="color:#778899; position: absolute; left: 10px; top: 70%; transform: translateY(-50%);"></i>
-        </div>
+<div>
+    <div style="text-align: center;">
+        <button class="button-dl {{ $tab === 'timeSheet' ? 'active' : '' }}" wire:click="$set('tab', 'timeSheet')">Time Sheets</button>
+        <button class="button-dl {{ $tab === 'timesheetHistory' ? 'active' : '' }}" wire:click="$set('tab', 'timesheetHistory')">History</button>
     </div>
-    <div class="time-sheet-details bg-white px-2 py-2 m-0 border ">
-        <div class="d-flex justify-content-between align-items-center px-3">
-            <div class="d-flex gap-4 align-items-center">
-                <div class="week-details">
-                    <span class="week-details-heading">Week :
-                        <!-- <span class="heading-value">{{ $currentWeek }}</span>  -->
-                        <input type="text" name="daterange2" value="01/01/2018 - 01/15/2018" />
-                    </span>
+    @if($tab=="timeSheet")
+    <div class="timeSheet">
+        <div class="card" style="margin-bottom: 0.5rem; background-color: #ffffff; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 1.5rem; max-width: 31rem;">
+            <div class="input-group" style="margin-bottom: 1.5rem;">
+                <label for="emp_id" class="input-label" style="font-weight: bold; font-size: 0.8rem;">Employee ID: {{ $auth_empId }}</label>
+            </div>
+            <div class="input-group" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between;">
+                <div>
+                    <label for="start_date" class="input-label" style="font-weight: bold; font-size: 0.8rem;">Start Date:</label>
+                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:model="start_date" id="start_date" class="input-field" style="font-size: 0.9rem; width: 100%; border: 1px solid #ccc; border-radius: 0.25rem; padding: 0.5rem;">
                 </div>
-                <div class="emp-timesheet-profile d-flex align-items-center gap-1">
-                    @if($employeeDetails->image)
-                    <div class="employee-profile-image-container">
-                        <img height="32" width="32" src="{{ asset('storage/' . $employeeDetails->image) }}" style="border-radius:50%;">
-                    </div>
-                    @else
-                    <div class="employee-profile-image-container">
-                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="32" width="32" alt="Default Image">
-                    </div>
-                    @endif
-                    <span class="week-details-heading">{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }}</span>
+                <div>
+                    <label for="end_date" class="input-label" style="font-weight: bold; font-size: 0.8rem;">End Date:</label>
+                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:model="end_date" id="end_date" class="input-field" style="font-size: 0.9rem; width: 100%; border: 1px solid #ccc; border-radius: 0.25rem; padding: 0.5rem;">
                 </div>
             </div>
-            <div class="actions d-flex gap-2 align-items-center">
-                <div class="submit-details">
-                    <button class="submit-btn" style='color: rgb(2, 17, 79); background-color: #fff; border: 1px solid;'><i class="fas fa-download me-2" style="height: auto; width: auto;"></i>Export</button>
-                </div>
-                <div class="submit-details">
-                    <button class="submit-btn"><i class="far fa-save me-2"></i>Submit</button>
-                </div>
-
-            </div>
+            @error('start_date') <span class="error-message" style="color: #e53e3e; font-size: 0.8rem;margin-top: 0.25rem; display: block;">{{ $message }}</span> @enderror
+            @error('end_date') <span class="error-message" style="color: #e53e3e; font-size: 0.8rem; margin-top: 0.25rem; display: block;">{{ $message }}</span> @enderror
         </div>
-    </div>
-    <div class="time-sheet-profile px-2 py-4 d-flex border justify-content-between align-items-start">
-        <div class="col">
-            <div class="billable-hours d-flex gap-2">
-                <div class="d-flex justify-content-center align-items-center" style="width:32px;height:32px;border-radius:50%;background:#dffafe;">
-                    <img src="{{ asset('/images/clock-2.png') }}" alt="logo" height="20" width="20" style="border-radius:50%;">
-                </div>
-                <div class="d-flex flex-column">
-                    <span>Billable hours</span>
-                    <span class="heading-value">40 hours 32 minutes</span>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="billable-hours d-flex gap-2">
-                <div class="d-flex justify-content-center align-items-center" style="width:30px;height:30px;border-radius:50%;background:#d5f7e5;">
-                    <img src="{{ asset('/images/save-money.png') }}" alt="logo" height="18" width="19" style="border-radius:50%;">
-                </div>
-                <div class="d-flex flex-column">
-                    <span>Non-Billable hours</span>
-                    <span class="heading-value">10 hours 32 minutes</span>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="billable-hours d-flex gap-2">
-                <div class="d-flex justify-content-center align-items-center" style="width:30px;height:30px;border-radius:50%;background:#fcd9d6;">
-                    <img src="{{ asset('/images/calendar.png') }}" alt="logo" height="18" width="19">
-                </div>
-                <div class="d-flex flex-column">
-                    <span>Submission Date</span>
-                    <!-- <span class="heading-value">{{ $submissionDate }}</span> -->
-                    <input type="date" placeholder="Enter submission date" class="form-control">
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="billable-hours d-flex gap-2">
-                <div class="d-flex justify-content-center align-items-center" style="width:30px;height:30px;border-radius:50%;background:#fdead5;">
-                    <img src="{{ asset('/images/user.png') }}" alt="logo" height="19" width="19">
-                </div>
-                <div class="d-flex flex-column">
-                    <span>Approved By</span>
-                    @if($managerNameOfLogin)
-                    <span class="heading-value">{{ $managerNameOfLogin }}</span>
-                    @else
-                    <span class="heading-value">-</span>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="mt-3">
-        <div class="row m-0 mb-3">
-            <div class="col-md-6 ps-2">
-                <button class="btn btn-primary submit-btn" wire:click="openTimeSheet">Generate Timesheets</button>
-            </div>
-            <div class="col-md-6 text-end ps-2">
-                @if($openTimeSheettable)
-                <a href="#" wire:click.prevent="addNewRow" style="font-size:12px;">
-                    <button class="btn btn-outline-primary submit-btn">+ Add New</button>
-                </a>
-                @endif
-            </div>
-
-        </div>
-        @if($openTimeSheettable)
-        <div class="row m-0 p-0">
-            <div class="col p-0">
-                <div class="table-responsive" style="max-width:98%;overflow-x:auto;margin:0 auto;">
-                    <table class="timesheet-table rounded border mx-2">
-                        <thead>
+        <div style="max-width: 45rem;padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 0.5rem;">
+            <form wire:submit.prevent="submit">
+                <!-- Task input fields -->
+                <div class="task-table-container">
+                    <table style="width: 100%; border-collapse: collapse;" class="task-table">
+                        <thead style="background-color: rgba(2,17,79);color:white">
                             <tr>
-                                <!-- Removed the "Job" header -->
-                                <th style='padding: 0px;'>Task<i class="fas fa-tasks ms-2" style='width: auto; height: auto'></i></th>
-                                <th style='padding: 10px;'>Mon</th>
-                                <th style='padding: 10px;'>Tue</th>
-                                <th style='padding: 10px;'>Wed</th>
-                                <th style='padding: 10px;'>Thu</th>
-                                <th style='padding: 10px;'>Fri</th>
-                                <th style='padding: 10px;'>Sat</th>
-                                <th style='padding: 10px;'>Sun</th>
-                                <th style='padding: 10px;'>Total</th>
-                                <th style='padding: 10px;'>Actions</th>
+                                <th style="padding: 0.75rem;font-weight:normal; border-bottom: 1px solid #ddd;font-size:0.8rem">Date</th>
+                                <th style="padding: 0.75rem; font-weight:normal;border-bottom: 1px solid #ddd;font-size:0.8rem">Day</th>
+                                <th style="padding: 0.75rem;font-weight:normal; border-bottom: 1px solid #ddd;font-size:0.8rem">Hours</th>
+                                <th style="padding: 0.75rem;font-weight:normal; border-bottom: 1px solid #ddd;font-size:0.8rem">Tasks</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($rows as $row)
-                            <tr>
-                                @foreach($row as $index => $data)
-                                <td>
-                                    <!-- Client select menu or Task input field -->
-                                    @if($index === 0)
-                                    <select class="form-select" aria-label="Task select menu" style="font-size: 12px; margin: 0px;width: 80px;">
-                                        <option selected>Choose task</option>
-                                        <option value="task1">Task 1</option>
-                                        <option value="task2">Task 2</option>
-                                        <option value="task3">Task 3</option>
-                                    </select>
-                                    @else
-                                    <input type="number" wire:model="hours.{{ $index }}" style="width:60px;outline:none;border:1px solid #ccc;padding:7px;border-radius:3px;" />
-                                    @endif
+                            @foreach ($date_and_day_with_tasks as $index => $task)
+                            <tr style="{{ $index % 2 === 0 ? 'background-color: #f7fafc;' : 'background-color: #edf2f7;' }}" class="{{ $index % 2 === 0 ? 'even-row' : 'odd-row' }}">
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;width:5%"><input type="text" wire:model="date_and_day_with_tasks.{{ $index }}.date" style="width:120px; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem;" readonly></td>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;width:45%"><input type="text" readonly wire:model="date_and_day_with_tasks.{{ $index }}.day" style="width: 120px; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem;"></td>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;">
+                                    <input type="text" wire:model="date_and_day_with_tasks.{{ $index }}.hours" wire:change="saveTimeSheet" style="width:120px; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem" pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours') style="border-color: red;" @enderror>
+
+                                    <br> @error('date_and_day_with_tasks.'.$index.'.hours')
+                                    <span style="color: red; font-size: 0.5rem; width: 50px;">{{ $message }}</span>
+                                    @enderror
                                 </td>
-                                @endforeach
-                                <td>
-                                    <!-- Buttons for actions -->
-                                    <div>
-                                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewTotalModal"><i class="far fa-eye" style="font-size: 12px;"></i></button>
-                                        <button class="btn btn-outline-danger btn-sm" wire:click="deleteLastRow"><i class="far fa-trash-alt" style="font-size: 12px;"></i></button>
-                                    </div>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;"><textarea wire:model="date_and_day_with_tasks.{{ $index }}.tasks" wire:change="saveTimeSheet" style="width: 250px; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem;"></textarea><br>
+                                    @error('date_and_day_with_tasks.'.$index.'.tasks')
+                                    <span style="color: red; font-size: 0.5rem; width: 50px;">{{ $message }}</span>
+                                    @enderror
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
-
-                        <tfoot class="border">
-                            <tr>
-                                <td colspan="2" class="table-footer-header text-end px-2">Total for the week</td>
-                                <td>40</td> <!-- Total for Monday -->
-                                <td>40</td> <!-- Total for Tuesday -->
-                                <td>40</td> <!-- Total for Wednesday -->
-                                <td>40</td> <!-- Total for Thursday -->
-                                <td>40</td> <!-- Total for Friday -->
-                                <td>0</td> <!-- Total for Saturday -->
-                                <td>0</td> <!-- Total for Sunday -->
-                                <td>100</td>
-                            </tr>
-                        </tfoot>
                     </table>
-                    <button wire:click="storeTimeSheet" class="btn btn-primary">Save</button>
+
                 </div>
-            </div>
+
+                <div style="margin-top: 1rem; padding: 0.75rem; background-color: #f7fafc; border: 1px solid #ddd; border-radius: 0.25rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="text-align: center; flex-grow: 1;">
+                        <div class="row">
+                            <div class="col">
+                                <p style="font-size: 0.9rem; font-weight: bold;">Total Days: {{ $totalDays }}</p>
+                            </div>
+                            <div class="col">
+                                <p style="font-size: 0.9rem; font-weight: bold;">Total Hours: {{ $totalHours }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" wire:click="addTask" style="padding: 0.5rem; background-color: #27ae60; color: #fff; border: none; border-radius: 0.25rem; cursor: pointer; transition: background-color 0.3s ease; font-size: 0.8rem; margin-left: 10px;" class="add-task-btn">Add Task</button>
+                </div>
+
+
+                <div style="text-align: center;margin-top:8px">
+                    <button type="submit" style="width: 15%; padding: 0.55rem; background-color: #3498db; color: #fff; border: none; border-radius: 0.25rem; cursor: pointer; transition: background-color 0.3s ease;font-size:0.8rem" class="submit-btn">Submit</button>
+                </div>
+                <!-- Button to add a new task -->
+            </form>
+
+            <!-- Flash message for success -->
+            @if (session()->has('message'))
+            <div style="margin-top: 1rem; padding: 0.75rem; background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">{{ session('message') }}</div>
+            @endif
         </div>
-        @endif
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="viewTotalModal" tabindex="-1" aria-labelledby="viewTotalModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="viewTotalModalLabel">Total Week Hours</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Total hours</p>
-                    <p>40 hours 32 minutes</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-                </div>
-            </div>
-        </div>
+    @endif
+
+    @if($tab=="timesheetHistory")
+    <div class="history-card" style="max-width: 60rem; padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 0.5rem;margin-left:25px">
+        <table style="width: 100%; border-collapse: collapse;" class="task-table">
+            <thead style="background-color: rgba(2,17,79);color:white">
+                <tr>
+                    <th style="padding: 0.75rem;font-weight:normal; border-bottom: 1px solid #ddd;font-size:0.8rem">Start Date</th>
+                    <th style="padding: 0.75rem;font-weight:normal; border-bottom: 1px solid #ddd;font-size:0.8rem">End Date</th>
+                    <th style="padding: 0.75rem;font-weight:normal; border-bottom: 1px solid #ddd;font-size:0.8rem">Time Sheet Details</th>
+                    <th style="padding: 0.75rem;font-weight:normal; border-bottom: 1px solid #ddd;font-size:0.8rem">Status</th>
+                    <th style="padding: 0.75rem;font-weight:normal; border-bottom: 1px solid #ddd;font-size:0.8rem">Approval for Manager</th>
+                    <th style="padding: 0.75rem;font-weight:normal; border-bottom: 1px solid #ddd;font-size:0.8rem">Approval for HR</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($timesheets as $index=> $timesheet)
+                <tr style="{{ $index % 2 === 0 ? 'background-color: #f7fafc;' : 'background-color: #edf2f7;' }}" class="{{ $index % 2 === 0 ? 'even-row' : 'odd-row' }}">
+                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;width:100px">{{ $timesheet->start_date }}</td>
+                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;width:100px"> {{ $timesheet->end_date }}</td>
+                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd; width: 250px; height: 200px; max-height: 250px;">
+                        @php
+                        $tasks = json_decode($timesheet->date_and_day_with_tasks, true);
+                        @endphp
+
+                        <div style="overflow-y: auto; height: 100%;">
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 0.75rem; font-weight: normal; border-bottom: 1px solid #ddd; font-size: 0.8rem; background-color: rgba(2, 17, 79, 0.5); color: white">Date</th>
+                                        <th style="padding: 0.75rem; font-weight: normal; border-bottom: 1px solid #ddd; font-size: 0.8rem; background-color: rgba(2, 17, 79, 0.5); color: white">Day</th>
+                                        <th style="padding: 0.75rem; font-weight: normal; border-bottom: 1px solid #ddd; font-size: 0.8rem; background-color: rgba(2, 17, 79, 0.5); color: white">Tasks</th>
+                                        <th style="padding: 0.75rem; font-weight: normal; border-bottom: 1px solid #ddd; font-size: 0.8rem; background-color: rgba(2, 17, 79, 0.5); color: white">Hours</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($tasks as $task)
+                                    <tr>
+                                        <td style="background-color: white; color: black">{{ $task['date'] }}</td>
+                                        <td style="background-color: white; color: black">{{ $task['day'] }}</td>
+                                        <td style="background-color: white; color: black;text-transform:capitalize">{{ $task['tasks'] }}</td>
+                                        <td style="background-color: white; color: black">{{ $task['hours'] }}</td>
+                                    </tr>
+                                    @endforeach
+                                    @php
+                                    $totalDays = array_reduce($tasks, function ($carry, $task) {
+                                    if (isset($task['day'])) {
+                                    return $carry + 1;
+                                    }
+                                    return $carry;
+                                    }, 0);
+
+                                    $totalHours = array_reduce($tasks, function ($carry, $task) {
+                                    if (isset($task['hours'])) {
+                                    return $carry + $task['hours'];
+                                    }
+                                    return $carry;
+                                    }, 0);
+                                    @endphp
+                                    <tr>
+                                        <td colspan="4" style="background-color: lightgray; color: black; font-weight: bold;text-align:center">
+                                            <div class="row">
+                                                <div class="col">
+                                                    Total Days : {{ $totalDays }}
+                                                </div>
+                                                <div class="col">
+                                                    Total Hours :{{ $totalHours }}
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;width:100px;text-transform:capitalize">{{ $timesheet->submission_status }}
+                    </td>
+                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;width:100px;text-transform:capitalize">{{ $timesheet->approval_status_for_manager }}</td>
+                    <td style="padding: 0.75rem; border-bottom: 1px solid #ddd;width:100px;text-transform:capitalize">{{ $timesheet->approval_status_for_hr }}</td>
+                </tr>
+                @endforeach
+                
+            </tbody>
+        </table>
     </div>
+    @endif
 </div>
-
-
-
-<script>
-    $(document).ready(function() {
-        $('input[name="daterange2"]').daterangepicker(
-
-            {
-                //customClass: 'my-css',
-                opens: 'right',
-                autoUpdateInput: true,
-                //"parentEl": $(this).closest('div'),
-                locale: {
-                    cancelLabel: 'Clear'
-                }
-
-            }).on('show.daterangepicker', function(ev, picker) {
-            picker.container.addClass('my-daterange-timesheet');
-        });
-    });
-</script>

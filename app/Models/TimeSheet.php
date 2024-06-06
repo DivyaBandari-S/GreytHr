@@ -10,19 +10,17 @@ class TimeSheet extends Model
     use HasFactory;
     protected $fillable = [
         'emp_id',
-        'week_start_date',
-        'monday_hours',
-        'tuesday_hours',
-        'wednesday_hours',
-        'thursday_hours',
-        'friday_hours',
-        'saturday_hours',
-        'sunday_hours',
-        'client_task_mapping',
+        'start_date',
+        'end_date',
+        'time_sheet_type',
+        'date_and_day_with_tasks',
+        'submission_status',
+        'approval_status_for_manager',
+        'approval_status_for_hr',
     ];
 
     protected $casts = [
-        'client_task_mapping' => 'array',
+        'date_and_day_with_tasks' => 'array',
     ];
 
     public function employee()

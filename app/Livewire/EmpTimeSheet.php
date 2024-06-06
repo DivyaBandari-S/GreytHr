@@ -2,150 +2,198 @@
 
 namespace App\Livewire;
 
-use App\Models\EmployeeDetails;
-use App\Models\TimeSheet;
 use Livewire\Component;
+use App\Models\TimeSheet;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class EmpTimeSheet extends Component
 {
-    public $employeeDetails;
-    public $openTimeSheettable = false;
-    public $currentWeek;
-    public $submissionDate;
-    public $managerDetails;
-    public $managerNameOfLogin;
-    public $rows = [];
+    public $tab = "timeSheet";
     public $emp_id;
-    public $week_start_date;
-    public $hours = [];
-    public $client_task_mapping = [];
+    public $start_date;
+    public $end_date;
+    public $date_and_day_with_tasks = [];
+    public $auth_empId;
+    public $timeSheet;
 
-    public $addingRow = false;
-    public $total_hours;
-
-    public function addNewRow()
+    public function updatedStartDate()
     {
-        if (!$this->addingRow) {
-            $this->addingRow = true;
-            $this->rows[] = ['',0, 0, 0, 0, 0, 0, 0, 0];
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            session(["timesheet_rows_{$employeeId}" => $this->rows]);
-        }
-    }
-    public function deleteLastRow()
-    {
-        try {
-            array_pop($this->rows);
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            session(["timesheet_rows_{$employeeId}" => $this->rows]);
-            $this->addingRow = false; // Reset the addingRow flag
-        } catch (\Exception $e) {
-            session()->flash('error', 'Failed to delete the last row');
-            // You can also log the error if needed
-            Log::error('Failed to delete the last row: ' . $e->getMessage());
-        }
+        $this->fetchExistingData();
     }
 
-    protected $rules = [
-        'week_start_date' => 'required|date',
-        'hours.*' => 'nullable|numeric|min:0',
-        'total_hours' => 'nullable|numeric|min:0', // Custom rule for total hours
-        'emp_id' => 'required|string', // Example validation rule for emp_id
-    ];
-    public function storeTimeSheet()
+    public function updatedEndDate()
     {
-        $this->validate();
-        $totalHours = array_sum($this->hours);
-
-        // Merge total hours into the request data for validation
-        $validatedData = array_merge($this->validate(), ['total_hours' => $totalHours]);
-        try {
-            DB::beginTransaction();
-
-            // Prepare the data for storage
-            $data = [
-                'emp_id' => $this->emp_id,
-                'week_start_date' => $this->week_start_date,
-                'monday_hours' => $this->hours[0] ?? null,
-                'tuesday_hours' => $this->hours[1] ?? null,
-                'wednesday_hours' => $this->hours[2] ?? null,
-                'thursday_hours' => $this->hours[3] ?? null,
-                'friday_hours' => $this->hours[4] ?? null,
-                'saturday_hours' => $this->hours[5] ?? null,
-                'sunday_hours' => $this->hours[6] ?? null,
-                'client_task_mapping' => json_encode($this->client_task_mapping),
-            ];
-            // Store the data in the database
-            TimeSheet::create($data);
-
-            DB::commit();
-
-            session()->flash('success', 'Time sheet stored successfully');
-
-            // Reset form fields
-            $this->reset();
-        } catch (\Exception $e) {
-            DB::rollback();
-            session()->flash('error', 'Failed to store time sheet');
-        }
+        $this->fetchExistingData();
     }
-    public function mount()
-    {
-        $this->emp_id = Auth::guard('emp')->user()->emp_id;
-        $this->week_start_date = now()->startOfWeek()->format('Y-m-d');
-        // Get the start of the current week
-        $startOfWeek = Carbon::now()->startOfWeek();
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        // Get the end of the current week
-        $endOfWeek = Carbon::now()->endOfWeek();
-        $this->submissionDate =$endOfWeek->format('d F, Y');
-        // Check if the start and end dates fall within the same month
-        if ($startOfWeek->month == $endOfWeek->month) {
-            // Format the dates with month name
-            $formattedStartDate = $startOfWeek->format('d');
-            $formattedEndDate = $endOfWeek->format('d F, Y');
-        } else {
-            // Format the dates with month name for both start and end dates
-            $formattedStartDate = $startOfWeek->format('d F');
-            $formattedEndDate = $endOfWeek->format('d F, Y');
-        }
 
-        // Set the current week range
-        $this->currentWeek = $formattedStartDate . '-' . $formattedEndDate;
-        if (session()->has("timesheet_rows_{$employeeId}")) {
-            $this->rows = session("timesheet_rows_{$employeeId}");
-        } else {
-            $this->rows = [
-                ['',0, 0, 0, 0, 0, 0, 0, 0],
-            ];
-            session(["timesheet_rows_{$employeeId}" => $this->rows]);
+    public function fetchExistingData()
+    {
+        if ($this->auth_empId && $this->start_date && $this->end_date) {
+            // Check if the time sheet belongs to the authenticated employee
+            if ($this->timeSheet && $this->timeSheet->emp_id == $this->auth_empId) {
+                // Filter tasks based on selected date range
+                $this->date_and_day_with_tasks = array_filter($this->date_and_day_with_tasks, function ($task) {
+                    return Carbon::parse($task['date'])->between($this->start_date, $this->end_date);
+                });
+                $this->getTotalDaysAndHours();
+            } else {
+                // Fetch the time sheet data from the database for the authenticated employee and selected date range
+                $this->timeSheet = TimeSheet::where('emp_id', $this->auth_empId)
+                    ->where(function ($query) {
+                        $query->whereBetween('start_date', [$this->start_date, $this->end_date])
+                            ->orWhereBetween('end_date', [$this->start_date, $this->end_date])
+                            ->orWhere(function ($query) {
+                                $query->where('start_date', '<=', $this->start_date)
+                                    ->where('end_date', '>=', $this->end_date);
+                            });
+                    })
+                    ->first();
+
+                if ($this->timeSheet) {
+                    $dateAndDayWithTasks = json_decode($this->timeSheet->date_and_day_with_tasks, true); // Decode the JSON string into an associative array
+                    // Filter tasks based on selected date range
+                    $this->date_and_day_with_tasks = array_filter($dateAndDayWithTasks, function ($task) {
+                        return Carbon::parse($task['date'])->between($this->start_date, $this->end_date);
+                    });
+                } else {
+                    // If no time sheet is found, reset the tasks array
+                    $this->date_and_day_with_tasks = [];
+                }
+                $this->getTotalDaysAndHours();
+            }
         }
     }
 
-    public function openTimeSheet(){
-         $this->openTimeSheettable = true;
-    }
-    public function render()
+
+    public function addTask()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id',$employeeId)->first();
-        if($this->employeeDetails){
-            $managerId = $this->employeeDetails->manager_id;
-            $this->managerDetails = EmployeeDetails::where('emp_id',$managerId)->first();
-            if($this->managerDetails ){
-                $this->managerNameOfLogin = ucwords(strtolower($this->managerDetails->first_name)) . ' ' . ucwords(strtolower($this->managerDetails->last_name));
-            }else{
-                $this->managerNameOfLogin = null;
+        // Parse the start and end dates
+        $startDate = Carbon::parse($this->start_date);
+        $endDate = Carbon::parse($this->end_date);
+
+        // Loop through each date between the start and end dates
+        for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
+            // Check if the date is already in the array
+            $exists = false;
+            foreach ($this->date_and_day_with_tasks as $task) {
+                if ($task['date'] === $date->toDateString()) {
+                    $exists = true;
+                    break;
+                }
+            }
+
+            if (!$exists) {
+                // Add a new task with the date and day
+                $this->date_and_day_with_tasks[] = [
+                    'date' => $date->toDateString(),
+                    'day' => $date->format('l'), // Format day name (e.g., Monday)
+                    'hours' => 0,
+                    'tasks' => ''
+                ];
             }
         }
 
-        return view('livewire.emp-time-sheet',[
-            'employeeDetails' => $this->employeeDetails,
-            'managerNameOfLogin' => $this->managerNameOfLogin
+        // Sort the array based on dates
+        usort($this->date_and_day_with_tasks, function ($a, $b) {
+            return strtotime($a['date']) - strtotime($b['date']);
+        });
+        $this->getTotalDaysAndHours();
+    }
+
+
+    public function removeTask($index)
+    {
+        // Check if the index exists in the array
+        if (isset($this->date_and_day_with_tasks[$index])) {
+            // Remove the task at the given index
+            unset($this->date_and_day_with_tasks[$index]);
+            $this->getTotalDaysAndHours();
+        }
+        $this->getTotalDaysAndHours();
+    }
+    public function saveTimeSheet()
+    {
+        $this->getTotalDaysAndHours();
+        $this->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'date_and_day_with_tasks' => 'required|array|min:1',
+            'date_and_day_with_tasks.*.date' => 'required|date',
+            'date_and_day_with_tasks.*.day' => 'required|string',
+            'date_and_day_with_tasks.*.tasks' => 'required|string',
+            'date_and_day_with_tasks.*.hours' => [
+                'required',
+                'numeric',
+                'multiple_of:0.5',
+                'min:0',
+                'max:24.0',
+            ]
         ]);
+        // Check for overlapping records in the database
+    }
+
+    public function submit()
+    {
+        $this->addTask();
+        $existingRecord = TimeSheet::where('emp_id', $this->auth_empId)
+            ->where(function ($query) {
+                $query->where('start_date', '<=', $this->end_date)
+                    ->where('end_date', '>=', $this->start_date);
+            })
+            ->first();
+
+        if ($existingRecord) {
+            // Update the existing record
+            $existingRecord->update([
+                'date_and_day_with_tasks' => json_encode($this->date_and_day_with_tasks),
+                'submission_status' => 'submitted',
+            ]);
+
+            // Set flash message for updating existing record
+            session()->flash('message', 'Time sheet updated successfully!');
+        } else {
+            // Insert a new record into the time_sheets table
+            TimeSheet::create([
+                'emp_id' => $this->auth_empId,
+                'start_date' => $this->start_date,
+                'end_date' => $this->end_date,
+                'date_and_day_with_tasks' => json_encode($this->date_and_day_with_tasks),
+                'submission_status' => 'submitted',
+            ]);
+
+            // Set flash message for adding new record
+            session()->flash('message', 'New time sheet added successfully!');
+        }
+
+        // Redirect to the timesheet page after saving
+        return redirect('/timesheet-page');
+    }
+
+
+    public $totalHours, $totalDays;
+    public function getTotalDaysAndHours()
+    {
+        $totalHours = 0;
+        $days = array();
+        foreach ($this->date_and_day_with_tasks as $task) {
+            // Add the hours from each task to the total
+            $hours = floatval($task['hours']);
+            $totalHours += $hours;
+            $days[] = $task['day'];
+        }
+
+        // Set the total hours property
+        $this->totalHours = $totalHours;
+        $this->totalDays = count($days);
+    }
+
+    public $timesheets;
+    public function render()
+    {
+        // Calculate total days and total working hours
+        $this->auth_empId = auth()->guard('emp')->user()->emp_id;
+        $this->timesheets = Timesheet::where('emp_id', $this->auth_empId)->orderBy('created_at', 'desc')->get();
+
+        return view('livewire.emp-time-sheet');
     }
 }
