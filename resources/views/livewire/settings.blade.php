@@ -1,12 +1,16 @@
 <div>
-
+    @if(session()->has('emp_error'))
+        <div class="alert alert-danger">
+            {{ session('emp_error') }}
+        </div>
+    @endif
     <div class="row m-0">
         <div class="d-flex align-items-center justify-content-end gap-3" >
             <div class=" p-0">
                 <div wire:click="open" class="col text-primary" style="font-size:12px;font-weight:500;cursor:pointer;text-align:end;">
                 View Login History
                 </div>
-                @if ($showAlertDialog)
+                @if ($showAlertDialog).
                 <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">

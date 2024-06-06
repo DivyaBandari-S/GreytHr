@@ -3,6 +3,11 @@
 <div>
     <x-loading-indicator />
     <div class="container">
+        @if(session()->has('emp_error'))
+            <div class="alert alert-danger">
+                {{ session('emp_error') }}
+            </div>
+        @endif
         <div class="row" style="margin-left: 1%; width: 20%; position: relative;width:500px">
             <div class="col" style="text-align: center; border-radius: 5px; margin-right: 10px; cursor: pointer;">
                 <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'starred')" class="links">Starred</a>

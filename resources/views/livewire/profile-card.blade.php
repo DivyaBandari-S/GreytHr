@@ -1,4 +1,9 @@
 <div>
+    @if(session()->has('emp_error'))
+        <div class="alert alert-danger">
+            {{ session('emp_error') }}
+        </div>
+    @endif
     @auth('emp')
     @foreach($employees as $employee)
     <div class="profile-container">

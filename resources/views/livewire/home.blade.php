@@ -94,71 +94,7 @@
                 </div>
 
                 @if($ismanager)
-                <div class="col-md-3 mb-4 fade-in-section">
-                    <div class="home-hover">
-                        <div class="reviews">
-                            <div class="homeCard1">
-                                <div class="home-heading d-flex justify-content-between px-3 py-2">
-                                    <div class="rounded">
-                                        <p style="font-size:12px;color:#778899;font-weight:500;">  Review</p>
-                                    </div>
-                                    <div >
-                                        <a href="/navigate-to-helpdesk" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
-                                    </div>
-                                </div>
-                                @if(($this->count) > 0)
-                                    <div class="notify d-flex justify-content-between  px-3">
-                                        <p style="color: black; font-size: 12px; font-weight: 500;">
-                                            {{$count}} <br>
-                                            <span style="color: #778899; font-size:11px; font-weight: 500;">Things to review</span>
-                                        </p>
-                                        <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg" alt="" style="height: 40px; width: 40px;">
-                                    </div>
-                                    <div class="leave-display d-flex border-top p-3 gap-1" >
-                                    @php
-                                        function getRandomColor() {
-                                            $colors = ['#FFD1DC', '#B0E57C', '#ADD8E6', '#E6E6FA', '#FFB6C1'];
-                                                return $colors[array_rand($colors)];
-                                        }
-                                    @endphp
-                                    @for ($i = 0; $i < min($count, 3); $i++)
-                                        <?php
-                                        $leaveRequest = $this->leaveApplied[$i]['leaveRequest'] ?? null;
-                                        if ($leaveRequest && $leaveRequest->employee) {
-                                            $firstName = $leaveRequest->employee->first_name;
-                                            $lastName = $leaveRequest->employee->last_name;
-                                            $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
-                                        ?>
-                                        <div class="circle-container d-flex flex-column mr-3">
-                                        <div class="circle d-flex" style="border-radius: 50%;width: 35px;height: 35px;align-items: center;justify-content: center;border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
-                                            <span style="color: #778899; font-weight: 500; font-size: 11px;">{{ $initials }}</span>
-                                        </div>
-                                        <span style="display: block; text-align: center;font-size:10px;color:#778899;">Leave</span>
-                                    </div>
-
-                                        <?php
-                                        }
-                                        ?>
-                                    @endfor
-                                        @if ($count > 3)
-                                            <div class="circle-notify d-flex flex-column mt-3" style="cursor:pointer; align-items:center;" data-toggle="modal" data-target="#exampleModalCenter">
-                                                <a href=" " style="color:blue;font-size:10px">+{{ $count - 3}}</a>
-                                                <p style="color:blue;font-size:10px;margin-top:-5px;"><span class="remaining">More</span></p>
-                                            </div>
-                                        @endif
-                                    </div>
-                                @else
-                                    <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
-                                        <img src="/images/not_found.png" alt="Image Description" style="width: 7em;">
-                                        <p style="color: #677A8E; font-size: 12px; text-align:center;">
-                                            Hurrah! You've nothing to review.
-                                        </p>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
