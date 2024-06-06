@@ -233,13 +233,24 @@ class Tasks extends Component
         $this->newComment = '';
         session()->flash('message', 'Comment added successfully.');
     }
+    public function updatedNewComment($value)
+    {
+        $this->newComment = ucfirst($value); // Capitalize the first letter
+    }
+
     // Delete a comment
     public function deleteComment($commentId)
     {
-        TaskComment::findOrFail($commentId)->delete();
+        try {
+            $comment = TaskComment::findOrFail($commentId);
+            $comment->delete();
+            session()->flash('message', 'Comment deleted successfully.');
+            $this->fetchTaskComments($this->taskId);
 
-        session()->flash('message', 'Comment deleted successfully.');
-        $this->fetchTaskComments($this->taskId);
+        } catch (\Exception $e) {
+            // Handle any exceptions that occur during the deletion process
+            session()->flash('error', 'Failed to delete comment: ' . $e->getMessage());
+        }
     }
     public function cancelEdit()
     {

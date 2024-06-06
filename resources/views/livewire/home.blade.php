@@ -3,16 +3,8 @@
     <div class="msg-container">
     @if (session()->has('success'))
         <div x-data x-init="checkFadeIn()" class="custom-alert alert-success successAlert row mx-auto" style="text-align:center;">
-            <p class="mx-auto">{{ session('success') }} 😀</p>
+            <p class="mx-auto mb-0">{{ session('success') }} 😀 <span wire:click="hideMessage" style="cursor: pointer; margin-left:20px;">&#10006;</span> </p>
         </div>
-        <script>
-            setTimeout(function() {
-                const successMessage = document.querySelector('.custom-alert');
-                if (successMessage) {
-                    successMessage.style.display = 'none';
-                }
-            }, 1000);
-        </script>
     @endif
         </div>
         <div class="content">

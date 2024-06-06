@@ -5,6 +5,12 @@
  */
 
 import './bootstrap';
+// resources/js/app.js
+
+import './../../vendor/power-components/livewire-powergrid/dist/powergrid'
+// resources/js/app.js
+
+import './../../vendor/power-components/livewire-powergrid/dist/bootstrap5.css'
 
 /**
  * Next, we will create a fresh React component instance and attach it to

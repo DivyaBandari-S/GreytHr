@@ -1,13 +1,31 @@
 <?php
 
+// File Name                       : EmpLogin.php
+// Description                     : This file contains the implementation after login change theire password,nick name etc.
+// Creator                         : Saragada Siva Kumar and Asapu Kiran Kumar
+// Email                           :
+// Organization                    : PayG.
+// Date                            : 2024-03-07
+// Framework                       : Laravel (10.10 Version)
+// Programming Language            : PHP (8.1 Version)
+// Database                        : MySQL
+// Models                          : EmployeeDetails,Hr,Finance,Admin,IT
+
+
+
 namespace App\Livewire;
 
+use App\Models\Admin;
 use App\Models\EmployeeDetails;
+use App\Models\Finance;
+use App\Models\Hr;
+use App\Models\IT;
 use App\Models\PeopleList;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
-    
+use Illuminate\Support\Facades\DB;
 
 class Settings extends Component
 {
@@ -29,6 +47,7 @@ class Settings extends Component
     public $newPassword;
     public $confirmNewPassword;
     public $passwordChanged = false;
+    public $error = '';
     public function editBiography()
     {
         try {
@@ -41,10 +60,12 @@ class Settings extends Component
         }
     }
 
+
     public function cancelBiography()
     {
         $this->editingBiography = false;
     }
+
 
     public function saveBiography()
     {
@@ -73,10 +94,12 @@ class Settings extends Component
         }
     }
 
+
     public function cancelSocialMedia()
     {
         $this->editingSocialMedia = false;
     }
+
 
     public function saveSocialMedia()
     {
@@ -106,6 +129,7 @@ class Settings extends Component
         }
     }
 
+
     public function cancelProfile()
     {
         $this->editingNickName = false;
@@ -125,6 +149,7 @@ class Settings extends Component
         }
     }
 
+
     public function editTimeZone()
     {
         try {
@@ -137,10 +162,12 @@ class Settings extends Component
         }
     }
 
+
     public function cancelTimeZone()
     {
         $this->editingTimeZone = false;
     }
+
 
     public function saveTimeZone()
     {
@@ -157,6 +184,7 @@ class Settings extends Component
 
     public $showAlertDialog = false;
     public $showDialog = false;
+
 
     public function open()
     {
@@ -179,12 +207,16 @@ class Settings extends Component
     {
         $this->resetForm();
         $this->showAlertDialog = false;
+        $this->showAlertDialog = false;
     }
 
     public function resetForm()
     {
         $this->resetErrorBag();
         $this->resetValidation();
+        $this->oldPassword = '';
+        $this->newPassword = '';
+        $this->confirmNewPassword = '';
         $this->oldPassword = '';
         $this->newPassword = '';
         $this->confirmNewPassword = '';

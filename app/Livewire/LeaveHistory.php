@@ -17,9 +17,10 @@ use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use App\Helpers\LeaveHelper; 
+use App\Helpers\LeaveHelper;
 use Carbon\Carbon;
 use App\Livewire\LeavePage;
+use Illuminate\Support\Facades\Log;
 
 class LeaveHistory extends Component
 {
@@ -33,17 +34,24 @@ class LeaveHistory extends Component
 
     public function mount($leaveRequestId)
     {
-        // Fetch leave request details based on $leaveRequestId with employee details
-        $this->selectedYear = Carbon::now()->format('Y');
-        $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
-        $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
-        $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
+        try {
+            // Fetch leave request details based on $leaveRequestId with employee details
+            $this->selectedYear = Carbon::now()->format('Y');
+            $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
+            $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
+            $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
+        } catch (\Exception $e) {
+            // Handle the exception, log it, or display an error message
+            Log::error('Error mounting leave request: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching leave request details. Please try again later.');
+            $this->leaveRequest = null;
+        }
     }
-    
+
+    //used to calculate number of days for leave
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
-        
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
             // Check if the start and end sessions are different on the same day
@@ -58,11 +66,11 @@ class LeaveHistory extends Component
             }
             // Check if the start and end sessions are different on the same day
             if (
-                
+
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
             ) {
-              
+
                 // Inner condition to check if both start and end dates are weekdays
                 if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
                     return 0.5;
@@ -75,7 +83,7 @@ class LeaveHistory extends Component
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
             ) {
-                
+
                 // Inner condition to check if both start and end dates are weekdays
                 if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
                     return 1;
@@ -108,56 +116,52 @@ class LeaveHistory extends Component
                 // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
-                }else{
+                } else {
                     $totalDays += 0.5;
                 }
-            }elseif($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)){
+            } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 1; // Add half a day
                 }
-            }
-            else {
+            } else {
                 $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
             }
 
             return $totalDays;
-            
-
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
     }
 
+    //to count the sessions of leave applied
     private function getSessionNumber($session)
     {
-        // You might need to customize this based on your actual session values
         return (int) str_replace('Session ', '', $session);
     }
 
     public function render()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id; 
+        $employeeId = auth()->guard('emp')->user()->emp_id;
         // Call the getLeaveBalances function to get leave balances
         $leaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
 
         try {
-                // Attempt to decode applying_to
-        $applyingToJson = trim($this->leaveRequest->applying_to);
-        $this->leaveRequest->applying_to = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
+            // Attempt to decode applying_to
+            $applyingToJson = trim($this->leaveRequest->applying_to);
+            $this->leaveRequest->applying_to = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
 
-        // Attempt to decode cc_to
-        $ccToJson = trim($this->leaveRequest->cc_to);
-        $this->leaveRequest->cc_to = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
-
+            // Attempt to decode cc_to
+            $ccToJson = trim($this->leaveRequest->cc_to);
+            $this->leaveRequest->cc_to = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
         } catch (\Exception $e) {
-            dd("Error in JSON decoding: " . $e->getMessage());
+            session()->flash('error', "Error in getting details: " . $e->getMessage());
         }
+
         // Pass the leaveRequest data and leaveBalances to the Blade view
         return view('livewire.leave-history', [
-             'leaveRequest' => $this->leaveRequest,
-             'leaveBalances' => $leaveBalances,
-             
+            'leaveRequest' => $this->leaveRequest,
+            'leaveBalances' => $leaveBalances,
+
         ]);
-       
-    }  
+    }
 }

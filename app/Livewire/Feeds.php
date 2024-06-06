@@ -14,6 +14,7 @@ use App\Models\Emoji;
 use Livewire\WithFileUploads;
 use App\Services\GoogleDriveService;
 use App\Models\Addcomment;
+use App\Models\Company;
 use App\Models\Post;
 
 class Feeds extends Component
@@ -50,8 +51,14 @@ class Feeds extends Component
     public $message='';
     public $attachment;
     public $storedemojis;
-    
+
     public $showFeedsDialog = false;
+    public $showMessage = true;
+    public $empCompanyLogoUrl;
+    public function closeMessage()
+    {
+        $this->showMessage = false;
+    }
     public function addFeeds()
     {
         $this->showFeedsDialog = true;
@@ -87,19 +94,19 @@ class Feeds extends Component
     {
         
         $companyId = Auth::user()->company_id;
-    
         // Load employees with comments
         $this->employees = EmployeeDetails::with('comments')->where('company_id', $companyId)->get();
-    
+
         // Combine and sort data
         $this->combinedData = $this->combineAndSortData($this->employees);
-    
+
         // Fetch comments for the initial set of cards
-        $this->comments = Comment::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-        $this->addcomments = Addcomment::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+        $this->comments = Comment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+        $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->storedemojis= Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->emojis= EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-      
+                // Retrieve and set the company logo URL for the current employee
+                $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
     }
     public $isEmojiListVisible = false;
     public function showEmojiList()
@@ -122,9 +129,6 @@ class Feeds extends Component
         if ($this->selectedEmoji !== $emoji) {
             // Update the selected emoji property
             $this->selectedEmoji = $emoji;
-
-        
-            
             // Call the add_emoji method with emp_id
             $this->add_emoji($emp_id);
         }
@@ -138,7 +142,7 @@ class Feeds extends Component
 
         // Call the add_emoji method with emp_id
         $this->createemoji($emp_id);
-        
+
     }
 }
 
@@ -163,12 +167,9 @@ class Feeds extends Component
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-
-        // Optionally, emit an event or perform other actions
-
         // Optionally, show a flash message
         session()->flash('success', 'Emoji added successfully.');
-        $this->setCurrentCardEmpId($emp_id);
+
     }
     public function createemoji($emp_id)
     {
@@ -189,12 +190,8 @@ class Feeds extends Component
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
- 
-        // Optionally, emit an event or perform other actions
-
         // Optionally, show a flash message
-        session()->flash('success', 'Emoji added successfully.');
-        $this->setCurrentCardEmpId($emp_id);
+        session()->flash('message', 'Emoji added successfully.');
     }
 
     public function add_comment($emp_id)
@@ -202,25 +199,20 @@ class Feeds extends Component
         $user = Auth::user();
     
         $this->validate();
-    
-        Comment::create([
-            'emp_id' => $emp_id,
-            'first_name' => $user->first_name,
-            'last_name' => $user->last_name,
-            'image'   => $user->image ?? 'default.jpg',
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+       Comment::create([
+            'card_id' => $emp_id,
+            'emp_id' => $employeeId,
             'comment' => $this->newComment ?? '',
         ]);
-    
         // Clear the input field after adding the comment
         $this->reset(['newComment']);
         $this->isSubmitting = false;
-        // Retrieve comments in descending order of creation timestamp
-        $this->comments = Comment::whereIn('emp_id', $this->employees->pluck('emp_id'))
-                                 ->orderBy('created_at', 'desc')
-                                 ->get();
-    
-        session()->flash('success', 'Comment added successfully.');
-        $this->setCurrentCardEmpId($emp_id);
+        $this->comments = Comment::with('employee')
+                            ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+                            ->orderByDesc('created_at')
+                            ->get();
+        session()->flash('message', 'Comment added successfully.');
     }
     
 public function employee()
@@ -230,16 +222,13 @@ public function employee()
 public function createcomment($emp_id)
 {
     $this->isSubmitting = true; // Set submitting flag to true
-
     // Validate the input fields
     $this->validate();
-   
+    $employeeId = auth()->guard('emp')->user()->emp_id;
     // Create a new comment record using the Addcomment model
     Addcomment::create([
-        'emp_id' => $emp_id,
-        'first_name' => auth()->user()->first_name,
-        'last_name' => auth()->user()->last_name,
-        'image' => auth()->user()->image ?? 'default.jpg',
+        'emp_id' => $employeeId,
+        'card_id' =>$emp_id,
         'addcomment' => $this->newComment ?? '',
     ]);
 
@@ -247,13 +236,13 @@ public function createcomment($emp_id)
     $this->reset(['newComment']);
 
     $this->isSubmitting = false; // Set submitting flag to false
-    // Retrieve comments in descending order of creation timestamp
-    $this->addcomments = Addcomment::whereIn('emp_id', $this->employees->pluck('emp_id'))
-                                   ->orderBy('created_at', 'desc')
-                                   ->get();
-
+    $this->addcomments = Addcomment::with('employee')
+                        ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+                        ->orderByDesc('created_at')
+                        ->get();
     // Flash a success message
-    session()->flash('success', 'Comment added successfully.');
+    session()->flash('message', 'Comment added successfully.');
+    $this->combinedData = $this->combineAndSortData($this->employees);
 }
 public function upload()
 {
@@ -266,11 +255,9 @@ public function upload()
 }
 
 
-
 public function submit()
 {
     $this->validate( $this->newCommentRules);
-
     // Get the authenticated employee's ID
     $emp_id = Auth::user()->emp_id;
 
@@ -300,8 +287,8 @@ public function submit()
         $this->employeeDetails = EmployeeDetails::where('emp_id', $empId)->first();
     
         // Fetch comments for the current card
-        $this->comments = Comment::where('emp_id', $this->currentCardEmpId)->get();
-        $this->addcomments = Addcomment::where('emp_id', $this->currentCardEmpId)->get();
+        $this->comments = Comment::where('card_id', $this->currentCardEmpId)->get();
+        $this->addcomments = Addcomment::where('card_id', $this->currentCardEmpId)->get();
         $this->storedemojis = Emoji::where('emp_id', $this->currentCardEmpId)->get();
         $this->emojis = EmojiReaction::where('emp_id', $this->currentCardEmpId)->get();
 
@@ -316,6 +303,18 @@ public function submit()
 
     public $fileId;
 
+// Method to fetch the company logo URL for the current employee
+private function getEmpCompanyLogoUrl()
+{
+    // Get the current authenticated employee's company ID
+    $empCompanyId = auth()->guard('emp')->user()->company_id;
+
+    // Assuming you have a Company model with a 'company_logo' attribute
+    $company = Company::where('company_id', $empCompanyId)->first();
+
+    // Return the company logo URL, or a default if not found
+    return $company ? $company->company_logo : asset('user.jpg');
+}
 
     public function render()
 {
@@ -327,6 +326,7 @@ public function submit()
     return view('livewire.feeds', [
         'comments' => $this->comments,
         'addcomments'=>$this->addcomments,
+        'empCompanyLogoUrl' => $this->empCompanyLogoUrl,
         'employees' => $this->employeeDetails,'emojis' => $emojis, 'storedEmojis' => $storedEmojis,
     ]);
 }
@@ -343,9 +343,10 @@ public function submit()
 
     private function combineAndSortData($employees)
     {
+
         $combinedData = [];
         $currentDate = Carbon::now();
-    
+
         foreach ($employees as $employee) {
             if ($employee->date_of_birth) {
                 $dateOfBirth = Carbon::parse($employee->date_of_birth);
@@ -358,7 +359,7 @@ public function submit()
                     ];
                 }
             }
-    
+
             if ($employee->hire_date) {
                 $hireDate = Carbon::parse($employee->hire_date);
                 // Check if the hire date is within the current month and up to the current date
@@ -371,12 +372,14 @@ public function submit()
                 }
             }
         }
-    
+
+
         // Sort the combined data by date in descending order
         usort($combinedData, function ($a, $b) {
             return $b['date'] <=> $a['date']; // Sort in descending order
         });
-    
+
         return $combinedData;
+
     }
-}   
+}

@@ -1,4 +1,9 @@
 <div>
+    @if(session()->has('emp_error'))
+        <div class="alert alert-danger">
+            {{ session('emp_error') }}
+        </div>
+    @endif
     @if (Session::has('success'))
     <div id="success-alert" class="alert alert-success alert-dismissible fade show" style="
             height: 30px;
