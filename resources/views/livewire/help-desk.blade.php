@@ -1,5 +1,9 @@
 <div style="overflow-x:hidden">
-
+    @if(session()->has('emp_error'))
+        <div class="alert alert-danger">
+            {{ session('emp_error') }}
+        </div>
+    @endif
     <body>
         <div class="row ">
             <div class="d-flex align-item-center justify-content-center">

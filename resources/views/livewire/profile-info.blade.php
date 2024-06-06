@@ -1,5 +1,9 @@
 <div>
-
+    @if(session()->has('emp_error'))
+        <div class="alert alert-danger">
+            {{ session('emp_error') }}
+        </div>
+    @endif
     <div class="row m-0 p-0">
 
 
@@ -22,9 +26,9 @@
                 </li>
             </ul>
         </div>
-<div>
+    <div>
 
-</div>
+   </div>
         @foreach($employeeDetails as $employee)
         {{-- Personal Tab --}}
         <div class="row p-0 " id="personalDetails" style=" margin:20px auto;">

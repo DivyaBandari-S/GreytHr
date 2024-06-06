@@ -361,6 +361,21 @@
                                 <i class="fas mr-1    fa-laptop" style="color:#6c7e90"></i> HR Requests
                             </a>
                         </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="toggleEmployeeDropdown()">
+                                        <i class="fas mr-1    fa-clock"></i> Employee<i class="fas mr-1    fa-caret-down" id="employee-caret"></i>
+                                    </a>
+                                    <div id="employee-options" style="display: none;">
+                                        <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item" style="text-decoration: none;">
+                                                <a class="nav-link" href="/over-view" onclick="setActiveLink(this)">
+                                                    OverView
+                                                </a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
 
                             <a class="nav-link" href="/addLeaves" onclick="setActiveLink(this)">
@@ -1369,29 +1384,43 @@
                 leaveCaret.classList.add("fa-caret-down");
             }
 
-            // Toggle the state of the current dropdown
-            if (todoOptions.style.display === "block" && !todoDropdownClicked) {
-                todoOptions.style.display = "none";
-                todoCaret.classList.remove("fa-caret-up");
-                todoCaret.classList.add("fa-caret-down");
-            } else {
-                todoOptions.style.display = "block";
-                todoCaret.classList.remove("fa-caret-down");
-                todoCaret.classList.add("fa-caret-up");
-                todoDropdownClicked = false; // Reset the flag after toggling
+                // Toggle the state of the current dropdown
+                if (todoOptions.style.display === "block" && !todoDropdownClicked) {
+                    todoOptions.style.display = "none";
+                    todoCaret.classList.remove("fa-caret-up");
+                    todoCaret.classList.add("fa-caret-down");
+                } else {
+                    todoOptions.style.display = "block";
+                    todoCaret.classList.remove("fa-caret-down");
+                    todoCaret.classList.add("fa-caret-up");
+                    todoDropdownClicked = false; // Reset the flag after toggling
+                }
             }
-        }
+            function toggleEmployeeDropdown() {
+                const EmployeeOptions = document.getElementById("employee-options");
+                const EmployeeCaret = document.getElementById("employee-caret");
 
+                if (EmployeeOptions.style.display === "block") {
+                    EmployeeOptions.style.display = "none";
+                    EmployeeCaret.classList.remove("fa-caret-up");
+                    EmployeeCaret.classList.add("fa-caret-down");
+                } else {
+                    EmployeeOptions.style.display = "block";
+                    EmployeeCaret.classList.remove("fa-caret-down");
+                    EmployeeCaret.classList.add("fa-caret-up");
+                }
+            }
 
-        function selectOption(option, pageTitle) {
-            const accordionItems = document.querySelectorAll('.nav-link');
-            // Update the pageTitle
-            updatePageTitle(pageTitle);
-            // Close the dropdown if open
-            toggleAttendanceDropdown();
-            toggleLeaveDropdown();
-            toggleSalaryDropdown();
-        }
+            function selectOption(option, pageTitle) {
+                const accordionItems = document.querySelectorAll('.nav-link');
+                // Update the pageTitle
+                updatePageTitle(pageTitle);
+                // Close the dropdown if open
+                toggleAttendanceDropdown();
+                toggleLeaveDropdown();
+                toggleSalaryDropdown();
+                toggleEmployeeDropdown();
+            }
 
         function updatePageTitle(newTitle) {
             document.getElementById("pageTitle").textContent = newTitle;
