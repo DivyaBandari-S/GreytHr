@@ -1,53 +1,52 @@
 <div class="m-0 px-4" style="position: relative;">
     <div class="toggle-container">
         <style>
-        /* Define your custom CSS classes */
-        .custom-nav-tabs {
-            background-color: #fff;
-            border-radius: 5px;
-            display: flex;
-            font-weight: 500;
-            color: #778899;
-            width: 50%;
-            font-size: 0.825rem;
-            /* Background color for the tabs */
-        }
+            /* Define your custom CSS classes */
+            .custom-nav-tabs {
+                background-color: #fff;
+                border-radius: 5px;
+                display: flex;
+                font-weight: 500;
+                color: #778899;
+                width: 50%;
+                font-size: 0.825rem;
+                /* Background color for the tabs */
+            }
 
-        .custom-nav-link {
-            color: #ccc;
-            /* Text color for inactive tabs */
-        }
+            .custom-nav-link {
+                color: #ccc;
+                /* Text color for inactive tabs */
+            }
 
-        .custom-nav-link.active {
-            margin-top: 5px;
-            color: white !important;
-            background-color: rgb(2, 17, 79);
-            border-radius: 5px;
-        }
+            .custom-nav-link.active {
+                margin-top: 5px;
+                color: white !important;
+                background-color: rgb(2, 17, 79);
+                border-radius: 5px;
+            }
         </style>
         <!-- leave-page.blade.php -->
 
 
         @if(session()->has('message'))
-        <div class="alert alert-success"
-            style="display:flex; justify-content:space-between;position:absolute;top:1%;right:50%;font-size:12px;">
+        <div class="alert alert-success" style="display:flex; justify-content:space-between;position:absolute;top:1%;right:50%;font-size:12px;">
             {{ session('message') }}
             <span class="close-btn" onclick="closeMessage()" style="cursor:pointer;">X</span>
         </div>
         @if(session()->has('error'))
-        <div class="alert alert-danger">e
+        <div class="alert alert-danger">
             {{ session('error') }}
         </div>
         @endif
         <script>
-        // Close the success message after a certain time
-        setTimeout(function() {
-            closeMessage();
-        }, 5000); // Adjust the time limit (in milliseconds) as needed
+            // Close the success message after a certain time
+            setTimeout(function() {
+                closeMessage();
+            }, 5000); // Adjust the time limit (in milliseconds) as needed
 
-        function closeMessage() {
-            document.querySelector('.alert-success').style.display = 'none';
-        }
+            function closeMessage() {
+                document.querySelector('.alert-success').style.display = 'none';
+            }
         </script>
         @endif
 
@@ -55,22 +54,19 @@
             <ul class="nav custom-nav-tabs">
                 <!-- Apply the custom class to the nav -->
                 <li class="nav-item flex-grow-1">
-                    <a class="nav-link custom-nav-link active" data-section="applyButton"
-                        onclick="toggleDetails('applyButton', this)">Apply</a>
+                    <a class="nav-link custom-nav-link active" data-section="applyButton" onclick="toggleDetails('applyButton', this)">Apply</a>
                 </li>
                 <li class="nav-item flex-grow-1">
-                    <a class="nav-link custom-nav-link" data-section="pendingButton"
-                        onclick="toggleDetails('pendingButton', this)">Pending</a>
+                    <a class="nav-link custom-nav-link" data-section="pendingButton" onclick="toggleDetails('pendingButton', this)">Pending</a>
                 </li>
                 <li class="nav-item flex-grow-1">
-                    <a class="nav-link custom-nav-link" data-section="historyButton"
-                        onclick="toggleDetails('historyButton', this)">History</a>
+                    <a class="nav-link custom-nav-link" data-section="historyButton" onclick="toggleDetails('historyButton', this)">History</a>
                 </li>
             </ul>
         </div>
 
 
-        <div class="side " id="cardElement">
+        <div id="cardElement" class="side ">
 
             <div>
 
@@ -100,7 +96,7 @@
         </div>
 
 
-        <div id="leave" class="row mt-2 align-items-center ">
+        <div id="leave" class="row mt-2 align-items-center " style="display:none;">
 
             <div style="width:85%; margin:0 auto;">@livewire('leave-apply') </div>
 
@@ -144,8 +140,7 @@
                                 Off Grant</p>
                             <p class="info-paragraph" onclick="toggleInfo()">Info</p>
                         </div>
-                        <img src="{{asset('/images/pending.png')}}" alt="Pending Image"
-                            style="width:40%; margin:0 auto;">
+                        <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:40%; margin:0 auto;">
                         <p style="color:#778899; font-size:0.825rem; font-weight:500;  text-align:center;">You are not
                             eligible to request for compensatory off grant. Please contact your HR for further
                             information.</p>
@@ -156,8 +151,8 @@
 
 
         {{-- Apply Tab --}}
-        <div class="row" id="applyButton" style=" margin-top:20px;display: none; margin-left:100px;">
-            <div>@livewire('leave-apply')</div>
+        <div class="row" id="applyButton">
+            <div style="width:85%; margin:0 auto;">@livewire('leave-apply')</div>
         </div>
 
         {{-- pending --}}
@@ -189,8 +184,7 @@
 
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;">Leave Type</span>
 
-                                <span
-                                    style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest->leave_type}}</span>
+                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest->leave_type}}</span>
 
                             </div>
 
@@ -211,8 +205,7 @@
 
                             <div class="col accordion-content">
 
-                                <span
-                                    style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#cf9b17;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#cf9b17;">{{ strtoupper($leaveRequest->status) }}</span>
 
                             </div>
 
@@ -264,8 +257,7 @@
 
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;">Applied on:</span>
 
-                                <span
-                                    style="color: #333; font-size:12px; font-weight: 500;">{{ $leaveRequest->created_at->format('d M, Y') }}</span>
+                                <span style="color: #333; font-size:12px; font-weight: 500;">{{ $leaveRequest->created_at->format('d M, Y') }}</span>
 
                             </div>
 
@@ -277,8 +269,7 @@
                                         Details</span>
 
                                 </a>
-                                <button class="withdraw mb-2"
-                                    wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
+                                <button class="withdraw mb-2" wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
 
                             </div>
 
@@ -294,8 +285,7 @@
 
             @else
 
-            <div class="leave-pending"
-                style="margin-top:30px; background:#fff; margin-left:120px; display:flex; width:75%;flex-direction:column; text-align:center;justify-content:center; border:1px solid #ccc; padding:20px;gap:10px;">
+            <div class="leave-pending" style="margin-top:30px; background:#fff; margin-left:120px; display:flex; width:75%;flex-direction:column; text-align:center;justify-content:center; border:1px solid #ccc; padding:20px;gap:10px;">
 
                 <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:60%; margin:0 auto;">
 
@@ -339,8 +329,7 @@
 
                                 <span style="color: #778899; font-size:12px; font-weight: 500;">Leave Type</span>
 
-                                <span
-                                    style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest->leave_type}}</span>
+                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest->leave_type}}</span>
 
                             </div>
 
@@ -366,18 +355,15 @@
 
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
-                                <span
-                                    style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
 
-                                <span
-                                    style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#FF0000;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#FF0000;">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @else
 
-                                <span
-                                    style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#778899;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#778899;">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @endif
 
@@ -401,13 +387,11 @@
 
                             <span style="font-size: 11px;">
 
-                                <span
-                                    style="font-size: 11px; font-weight: 500;">{{ $leaveRequest->formatted_from_date }}</span>
+                                <span style="font-size: 11px; font-weight: 500;">{{ $leaveRequest->formatted_from_date }}</span>
 
                                 ({{ $leaveRequest->from_session }} ) to
 
-                                <span
-                                    style="font-size: 11px; font-weight: 500;">{{ $leaveRequest->formatted_to_date }}</span>
+                                <span style="font-size: 11px; font-weight: 500;">{{ $leaveRequest->formatted_to_date }}</span>
 
                                 ( {{ $leaveRequest->to_session }} )
 
@@ -431,8 +415,7 @@
 
                                 <span style="color: #778899; font-size:12px; font-weight: 400;">Applied on:</span>
 
-                                <span
-                                    style="color: #333; font-size: 12px; font-weight: 500;">{{ $leaveRequest->created_at->format('d M, Y') }}</span>
+                                <span style="color: #333; font-size: 12px; font-weight: 500;">{{ $leaveRequest->created_at->format('d M, Y') }}</span>
 
                             </div>
 
@@ -459,8 +442,7 @@
 
             @else
 
-            <div class="leave-pending"
-                style="margin-top:30px; background:#fff; margin-left:120px; display:flex; width:75%;flex-direction:column; text-align:center;justify-content:center; border:1px solid #ccc; padding:20px;gap:10px;">
+            <div class="leave-pending" style="margin-top:30px; background:#fff; margin-left:120px; display:flex; width:75%;flex-direction:column; text-align:center;justify-content:center; border:1px solid #ccc; padding:20px;gap:10px;">
 
                 <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:60%; margin:0 auto;">
 
@@ -479,101 +461,62 @@
 
 
 <script>
-function toggleInfo() {
-    const hideInfoDiv = document.querySelector('.hide-info');
-    const infoParagraph = document.querySelector('.info-paragraph');
+    function toggleInfo() {
+        const hideInfoDiv = document.querySelector('.hide-info');
+        const infoParagraph = document.querySelector('.info-paragraph');
 
-    hideInfoDiv.style.display = (hideInfoDiv.style.display === 'none' || hideInfoDiv.style.display === '') ? 'flex' :
-        'none';
-    infoParagraph.style.display = (infoParagraph.style.display === 'none' || infoParagraph.style.display === '') ?
-        'block' : 'none';
-}
+        hideInfoDiv.style.display = (hideInfoDiv.style.display === 'none' || hideInfoDiv.style.display === '') ? 'flex' :
+            'none';
+        infoParagraph.style.display = (infoParagraph.style.display === 'none' || infoParagraph.style.display === '') ?
+            'block' : 'none';
+    }
 
-function toggleDetails(sectionId, clickedLink) {
-    const tabs = ['leave', 'pendingButton', 'historyButton'];
+    function toggleDetails(sectionId, clickedLink) {
+        // Define all the tab IDs
+        const tabs = ['applyButton', 'pendingButton', 'historyButton'];
 
-    const links = document.querySelectorAll('.custom-nav-link');
-    links.forEach(link => link.classList.remove('active'));
+        // Remove 'active' class from all links
+        const links = document.querySelectorAll('.custom-nav-link');
+        links.forEach(link => link.classList.remove('active'));
 
-    clickedLink.classList.add('active');
+        // Add 'active' class to the clicked link
+        clickedLink.classList.add('active');
 
-    tabs.forEach(tab => {
-        const tabElement = document.getElementById(tab);
-        if (tab === sectionId) {
-            tabElement.style.display = 'block';
+        // Hide or show tabs based on the clicked sectionId
+        tabs.forEach(tab => {
+            const tabElement = document.getElementById(tab);
+            if (tab === sectionId) {
+                tabElement.style.display = 'block';
+            } else {
+                tabElement.style.display = 'none';
+            }
+        });
+
+        // Hide the #leave container if history or pending button is clicked
+        if (sectionId === 'historyButton' || sectionId === 'pendingButton') {
+            document.getElementById('leave').style.display = 'none';
+            document.getElementById('cardElement').style.display = 'none'; // Hide cardElement
         } else {
-            tabElement.style.display = 'none';
+            // Otherwise, show the #leave container
+            document.getElementById('leave').style.display = 'block';
+            document.getElementById('cardElement').style.display = 'flex'; // Show cardElement
         }
-    });
-    // Hide the content of other containers
-    const otherContainers = ['restricted', 'leaveCancel', 'compOff'];
-    otherContainers.forEach(container => {
-        const containerElement = document.getElementById(container);
-        containerElement.style.display = 'none';
-    });
-    // Hide the 'side' container when 'pending' or 'history' is clicked
-    const sideContainer = document.getElementById('cardElement');
-    if (sectionId === 'pendingButton' || sectionId === 'historyButton') {
-        sideContainer.style.display = 'none';
-    } else {
-        sideContainer.style.display = 'flex';
-        sideContainer.style.flexDirection = 'row'
-        toggleOptions('leave', document.querySelector('.side a[data-section="leave"]'));
     }
 
 
-}
 
 
 
-function toggleAccordion(element) {
 
-    const accordionBody = element.nextElementSibling;
+    function toggleAccordion(element) {
+        const accordionBody = element.nextElementSibling;
 
-    if (accordionBody.style.display === 'block') {
-
-        accordionBody.style.display = 'none';
-
-        element.classList.remove('active'); // Remove active class
-
-    } else {
-
-        accordionBody.style.display = 'block';
-
-        element.classList.add('active'); // Add active class
-
-    }
-}
-document.addEventListener('DOMContentLoaded', function() {
-    // Get the default link for 'leave'
-    const defaultLink = document.querySelector('.side a[data-section="leave"]');
-
-    // Call toggleOptions with 'leave' and the default link
-    toggleOptions('leave', defaultLink);
-});
-
-function toggleOptions(sectionId, clickedLink) {
-    const tabs = ['leave', 'restricted', 'leaveCancel', 'compOff'];
-
-    const links = document.querySelectorAll('.side a');
-    links.forEach(link => link.classList.remove('active'));
-
-    clickedLink.classList.add('active');
-
-    tabs.forEach(tab => {
-        const tabElement = document.getElementById(tab);
-        if (tab === sectionId) {
-            tabElement.style.display = 'block';
+        if (accordionBody.style.display === 'block') {
+            accordionBody.style.display = 'none';
+            element.classList.remove('active'); // Remove active class
         } else {
-            tabElement.style.display = 'none';
+            accordionBody.style.display = 'block';
+            element.classList.add('active'); // Add active class
         }
-    });
-
-    // Hide the content of other containers
-    const otherContainers = ['pendingButton', 'historyButton'];
-    otherContainers.forEach(container => {
-        const containerElement = document.getElementById(container);
-        containerElement.style.display = 'none';
-    });
-}
+    }
 </script>

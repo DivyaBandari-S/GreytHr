@@ -19,9 +19,6 @@ class CheckAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-        dump($session = $request->session());
-
         // Check if the user is an employee
         if (auth()->guard('emp')->check()) {
             //   session(['user_type' => 'emp']);
