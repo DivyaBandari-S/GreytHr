@@ -18,10 +18,9 @@
             /* Text color for inactive tabs */
         }
 
-
         .custom-nav-link.active {
             margin-top: 5px;
-            color: white;
+            color: white !important;
             background-color: rgb(2, 17, 79);
             border-radius: 5px;
         }

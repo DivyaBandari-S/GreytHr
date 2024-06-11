@@ -198,7 +198,6 @@ class Home extends Component
     public function close()
     {
         $this->showAlertDialog = false;
-        return redirect()->to('/');
     }
     public function toggleSalary()
     {
