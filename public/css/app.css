@@ -458,13 +458,13 @@ button.close-button {
     color: rgb(2, 17, 79);
     cursor: pointer;
     margin-right: 15px;
-    font-size: 14px;
+    font-size: 12px;
     text-decoration: none;
 }
 
 .custom-nav-link-pi.active {
     margin-top: 5px;
-    color: white;
+    color: white !important;
     background-color: rgb(2, 17, 79);
     border-radius: 5px;
     padding: 5px;
@@ -537,20 +537,17 @@ button.close-button {
 /* Starting document center/letters module (Kumar Asapu)*/
 
 .confirmation-letter:hover {
-    background-color: rgb(198, 205, 232);
-    width: 98%;
-    margin-left: 5px;
-}
-.confirmation-letterr:hover {
-    margin: 0%;
-    padding: 0%;
-    background-color: lightgrey;
+    background-color: #b3c3f1 !important;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .appointment-order:hover {
-    background-color: rgb(122, 149, 255);
-    width: 98%;
-    margin-left: 5px;
+    background-color: #b3c3f1 !important;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
@@ -564,18 +561,18 @@ button.close-button {
 }
 
 .tab {
-    font-size: 0.8rem;
+    font-size:12px;
     cursor: pointer;
     transition: color 0.3s ease-in-out;
 }
 
 .tab:hover {
-    color: rgb(122, 149, 255);
+    color: rgb(69, 164, 241);
 }
 
 .jump-to {
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size:12px;
     margin-top: 5px;
     transition: color 0.3s ease-in-out;
     border: none;
@@ -583,20 +580,20 @@ button.close-button {
 }
 
 .jump-to:hover {
-    color: rgb(122, 149, 255);
+    color: rgb(122, 195, 255);
 }
 
 .jump-to.active {
     border: none;
     background-color: rgb(2, 12, 53);
     border-radius: 5px;
-    color: white;
+    color: white !important;
 }
 
 .button-dl {
     width: 100%;
     max-width: 120px;
-    font-size: 0.8rem;
+    font-size:12px;
     padding: 10px;
     background-color: white;
     border: none;
@@ -605,13 +602,13 @@ button.close-button {
 }
 
 .button-dl:hover {
-    background-color: rgb(122, 149, 255);
-    color: white;
+    background-color:#f4f4f4;
+    color: #778899 !important;
 }
 
 .button-dl.active {
     background-color: rgb(2, 17, 79);
-    color: white;
+    color: white !important;
 }
 
 @media (min-width: 768px) {
@@ -639,6 +636,7 @@ button.close-button {
     height: auto;
     margin-bottom: 15px;
 }
+
 
 @media (max-width: 575.98px) {
     .tab,

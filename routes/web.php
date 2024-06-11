@@ -185,7 +185,7 @@ Route::middleware(['auth:com','handleSession'])->group(function () {
 });
 
 Route::middleware(['auth:hr','handleSession'])->group(function () {
-    Route::get('/hrPage', AuthChecking::class)->name('home');
+    Route::get('/hrPage', AuthChecking::class)->name('hrPage');
     Route::get('/home-dashboard', HomeDashboard::class)->name('admin-home');
     Route::get('/letter-requests', LetterRequests::class)->name('letter-requests');
     Route::get('/add-employee-details/{employee?}', AddEmployeeDetails::class)->name('add-employee-details');
@@ -195,18 +195,19 @@ Route::middleware(['auth:hr','handleSession'])->group(function () {
     Route::get('/hrAttendanceOverview', HrAttendanceOverviewNew::class)->name('hrAttendanceOverview');
     Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
     Route::get('/over-view', OverView::class)->name('over-view');
+
     // Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
 
 Route::middleware(['auth:finance','handleSession'])->group(function () {
-    Route::get('/financePage', AuthChecking::class)->name('home');
+    Route::get('/financePage', AuthChecking::class)->name('financePage');
 });
 
 Route::middleware(['auth:it','handleSession'])->group(function () {
     Route::get('/itPage', AuthChecking::class)->name('IT-requests');
     Route::get('/emp-assets-details', EmployeeAssetsDetails::class)->name('employee-asset-details');
-    Route::get('/ithomepage', ItDashboardPage::class)->name('home');
+    Route::get('/ithomepage', ItDashboardPage::class)->name('ithomepage');
 });
 
 Route::middleware(['auth:admins','handleSession'])->group(function () {
@@ -281,7 +282,6 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/leave-apply', LeaveApply::class);
     Route::get('/holiday-calender', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
-    Route::get('/sickleavebalance',Sickleavebalance::class)->name('sickleavebalance');
     Route::get('/casualleavebalance',CasualLeaveBalance::class)->name('casualleavebalance');
     Route::get('/casualprobationleavebalance',CasualProbationLeaveBalance::class)->name('casualprobationleavebalance');
     Route::get('/leave-cancel', LeaveCancel::class)->name('leave-cancel');

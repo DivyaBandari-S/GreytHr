@@ -20,7 +20,7 @@
         </div>
         <div class="emp-name p-0">
             <p style="font-size: 13px; color: white; max-width: 110px; word-wrap: break-word; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;margin-left:10px;" class="username">
-               Hi &nbsp; {{ ucwords(strtolower($employee->first_name)) }}
+               Hi &nbsp;{{ ucwords(strtolower($employee->first_name)) }}
             </p>
 
             <a href="{{ route('profile.info') }}" class="nav-item-1" style="text-decoration: none;color: #EC9B3B;font-weight:500;font-size: 11px;margin-left:10px;" onclick="changePageTitle()">View My Info</a>

@@ -747,17 +747,17 @@
                         </div>
                         @endauth
                         <div class="item">
-                            <div class="ui primary button">
+                            <div >
                                 @livewire('log-out')
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
                 <div class="ui csd" style="margin-left: 210px;">
                     <!-- <h2 class="ui header">Sample Content</h2> -->
-                    <div onscroll="checkFadeIn()" class="slot pt-4 ">
+                    <div class="slot pt-4 ">
                         {{ $slot }}
                     </div>
                 </div>

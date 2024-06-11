@@ -2,7 +2,7 @@
 <body>
     <div class="msg-container">
     @if (session()->has('success'))
-        <div x-data x-init="checkFadeIn()" class="custom-alert alert-success successAlert row mx-auto" style="text-align:center;margin:0 auto;">
+        <div x-data x-init="checkFadeIn()" class="custom-alert alert-success successAlert row mx-auto" style="text-align:center;margin-left:20%;">
             <p class="mx-auto mb-0">{{ session('success') }} 😀 <span wire:click="hideMessage" style="cursor: pointer; margin-left:20px;">&#10006;</span> </p>
         </div>
     @endif
@@ -91,7 +91,7 @@
                         <div class="reviews">
                             <div class="homeCard1">
                                 <div class="home-heading d-flex justify-content-between px-3 py-2">
-                                    <div class="rounded">
+                                    <div class="rounded pt-1">
                                         <p style="font-size:12px;color:#778899;font-weight:500;">  Review</p>
                                     </div>
                                     <div >
@@ -102,7 +102,7 @@
                                     <div class="notify d-flex justify-content-between  px-3">
                                         <p style="color: black; font-size: 12px; font-weight: 500;">
                                             {{$count}} <br>
-                                            <span style="color: #778899; font-size:11px; font-weight: 500;">Things to review</span>
+                                            <span  style="color: #778899; font-size:11px; font-weight: 500;">Things to review</span>
                                         </p>
                                         <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg" alt="" style="height: 40px; width: 40px;">
                                     </div>
@@ -142,7 +142,7 @@
                                 @else
                                     <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
                                         <img src="/images/not_found.png" alt="Image Description" style="width: 7em;">
-                                        <p style="color: #677A8E; font-size: 12px; text-align:center;">
+                                        <p class="mb-2" style="color: #677A8E; font-size: 12px; text-align:center;">
                                             Hurrah! You've nothing to review.
                                         </p>
                                     </div>
@@ -215,7 +215,7 @@
                                                     <p style="color: #677A8E; font-size: 11px;margin-bottom:10px; ">
                                                         <span style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }}  <span style="font-size: 10px; font-weight: normal;">{{ date('l', strtotime($entry->date)) }}</span></span>
                                                         <br>
-                                                        <span style="font-size: 10px; font-weight: normal;">{{ $entry->festivals }}</span>
+                                                        <span style="font-size: 11px; font-weight: normal;">{{ ucfirst($entry->festivals) }}</span>
                                                     </p>
                                                 </div>
                                                 @php
@@ -409,7 +409,7 @@
                             <div class="homeCard4">
                                 <div class="team-heading px-3 mt-2" style="display:flex; justify-content:space-between;">
                                     <div>
-                                        <p style="font-size:12px;color:#778899;font-weight:500;"> Team On Leave</p>
+                                        <p class="pt-1" style="font-size:12px;color:#778899;font-weight:500;"> Team On Leave</pclass>
                                     </div>
                                     <div >
                                         <a href="/team-on-leave-chart" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
@@ -458,7 +458,7 @@
                                 @else
                                     <div style="display:flex;justify-content:center;flex-direction:column;align-items:center;">
                                         <img src="https://i.pinimg.com/originals/52/4c/6c/524c6c3d7bd258cd165729ba9b28a9a2.png" alt="Image Description" style="width: 120px; height:100px;">
-                                        <p style="color: #677A8E; font-size: 11px; ">
+                                        <p style="color: #677A8E; font-size: 11px;margin-bottom:10px; ">
                                             Wow!No leaves planned today.
                                         </p>
                                     </div>
@@ -552,7 +552,7 @@
                     <div class="home-hover mb-4">
                         <div class="homeCard2">
                         <div class="px-3 py-2" style="color: #677A8E; font-weight:500;">
-                                    <p style="font-size:12px;">Quick Access</p>
+                                    <p class="pt-1" style="font-size:12px;">Quick Access</p>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; position: relative;">
                                     <div class="quick col-md-7 px-3 py-0">
@@ -573,7 +573,7 @@
                             <div >
                                 <p style="font-size:12px;color:#778899;font-weight:500;">POI</p>
                             </div>
-                            <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
+                            <div style="display:flex;gap:10px;align-items:center;margin:10px auto;">
                                 <img src="images/pen.png" alt="Image Description" style="width: 4em;">
                                 <p style="color: #677A8E;  font-size: 12px;margin-top:5px;">Hold on! You can submit your Proof of Investments (POI) once released.</p>
                             </div>
@@ -658,7 +658,7 @@
                             <div>
                                 <p style="font-size:12px;color:#778899;font-weight:500;">IT Declaration</p>
                             </div>
-                            <div style="display: flex;gap:10px;">
+                            <div class="pt-2" style="display: flex;gap:10px;">
                                 <img src="images/thumb-up.png" alt="Image Description" style="width: 5em;">
                                 <p style="font-size:12px;color:#778899;margin-top:10px;">Hurrah! Considered your IT declaration for Apr 2023.</p>
                             </div>
@@ -680,7 +680,7 @@
                                 <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;" >
                                 </button>
                             </div>
-                            <div class="modal-body" style="max-height:500;overflow-y:auto">
+                            <div class="modal-body" style="max-height:300px;overflow-y:auto">
                                 <div class="row">
                                     <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Date : <span style="color: #000000;">{{$currentDate}}</span></div>
                                     <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Shift Time : <span style="color: #000000;">10:00 to 19:00</span></div>

@@ -96,7 +96,7 @@ class LeaveBalances extends Component
                 $this->sickLeaveBalance = $this->sickLeavePerYear - $this->totalSickDays;
                 $this->casualLeaveBalance = $this->casualLeavePerYear - $this->totalCasualDays;
                 $this->casualProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->totalCasualLeaveProbationDays;
-                $this->lossOfPayBalance = $this->lossOfPayPerYear - $this->totalLossOfPayDays;
+                $this->lossOfPayBalance = $this->totalLossOfPayDays;
                 $this->consumedCasualLeaves = $this->casualLeavePerYear - $this->casualLeaveBalance;
                 $this->consumedSickLeaves = $this->sickLeavePerYear - $this->sickLeaveBalance;
                 $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
