@@ -8,6 +8,7 @@ use App\Models\Hr;
 use App\Models\IT;
 use Livewire\Component;
 use App\Services\GoogleDriveService;
+use Illuminate\Support\Facades\Log;
 
 class ProfileCard extends Component
 {
@@ -35,7 +36,7 @@ class ProfileCard extends Component
             return view('livewire.profile-card');
         } 
         catch (\Exception $e) {
-        \Log::error('Error in render method: ' . $e->getMessage());
+        Log::error('Error in render method: ' . $e->getMessage());
         return view('livewire.profile-card')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
     }
     }

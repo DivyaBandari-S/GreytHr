@@ -4,7 +4,7 @@
             <h6 class="text-start text-5xl font-bold py-3 px-4 employees-details-chat" style="margin-left:55px;">Users</h6>
         </div>
         <div class="col-md-6 input-group">
-            <input type="text" class="form-control" placeholder="Search..." wire:model.debounce.500ms="searchTerm" aria-label="Search" aria-describedby="search-addon">
+            <input type="text" class="form-control" placeholder="Search..." wire:model.debounce.500ms="searchTerm" aria-label="Search" aria-describedby="search-addon" wire:keydown.enter="filter">
             <button class="submit-btn" wire:click="filter" id="search-addon" style="height:37px; line-height: 2;">Search</button>
         </div>
 
@@ -28,7 +28,16 @@
                 <div class="card-body text-center">
 
                     <div class="chat-employee-name">{{ ucwords(strtolower($employee->first_name)) }}&nbsp;{{ ucwords(strtolower($employee->last_name)) }}</div>
-                    <p class="card-text px-4 mb-0" style="display: inline-block;">{{ ucwords(strtolower($employee->job_title)) }}</p>
+                    @php
+                    // Example job title
+                    $jobTitle = $employee->job_title;
+
+                    // Convert "II" to "I" and "III" to "III" in the job title
+                    $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
+                    $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
+                    $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
+                    @endphp
+                    <p class="card-text px-4 mb-0" style="display: inline-block;">{{ $convertedTitle }}</p>
                     <div class="d-flex justify-content-between mt-3">
                         <div class="chat-emp-head d-flex flex-column align-items-start gap-1">
                             <span>Employee Id</span>
@@ -36,7 +45,7 @@
                         </div>
                         <div class="chat-emp-details d-flex flex-column align-items-end gap-1">
                             <span>{{ $employee->emp_id }}</span>
-                            <span>{{ \Carbon\Carbon::parse($employee->hire_date)->isoFormat('D M, YYYY') }}</span>
+                            <span>{{ \Carbon\Carbon::parse($employee->hire_date)->format('d M, Y') }}</span>
                         </div>
                     </div>
                 </div>

@@ -1132,10 +1132,10 @@ margin-top:10px;
 border: 1px solid #cecece;
 }
 
-.active, .accordion:hover {
+/* .active, .accordion:hover {
 background-color: #02114f;
 color: #fff;
-}
+} */
 
 .panel {
 /* padding: 0 18px; */

@@ -15,6 +15,9 @@
     margin-top: 30px;
     border-radius: 5px;
 }
+.primarySideBar{
+    font-family: "Montserrat", sans-serif;
+}
 /* Ending of auth checking module (Kumar Asapu)*/
 
 /* Starting of letter request module (Kumar Asapu)*/
@@ -331,6 +334,9 @@ body {
     font-size: 12px;
     border: none;
 }
+.submit-btn:hover{
+    background-color: #272d48;
+}
 .cancel-btn{
     background-color: #fff;
     color: rgb(2, 17, 79);
@@ -529,7 +535,7 @@ button.close-button {
 /* Starting document center/letters module (Kumar Asapu)*/
 
 .confirmation-letter:hover {
-    background-color: rgb(122, 149, 255);
+    background-color: rgb(198, 205, 232);
     width: 98%;
     margin-left: 5px;
 }
@@ -698,19 +704,25 @@ button.close-button {
 /* app.blade */
 .profile-container {
     display: flex;
-
-    /* gap: 10px; */
     justify-content: space-between;
     align-items: center;
-
-    padding: 10px;
-
-    background-color: rgb(2, 17, 79);
-
+    padding: 1px 10px;
+    background-color: none;
+    color: #fff;
+    font-weight: 500;
     box-shadow: 2px 4px 4px 4px rgba(0, 0, 0, 0.1);
-
     border-radius: 5px;
 }
+.text-white{
+    color: white;
+}
+.sidebar-heading{
+    color: #4d5256;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
 
 .profile-image {
     height: 32px;
@@ -728,6 +740,9 @@ button.close-button {
     margin: 0;
 }
 .left-card-body{
+    font-family: "Montserrat", sans-serif;
+}
+.layout-side-menu{
     font-family: "Montserrat", sans-serif;
 }
 .nav-item {
@@ -754,7 +769,7 @@ button.close-button {
 }
 
 .nav-text {
-    margin-left: 15px; 
+    margin-left: 15px;
 }
 .fas{
     height: 25px;
@@ -831,6 +846,7 @@ button.close-button {
 }
 .emp-name {
     display: flex;
+    gap:5px;
     flex-direction: column;
 }
 
@@ -868,8 +884,8 @@ button.close-button {
     position: relative;
     display: inline-block;
     background: transparent;
-    width: 200px;
-    margin-right: 30px;
+    /* width: 200px;
+    margin-right: 30px; */
 }
 
 .dropdown-btn {
@@ -1017,7 +1033,7 @@ button.close-button {
         display: none !important;
     }
     .scrollable-container {
-        max-height: 470px;
+        max-height: calc(100vh - 70px);
         overflow-y: auto;
     }
     .scrollable-container::-webkit-scrollbar {
@@ -1050,7 +1066,6 @@ button.close-button {
     }
 }
 /* end of app.blade */
-
 
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
@@ -1817,8 +1832,9 @@ td{
 
 .text-base {
     /* Font size */
-    font-size: 1.25rem;
-    /* Adjust as needed */
+    font-size: 14px;
+    color:#47515b;
+    font-weight: 600;
 }
 
 .font-semibold {
@@ -2648,7 +2664,7 @@ td{
 
     /* //catalog */
     .activeCatalog {
-        background-color: #02114f;
+        background-color: none;
         color: #fff;
     }
 
@@ -2971,7 +2987,7 @@ select .yearSelect {
 /* Add box shadow to the login form */
 .loginBGGradiant {
     height: 100vh;
-    background-image: radial-gradient(circle at 53% 25%, rgba(203, 203, 203,0.04) 0%, rgba(203, 203, 203,0.04) 36%,transparent 36%, transparent 100%),radial-gradient(circle at 48% 27%, rgba(22, 22, 22,0.04) 0%, rgba(22, 22, 22,0.04) 45%,transparent 45%, transparent 100%),radial-gradient(circle at 65% 50%, rgba(219, 219, 219,0.04) 0%, rgba(219, 219, 219,0.04) 61%,transparent 61%, transparent 100%),radial-gradient(circle at 78% 82%, rgba(229, 229, 229,0.04) 0%, rgba(229, 229, 229,0.04) 26%,transparent 26%, transparent 100%),radial-gradient(circle at 99% 75%, rgba(96, 96, 96,0.04) 0%, rgba(96, 96, 96,0.04) 31%,transparent 31%, transparent 100%),radial-gradient(circle at 17% 28%, rgba(188, 188, 188,0.04) 0%, rgba(188, 188, 188,0.04) 15%,transparent 15%, transparent 100%),radial-gradient(circle at 19% 19%, rgba(25, 25, 25,0.04) 0%, rgba(25, 25, 25,0.04) 68%,transparent 68%, transparent 100%),radial-gradient(circle at 35% 23%, rgba(31, 31, 31,0.04) 0%, rgba(31, 31, 31,0.04) 18%,transparent 18%, transparent 100%),linear-gradient(90deg, rgb(138, 193, 238),rgb(20, 21, 171));
+    background-image: radial-gradient(circle at 53% 25%, rgba(203, 203, 203, 0.04) 0%, rgba(203, 203, 203, 0.04) 36%, transparent 36%, transparent 100%), radial-gradient(circle at 48% 27%, rgba(22, 22, 22, 0.04) 0%, rgba(22, 22, 22, 0.04) 45%, transparent 45%, transparent 100%), radial-gradient(circle at 65% 50%, rgba(219, 219, 219, 0.04) 0%, rgba(219, 219, 219, 0.04) 61%, transparent 61%, transparent 100%), radial-gradient(circle at 78% 82%, rgba(229, 229, 229, 0.04) 0%, rgba(229, 229, 229, 0.04) 26%, transparent 26%, transparent 100%), radial-gradient(circle at 99% 75%, rgba(96, 96, 96, 0.04) 0%, rgba(96, 96, 96, 0.04) 31%, transparent 31%, transparent 100%), radial-gradient(circle at 17% 28%, rgba(188, 188, 188, 0.04) 0%, rgba(188, 188, 188, 0.04) 15%, transparent 15%, transparent 100%), radial-gradient(circle at 19% 19%, rgba(25, 25, 25, 0.04) 0%, rgba(25, 25, 25, 0.04) 68%, transparent 68%, transparent 100%), radial-gradient(circle at 35% 23%, rgba(31, 31, 31, 0.04) 0%, rgba(31, 31, 31, 0.04) 18%, transparent 18%, transparent 100%), linear-gradient(90deg, #e6e6ed, #cdcedc);
 }
 .login-form-with-shadow {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
@@ -3256,7 +3272,7 @@ select .yearSelect {
     padding-left: 0;
 }
 .header {
-    display: flex; align-items: center; background-color: #dce0e5; padding: 10px;
+    display: flex; align-items: center;padding: 10px;
 }
 .header h6{
     color:#778899;
@@ -3469,7 +3485,12 @@ select .yearSelect {
     text-align: start;
 }
 .card-text {
-    font-size: 0.725rem;
+    font-size: 9px;
+    padding: 2px 5px;
+    margin-bottom: 0px;
+    margin-top: 7px;
+    border-radius: 20px;
+    background-color: #f4f4f4;
 }
 .btn-start {
     display: flex;
@@ -3603,6 +3624,9 @@ select .yearSelect {
 	color: #26254e;
 	margin-bottom: 10px;
   font-weight: 700;
+}
+.fs18 {
+    font-size: 18px;
 }
 .fs-subtitle {
 	font-weight: normal;
@@ -3804,4 +3828,285 @@ option{
     line-height: 1.5;
     margin-bottom: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+.employee-timesheet span{
+    margin-bottom: 0;
+    color: #778899;
+    font-size: 12px;
+    max-width: 100%;
+    overflow-x: auto;
+    font-weight: normal;
+}
+.employee-timesheet .week-details-heading{
+    margin-bottom: 0;
+    color: #778899;
+    font-size: 12px;
+    font-weight: 500;
+}
+.timesheet-table {
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.timesheet-table th,
+.timesheet-table td {
+    width: calc(100% / 10); /* Adjusted for 10 columns excluding the first one */
+    text-align: center;
+}
+.timesheet-table th:first-child,
+.timesheet-table td:first-child {
+    width: auto; /* Let the first column adjust its width based on content */
+}
+
+.timesheet-table thead th{
+    padding: 8px;
+    color: #778899;
+    font-weight: 600;
+    background-color: #f1f4f8 ;
+    border-bottom: 2px solid #dee2e6; /* Make header border thicker */
+}
+.timesheet-table td{
+    font-size: 12px;
+    color: #778899;
+    font-weight: normal;
+    border-bottom: 1px solid #dee2e6;
+}
+.time-sheet-heading{
+    color:#778899;
+    font-weight: 600;
+}
+.employee-timesheet .heading-value{
+    color: #000;
+    font-weight: 500;
+}
+.placeholder-timesheet{
+    color:#000;
+    font-size: 12px;
+}
+.basic-container{
+    border-radius: 10px;
+    display: flex;
+    border:1px solid #bbc3cc;
+    font-size: 12px;
+    font-weight: 500;
+    color: #47515b;
+}
+
+p::first-letter {
+    text-transform: uppercase;
+  }
+  .offcanvas{
+    font-family: "Montserrat", sans-serif;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
+  }
+.offcanvasRightLabel{
+    color:#778899;
+    font-size: 14px;
+    font-size: 500;
+}
+.lableCount{
+    color:#f2b13f;
+    font-size: 14px;
+}
+.notification-text{
+    color: #9fabb7 ;
+    font-size: 11px;
+}
+.notification-head{
+    font-size:12px;
+}
+.notification-text-para{
+    color: #778899    ;
+    font-weight: normal;
+    font-size:11px;
+    max-height: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+}
+.my-daterange-timesheet .month {
+    display: revert-layer !important;
+}
+.my-daterange-timesheet td {
+    padding: 1px !important;
+}
+.noti-badge {
+    position: absolute;
+    /* top: 6px; */
+    top: 14px;
+    right: 3px;
+    /* background: red; */
+    color: #fff;
+    padding: 3px 5px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 5px;
+}
+
+/* //log out */
+.logout-icon-container {
+    display: inline-block;
+    position: relative;
+}
+
+/* Style the logout icon */
+.logout-icon-container i {
+    color: #fff;
+    font-size: 15px;
+    transition: color 0.3s ease;
+}
+
+/* Style the tooltip */
+.logout-icon-container .tooltip {
+    visibility: hidden;
+    width: 90px;
+    background-color: #333;
+    color: orange;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 3  0px;
+    margin-left:-30px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.logout-icon-container:hover i {
+    color: orange;
+}
+
+.logout-icon-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip {
+    margin-left: 10px;
+    color: orange;
+}
+.pointer {
+    cursor: pointer;
+}
+
+.sideBarIcon {
+    font-size: 14px !important;
+    color:#6c7e90;
+}
+
+/* ///chat styles */
+.employees-details-chat{
+    color: #333;
+    font-weight: 500;
+}
+.chat-employee-name{
+    color: #333;
+    font-size: 12px;
+    font-weight: 600;
+}
+.chat-emp-details{
+    color: #000;
+    font-size: 10px;
+}
+.chat-emp-head{
+    font-size: 10px;
+    color: #778899;
+}
+
+
+/* //it styles */
+.employee-asset-details {
+    margin: 0 auto;
+    border-collapse: collapse; /* Collapse table borders */
+}
+
+.employee-asset-details th,
+.employee-asset-details td {
+    width: 150px;
+    font-size: 12px;
+    color: #fff;
+    font-weight: 500;
+    border-bottom: 1px solid #ccc; /* Add horizontal borders */
+    padding: 7px 15px; /* Add padding for better spacing */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Show ellipsis for hidden text */
+}
+
+.employee-asset-details td:first-child,
+.employee-asset-details th:first-child {
+    border-left: 1px solid #ccc; /* Add left border to first column */
+}
+
+.employee-asset-details td:last-child,
+.employee-asset-details th:last-child {
+    border-right: 1px solid #ccc; /* Add right border to last column */
+}
+
+.employee-asset-details thead {
+    background-color: rgb(2, 17, 79); /* Set background color for thead */
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to thead */
+}
+
+/* Set background color for even rows */
+.employee-asset-details tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+/* Set background color for odd rows */
+.employee-asset-details tbody tr:nth-child(odd) {
+    background-color: #f8f8f8;
+}
+.employee-asset-details th:nth-child(2)
+{
+    width: 250px;
+}
+
+.employee-asset-details td {
+    width: 150px;
+    padding: 10px 15px;
+    font-size: 11px;
+    text-align: start;
+    color: #000;
+    font-weight: normal;
+}
+/* Hover effect for table rows */
+.employee-asset-details tbody tr:hover {
+    background-color: 
+    #f6fbff; /* Light gray background on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow on hover */
+}
+.asset-fields{
+    text-align: start;
+}
+.table-frame {
+    border: 1px solid #ccc;
+    background-color: #265073;
+    padding: 5px;
+    width: 950px;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin: 0 auto;
+}
+/* CSS */
+.position-relative {
+    position: relative;
+}
+
+.arrow-down {
+    position: absolute;
+    top: 50%;
+    right: 10px; /* Adjust the position as needed */
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #778899; /* Change the color as needed */
+    pointer-events: none; /* Ensure the arrow doesn't interfere with select clicks */
 }

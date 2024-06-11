@@ -206,7 +206,7 @@ Route::middleware(['auth:hr'])->group(function () {
     // Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
- 
+
 Route::middleware(['auth:finance'])->group(function () {
     Route::get('/financePage', AuthChecking::class)->name('home');
 });
@@ -219,7 +219,7 @@ Route::middleware(['auth:it'])->group(function () {
 
 Route::middleware(['auth:admins'])->group(function () {
     Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
- 
+
 });
  
 
@@ -309,7 +309,7 @@ Route::get('/google-callback', [GoogleDriveController::class, 'callback'])
     // ####################################### Chat Module Routes #########################endregion
     Route::get('/chat',Index::class)->name('chat.index');
     Route::get('/chat/{query}',Chat::class)->name('chat');
-    Route::get('/users',Employee::class)->name('employee');
+    Route::get('/e',Employee::class)->name('employee');
     Route::get('/image',ImageUpload::class)->name('image');
     //*******************************************  End Of Chat Module Routes *************************/
 });

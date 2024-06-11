@@ -15,6 +15,9 @@
     margin-top: 30px;
     border-radius: 5px;
 }
+.primarySideBar{
+    font-family: "Montserrat", sans-serif;
+}
 /* Ending of auth checking module (Kumar Asapu)*/
 
 /* Starting of letter request module (Kumar Asapu)*/
@@ -66,7 +69,9 @@
 /* Ending of letter request module (Kumar Asapu)*/
 
 /* Starting of home module (Kumar Asapu,Archana Goud,Divya Bandari,Pranita Priyadarshi & Siva)*/
-
+.layout-side-menu{
+    font-family: "Montserrat", sans-serif;
+}
 .greet {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     tab-size: 4;
@@ -701,18 +706,17 @@ button.close-button {
 /* app.blade */
 .profile-container {
     display: flex;
-
-    /* gap: 10px; */
     justify-content: space-between;
     align-items: center;
-
-    padding: 10px;
-
-    background-color: rgb(2, 17, 79);
-
+    padding: 1px 10px;
+    background-color: none;
+    color: #fff;
+    font-weight: 500;
     box-shadow: 2px 4px 4px 4px rgba(0, 0, 0, 0.1);
-
     border-radius: 5px;
+}
+.text-white{
+    color: white;
 }
 
 .profile-image {
@@ -757,12 +761,12 @@ button.close-button {
 }
 
 .nav-text {
-    margin-left: 15px; 
+    margin-left: 15px;
 }
-.fas{
+/* .fas{
     height: 25px;
     width: 25px;
-}
+} */
 
 .custom-background {
     height: 60px;
@@ -834,6 +838,7 @@ button.close-button {
 }
 .emp-name {
     display: flex;
+    gap:5px;
     flex-direction: column;
 }
 
@@ -871,8 +876,8 @@ button.close-button {
     position: relative;
     display: inline-block;
     background: transparent;
-    width: 200px;
-    margin-right: 30px;
+    /* width: 200px;
+    margin-right: 30px; */
 }
 
 .dropdown-btn {
@@ -883,7 +888,12 @@ button.close-button {
     border: none;
     cursor: pointer;
 }
-
+.sidebar-heading{
+    color: #4d5256;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 600;
+}
 .dropdown-content {
     display: none;
     position: absolute;
@@ -1020,7 +1030,7 @@ button.close-button {
         display: none !important;
     }
     .scrollable-container {
-        max-height: 470px;
+        max-height: calc(100vh - 70px);
         overflow-y: auto;
     }
     .scrollable-container::-webkit-scrollbar {
@@ -1053,8 +1063,6 @@ button.close-button {
     }
 }
 /* end of app.blade */
-
-
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
@@ -4058,4 +4066,21 @@ p::first-letter {
     border-radius: 10px;
     overflow-x: auto;
     margin: 0 auto;
+}
+/* CSS */
+.position-relative {
+    position: relative;
+}
+
+.arrow-down {
+    position: absolute;
+    top: 50%;
+    right: 10px; /* Adjust the position as needed */
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #778899; /* Change the color as needed */
+    pointer-events: none; /* Ensure the arrow doesn't interfere with select clicks */
 }
