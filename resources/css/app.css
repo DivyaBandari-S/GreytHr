@@ -1247,7 +1247,10 @@ input[type="date"]::before {
 .form-group-who-is-in {
     margin-right: 10px;
 }
-
+.form-group label{
+    font-size: 12px;
+    color: #778899;
+}
 .search-input-who-is-in {
     border: none;
     position: relative;
