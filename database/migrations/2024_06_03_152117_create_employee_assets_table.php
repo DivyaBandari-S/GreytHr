@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,9 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employee_assets', function (Blueprint $table) {
-
             $table->id();
-            $table->string('emp_id')->unique();
+            $table->string('asset_id')->nullable()->default(null)->unique();
             $table->string('asset_tag')->nullable();
             $table->string('status')->nullable();
             $table->string('manufacturer')->nullable();
@@ -44,11 +44,25 @@ return new class extends Migration
             $table->enum('one_drive', ['Yes', 'No'])->default('No');
             $table->string('mac_address')->nullable();
             $table->enum('laptop_received', ['Yes', 'No'])->default('No');
+            $table->date('laptop_received_date')->nullable();
             $table->timestamps();
-            $table->foreign('emp_id')->references('emp_id')->on('employee_details')->onDelete('cascade');
-
-
         });
+
+        $triggerSQL = <<<SQL
+        CREATE TRIGGER asset_id BEFORE INSERT ON employee_assets FOR EACH ROW
+        BEGIN
+            -- Check if bill_number is NULL
+            IF NEW.asset_id IS NULL THEN
+                -- Find the maximum bill_number value in the bills table
+                SET @max_id := IFNULL((SELECT MAX(CAST(SUBSTRING(asset_id, 4) AS UNSIGNED)) FROM employee_assets), 0);
+
+                -- Increment the max_id and assign it to the new bill_number
+                SET NEW.asset_id = CONCAT('AST', LPAD(@max_id + 1, 6, '0'));
+            END IF;
+        END;
+    SQL;
+
+        DB::unprepared($triggerSQL);
     }
 
     /**

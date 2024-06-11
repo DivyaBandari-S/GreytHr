@@ -1,4 +1,9 @@
 <div>
+    @if(session()->has('emp_error'))
+        <div class="alert alert-danger">
+            {{ session('emp_error') }}
+        </div>
+    @endif
     <div class="row m-0">
         <div class="d-flex align-items-center justify-content-end gap-3">
             <div class=" p-0">
@@ -6,53 +11,43 @@
                     style="font-size:12px;font-weight:500;cursor:pointer;text-align:end;">
                     View Login History
                 </div>
-                @if ($showAlertDialog)
-                    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header" style="background-color: rgb(2, 17, 79);">
-                                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
-                                        <b>Login
-                                            History</b></h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                        wire:click="close">
-                                        <span aria-hidden="true" style="color: white;">×</span>
-                                    </button>
+                @if ($showAlertDialog).
+                <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: rgb(2, 17, 79);">
+                                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Login
+                                        History</b></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="close">
+                                    <span aria-hidden="true" style="color: white;">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col" style="font-size: 10px;"><b>Last Login</b></div>
+                                    <div class="col" style="font-size: 10px;"><b>Last Login Failure</b></div>
+                                    <div class="col" style="font-size: 10px;"><b>Last Password Changed</b></div>
                                 </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col" style="font-size: 10px;"><b>Last Login</b></div>
-                                        <div class="col" style="font-size: 10px;"><b>Last Login Failure</b></div>
-                                        <div class="col" style="font-size: 10px;"><b>Last Password Changed</b></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col" style="font-size: 10px;">04 Oct 2023 14:32:00</div>
-                                        <div class="col" style="font-size: 10px;">05 Apr 2023 19:12:48</div>
-                                        <div class="col" style="font-size: 10px;">28 Jan 2023 19:00:01</div>
-                                    </div>
-                                    <table class="table-s" border="1" style="margin-top: 10px;width:100%">
-                                        <tr class="tr-s">
-                                            <th class="th-s"
-                                                style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
-                                                Date</th>
-                                            <th class="th-s"
-                                                style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
-                                                IP Address</th>
-                                        </tr>
-                                        <tr class="tr-s">
-                                            <td class="th-d"
-                                                style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">
-                                                04 Oct, 2023 13:48:06</td>
-                                            <td class="th-d"
-                                                style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">
-                                                183.82.97.220</td>
-                                        </tr>
-                                    </table>
+                                <div class="row">
+                                    <div class="col" style="font-size: 10px;">04 Oct 2023 14:32:00</div>
+                                    <div class="col" style="font-size: 10px;">05 Apr 2023 19:12:48</div>
+                                    <div class="col" style="font-size: 10px;">28 Jan 2023 19:00:01</div>
                                 </div>
+                                <table class="table-s" border="1" style="margin-top: 10px;width:100%">
+                                    <tr  class="tr-s">
+                                        <th class="th-s" style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">Date</th>
+                                        <th class="th-s" style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">IP Address</th>
+                                    </tr>
+                                    <tr class="tr-s">
+                                        <td class="th-d" style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">04 Oct, 2023 13:48:06</td>
+                                        <td class="th-d" style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">183.82.97.220</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-backdrop fade show blurred-backdrop"></div>
+                </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>
                 @endif
             </div>
 

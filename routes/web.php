@@ -69,6 +69,9 @@ use App\Livewire\HomeDashboard;
 use App\Livewire\LeaveBalanaceAsOnADay;
 use App\Livewire\LetterRequests;
 use App\Livewire\TeamOnLeaveChart;
+use App\Livewire\Sickleavebalance;
+use App\Livewire\CasualLeaveBalance;
+use App\Livewire\CasualProbationLeaveBalance;
 
 use App\Livewire\ViewDetails;
 use App\Livewire\ViewDetails1;
@@ -81,11 +84,14 @@ use App\Livewire\TeamOnAttendanceChart;
 use App\Livewire\ViewPendingDetails;
 use App\Livewire\Emojies;
 use App\Livewire\Employee;
+use App\Livewire\EmployeeAssetsDetails;
 use App\Livewire\EmpTimeSheet;
 use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
+use App\Livewire\ItDashboardPage;
 use App\Livewire\LeaveBalancesChart;
 use App\Livewire\ReviewPendingRegularisation;
+use App\Livewire\OverView;
 use Illuminate\Support\Facades\Route;
 
 
@@ -188,20 +194,24 @@ Route::middleware(['auth:hr','handleSession'])->group(function () {
     // Route::get('/hrleaveOverview', HrLeaveOverview::class)->name('hrleaveOverview');
     Route::get('/hrAttendanceOverview', HrAttendanceOverviewNew::class)->name('hrAttendanceOverview');
     Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
+    Route::get('/over-view', OverView::class)->name('over-view');
     // Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
 
-Route::middleware(['auth:finance','handleSession'])->group(function () {
+Route::middleware(['auth:finance'])->group(function () {
     Route::get('/financePage', AuthChecking::class)->name('home');
 });
 
-Route::middleware(['auth:it','handleSession'])->group(function () {
-    Route::get('/itPage', AuthChecking::class)->name('home');
+Route::middleware(['auth:it'])->group(function () {
+    Route::get('/itPage', AuthChecking::class)->name('IT-requests');
+    Route::get('/emp-assets-details', EmployeeAssetsDetails::class)->name('employee-asset-details');
+    Route::get('/ithomepage', ItDashboardPage::class)->name('home');
 });
 
 Route::middleware(['auth:admins','handleSession'])->group(function () {
     Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
+
 });
 
 
@@ -230,6 +240,8 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/review-pending-regularation/{id}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
     Route::get('/timesheet-page', EmpTimeSheet::class)->name('time-sheet');
+
+
     //Feeds Module
     Route::get('/Feeds', Feeds::class)->name('feeds');
     Route::get('/events', Activities::class);
@@ -269,6 +281,9 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/leave-apply', LeaveApply::class);
     Route::get('/holiday-calender', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
+    Route::get('/sickleavebalance',Sickleavebalance::class)->name('sickleavebalance');
+    Route::get('/casualleavebalance',CasualLeaveBalance::class)->name('casualleavebalance');
+    Route::get('/casualprobationleavebalance',CasualProbationLeaveBalance::class)->name('casualprobationleavebalance');
     Route::get('/leave-cancel', LeaveCancel::class)->name('leave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
@@ -284,10 +299,10 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');
 
     // ####################################### Chat Module Routes #########################endregion
-    Route::get('/chat', Index::class)->name('chat.index');
-    Route::get('/chat/{query}', Chat::class)->name('chat');
-    Route::get('/users', Employee::class)->name('employee');
-    Route::get('/image', ImageUpload::class)->name('image');
+    Route::get('/chat',Index::class)->name('chat.index');
+    Route::get('/chat/{query}',Chat::class)->name('chat');
+    Route::get('/e',Employee::class)->name('employee');
+    Route::get('/image',ImageUpload::class)->name('image');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 
