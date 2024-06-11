@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Torann\GeoIP\Facades\GeoIP;
 
 class CheckAuth
 {
@@ -19,8 +21,9 @@ class CheckAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         // Check if the user is an employee
-        if (auth()->guard('emp')->check()) {
+         if (auth()->guard('emp')->check()) {
             //   session(['user_type' => 'emp']);
             // $user = Auth::User();
             // Session::put('name', $user->name);
