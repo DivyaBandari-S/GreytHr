@@ -77,7 +77,7 @@ class EmpLogin extends Component
             if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/');
             } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/');
+               return redirect('/');
             } elseif (Auth::guard('hr')->attempt(['hr_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/home-dashboard');
             } elseif (Auth::guard('hr')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
@@ -88,10 +88,10 @@ class EmpLogin extends Component
                 return redirect('/financePage');
             } elseif (Auth::guard('it')->attempt(['it_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/itPage');
-            } elseif (Auth::guard('admins')->attempt(['admin_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/adminPage');
             } elseif (Auth::guard('it')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/itPage');
+            } elseif (Auth::guard('admins')->attempt(['admin_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
+                return redirect('/adminPage');
             } else {
                 $this->error = "Invalid ID or Password. Please try again.";
             }
@@ -220,22 +220,22 @@ class EmpLogin extends Component
             // Handle validation errors
             //$this->showErrorModal = true;
             // $this->addError('email', 'There was a problem with your input. Please check and try again.');
-            $this->verify_error="There was a problem with your input. Please check and try again.";
+            $this->verify_error = "There was a problem with your input. Please check and try again.";
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database errors
             //$this->showErrorModal = true;
             // $this->addError('email', 'We are experiencing technical difficulties. Please try again later.');
-            $this->verify_error='We are experiencing technical difficulties. Please try again later.';
+            $this->verify_error = 'We are experiencing technical difficulties. Please try again later.';
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
             // Handle server errors
             // $this->showErrorModal = true;
             // $this->addError('email', 'There is a server error. Please try again later.');
-            $this->verify_error='There is a server error. Please try again later.';
+            $this->verify_error = 'There is a server error. Please try again later.';
         } catch (\Exception $e) {
             // Handle general errors
             // $this->showErrorModal = true;
             // $this->addError('email', 'An unexpected error occurred. Please try again.');
-            $this->verify_error='An unexpected error occurred. Please try again.';
+            $this->verify_error = 'An unexpected error occurred. Please try again.';
         }
     }
 
@@ -325,19 +325,19 @@ class EmpLogin extends Component
         } catch (ValidationException $e) {
             // Handle validation errors
             // $this->passwordChangedModal = false;
-            $this->pass_change_error='There was a problem with your input. Please check and try again.';
+            $this->pass_change_error = 'There was a problem with your input. Please check and try again.';
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database errors
             // $this->passwordChangedModal = false;
-            $this->pass_change_error='We are experiencing technical difficulties. Please try again later.';
+            $this->pass_change_error = 'We are experiencing technical difficulties. Please try again later.';
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
             // Handle server errors
             // $this->passwordChangedModal = false;
-            $this->pass_change_error= 'There is a server error. Please try again later.';
+            $this->pass_change_error = 'There is a server error. Please try again later.';
         } catch (\Exception $e) {
             // Handle general errors
             //$this->passwordChangedModal = false;
-            $this->pass_change_error= 'An unexpected error occurred. Please try again.';
+            $this->pass_change_error = 'An unexpected error occurred. Please try again.';
         }
     }
 
