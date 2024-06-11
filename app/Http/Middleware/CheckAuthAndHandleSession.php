@@ -55,13 +55,14 @@ class CheckAuthAndHandleSession
                 Session::put('user_type', $guard);
                 // Get GeoIP data
                 $geoIpData = geoip()->getLocation(geoip()->getClientIP());
-
+                $userAgent = $request->header('User-Agent');
                 // Store data in session table
                 DB::table('sessions')->updateOrInsert(
                     ['id' => session()->getId()],
                     [
                         'user_id' => $id,
                         'ip_address' => $geoIpData['ip'],
+                        'user_agent'=>$userAgent,
                         'iso_code' => $geoIpData['iso_code'],
                         'country' => $geoIpData['country'],
                         'city' => $geoIpData['city'],
