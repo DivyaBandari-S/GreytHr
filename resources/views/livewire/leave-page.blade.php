@@ -505,6 +505,26 @@
 
 
 
+    function toggleOptions(sectionId, clickedLink) {
+        // Get all the sections and links
+        const sections = document.querySelectorAll('.side > div');
+        const links = document.querySelectorAll('.side a');
+
+        // Remove 'active' class from all links
+        links.forEach(link => link.classList.remove('active'));
+
+        // Add 'active' class to the clicked link
+        clickedLink.classList.add('active');
+
+        // Hide all sections except the one associated with the clicked link
+        sections.forEach(section => {
+            if (section.id === sectionId) {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        });
+    }
 
 
 
