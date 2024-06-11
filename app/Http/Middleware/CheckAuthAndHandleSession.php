@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class CheckAuthAndHandleSession
 {
@@ -18,44 +19,77 @@ class CheckAuthAndHandleSession
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Define an array of guards to check
+        $guards = ['emp', 'it', 'hr', 'com', 'finance', 'admins'];
 
-        if (Auth::guard('emp')->check()) {
-            $emp_id = Auth::guard('emp')->user()->emp_id;
-            Session::put('emp_id', $emp_id);
-            Log::info("Emp ID set: $emp_id");
-            $user = auth('emp')->user();
-            Session::put('user_type', 'emp');
-        } elseif (Auth::guard('it')->check()) {
-            $it_emp_id = Auth::guard('it')->user()->it_emp_id;
-            Session::put('it_emp_id', $it_emp_id);
-            Log::info("It ID set: $it_emp_id");
-            Session::put('user_type', 'it');
-        } elseif (Auth::guard('hr')->check()) {
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                $user = Auth::guard($guard)->user();
 
-            $hr_emp_id = Auth::guard('hr')->user()->hr_emp_id;
-            Session::put('hr_emp_id', $hr_emp_id);
-            Log::info("Hr ID set: $hr_emp_id");
-            Session::put('user_type', 'hr');
-        }elseif (Auth::guard('com')->check()) {
-            $company_id = Auth::guard('com')->user()->company_id;
-            Session::put('company_id', $company_id);
-            Log::info("Company ID set: $company_id");
+                switch ($guard) {
+                    case 'emp':
+                        $id = $user->emp_id;
+                        break;
+                    case 'it':
+                        $id = $user->it_emp_id;
+                        break;
+                    case 'hr':
+                        $id = $user->hr_emp_id;
+                        break;
+                    case 'com':
+                        $id = $user->company_id;
+                        break;
+                    case 'finance':
+                        $id = $user->fi_emp_id;
+                        break;
+                    case 'admins':
+                        $id = $user->admin_emp_id;
+                        break;
+                    default:
+                        $id = null;
+                        break;
+                }
 
-            Session::put('user_type', 'company');
-        } else if (Auth::guard('finance')->check()) {
-            $fi_emp_id = Auth::guard('finance')->user()->fi_emp_id;
-            Session::put('fi_emp_id', $fi_emp_id);
-            Log::info("Finance ID set: $fi_emp_id");
-            session(['user_type' => 'finance']);
-        } else if (Auth::guard('admins')->check()) {
-            $admin_emp_id = Auth::guard('admins')->user()->admin_emp_id;
-            Session::put('admin_emp_id', $admin_emp_id);
-            Log::info("Emp ID set: $admin_emp_id");
-            session(['user_type' => 'admins']);
-        } else {
+                Session::put($guard . '_id', $id);
+                Log::info("$guard ID set: $id");
+                Session::put('user_type', $guard);
+                // Get GeoIP data
+                $geoIpData = geoip()->getLocation(geoip()->getClientIP());
+
+                // Store data in session table
+                DB::table('sessions')->updateOrInsert(
+                    ['id' => session()->getId()],
+                    [
+                        'user_id' => $id,
+                        'ip_address' => $geoIpData['ip'],
+                        'iso_code' => $geoIpData['iso_code'],
+                        'country' => $geoIpData['country'],
+                        'city' => $geoIpData['city'],
+                        'state' => $geoIpData['state'],
+                        'state_name' => $geoIpData['state_name'],
+                        'postal_code' => $geoIpData['postal_code'],
+                        'latitude' => $geoIpData['lat'],
+                        'longitude' => $geoIpData['lon'],
+                        'timezone' => $geoIpData['timezone'],
+                        'continent' => $geoIpData['continent'],
+                        'currency' => $geoIpData['currency'],
+                        'payload' => '', // Example: You can store session payload if needed
+                        'last_activity' => now()->timestamp,
+                        'created_at' => now(), // Set the created_at timestamp
+                        'updated_at' => now(), // Set the updated_at timestamp
+                    ]
+                );
+
+                // If user is authenticated, stop checking other guards
+                break;
+            }
+        }
+
+        if (!Auth::check()) {
             session(['user_type' => 'guest']);
             Log::info('Session has timed out');
         }
+
         return $next($request);
     }
 }
