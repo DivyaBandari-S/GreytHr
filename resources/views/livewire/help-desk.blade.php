@@ -10,13 +10,13 @@
                 <div class="card " style="width:400px; ">
                     <div class="card-header px-4 py-0 m-0 ">
                         <div class="row">
-                            <button wire:click="$set('activeTab', 'active')" class="col btn @if($activeTab === 'active') active @else btn-light @endif" style="font-size:13px;font-weight:500;border-radius: 5px; margin-right: 5px;background-color: @if($activeTab === 'active') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'active') #fff @else #778899 @endif;">
+                            <button wire:click="$set('activeTab', 'active')" class="col btn @if($activeTab === 'active') active @else btn-light @endif" style="font-size:13px;font-weight:500;border-radius: 5px; margin-right: 5px;background-color: @if($activeTab === 'active') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'active') #fff !important @else #778899 @endif;">
                                 Active
                             </button>
-                            <button wire:click="$set('activeTab', 'pending')" class="col btn @if($activeTab === 'pending') active @else btn-light @endif" style="font-size:13px;font-weight:500;border-radius: 5px;margin-right: 5px;background-color: @if($activeTab === 'pending') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'pending') #fff @else #778899 @endif;">
+                            <button wire:click="$set('activeTab', 'pending')" class="col btn @if($activeTab === 'pending') active @else btn-light @endif" style="font-size:13px;font-weight:500;border-radius: 5px;margin-right: 5px;background-color: @if($activeTab === 'pending') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'pending') #fff !important @else #778899 @endif;">
                                 Pending
                             </button>
-                            <button wire:click="$set('activeTab', 'closed')" class="col btn @if($activeTab === 'closed') active @else btn-light @endif" style="font-size:13px;font-weight:500;border-radius: 5px;background-color: @if($activeTab === 'closed') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'closed') #fff @else #778899 @endif;">
+                            <button wire:click="$set('activeTab', 'closed')" class="col btn @if($activeTab === 'closed') active @else btn-light @endif" style="font-size:13px;font-weight:500;border-radius: 5px;background-color: @if($activeTab === 'closed') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'closed') #fff !important @else #778899 @endif;">
                                 Closed
                             </button>
                         </div>
@@ -28,10 +28,10 @@
         </div>
         <div class="d-flex flex-row justify-content-end gap-10 mt-2">
             <div class="mx-2 ">
-                <button wire:click="open" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> New Request </button>
+                <button wire:click="open" class="cancel-btn" style="border:1px solid rgb(2,17,79);"> New Request </button>
             </div>
-            <div>
-                <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px;margin:0;padding:1px 0;"><a href="/catalog" class="px-2 py-0" style="color:white;font-size:12px;margin:0;"> Catalog </a></button>
+            <div class="mx-2">
+                <button class="submit-btn"><a href="/catalog" class="px-2 py-0" style="color:white;font-size:12px;margin:0;"> Catalog </a></button>
             </div>
         </div>
 
@@ -248,7 +248,7 @@
                     @endforeach
                     @else
                     <tr>
-                        <td colspan="7" style="text-align: center;font-size:12px">Active records not found</td>
+                        <td colspan="7" style="text-align: center;font-size:12px;margin:10px auto">Active records not found</td>
                     </tr>
                     @endif
 
@@ -296,7 +296,7 @@
                     @endforeach
                     @else
                     <tr>
-                        <td colspan="7" style="text-align: center;font-size:12px">Closed records not found</td>
+                        <td colspan="7" style="text-align: center;font-size:12px;margin:10px auto">Closed records not found</td>
                     </tr>
                     @endif
 
@@ -345,7 +345,7 @@
                     @endforeach
                     @else
                     <tr>
-                        <td colspan="7" style="text-align: center;font-size:12px">Pending records not found</td>
+                        <td colspan="7" style="text-align: center;font-size:12px;margin:10px auto;">Pending records not found</td>
                     </tr>
                     @endif
 
