@@ -30,7 +30,7 @@
             </div>
             <div class="actions d-flex gap-2 align-items-center">
                 <div class="submit-details">
-                    <button class="submit-btn" style='color: rgb(2, 17, 79); background-color: #fff; border: 1px solid;'><i class="fas fa-download me-2" style="height: auto; width: auto;"></i>Export</button>
+                    <button class="submit-btn" style='colowr: rgb(2, 17, 79); background-color: #fff; border: 1px solid;'><i class="fas fa-download me-2" style="height: auto; width: auto;"></i>Export</button>
                 </div>
                 <div class="submit-details">
                     <button class="submit-btn"><i class="far fa-save me-2"></i>Submit</button>

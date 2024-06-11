@@ -9,15 +9,68 @@
     <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
         {{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    </div>a
     @endif
     <div class="row m-0 p-0 ">
-        <form wire:submit.prevent="addNewRow">
-            <div class="float-right py-2 px-3">
-                <button class="submit-btn" type="submit">Add New Row</button>
+        <div class="d-flex justify-content-end align-items-center">
+            <div>
+                <i class="fa fa-download" aria-hidden="true" wire:click="downloadExcelForAssetDetails"></i>
             </div>
-        </form>
+            <form wire:submit.prevent="addNewRow">
+                <div class=" py-2 px-3">
+                    <button class="submit-btn" type="submit">Add New Row</button>
+                </div>
+            </form>
+        </div>
     </div>
+    <div class="row m-0 p-2 d-flex justify-content-between">
+        <div class="col-md-2">
+            <div class="position-relative">
+                <select wire:model="selectedStatus" wire:change="loadEmployeeAssets" class="form-control" style="font-size: 12px;">
+                    <option value="">Select Status</option>
+                    <option value="all">All</option>
+                    @foreach($statuses as $status)
+                    <option value="{{ $status }}">{{ ucfirst(strtolower($status)) }}</option>
+                    @endforeach
+                </select>
+                <div class="arrow-down"></div>
+            </div>
+        </div>
+        <div class="col-md-2 px-1">
+            <div class="position-relative">
+                <select wire:model="selectedManufacturer" wire:change="loadEmployeeAssets" class="form-control" style="font-size: 12px;">
+                    <option value="">Select Manufacturer</option>
+                    <option value="all">All</option>
+                    @foreach($manufacturers as $manufacturer)
+                    <option value="{{ $manufacturer }}">{{ ucfirst(strtolower($manufacturer)) }}</option>
+                    @endforeach
+                </select>
+                <div class="arrow-down"></div>
+            </div>
+        </div>
+        <div class="col-md-4  px-1">
+            <div class="d-flex justify-content-between">
+                <div title="Start Date">
+                    <input wire:model="startDate" wire:change="loadEmployeeAssets" type="date" class="form-control" :placeholder="startDate ? startDate : 'Start Date'" style="font-size: 12px;">
+                </div>
+                <div title="End Date">
+                    <input wire:model="endDate" wire:change="loadEmployeeAssets" type="date" class="form-control" :placeholder="endDate ? endDate : 'End Date'" style="font-size: 12px;">
+                </div>
+                <div title="Reset Date Filters">
+                    <button wire:click="resetDateFilters" class="btn btn-secondary p-0"> <i class="fas fa-sync"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group mb-2  d-flex justify-content-end">
+                <input wire:model.debounce.300ms="searchQuery" type="text" class="form-control" placeholder="Search" style="font-size:12px;width:100px;">
+                <div class="input-group-append">
+                    <button wire:click="loadEmployeeAssets" class="btn btn-primary " style="font-size:12px; background-color: rgb(2, 17, 79);">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div style="max-width:950px;overflow-x:auto; margin:0 auto;   ">
         <div class="table-frame p-2">
             <div class="table-responsive border rounded" style="max-height: 400px;
@@ -569,8 +622,8 @@
                     </tbody>
                 </table>
             </div>
-            <div class="bg-white mt-2 rounded border">
-                <p>total</p>
+            <div class="bg-white mt-2 p-2 rounded border">
+                <p class="mb-0">Total Assets: {{ $employeeAssets->count() }}</p>
             </div>
         </div>
     </div>

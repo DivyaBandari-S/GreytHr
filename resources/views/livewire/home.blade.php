@@ -2,18 +2,18 @@
 <body>
     <div class="msg-container">
     @if (session()->has('success'))
-        <div x-data x-init="checkFadeIn()" class="custom-alert alert-success successAlert row mx-auto" style="text-align:center;">
+        <div x-data x-init="checkFadeIn()" class="custom-alert alert-success successAlert row mx-auto" style="text-align:center;margin:0 auto;">
             <p class="mx-auto mb-0">{{ session('success') }} 😀 <span wire:click="hideMessage" style="cursor: pointer; margin-left:20px;">&#10006;</span> </p>
         </div>
     @endif
         </div>
         <div class="content">
-            <div class="row m-0 mb-3 fade-in-section">
+            <div class="row m-0 mb-3 ">
                 <div class="col-md-6 mb-4">
                     <div class="homeCard4" style="height: 20em; padding: 1em 20px; background: url('images/home_banner_bg.gif') no-repeat center #ffffff;">
                         <div class="greet">
                         @if($this->greetingText)
-                            <h1 class="greet-text text-secondary-500 pb-1.5x" style="font-size: 30px; font-family: montserrat;;color:rgb(2, 17, 79); font-weight: 600;">{{$greetingText}}</h1>
+                            <h1 class="greet-text text-secondary-500 pb-1.5x" style="font-size: 24px; font-family: montserrat;;color:rgb(2, 17, 79); font-weight: 600;">{{$greetingText}}</h1>
                         @endif
                         </div>
 
@@ -41,7 +41,7 @@
             <!-- main content -->
 
             <div class="row m-0">
-                <div class="col-md-3 mb-4 fade-in-section">
+                <div class="col-md-3 mb-4 ">
                 <div class="home-hover">
                         <div class="homeCard4">
                             <div style="color: black; padding:10px 15px;">
@@ -86,12 +86,76 @@
                 </div>
 
                 @if($ismanager)
-                
+                <div class="col-md-3 mb-4 ">
+                    <div class="home-hover">
+                        <div class="reviews">
+                            <div class="homeCard1">
+                                <div class="home-heading d-flex justify-content-between px-3 py-2">
+                                    <div class="rounded">
+                                        <p style="font-size:12px;color:#778899;font-weight:500;">  Review</p>
+                                    </div>
+                                    <div >
+                                        <a href="/navigate-to-helpdesk" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
+                                    </div>
+                                </div>
+                                @if(($this->count) > 0)
+                                    <div class="notify d-flex justify-content-between  px-3">
+                                        <p style="color: black; font-size: 12px; font-weight: 500;">
+                                            {{$count}} <br>
+                                            <span style="color: #778899; font-size:11px; font-weight: 500;">Things to review</span>
+                                        </p>
+                                        <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg" alt="" style="height: 40px; width: 40px;">
+                                    </div>
+                                    <div class="leave-display d-flex border-top p-3 gap-1" >
+                                    @php
+                                        function getRandomColor() {
+                                            $colors = ['#FFD1DC', '#B0E57C', '#ADD8E6', '#E6E6FA', '#FFB6C1'];
+                                                return $colors[array_rand($colors)];
+                                        }
+                                    @endphp
+                                    @for ($i = 0; $i < min($count, 3); $i++)
+                                        <?php
+                                        $leaveRequest = $this->leaveApplied[$i]['leaveRequest'] ?? null;
+                                        if ($leaveRequest && $leaveRequest->employee) {
+                                            $firstName = $leaveRequest->employee->first_name;
+                                            $lastName = $leaveRequest->employee->last_name;
+                                            $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
+                                        ?>
+                                        <div class="circle-container d-flex flex-column mr-3">
+                                        <div class="circle d-flex" style="border-radius: 50%;width: 35px;height: 35px;align-items: center;justify-content: center;border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                            <span style="color: #778899; font-weight: 500; font-size: 11px;">{{ $initials }}</span>
+                                        </div>
+                                        <span style="display: block; text-align: center;font-size:10px;color:#778899;">Leave</span>
+                                    </div>
+
+                                        <?php
+                                        }
+                                        ?>
+                                    @endfor
+                                        @if ($count > 3)
+                                            <div class="circle-notify d-flex flex-column mt-3" style="cursor:pointer; align-items:center;" data-toggle="modal" data-target="#exampleModalCenter">
+                                                <a href=" " style="color:blue;font-size:10px">+{{ $count - 3}}</a>
+                                                <p style="color:blue;font-size:10px;margin-top:-5px;"><span class="remaining">More</span></p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
+                                        <img src="/images/not_found.png" alt="Image Description" style="width: 7em;">
+                                        <p style="color: #677A8E; font-size: 12px; text-align:center;">
+                                            Hurrah! You've nothing to review.
+                                        </p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h6 class="modal-title" id="exampleModalLongTitle" style="color:#fff;background:rgb(2, 17, 79);">Leave Requests</h6>
+                                <h6 class="modal-title" id="exampleModalLongTitle" style="color:#778899;">Leave Requests</h6>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -121,14 +185,14 @@
                                 @endif
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="submit-btn" data-dismiss="modal">Close</button>
+                                <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 @endif
 
-                <div class="col-md-3 mb-4 fade-in-section">
+                <div class="col-md-3 mb-4 ">
                 <div class="home-hover">
                         <div class="homeCard6" style="padding:10px 15px;">
                             <div style="display:flex; justify-content:space-between;">
@@ -148,7 +212,7 @@
                                         @foreach($calendarData as $entry)
                                             @if(!empty($entry->festivals))
                                                 <div>
-                                                    <p style="color: #677A8E; font-size: 11px; ">
+                                                    <p style="color: #677A8E; font-size: 11px;margin-bottom:10px; ">
                                                         <span style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }}  <span style="font-size: 10px; font-weight: normal;">{{ date('l', strtotime($entry->date)) }}</span></span>
                                                         <br>
                                                         <span style="font-size: 10px; font-weight: normal;">{{ $entry->festivals }}</span>
@@ -174,14 +238,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4 fade-in-section">
+                <div class="col-md-3 mb-4 ">
                 <div class="home-hover">
                         <div class="homeCard1" style="padding:10px 15px;">
                             <div style="display:flex; justify-content:space-between;">
                                 <p style="font-size:12px;color:#778899;font-weight:500;">Time Sheet</p>
                             </div>
                             <div class="mt-2" style="display: flex;align-items:center;text-align:center;">
-                                <p style="font-size:12px;color:#778899;margin-top:5px;">
+                                <p style="font-size:11px;color:#778899;margin-top:5px;">
                                     Kindly click on the "Submit" button below to submit your timesheet for this week.
                                 </p>
                             </div>
@@ -197,14 +261,14 @@
                     </div>
                 </div>
 
-                <div class="col-md-3 mb-4 fade-in-section">
+                <div class="col-md-3 mb-4 ">
                     <div class="home-hover">
                         <div class="homeCard2" style="padding:10px 15px;justify-content:center;display: flex;flex-direction:column;">
                             <div>
                                 <p style="font-size:12px;color:#778899;font-weight:500;">Apply for a Leave</p>
                             </div>
                             <div class="mt-2" style="display: flex;align-items:center;text-align:center;">
-                                <p style="font-size:12px;color:#778899;margin-top:5px;">Kindly click on the "Apply" button below to submit your leave application.</p>
+                                <p style="font-size:11px;color:#778899;margin-top:5px;">Kindly click on the "Apply" button below to submit your leave application.</p>
                             </div>
                             <div class="B mb-3" style="color:  #677A8E; font-size: 12px;display:flex;justify-content:center; margin-top: 15px;">
                                 <a href="/leave-page" class="button-link">
@@ -216,7 +280,7 @@
                 </div>
 
                 @if($ismanager)
-                <div class="col-md-6 mb-4 fade-in-section">
+                <div class="col-md-6 mb-4 ">
                     <div class="home-hover">
                         <div class="homeCard6" style="padding:10px 15px;">
                             <div style="color: #677A8E;  font-weight:500; display:flex;justify-content:space-between;">
@@ -339,7 +403,7 @@
 
                  <!-- TEAM ON LEAVE -->
                  @if($this->showLeaveApplies)
-                <div class="col-md-3 mb-4 fade-in-section">
+                <div class="col-md-3 mb-4 ">
                     <div class="home-hover">
                         <div class="reviews">
                             <div class="homeCard4">
@@ -408,7 +472,7 @@
 
 
 
-                <div class="col-md-4 mb-4 fade-in-section">
+                <div class="col-md-4 mb-4 ">
                     <div class="home-hover">
                         @if($salaryRevision->isEmpty())
                         <div class="homeCard5">
@@ -450,14 +514,14 @@
                                         <div class="net-salary">
                                             <div style="display:flex;gap:10px;">
                                                 <div style="padding:2px;width:2px;height:17px;background:#000000;border-radius:2px;"></div>
-                                                <p style="font-size:11px;">Gross Pay</p>
+                                                <p style="font-size:11px;margin-bottom:10px;">Gross Pay</p>
                                             </div>
                                             <p style="font-size:12px;">{{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalAllowance(), 2) : '*********' }}</p>
                                         </div>
                                         <div class="net-salary">
                                             <div style="display:flex;gap:10px;">
                                                 <div style="padding:2px;width:2px;height:17px;background:#B9E3C6;border-radius:2px;"></div>
-                                                <p style="font-size:11px;">Deduction</p>
+                                                <p style="font-size:11px;margin-bottom:10px;">Deduction</p>
                                             </div>
                                             <p style="font-size:12px;">{{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalDeductions() ?? 0, 2) : '*********' }}</p>
 
@@ -465,7 +529,7 @@
                                         <div class="net-salary">
                                             <div style="display:flex;gap:10px;">
                                                 <div style="padding:2px;width:2px;height:17px;background:#1C9372;border-radius:2px;"></div>
-                                                <p style="font-size:11px;">Net Pay</p>
+                                                <p style="font-size:11px;margin-bottom:10px;">Net Pay</p>
                                             </div>
                                             @if ($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions() > 0)
                                             <p style="font-size:12px;"> {{ $showSalary ? '₹ ' .number_format(max($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions(), 0), 2) : '*********' }}</p>
@@ -484,7 +548,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 mb-4 fade-in-section">
+                <div class="col-md-4 mb-4 ">
                     <div class="home-hover mb-4">
                         <div class="homeCard2">
                         <div class="px-3 py-2" style="color: #677A8E; font-weight:500;">
@@ -555,7 +619,7 @@
                     // Count the number of records
                     $taskCount = $taskRecords->count();
                 @endphp
-                <div class="col-md-4 mb-4 fade-in-section">
+                <div class="col-md-4 mb-4 ">
                     <div class="home-hover mb-4">
                         <div class="homeCard1">
                             <div class="d-flex justify-content-between px-3" style="color: #778899;font-weight:500;margin-top: 10px;">
@@ -583,7 +647,7 @@
                             <div style="text-align: center">
                                 <img src="images/track.png" alt="Image Description" style="width: 9em;">
                                 <div class="B" style="color: black; ">
-                                    <p style="color: #677A8E; font-size: 11px; margin-top: 20px;">All good! You've nothing new to track.</p>
+                                    <p style="color: #677A8E; font-size: 11px; margin: 20px 0;">All good! You've nothing new to track.</p>
                                 </div>
                             </div>
                             @endif
@@ -670,7 +734,7 @@
     // Function to check for elements to fade in
     function checkFadeIn() {
         // alert("scroll");
-        const fadeInSection = document.querySelectorAll('.fade-in-section');
+        const fadeInSection = document.querySelectorAll('.');
         fadeInSection.forEach((element) => {
             if (isElementInViewport(element)) {
                 element.classList.add('fade-in');

@@ -98,8 +98,6 @@ class Employee extends Component
         $this->employeeDetails = EmployeeDetails::where('company_id', $loggedInCompanyId)->get();
 
         // Filter out the logged-in user
-        // Filter out the logged-in user
-        // Filter out the logged-in user
         $this->employeeDetails = $this->employeeDetails->reject(function ($employee) {
             return $employee->id == auth()->id() // Exclude by ID
                 || $employee->emp_id == auth()->user()->emp_id // Exclude by emp_id

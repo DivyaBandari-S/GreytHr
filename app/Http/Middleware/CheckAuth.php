@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
  
 class CheckAuth
@@ -25,6 +26,10 @@ class CheckAuth
       Session::put('emp_id', $emp_id);
       $user = auth('emp')->user();
       $sessionTimeout = $user->role === 'admin' ? 60 : 10; // Example: Admins get a 60-minute timeout, others get a 10-minute timeout.
+      if ($request->route('employee')) {
+        $encryptedEmployee = Crypt::encrypt($request->route('employee'));
+        $request->route()->setParameter('employee', $encryptedEmployee);
+    }
     //   Log::info("Session Timeout: $sessionTimeout minutes");
     //   config(['session.lifetime' => $sessionTimeout]);
       return redirect(route('profile.info'));

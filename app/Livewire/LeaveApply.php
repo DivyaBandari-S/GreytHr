@@ -375,6 +375,11 @@ class LeaveApply extends Component
                 $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
                 return;
             }
+            //to check validation for fromdate to todate
+            if ($this->to_date < $this->from_date) {
+                session()->flash('error', 'To date must be greater than or equal to from date.');
+                return redirect()->back()->withInput();
+            }
 
             $filePaths = [];
 

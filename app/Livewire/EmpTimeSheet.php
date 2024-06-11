@@ -45,7 +45,7 @@ class EmpTimeSheet extends Component
             $this->addingRow = false; // Reset the addingRow flag
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to delete the last row');
-            // You can also log the error if needed
+            // You can also log the error tif needed
             Log::error('Failed to delete the last row: ' . $e->getMessage());
         }
     }
