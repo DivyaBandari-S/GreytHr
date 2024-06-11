@@ -504,29 +504,30 @@
     }
 
 
-
     function toggleOptions(sectionId, clickedLink) {
-        // Get all the sections and links
-        const sections = document.querySelectorAll('.side > div');
-        const links = document.querySelectorAll('.side a');
+        const tabs = ['leave', 'restricted', 'leaveCancel', 'compOff'];
 
-        // Remove 'active' class from all links
+        const links = document.querySelectorAll('.side a');
         links.forEach(link => link.classList.remove('active'));
 
-        // Add 'active' class to the clicked link
         clickedLink.classList.add('active');
 
-        // Hide all sections except the one associated with the clicked link
-        sections.forEach(section => {
-            if (section.id === sectionId) {
-                section.style.display = 'block';
+        tabs.forEach(tab => {
+            const tabElement = document.getElementById(tab);
+            if (tab === sectionId) {
+                tabElement.style.display = 'block';
             } else {
-                section.style.display = 'none';
+                tabElement.style.display = 'none';
             }
         });
+
+        // Hide the content of other containers
+        const otherContainers = ['pendingButton', 'historyButton'];
+        otherContainers.forEach(container => {
+            const containerElement = document.getElementById(container);
+            containerElement.style.display = 'none';
+        });
     }
-
-
 
     function toggleAccordion(element) {
         const accordionBody = element.nextElementSibling;
