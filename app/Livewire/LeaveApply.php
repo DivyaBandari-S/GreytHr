@@ -94,22 +94,24 @@ class LeaveApply extends Component
     ];
     public function mount()
     {
-        try {
-            $this->searchTerm = '';
-            $this->selectedYear = Carbon::now()->format('Y');
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->probationDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
-            foreach ($this->probationDetails as $employee) {
-                if ($employee->hire_date) {
-                    $hireDate = Carbon::parse($employee->hire_date);
-                    $this->differenceInMonths = $hireDate->diffInMonths(Carbon::now());
-                }
+        try{
+
+        
+        $this->searchTerm = '';
+        $this->selectedYear = Carbon::now()->format('Y');
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+        $this->probationDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
+        foreach ($this->probationDetails as $employee) {
+            if ($employee->hire_date) {
+                $hireDate = Carbon::parse($employee->hire_date);
+                $this->differenceInMonths = $hireDate->diffInMonths(Carbon::now());
             }
-            if ($this->applying_to) {
-                $this->loginEmpManagerId = $this->applying_to->manager_id;
-                // Retrieve the corresponding employee details for the manager
-                $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
+        }
+        if ($this->applying_to) {
+            $this->loginEmpManagerId = $this->applying_to->manager_id;
+            // Retrieve the corresponding employee details for the manager
+            $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
 
                 if ($managerDetails) {
                     // Concatenate first_name and last_name to create the full name
@@ -124,7 +126,8 @@ class LeaveApply extends Component
             }
             $this->searchEmployees();
             $this->searchCCRecipients();
-        } catch (\Exception $e) {
+        
+        }catch (\Exception $e) {
             // Log the error
             Log::error('Error in mount method: ' . $e->getMessage());
             // Display a friendly error message to the user

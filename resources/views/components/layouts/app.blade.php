@@ -355,6 +355,7 @@
                             <a class="item p-0 m-0" href="/whoisinchart" onclick="setActiveLink(this)">@livewire('whoisin')</a>
                             <a class="item p-0 m-0" href="/employee-swipes-data" onclick="setActiveLink(this)">@livewire('employee-swipes')</a>
                             <a class="item p-0 m-0" href="/attendance-muster-data" onclick="setActiveLink(this)">@livewire('attendance-muster')</a>
+                            <a class="item p-0 m-0" href="/shift-roaster-data" onclick="setActiveLink(this)">@livewire('shift-roaster-submodule')</a>
                             @endif
                         </div>
                         <div class="ui accordion scrollable-container content-item" id="document-center" style="border: none">
