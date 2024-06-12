@@ -84,6 +84,7 @@ use App\Livewire\TeamOnAttendanceChart;
 use App\Livewire\ViewPendingDetails;
 use App\Livewire\Emojies;
 use App\Livewire\Employee;
+use App\Livewire\EmployeeAssetsDetails;
 use App\Livewire\EmpTimeSheet;
 use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
@@ -91,6 +92,7 @@ use App\Livewire\ItDashboardPage;
 use App\Livewire\LeaveBalancesChart;
 use App\Livewire\OrganisationChart;
 use App\Livewire\ReviewPendingRegularisation;
+use App\Livewire\ShiftRoaster;
 use Illuminate\Support\Facades\Route;
 
 

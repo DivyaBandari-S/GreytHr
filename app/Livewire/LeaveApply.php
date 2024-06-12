@@ -94,6 +94,9 @@ class LeaveApply extends Component
     ];
     public function mount()
     {
+        try{
+
+        
         $this->searchTerm = '';
         $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -123,7 +126,8 @@ class LeaveApply extends Component
             }
             $this->searchEmployees();
             $this->searchCCRecipients();
-        } catch (\Exception $e) {
+        
+        }catch (\Exception $e) {
             // Log the error
             Log::error('Error in mount method: ' . $e->getMessage());
             // Display a friendly error message to the user

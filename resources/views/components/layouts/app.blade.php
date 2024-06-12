@@ -107,6 +107,115 @@
 
     <style>
         @import url('/public/app.css');
+        .marginlefting {
+            margin-left: 60px !important;
+        }
+
+        .displaynone {
+            display: none !important;
+        }
+
+
+        .displayblock {
+            display: block !important;
+        }
+
+        .item {
+            margin-bottom: 20px !important;
+            margin-top: 10px !important;
+            font-size: 12px;
+            padding: 10px;
+            font-weight: 500 !important;
+            color: #778899 !important;
+        }
+
+        .active {
+            /* Define your active color here */
+            color: rgb(2, 17, 79) !important;
+            /* Example color */
+            /* Add any other styles you want for the active state */
+        }
+
+        .sidebar .item i {
+            font-size: 14px;
+            margin-top: -5px !important;
+        }
+
+        .logo {
+            height: 58px !important;
+            padding: 10px !important;
+        }
+
+        .logo img {
+            width: 9em !important;
+            height: 38px !important;
+        }
+
+        .title.item {
+            padding: .92857143em 1.14285714em !important;
+        }
+
+        .dropdown .menu .header {
+            padding-top: 3.9px !important;
+            padding-bottom: 3.9px !important;
+        }
+
+        .ui.left.sidebar,
+        .ui.right.sidebar {
+            width: 210px;
+        }
+
+        .ui.vertical.menu .item:before {
+            height: 0px !important;
+        }
+
+        .menu-item-label.active {
+            background-color: #fff;
+            margin: 0px 3px;
+            padding: 0 3px;
+            color: #000 !important;
+            border-radius: 5px;
+        }
+
+        .menu-item-label.active:hover {
+            background-color: #fff;
+            margin: 0px 3px;
+            padding: 0 3px;
+            border-radius: 5px;
+        }
+
+        .menu-item-label {
+            cursor: pointer;
+            color: #fff !important;
+            margin: 3px;
+        }
+
+        .menu-item-label:hover {
+            background: white;
+            color: black !important;
+            border-radius: 5px;
+        }
+
+        /* .content {
+            margin-left: 20px;
+            flex: 1;
+        } */
+
+        .content-item {
+            display: none;
+        }
+
+        .ui.vertical.menu .active.item {
+            background-color: none !important;
+            padding: 5px 2px !important;
+            border-radius: 5px !important;
+        }
+
+        .content-item.active {
+            display: block;
+            padding-left: 10px;
+        }
+
     </style>
 
     @livewireScripts
@@ -124,271 +233,45 @@
 
             <div class="row m-0 p-0 " style="height: 100vh;background:#f5f5f5;">
 
-                <div class="menucard displayNone hideMinBar" id="menu-popup"
-                    style="border-radius:0px; width: auto; background:#fff;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);padding:0;margin:0; backdrop-filter: blur( 3px ); -webkit-backdrop-filter: blur( 3px );">
+            <div class="ui sidebar vertical left menu overlay visible p-0" style="-webkit-transition-duration: 0.1s; overflow: visible !important;">
+                <div class="item logos text-center">
+                    @livewire('company-logo')
+                    <!-- <img src="https://image.flaticon.com/icons/svg/866/866218.svg" /><img src="https://image.flaticon.com/icons/svg/866/866218.svg" style="display: none" /> -->
+                </div>
 
-                    <div class="left-card-body" style="padding: 0 5px;margin: 0;height: 100vh;">
-
-                        <ul class="flex-column nav">
-
-                            <div style="margin-bottom: 20px;margin-top:5px">
-
-                                @livewire('company-logo')
-                            </div>
-
-                            @livewire('profile-card')
-
-
+                <div class="row m-0">
+                    <div class="col-3 p-0 py-1" style="min-height: 100vh; background: rgb(2,17,79);border-top-right-radius: 5px;">
+                        <div class="primarySideBar">
                             @auth('emp')
-                                <div class="scrollable-container mt-2">
-                                    <ul class="nav flex-column">
-                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item  ">
-
-                                            <a class="nav-link" href="/" onclick="setActiveLink(this)">
-
-                                                <i class="fas mr-1 fa-home" style="color:#6c7e90;"></i>
-                                                Home
-
-                                            </a>
-
-                                        </li>
-
-                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item ">
-
-                                            <a class="nav-link" href="/Feeds" onclick="setActiveLink(this)">
-
-                                                <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
-                                                Feeds
-
-                                            </a>
-
-                                        </li>
-                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item  ">
-
-                                            <a class="nav-link" href="/PeoplesList" onclick="setActiveLink(this)">
-
-                                                <i class="fas mr-1    fa-users" style="color:#6c7e90"></i>
-                                                People
-
-                                            </a>
-
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" onclick="toggleToDoDropdown()">
-                                                <i class="fas mr-1    fa-file-alt" id="todo-icon" style="color:#6c7e90"></i>
-                                                Todo
-                                                <i class="fas mr-1    fa-caret-down" id="todo-caret" style="color:#6c7e90"></i>
-                                            </a>
-                                            <div id="todo-options" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/tasks" onclick=" setActiveLink(this)">
-                                                            Tasks
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/employees-review"
-                                                            onclick=" setActiveLink(this)">
-                                                            Review
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-                                        </li>
-
-
-
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" onclick="toggleSalaryDropdown()">
-                                                <i class="fas mr-1    fa-solid fa-money-bill-transfer" id="salary-icon"
-                                                    style="color:#6c7e90"></i>
-                                                Salary
-                                                <i class="fas mr-1    fa-caret-down" id="salary-caret"
-                                                    style="color:#6c7e90"></i>
-                                            </a>
-                                            <div id="salary-options" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/formdeclaration" id="itdeclaration"
-                                                            onclick="selectOption(this, 'IT Declaration');setActiveLink(this)">
-                                                            IT Declaration
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/itstatement" id="itstatement"
-                                                            onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
-                                                            IT Statement
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/slip" id="slip"
-                                                            onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
-                                                            Payslips
-                                                        </a>
-                                                    </li>
-
-
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/reimbursement" id="reimbursement"
-                                                            onclick="selectOption(this, 'Reimbursement'); setActiveLink(this)">
-                                                            Reimbursement
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/investment" id="investment"
-                                                            onclick="selectOption(this, 'Proof of Investment'); setActiveLink(this) ">
-                                                            Proof of Investment
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/salary-revision" id="salary-revision"
-                                                            onclick="selectOption(this, 'Salary Revision'); setActiveLink(this)">
-                                                            Salary Revision
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" onclick="toggleLeaveDropdown(event)">
-                                                <i class="fas mr-1    fa-file-alt" id="leave-icon" style="color:#6c7e90"></i>
-                                                Leave
-                                                <i class="fas mr-1    fa-caret-down" id="leave-caret"
-                                                    style="color:#6c7e90"></i>
-                                            </a>
-                                            <div id="leave-options" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/leave-page"
-                                                            onclick="csetActiveLink(this)">
-                                                            Leave Apply
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/leave-balances"
-                                                            onclick="setActiveLink(this)">
-                                                            Leave Balances
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/leave-calender"
-                                                            onclick="setActiveLink(this)">
-                                                            Leave Calendar
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/holiday-calender"
-                                                            onclick="setActiveLink(this)">
-                                                            Holiday Calendar
-                                                        </a>
-                                                    </li>
-                                                    @if ($mangerid)
-                                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                            class="nav-item">
-                                                            <a class="nav-link" href="/team-on-leave-chart"
-                                                                onclick="setActiveLink(this)">
-                                                                @livewire('team-on-leave')
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                </ul>
-                                            </div>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" onclick="toggleAttendanceDropdown()">
-                                                <i class="fas mr-1    fa-clock" style="color:#6c7e90"></i>
-                                                Attendance
-                                                <i class="fas mr-1    fa-caret-down" id="attendance-caret"
-                                                    style="color:#6c7e90"></i>
-                                            </a>
-                                            <div id="attendance-options" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/Attendance" onclick="setActiveLink(this)">
-                                                            Attendance Info
-                                                        </a>
-                                                    </li>
-                                                    @if ($mangerid)
-                                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                            class="nav-item">
-                                                            <a class="nav-link" href="/whoisinchart"
-                                                                onclick="setActiveLink(this)">
-                                                                @livewire('whoisin')
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                    @if ($mangerid)
-                                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                            class="nav-item">
-                                                            <a class="nav-link" href="/employee-swipes-data"
-                                                                onclick="setActiveLink(this)">
-                                                                @livewire('employee-swipes')
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                    @if ($mangerid)
-                                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                            class="nav-item">
-                                                            <a class="nav-link" href="/attendance-muster-data"
-                                                                onclick="setActiveLink(this)">
-                                                                @livewire('attendance-muster')
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                </ul>
-                                            </div>
-                                        </li>
-
-                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                            <a class="nav-link" href="/document" onclick="setActiveLink(this)">
-
-                                                <i class="fas mr-1    fa-folder" style="color:#6c7e90"></i> Document Center
-
-                                            </a>
-
-                                        </li>
-
-
-                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                            <a class="nav-link" href="/HelpDesk" onclick="setActiveLink(this)">
-
-                                                <i class="fas mr-1    fa-headset" style="color:#6c7e90"></i> Helpdesk
-
-                                            </a>
-
-                                        </li>
-
-                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                            <a class="nav-link" href="/delegates" onclick="setActiveLink(this)">
-
-                                                <i class="fas mr-1    fa-user-friends" style="color:#6c7e90"></i> Workflow
-                                                Delegates
-
-                                            </a>
-                                        </li>
-                                    </ul>
+                                <div class="text-center menu-item-label active" data-target="#home">
+                                    <i class="fas fa-home" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#feeds">
+                                    <i class="fas fa-rss" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#people">
+                                    <i class="fas fa-users" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#todo">
+                                    <i class="fas fa-file-alt" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#salary">
+                                    <i class="fas fa-solid fa-money-bill-transfer" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#leave">
+                                    <i class="fas fa-file-alt" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#attendance">
+                                    <i class="fas fa-clock" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#document-center">
+                                    <i class="fas fa-folder" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#helpdesk">
+                                    <i class="fas fa-headset" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#workflow-delegates">
+                                    <i class="fas fa-user-friends" style="padding: 15px 0px;"></i>
                                 </div>
                             @endauth
 
@@ -469,6 +352,7 @@
                             <a class="item p-0 m-0" href="/whoisinchart" onclick="setActiveLink(this)">@livewire('whoisin')</a>
                             <a class="item p-0 m-0" href="/employee-swipes-data" onclick="setActiveLink(this)">@livewire('employee-swipes')</a>
                             <a class="item p-0 m-0" href="/attendance-muster-data" onclick="setActiveLink(this)">@livewire('attendance-muster')</a>
+                            <a class="item p-0 m-0" href="/shift-roaster-data" onclick="setActiveLink(this)">@livewire('shift-roaster-submodule')</a>
                             @endif
                         </div>
                         <div class="ui accordion scrollable-container content-item" id="document-center" style="border: none">
