@@ -45,7 +45,8 @@ class PageTitle extends Component
             'leave-pending' =>'Leave - View Details',
             'approved-details' => 'Review - Leave',
             'leave-page' => 'Leave Apply',
-            
+            'hrorganisationchart'=> 'Organisation Chart',
+            'hremployeedirectory'=> 'Employee Directory'
         ];
         // Use the mapped title or fallback to the original route name
         return $routeTitleMap[$routeName] ?? ucwords(str_replace('-', ' ', $routeName));

@@ -97,6 +97,7 @@ class LeaveApply extends Component
         $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+        
         $this->probationDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
         foreach ($this->probationDetails as $employee) {
             if ($employee->hire_date) {

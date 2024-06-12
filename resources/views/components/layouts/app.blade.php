@@ -334,6 +334,15 @@
                                                     @if ($mangerid)
                                                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
                                                             class="nav-item">
+                                                            <a class="nav-link" href="/shift-roaster-data"
+                                                                onclick="setActiveLink(this)">
+                                                                @livewire('shift-roaster-submodule')
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                    @if ($mangerid)
+                                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
+                                                            class="nav-item">
                                                             <a class="nav-link" href="/employee-swipes-data"
                                                                 onclick="setActiveLink(this)">
                                                                 @livewire('employee-swipes')
@@ -349,6 +358,7 @@
                                                             </a>
                                                         </li>
                                                     @endif
+                                                   
                                                 </ul>
                                             </div>
                                         </li>
