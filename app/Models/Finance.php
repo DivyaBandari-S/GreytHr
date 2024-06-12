@@ -17,11 +17,11 @@ class Finance extends Authenticatable
 
     protected $fillable = [
         'fi_emp_id','image',
-        'company_id', 'employee_name', 'role', 'salary', 'hire_date',
+        'company_id', 'employee_name', 'date_of_birth','role', 'salary', 'hire_date',
         'department', 'work_location', 'manager_name', 'bank_name',
         'account_number', 'routing_number', 'beneficiary_name', 'beneficiary_relationship',
         'emergency_contact_name', 'emergency_contact_number', 'address','password',
-        'phone_number', 'email', 'is_active'
+        'phone_number', 'email', 'company_email', 'is_active'
     ];
 
     protected $casts = [

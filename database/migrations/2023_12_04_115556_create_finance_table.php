@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('company_id');
             $table->string('employee_name');
             $table->string('image');
+            $table->date('date_of_birth');
             $table->string('role');
             $table->decimal('salary', 10, 2);
             $table->date('hire_date');
@@ -35,6 +36,7 @@ return new class extends Migration
 
             $table->string('phone_number');
             $table->string('email')->unique();
+            $table->string('company_email');
             $table->boolean('is_active')->default(true);
             $table->foreign('company_id')
                 ->references('company_id') // Assuming the primary key of the companies table is 'id'

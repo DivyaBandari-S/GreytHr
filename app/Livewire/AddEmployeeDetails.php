@@ -86,40 +86,95 @@ class AddEmployeeDetails extends Component
     public $reportTos, $selectedEmployee, $employee;
     public $selectedId;
     public $companieIds;
-
     public  $selectedEmployees;
+    public $showEmployeeDetails = true;
+    public $showEmployeePersonalDetails = false;
+    public $showEmployeeJobDetails = false;
+    public $currentStep = 1;
 
-
-    public function register()
+    protected function validationRules()
     {
-        $this->validate([
+        return $this->rules[$this->currentStep];
+    }
+
+    public function nextPageOne()
+    {
+        // $this->validate($this->validationRules());
+        // $this->currentStep = 2;
+        // $this->showEmployeeDetails = false;
+        // $this->showEmployeePersonalDetails = true;
+        
+            $this->validate($this->validationRules()); // Validate form fields
+            
+            $this->register(); // Call the register method to handle form submission
+            
+            // Proceed to the next page
+            $this->currentStep = 2;
+            $this->showEmployeeDetails = false;
+            $this->showEmployeePersonalDetails = true;
+        
+    }
+
+    public function nextPageTwo()
+    {
+        $this->validate($this->validationRules());
+        $this->currentStep = 3;
+        $this->showEmployeePersonalDetails = false;
+        $this->showEmployeeJobDetails = true;
+    }
+
+    public function backPageOne()
+    {
+        $this->currentStep = 1;
+        $this->showEmployeeDetails = true;
+        $this->showEmployeePersonalDetails = false;
+    }
+
+    public function backPageTwo()
+    {
+        $this->currentStep = 2;
+        $this->showEmployeePersonalDetails = true;
+        $this->showEmployeeJobDetails = false;
+    }
+    protected $rules = [
+        1 => [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'mobile_number' => 'required|string|max:15',
+            'email' => 'required|email|unique:employee_details',
+            'company_email' => 'required|email',
+        ],
+        2 => [
             'date_of_birth' => 'required|date',
             'gender' => 'required|in:Male,Female',
-            'email' => 'required|email|unique:employee_details',
-            'company_name' => 'required|string|max:255',
-            'company_email' => 'required|email',
-            'mobile_number' => 'required|string|max:15',
-            'alternate_mobile_number' => 'nullable|string|max:15',
+            'blood_group' => 'required',
+            'religion' => 'required',
+            'nationality' => 'required',
+            'marital_status' => 'required',
+        ],
+        3 => [
+            'hire_date' => 'required|date',
+            'employee_type' => 'required|in:full-time,part-time,contract',
+            'employee_status' => 'required|in:active,on-leave,terminated',
+            'department' => 'required|string|max:255',
+            'job_title' => 'required|string|max:255',
+            'job_location' => 'required|string|max:255',
+            'company_id' => 'required|exists:companies,company_id',
+            'manager_id' => 'required|exists:managers,id',
+        ],
+        4 => [
             'address' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
-            'postal_code' => 'required|string|max:20',
+            'postal_code' => 'required|string|max:10',
             'country' => 'required|string|max:255',
-            'hire_date' => 'required|date',
-            'department' => 'required|string|max:255',
-            'company_id' => 'required|string|max:255',
-            'job_title' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'inter_emp' => 'required',
-            'marital_status' => 'required',
-            'employee_type'=>'required',
-            'nationality'=>'required',
-            'religion'=>'required',
-            'blood_group'=>'required',
-            'job_location'=>'required'
-        ]);
+        ],
+    ];
+
+    public function register()
+    {
+        
+        $this->validate($this->validationRules());
 
         $imagePath = $this->image->store('employee_image', 'public');
         EmployeeDetails::create([
@@ -169,7 +224,6 @@ class AddEmployeeDetails extends Component
             'company_id' => $this->company_id,
             'is_starred' => $this->is_starred,
         ]);
-
 
         session()->flash('emp_success', 'Employee registered successfully!');
 
@@ -239,7 +293,7 @@ class AddEmployeeDetails extends Component
     public function editEmployee($employeeId)
     {
         $employee = EmployeeDetails::find($employeeId);
-       
+
         if ($employee) {
             // Assign fetched employee details to the respective properties
             $this->first_name = $employee->first_name;
@@ -288,10 +342,11 @@ class AddEmployeeDetails extends Component
             $this->company_id = $employee->company_id;
             $this->is_starred = $employee->is_starred;
             $this->employeeId = $employeeId;
-        } 
+        }
     }
     public function updateEmployee()
     {
+        $this->validate($this->validationRules());
         $employee = EmployeeDetails::find($this->employeeId);
         // Update the employee details
         if ($employee) {
@@ -300,6 +355,7 @@ class AddEmployeeDetails extends Component
             } else {
                 $imagePath = $this->image; // Already a path, use as is
             }
+            dd();
             $employee->update([
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
@@ -357,7 +413,6 @@ class AddEmployeeDetails extends Component
     
     public function render()
     {
-
         $hrEmail = auth()->guard('hr')->user()->company_id;
         $this->companieIds = Company::where('company_id', $hrEmail)->get();
         $hrEmail = auth()->guard('hr')->user()->company_id;

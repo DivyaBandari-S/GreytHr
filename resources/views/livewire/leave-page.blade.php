@@ -6,7 +6,7 @@
                 background-color: #fff;
                 border-radius: 5px;
                 display: flex;
-                font-weight: 500;   
+                font-weight: 500;
                 color: #778899;
                 width: 50%;
                 font-size: 0.825rem;
@@ -18,10 +18,9 @@
                 /* Text color for inactive tabs */
             }
 
-
             .custom-nav-link.active {
                 margin-top: 5px;
-                color: white;
+                color: white !important;
                 background-color: rgb(2, 17, 79);
                 border-radius: 5px;
             }
@@ -34,6 +33,11 @@
             {{ session('message') }}
             <span class="close-btn" onclick="closeMessage()" style="cursor:pointer;">X</span>
         </div>
+        @if(session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
         <script>
             // Close the success message after a certain time
             setTimeout(function() {
@@ -46,8 +50,9 @@
         </script>
         @endif
 
-        <div class="nav-buttons d-flex justify-content-center mx-2 p-0" >
-            <ul class="nav custom-nav-tabs"> <!-- Apply the custom class to the nav -->
+        <div class="nav-buttons d-flex justify-content-center mx-2 p-0">
+            <ul class="nav custom-nav-tabs">
+                <!-- Apply the custom class to the nav -->
                 <li class="nav-item flex-grow-1">
                     <a class="nav-link custom-nav-link active" data-section="applyButton" onclick="toggleDetails('applyButton', this)">Apply</a>
                 </li>
@@ -61,7 +66,7 @@
         </div>
 
 
-        <div class="side " id="cardElement">
+        <div id="cardElement" class="side ">
 
             <div>
 
@@ -74,7 +79,7 @@
                 <a onclick="toggleOptions('restricted', this)" data-section="restricted">Restricted Holiday</a>
 
             </div>
-            
+
             <div class="line"></div>
             <div>
 
@@ -90,47 +95,55 @@
 
         </div>
 
- 
-            <div id="leave"  class="row mt-2 align-items-center " >
-        
-               <div style="width:85%; margin:0 auto;">@livewire('leave-apply') </div>
 
-            </div>
+        <div id="leave" class="row mt-2 align-items-center " style="display:none;">
 
-        <div  id="restricted"  class="row mt-2 w-85 align-items-center" style="display:none;">
+            <div style="width:85%; margin:0 auto;">@livewire('leave-apply') </div>
+
+        </div>
+
+        <div id="restricted" class="row mt-2 w-85 align-items-center" style="display:none;">
             <div style="width:85%; margin:0 auto;">
                 <div class="leave-pending rounded">
                     <div class="hide-info">
-                        <p style="font-size:10px;">Restricted Holidays (RH) are a set of holidays allocated by the company that are optional for the employee to utilize. The company sets a limit on the amount of holidays that can be used.</p>
+                        <p style="font-size:10px;">Restricted Holidays (RH) are a set of holidays allocated by the
+                            company that are optional for the employee to utilize. The company sets a limit on the
+                            amount of holidays that can be used.</p>
                         <p onclick="toggleInfo()" style="font-weight:500; color:#3a9efd;cursor:pointer;">Hide</p>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <p style="color:#333; font-size:14px; font-weight:500;text-align:start; ">Applying for Restricted Holiday</p>
+                        <p style="color:#333; font-size:14px; font-weight:500;text-align:start; ">Applying for
+                            Restricted Holiday</p>
                         <p class="info-paragraph" onclick="toggleInfo()">Info</p>
                     </div>
                     <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:40%; margin:0 auto;">
-                    <p style="color:#778899; font-size:10px; font-weight:500;  text-align:center;">You have no Restricted Holiday balance, as per our record.</p>
+                    <p style="color:#778899; font-size:10px; font-weight:500;  text-align:center;">You have no
+                        Restricted Holiday balance, as per our record.</p>
                 </div>
             </div>
         </div>
-        <div id="leaveCancel" class="row w-85 mt-2 align-items-center"  style="display: none;">
-            <div style="width:85%; margin:0 auto;" > @livewire('leave-cancel') </div>
+        <div id="leaveCancel" class="row w-85 mt-2 align-items-center" style="display: none;">
+            <div style="width:85%; margin:0 auto;"> @livewire('leave-cancel') </div>
         </div>
 
-        <div id="compOff" class="row w-85 mt-2 align-items-center"  style="display: none;">
+        <div id="compOff" class="row w-85 mt-2 align-items-center" style="display: none;">
             <div style="width:85%; margin:0 auto;">
                 <div>
                     <div class="leave-pending rounded">
                         <div class="hide-info">
-                            <p>Compensatory Off is additional leave granted as a compensation for working overtime or on an off day.</p>
+                            <p>Compensatory Off is additional leave granted as a compensation for working overtime or on
+                                an off day.</p>
                             <p onclick="toggleInfo()" style="font-weight:500; color:#3a9efd;cursor:pointer;">Hide</p>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <p style="color:#333; font-size:14px; font-weight:500;text-align:start; ">Applying for Comp. Off Grant</p>
-                            <p class="info-paragraph"  onclick="toggleInfo()">Info</p>
+                            <p style="color:#333; font-size:14px; font-weight:500;text-align:start; ">Applying for Comp.
+                                Off Grant</p>
+                            <p class="info-paragraph" onclick="toggleInfo()">Info</p>
                         </div>
                         <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:40%; margin:0 auto;">
-                        <p style="color:#778899; font-size:0.825rem; font-weight:500;  text-align:center;">You are not eligible to request for compensatory off grant. Please contact your HR for further information.</p>
+                        <p style="color:#778899; font-size:0.825rem; font-weight:500;  text-align:center;">You are not
+                            eligible to request for compensatory off grant. Please contact your HR for further
+                            information.</p>
                     </div>
                 </div>
             </div>
@@ -138,12 +151,12 @@
 
 
         {{-- Apply Tab --}}
-        <div class="row" id="applyButton" style=" margin-top:20px;display: none; margin-left:100px;">
-            <div>@livewire('leave-apply')</div>
+        <div class="row" id="applyButton">
+            <div style="width:85%; margin:0 auto;">@livewire('leave-apply')</div>
         </div>
 
         {{-- pending --}}
-        <div id="pendingButton" class="row rounded mt-4" style="display: none;" >
+        <div id="pendingButton" class="row rounded mt-4" style="display: none;">
 
             @if($this->leavePending->isNotEmpty())
 
@@ -196,8 +209,8 @@
 
                             </div>
 
-                            <div class="arrow-btn" >
-                                  <i class="fa fa-angle-down"></i>
+                            <div class="arrow-btn">
+                                <i class="fa fa-angle-down"></i>
                             </div>
 
                         </div>
@@ -214,11 +227,13 @@
 
                             <span style="font-size: 11px;">
 
-                                <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }} </span>
+                                <span style="font-size: 11px; font-weight: 500;">
+                                    {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }} </span>
 
                                 ( {{ $leaveRequest->from_session }} )to
 
-                                <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
+                                <span style="font-size: 11px; font-weight: 500;">
+                                    {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
 
                                 ( {{ $leaveRequest->to_session }} )
 
@@ -250,7 +265,8 @@
 
                                 <a href="{{ route('leave-history', ['leaveRequestId' => $leaveRequest->id]) }}">
 
-                                    <span style="color: rgb(2,17,53); font-size: 12px; font-weight: 500;">View Details</span>
+                                    <span style="color: rgb(2,17,53); font-size: 12px; font-weight: 500;">View
+                                        Details</span>
 
                                 </a>
                                 <button class="withdraw mb-2" wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
@@ -273,7 +289,8 @@
 
                 <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:60%; margin:0 auto;">
 
-                <p style="color:#969ea9; font-size:13px; font-weight:400; ">There are no pending records of any leave transaction</p>
+                <p style="color:#969ea9; font-size:13px; font-weight:400; ">There are no pending records of any leave
+                    transaction</p>
 
             </div>
 
@@ -285,7 +302,7 @@
 
         {{-- history --}}
 
-        <div id="historyButton" class="row rounded mt-4" style="display: none;" >
+        <div id="historyButton" class="row rounded mt-4" style="display: none;">
             @if($this->leaveRequests->isNotEmpty())
 
             @foreach($this->leaveRequests->whereIn('status', ['approved', 'rejected','Withdrawn']) as $leaveRequest)
@@ -352,8 +369,8 @@
 
                             </div>
 
-                            <div class="arrow-btn" >
-                              <i class="fa fa-angle-down"></i>
+                            <div class="arrow-btn">
+                                <i class="fa fa-angle-down"></i>
                             </div>
 
                         </div>
@@ -405,7 +422,8 @@
                             <div class="content px-2 mb-2">
 
                                 <a href="{{ route('leave-pending', ['leaveRequestId' => $leaveRequest->id]) }}">
-                                    <span style="color: rgb(2,17,53); font-size:12px; font-weight: 500;">View Details</span>
+                                    <span style="color: rgb(2,17,53); font-size:12px; font-weight: 500;">View
+                                        Details</span>
                                 </a>
 
                             </div>
@@ -428,7 +446,8 @@
 
                 <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:60%; margin:0 auto;">
 
-                <p style="color:#969ea9; font-size:13px; font-weight:400; ">There are no history records of any leave transaction</p>
+                <p style="color:#969ea9; font-size:13px; font-weight:400; ">There are no history records of any leave
+                    transaction</p>
 
             </div>
 
@@ -446,18 +465,24 @@
         const hideInfoDiv = document.querySelector('.hide-info');
         const infoParagraph = document.querySelector('.info-paragraph');
 
-        hideInfoDiv.style.display = (hideInfoDiv.style.display === 'none' || hideInfoDiv.style.display === '') ? 'flex' : 'none';
-        infoParagraph.style.display = (infoParagraph.style.display === 'none' || infoParagraph.style.display === '') ? 'block' : 'none';
+        hideInfoDiv.style.display = (hideInfoDiv.style.display === 'none' || hideInfoDiv.style.display === '') ? 'flex' :
+            'none';
+        infoParagraph.style.display = (infoParagraph.style.display === 'none' || infoParagraph.style.display === '') ?
+            'block' : 'none';
     }
 
     function toggleDetails(sectionId, clickedLink) {
-        const tabs = ['leave', 'pendingButton', 'historyButton'];
+        // Define all the tab IDs
+        const tabs = ['applyButton', 'pendingButton', 'historyButton'];
 
+        // Remove 'active' class from all links
         const links = document.querySelectorAll('.custom-nav-link');
         links.forEach(link => link.classList.remove('active'));
 
+        // Add 'active' class to the clicked link
         clickedLink.classList.add('active');
 
+        // Hide or show tabs based on the clicked sectionId
         tabs.forEach(tab => {
             const tabElement = document.getElementById(tab);
             if (tab === sectionId) {
@@ -466,55 +491,21 @@
                 tabElement.style.display = 'none';
             }
         });
-        // Hide the content of other containers
-        const otherContainers = ['restricted', 'leaveCancel', 'compOff'];
-        otherContainers.forEach(container => {
-            const containerElement = document.getElementById(container);
-            containerElement.style.display = 'none';
-        });
-        // Hide the 'side' container when 'pending' or 'history' is clicked
-        const sideContainer = document.getElementById('cardElement');
-        if (sectionId === 'pendingButton' || sectionId === 'historyButton') {
-            sideContainer.style.display = 'none';
+
+        // Hide the #leave container if history or pending button is clicked
+        if (sectionId === 'historyButton' || sectionId === 'pendingButton') {
+            document.getElementById('leave').style.display = 'none';
+            document.getElementById('cardElement').style.display = 'none'; // Hide cardElement
         } else {
-            sideContainer.style.display = 'flex';
-            sideContainer.style.flexDirection = 'row'
-            toggleOptions('leave', document.querySelector('.side a[data-section="leave"]'));
-        }
-
-
-    }
-
-
-
-    function toggleAccordion(element) {
-
-        const accordionBody = element.nextElementSibling;
-
-        if (accordionBody.style.display === 'block') {
-
-            accordionBody.style.display = 'none';
-
-            element.classList.remove('active'); // Remove active class
-
-        } else {
-
-            accordionBody.style.display = 'block';
-
-            element.classList.add('active'); // Add active class
-
+            // Otherwise, show the #leave container
+            document.getElementById('leave').style.display = 'block';
+            document.getElementById('cardElement').style.display = 'flex'; // Show cardElement
         }
     }
-document.addEventListener('DOMContentLoaded', function() {
-    // Get the default link for 'leave'
-    const defaultLink = document.querySelector('.side a[data-section="leave"]');
 
-    // Call toggleOptions with 'leave' and the default link
-    toggleOptions('leave', defaultLink);
-});
 
-function toggleOptions(sectionId, clickedLink) {
-    const tabs = ['leave', 'restricted', 'leaveCancel', 'compOff'];
+    function toggleOptions(sectionId, clickedLink) {
+        const tabs = ['leave', 'restricted', 'leaveCancel', 'compOff'];
 
         const links = document.querySelectorAll('.side a');
         links.forEach(link => link.classList.remove('active'));
@@ -530,12 +521,23 @@ function toggleOptions(sectionId, clickedLink) {
             }
         });
 
-    // Hide the content of other containers
-    const otherContainers = ['pendingButton', 'historyButton'];
-    otherContainers.forEach(container => {
-        const containerElement = document.getElementById(container);
-        containerElement.style.display = 'none';
-    });
-}
+        // Hide the content of other containers
+        const otherContainers = ['pendingButton', 'historyButton'];
+        otherContainers.forEach(container => {
+            const containerElement = document.getElementById(container);
+            containerElement.style.display = 'none';
+        });
+    }
 
+    function toggleAccordion(element) {
+        const accordionBody = element.nextElementSibling;
+
+        if (accordionBody.style.display === 'block') {
+            accordionBody.style.display = 'none';
+            element.classList.remove('active'); // Remove active class
+        } else {
+            accordionBody.style.display = 'block';
+            element.classList.add('active'); // Add active class
+        }
+    }
 </script>

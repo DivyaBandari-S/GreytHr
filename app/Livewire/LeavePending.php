@@ -16,9 +16,10 @@ use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use App\Helpers\LeaveHelper; 
+use App\Helpers\LeaveHelper;
 use Carbon\Carbon;
 use App\Livewire\LeavePage;
+use Illuminate\Support\Facades\Log;
 
 class LeavePending extends Component
 {
@@ -32,13 +33,20 @@ class LeavePending extends Component
 
     public function mount($leaveRequestId)
     {
-        // Fetch leave request details based on $leaveRequestId with employee details
-        $this->selectedYear = Carbon::now()->format('Y');
-        $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
-        $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
-        $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
+        try {
+            // Fetch leave request details based on $leaveRequestId with employee details
+            $this->selectedYear = Carbon::now()->format('Y');
+            $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
+            $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
+            $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
+        } catch (\Exception $e) {
+            // Handle the exception here
+            $errorMessage = 'Error occurred while getting leave request: ' . $e->getMessage();
+            session()->flash('error', $errorMessage);
+        }
     }
-    
+
+
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
@@ -57,11 +65,11 @@ class LeavePending extends Component
             }
             // Check if the start and end sessions are different on the same day
             if (
-                
+
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
             ) {
-              
+
                 // Inner condition to check if both start and end dates are weekdays
                 if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
                     return 0.5;
@@ -74,7 +82,7 @@ class LeavePending extends Component
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
             ) {
-                
+
                 // Inner condition to check if both start and end dates are weekdays
                 if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
                     return 1;
@@ -107,21 +115,18 @@ class LeavePending extends Component
                 // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
-                }else{
+                } else {
                     $totalDays += 0.5;
                 }
-            }elseif($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)){
+            } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 1; // Add half a day
                 }
-            }
-            else {
+            } else {
                 $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
             }
 
             return $totalDays;
-            
-
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
@@ -135,11 +140,11 @@ class LeavePending extends Component
 
     public function render()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id; 
-        // Call the getLeaveBalances function to get leave balances
-        $leaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
-
         try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            // Call the getLeaveBalances function to get leave balances
+            $leaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
+
             // Attempt to decode applying_to
             $applyingToJson = trim($this->leaveRequest->applying_to);
             $this->leaveRequest->applying_to = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
@@ -148,16 +153,16 @@ class LeavePending extends Component
             $ccToJson = trim($this->leaveRequest->cc_to);
             $this->leaveRequest->cc_to = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
 
-            } catch (\Exception $e) {
-                dd("Error in JSON decoding: " . $e->getMessage());
-            }
-
-        // Pass the leaveRequest data and leaveBalances to the Blade view
-        return view('livewire.leave-pending', [
-             'leaveRequest' => $this->leaveRequest,
-             'leaveBalances' => $leaveBalances,
-             
-        ]);
-       
-    }  
+            // Pass the leaveRequest data and leaveBalances to the Blade view
+            return view('livewire.leave-pending', [
+                'leaveRequest' => $this->leaveRequest,
+                'leaveBalances' => $leaveBalances,
+            ]);
+        } catch (\Exception $e) {
+            // Handle the exception, log it, or display an error message
+            Log::error('Error rendering leave pending page: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while loading leave history page. Please try again later.');
+            return redirect()->back();
+        }
+    }
 }

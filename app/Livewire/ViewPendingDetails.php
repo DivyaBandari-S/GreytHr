@@ -16,8 +16,9 @@ use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use PDOException;
 
 class ViewPendingDetails extends Component
 {
@@ -34,57 +35,92 @@ class ViewPendingDetails extends Component
 
     public function mount()
     {
-        $this->selectedYear = Carbon::now()->format('Y');
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->leaveRequests = LeaveRequest::where('leave_applications.status', 'pending')
-            ->where(function ($query) use ($employeeId) {
-                $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
-                    ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
-            })
-            ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->orderBy('created_at', 'desc')
-            ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
-        $matchingLeaveApplications = [];
+        try {
+            //for year selection
+            $this->selectedYear = Carbon::now()->format('Y');
+            //login employee id
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            //fetching pending leave requests
+            $this->leaveRequests = LeaveRequest::where('leave_applications.status', 'pending')
+                ->where(function ($query) use ($employeeId) {
+                    $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
+                        ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
+                })
+                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                ->orderBy('created_at', 'desc')
+                ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
 
-        foreach ($this->leaveRequests as $leaveRequest) {
-            $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
-            $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
+            $matchingLeaveApplications = [];
 
-            $applyingToJson = trim($leaveRequest->applying_to);
-            $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
+            //foreach to get leave balance and leave requests
+            foreach ($this->leaveRequests as $leaveRequest) {
+                $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
+                $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
 
-            $ccToJson = trim($leaveRequest->cc_to);
-            $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
+                $applyingToJson = trim($leaveRequest->applying_to);
+                $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
 
-            $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
-            $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
+                $ccToJson = trim($leaveRequest->cc_to);
+                $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
 
-            if ($isManagerInApplyingTo || $isEmpInCcTo) {
-                $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
-                // Check if the from_date year is equal to the current year
-                $fromDateYear = Carbon::parse($leaveRequest->from_date)->format('Y');
+                $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
+                $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
 
-                if ($fromDateYear == $this->selectedYear) {
-                    // Get leave balance for the current year only
+                if ($isManagerInApplyingTo || $isEmpInCcTo) {
                     $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
-                } else {
-                    // If from_date year is not equal to the current year, set leave balance to 0
-                    $leaveBalances = 0;
+
+                    // Check if the from_date year is equal to the current year
+                    $fromDateYear = Carbon::parse($leaveRequest->from_date)->format('Y');
+
+                    if ($fromDateYear == $this->selectedYear) {
+                        // Get leave balance for the current year only
+                        $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
+                    } else {
+                        // If from_date year is not equal to the current year, set leave balance to 0
+                        $leaveBalances = 0;
+                    }
+
+                    $matchingLeaveApplications[] = [
+                        'leaveRequest' => $leaveRequest,
+                        'leaveBalances' => $leaveBalances,
+                    ];
                 }
-                $matchingLeaveApplications[] = [
-                    'leaveRequest' => $leaveRequest,
-                    'leaveBalances' => $leaveBalances,
-                ];
             }
+
+            $this->leaveApplications = $matchingLeaveApplications;
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Handle query execution errors
+            Log::error('A database query error occurred: ' . $e->getMessage());
+            session()->flash('error', 'Error while getting the data. Please try again.');
+
+        } catch (PDOException $e) {
+            // Handle connection errors
+            Log::error('Database connection error occurred: ' . $e->getMessage());
+            session()->flash('error', 'Connection error . Please try again.');
+
+        } catch (\Exception $e) {
+            // Handle any other unexpected errors
+            Log::error('An unexpected error occurred: ' . $e->getMessage());
+            session()->flash('error', 'Connection error . Please try again.');
         }
-        $this->leaveApplications = $matchingLeaveApplications;
     }
 
+
+    // Check if there are pending leave requests
     public function hasPendingLeave()
     {
-        // Check if there are pending leave requests
-        return $this->leaveRequests->where('status', 'pending')->isNotEmpty();
+        try {
+            // Check if there are pending leave requests
+            return $this->leaveRequests->where('status', 'pending')->isNotEmpty();
+        }
+        catch (\Exception $e) {
+            Log::error('An error occurred win hasPendingLeave: ' . $e->getMessage());
+            session()->flash('error', 'Error while getting leave application. Please try again.');
+        }
     }
+
+    //calcilate number of days in a leave application
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
@@ -162,32 +198,54 @@ class ViewPendingDetails extends Component
         return (int) str_replace('Session ', '', $session);
     }
 
+
+    //This method used to approve leave application by manager
     public function approveLeave($index)
     {
-        // Find the leave request by ID
-        $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
+        try {
+            // Find the leave request by ID
+            $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
 
-        // Update status to 'approved'
-        $leaveRequest->status = 'approved';
-        $leaveRequest->save();
-        $leaveRequest->touch();
-        $this->reset();
-        session()->flash('message', 'Leave application approved successfully.');
+            // Update status to 'approved'
+            $leaveRequest->status = 'approved';
+            $leaveRequest->save();
+            $leaveRequest->touch();
+            $this->reset();
+            session()->flash('message', 'Leave application approved successfully.');
 
-        return redirect()->to('/employees-review');
+            return redirect()->to('/employees-review');
+        } catch (\Exception $e) {
+            // Handle the exception
+            Log::error('Error approving leave: ' . $e->getMessage());
+            session()->flash('error', 'Failed to approve leave application. Please try again.');
+
+            return redirect()->back(); // Redirect back to the previous page
+        }
     }
 
+    //this to reject the leave
     public function rejectLeave($index)
     {
-        // Find the leave request by ID
-        $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
+        try {
+            // Find the leave request by ID
+            $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
 
-        // Update status to 'rejected'
-        $leaveRequest->status = 'rejected';
-        $leaveRequest->save();
-        $leaveRequest->touch();
-        $this->reset();
-        session()->flash('message', 'Leave application rejected.');
-        return redirect()->to('/employees-review');
+            // Update status to 'rejected'
+            $leaveRequest->status = 'rejected';
+            $leaveRequest->save();
+            $leaveRequest->touch();
+            $this->reset();
+            session()->flash('message', 'Leave application rejected.');
+            return redirect()->to('/employees-review');
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error($e);
+
+            // Flash a message to the session
+            session()->flash('error_message', 'An error occurred while rejecting leave application.');
+
+            // Redirect back or to a specific route
+            return redirect()->back();
+        }
     }
 }

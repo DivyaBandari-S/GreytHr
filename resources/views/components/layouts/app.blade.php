@@ -90,6 +90,11 @@
     <!-- Hierarchy Select Js -->
     <!-- <script src="js/hierarchy-select.min.js"></script> -->
 
+    <!-- Semantic UI CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.css">
+    <!-- Semantic UI JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.js"></script>
+
     <!-- Hierarchy Select CSS -->
     <!-- <link rel="stylesheet" href="css/hierarchy-swelect.min.css"> -->
     <!-- Emoji links -->
@@ -334,351 +339,6 @@
                                                     @if ($mangerid)
                                                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
                                                             class="nav-item">
-                                                            <a class="nav-link" href="/shift-roaster-data"
-                                                                onclick="setActiveLink(this)">
-                                                                @livewire('shift-roaster-submodule')
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                    @if ($mangerid)
-                                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                            class="nav-item">
-                                                            <a class="nav-link" href="/employee-swipes-data"
-                                                                onclick="setActiveLink(this)">
-                                                                @livewire('employee-swipes')
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                    @if ($mangerid)
-                                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                            class="nav-item">
-                                                            <a class="nav-link" href="/attendance-muster-data"
-                                                                onclick="setActiveLink(this)">
-                                                                @livewire('attendance-muster')
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                   
-                                                </ul>
-                                            </div>
-                                        </li>
-
-                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                            <a class="nav-link" href="/document" onclick="setActiveLink(this)">
-
-                                                <i class="fas mr-1    fa-folder" style="color:#6c7e90"></i> Document Center
-
-                                            </a>
-
-                                        </li>
-
-
-                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                            <a class="nav-link" href="/HelpDesk" onclick="setActiveLink(this)">
-
-                                                <i class="fas mr-1    fa-headset" style="color:#6c7e90"></i> Helpdesk
-
-                                            </a>
-
-                                        </li>
-
-                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                            <a class="nav-link" href="/delegates" onclick="setActiveLink(this)">
-
-                                                <i class="fas mr-1    fa-user-friends" style="color:#6c7e90"></i> Workflow
-                                                Delegates
-
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            @endauth
-
-                            @auth('hr')
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="/home-dashboard" onclick="setActiveLink(this)">
-                                        <i class="fas mr-1    fa-home" style="color:#6c7e90"></i> Home
-                                    </a>
-                                </li>
-
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="/hrPage" onclick="setActiveLink(this)">
-                                        <i class="fas mr-1    fa-laptop" style="color:#6c7e90"></i> HR Requests
-                                    </a>
-                                </li>
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                    <a class="nav-link" href="/addLeaves" onclick="setActiveLink(this)">
-
-                                        <i class="fas mr-1    fa-envelope" style="color:#6c7e90"></i>
-                                        Grant Leaves
-
-                                    </a>
-
-                                </li>
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                    <a class="nav-link" href="/letter-requests" onclick="setActiveLink(this)">
-
-                                        <i class="fas mr-1    fa-envelope" style="color:#6c7e90"></i>
-                                        Letter Requests
-
-                                    </a>
-
-                                </li>
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                    <a class="nav-link" href="/add-holiday-list" onclick="setActiveLink(this)">
-
-                                        <i class="fas mr-1    fa-envelope" style="color:#6c7e90"></i>
-                                        Add Holidays
-                                    </a>
-
-                                </li>
-                            @endauth
-
-                            @auth('it')
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="#" onclick="setActiveLink(this)">
-                                        <i class="fas mr-1    fa-laptop" style="color:#6c7e90"></i> IT Requests
-                                    </a>
-                                </li>
-                            @endauth
-
-                            @auth('finance')
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="#" onclick="setActiveLink(this)">
-                                        <i class="fas mr-1    fa-dollar-sign" style="color:#6c7e90"></i> Finance Requests
-                                    </a>
-                                </li>
-                            @endauth
-
-                        </ul>
-                    </div>
-
-                </div>
-
-                <div onmouseleave="myMenuSmallHover()" class="menucard displayNone hideMinBar" id="menu-popup-hover"
-                    style="position: absolute; z-index: 1; border-radius:0px; width: auto; background:#fff;;box-shadow: 0 4px 6px
-            a(0, 0, 0, 0.1);padding:0;margin:0;  backdrop-filter: blur( 3px ); -webkit-backdrop-filter: blur( 3px )">
-
-                    <div class="left-card-body"
-                        style="margin-top: 0px;padding: 0 5px;margin: 0;height: 100vh;background:#fff;">
-
-                        <ul class="nav flex-column">
-
-                            <div style="margin-bottom: 20px;margin-top:5px">
-
-                                @livewire('company-logo')
-                            </div>
-
-                            @livewire('profile-card')
-
-
-                            @auth('emp')
-                                <div class="scrollable-container mt-2">
-                                    <ul class="nav flex-column">
-                                        <li data-bs-target="#navigateLoader" class="nav-item">
-
-                                            <a class="nav-link" href="/" onclick="setActiveLink(this, '/')">
-
-                                                <i class="fas mr-1 fa-home" style="color:#6c7e90;"></i>
-                                                Home
-
-                                            </a>
-
-                                        </li>
-
-                                        <li data-bs-target="#navigateLoader" class="nav-item">
-
-                                            <a class="nav-link" href="/Feeds" onclick="setActiveLink(this, '/Feeds')">
-
-                                                <i class="fas mr-1    fa-rss" style="color:#6c7e90"></i>
-                                                Feeds
-                                            </a>
-
-                                        </li>
-                                        <li data-bs-target="#navigateLoader" class="nav-item">
-
-                                            <a class="nav-link" href="/PeoplesList"
-                                                onclick="setActiveLink(this, '/PeoplesList')">
-
-
-                                                <i class="fas mr-1    fa-users" style="color:#6c7e90"></i>
-
-                                                People
-
-
-                                            </a>
-
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" onclick="toggleToDoDropdown2()">
-                                                <i class="fas mr-1    fa-file-alt" id="todo-icon" style="color:#6c7e90"></i>
-                                                Todo
-                                                <i class="fas mr-1    fa-caret-down" id="todo-caret-2"
-                                                    style="color:#6c7e90"></i>
-                                            </a>
-                                            <div id="todo-options-2" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/tasks"
-                                                            onclick=" setActiveLink(this, '/tasks')">
-                                                            Tasks
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/employees-review"
-                                                            onclick=" setActiveLink(this, '/employees-review')">
-                                                            Review
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-                                        </li>
-
-
-
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" onclick="toggleSalaryDropdown2()">
-                                                <i class="fas mr-1    fa-solid fa-money-bill-transfer" id="salary-icon"
-                                                    style="color:#6c7e90"></i>
-                                                Salary
-                                                <i class="fas mr-1    fa-caret-down" id="salary-caret-2"
-                                                    style="color:#6c7e90"></i>
-                                            </a>
-                                            <div id="salary-options-2" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/formdeclaration" id="itdeclaration"
-                                                            onclick="selectOption(this, 'IT Declaration');setActiveLink(this, '/formdeclaration')">
-                                                            IT Declaration
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/itstatement" id="itstatement"
-                                                            onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
-                                                            IT Statement
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/slip" id="slip"
-                                                            onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
-                                                            Payslips
-                                                        </a>
-                                                    </li>
-
-
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/reimbursement" id="reimbursement"
-                                                            onclick="selectOption(this, 'Reimbursement'); setActiveLink(this)">
-                                                            Reimbursement
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/investment" id="investment"
-                                                            onclick="selectOption(this, 'Proof of Investment'); setActiveLink(this) ">
-                                                            Proof of Investment
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/salary-revision" id="salary-revision"
-                                                            onclick="selectOption(this, 'Salary Revision'); setActiveLink(this)">
-                                                            Salary Revision
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" onclick="toggleLeaveDropdown2(event)">
-                                                <i class="fas mr-1    fa-file-alt" id="leave-icon" style="color:#6c7e90"></i>
-                                                Leave
-                                                <i class="fas mr-1    fa-caret-down" id="leave-caret-2"
-                                                    style="color:#6c7e90"></i>
-                                            </a>
-                                            <div id="leave-options-2" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/leave-page" onclick="setActiveLink(this)">
-                                                            Leave Apply
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/leave-balances"
-                                                            onclick="setActiveLink(this)">
-                                                            Leave Balances
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/leave-calender"
-                                                            onclick="setActiveLink(this)">
-                                                            Leave Calendar
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/holiday-calender"
-                                                            onclick="setActiveLink(this)">
-                                                            Holiday Calendar
-                                                        </a>
-                                                    </li>
-                                                    @if ($mangerid)
-                                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                            class="nav-item">
-                                                            <a class="nav-link" href="/team-on-leave-chart"
-                                                                onclick="setActiveLink(this)">
-                                                                @livewire('team-on-leave')
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                </ul>
-                                            </div>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" onclick="toggleAttendanceDropdown2()">
-                                                <i class="fas mr-1    fa-clock" style="color:#6c7e90"></i>
-                                                Attendance
-                                                <i class="fas mr-1    fa-caret-down" id="attendance-caret"
-                                                    style="color:#6c7e90"></i>
-                                            </a>
-                                            <div id="attendance-options-2" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/Attendance" onclick="setActiveLink(this)">
-                                                            Attendance Info
-                                                        </a>
-                                                    </li>
-                                                    @if ($mangerid)
-                                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                            class="nav-item">
-                                                            <a class="nav-link" href="/whoisinchart"
-                                                                onclick="setActiveLink(this)">
-                                                                @livewire('whoisin')
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                    @if ($mangerid)
-                                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                            class="nav-item">
                                                             <a class="nav-link" href="/employee-swipes-data"
                                                                 onclick="setActiveLink(this)">
                                                                 @livewire('employee-swipes')
@@ -733,446 +393,492 @@
                             @endauth
 
                             @auth('hr')
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="/home-dashboard" onclick="setActiveLink(this)">
-                                        <i class="fas mr-1    fa-home" style="color:#6c7e90"></i> Home
-                                    </a>
-                                </li>
-
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="/hrPage" onclick="setActiveLink(this)">
-                                        <i class="fas mr-1    fa-laptop" style="color:#6c7e90"></i> HR Requests
-                                    </a>
-                                </li>
-
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                    <a class="nav-link" href="/letter-requests" onclick="setActiveLink(this)">
-
-                                        <i class="fas mr-1    fa-envelope" style="color:#6c7e90"></i>
-                                        Letter Requests
-
-                                    </a>
-
-                                </li>
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                    <a class="nav-link" href="/addLeaves" onclick="setActiveLink(this)">
-
-                                        <i class="fas mr-1    fa-envelope" style="color:#6c7e90"></i>
-                                        Grant Leaves
-
-                                    </a>
-
-                                </li>
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                    <a class="nav-link" href="/add-holiday-list" onclick="setActiveLink(this)">
-
-                                        <i class="fas mr-1    fa-envelope" style="color:#6c7e90"></i>
-                                        Add Holidays
-                                    </a>
-
-                                </li>
-                            @endauth
-
-                            @auth('it')
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="#" onclick="setActiveLink(this)">
-                                        <i class="fas mr-1    fa-laptop" style="color:#6c7e90"></i> IT Requests
-                                    </a>
-                                </li>
-                            @endauth
-
-                            @auth('finance')
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="#" onclick="setActiveLink(this)">
-                                        <i class="fas mr-1    fa-dollar-sign" style="color:#6c7e90"></i> Finance Requests
-                                    </a>
-                                </li>
-                            @endauth
-
-                        </ul>
-                    </div>
-
-                </div>
-
-                <div class="menucard displayNone" onclick="myMenuSmallHover()" id="menu-small"
-                    style="border-radius:0px; width: 5%; background:#55535333;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);padding:0;margin:0;  backdrop-filter: blur( 3px ); -webkit-backdrop-filter: blur( 3px )">
-
-                    <div class="left-card-body" style="margin-top: 0px;padding: 0 5px;margin: 0;height: 100vh;">
-                        <ul class="nav flex-column">
-
-                            <div class="miniBarLogo" style="margin-bottom: 15px;margin-top:20px">
-
-                                @livewire('company-logo')
-                            </div>
-
-
-
-                            @auth('emp')
-                                <div>
-                                    <ul class="nav flex-column">
-                                        <li data-bs-target="#navigateLoader" title="Home" class="nav-item">
-                                            <a class="nav-link" href="/" onclick="setActiveLink(this, '/')">
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/home.png" alt="home" />
-                                                <!-- <i class="fas mr-1 fa-home" style="color:#6c7e90"></i> -->
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-target="#navigateLoader" title="Feeds" class="nav-item">
-
-                                            <a class="nav-link" href="/Feeds" onclick="setActiveLink(this, '/Feeds')">
-
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/rss.png" alt="rss" />
-
-                                                <!-- <i class="fas mr-1    fa-rss" style="color:#6c7e90"></i> -->
-
-                                            </a>
-
-                                        </li>
-                                        <li data-bs-target="#navigateLoader" title="People" class="nav-item">
-
-                                            <a class="nav-link" href="/PeoplesList"
-                                                onclick="setActiveLink(this, '/PeoplesList')">
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/group--v1.png"
-                                                    alt="group--v1" />
-
-                                                <!-- <i class="fas mr-1    fa-users" style="color:#6c7e90"></i> -->
-
-                                            </a>
-
-                                        </li>
-
-                                        <li class="nav-item" data-bs-placement="right" title="To do">
-                                            <a class="nav-link" onclick="toggleToDoDropdown()">
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/document.png" alt="document" />
-                                                <!-- <i class="fas mr-1    fa-file-alt" id="todo-icon" style="color:#6c7e90"></i> -->
-                                            </a>
-                                            <div id="todo-options" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/tasks"
-                                                            onclick=" setActiveLink(this, '/tasks')">
-
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/employees-review"
-                                                            onclick=" setActiveLink(this, '/employees-review')">
-
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-                                        </li>
-
-
-
-
-                                        <li class="nav-item" data-bs-placement="right" title="Salary">
-                                            <a class="nav-link" onclick="toggleSalaryDropdown()">
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/money-transfer.png"
-                                                    alt="money-transfer" />
-                                                <!-- <i class="fas mr-1    fa-solid fa-money-bill-transfer" id="salary-icon" style="color:#6c7e90"></i> -->
-                                            </a>
-                                            <div id="salary-options" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/formdeclaration" id="itdeclaration"
-                                                            onclick="selectOption(this, 'IT Declaration');setActiveLink(this, '/formdeclaration')">
-                                                            IT Declaration
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/itstatement" id="itstatement"
-                                                            onclick="selectOption(this, 'IT Statement');setActiveLink(this, '/itstatement')">
-                                                            IT Statement
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/slip" id="slip"
-                                                            onclick="selectOption(this, 'Pay Slip');setActiveLink(this, '/slip')">
-                                                            Payslips
-                                                        </a>
-                                                    </li>
-
-
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/reimbursement" id="reimbursement"
-                                                            onclick="selectOption(this, 'Reimbursement'); setActiveLink(this, '/reimbursement')">
-                                                            Reimbursement
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/investment" id="investment"
-                                                            onclick="selectOption(this, 'Proof of Investment'); setActiveLink(this, '/investment') ">
-                                                            Proof of Investment
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/salary-revision" id="salary-revision"
-                                                            onclick="selectOption(this, 'Salary Revision'); setActiveLink(this, '/salary-revision')">
-                                                            Salary Revision
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-                                            </div>
-                                        </li>
-
-                                        <li class="nav-item" data-bs-placement="right" title="Leave">
-                                            <a class="nav-link" onclick="toggleLeaveDropdown(event)">
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/leave.png" alt="leave" />
-                                                <!-- <i class="fas mr-1    fa-file-alt" id="leave-icon" style="color:#6c7e90"> </i> -->
-                                            </a>
-                                            <div id="leave-options" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/leave-page"
-                                                            onclick="setActiveLink(this, '/leave-page')">
-                                                            Leave Apply
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/leave-balances"
-                                                            onclick="setActiveLink(this, '/leave-balances')">
-                                                            Leave Balances
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/leave-calender"
-                                                            onclick="setActiveLink(this, '/leave-calende')">
-                                                            Leave Calendar
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/holiday-calender"
-                                                            onclick="setActiveLink(this, '/holiday-calender')">
-                                                            Holiday Calendar
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/team-on-leave-chart"
-                                                            onclick="setActiveLink(this, '/team-on-leave-chart')">
-                                                            @livewire('team-on-leave')
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-
-                                        <li class="nav-item" data-bs-placement="right" title="Attendance">
-                                            <a class="nav-link" onclick="toggleAttendanceDropdown()">
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/timetable.png"
-                                                    alt="timetable" />
-                                                <!-- <i class="fas mr-1    fa-clock" style="color:#6c7e90"></i> -->
-                                            </a>
-                                            <div id="attendance-options" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/Attendance"
-                                                            onclick="setActiveLink(this. '/Attendance')">
-                                                            Attendance Info
-                                                        </a>
-                                                    </li>
-
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/whoisinchart"
-                                                            onclick="setActiveLink(this, '/whoisinchart')">
-                                                            @livewire('whoisin')
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/employee-swipes-data"
-                                                            onclick="setActiveLink(this, '/employee-swipes-dat')">
-                                                            @livewire('employee-swipes')
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/attendance-muster-data"
-                                                            onclick="setActiveLink(this, '/attendance-muster-data')">
-                                                            @livewire('attendance-muster')
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-
-                                        <li data-bs-target="#navigateLoader" title="Document Center" class="nav-item">
-
-                                            <a class="nav-link" href="/document" onclick="setActiveLink(this, '/document')">
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/folder-invoices--v1.png"
-                                                    alt="folder-invoices--v1" />
-
-                                                <!-- <i class="fas mr-1    fa-folder" style="color:#6c7e90"></i> -->
-
-                                            </a>
-
-                                        </li>
-
-
-                                        <li data-bs-target="#navigateLoader" title="Help Desk" class="nav-item">
-
-                                            <a class="nav-link" href="/HelpDesk" onclick="setActiveLink(this, '/HelpDesk')">
-
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/headset.png" alt="headset" />
-
-                                                <!-- <i class="fas mr-1    fa-headset" style="color:#6c7e90"></i> -->
-
-                                            </a>
-
-                                        </li>
-
-                                        <li data-bs-target="#navigateLoader" title="Workflow Delegates" class="nav-item">
-
-                                            <a class="nav-link" href="/delegates"
-                                                onclick="setActiveLink(this, '/delegates')">
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/collaboration-female-male--v1.png"
-                                                    alt="collaboration-female-male--v1" />
-
-                                                <!-- <i class="fas mr-1    fa-user-friends" style="color:#6c7e90"></i> -->
-
-                                            </a>
-                                        </li>
-                                    </ul>
+                                <div class="text-center menu-item-label active" data-target="#home-dashboard">
+                                    <i class="fas fa-home" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#hr-request">
+                                    <i class="fas fa-laptop" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#grant-leaves">
+                                    <i class="fas fa-envelope" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#letter-request">
+                                    <i class="fas fa-envelope" style="padding: 15px 0px;"></i>
+                                </div>
+                                <div class="text-center menu-item-label" data-target="#add-holiday-list">
+                                    <i class="fas fa-envelope" style="padding: 15px 0px;"></i>
                                 </div>
                             @endauth
 
-                            @auth('hr')
-                                <li data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="/home-dashboard"
-                                        onclick="setActiveLink(this, '/home-dashboar')">
-                                        <i class="fas mr-1    fa-home" style="color:#6c7e90"></i>
-                                    </a>
-                                </li>
-
-                                <li data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="/hrPage" onclick="setActiveLink(this, '/hrPage')">
-                                        <i class="fas mr-1    fa-laptop" style="color:#6c7e90"></i>
-                                    </a>
-                                </li>
-                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-
-                                    <a class="nav-link" href="/addLeaves" onclick="setActiveLink(this)">
-
-                                        <i class="fas mr-1    fa-envelope" style="color:#6c7e90"></i>
-
-
-                                    </a>
-
-                                </li>
-                                <li data-bs-target="#navigateLoader" class="nav-item">
-
-                                    <a class="nav-link" href="/letter-requests"
-                                        onclick="setActiveLink(this, '/letter-requests')">
-
-                                        <i class="fas mr-1    fa-envelope" style="color:#6c7e90"></i>
-
-
-                                    </a>
-
-                                </li>
-
-                                <li data-bs-target="#navigateLoader" class="nav-item">
-
-                                    <a class="nav-link" href="/add-holiday-list"
-                                        onclick="setActiveLink(this, '/add-holiday-list')">
-
-                                        <i class="fas mr-1    fa-envelope" style="color:#6c7e90"></i>
-
-                                    </a>
-
-                                </li>
-                            @endauth
-
                             @auth('it')
-                                <li data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="#" onclick="setActiveLink(this, '#')">
-                                        <i class="fas mr-1    fa-laptop" style="color:#6c7e90"></i>
-                                    </a>
-                                </li>
+                                <div class="text-center menu-item-label active" data-target="#it-request">
+                                    <i class="fas fa-laptop" style="padding: 15px 0px;"></i>
+                                </div>
                             @endauth
 
                             @auth('finance')
-                                <li data-bs-target="#navigateLoader" class="nav-item">
-                                    <a class="nav-link" href="#" onclick="setActiveLink(this, '#')">
-                                        <i class="fas mr-1    fa-dollar-sign" style="color:#6c7e90"></i>
-                                    </a>
-                                </li>
+                                <div class="text-center menu-item-label active" data-target="#finance-request">
+                                    <i class="fas fa-dollar-sign" style="padding: 15px 0px;"></i>
+                                </div>
                             @endauth
-
-                        </ul>
+                        </div>
                     </div>
-                </div>
-
-                <div class="col m-0 px-2 "
-                    style="height: 60px; width: auto; background: url('images/imageedit_1_3636168378.png') no-repeat center #02114f; background-size: cover;">
-
-                    <div class="col d-flex align-items-center mt-2">
-                        <!-- <i class="fas fa-bars hideHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px; margin: 0px 10px; cursor: pointer;" onclick="myMenu()"></i>
-                        <i class="fas fa-bars showHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px;  cursor: pointer;" onclick="myMenuSmall()"></i> -->
-                        <img src="/images/app-drawer.png" class="app-drawer-img hideHamburger" onclick="myMenu()">
-                        <img src="/images/app-drawer.png" class="app-drawer-img showHamburger" onclick="myMenuSmall()">
-                        <h6 class="mx-2 my-0" style="color: white; width: -webkit-fill-available;"> @livewire('page-title')
-                        </h6>
-
+                    <div class="col-9 p-0">
                         @auth('emp')
-                            <div class="col-md-4 p-0 showHamburger d-flex justify-content-end">
+                        <div class="ui accordion scrollable-container content-item active" id="home" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Home</p></div>
+                            <a class="item p-0 m-0" href="/" onclick="setActiveLink(this)">Home</a>
+                        </div>
 
-
-
-
-                                <input type="text" class="form-control w-70 bg-light" placeholder="Search..."
-                                    aria-label="Username" aria-describedby="basic-addon1">
-
-                            </div>
-                            <div>
-                                <a href="/users" style="color: white; text-decoration: none;">
-                                    <i class="fa fa-comment" style="display: inline-block; vertical-align: middle;font-size: 20px; margin-left: 10px;"></i>
-                                  </a>
-                            </div>
-                            <div class="col dropdown mx-2 p-0">
-
-                                <button class="dropdown-btn" style="font-size: 13px;  white-space: nowrap; ">Quick
-                                    Links</button>
-                                <div class="dropdown-content" style="font-size: 12px;font-weight:500;">
-                                    <a href="/tasks">Tasks</a>
-                                    <a href="/HelpDesk">Helpdesk</a>
-                                </div>
-                            </div>
-
-                            <div class="notification-icon ">
-                                <i style="color: white; position: relative;" class="fas mr-1 fa-bell">
-                                    <span class="badge bg-danger"
-                                        style="position: absolute; top: -9px; right: -1px; font-size:10px;">4</span>
-                                </i>
-                            </div>
+                        <div class="ui accordion scrollable-container content-item" id="feeds" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Feeds</p></div>
+                            <a class="item p-0 m-0" href="/Feeds" onclick="setActiveLink(this)">Feeds</a>
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="people" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">People</p></div>
+                            <a class="item p-0 m-0" href="/PeoplesList" onclick="setActiveLink(this)">People</a>
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="todo" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Todo</p></div>
+                            <a class="item p-0 m-0" href="/tasks" onclick="setActiveLink(this)">Tasks</a>
+                            <a class="item p-0 m-0" href="/employees-review" onclick="setActiveLink(this)">Review</a>
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="salary" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Salary</p></div>
+                            <a class="item p-0 m-0" href="/formdeclaration" onclick="setActiveLink(this)">IT Declaration</a>
+                            <a class="item p-0 m-0" href="/itstatement" onclick="setActiveLink(this)">IT Statement</a>
+                            <a class="item p-0 m-0" href="/slip" onclick="setActiveLink(this)">Payslips</a>
+                            <a class="item p-0 m-0" href="/reimbursement" onclick="setActiveLink(this)">Reimbursement</a>
+                            <a class="item p-0 m-0" href="/investment" onclick="setActiveLink(this)">Proof of Investment</a>
+                            <a class="item p-0 m-0" href="/salary-revision" onclick="setActiveLink(this)">Salary Revision</a>
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="leave" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Leave</p></div>
+                            <a class="item p-0 m-0" href="/leave-page" onclick="setActiveLink(this)">Leave Apply</a>
+                            <a class="item p-0 m-0" href="/leave-balances" onclick="setActiveLink(this)">Leave Balances</a>
+                            <a class="item p-0 m-0" href="/leave-calender" onclick="setActiveLink(this)">Leave Calendar</a>
+                            <a class="item p-0 m-0" href="/holiday-calender" onclick="setActiveLink(this)">Holiday Calendar</a>
+                            @if ($mangerid)
+                            <a class="item p-0 m-0" href="/team-on-leave-chart" onclick="setActiveLink(this)">@livewire('team-on-leave')</a>
+                            @endif
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="attendance" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Attendance</p></div>
+                            <a class="item p-0 m-0" href="/Attendance" onclick="setActiveLink(this)">Attendance Info</a>
+                            @if ($mangerid)
+                            <a class="item p-0 m-0" href="/whoisinchart" onclick="setActiveLink(this)">@livewire('whoisin')</a>
+                            <a class="item p-0 m-0" href="/employee-swipes-data" onclick="setActiveLink(this)">@livewire('employee-swipes')</a>
+                            <a class="item p-0 m-0" href="/attendance-muster-data" onclick="setActiveLink(this)">@livewire('attendance-muster')</a>
+                            @endif
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="document-center" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Documents</p></div>
+                            <a class="item p-0 m-0" href="/document" onclick="setActiveLink(this)">Document Center</a>
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="helpdesk" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Helpdesk</p></div>
+                            <a class="item p-0 m-0" href="/HelpDesk" onclick="setActiveLink(this)">Helpdesk</a>
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="workflow-delegates" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Workflow</p></div>
+                            <a class="item p-0 m-0" href="/delegates" onclick="setActiveLink(this)">Workflow Delegates</a>
+                        </div>
                         @endauth
 
-                        <div style="text-align:end;cursor:pointer; margin-right:10px;">
-                            @livewire('log-out')
+                        @auth('hr')
+                        <div class="ui accordion scrollable-container content-item active" id="home-dashboard" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Home</p></div>
+                            <a class="item p-0 m-0" href="/home-dashboard" onclick="setActiveLink(this)">Home</a>
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="hr-request" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">HR</p></div>
+                            <a class="item p-0 m-0" href="/hrPage" onclick="setActiveLink(this)">HR Requests</a>
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="grant-leaves" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Leaves</p></div>
+                            <a class="item p-0 m-0" href="/addLeaves" onclick="setActiveLink(this)">Grant Leaves</a>
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="letter-request" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Letter</p></div>
+                            <a class="item p-0 m-0" href="/letter-requests" onclick="setActiveLink(this)">Letter Requests</a>
+                        </div>
+                        <div class="ui accordion scrollable-container content-item" id="add-holiday-list" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Holidays</p></div>
+                            <a class="item p-0 m-0" href="/add-holiday-list" onclick="setActiveLink(this)">Add Holidays</a>
+                        </div>
+                        @endauth
+
+                        @auth('it')
+                        <div class="ui accordion scrollable-container content-item active" id="it-request" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">IT</p></div>
+                            <a class="item p-0 m-0" href="#" onclick="setActiveLink(this)">IT Requests</a>
+                        </div>
+                        @endauth
+
+                        @auth('finance')
+                        <div class="ui accordion scrollable-container content-item active" id="finance-requestt" style="border: none">
+                            <div class="sidebar-heading pb-2 pt-2 text-start"><p class="fw-bold">Finance</p></div>
+                            <a class="item p-0 m-0" href="#" onclick="setActiveLink(this)">Finance Requests</a>
+                        </div>
+                        @endauth
+                    </div>
+                </div>
+                
+
+                @auth('emp')
+                <div class="ui dropdown item displaynone">
+                    <z>Home</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-home icon demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">Home</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0" href="/" onclick="setActiveLink(this)">Home</a>
+                    </div>
+                </div>
+                <div class="ui dropdown item displaynone">
+                    <z>Feeds</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-rss icon demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">Feeds</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0" href="/Feeds" onclick="setActiveLink(this)">Feeds</a>
+                    </div>
+                </div>
+                <div class="ui dropdown item displaynone">
+                    <z>People</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-users icon demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">People</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0" href="/PeoplesList" onclick="setActiveLink(this)">People</a>
+                    </div>
+                </div>
+
+                <div class="ui dropdown item displaynone">
+                    <z>Todo</z>
+                    <i class="icon demo-icon fas fa-file-alt"></i>
+                
+                    <div class="menu">
+                        <div class="header">Todo</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0" href="/tasks" onclick=" setActiveLink(this)">Tasks</a>
+                        <a class="item p-0 m-0" href="/employees-review" onclick=" setActiveLink(this)">Review</a>
+                    </div>
+                </div>
+
+                <div class="ui dropdown item displaynone">
+                    <z>Salary</z>
+                    <i class="fas fa-solid fa-money-bill-transfer demo-icon "></i>
+                
+                    <div class="menu">
+                        <div class="header">Salary</div>
+                        <div class="ui divider"></div>
+                        <a class="item item" href="/formdeclaration" onclick=" setActiveLink(this)">IT Declaration</a>
+                        <a class="item item" href="/itstatement" onclick=" setActiveLink(this)">IT Statement</a>
+                        <a class="item item" href="/slip" onclick=" setActiveLink(this)">Payslips</a>
+                        <a class="item item" href="/reimbursement" onclick=" setActiveLink(this)">Reimbursement</a>
+                        <a class="item item" href="/investment" onclick=" setActiveLink(this)">Proof of Investment</a>
+                        <a class="item item" href="/salary-revision" onclick=" setActiveLink(this)">Salary Revision</a>
+                    </div>
+                </div>
+                <div class="ui dropdown item displaynone">
+                    <z>Leave</z>
+                    <i class="fas fa-file-alt icon demo-icon "></i>
+                
+                    <div class="menu">
+                        <div class="header">Leave</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0" href="/leave-page" onclick=" setActiveLink(this)">Leave Apply</a>
+                        <a class="item p-0 m-0" href="/leave-balances" onclick=" setActiveLink(this)">Leave Balances</a>
+                        <a class="item p-0 m-0" href="/leave-calender" onclick=" setActiveLink(this)">Leave Calendar</a>
+                        <a class="item p-0 m-0" href="/holiday-calender" onclick=" setActiveLink(this)">Holiday Calendar</a>
+                        @if ($mangerid)
+                        <a class="item p-0 m-0" href="/team-on-leave-chart" onclick=" setActiveLink(this)">@livewire('team-on-leave')</a>
+                        @endif
+                    </div>
+                </div>
+                <div class="ui dropdown item displaynone">
+                    <z>Attendance</z>
+                    <i class="fas fa-clock icon demo-icon "></i>
+                
+                    <div class="menu">
+                        <div class="header">Attendance</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0" href="/Attendance" onclick="setActiveLink(this)">Attendance Info</a>
+                        @if ($mangerid)
+                        <a class="item p-0 m-0" href="/whoisinchart" onclick="setActiveLink(this)">@livewire('whoisin')</a>
+                        <a class="item p-0 m-0" href="/employee-swipes-data" onclick="setActiveLink(this)">@livewire('employee-swipes')</a>
+                        <a class="item p-0 m-0" href="/attendance-muster-data" onclick="setActiveLink(this)">@livewire('attendance-muster')</a>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="ui dropdown item displaynone">
+                    <z>Document Center</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-folder icon demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">Document Center</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0" href="/document" onclick="setActiveLink(this)">Document Center</a>
+                    </div>
+                </div>
+                <div class="ui dropdown item displaynone">
+                    <z>Helpdesk</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-headset demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">Helpdesk</div>
+                        <div class="ui divider"></div>
+                        <a class="itemp-0 m-0" href="/headset" onclick="setActiveLink(this)">Helpdesk</a>
+                    </div>
+                </div>
+                <div class="ui dropdown item displaynone">
+                    <z>Workflow</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-user-friends demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">Workflow</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0" href="/delegates" onclick="setActiveLink(this)">Workflow Delegates</a>
+                    </div>
+                </div>
+                @endauth
+
+                @auth('hr')
+                <div class="ui dropdown item displaynone">
+                    <z>Home</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-home demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">Home</div>
+                        <div class="ui divider"></div>
+                        <a class="item m-0 p-0" href="/home-dashboard" onclick="setActiveLink(this)">Home</a>
+                    </div>
+                </div>
+                <div class="ui dropdown item displaynone">
+                    <z>HR Requests</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-envelope demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">HR Requests</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0 " href="/hrPage" onclick="setActiveLink(this)">HR Requests</a>
+                    </div>
+                </div>
+                <div class="ui dropdown item displaynone">
+                    <z>Grant Leaves</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-envelope demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">Grant Leaves</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0" href="/addLeaves" onclick="setActiveLink(this)">Grant Leaves</a>
+                    </div>
+                </div>
+                <div class="ui dropdown item displaynone">
+                    <z>Letter Requests</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-envelope demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">Letter Requests</div>
+                        <div class="ui divider"></div>
+                        <a class="item p-0 m-0" href="/letter-requests" onclick="setActiveLink(this)">Letter Requests</a>
+                    </div>
+                </div>
+                <div class="ui dropdown item displaynone">
+                    <z>Add Holidays</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-envelope demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">Add Holidays</div>
+                        <div class="ui divider"></div>
+                        <a class="item" href="/add-holiday-list" onclick="setActiveLink(this)">Add Holidays</a>
+                    </div>
+                </div>
+                @endauth
+                @auth('it')
+                <div class="ui dropdown item displaynone">
+                    <z>IT Requests</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-laptop demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">IT Requests</div>
+                        <div class="ui divider"></div>
+                        <a class="item" href="#" onclick="setActiveLink(this)">IT Requests</a>
+                    </div>
+                </div>
+                @endauth
+                @auth('finance')
+                <div class="ui dropdown item displaynone">
+                    <z>Finance Requests</z>
+                    <!-- <i class="icon demo-icon heart icon-heart"></i> -->
+                    <i class="fas fa-dollar-sign demo-icon"></i>
+                
+                    <div class="menu">
+                        <div class="header">Finance Requests</div>
+                        <div class="ui divider"></div>
+                        <a class="item" href="#" onclick="setActiveLink(this)">Finance Requests</a>
+                    </div>
+                </div>
+                @endauth
+            </div>
+            <div class="pusher p-0 bg-white">
+                <div class="ui menu asd borderless" style="margin-bottom: 0;background: #02114f; border-radius: 0!important; border: 0; margin-left: 210px; -webkit-transition-duration: 0.1s;">
+                    <!-- <a class="item hamButton">
+                        <i class="icon content text-white"></i>
+                    </a> -->
+                    <!-- <div class="item">
+                        <div class="bg-success ui primary button hamButton">
+                            <i class="icon content text-white m-0"></i>
+                        </div>
+                    </div> -->
+                    <a class="item">@livewire('page-title')</a>
+                    <div class="right menu">
+                        @auth('emp')
+                        <!-- <div class="item">
+                            <div class="ui primary">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="item">
+                            @php
+                            $chatNotificationCount = DB::table('messages')
+                            ->where('receiver_id', $employeeId)
+                            ->count();
+                            @endphp
+                            <a href="/users" style="color: white; text-decoration: none;">
+                                <i class="fa fa-comment" style="position: relative;display: inline-block; vertical-align: middle;font-size: 18px; margin-left: 10px;">
+                                    <span class="badge bg-danger" style="position: absolute; top: -10px; right: -3px; font-size:9px;">{{ $chatNotificationCount }}</span></i>
+                            </a>
+
+                        </div>
+
+                        <div class="ui dropdown item m-auto text-white">
+                            Quick Links <i class="dropdown icon text-white"></i>
+                            <div class="menu">
+                                <a href="/tasks" class="item">Tasks</a>
+                                <a href="/HelpDesk" class="item">Helpdesk</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            @php
+                            $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+                            $matchingLeaveRequests = DB::table('leave_applications')
+                            ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                            ->select('employee_details.first_name', 'employee_details.last_name', 'leave_applications.leave_type', 'leave_applications.emp_id', 'leave_applications.reason')
+                            ->where('leave_applications.status', 'pending')
+                            ->where(function ($query) use ($loggedInEmpId) {
+                            $query->whereJsonContains('leave_applications.applying_to', [['manager_id' => $loggedInEmpId]])
+                            ->orWhereJsonContains('leave_applications.cc_to', [['emp_id' => $loggedInEmpId]]);
+                            })
+                            ->get();
+                            $matchingLeaveRequestsCount = $matchingLeaveRequests->count();
+                            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+                            // Count notifications where receiver_id matches the logged-in employee's emp_id
+                            $chatNotificationCount = DB::table('messages')
+                            ->where('receiver_id', $employeeId)
+                            ->count();
+
+                            function updateNotificationCount($matchingLeaveRequestsCount, $chatNotificationCount) {
+                            // For example, decrement the notification count
+                            $notificationCount = $matchingLeaveRequestsCount + $chatNotificationCount;
+                            $notificationCount -= 1;
+                            // Update the HTML element to reflect the new count
+                            echo "<script>
+                                document.getElementById('notificationCount').innerText = $notificationCount;
+                            </script>";
+                            }
+                            @endphp
+                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="background:none;border:none;">
+                                <i style="color: white; position: relative;font-size:18px;" class="fas mr-1 fa-bell">
+                                    <span class="badge bg-danger" style="position: absolute; top: -9px; right: -2px; font-size:9px;">{{ $matchingLeaveRequestsCount +  $chatNotificationCount }}</span>
+                                </i>
+                            </button>
+                        </div>
+                        <div class="offcanvas offcanvas-end " tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width:320px;background:#f5f8f9;">
+                            <div class="offcanvas-header d-flex justify-content-between align-items-center">
+                                <h6 id="offcanvasRightLabel" class="offcanvasRightLabel">Notifications <span class="lableCount" id="notificationCount"> ({{ $matchingLeaveRequestsCount + $chatNotificationCount }})</span> </h6>
+                                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" style="font-size: 7px; width: 15px; height: 15px; border-radius: 50%; padding: 2px;border:1px solid #778899;"></button>
+                            </div>
+                            <div style="border-bottom:1px solid #ccc;"></div>
+                            <div class="offcanvas-body">
+                                <!-- ///leave notifcations -->
+                                @if ($mangerid)
+                                @foreach ($matchingLeaveRequests as $request)
+                                <div class="leave-request-container mb-2">
+                                    <div class="border rounded bg-white p-2" style="text-decoration:none;" title="{{ $request->leave_type }}">
+                                        <p class="mb-0 notification-text">EMPLOYEE LEAVE REQUESTS</p>
+                                        <a href="/employees-review" class="notification-head">{{ ucwords(strtolower($request->first_name)) }} {{ ucwords(strtolower($request->last_name)) }} (#{{ $request->emp_id }})</a>
+                                        <p class="mb-0 notification-text-para">Above employee applied a leave request of Reason : {{ ucfirst(strtolower($request->reason)) }} </p>
+                                    </div>
+                                </div>
+                                @endforeach
+                                @endif
+                                <!-- ////chat notifications -->
+                                @php
+                                $employeeId = auth()->guard('emp')->user()->emp_id;
+                                // Count notifications where receiver_id matches the logged-in employee's emp_id
+                                $senderDetails = DB::table('messages')
+                                ->join('employee_details', 'messages.sender_id', '=', 'employee_details.emp_id')
+                                ->where('receiver_id', $employeeId)
+                                ->select('messages.*', 'employee_details.first_name', 'employee_details.last_name')
+                                ->get();
+                                @endphp
+                                @foreach ($senderDetails as $request)
+                                <div class="leave-request-container mb-4">
+                                    <div class="border rounded bg-white p-2" style="text-decoration:none;">
+                                        <p class="mb-0 notification-text">Chat Notifications</p>
+                                        <a href="{{ route('chat', ['query' => $request->chating_id]) }}" class="notification-head" onclick="updateNotificationCount($matchingLeaveRequestsCount, $chatNotificationCount)">
+                                            {{ $request->first_name }} {{ $request->last_name }} (#{{ $request->sender_id }})
+                                        </a>
+                                        <p class="mb-0 notification-text-para">message : {{ ucfirst(strtolower($request->body)) }} </p>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="ui primary pointer">
+                                @livewire('profile-card')
+                            </div>
+                        </div>
+                        @endauth
+                        <div class="item">
+                            <div >
+                                @livewire('log-out')
+                            </div>
                         </div>
 
                     </div>
-
-                    <div onscroll="checkFadeIn()" class="slot mt-4 ">
-                        {{ $slot }}
-                    </div>
-
                 </div>
 
+                <div class="ui csd" style="margin-left: 210px;">
+                    <!-- <h2 class="ui header">Sample Content</h2> -->
+                    <div class="slot pt-4 ">
+                        {{ $slot }}
+                    </div>
+                </div>
+            </div>
             </div>
 
             <!-- Modal -->
@@ -1181,9 +887,9 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content" style="background-color : transparent; border : none">
                         <!-- <div class="modal-header">
-            <h1 class="modal-title fs-5" id="navigateLoaderLabel">Modal title</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div> -->
+                            <h1 class="modal-title fs-5" id="navigateLoaderLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div> -->
 
                         <div class="modal-body">
                             <div class="logo text-center mb-1" style="padding-top: 20px;">
@@ -1210,6 +916,57 @@
 
         @livewireScripts
         <script>
+            $(".hamButton").on("click", function() {
+            $(".ui.sidebar").toggleClass("very thin icon");
+            $(".asd").toggleClass("marginlefting");
+            $(".csd").toggleClass("marginlefting");
+            $(".sidebar z").toggleClass("displaynone");
+            $(".ui.accordion").toggleClass("displaynone");
+            $(".profileCard").toggleClass("displaynone");
+            $(".ui.dropdown.item").toggleClass("displayblock");
+
+            $(".logo").find('img').toggle();
+
+        });
+
+        $(".ui.dropdown").dropdown({
+            allowCategorySelection: true,
+            transition: "fade up",
+            context: 'sidebar',
+            on: "hover"
+        });
+
+        $('.ui.accordion').accordion({
+            selector: {
+
+            }
+        });
+
+        $(document).ready(function() {
+            $('.menu-item-label').click(function() {
+                // Remove active class from all menu items
+                $('.menu-item-label').removeClass('active');
+
+                // Add active class to the clicked menu item
+                $(this).addClass('active');
+
+                // Get the target content ID from the clicked menu item's data-target attribute
+                var target = $(this).data('target');
+
+                // Hide all content items
+                $('.content-item').removeClass('active');
+
+                // Show the targeted content item
+                $(target).addClass('active');
+            });
+        });
+
+
+
+        function redirectToPage(page) {
+            window.location.href = page;
+        }
+
             function myMenu() {
                 document.getElementById("menu-popup").classList.toggle("displayBlock");
             }

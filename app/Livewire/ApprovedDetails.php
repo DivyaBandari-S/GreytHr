@@ -20,6 +20,7 @@ use Livewire\Component;
 use App\Helpers\LeaveHelper;
 use Carbon\Carbon;
 use App\Livewire\LeavePage;
+use Illuminate\Support\Facades\Log;
 
 class ApprovedDetails extends Component
 {
@@ -39,14 +40,39 @@ class ApprovedDetails extends Component
 
     public function mount($leaveRequestId)
     {
-        // Fetch leave request details based on $leaveRequestId with employee details
-        $this->selectedWeek = 'this_week';
-        $this->setWeekDates();
-        $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
-        $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
-        $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
-        $this->selectedYear = Carbon::now()->format('Y');
-        $this->leaveBalances = LeaveBalances::getLeaveBalances($this->leaveRequest->emp_id, $this->selectedYear);
+        try {
+            // Fetch leave request details based on $leaveRequestId with employee details
+            $this->selectedWeek = 'this_week';
+            $this->setWeekDates();
+            $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
+            $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
+            $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
+            $this->selectedYear = Carbon::now()->format('Y');
+            $this->leaveBalances = LeaveBalances::getLeaveBalances($this->leaveRequest->emp_id, $this->selectedYear);
+        } catch (\Exception $e) {
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                // Handle database query exceptions
+                Log::error("Database error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Database connection error occurred. Please try again later.');
+            } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
+                // Display a user-friendly error message for null image
+                session()->flash('emp_error', 'Please upload an image.');
+            } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
+                // Handle network request exceptions
+                Log::error("Network error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Network error occurred. Please try again later.');
+            } elseif ($e instanceof \PDOException) {
+                // Handle database connection errors
+                Log::error("Database connection error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Database connection error. Please try again later.');
+            } else {
+                // Handle other generic exceptions
+                Log::error("Error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Failed to register employee. Please try again later.');
+            }
+            // Redirect the user back to the registration page or any other appropriate action
+            return redirect()->back();
+        }
     }
 
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
@@ -135,88 +161,171 @@ class ApprovedDetails extends Component
     {
         return (int) str_replace('Session ', '', $session);
     }
+
+    //this method used to fetch weekly dropdown data
     public function setWeekDates()
     {
-        if ($this->selectedWeek === 'this_week') {
-            $this->startOfWeek = Carbon::now()->startOfWeek()->format('Y-m-d');
-            $this->endOfWeek = Carbon::now()->endOfWeek()->format('Y-m-d');
-        } elseif ($this->selectedWeek === 'next_week') {
-            $this->startOfWeek = Carbon::now()->addWeek()->startOfWeek()->format('Y-m-d');
-            $this->endOfWeek = Carbon::now()->addWeek()->endOfWeek()->format('Y-m-d');
-        } elseif ($this->selectedWeek === 'last_week') {
-            $this->startOfWeek = Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d');
-            $this->endOfWeek = Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d');
-        }  elseif ($this->selectedWeek === 'this_month') {
-            $this->startOfWeek = Carbon::now()->startOfMonth()->format('Y-m-d');
-            $this->endOfWeek = Carbon::now()->endOfMonth()->format('Y-m-d');
-        } elseif ($this->selectedWeek === 'next_month') {
-            $this->startOfWeek = Carbon::now()->addMonth()->startOfMonth()->format('Y-m-d');
-            $this->endOfWeek = Carbon::now()->addMonth()->endOfMonth()->format('Y-m-d');
-        } elseif ($this->selectedWeek === 'last_month') {
-            $this->startOfWeek = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
-            $this->endOfWeek = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
-        }else {
-
+        try {
+            if ($this->selectedWeek === 'this_week') {
+                $this->startOfWeek = Carbon::now()->startOfWeek()->format('Y-m-d');
+                $this->endOfWeek = Carbon::now()->endOfWeek()->format('Y-m-d');
+            } elseif ($this->selectedWeek === 'next_week') {
+                $this->startOfWeek = Carbon::now()->addWeek()->startOfWeek()->format('Y-m-d');
+                $this->endOfWeek = Carbon::now()->addWeek()->endOfWeek()->format('Y-m-d');
+            } elseif ($this->selectedWeek === 'last_week') {
+                $this->startOfWeek = Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d');
+                $this->endOfWeek = Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d');
+            } elseif ($this->selectedWeek === 'this_month') {
+                $this->startOfWeek = Carbon::now()->startOfMonth()->format('Y-m-d');
+                $this->endOfWeek = Carbon::now()->endOfMonth()->format('Y-m-d');
+            } elseif ($this->selectedWeek === 'next_month') {
+                $this->startOfWeek = Carbon::now()->addMonth()->startOfMonth()->format('Y-m-d');
+                $this->endOfWeek = Carbon::now()->addMonth()->endOfMonth()->format('Y-m-d');
+            } elseif ($this->selectedWeek === 'last_month') {
+                $this->startOfWeek = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
+                $this->endOfWeek = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
+            } else {
+                // Handle any additional cases here
+            }
+            // Fetch leave applications based on the selected week
+            $this->fetchLeaveApplications();
+        } catch (\Exception $e) {
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                // Handle database query exceptions
+                Log::error("Database error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Database connection error occurred. Please try again later.');
+            } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
+                // Display a user-friendly error message for null image
+                session()->flash('emp_error', 'Please upload an image.');
+            } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
+                // Handle network request exceptions
+                Log::error("Network error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Network error occurred. Please try again later.');
+            } elseif ($e instanceof \PDOException) {
+                // Handle database connection errors
+                Log::error("Database connection error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Database connection error. Please try again later.');
+            } else {
+                // Handle other generic exceptions
+                Log::error("Error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Failed to register employee. Please try again later.');
+            }
+            // Redirect the user back to the registration page or any other appropriate action
+            return redirect()->back();
         }
-        // Fetch leave applications based on the selected week
-        $this->fetchLeaveApplications();
     }
+
 
     public function updatedSelectedWeek()
     {
         $this->setWeekDates();
     }
+
+    //
     public function fetchLeaveApplications()
     {
-        // Fetch leave applications where status is approved, rejected, or withdrawn
-        // and emp_id matches the logged-in employee's ID, and the leave period overlaps with the selected week
-        $this->leaveApplications = LeaveRequest::whereIn('status', ['approved'])
-            ->where('emp_id', auth()->guard('emp')->user()->emp_id)
-            ->where(function($query) {
-                $query->whereBetween('from_date', [$this->startOfWeek, $this->endOfWeek])
-                      ->orWhereBetween('to_date', [$this->startOfWeek, $this->endOfWeek])
-                      ->orWhere(function($query) {
-                          $query->where('from_date', '<', $this->startOfWeek)
+        try {
+            // Fetch leave applications where status is approved, rejected, or withdrawn
+            // and emp_id matches the logged-in employee's ID, and the leave period overlaps with the selected week
+            $this->leaveApplications = LeaveRequest::whereIn('status', ['approved'])
+                ->where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->where(function ($query) {
+                    $query->whereBetween('from_date', [$this->startOfWeek, $this->endOfWeek])
+                        ->orWhereBetween('to_date', [$this->startOfWeek, $this->endOfWeek])
+                        ->orWhere(function ($query) {
+                            $query->where('from_date', '<', $this->startOfWeek)
                                 ->where('to_date', '>', $this->endOfWeek);
-                      });
-            })
-            ->get();
+                        });
+                })
+                ->get();
             $this->leaveCount =  $this->leaveApplications->count();
+        } catch (\Exception $e) {
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                // Handle database query exceptions
+                Log::error("Database error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Database connection error occurred. Please try again later.');
+            } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
+                // Display a user-friendly error message for null image
+                session()->flash('emp_error', 'Please upload an image.');
+            } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
+                // Handle network request exceptions
+                Log::error("Network error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Network error occurred. Please try again later.');
+            } elseif ($e instanceof \PDOException) {
+                // Handle database connection errors
+                Log::error("Database connection error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Database connection error. Please try again later.');
+            } else {
+                // Handle other generic exceptions
+                Log::error("Error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Failed to register employee. Please try again later.');
+            }
+            // Redirect the user back to the registration page or any other appropriate action
+            return redirect()->back();
+        }
     }
+
 
     public function render()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $employeeDetails = DB::table('employee_details')
-            ->select(DB::raw("CONCAT(first_name, ' ', last_name) AS employee_name"))
-            ->where('emp_id', $employeeId)
-            ->first();
-
-        if ($employeeDetails) {
-            $employeeName = ucwords(strtolower($employeeDetails->employee_name));
-        } else {
-            $employeeName = 'Unknown';
-        }
-        // Call the getLeaveBalances function to get leave balances
-        $leaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
-
         try {
-            // Attempt to decode applying_to
-            $applyingToJson = trim($this->leaveRequest->applying_to);
-            $this->leaveRequest->applying_to = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $employeeDetails = DB::table('employee_details')
+                ->select(DB::raw("CONCAT(first_name, ' ', last_name) AS employee_name"))
+                ->where('emp_id', $employeeId)
+                ->first();
 
-            // Attempt to decode cc_to
-            $ccToJson = trim($this->leaveRequest->cc_to);
-            $this->leaveRequest->cc_to = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
+            if ($employeeDetails) {
+                $employeeName = ucwords(strtolower($employeeDetails->employee_name));
+            } else {
+                $employeeName = 'Unknown';
+            }
+            // Call the getLeaveBalances function to get leave balances
+            $leaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
+
+            try {
+                // Attempt to decode applying_to
+                $applyingToJson = trim($this->leaveRequest->applying_to);
+                $this->leaveRequest->applying_to = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
+
+                // Attempt to decode cc_to
+                $ccToJson = trim($this->leaveRequest->cc_to);
+                $this->leaveRequest->cc_to = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
+            } catch (\Exception $e) {
+                Log::error('Error in JSON decoding: ' . $e->getMessage());
+                // Handle the error gracefully
+                // You can set an error message or take other actions here
+            }
+
+            // Pass the leaveRequest data and leaveBalances to the Blade view
+            return view('livewire.approved-details', [
+                'leaveRequest' => $this->leaveRequest,
+                'leaveBalances' => $this->leaveBalances,
+                'employeeName' => $employeeName
+            ]);
         } catch (\Exception $e) {
-            return "Error in JSON decoding: " . $e->getMessage();
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                // Handle database query exceptions
+                Log::error("Database error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Database connection error occurred. Please try again later.');
+            } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
+                // Display a user-friendly error message for null image
+                session()->flash('emp_error', 'Please upload an image.');
+            } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
+                // Handle network request exceptions
+                Log::error("Network error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Network error occurred. Please try again later.');
+            } elseif ($e instanceof \PDOException) {
+                // Handle database connection errors
+                Log::error("Database connection error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Database connection error. Please try again later.');
+            } else {
+                // Handle other generic exceptions
+                Log::error("Error registering employee: " . $e->getMessage());
+                session()->flash('emp_error', 'Failed to register employee. Please try again later.');
+            }
+            // Redirect the user back to the registration page or any other appropriate action
+            return redirect()->back();
         }
-
-        // Pass the leaveRequest data and leaveBalances to the Blade view
-        return view('livewire.approved-details', [
-            'leaveRequest' => $this->leaveRequest,
-            'leaveBalances' => $this->leaveBalances,
-            'employeeName' => $employeeName
-        ]);
     }
 }

@@ -14,184 +14,227 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 
 class TeamOnLeaveChart extends Component
 {
     public $leaveApplications;
     public $chartData;
     public $chartOptions;
+    public $employeeId;
     public $duration = 'this_month';
 
     public function render()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
 
-        // Fetch data based on the selected duration
-        if ($this->duration === 'today') {
-            $this->leaveApplications = $this->fetchTodayLeaveApplications();
-        } elseif ($this->duration === 'this_month') {
-            $this->leaveApplications = $this->fetchThisMonthLeaveApplications();
-        }
+            // Fetch data based on the selected duration
+            if ($this->duration === 'today') {
+                $this->leaveApplications = $this->fetchTodayLeaveApplications();
+            } elseif ($this->duration === 'this_month') {
+                $this->leaveApplications = $this->fetchThisMonthLeaveApplications();
+            }
 
-        $chartData = $this->prepareChartData($this->leaveApplications);
+            $chartData = $this->prepareChartData($this->leaveApplications);
 
-        $this->chartData = [
-            'labels' => $chartData['labels'],
-            'datasets' => $chartData['datasets'],
-        ];
+            $this->chartData = [
+                'labels' => $chartData['labels'],
+                'datasets' => $chartData['datasets'],
+            ];
 
-        $this->chartOptions = [
-            'responsive' => true,
-            'scales' => [
-                'x' => [
-                    'display' => true,
-                    'title' => [
+            $this->chartOptions = [
+                'responsive' => true,
+                'scales' => [
+                    'x' => [
                         'display' => true,
+                        'title' => [
+                            'display' => true,
 
+                        ],
+                        'ticks' => [
+                            'align' => 'center',
+                        ],
+                        'grid' => [
+                            'display' => false,
+                        ],
                     ],
-                    'ticks' => [
-                        'align' => 'center',
-                    ],
-                    'grid' => [
-                        'display' => false,
-                    ],
-                ],
-                'y' => [
-                    'display' => true,
-                    'title' => [
+                    'y' => [
                         'display' => true,
-                        'text' => 'Number Of Days',
-                    ],
-                    'ticks' => [
-                        'beginAtZero' => true,
-                        'stepSize' => 1,
-                        'max' => 6, // Set the max value for the y-axis ticks
-                    ],
-                    'grid' => [
-                        'display' => false,
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Number Of Days',
+                        ],
+                        'ticks' => [
+                            'beginAtZero' => true,
+                            'stepSize' => 1,
+                            'max' => 6, // Set the max value for the y-axis ticks
+                        ],
+                        'grid' => [
+                            'display' => false,
+                        ],
                     ],
                 ],
-            ],
-            'elements' => [
-                'bar' => [
-                    'barPercentage' => 1, // Adjust the bar width percentage (e.g., 0.8 for 80% width)
+                'elements' => [
+                    'bar' => [
+                        'barPercentage' => 1, // Adjust the bar width percentage (e.g., 0.8 for 80% width)
+                    ],
                 ],
-            ],
-        ];
+            ];
 
-
-        return view('livewire.team-on-leave-chart', [
-            'leaveApplications' => $this->leaveApplications,
-            'chartData' => $this->chartData,
-            'chartOptions' => $this->chartOptions,
-            'debugInfo' => [
+            return view('livewire.team-on-leave-chart', [
+                'leaveApplications' => $this->leaveApplications,
                 'chartData' => $this->chartData,
                 'chartOptions' => $this->chartOptions,
-            ]
-        ]);
+                'debugInfo' => [
+                    'chartData' => $this->chartData,
+                    'chartOptions' => $this->chartOptions,
+                ]
+            ]);
+        } catch (QueryException $e) {
+            // Log the exception or handle it accordingly
+            Log::error('QueryException occurred: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching data.');
+        } catch (\Exception $e) {
+            // Log other exceptions
+            Log::error('Exception occurred: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching data.');
+        }
     }
 
+    ///this method ill give data for barchart of leave applications of employees
     private function prepareChartData($leaveApplications)
     {
-        $chartData = [
-            'labels' => [],
-            'datasets' => [],
-            'barThickness' => 10,
-        ];
+        try {
+            $chartData = [
+                'labels' => [],
+                'datasets' => [],
+                'barThickness' => 10,
+            ];
 
-        // Generate labels based on the selected duration
-        if ($this->duration === 'today') {
-            $chartData['labels'][] = Carbon::now()->format('M d');
-        } elseif ($this->duration === 'this_month') {
-            $chartData['labels'] = array_map(function ($day) {
-                $fromDate = Carbon::now()->startOfMonth()->addDays($day - 1);
-                return $fromDate->format('M d');
-            }, range(1, Carbon::now()->endOfMonth()->day));
-        }
+            // Generate labels based on the selected duration
+            if ($this->duration === 'today') {
+                $chartData['labels'][] = Carbon::now()->format('M d');
+            } elseif ($this->duration === 'this_month') {
+                $chartData['labels'] = array_map(function ($day) {
+                    $fromDate = Carbon::now()->startOfMonth()->addDays($day - 1);
+                    return $fromDate->format('M d');
+                }, range(1, Carbon::now()->endOfMonth()->day));
+            }
 
-        foreach ($leaveApplications as $leaveApplication) {
-            $fromDate = Carbon::parse($leaveApplication->from_date);
-            $toDate = Carbon::parse($leaveApplication->to_date);
+            foreach ($leaveApplications as $leaveApplication) {
+                $fromDate = Carbon::parse($leaveApplication->from_date);
+                $toDate = Carbon::parse($leaveApplication->to_date);
 
-            $leaveType = $leaveApplication->leave_type;
+                $leaveType = $leaveApplication->leave_type;
 
-            while ($fromDate->lte($toDate)) {
-                // Check if the day is in the current month
-                if ($fromDate->month == Carbon::now()->month) {
-                    $day = $fromDate->format('M d');
+                while ($fromDate->lte($toDate)) {
+                    // Check if the day is in the current month
+                    if ($fromDate->month == Carbon::now()->month) {
+                        $day = $fromDate->format('M d');
 
-                    // Ensure there is an entry for the leave type
-                    if (!isset($chartData['datasets'][$leaveType])) {
-                        $chartData['datasets'][$leaveType] = [];
+                        // Ensure there is an entry for the leave type
+                        if (!isset($chartData['datasets'][$leaveType])) {
+                            $chartData['datasets'][$leaveType] = [];
+                        }
+
+                        // Set the value for the leave type on the specific day
+                        $chartData['datasets'][$leaveType][$day] = isset($chartData['datasets'][$leaveType][$day])
+                            ? $chartData['datasets'][$leaveType][$day] + $this->calculateNumberOfDays($fromDate->toDateString(), $leaveApplication->from_session, $fromDate->toDateString(), $leaveApplication->to_session)
+                            : $this->calculateNumberOfDays($fromDate->toDateString(), $leaveApplication->from_session, $fromDate->toDateString(), $leaveApplication->to_session);
                     }
 
-                    // Set the value for the leave type on the specific day
-                    $chartData['datasets'][$leaveType][$day] = isset($chartData['datasets'][$leaveType][$day])
-                        ? $chartData['datasets'][$leaveType][$day] + $this->calculateNumberOfDays($fromDate->toDateString(), $leaveApplication->from_session, $fromDate->toDateString(), $leaveApplication->to_session)
-                        : $this->calculateNumberOfDays($fromDate->toDateString(), $leaveApplication->from_session, $fromDate->toDateString(), $leaveApplication->to_session);
+                    $fromDate->addDay();
                 }
-
-                $fromDate->addDay();
             }
-        }
 
-        // Fill in missing days with zero values for each leave type
-        foreach ($chartData['datasets'] as &$leaveTypeData) {
-            $leaveTypeData = array_replace(array_fill_keys($chartData['labels'], 0), $leaveTypeData);
-        }
+            // Fill in missing days with zero values for each leave type
+            foreach ($chartData['datasets'] as &$leaveTypeData) {
+                $leaveTypeData = array_replace(array_fill_keys($chartData['labels'], 0), $leaveTypeData);
+            }
 
-        return $chartData;
+            return $chartData;
+        } catch (\Exception $e) {
+            Log::error('Error occurred in prepareChartData method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while preparing chart data.');
+            // Return a default value or an empty array, depending on your application logic
+            return [
+                'labels' => [],
+                'datasets' => [],
+                'barThickness' => 10,
+            ];
+        }
     }
 
+    //this method will fetch only today leave application data
     private function fetchTodayLeaveApplications()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
 
-        return LeaveRequest::where('status', 'approved')
-            ->where(function ($query) use ($employeeId) {
-                $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
-                    ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
-            })
-            ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->whereDate('from_date', Carbon::now()->toDateString()) // Filter for today
-            ->orderBy('created_at', 'desc')
-            ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
-        // Add a null check before returning the data
-
+            return LeaveRequest::where('leave_applications.status', 'approved')
+                ->where(function ($query) use ($employeeId) {
+                    $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
+                        ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
+                })
+                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                ->whereMonth('from_date', Carbon::now()->month) // Filter for the current month
+                ->orderBy('created_at', 'desc')
+                ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
+        } catch (\Exception $e) {
+            Log::error('Error occurred in fetching details method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching the leaves.');
+        }
     }
 
 
+    //this method for to fetch details according to dropdown
     public function updateDuration($value)
     {
         $this->duration = $value;
 
-        logger("Selected Duration: $value"); // Add this line for logging
+        Log::error("Selected Duration: $value"); // Log selected duration
 
-        // Fetch data based on the selected duration
-        if ($this->duration === 'today') {
-            $this->leaveApplications = $this->fetchTodayLeaveApplications();
-        } elseif ($this->duration === 'this_month') {
-            $this->leaveApplications = $this->fetchThisMonthLeaveApplications();
+        try {
+            // Fetch data based on the selected duration
+            if ($this->duration === 'today') {
+                $this->leaveApplications = $this->fetchTodayLeaveApplications();
+            } elseif ($this->duration === 'this_month') {
+                $this->leaveApplications = $this->fetchThisMonthLeaveApplications();
+            }
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in updateDuration(): ' . $e->getMessage());
+            // Flash error message to session
+            session()->flash('error', 'An error occurred while fetching leave applications.');
+            $this->leaveApplications = [];
         }
-
-        // Rest of the code remains unchanged...
     }
 
-
+    //this method will fetch monthly based leave applications
     private function fetchThisMonthLeaveApplications()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
 
-        return LeaveRequest::where('leave_applications.status', 'approved')
-            ->where(function ($query) use ($employeeId) {
-                $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
-                    ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
-            })
-            ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->whereMonth('from_date', Carbon::now()->month) // Filter for the current month
-            ->orderBy('created_at', 'desc')
-            ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
+            return LeaveRequest::where('leave_applications.status', 'approved')
+                ->where(function ($query) use ($employeeId) {
+                    $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
+                        ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
+                })
+                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                ->whereMonth('from_date', Carbon::now()->month) // Filter for the current month
+                ->orderBy('created_at', 'desc')
+                ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
+        } catch (\Exception $e) {
+            // Log the exception or handle it accordingly
+            Log::error('Error fetching leave applications: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching leave applications.');
+            return [];
+        }
     }
+
 
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {

@@ -1,4 +1,9 @@
 <div class="row p-0 m-0 mt-3 p-2">
+@if(session()->has('emp_error'))
+    <div class="alert alert-danger">
+        {{ session('emp_error') }}
+    </div>
+    @endif
     <div class="col-md-3">
         <div class="d-flex flex-column mb-2" style="line-height:2;">
             <span style="color:#b1b1b1;font-size:12px;" class="mt-2" class="mt-2" class="mt-2">ATTENDANCE</span>
@@ -189,7 +194,6 @@
                 </div>
                 @endif
                 @endif
-
         </div>
 
         @elseif($currentSection === 'Confirmation')
