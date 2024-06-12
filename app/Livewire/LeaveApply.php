@@ -380,7 +380,7 @@ class LeaveApply extends Component
             }
             //to check validation for fromdate to todate
             if ($this->to_date < $this->from_date) {
-                session()->flash('error', 'To date must be greater than or equal to from date.');
+                $this->errorMessage = 'To date must be greater than or equal to from date.';
                 return redirect()->back()->withInput();
             }
 
@@ -454,13 +454,13 @@ class LeaveApply extends Component
             // Check if emp_id is set on the $createdLeaveRequest object
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
                 // Reset the component
-                $this->reset();
-
                 session()->flash('message', 'Leave application submitted successfully!');
+                $this->resetFields();
                 return redirect()->to('/leave-page');
             } else {
                 // Log an error if there's an issue with creating the LeaveRequest
                 logger('Error creating LeaveRequest', ['emp_id' => $employeeId]);
+                $this->resetFields();
                 session()->flash('error', 'Error submitting leave application. Please try again.');
                 return redirect()->to('/leave-page');
             }
@@ -468,28 +468,66 @@ class LeaveApply extends Component
             if ($e instanceof \Illuminate\Database\QueryException) {
                 // Handle database query exceptions
                 Log::error("Database error submitting leave application: " . $e->getMessage());
+                $this->resetFields();
                 session()->flash('error', 'Database error occurred. Please try again later.');
             } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
                 // Display a user-friendly error message for null image
+                $this->resetFields();
                 session()->flash('error', 'Please upload an image.');
             } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
                 // Handle network request exceptions
                 Log::error("Network error submitting leave application: " . $e->getMessage());
+                $this->resetFields();
                 session()->flash('error', 'Network error occurred. Please try again later.');
             } elseif ($e instanceof \PDOException) {
                 // Handle database connection errors
                 Log::error("Database connection error submitting leave application: " . $e->getMessage());
+                $this->resetFields();
                 session()->flash('error', 'Database connection error. Please try again later.');
             } else {
                 // Handle other generic exceptions
                 Log::error("Error submitting leave application: " . $e->getMessage());
                 session()->flash('error', 'Failed to submit leave application. Please try again later.');
+                $this->resetFields();
             }
             // Redirect the user back to the leave application page
             return redirect()->back();
         }
     }
-
+    public function resetFields()
+    {
+        $this->leave_type = '';
+        $this->from_date = '';
+        $this->from_session = '';
+        $this->to_session = '';
+        $this->to_date = '';
+        $this->selectedManager = [];
+        $this->selectedPeople = [];
+        $this->files = '';
+        $this->contact_details = '';
+        $this->reason = '';
+        $this->errorMessage = '';
+    }
+    public function cancelLeaveApplication()
+    {
+        // Reset the fields
+        $this->resetFields();
+    }
+    public function saveLeaveApplication()
+    {
+        $this->leaveApply();
+        $this->validate([
+            'from_date' => 'required|date',
+            'to_date' => 'required|date',
+            'reason' => 'required',
+            'contact_details' => 'required',
+            'from_session' => 'required',
+            'to_session' => 'required',
+            'leave_type' => 'required',
+            'applying_to' => 'required',
+        ]);
+        // Check for overlapping records in the database
+    }
     public function selectLeave()
     {
         try {
