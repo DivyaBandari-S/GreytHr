@@ -10,8 +10,9 @@
         }
         .button-container button {
             border-radius:8px;
+            border:1px solid rgb(2, 17, 79);
             padding: 5px 20px; /* Adds padding to the buttons */
-            font-size: 16px; /* Adjusts the font size */
+            font-size: 12px; /* Adjusts the font size */
             margin-right: 10px; /* Adjusts space between buttons */
         }
         .button-container button:last-child {
@@ -94,7 +95,7 @@
   color: #ccc;
   
 }
-.profile-container {
+.profile-containers {
     display: flex;
     align-items: center;
     padding: 10px;
@@ -201,10 +202,16 @@
     background-color: white; /* Background color of the horizontal arrow */
     color: blue; /* Color of the horizontal arrow */
 }
-.cancel-btn
-{
-    border:1px solid  rgb(2, 17, 79);
+.cancel-btn1{
+    background-color: #fff;
+    color: rgb(2, 17, 79);
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 5px;
+    border: none;
 }
+
 .flowchart {
             display: flex;
             flex-direction: column;
@@ -274,51 +281,188 @@
         .profile-name:hover .tooltip {
             display: block;
         }
+        .rectangle-container {
+            background-color: #f8f9fa; /* Light grey background */
+            color: #333; /* Darker text color */
+            padding: 10px;
+            border: 1px solid #ccc; /* Light grey border */
+            border-radius: 5px; /* Slightly rounded corners */
+            margin-top: 10px;
+            width: 30px; /* Fixed width for the container */
+        }
       
 </style>
+@if (session()->has('message'))
+   <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('message') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+@if (session()->has('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
     
         <div class="button-container">
-          <button type="button"class="cancel-btn"data-toggle="modal" data-target="#assigntoplevelmanagerModal">Assign&nbsp;Top&nbsp;Level&nbsp;Manager</button>
-          <button type="button"class="cancel-btn">Mass&nbsp;&nbsp;Transfer</button>
-          <button class="submit-btn">Assign&nbsp;&nbsp;Manager</button>
+          <button type="button"class="cancel-btn1"wire:click="assigntoplevelmanager">Assign&nbsp;Top&nbsp;Level&nbsp;Manager</button>
+          <button type="button"class="cancel-btn1"wire:click="masstransfer">Mass&nbsp;&nbsp;Transfer</button>
+          <button class="submit-btn"wire:click="openAssignManagerPopup">Assign&nbsp;&nbsp;Manager</button>
         </div>
-        hiiihello{{$manager_id}}cfghvjbk{{$selected_higher_authority_emp_ids}}
-        <div class="modal fade" id="assigntoplevelmanagerModal" tabindex="-1" role="dialog" aria-labelledby="assigntoplevelmanagerModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
+        @if($massTransferDialog==true)
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <div class="modal-header" style="background-color:rgba(163, 178, 199, 0.15);">
-                                <h6 class="modal-title" id="assigntoplevelmanagerModalLabel" style="color:#666;font-weight:600;">Assign Top Level Manager</h6>
-                                <div style="width: 25px; height: 25px; border-radius: 50%; border:2px solid #666; display: flex; justify-content: center; align-items: center; position: relative;">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="border: none; background-color: transparent; position: absolute; left: 2px;margin-left:-16px">
-                                        <span aria-hidden="true" style="font-weight:400;font-size:30px;color:666">&times;</span>
-                                    </button>
-                                </div>
-
-
+                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Mass Transfer</b></h5>
+                                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeMassTransferDialog" style="background-color: white; height:10px;width:10px;" >
+                                </button>
                             </div>
-                            <div class="modal-body">
-                            <div class="form-group">
-                                 <label style="font-size:12px;color:#666;font-weight:400;">Select Managers</label>
-                                 @foreach ($managers as $m1)
-                                 <div id="manager-list" style="max-height: 200px; overflow-y: auto;">
-                                   
-                                        <div  class="checkbox">
-                                            <label>
-                                                    <input type="checkbox" value="1" wire:model="selectedManagers"wire:change="updateselectedManagers('{{$m1->manager_id}}')">{{ucwords(strtolower($m1->first_name))}}&nbsp;{{ucwords(strtolower($m1->last_name))}}({{$m1->manager_id}})
-                                            </label>
-                                       </div>
-                                       
-                                </div>
-                             @endforeach
-                       </div>
+                            <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                            
+                            <label for="employeeDropdown">Select Manager:</label>
+                                        <select id="employeeDropdown" class="form-control" wire:model="selectedMassTransferManager"wire:change="updateselectedMassTransferManager">
+                                                <option value="">Select Manager:</option>
+                                                @foreach ($managers as $employee)
+                                                
+                                                    <option value="{{ $employee->manager_id}}">
+                                                        {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }} ({{ $employee->manager_id }})
+                                                    </option>
+                                                
+                                                @endforeach
+                                            </select>
+                                            
+                                            @if($selectedMassTransferManager)
+                                              <p>List of people working under <span style="font-weight:500;">{{ucwords(strtolower($managerDetails->first_name))}}&nbsp;{{ucwords(strtolower($managerDetails->last_name))}}({{$managerDetails->emp_id}})</span></p>
+                                              @foreach($employeeForMassTransfer as $employee)
+                                                    <div class="node employee"style="margin-top:10px;">
+                                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1YjmQy7iBycLxXrdwvrl38TG9G_LxSHC1eg&s" alt="Profile Picture" class="profile-picture">
+                                                        <div style="display:flex;flex-direction:column;">
+                                                            <span class="profile-name">{{ucwords(strtolower($employee->first_name))}}&nbsp;{{ucwords(strtolower($employee->last_name))}}
+                                                            <span class="tooltip">{{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}</span>
+                                                            </span>
+                                                            <span class="profile-job-title">{{$employee->job_title}}</span>
+                                                            <span class="profile-job-title"><div class="emp-id">Emp ID-{{$employee->emp_id}}</div></span>
+                                                        </div>
+                                                    </div>
+                                              @endforeach
+                                            
+                                              <label for="employeeDropdown">Assign New Manager:</label>
+                                        <select id="employeeDropdown" class="form-control" wire:model="selectedMassTransferNewManager"wire:change="updateselectedMassTransferNewManager">
+                                                <option value="">Select Manager:</option>
+                                                @foreach ($newAssignManager as $employee)
+                                                
+                                                    <option value="{{ $employee->manager_id}}">
+                                                        {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }} ({{ $employee->manager_id }})
+                                                    </option>
+                                                
+                                                @endforeach
+                                            </select>
+                                              
+                                            @endif
                             </div>
-                            <div class="modal-footer justify-content-center" style="border:none;">
-                                <button type="button" class="approveBtn btn-primary" data-dismiss="modal" style="width:90px;">Cancel</button>
-                                <button type="button" class="rejectBtn" style="width:90px;">Confirm</button>
+                            <div class="modal-footer">
+                                    <button type="button"class="approveBtn btn-primary"wire:click="closeMassTransferDialog">Cancel</button>
+                                    <button type="button" class="rejectBtn"wire:click='checkMassTransfer'>Confirm</button>
                             </div>
                         </div>
                     </div>
-                </div>       
+                </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div> 
+        @endif
+        @if($assignManagerPopup==true)
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Assign Manager</b></h5>
+                                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeAssignManager" style="background-color: white; height:10px;width:10px;" >
+                                </button>
+                            </div>
+                            <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                            <div class="container">
+                                        <div class="form-group">
+                                            <label for="employeeDropdown">Select Employee</label>
+                                            <select id="employeeDropdown" class="form-control" wire:model="selectedEmployee"wire:change="updateselectedEmployee">
+                                                <option value="">Select Employee</option>
+                                                @foreach ($unassigned_manager as $employee)
+                                                
+                                                    <option value="{{ $employee->emp_id }}">
+                                                        {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }} ({{ $employee->emp_id }})
+                                                    </option>
+                                                
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @if($selectedEmployee)
+                                        <label for="employeeDropdown">Assign Manager:</label>
+                                        <select id="employeeDropdown" class="form-control" wire:model="selectedManager"wire:change="updateselectedManager">
+                                                <option value="">Select Manager:</option>
+                                                @foreach ($managers as $employee)
+                                                
+                                                    <option value="{{ $employee->manager_id}}">
+                                                        {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }} ({{ $employee->manager_id }})
+                                                    </option>
+                                                
+                                                @endforeach
+                                            </select>
+                                        @endif
+                                    </div>
+                              
+                            </div>
+                            <div class="modal-footer">
+                                    <button type="button"class="approveBtn btn-primary"wire:click="closeAssignManager">Cancel</button>
+                                    <button type="button" class="rejectBtn"wire:click="check">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>  
+        @endif
+        @if($assignTopLevelManager==true)
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                                <h6 class="modal-title" id="assigntoplevelmanagerModalLabel" style="color:#666;font-weight:600;">Assign Top Level Manager</h6>
+                                <div style="width: 25px; height: 25px; border-radius: 50%; border:2px solid #666; display: flex; justify-content: center; align-items: center; position: relative;">
+                                    <button type="button" class="btn-close btn-primary"aria-label="Close" wire:click="closeAssignTopLevelManager" style="height:10px;width:10px;" >
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                            <div class="form-group">
+                                 <label style="font-size:12px;color:#666;font-weight:400;">Select Managers</label>
+                                 <div id="manager-list" style="max-height: 200px; overflow-y: auto;">
+                                            @foreach ($managers as $m1)
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" value="{{ $m1->manager_id }}"wire:model="selectedManagers"wire:change="updateselectedManagers('{{$m1->manager_id}}')">
+                                                        {{ ucwords(strtolower($m1->first_name)) }} {{ ucwords(strtolower($m1->last_name)) }} ({{ $m1->manager_id }})
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                 </div>
+                       </div>
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);"wire:click="closeAssignTopLevelManager">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>
+
+
+
+        @endif      
         <div class="container">
         <div class="large-container"style="display:flex;flex-direction:row;">
             <!-- Content inside the large container -->
@@ -424,16 +568,14 @@
         <div class="sidebar">
             <!-- Sidebar content goes here -->
             <h6 class="accordion-header"><span class="accordion-arrow">&#9662;</span>Unassigned({{$UnAssignedManagerCount}})</h6>
-            <div class="drag-drop-container">
-                  <p style="margin-top:-20px;">Assign manager using drag and drop</p>
-            </div>
+            
             <div class="search-container">
                  <input type="text" wire:model="search"placeholder="Search" class="search-input" wire:change="searchFilters">
                  <button class="search-button"><i class="fa fa-search"></i></button>
             </div>
             <div class="scroll-container">
                 @foreach($unassigned_manager as $um)
-                <div class="profile-container">
+                <div class="profile-containers">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1YjmQy7iBycLxXrdwvrl38TG9G_LxSHC1eg&s" alt="Profile Picture" class="profile-picture">
                         <div style="display:flex;flex-direction:column;">
                             <span class="profile-name">{{ucwords(strtolower($um->first_name))}}&nbsp;{{ucwords(strtolower($um->last_name))}}

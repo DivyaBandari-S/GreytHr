@@ -95,8 +95,8 @@ class EmployeeDetails extends Authenticatable
 
     public function conversations()
     {
-       
+
         return $this->hasMany(Chating::class,'sender_id')->orWhere('receiver_id',$this->emp_id)->whereNotDeleted();
-       
+
     }
 }

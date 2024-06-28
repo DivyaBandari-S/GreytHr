@@ -5,15 +5,15 @@
         <span class="close-btn" onclick="closeErrorMessage()" style="cursor:pointer;">X</span>
     </div>
     <script>
-            // Close the success message after a certain time
-            setTimeout(function() {
-                closeErrorMessage();
-            }, 5000); // Adjust the time limit (in milliseconds) as needed
+        // Close the success message after a certain time
+        setTimeout(function() {
+            closeErrorMessage();
+        }, 5000); // Adjust the time limit (in milliseconds) as needed
 
-            function closeErrorMessage() {
-                document.getElementById('errorMessage').style.display = 'none';
-            }
-        </script>
+        function closeErrorMessage() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+    </script>
     @endif
 
     <div class="applyContainer bg-white">
@@ -339,11 +339,11 @@
                         <div class="col-md-10" style="margin: 0px; padding: 0px">
                             <div class="input-group">
                                 <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                    <div class="input-group-append">
-                                        <button type="button" wire:click="searchCCRecipients" style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn">
-                                            <i style="margin-right: 5px;" class="fa fa-search"></i> <!-- Adjust margin-right as needed -->
-                                        </button>
-                                    </div>
+                                <div class="input-group-append">
+                                    <button type="button" wire:click="searchCCRecipients" style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn">
+                                        <i style="margin-right: 5px;" class="fa fa-search"></i> <!-- Adjust margin-right as needed -->
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-2 m-0 p-0">
@@ -380,9 +380,10 @@
 
             <div class="form-group">
                 <label for="contactDetails" style="color: #778899; font-size: 12px; font-weight: 500;">Contact Details</label>
-                <input type="text" wire:model="contact_details" wire:change="saveLeaveApplication" class="form-control placeholder-small" id="contactDetails" name="contactDetails" value="contact_details"  style="color: #778899;width:50%;">
+                <input type="text" wire:model="contact_details" class="form-control placeholder-small" id="contactDetails" name="contactDetails" style="color: #778899;width:50%;">
                 @error('contact_details') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
+
             <div class="form-group">
                 <label for="reason" style="color: #778899; font-size: 12px; font-weight: 500;">Reason</label>
                 <textarea class="form-control" wire:model="reason" id="reason" wire:change="saveLeaveApplication" name="reason" placeholder="Enter a reason" rows="4" style="font-size:12px;color: #778899;"></textarea>
@@ -394,13 +395,12 @@
             </div>
 
             <div class="buttons1">
-                <button type="submit" class=" submit-btn"  @if(isset($insufficientBalance)) disabled @endif>Submit</button>
+                <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
                 <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
             </div>
         </form>
     </div>
     <script>
-
         // Define a variable to track the visibility state of the search container
         let searchContainerVisible = false;
 

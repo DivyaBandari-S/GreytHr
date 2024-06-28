@@ -48,13 +48,15 @@ class Attendance extends Component
     public $secondSwipeTime;
     public $swiperecords;
     public $currentDate1;
-    public $swiperecord;
+   
     public $showCalendar = true;
     public $date2;
     public $modalTitle = '';
     public $view_student_swipe_time;
     public $view_student_in_or_out;
     public $swipeRecordId;
+
+    public $swiperecord;
     public $from_date;
     public $to_date;
     public $status;
@@ -62,6 +64,8 @@ class Attendance extends Component
     public $view_student_emp_id;
     public $view_employee_swipe_time;
     public $currentDate2recordexists;
+
+    public $defaultfaCalendar=1;
     public $dateclicked;
     public $view_table_in;
     public $view_table_out;
@@ -69,6 +73,20 @@ class Attendance extends Component
     public $changeDate = 0;
     public $student;
     public $selectedRecordId = null;
+
+    public $regularised_by;
+
+    public $regularised_date;
+
+    public $regularised_reason;
+
+    public $regularised_date_to_check;
+
+    public $record;
+
+    public $dateToCheck;
+
+    public $showRegularisationDialog=false;
     public $distinctDates;
     public $isPresent;
     public $table;
@@ -87,6 +105,10 @@ class Attendance extends Component
     public $k, $k1;
     public $showMessage = false;
     //This function will help us to toggle the arrow present in session fields
+public function closeRegularisationModal()
+{
+    $this->showRegularisationDialog=false;
+}
     public function toggleSession1Fields()
 {
     try {
@@ -184,10 +206,15 @@ public function mount()
     }
 }
 
+public function showTable()
+{
+    $this->defaultfaCalendar=0;
+}
 
 public function showBars()
 {
     try {
+        $this->defaultfaCalendar=1;
         $this->showMessage = false;
     } catch (\Exception $e) {
         Log::error('Error in showBars method: ' . $e->getMessage());
@@ -216,6 +243,17 @@ public function showlargebox($k)
     } catch (\Exception $e) {
         Log::error('Error in showlargebox method: ' . $e->getMessage());
         session()->flash('error', 'An error occurred while showing the large box. Please try again later.');
+    }
+}
+private function isEmployeeRegularisedOnDate($date)
+{
+    try {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularised',1)->exists();
+    } catch (\Exception $e) {
+        Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
+        session()->flash('error', 'An error occurred while checking employee presence. Please try again later.');
+        return false; // Return false to handle the error gracefully
     }
 }
 //This function will help us to check if the employee is present on this particular date or not
@@ -317,6 +355,7 @@ public function generateCalendar()
                         'isPublicHoliday' => in_array($previousMonthDays->toDateString(), $publicHolidaysPreviousMonth->pluck('date')->toArray()),
                         'isCurrentMonth' => false,
                         'isPreviousMonth' => true,
+                        'isRegularised'=>false,
                         'backgroundColor' => '',
                         'status' => '',
                         'onleave' => ''
@@ -331,7 +370,7 @@ public function generateCalendar()
                     $backgroundColor = $isPublicHoliday ? 'background-color: IRIS;' : '';
 
                     $date = Carbon::create($this->year, $this->month, $dayCount)->toDateString();
-
+                    $isregularised=$this->isEmployeeRegularisedOnDate($date);
                     // Check if the employee is absent
                     $isAbsent = !$this->isEmployeePresentOnDate($date);
                     $isonLeave = $this->isEmployeeLeaveOnDate($date, $employeeId);
@@ -366,6 +405,7 @@ public function generateCalendar()
                         'isToday' => $isToday,
                         'isPublicHoliday' => $isPublicHoliday,
                         'isCurrentMonth' => true,
+                        'isRegularised'=>$isregularised,
                         'isPreviousMonth' => false,
                         'backgroundColor' => $backgroundColor,
                         'status' => $status,
@@ -378,6 +418,7 @@ public function generateCalendar()
                         'isToday' => false,
                         'isPublicHoliday' => in_array($lastDayOfPreviousMonth->copy()->addDays($dayCount - $daysInMonth)->toDateString(), $this->getPublicHolidaysForMonth($startOfPreviousMonth->year, $startOfPreviousMonth->month)->pluck('date')->toArray()),
                         'isCurrentMonth' => false,
+                        'isRegularised'=>false,
                         'isNextMonth' => true,
                         'backgroundColor' => '', 
                         'status' => '',
@@ -400,7 +441,7 @@ public function updateDate($date1)
 {
     try {
         $parsedDate = Carbon::parse($date1);
-
+        $this->dateToCheck=$date1;
         if ($parsedDate->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
             $this->changeDate = 1;
         }
@@ -612,11 +653,12 @@ private function calculateActualHours($swipe_records)
 public function viewDetails($id)
 {
     try {
+        $this->showSR = true;
         $student = SwipeRecord::find($id);
         $this->view_student_emp_id = $student->emp_id;
         $this->view_student_swipe_time = $student->swipe_time;
         $this->view_student_in_or_out = $student->in_or_out;
-        $this->showSR = true;
+       
     } catch (\Exception $e) {
         Log::error('Error in viewDetails method: ' . $e->getMessage());
         session()->flash('error', 'An error occurred while viewing details. Please try again later.');
@@ -708,13 +750,48 @@ public function closeViewStudentModal()
             session()->flash('error', 'An error occurred while navigating to the next month. Please try again later.');
         }
     }
+    public function checkDateInRegularisationEntries($d)
+    {
+        $this->showRegularisationDialog=true;
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $regularisationRecords = RegularisationNew1::where('emp_id', $employeeId)
+            ->where('status', 'approved')
+            ->get();
+        $dateFound = false;
+        
+        foreach ($regularisationRecords as $record) {
+            $entries = json_decode($record->regularisation_entries, true);
+
+            foreach ($entries as $entry) {
+                if (isset($entry['date']) && $entry['date'] === $d) {
+                    $dateFound = true;
+                    $result = [
+                        'date' => $entry['date'],
+                        'reason' => $entry['reason'],
+                        'approved_date' => $record['approved_date'],
+                        'approved_by' => $record['approved_by']
+                    ];
+                    break 2; // Exit both loops
+                }
+            }
+        }
+        if (empty($result)) {
+            $result=null;
+        }
+        $this->regularised_date_to_check=$entry['date'];
+        $this->regularised_by=$record['approved_by'];
+        $this->regularised_date=$record['approved_date'];
+        $this->regularised_reason=$entry['reason'];
+    }
+
     public function render()
     {
         try {
             $this->dynamicDate = now()->format('Y-m-d');
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->swiperecord=SwipeRecord::where('emp_id',$employeeId)->where('is_regularised',1)->get();
             $currentDate = Carbon::now()->format('Y-m-d');
             $holiday = HolidayCalendar::all();
-    
             $today = Carbon::today();
             $data = SwipeRecord::join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->where('swipe_records.emp_id', auth()->guard('emp')->user()->emp_id)

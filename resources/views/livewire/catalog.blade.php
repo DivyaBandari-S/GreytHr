@@ -160,10 +160,8 @@
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
-
-                                                    <button wire:click="closecatalog" type="button" class="btn btn-danger">Cancel</button>
-
-                                                    <button type="button" wire:click="DistributorRequest" class="btn btn-primary">Submit</button>
+                                                    <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
+                                                    <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -320,9 +318,9 @@
                                                 </div>
                                                 <div class="modal-footer">
 
-                                                    <button wire:click="closecatalog" type="button" class="btn btn-danger">Cancel</button>
+                                                    <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                    <button type="button" wire:click="submit" class="btn btn-primary">Submit</button>
+                                                    <button type="button" wire:click="submit" class="submit-btn">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -469,9 +467,9 @@
                                                 </div>
                                                 <div class="modal-footer">
 
-                                                    <button wire:click="closecatalog" type="button" class="btn btn-danger">Cancel</button>
+                                                    <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                    <button type="button" wire:click="Request" class="btn btn-primary">Submit</button>
+                                                    <button type="button" wire:click="Request" class="submit-btn">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -626,9 +624,9 @@
                                                     </div>
                                                     <div class="modal-footer">
 
-                                                        <button wire:click="closecatalog" type="button" class="btn btn-danger">Cancel</button>
+                                                        <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="btn btn-primary">Submit</button>
+                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -780,9 +778,9 @@
                                                     </div>
                                                     <div class="modal-footer">
 
-                                                        <button wire:click="closecatalog" type="button" class="btn btn-danger">Cancel</button>
+                                                        <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="btn btn-primary">Submit</button>
+                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -928,9 +926,9 @@
                                                     </div>
                                                     <div class="modal-footer">
 
-                                                        <button wire:click="closecatalog" type="button" class="btn btn-danger">Cancel</button>
+                                                        <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="DistributorRequest" class="btn btn-primary">Submit</button>
+                                                        <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1085,9 +1083,9 @@
                                                     </div>
                                                     <div class="modal-footer">
 
-                                                        <button wire:click="closecatalog" type="button" class="btn btn-danger">Cancel</button>
+                                                        <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="btn btn-primary">Submit</button>
+                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1253,9 +1251,9 @@
                                                     </div>
                                                     <div class="modal-footer">
 
-                                                        <button wire:click="closecatalog" type="button" class="btn btn-danger">Cancel</button>
+                                                        <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="btn btn-primary">Submit</button>
+                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
                                                     </div>
                                                 </div>
                                             </div>

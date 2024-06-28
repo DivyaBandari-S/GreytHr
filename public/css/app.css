@@ -69,9 +69,7 @@
 /* Ending of letter request module (Kumar Asapu)*/
 
 /* Starting of home module (Kumar Asapu,Archana Goud,Divya Bandari,Pranita Priyadarshi & Siva)*/
-.layout-side-menu{
-    font-family: "Montserrat", sans-serif;
-}
+
 .greet {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     tab-size: 4;
@@ -637,7 +635,6 @@ button.close-button {
     margin-bottom: 15px;
 }
 
-
 @media (max-width: 575.98px) {
     .tab,
     .jump-to,
@@ -698,7 +695,6 @@ button.close-button {
     text-decoration: none;
     color: rgb(122, 149, 255);
 }
-
 /*End of document center/letter module (Kumar Asapu) */
 
 /* app.blade */
@@ -706,8 +702,8 @@ button.close-button {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1px 10px;
-    background-color: none;
+    padding: 5px 10px;
+    background-color: rgb(2, 17, 79) !important;
     color: #fff;
     font-weight: 500;
     box-shadow: 2px 4px 4px 4px rgba(0, 0, 0, 0.1);
@@ -716,6 +712,13 @@ button.close-button {
 .text-white{
     color: white;
 }
+.sidebar-heading{
+    color: #4d5256;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
 
 .profile-image {
     height: 32px;
@@ -733,6 +736,10 @@ button.close-button {
     margin: 0;
 }
 .left-card-body{
+    height: 100%;
+    font-family: "Montserrat", sans-serif;
+}
+.layout-side-menu{
     font-family: "Montserrat", sans-serif;
 }
 .nav-item {
@@ -761,10 +768,10 @@ button.close-button {
 .nav-text {
     margin-left: 15px;
 }
-/* .fas{
+.fas{
     height: 25px;
     width: 25px;
-} */
+}
 
 .custom-background {
     height: 60px;
@@ -836,7 +843,6 @@ button.close-button {
 }
 .emp-name {
     display: flex;
-    gap:5px;
     flex-direction: column;
 }
 
@@ -886,12 +892,7 @@ button.close-button {
     border: none;
     cursor: pointer;
 }
-.sidebar-heading{
-    color: #4d5256;
-    text-transform: uppercase;
-    font-size: 12px;
-    font-weight: 600;
-}
+
 .dropdown-content {
     display: none;
     position: absolute;
@@ -1028,7 +1029,8 @@ button.close-button {
         display: none !important;
     }
     .scrollable-container {
-        max-height: calc(100vh - 70px);
+        height: 100%;
+        max-height: 100%;
         overflow-y: auto;
     }
     .scrollable-container::-webkit-scrollbar {
@@ -1061,6 +1063,7 @@ button.close-button {
     }
 }
 /* end of app.blade */
+
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
@@ -2658,12 +2661,24 @@ td{
 
     /* //catalog */
     .activeCatalog {
-        background-color: none;
-        color: #fff;
+        background-color: none !important;
+        border-bottom: 2px solid rgb(2, 17, 79) !important;
+        color: rgb(2,17,79) !important;
     }
-
+    .custom-table-catalog th,
+    .custom-table-catalog td {
+        padding: 8px; /* Adjust the padding as needed */
+        border: 1px solid #ccc; /* Add borders with desired style and color */
+    }
+    .item-td{
+        width: 40%;
+    }
+    .descrption-td{
+        width: 60%;
+    }
     .catalogFilter {
         cursor: pointer;
+        color: #778899;
     }
 
     .catalogFilter:hover {
@@ -2965,7 +2980,7 @@ select .yearSelect {
     padding: 10px 20px;
     border: 1px solid;
     border-radius: 7px;
-    left: 50%;
+    left: 55%;
     top: 8em;
     transform: translate(-50%, -50%);
     box-shadow: 0px 4px 8px rgb(0 0 0 / 33%);
@@ -3266,7 +3281,7 @@ select .yearSelect {
     padding-left: 0;
 }
 .header {
-    display: flex; align-items: center; background-color: #dce0e5; padding: 10px;
+    display: flex; align-items: center;padding: 10px;
 }
 .header h6{
     color:#778899;
@@ -3619,6 +3634,9 @@ select .yearSelect {
 	margin-bottom: 10px;
   font-weight: 700;
 }
+.fs18 {
+    font-size: 18px;
+}
 .fs-subtitle {
 	font-weight: normal;
 	font-size: 16px;
@@ -3922,6 +3940,18 @@ p::first-letter {
 .my-daterange-timesheet td {
     padding: 1px !important;
 }
+.noti-badge {
+    position: absolute;
+    /* top: 6px; */
+    top: 14px;
+    right: 3px;
+    /* background: red; */
+    color: #fff;
+    padding: 3px 5px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 5px;
+}
 
 /* //log out */
 .logout-icon-container {
@@ -3966,7 +3996,14 @@ p::first-letter {
     margin-left: 10px;
     color: orange;
 }
+.pointer {
+    cursor: pointer;
+}
 
+.sideBarIcon {
+    font-size: 14px !important;
+    color:#6c7e90;
+}
 
 /* ///chat styles */
 .employees-details-chat{

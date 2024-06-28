@@ -77,6 +77,7 @@ class EmployeeAssetsDetails extends Component
     public function mount()
     {
         $this->loadEmployeeAssets();
+        $this->statuses = AssetModel::distinct('status')->pluck('status');
         $this->employeeAssets = AssetModel::all();
         foreach ($this->employeeAssets as $asset) {
             $this->editMode[$asset->id] = false;

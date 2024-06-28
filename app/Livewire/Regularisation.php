@@ -15,7 +15,7 @@ class Regularisation extends Component
 {
     public $c=false;
     
-    public $isApply=0;
+    public $isApply=1;
 
     public $isPending=0;
     public $isHistory=0;
@@ -401,8 +401,7 @@ public function historyButton()
       $historyRegularisations = RegularisationNew1::where('emp_id', $loggedInEmpId)
                     ->whereIn('status', ['pending', 'approved', 'rejected'])
                     ->orderByDesc('id')
-                    ->get();
-
+                    ->get();            
       $this->historyRegularisations = $historyRegularisations->filter(function ($regularisation) {
         return $regularisation->regularisation_entries !== "[]";
        });
