@@ -10,7 +10,6 @@
                 color: #778899;
                 width: 50%;
                 font-size: 0.825rem;
-                /* Background color for the tabs */
             }
 
             .custom-nav-link {
@@ -34,7 +33,7 @@
             <span class="close-btn" onclick="closeMessage()" style="cursor:pointer;">X</span>
         </div>
         @if(session()->has('error'))
-        <div class="alert alert-danger" style="font-size:12px;">
+        <div class="alert alert-danger" style="font-size:12px;"a>
             {{ session('error') }}
         </div>
         @endif

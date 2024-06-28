@@ -85,6 +85,7 @@ use App\Livewire\ViewPendingDetails;
 use App\Livewire\Emojies;
 use App\Livewire\Employee;
 use App\Livewire\EmployeeAssetsDetails;
+use App\Livewire\EmployeeDirectory;
 use App\Livewire\EmpTimeSheet;
 use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
@@ -93,6 +94,7 @@ use App\Livewire\LeaveBalancesChart;
 use App\Livewire\OrganisationChart;
 use App\Livewire\ReviewPendingRegularisation;
 use App\Livewire\ShiftRoaster;
+use App\Livewire\Ytdreport;
 use Illuminate\Support\Facades\Route;
 
 
@@ -195,6 +197,8 @@ Route::middleware(['auth:hr','handleSession'])->group(function () {
     // Route::get('/hrleaveOverview', HrLeaveOverview::class)->name('hrleaveOverview');
     Route::get('/hrAttendanceOverview', HrAttendanceOverviewNew::class)->name('hrAttendanceOverview');
     Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
+    Route::get('/hremployeedirectory', EmployeeDirectory::class)->name('employee-directory');
+    Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
     // Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
@@ -254,9 +258,9 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
 
     //Helpdesk module
 
-    Route::get('/HelpDesk', HelpDesk::class)->name('help-desk');
+    Route::get('/HelpDesk', HelpDesk::class)->name('helpdesk');
 
-    Route::get('/catalog', Catalog::class);
+    Route::get('/catalog', Catalog::class)->name('catalog');
 
     // Related salary module and ITdeclaration Document center
     Route::get('/payslip', Payroll::class);
@@ -273,6 +277,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/reimbursement', Reimbursement::class)->name('reimbursement');
     Route::get('/investment', Investment::class)->name('proof-of-investment');
     Route::get('/documents', Documents::class);
+    Route::get('/ytd', Ytdreport::class)->name('ytdreport');
 
 
     //leave module
@@ -282,8 +287,8 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/leave-apply', LeaveApply::class);
     Route::get('/holiday-calender', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
-    Route::get('/casualleavebalance',CasualLeaveBalance::class)->name('casualleavebalance');
-    Route::get('/casualprobationleavebalance',CasualProbationLeaveBalance::class)->name('casualprobationleavebalance');
+    Route::get('/casualleavebalance',CasualLeaveBalance::class)->name('casual-leave-balance');
+    Route::get('/casualprobationleavebalance',CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
     Route::get('/leave-cancel', LeaveCancel::class)->name('leave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
@@ -301,7 +306,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     // ####################################### Chat Module Routes #########################endregion
     Route::get('/chat',Index::class)->name('chat.index');
     Route::get('/chat/{query}',Chat::class)->name('chat');
-    Route::get('/e',Employee::class)->name('employee');
+    Route::get('/users',Employee::class)->name('employee');
     Route::get('/image',ImageUpload::class)->name('image');
     //*******************************************  End Of Chat Module Routes *************************/
 });
@@ -319,4 +324,12 @@ Route::get('/your-download-route', function () {
 });
 Route::get('/downloadform', function () {
     return view('downloadform');
+});
+
+Route::get('/attune-reports', function () {
+    return view('mail-content_view');
+});
+
+Route::get('/data-entry', function () {
+    return view('data-entry_view');
 });

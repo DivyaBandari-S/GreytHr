@@ -516,6 +516,7 @@ class LeaveApply extends Component
     public function saveLeaveApplication()
     {
         $this->leaveApply();
+
         $this->validate([
             'from_date' => 'required|date',
             'to_date' => 'required|date',

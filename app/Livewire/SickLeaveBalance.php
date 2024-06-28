@@ -62,17 +62,15 @@ class SickLeaveBalance extends Component
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
                 }
-            }elseif(self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)){
+            } elseif (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 1; // Add half a day
                 }
-            }
-            else {
+            } else {
                 $totalDays += (self::getSessionNumber($toSession) - self::getSessionNumber($fromSession) + 1) * 0.5;
             }
 
             return (float) $totalDays;
-
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
@@ -83,25 +81,25 @@ class SickLeaveBalance extends Component
         // You might need to customize this based on your actual session values
         return (int) str_replace('Session ', '', $session);
     }
-    
+
     public function render()
     {
-        try{
+        try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            
-            $this->employeeLeaveBalances= EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->where('leave_type', 'Sick Leave')
-            ->get();
-                
+
+            $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                ->where('leave_type', 'Sick Leave')
+                ->get();
+
             // Now $employeeLeaveBalances contains all the rows from employee_leave_balances 
             // where emp_id matches and leave_type is "Sick Leave"
             $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_type', 'Sick Leave')
-            ->where('status', 'approved')
-            ->get();
+                ->where('leave_type', 'Sick Leave')
+                ->where('status', 'approved')
+                ->get();
 
-            
+
             foreach ($this->employeeleaveavlid as $leaveRequest) {
                 //$leaveType = $leaveRequest->leave_type;
                 $days = self::calculateNumberOfDays(
@@ -117,24 +115,24 @@ class SickLeaveBalance extends Component
                 $this->Availablebalance = $employeeLeaveBalance->leave_balance - $this->totalSickDays;
                 // Do something with $this->Availablebalance
             }
-        //dd($this->Availablebalance);
+            //dd($this->Availablebalance);
 
             $currentMonth = date('n');
             $currentYear = date('Y');
             $startingMonth = 1; // January
-            
+
             $grantedLeavesByMonth = [];
             $availedLeavesByMonth = [];
 
             $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->where('leave_type', 'Sick Leave')
-            ->whereYear('from_date', $currentYear)
-            ->sum('leave_balance');
+                ->where('leave_type', 'Sick Leave')
+                ->whereYear('from_date', $currentYear)
+                ->sum('leave_balance');
             // Loop through months from starting month to current month
             for ($month = $startingMonth; $month <= $currentMonth; $month++) {
                 // Fetch granted leaves count for this month
-                
-                
+
+
                 // Fetch availed leaves count for this month
                 $availedLeavesCount = LeaveRequest::where('emp_id', $employeeId)
                     ->where('leave_type', 'Sick Leave')
@@ -142,19 +140,19 @@ class SickLeaveBalance extends Component
                     ->whereYear('from_date', $currentYear)
                     ->whereMonth('from_date', $month)
                     ->count();
-                
+
                 // Adjust granted leaves count based on availed leaves
                 // Adjust granted leaves count by subtracting availed leaves count
-            $grantedLeavesCount -= $availedLeavesCount;
+                $grantedLeavesCount -= $availedLeavesCount;
 
-            // Ensure granted leaves count is non-negative
-            $grantedLeavesCount = max(0, $grantedLeavesCount);
-                
+                // Ensure granted leaves count is non-negative
+                $grantedLeavesCount = max(0, $grantedLeavesCount);
+
                 // Store the adjusted granted leaves count and availed leaves count in their respective arrays
                 $grantedLeavesByMonth[] = $grantedLeavesCount;
                 $availedLeavesByMonth[] = $availedLeavesCount;
             }
-                
+
             $chartData = [
                 'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 'datasets' => [
@@ -174,7 +172,7 @@ class SickLeaveBalance extends Component
                     ]
                 ]
             ];
-            
+
             $chartOptions = [
                 'scales' => [
                     'yAxes' => [[
@@ -207,11 +205,10 @@ class SickLeaveBalance extends Component
                 'chartData' => $chartData,
                 'chartOptions' => $chartOptions // Pass chart options to the view
             ]);
-        }    
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             // Handle the exception, log the error message, and show a user-friendly message
             \Log::error('Error in Sick Leave Balance render method: ' . $e->getMessage());
-    
+
             return view('livewire.sick-leave-balance')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
         }
     }
