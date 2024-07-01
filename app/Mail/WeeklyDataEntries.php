@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\SentEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,36 +14,38 @@ class WeeklyDataEntries extends Mailable
 {
     use Queueable, SerializesModels;
     public $filePath;
-    public $fromAddress, $writer;
+    public $fromAddress;
+    public $subject;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($filePath, $fromAddress)
+    public function __construct($filePath, $fromAddress, $subject)
     {
         $this->filePath = $filePath;
         $this->fromAddress = $fromAddress;
+        $this->subject = SentEmail::latest()->value('subject');
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Weekly Data Entries',
+            subject: $this->subject // Set the subject dynamically
         );
     }
+    /**
+     * Get the message envelope.
+     */
 
     public function build()
     {
         return $this->from($this->fromAddress)
-                    ->subject('Weekly Data Entries Export')
-                    ->view('data-entry_content_view')
-                    ->attach($this->filePath, [
-                        'as' => 'data_entries.xlsx',
-                        'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    ]);
+            ->subject($this->subject)
+            ->view('data-entry-content_view')
+            ->attach($this->filePath, [
+                'as' => 'data_entries.xlsx',
+                'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
     }
 
     /**
