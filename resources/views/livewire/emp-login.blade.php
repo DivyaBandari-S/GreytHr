@@ -56,7 +56,7 @@
                 @endif
                 <div class="form-group">
                     <label for="emp_id" style="font-size: 14px;">Login ID</label>
-                    <input type="text" class="form-control" id="emp_id" placeholder="ID / Mail" wire:model="form.emp_id" />
+                    <input type="text" class="form-control" id="emp_id" placeholder="ID / Mail" wire:model="form.emp_id" wire:change="empLoginValidate" />
                     
                     @error('form.emp_id')
                     <p class="pt-2 px-1 text-danger">{{ str_replace('form.emp id', 'Employee ID', $message) }}</p>
@@ -64,8 +64,8 @@
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
                     <label for="password" style="font-size: 14px;">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password" wire:model="form.password" />
-                    
+                    <input type="password" class="form-control" id="password" placeholder="Password" wire:model="form.password" wire:change="empLoginValidate"/>
+
                     @error('form.password')
                     <p class="pt-2 px-1 text-danger">{{ str_replace('form.password', 'Password', $message) }}</p>
                     @enderror

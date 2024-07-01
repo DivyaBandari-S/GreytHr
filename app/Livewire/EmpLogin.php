@@ -64,6 +64,14 @@ class EmpLogin extends Component
     {
         return redirect()->to('/CreateCV');
     }
+    public function empLoginValidate(){
+
+        $this->validate([
+            "form.emp_id" => 'required',
+            "form.password" => "required"
+        ]);
+
+    }
     public function empLogin()
     {
         $this->validate([
@@ -149,7 +157,8 @@ class EmpLogin extends Component
     {
         $this->passwordChangedModal = false;
     }
-    
+
+
     public function verifyEmailAndDOB()
     {
 

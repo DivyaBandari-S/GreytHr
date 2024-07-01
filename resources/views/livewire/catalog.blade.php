@@ -1,5 +1,15 @@
 <div>
     <div class="row m-0">
+        @if (session()->has('message'))
+        <div class="alert alert-success">
+            {{ session('message') }}
+        </div>
+        @endif
+        <div class="col-md-12 mb-4">
+            <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 2px 4px; font-size: 12px;" onclick="location.href='/HelpDesk'">
+                Back
+            </button>
+        </div>
         <div class="row">
             <div class="col-md-12 mb-4">
                 <div class="filter-container" style="display: flex; flex-direction: column;">
@@ -46,6 +56,7 @@
                                                 </div>
 
                                                 <div class="modal-body">
+
                                                     <div class="row m-0">
                                                         <div class="col-4 m-auto">
                                                             <img src="https://snow.payg.in/89294c29871c7510279786a50cbb35b5.iix?t=medium" style="height:4em">
@@ -68,61 +79,65 @@
                                                             <div class="row">
                                                                 <div class="mb-3">
                                                                     <label for="cc_to" class="form-label"> Members to be Added</label>
-                                                                    <input wire:model="cc_to" type="text" id="cc_to" class="form-control" readonly>
-                                                                </div>
-                                                                <div class="row m-0">
-                                                                    <div class="mb-3 p-0">
-                                                                        <button type="button" class="btn btn-outline-primary" wire:click="NamesSearch">
-                                                                            <i class="fa fa-plus me-4"></i>
-                                                                            Add
-                                                                        </button>
-                                                                    </div>
                                                                     <div class="row m-0 p-0">
                                                                         <p style="font-size: 12px;">
                                                                             <strong>Request: </strong>
                                                                             {{ implode(', ', array_unique($selectedPeopleNames)) }}
                                                                         </p>
                                                                     </div>
-                                                                    @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
+                                                                </div>
+                                                                <div class="row m-0">
+                                                                    <div class="mb-3 p-0">
+                                                                        <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
+                                                                            <i class="fa fa-plus me-3"></i>
+                                                                            Add
+                                                                        </button>
+                                                                    </div>
+
+                                                                    @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
                                                                 </div>
                                                             </div>
                                                             @if($isNames)
-                                                            <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px;">
-                                                                <div class="input-group" style="margin-bottom: 10px;">
-                                                                    <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                    <div class="input-group-append">
-                                                                        <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn me-3" type="button">
-                                                                            <i style="text-align: center;" class="fa fa-search"></i>
-                                                                        </button>
-                                                                        <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                                @if ($peopleData->isEmpty())
-                                                                <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
-                                                                    No People Found
-                                                                </div>
-                                                                @else
-                                                                @foreach($peopleData as $people)
-                                                                <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-auto">
-                                                                            <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                            <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;">
+                                                                <div style="overflow-y:auto;max-height:300px;width:330px">
+                                                                    <div class="input-group" style="margin-bottom: 10px;">
+                                                                        <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                        <div class="input-group-append">
+                                                                            <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn me-3" type="button">
+                                                                                <i style="text-align: center;" class="fa fa-search"></i>
+                                                                            </button>
+                                                                            <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
+                                                                            </button>
                                                                         </div>
+                                                                    </div>
+                                                                    @if ($peopleData->isEmpty())
+                                                                    <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
+                                                                        No People Found
+                                                                    </div>
+                                                                    @else
+                                                                    @foreach($peopleData as $people)
 
-                                                                        <div class="col">
-                                                                            <h6 class="username" style="font-size: 12px; color: white;">
-                                                                                {{ $people->first_name }}
-                                                                                {{ $people->last_name }}
-                                                                            </h6>
-                                                                            <p class="mb-0" style="font-size: 12px; color: white;">
-                                                                                (#{{ $people->emp_id }})</p>
+                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <div class="row align-items-center">
+
+                                                                            <div class="col-auto">
+                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                            </div>
+
+                                                                            <div class="col">
+                                                                                <h6 class="username" style="font-size: 12px; color: white;">
+                                                                                    {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
+                                                                                </h6>
+                                                                                <p class="mb-0" style="font-size: 12px; color: white;">
+                                                                                    (#{{ $people->emp_id }})</p>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
+
+                                                                    @endforeach
+                                                                    @endif
                                                                 </div>
-                                                                @endforeach
-                                                                @endif
                                                             </div>
                                                             @endif
                                                         </div>
@@ -171,7 +186,7 @@
 
                                 </div>
 
-                                <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+                                <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="AddRequest">View Details</p>
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
@@ -199,7 +214,7 @@
                                                             <img src="https://milvusrobotics.com/assets/careers/support.b904d83a.png" style="height:7em">
                                                         </div>
                                                         <div class="col-8 m-auto">
-                                                            <p style="font-size:15px;">
+                                                            <p style="font-size:14px;">
                                                                 Please use this catalogue item to raise new request for IT accessories
                                                                 like Headset, Mouse, Keyboard, Monitor etc.</p>
                                                         </div>
@@ -210,61 +225,65 @@
                                                             <div class="row">
                                                                 <div class="mb-3">
                                                                     <label for="cc_to" class="form-label">Request For</label>
-                                                                    <input wire:model="cc_to" type="text" id="cc_to" class="form-control" readonly>
-                                                                </div>
-                                                                <div class="row m-0">
-                                                                    <div class="mb-3 p-0">
-                                                                        <button type="button" class="btn btn-outline-primary" wire:click="NamesSearch">
-                                                                            <i class="fa fa-plus me-4"></i>
-                                                                            Add
-                                                                        </button>
-                                                                    </div>
                                                                     <div class="row m-0 p-0">
                                                                         <p style="font-size: 12px;">
                                                                             <strong>Request: </strong>
                                                                             {{ implode(', ', array_unique($selectedPeopleNames)) }}
                                                                         </p>
                                                                     </div>
+                                                                </div>
+                                                                <div class="row m-0">
+                                                                    <div class="mb-3 p-0">
+                                                                        <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
+                                                                            <i class="fa fa-plus me-3"></i>
+                                                                            Add
+                                                                        </button>
+                                                                    </div>
+
                                                                     @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
                                                                 </div>
                                                             </div>
                                                             @if($isNames)
-                                                            <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px;">
-                                                                <div class="input-group" style="margin-bottom: 10px;">
-                                                                    <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                    <div class="input-group-append">
-                                                                        <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn me-3" type="button">
-                                                                            <i style="text-align: center;" class="fa fa-search"></i>
-                                                                        </button>
-                                                                        <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                                @if ($peopleData->isEmpty())
-                                                                <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
-                                                                    No People Found
-                                                                </div>
-                                                                @else
-                                                                @foreach($peopleData as $people)
-                                                                <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-auto">
-                                                                            <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                            <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;">
+                                                                <div style="overflow-y:auto;max-height:300px;width:330px">
+                                                                    <div class="input-group" style="margin-bottom: 10px;">
+                                                                        <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                        <div class="input-group-append">
+                                                                            <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn me-3" type="button">
+                                                                                <i style="text-align: center;" class="fa fa-search"></i>
+                                                                            </button>
+                                                                            <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
+                                                                            </button>
                                                                         </div>
+                                                                    </div>
+                                                                    @if ($peopleData->isEmpty())
+                                                                    <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
+                                                                        No People Found
+                                                                    </div>
+                                                                    @else
+                                                                    @foreach($peopleData as $people)
 
-                                                                        <div class="col">
-                                                                            <h6 class="username" style="font-size: 12px; color: white;">
-                                                                                {{ $people->first_name }}
-                                                                                {{ $people->last_name }}
-                                                                            </h6>
-                                                                            <p class="mb-0" style="font-size: 12px; color: white;">
-                                                                                (#{{ $people->emp_id }})</p>
+                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <div class="row align-items-center">
+
+                                                                            <div class="col-auto">
+                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                            </div>
+
+                                                                            <div class="col">
+                                                                                <h6 class="username" style="font-size: 12px; color: white;">
+                                                                                    {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
+                                                                                </h6>
+                                                                                <p class="mb-0" style="font-size: 12px; color: white;">
+                                                                                    (#{{ $people->emp_id }})</p>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
+
+                                                                    @endforeach
+                                                                    @endif
                                                                 </div>
-                                                                @endforeach
-                                                                @endif
                                                             </div>
                                                             @endif
                                                         </div>
@@ -272,7 +291,7 @@
                                                         <div class="form-group mt-2">
                                                             <label for="selectedEquipment">Select Equipment</label>
                                                             <select wire:model="selected_equipment" class="form-control">
-                                                                <option value="keyboard">Keyboard</option>
+                                                                <option value="keyboard">Select Equipment</option>
                                                                 <option value="keyboard">Keyboard</option>
                                                                 <option value="mouse">Mouse</option>
                                                                 <option value="headset">Headset</option>
@@ -329,7 +348,7 @@
                                     @endif
 
                                 </div>
-                                <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+                                <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="ItRequest">View Details</p>
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
@@ -366,61 +385,65 @@
                                                             <div class="row">
                                                                 <div class="mb-3">
                                                                     <label for="cc_to" class="form-label">Please select the users to be added to New Mailbox</label>
-                                                                    <input wire:model="cc_to" type="text" id="cc_to" class="form-control" readonly>
-                                                                </div>
-                                                                <div class="row m-0">
-                                                                    <div class="mb-3 p-0">
-                                                                        <button type="button" class="btn btn-outline-primary" wire:click="NamesSearch">
-                                                                            <i class="fa fa-plus me-4"></i>
-                                                                            Add
-                                                                        </button>
-                                                                    </div>
                                                                     <div class="row m-0 p-0">
                                                                         <p style="font-size: 12px;">
                                                                             <strong>Request: </strong>
                                                                             {{ implode(', ', array_unique($selectedPeopleNames)) }}
                                                                         </p>
                                                                     </div>
+                                                                </div>
+                                                                <div class="row m-0">
+                                                                    <div class="mb-3 p-0">
+                                                                        <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
+                                                                            <i class="fa fa-plus me-3"></i>
+                                                                            Add
+                                                                        </button>
+                                                                    </div>
+
                                                                     @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
                                                                 </div>
                                                             </div>
                                                             @if($isNames)
-                                                            <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px;">
-                                                                <div class="input-group" style="margin-bottom: 10px;">
-                                                                    <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                    <div class="input-group-append">
-                                                                        <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn me-3" type="button">
-                                                                            <i style="text-align: center;" class="fa fa-search"></i>
-                                                                        </button>
-                                                                        <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                                @if ($peopleData->isEmpty())
-                                                                <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
-                                                                    No People Found
-                                                                </div>
-                                                                @else
-                                                                @foreach($peopleData as $people)
-                                                                <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-auto">
-                                                                            <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                            <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;">
+                                                                <div style="overflow-y:auto;max-height:300px;width:330px">
+                                                                    <div class="input-group" style="margin-bottom: 10px;">
+                                                                        <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                        <div class="input-group-append">
+                                                                            <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn me-3" type="button">
+                                                                                <i style="text-align: center;" class="fa fa-search"></i>
+                                                                            </button>
+                                                                            <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
+                                                                            </button>
                                                                         </div>
+                                                                    </div>
+                                                                    @if ($peopleData->isEmpty())
+                                                                    <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
+                                                                        No People Found
+                                                                    </div>
+                                                                    @else
+                                                                    @foreach($peopleData as $people)
 
-                                                                        <div class="col">
-                                                                            <h6 class="username" style="font-size: 12px; color: white;">
-                                                                                {{ $people->first_name }}
-                                                                                {{ $people->last_name }}
-                                                                            </h6>
-                                                                            <p class="mb-0" style="font-size: 12px; color: white;">
-                                                                                (#{{ $people->emp_id }})</p>
+                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <div class="row align-items-center">
+
+                                                                            <div class="col-auto">
+                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                            </div>
+
+                                                                            <div class="col">
+                                                                                <h6 class="username" style="font-size: 12px; color: white;">
+                                                                                    {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
+                                                                                </h6>
+                                                                                <p class="mb-0" style="font-size: 12px; color: white;">
+                                                                                    (#{{ $people->emp_id }})</p>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
+
+                                                                    @endforeach
+                                                                    @endif
                                                                 </div>
-                                                                @endforeach
-                                                                @endif
                                                             </div>
                                                             @endif
                                                         </div>
@@ -478,7 +501,7 @@
                                     @endif
 
                                 </div>
-                                <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+                                <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="MailRequest">View Details</p>
                             </div>
                         </div>
 
@@ -517,61 +540,65 @@
                                                                 <div class="row">
                                                                     <div class="mb-3">
                                                                         <label for="cc_to" class="form-label"> Request For</label>
-                                                                        <input wire:model="cc_to" type="text" id="cc_to" class="form-control" readonly>
-                                                                    </div>
-                                                                    <div class="row m-0">
-                                                                        <div class="mb-3 p-0">
-                                                                            <button type="button" class="btn btn-outline-primary" wire:click="NamesSearch">
-                                                                                <i class="fa fa-plus me-4"></i>
-                                                                                Add
-                                                                            </button>
-                                                                        </div>
                                                                         <div class="row m-0 p-0">
                                                                             <p style="font-size: 12px;">
                                                                                 <strong>Request: </strong>
                                                                                 {{ implode(', ', array_unique($selectedPeopleNames)) }}
                                                                             </p>
                                                                         </div>
+                                                                    </div>
+                                                                    <div class="row m-0">
+                                                                        <div class="mb-3 p-0">
+                                                                            <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
+                                                                                <i class="fa fa-plus me-3"></i>
+                                                                                Add
+                                                                            </button>
+                                                                        </div>
+
                                                                         @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px;">
-                                                                    <div class="input-group" style="margin-bottom: 10px;">
-                                                                        <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                        <div class="input-group-append">
-                                                                            <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn me-3" type="button">
-                                                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                                                            </button>
-                                                                            <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                    @if ($peopleData->isEmpty())
-                                                                    <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
-                                                                        No People Found
-                                                                    </div>
-                                                                    @else
-                                                                    @foreach($peopleData as $people)
-                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;">
+                                                                    <div style="overflow-y:auto;max-height:300px;width:330px">
+                                                                        <div class="input-group" style="margin-bottom: 10px;">
+                                                                            <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                            <div class="input-group-append">
+                                                                                <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn me-3" type="button">
+                                                                                    <i style="text-align: center;" class="fa fa-search"></i>
+                                                                                </button>
+                                                                                <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
+                                                                                </button>
                                                                             </div>
+                                                                        </div>
+                                                                        @if ($peopleData->isEmpty())
+                                                                        <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
+                                                                            No People Found
+                                                                        </div>
+                                                                        @else
+                                                                        @foreach($peopleData as $people)
 
-                                                                            <div class="col">
-                                                                                <h6 class="username" style="font-size: 12px; color: white;">
-                                                                                    {{ $people->first_name }}
-                                                                                    {{ $people->last_name }}
-                                                                                </h6>
-                                                                                <p class="mb-0" style="font-size: 12px; color: white;">
-                                                                                    (#{{ $people->emp_id }})</p>
+                                                                        <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                            <div class="row align-items-center">
+
+                                                                                <div class="col-auto">
+                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                </div>
+
+                                                                                <div class="col">
+                                                                                    <h6 class="username" style="font-size: 12px; color: white;">
+                                                                                        {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
+                                                                                    </h6>
+                                                                                    <p class="mb-0" style="font-size: 12px; color: white;">
+                                                                                        (#{{ $people->emp_id }})</p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
+
+                                                                        @endforeach
+                                                                        @endif
                                                                     </div>
-                                                                    @endforeach
-                                                                    @endif
                                                                 </div>
                                                                 @endif
                                                             </div>
@@ -634,7 +661,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop"></div>
                                         @endif
                                     </div>
-                                    <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center">View Details</a>
+                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="IdRequest">View Details</p>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
@@ -671,12 +698,17 @@
                                                                 <div class="row">
                                                                     <div class="mb-3">
                                                                         <label for="cc_to" class="form-label"> Request For</label>
-                                                                        <input wire:model="cc_to" type="text" id="cc_to" class="form-control" readonly>
+                                                                        <div class="row m-0 p-0">
+                                                                            <p style="font-size: 12px;">
+                                                                                <strong>Request: </strong>
+                                                                                {{ implode(', ', array_unique($selectedPeopleNames)) }}
+                                                                            </p>
+                                                                        </div>
                                                                     </div>
                                                                     <div class="row m-0">
                                                                         <div class="mb-3 p-0">
-                                                                            <button type="button" class="btn btn-outline-primary" wire:click="NamesSearch">
-                                                                                <i class="fa fa-plus me-4"></i>
+                                                                            <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
+                                                                                <i class="fa fa-plus me-3"></i>
                                                                                 Add
                                                                             </button>
                                                                         </div>
@@ -690,42 +722,46 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px;">
-                                                                    <div class="input-group" style="margin-bottom: 10px;">
-                                                                        <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                        <div class="input-group-append">
-                                                                            <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn me-3" type="button">
-                                                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                                                            </button>
-                                                                            <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                    @if ($peopleData->isEmpty())
-                                                                    <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
-                                                                        No People Found
-                                                                    </div>
-                                                                    @else
-                                                                    @foreach($peopleData as $people)
-                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;">
+                                                                    <div style="overflow-y:auto;max-height:300px;width:330px">
+                                                                        <div class="input-group" style="margin-bottom: 10px;">
+                                                                            <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                            <div class="input-group-append">
+                                                                                <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn me-3" type="button">
+                                                                                    <i style="text-align: center;" class="fa fa-search"></i>
+                                                                                </button>
+                                                                                <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
+                                                                                </button>
                                                                             </div>
+                                                                        </div>
+                                                                        @if ($peopleData->isEmpty())
+                                                                        <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
+                                                                            No People Found
+                                                                        </div>
+                                                                        @else
+                                                                        @foreach($peopleData as $people)
 
-                                                                            <div class="col">
-                                                                                <h6 class="username" style="font-size: 12px; color: white;">
-                                                                                    {{ $people->first_name }}
-                                                                                    {{ $people->last_name }}
-                                                                                </h6>
-                                                                                <p class="mb-0" style="font-size: 12px; color: white;">
-                                                                                    (#{{ $people->emp_id }})</p>
+                                                                        <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                            <div class="row align-items-center">
+
+                                                                                <div class="col-auto">
+                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                </div>
+
+                                                                                <div class="col">
+                                                                                    <h6 class="username" style="font-size: 12px; color: white;">
+                                                                                        {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
+                                                                                    </h6>
+                                                                                    <p class="mb-0" style="font-size: 12px; color: white;">
+                                                                                        (#{{ $people->emp_id }})</p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
+
+                                                                        @endforeach
+                                                                        @endif
                                                                     </div>
-                                                                    @endforeach
-                                                                    @endif
                                                                 </div>
                                                                 @endif
                                                             </div>
@@ -788,7 +824,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop"></div>
                                         @endif
                                     </div>
-                                    <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;" wire:click="MmsRequest">View Details</p>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
@@ -833,61 +869,65 @@
                                                                 <div class="row">
                                                                     <div class="mb-3">
                                                                         <label for="cc_to" class="form-label"> Members to be Added</label>
-                                                                        <input wire:model="cc_to" type="text" id="cc_to" class="form-control" readonly>
-                                                                    </div>
-                                                                    <div class="row m-0">
-                                                                        <div class="mb-3 p-0">
-                                                                            <button type="button" class="btn btn-outline-primary" wire:click="NamesSearch">
-                                                                                <i class="fa fa-plus me-4"></i>
-                                                                                Add
-                                                                            </button>
-                                                                        </div>
                                                                         <div class="row m-0 p-0">
                                                                             <p style="font-size: 12px;">
                                                                                 <strong>Request: </strong>
                                                                                 {{ implode(', ', array_unique($selectedPeopleNames)) }}
                                                                             </p>
                                                                         </div>
+                                                                    </div>
+                                                                    <div class="row m-0">
+                                                                        <div class="mb-3 p-0">
+                                                                            <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
+                                                                                <i class="fa fa-plus me-3"></i>
+                                                                                Add
+                                                                            </button>
+                                                                        </div>
+
                                                                         @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px;">
-                                                                    <div class="input-group" style="margin-bottom: 10px;">
-                                                                        <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                        <div class="input-group-append">
-                                                                            <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn me-3" type="button">
-                                                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                                                            </button>
-                                                                            <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                    @if ($peopleData->isEmpty())
-                                                                    <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
-                                                                        No People Found
-                                                                    </div>
-                                                                    @else
-                                                                    @foreach($peopleData as $people)
-                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;">
+                                                                    <div style="overflow-y:auto;max-height:300px;width:330px">
+                                                                        <div class="input-group" style="margin-bottom: 10px;">
+                                                                            <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                            <div class="input-group-append">
+                                                                                <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn me-3" type="button">
+                                                                                    <i style="text-align: center;" class="fa fa-search"></i>
+                                                                                </button>
+                                                                                <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
+                                                                                </button>
                                                                             </div>
+                                                                        </div>
+                                                                        @if ($peopleData->isEmpty())
+                                                                        <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
+                                                                            No People Found
+                                                                        </div>
+                                                                        @else
+                                                                        @foreach($peopleData as $people)
 
-                                                                            <div class="col">
-                                                                                <h6 class="username" style="font-size: 12px; color: white;">
-                                                                                    {{ $people->first_name }}
-                                                                                    {{ $people->last_name }}
-                                                                                </h6>
-                                                                                <p class="mb-0" style="font-size: 12px; color: white;">
-                                                                                    (#{{ $people->emp_id }})</p>
+                                                                        <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                            <div class="row align-items-center">
+
+                                                                                <div class="col-auto">
+                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                </div>
+
+                                                                                <div class="col">
+                                                                                    <h6 class="username" style="font-size: 12px; color: white;">
+                                                                                        {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
+                                                                                    </h6>
+                                                                                    <p class="mb-0" style="font-size: 12px; color: white;">
+                                                                                        (#{{ $people->emp_id }})</p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
+
+                                                                        @endforeach
+                                                                        @endif
                                                                     </div>
-                                                                    @endforeach
-                                                                    @endif
                                                                 </div>
                                                                 @endif
                                                             </div>
@@ -936,7 +976,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop"></div>
                                         @endif
                                     </div>
-                                    <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="DistributionRequest">View Details</p>
                                 </div>
                             </div>
                         </div>
@@ -976,61 +1016,65 @@
                                                                 <div class="row">
                                                                     <div class="mb-3">
                                                                         <label for="cc_to" class="form-label"> Request For</label>
-                                                                        <input wire:model="cc_to" type="text" id="cc_to" class="form-control" readonly>
-                                                                    </div>
-                                                                    <div class="row m-0">
-                                                                        <div class="mb-3 p-0">
-                                                                            <button type="button" class="btn btn-outline-primary" wire:click="NamesSearch">
-                                                                                <i class="fa fa-plus me-4"></i>
-                                                                                Add
-                                                                            </button>
-                                                                        </div>
                                                                         <div class="row m-0 p-0">
                                                                             <p style="font-size: 12px;">
                                                                                 <strong>Request: </strong>
                                                                                 {{ implode(', ', array_unique($selectedPeopleNames)) }}
                                                                             </p>
                                                                         </div>
+                                                                    </div>
+                                                                    <div class="row m-0">
+                                                                        <div class="mb-3 p-0">
+                                                                            <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
+                                                                                <i class="fa fa-plus me-3"></i>
+                                                                                Add
+                                                                            </button>
+                                                                        </div>
+
                                                                         @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px;">
-                                                                    <div class="input-group" style="margin-bottom: 10px;">
-                                                                        <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                        <div class="input-group-append">
-                                                                            <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn me-3" type="button">
-                                                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                                                            </button>
-                                                                            <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                    @if ($peopleData->isEmpty())
-                                                                    <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
-                                                                        No People Found
-                                                                    </div>
-                                                                    @else
-                                                                    @foreach($peopleData as $people)
-                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;">
+                                                                    <div style="overflow-y:auto;max-height:300px;width:330px">
+                                                                        <div class="input-group" style="margin-bottom: 10px;">
+                                                                            <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                            <div class="input-group-append">
+                                                                                <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn me-3" type="button">
+                                                                                    <i style="text-align: center;" class="fa fa-search"></i>
+                                                                                </button>
+                                                                                <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
+                                                                                </button>
                                                                             </div>
+                                                                        </div>
+                                                                        @if ($peopleData->isEmpty())
+                                                                        <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
+                                                                            No People Found
+                                                                        </div>
+                                                                        @else
+                                                                        @foreach($peopleData as $people)
 
-                                                                            <div class="col">
-                                                                                <h6 class="username" style="font-size: 12px; color: white;">
-                                                                                    {{ $people->first_name }}
-                                                                                    {{ $people->last_name }}
-                                                                                </h6>
-                                                                                <p class="mb-0" style="font-size: 12px; color: white;">
-                                                                                    (#{{ $people->emp_id }})</p>
+                                                                        <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                            <div class="row align-items-center">
+
+                                                                                <div class="col-auto">
+                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                </div>
+
+                                                                                <div class="col">
+                                                                                    <h6 class="username" style="font-size: 12px; color: white;">
+                                                                                        {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
+                                                                                    </h6>
+                                                                                    <p class="mb-0" style="font-size: 12px; color: white;">
+                                                                                        (#{{ $people->emp_id }})</p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
+
+                                                                        @endforeach
+                                                                        @endif
                                                                     </div>
-                                                                    @endforeach
-                                                                    @endif
                                                                 </div>
                                                                 @endif
                                                             </div>
@@ -1093,7 +1137,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop"></div>
                                         @endif
                                     </div>
-                                    <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="LapRequest">View Details</p>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
@@ -1144,61 +1188,65 @@
                                                                 <div class="row">
                                                                     <div class="mb-3">
                                                                         <label for="cc_to" class="form-label"> Request For</label>
-                                                                        <input wire:model="cc_to" type="text" id="cc_to" class="form-control" readonly>
-                                                                    </div>
-                                                                    <div class="row m-0">
-                                                                        <div class="mb-3 p-0">
-                                                                            <button type="button" class="btn btn-outline-primary" wire:click="NamesSearch">
-                                                                                <i class="fa fa-plus me-4"></i>
-                                                                                Add
-                                                                            </button>
-                                                                        </div>
                                                                         <div class="row m-0 p-0">
                                                                             <p style="font-size: 12px;">
                                                                                 <strong>Request: </strong>
                                                                                 {{ implode(', ', array_unique($selectedPeopleNames)) }}
                                                                             </p>
                                                                         </div>
+                                                                    </div>
+                                                                    <div class="row m-0">
+                                                                        <div class="mb-3 p-0">
+                                                                            <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
+                                                                                <i class="fa fa-plus me-3"></i>
+                                                                                Add
+                                                                            </button>
+                                                                        </div>
+
                                                                         @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px;">
-                                                                    <div class="input-group" style="margin-bottom: 10px;">
-                                                                        <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                        <div class="input-group-append">
-                                                                            <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn me-3" type="button">
-                                                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                                                            </button>
-                                                                            <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                    @if ($peopleData->isEmpty())
-                                                                    <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
-                                                                        No People Found
-                                                                    </div>
-                                                                    @else
-                                                                    @foreach($peopleData as $people)
-                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;">
+                                                                    <div style="overflow-y:auto;max-height:300px;width:330px">
+                                                                        <div class="input-group" style="margin-bottom: 10px;">
+                                                                            <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                            <div class="input-group-append">
+                                                                                <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn me-3" type="button">
+                                                                                    <i style="text-align: center;" class="fa fa-search"></i>
+                                                                                </button>
+                                                                                <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
+                                                                                </button>
                                                                             </div>
+                                                                        </div>
+                                                                        @if ($peopleData->isEmpty())
+                                                                        <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
+                                                                            No People Found
+                                                                        </div>
+                                                                        @else
+                                                                        @foreach($peopleData as $people)
 
-                                                                            <div class="col">
-                                                                                <h6 class="username" style="font-size: 12px; color: white;">
-                                                                                    {{ $people->first_name }}
-                                                                                    {{ $people->last_name }}
-                                                                                </h6>
-                                                                                <p class="mb-0" style="font-size: 12px; color: white;">
-                                                                                    (#{{ $people->emp_id }})</p>
+                                                                        <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                            <div class="row align-items-center">
+
+                                                                                <div class="col-auto">
+                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                </div>
+
+                                                                                <div class="col">
+                                                                                    <h6 class="username" style="font-size: 12px; color: white;">
+                                                                                        {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
+                                                                                    </h6>
+                                                                                    <p class="mb-0" style="font-size: 12px; color: white;">
+                                                                                        (#{{ $people->emp_id }})</p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
+
+                                                                        @endforeach
+                                                                        @endif
                                                                     </div>
-                                                                    @endforeach
-                                                                    @endif
                                                                 </div>
                                                                 @endif
                                                             </div>
@@ -1261,7 +1309,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop"></div>
                                         @endif
                                     </div>
-                                    <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="DevopsRequest">View Details</p>
                                 </div>
                             </div>
                         </div>
@@ -1320,7 +1368,7 @@
                                             </div>
                                             <div class="col-12 mb-2 text-center">
                                                 <div style="max-width: 100%; overflow: hidden;">
-                                                    <p style="text-decoration:underline; cursor: pointer; white-space: nowrap;">Remove Members from Distribution List</p>
+                                                    <p style="text-decoration:underline; cursor: pointer; ">Remove Members from Distribution List</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1387,7 +1435,7 @@
                                     <img src="https://snow.payg.in/c3d8c429871c7510279786a50cbb3564.iix?t=medium" class="me-3" style="height:4em;">
                                     <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">Add Members to Mailbox</a>
                                 </td>
-                                <td  class="descrption-td" style="vertical-align: middle;">
+                                <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">Add Members to Mailbox</p>
                                 </td>
                             </tr>
@@ -1531,7 +1579,7 @@
                     <div class="row m-0">
                         <div class="col-md-4 mb-4">
                             <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
-                                <p style="text-decoration:underline; font-size: 12px;"><b>Shifting Distribution List to Shared Mailbox</b></p>
+                                <p style="text-decoration:underline; font-size: 12px;white-space: nowrap;"><b>Shifting Distribution List to..</b></p>
                                 <div class="row m-0 mb-5">
                                     <p class="p-0" style="cursor: pointer">Shifting Distribution List to Shared Mailboxt</p>
                                 </div>

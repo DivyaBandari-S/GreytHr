@@ -1,19 +1,8 @@
 <div class="mx-2">
     @if($errorMessage)
-    <div id="errorMessage" class="alert alert-danger d-flex justify-content-between" style="font-size:12px;">
+    <div id="errorMessage" class="alert alert-danger">
         {{ $errorMessage }}
-        <span class="close-btn" onclick="closeErrorMessage()" style="cursor:pointer;">X</span>
     </div>
-    <script>
-        // Close the success message after a certain time
-        setTimeout(function() {
-            closeErrorMessage();
-        }, 5000); // Adjust the time limit (in milliseconds) as needed
-
-        function closeErrorMessage() {
-            document.getElementById('errorMessage').style.display = 'none';
-        }
-    </script>
     @endif
 
     <div class="applyContainer bg-white">
@@ -24,7 +13,7 @@
             <div class="form-row d-flex mt-3">
                 <div class="form-group col-md-7" style="position: relative;">
                     <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave type</label>
-                    <select id="leaveType" class="form-control placeholder-small" wire:click="selectLeave" wire:change="saveLeaveApplication" wire:model="leave_type" name="leaveType" style="width: 50%; font-weight: 400; color: #778899; font-size: 12px;">
+                    <select id="leaveType" class="form-control placeholder-small" wire:click="selectLeave" wire:model="leave_type" name="leaveType" style="width: 50%; font-weight: 400; color: #778899; font-size: 12px;">
                         <option value="default">Select Type</option>
                         @php
                         $managerInfo = DB::table('employee_details')
@@ -47,9 +36,7 @@
                             <option value="Marriage Leave">Marriage Leave</option>
                     </select>
                     <span style="position: absolute; top: 75%; right: 52%; transform: translateY(-50%);font-size:12px;color:#c8cfd6;">▼</span>
-                    <div style="position: absolute; top: 100%; left: 0; width: 100%;">
-                        @error('leave_type') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
+                    @error('leave_type') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group col-md-4 m-0 p-0">
                     <div class="pay-bal">
@@ -202,12 +189,12 @@
             <div class="form-row d-flex mt-3">
                 <div class="form-group col-md-6">
                     <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From date</label>
-                    <input type="date" wire:model="from_date" wire:change="saveLeaveApplication" class="form-control placeholder-small" id="fromDate" name="fromDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('from_date')">
+                    <input type="date" wire:model="from_date" class="form-control placeholder-small" id="fromDate" name="fromDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('from_date')">
                     @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group col-md-6" style="position: relative;">
                     <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Sessions</label>
-                    <select class="form-control placeholder-small" wire:model="from_session" wire:change="saveLeaveApplication" id="session" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('from_session')">
+                    <select class="form-control placeholder-small" wire:model="from_session" id="session" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('from_session')">
                         <option value="default">Select session</option>
                         <option value="Session 1">Session 1</option>
                         <option value="Session 2">Session 2</option>
@@ -219,24 +206,19 @@
             <div class="form-row d-flex  mt-3">
                 <div class="form-group col-md-6">
                     <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To date</label>
-                    <input type="date" wire:model="to_date" wire:change="saveLeaveApplication" class="form-control placeholder-small" id="toDate" name="toDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('to_date')">
+                    <input type="date" wire:model="to_date" class="form-control placeholder-small" id="toDate" name="toDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('to_date')">
                     @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group col-md-6" style="position: relative;">
                     <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Sessions</label>
-                    <select class="form-control placeholder-small" wire:model="to_session" wire:change="saveLeaveApplication" id="session" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('to_session')">
+                    <select class="form-control placeholder-small" wire:model="to_session" id="session" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('to_session')">
                         <option value="default">Select session</option>
                         <option value="Session 1">Session 1</option>
                         <option value="Session 2">Session 2</option>
                     </select>
-                    <span style="position: absolute; top: 75%; right: 5%; transform: translateY(-50%);font-size:12px;color:#c8cfd6; @if($errors->has('to_session')) display: none; @endif">
-                        ▼
-                    </span>
-                    @error('to_session')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
+                    <span style="position: absolute; top: 75%; right: 5%; transform: translateY(-50%);font-size:12px;color:#c8cfd6;">▼</span>
+                    @error('to_session') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
-
             </div>
 
             <div>
@@ -317,31 +299,31 @@
                 @error('applying_to') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group">
-                <label for="ccToText" wire:model="from_date" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500;">
+                <label for="ccToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500;">
                     CC to
                 </label>
                 <div class="control-wrapper" style="display: flex; flex-direction: row; gap: 10px;">
                     <a href="javascript:void(0);" class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
-                        <div class="icon-container" wire:click="handleSearch('ccRecipients')" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="icon-container" style="display: flex; justify-content: center; align-items: center;">
                             <i class="fa-solid fa-plus" style="color: #778899;"></i>
                         </div>
-
                     </a>
                     <span class="text-2 text-secondary placeholder" id="ccPlaceholder" style="margin-top: 5px; background: transparent; color: #ccc;">Add</span>
 
-                    <div id="addedEmails" class="emails" style="display: flex; gap: 10px; "></div>
+                    <div id="addedEmails" class="emails" style="display: flex; gap: 10px;">
+                        cc:
 
+                    </div>
                 </div>
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false" style="max-height: 230px; overflow-y: auto;">
-                    <!-- Content for the search container -->
                     <div class="row" style="padding: 0 ; margin:0;">
                         <div class="col-md-10" style="margin: 0px; padding: 0px">
                             <div class="input-group">
                                 <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                                 <div class="input-group-append">
                                     <button type="button" wire:click="searchCCRecipients" style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn">
-                                        <i style="margin-right: 5px;" class="fa fa-search"></i> <!-- Adjust margin-right as needed -->
+                                        <i style="margin-right: 5px;" class="fa fa-search"></i>
                                     </button>
                                 </div>
                             </div>
@@ -353,10 +335,9 @@
                         </div>
                     </div>
                     @foreach($ccRecipients as $employee)
-                    <!-- Display each employee -->
-                    <div>
-                        <div style="margin-top:10px;display:flex; gap:10px; text-transform: capitalize;align-items:center;" onclick="addEmail('{{ ucwords(strtolower($employee['full_name'])) }}')">
-                            <input type="checkbox" wire:model="selectedPeople" value="{{ $employee['emp_id'] }}">
+                    <div wire:key="{{ $employee['emp_id'] }}">
+                        <div style="margin-top:10px;display:flex; gap:10px; text-transform: capitalize; align-items:center;">
+                            <input type="checkbox" wire:model="selectedPeople" value="{{ $employee['emp_id'] }}" wire:click="selectPerson('{{ $employee['emp_id'] }}')">
                             @if($employee['image'])
                             <div class="employee-profile-image-container">
                                 <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius:50%;">
@@ -368,25 +349,26 @@
                             @endif
                             <div class="center mb-2 mt-2">
                                 <p style="font-size: 12px; font-weight: 500; text-transform: capitalize; margin-bottom:0;">{{ ucwords(strtolower($employee['full_name'])) }}</p>
-                                <p style=" color: #778899; font-size: 0.69rem;margin-bottom:0;">#{{ $employee['emp_id'] }}</p>
+                                <p style="color: #778899; font-size: 0.69rem; margin-bottom:0;">#{{ $employee['emp_id'] }}</p>
                             </div>
                         </div>
                     </div>
                     @endforeach
+
                 </div>
                 @endif
                 @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
+
 
             <div class="form-group">
                 <label for="contactDetails" style="color: #778899; font-size: 12px; font-weight: 500;">Contact Details</label>
                 <input type="text" wire:model="contact_details" class="form-control placeholder-small" id="contactDetails" name="contactDetails" style="color: #778899;width:50%;">
                 @error('contact_details') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
-
             <div class="form-group">
                 <label for="reason" style="color: #778899; font-size: 12px; font-weight: 500;">Reason</label>
-                <textarea class="form-control" wire:model="reason" id="reason" wire:change="saveLeaveApplication" name="reason" placeholder="Enter a reason" rows="4" style="font-size:12px;color: #778899;"></textarea>
+                <textarea class="form-control" wire:model="reason" id="reason" name="reason" placeholder="Enter a reason" rows="4" style="font-size:12px;color: #778899;"></textarea>
                 @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group">
@@ -395,8 +377,8 @@
             </div>
 
             <div class="buttons1">
-                <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
-                <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="background: rgb(2, 17, 79);border:none;font-size:12px;" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
+                <button type="button" class="btn btn-secondary" style="background: #fff;border:1px solid rgb(2, 17, 79);font-size:12px;color:rgb(2, 17, 79);">Cancel</button>
             </div>
         </form>
     </div>
@@ -425,97 +407,10 @@
                 toggleSearchContainer();
             }
 
+            // Optionally, you can submit the form programmatically if needed
+            // document.querySelector('form').submit();
         }
 
-
-
-        function addEmail(fullName) {
-            const addedEmails = document.getElementById('addedEmails');
-            const addSpan = document.getElementById('ccPlaceholder');
-
-            // Split the full name into first and last names
-            const names = fullName.split(' ');
-
-            // Get the first letter of the first name
-            const firstNameAbbreviation = names.length > 0 ? names[0].charAt(0) : '';
-
-            // Get the first letter of the last name
-            const lastNameAbbreviation = names.length > 1 ? names[names.length - 1].charAt(0) : '';
-
-            // Combine the first letters of both names to create the email abbreviation
-            const emailAbbreviation = firstNameAbbreviation + lastNameAbbreviation;
-
-            // Check if the email abbreviation is already added
-            if (isEmailAlreadyAdded(emailAbbreviation)) {
-                return; // Do nothing if the email is already added
-            }
-
-            // Create a new element to display the added email abbreviation
-            const emailElement = document.createElement('div');
-            emailElement.textContent = emailAbbreviation;
-            emailElement.className = 'added-email';
-            emailElement.style.border = '2px solid #778899';
-            emailElement.style.color = '#778899';
-            emailElement.style.borderRadius = '50%';
-
-            // Add hover effect
-            emailElement.addEventListener('mouseover', function() {
-                emailElement.style.cursor = 'pointer';
-                emailElement.innerHTML = '&#9587;'; // Change the color to black
-            });
-
-            emailElement.addEventListener('mouseout', function() {
-                emailElement.innerHTML = emailAbbreviation; // Restore the email abbreviation on mouseout
-            });
-
-            // Remove on click
-            emailElement.addEventListener('click', function() {
-                emailElement.remove();
-                removeAddedEmail(emailAbbreviation); // Remove from the list of added emails
-                if (addedEmails.children.length === 0) {
-                    addSpan.style.display = 'block';
-                }
-            });
-
-
-            // Append the email element to the addedEmails container
-            addedEmails.appendChild(emailElement);
-            addSpan.style.display = 'none';
-            // Add the email to the list of added emails
-            addedEmailList.push(emailAbbreviation);
-
-            //unchecking
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            // console.log(this.checked);
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const {
-                        checked
-                    } = checkbox;
-                    if (!checked) {
-                        emailElement.remove();
-                        removeAddedEmail?.(emailAbbreviation); // Remove from the list of added emails
-                        addedEmails.children.length === 0 && (addSpan.style.display = 'block');
-                    }
-                });
-            });
-        }
-
-        // Array to keep track of added emails
-        const addedEmailList = [];
-
-        // Function to check if an email is already added
-        function isEmailAlreadyAdded(email) {
-            return addedEmailList.includes(email);
-        }
-
-        // Function to remove an email from the list of added emails
-        function removeAddedEmail(email) {
-            const index = addedEmailList.indexOf(email);
-            if (index !== -1) {
-                addedEmailList.splice(index, 1);
-            }
-        }
 
         function updateApplyingTo(reportTo, managerId) {
             // Update the values in the reporting container

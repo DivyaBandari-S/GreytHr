@@ -32,10 +32,10 @@ class HelpDesk extends Component
     public $selectedPeopleNames = [];
     public $employeeDetails;
     public $showDialog = false;
+    public $showDialogFinance = false;
+
     public $record;
     public $activeTab = 'active';
-    public $selectedPeople = [];
-    
     protected function resetInputFields()
     {
         $this->category = '';
@@ -45,183 +45,170 @@ class HelpDesk extends Component
         $this->cc_to = '';
         $this->priority = '';
     }
-    
+
+
     protected function addErrorMessages($messages)
     {
         foreach ($messages as $field => $message) {
             $this->addError($field, $message[0]);
         }
     }
-    
+
+
+
+
+
     public function openForDesks($taskId)
     {
-        try {
-            $task = HelpDesks::find($taskId);
-    
-            if ($task) {
-                $task->update(['status' => 'Completed']);
-            }
-            return redirect()->to('/HelpDesk');
-        } catch (\Exception $e) {
-            \Log::error('Error in openForDesks method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while updating the task status. Please try again later.');
+        $task = HelpDesks::find($taskId);
+
+        if ($task) {
+            $task->update(['status' => 'Completed']);
         }
+        return redirect()->to('/HelpDesk');
     }
-    
+
     public function closeForDesks($taskId)
     {
-        try {
-            $task = HelpDesks::find($taskId);
-    
-            if ($task) {
-                $task->update(['status' => 'Open']);
-            }
-            return redirect()->to('/HelpDesk');
-        } catch (\Exception $e) {
-            \Log::error('Error in closeForDesks method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while updating the task status. Please try again later.');
+        $task = HelpDesks::find($taskId);
+
+        if ($task) {
+            $task->update(['status' => 'Open']);
         }
+        return redirect()->to('/HelpDesk');
     }
-    
+
     public function submit()
     {
-        try {
-            $this->validate([
-                'category' => 'required|string|max:255',
-                'subject' => 'required|string|max:255',
-                'description' => 'required|string',
-                'file_path' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
-                'cc_to' => 'required',
-                'priority' => 'required|in:High,Medium,Low',
-                'image' => 'image|max:2048',
-            ]);
-    
-            if ($this->image) {
-                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('public/help-desk-images', $fileName);
-                $this->image = 'help-desk-images/' . $fileName;
-            }
-    
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-    
-            HelpDesks::create([
-                'emp_id' => $this->employeeDetails->emp_id,
-                'category' => $this->category,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path' => $this->image,
-                'cc_to' => $this->cc_to,
-                'priority' => $this->priority,
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
-                'distributor_name' => 'N/A',
-            ]);
-    
-            $this->resetInputFields();
-            session()->flash('success', 'Help desk record created successfully.');
-        } catch (\Exception $e) {
-            \Log::error('Error in submit method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while submitting the help desk record. Please try again later.');
+        $this->validate([
+            'category' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
+            'description' => 'required|string',
+            'file_path' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
+            'cc_to' => 'required',
+            'priority' => 'required|in:High,Medium,Low',
+            'image' => 'image|max:2048',
+        ]);
+        if ($this->image) {
+            $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
+
+            $this->image->storeAs('public/help-desk-images', $fileName);
+
+            $this->image = 'help-desk-images/' . $fileName;
         }
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+        HelpDesks::create([
+            'emp_id' => $this->employeeDetails->emp_id,
+            'category' => $this->category,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path' => $this->image,
+            'cc_to' => $this->cc_to,
+            'priority' => $this->priority,
+            'mail' => 'N/A',
+            'mobile' => 'N/A',
+            'distributor_name' => 'N/A',
+        ]);
+
+        $this->reset();
     }
-    
+
+
     public function open()
     {
         $this->showDialog = true;
     }
-    
+    public function openFinance()
+    {
+        $this->showDialogFinance = true;
+    }
+    public $selectedPeople = [];
+
+
     public function close()
     {
         $this->showDialog = false;
     }
-    
+    public function closeFinance()
+    {
+        $this->showDialogFinance = false;
+    }
     public function closePeoples()
     {
         $this->isRotated = false;
     }
-    
+
     public function updatedSelectedPeople()
     {
         $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
     }
-    
+
     public function selectPerson($personId)
     {
-        try {
-            $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-    
-            if ($selectedPerson) {
-                if (in_array($personId, $this->selectedPeople)) {
-                    $this->selectedPeopleNames[] = $selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')';
-                } else {
-                    $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')']);
-                }
-                $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+        $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
+
+        if ($selectedPerson) {
+            if (in_array($personId, $this->selectedPeople)) {
+                $this->selectedPeopleNames[] = $selectedPerson->first_name . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')';
+            } else {
+                $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$selectedPerson->first_name . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')']);
             }
-        } catch (\Exception $e) {
-            \Log::error('Error in selectPerson method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while selecting the person. Please try again later.');
+            $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
         }
     }
-    
+
     public function toggleRotation()
     {
         $this->isRotated = true;
+
         $this->selectedPeopleNames = [];
         $this->cc_to = '';
     }
-    
+
+
+
     public function filter()
     {
-        try {
-            $companyId = Auth::user()->company_id;
-            $trimmedSearchTerm = trim($this->searchTerm);
-    
-            $this->filteredPeoples = EmployeeDetails::where('company_id', $companyId)
-                ->where(function ($query) use ($trimmedSearchTerm) {
-                    $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
-                        ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
-                })
-                ->get();
-    
-            $this->peopleFound = count($this->filteredPeoples) > 0;
-        } catch (\Exception $e) {
-            \Log::error('Error in filter method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while filtering people. Please try again later.');
-        }
+        $companyId = Auth::user()->company_id;
+
+        $trimmedSearchTerm = trim($this->searchTerm);
+
+        $this->filteredPeoples = EmployeeDetails::where('company_id', $companyId)
+            ->where(function ($query) use ($trimmedSearchTerm) {
+                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
+                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+            })
+            ->get();
+
+        $this->peopleFound = count($this->filteredPeoples) > 0;
     }
-    
+
     public function render()
     {
-        try {
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $companyId = Auth::user()->company_id;
-    
-            $this->peoples = EmployeeDetails::where('company_id', $companyId)
-                ->orderBy('first_name')
-                ->orderBy('last_name')
-                ->get();
-    
-            $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
-            $this->record = HelpDesks::all();
-    
-            $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
-    
-            $this->records = HelpDesks::with('emp')
-                ->where(function ($query) use ($employeeId, $employeeName) {
-                    $query->where('emp_id', $employeeId)
-                        ->orWhere('cc_to', 'LIKE', "%$employeeName%");
-                })
-                ->orderBy('created_at', 'desc')
-                ->get();
-    
-            return view('livewire.help-desk', [
-                'peopleData' => $peopleData,
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('Error in render method: ' . $e->getMessage());
-            return view('livewire.help-desk')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
-        }
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $companyId = Auth::user()->company_id;
+
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+        $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+        $this->record = HelpDesks::all();
+        $employee = auth()->guard('emp')->user();
+        $employeeId = $employee->emp_id;
+        $employeeName = $employee->first_name . ' ' . $employee->last_name . ' #(' . $employeeId . ')';
+
+        $this->records = HelpDesks::with('emp')
+            ->where(function ($query) use ($employeeId, $employeeName) {
+                $query->where('emp_id', $employeeId)
+                    ->orWhere('cc_to', 'LIKE', "%$employeeName%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('livewire.help-desk', [
+            'peopleData' => $peopleData,
+        ]);
     }
 }

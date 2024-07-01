@@ -19,6 +19,8 @@ use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Company;
 use App\Models\EmpBankDetail;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 
 class AddEmployeeDetails extends Component
 {
@@ -287,8 +289,16 @@ class AddEmployeeDetails extends Component
         $empId = request()->query('emp_id');
 
         if ($empId) {
-            $this->editEmployee($empId);
-        }      
+            try {
+                $decryptedEmpId = Crypt::decrypt($empId);
+                //dd($decryptedEmpId);
+                $this->editEmployee($decryptedEmpId);
+            } catch (DecryptException $e) {
+                // Handle the error appropriately
+                session()->flash('error_message', 'Invalid Employee ID.');
+                return redirect()->route('some-error-route'); // Or handle the error as needed
+            }
+        }
     }
     public function editEmployee($employeeId)
     {

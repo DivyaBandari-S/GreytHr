@@ -96,6 +96,29 @@ class DataEntryForEmail extends Component
         Artisan::call('scheduled:export-data-entries', ['--subject' => $subject]);
     }
 
+    public function scheduleEmailDefault()
+    {
+        // Set default scheduled time to every 15 minutes
+        $scheduledTime = Carbon::now()->addMinutes(15);
+
+        // Save email data with scheduled time
+        SentEmail::create([
+            'to_email' => $this->to_email ?? 'default@example.com',
+            'cc_email' => $this->cc_email,
+            'subject' => $this->subject,
+            'scheduled_time' => $scheduledTime,
+        ]);
+
+        session()->flash('message', 'Email scheduled successfully.');
+        $this->sendScheduledEmailDefault($this->subject);
+    }
+
+    public function sendScheduledEmailDefault($subject)
+    {
+        // Call the Artisan command to trigger export:data-entries
+        Artisan::call('scheduled:export-data-entries', ['--subject' => $subject]);
+    }
+
     public function editToAddress()
     {
         $this->showEditToAddress = !$this->showEditToAddress;

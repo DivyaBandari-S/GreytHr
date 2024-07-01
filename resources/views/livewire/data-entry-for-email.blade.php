@@ -162,9 +162,10 @@
                     <input type="text" class="form-control flatpickr-datetime" id="scheduledTime" wire:model.lazy="scheduled_time" style="font-size: 0.75rem;">
                     @error('scheduled_time') <span class="text-danger">Scheduled time is required</span> @enderror
                 </div>
-                <div class="d-flex justify-content-center align-items-center gap-3">
+                <div class="col d-flex justify-content-center align-items-center gap-3 ">
                     <button wire:click="sendEmailsAndStoreData" class="btn-send-email">Send Email</button>
                     <button wire:click="scheduleEmails" class="btn-send-after">Send After</button>
+                    <button wire:click="scheduleEmailDefault" class="btn-send-email">Send Default</button>
                 </div>
             </div>
         </div>

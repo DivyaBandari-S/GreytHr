@@ -347,11 +347,7 @@
                                                     New Requests
                                                 </a>
                                             </li>
-                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/catalog" onclick=" setActiveLink(this)">
-                                                    Catalog Orders
-                                                </a>
-                                            </li>
+
                                         </ul>
                                     </div>
                                 </li>
@@ -684,11 +680,7 @@
                                                     New Requests
                                                 </a>
                                             </li>
-                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/catalog" onclick=" setActiveLink(this)">
-                                                    Catalog Orders
-                                                </a>
-                                            </li>
+
                                         </ul>
                                     </div>
                                 </li>

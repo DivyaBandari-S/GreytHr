@@ -19,7 +19,6 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         // $schedule->command('generate:monthly-leaves')->monthly();
-        $schedule->command('export:data-entries')->everyFifteenMinutes();
         $schedule->command('scheduled:export-data-entries')->everyFifteenMinutes();
 
     }

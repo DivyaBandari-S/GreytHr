@@ -94,24 +94,22 @@ class LeaveApply extends Component
     ];
     public function mount()
     {
-        try{
-
-        
-        $this->searchTerm = '';
-        $this->selectedYear = Carbon::now()->format('Y');
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
-        $this->probationDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
-        foreach ($this->probationDetails as $employee) {
-            if ($employee->hire_date) {
-                $hireDate = Carbon::parse($employee->hire_date);
-                $this->differenceInMonths = $hireDate->diffInMonths(Carbon::now());
+        try {
+            $this->searchTerm = '';
+            $this->selectedYear = Carbon::now()->format('Y');
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->probationDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
+            foreach ($this->probationDetails as $employee) {
+                if ($employee->hire_date) {
+                    $hireDate = Carbon::parse($employee->hire_date);
+                    $this->differenceInMonths = $hireDate->diffInMonths(Carbon::now());
+                }
             }
-        }
-        if ($this->applying_to) {
-            $this->loginEmpManagerId = $this->applying_to->manager_id;
-            // Retrieve the corresponding employee details for the manager
-            $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
+            if ($this->applying_to) {
+                $this->loginEmpManagerId = $this->applying_to->manager_id;
+                // Retrieve the corresponding employee details for the manager
+                $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
 
                 if ($managerDetails) {
                     // Concatenate first_name and last_name to create the full name
@@ -126,8 +124,7 @@ class LeaveApply extends Component
             }
             $this->searchEmployees();
             $this->searchCCRecipients();
-        
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             // Log the error
             Log::error('Error in mount method: ' . $e->getMessage());
             // Display a friendly error message to the user
@@ -180,7 +177,6 @@ class LeaveApply extends Component
             session()->flash('error', 'An error occurred while searching for employees. Please try again later.');
         }
     }
-
     //this method used to filter cc recipients from employee details
     public function searchCCRecipients()
     {
@@ -209,6 +205,35 @@ class LeaveApply extends Component
             session()->flash('error', 'An error occurred while searching for CC recipients. Please try again later.');
         }
     }
+    public function selectPerson($employeeId)
+    {
+        $this->searchCCRecipients();
+        // Ensure $ccRecipients is not null or empty
+        if (!is_array($this->ccRecipients) || empty($this->ccRecipients)) {
+            return;
+        }
+
+        // Find the selected person in $ccRecipients array
+        $selectedPerson = null;
+        foreach ($this->ccRecipients as $employee) {
+            if (isset($employee['emp_id']) && $employee['emp_id'] == $employeeId) {
+                $selectedPerson = $employee;
+                break;
+            }
+        }
+
+        // Check if the selected person exists
+        if ($selectedPerson) {
+            // Add emp_id to selectedPeople if it's not already there
+            if (!in_array($employeeId, $this->selectedPeople)) {
+                $this->selectedPeople[] = $employeeId;
+            }
+
+            // Update cc_to field with selectedPeople
+            $this->cc_to = implode(',', $this->selectedPeople);
+        }
+    }
+
 
     //this method will handle the search functionality
     public function handleSearch($type)
@@ -245,7 +270,6 @@ class LeaveApply extends Component
     {
         try {
             $this->showCcRecipents = !$this->showCcRecipents;
-            $this->searchCCRecipients();
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in closeCcRecipientsContainer method: ' . $e->getMessage());
@@ -516,7 +540,6 @@ class LeaveApply extends Component
     public function saveLeaveApplication()
     {
         $this->leaveApply();
-
         $this->validate([
             'from_date' => 'required|date',
             'to_date' => 'required|date',

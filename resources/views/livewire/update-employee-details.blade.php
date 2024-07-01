@@ -115,7 +115,7 @@
                         <div class="row-md-12">
                             <div class="col-md-6">
                                 <div class="d-inline-block">
-                                    <a href="{{ route('add-employee-details', ['emp_id' => $employee->emp_id]) }}" class="btn btn-primary btn-xs">
+                                    <a href="{{ route('add-employee-details', ['emp_id' => $employee->encrypted_emp_id]) }}" class="btn btn-primary btn-xs">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
                                     </a>
                                 </div>
