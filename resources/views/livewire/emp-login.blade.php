@@ -63,7 +63,7 @@
                     @enderror
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
-                    <label for="password" style="font-size: 14px;">Password</label>
+                    <labeel for="password" style="font-size: 14px;">Password</labeel>
                     <input type="password" class="form-control" id="password" placeholder="Password" wire:model="form.password" wire:change="empLoginValidate"/>
 
                     @error('form.password')

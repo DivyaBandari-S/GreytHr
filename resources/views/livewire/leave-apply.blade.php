@@ -310,10 +310,9 @@
                     </a>
                     <span class="text-2 text-secondary placeholder" id="ccPlaceholder" style="margin-top: 5px; background: transparent; color: #ccc;">Add</span>
 
-                    <div id="addedEmails" class="emails" style="display: flex; gap: 10px;">
-                        cc:
-
-                    </div>
+                    @foreach ($selectedPeople as $person)
+                    <div>{{ $person['first_name'] }} {{ $person['last_name'] }} (#{{ $person['emp_id'] }})</div>
+                    @endforeach
                 </div>
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false" style="max-height: 230px; overflow-y: auto;">
