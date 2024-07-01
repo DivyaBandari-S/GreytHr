@@ -149,6 +149,7 @@ class EmpLogin extends Component
     {
         $this->passwordChangedModal = false;
     }
+    
     public function verifyEmailAndDOB()
     {
 
@@ -156,6 +157,11 @@ class EmpLogin extends Component
             'email' => ['nullable', 'email', 'required_without:company_email'],
             'company_email' => ['nullable', 'email', 'required_without:email'],
             'dob' => ['required', 'date'],
+        ],
+        [
+            'email.required_without' => 'Email is required.', 
+            'dob.required' => 'Date of Birth is required.', 
+            'email.email' => 'Please enter a valid email address.', 
         ]);
         try {
             // Custom validation rule to ensure either email or company_email is present
@@ -213,7 +219,7 @@ class EmpLogin extends Component
                 }
             } else {
                 // Invalid email or DOB, show an error message or handle accordingly.
-                $this->addError('email', 'Invalid email or date of birth');
+                // $this->addError('email', 'Invalid email or date of birth');
                 $this->showErrorModal = true;
             }
         } catch (ValidationException $e) {
@@ -250,7 +256,13 @@ class EmpLogin extends Component
         $this->validate([
             'newPassword' => ['required', 'min:8', 'max:50',],
             'newPassword_confirmation' => ['required', 'same:newPassword'],
-        ]);
+        ]
+    ,[
+        
+        'newPassword.required' => 'New Password is required.', 
+        'newPassword_confirmation.required' => 'Confirm New Password is required.', 
+
+    ]);
 
         try {
             // Validate the new password and its confirmation

@@ -9,7 +9,7 @@
 
     <div class="row m-0">
         <!-- Left Side (Login Form) -->
-        <div class="col-md-6 p-5 ">
+        <div class="col-md-6 p-3">
             <div class="text-center mb-4">
             </div>
             @if (Session::has('success'))
@@ -55,13 +55,17 @@
                 </div>
                 @endif
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="ID / Mail" wire:model="form.emp_id" />
+                    <label for="emp_id" style="font-size: 14px;">Login ID</label>
+                    <input type="text" class="form-control" id="emp_id" placeholder="ID / Mail" wire:model="form.emp_id" />
+                    
                     @error('form.emp_id')
                     <p class="pt-2 px-1 text-danger">{{ str_replace('form.emp id', 'Employee ID', $message) }}</p>
                     @enderror
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
-                    <input type="password" class="form-control" placeholder="Password" wire:model="form.password" />
+                    <label for="password" style="font-size: 14px;">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Password" wire:model="form.password" />
+                    
                     @error('form.password')
                     <p class="pt-2 px-1 text-danger">{{ str_replace('form.password', 'Password', $message) }}</p>
                     @enderror
@@ -75,13 +79,14 @@
                 </div>
 
 
+
             </form>
 
         </div>
         <!-- Right Side (Carousel) -->
         <div class="col-md-6 p-0">
             <!-- Carousel -->
-            <div id="demo" class="carousel slide" data-bs-ride="carousel" style="background-color: f0f0f0; aspect-ratio: 16/9;border-radius:10px">
+            <div id="demo" class="carousel slide" data-bs-ride="carousel" style="background-color: f0f0f0; aspect-ratio: 16/6;border-radius:10px">
                 <!-- Indicators/dots -->
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
@@ -120,6 +125,13 @@
                 </button>
             </div>
         </div>
+        <div class="text-center pb-2">
+            <small>
+                © Greytip Software Pvt.Ltd |
+                <a href="https://xsilicasoftwaresolutions.greythr.com/v2/static-content/privacy-policy" target="_blank" style="color: rgb(2, 17, 79);">Privacy Policy</a> |
+                <a href="https://xsilicasoftwaresolutions.greythr.com/v2/static-content/terms-of-use" target="_blank" style="color: rgb(2, 17, 79);">Terms of Service</a>
+            </small>
+        </div>
 
         @if ($showDialog)
         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
@@ -127,7 +139,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79);">
                         <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
-                            <b>{{ $verified ? 'Create New Password' : 'Verify Email and DOB' }}</b>
+                            <b>{{ $verified ? 'Reset Password' : 'Forgot Password' }}</b>
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="remove">
                             <span aria-hidden="true" style="color: white;">x</span>
@@ -158,8 +170,11 @@
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-success">Reset Password</button>
+                            </div>
 
-                            <button type="submit" class="btn btn-success">Save Password</button>
+
 
                             <!-- Success or error message for password update -->
                             @if (session()->has('passwordMessage'))
@@ -180,13 +195,13 @@
                             @endif
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email/company email" wire:model="email">
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" wire:model="email">
                                 @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="dob">Date of Birth</label>
+                                <label for="dob">Date Of Birth</label>
                                 <div class="input-group">
                                     <input type="date" id="dob" name="dob" class="form-control" wire:model="dob" max="{{ date('Y-m-d') }}">
                                 </div>
@@ -194,9 +209,11 @@
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary">Verify</button>
+                            </div>
 
 
-                            <button type="submit" class="btn btn-primary">Verify</button>
 
                             <!-- Success or error message for email and DOB verification -->
                             @if (session()->has('emailDobMessage'))
@@ -231,7 +248,7 @@
                         <p>Verification successful! Do you want to change your password?</p>
                         <button type="button" class="btn btn-primary" wire:click="showPasswordChangeModal">Change
                             Password</button>
-                        <button type="button" class="btn btn-secondary" wire:click="closeSuccessModal">Cancel</button>
+                        <!-- <button type="button" class="btn btn-secondary" wire:click="closeSuccessModal">Cancel</button> -->
                     </div>
                 </div>
             </div>
@@ -253,8 +270,8 @@
                         </button>
                     </div>
                     <div class="modal-body" style="background-color: #f0f0f0; padding: 20px;">
-                        <p>Sorry You Are not Verified.... Please try again.</p>
-                        <button type="button" class="btn btn-danger" wire:click="closeErrorModal">Close</button>
+                        <p>Invalid Email or Date of Birth... Please try again!</p>
+                        <!-- <button type="button" class="btn btn-danger" wire:click="closeErrorModal">Close</button> -->
                     </div>
                 </div>
             </div>
@@ -317,3 +334,4 @@
         @endif
 
     </div>
+</div>
