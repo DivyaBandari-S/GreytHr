@@ -54,8 +54,10 @@ class EmpLogin extends Component
     protected $rules = [
         'form.emp_id' => 'required',
         'form.password' => 'required',
-        'newPassword' => 'required',
-        'newPassword_confirmation' => 'required',
+    ];
+    protected $passwordRules = [
+        'newPassword' => 'required|min:8|max:50',
+        'newPassword_confirmation' => 'required|same:newPassword',
     ];
     protected $messages = [
         'form.emp_id.required' => 'ID/Mail is required.',
@@ -72,13 +74,18 @@ class EmpLogin extends Component
     }
     public function validateField($field)
     {
-        $this->validateOnly($field);
+        if (in_array($field, ['newPassword', 'newPassword_confirmation'])) {
+            $this->validateOnly($field, $this->passwordRules);
+        } else {
+            $this->validateOnly($field, $this->rules);
+        }
     }
     
     public function empLogin()
     {
-        $this->validate();
+        $this->validate($this->rules);
       
+
 
         try {
             // $this->showLoader = true;
