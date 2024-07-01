@@ -56,7 +56,8 @@
                 @endif
                 <div class="form-group">
                     <label for="emp_id" style="font-size: 14px;">Login ID</label>
-                    <input type="text" class="form-control" id="emp_id" placeholder="ID / Mail" wire:model="form.emp_id" />
+                    <input type="text" class="form-control" id="emp_id" placeholder="ID / Mail"   wire:model.lazy="form.emp_id"
+                    wire:keydown.debounce.500ms="validateField('form.emp_id')"  />
                     
                     @error('form.emp_id')
                     <p class="pt-2 px-1 text-danger">{{ str_replace('form.emp id', 'Employee ID', $message) }}</p>
@@ -64,7 +65,8 @@
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
                     <label for="password" style="font-size: 14px;">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password" wire:model="form.password" />
+                    <input type="password" class="form-control" id="password" placeholder="Password" wire:model.lazy="form.password"
+                    wire:keydown.debounce.500ms="validateField('form.password')"/>
                     
                     @error('form.password')
                     <p class="pt-2 px-1 text-danger">{{ str_replace('form.password', 'Password', $message) }}</p>
@@ -158,14 +160,15 @@
                             @endif
                             <div class="form-group">
                                 <label for="newPassword">New Password</label>
-                                <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Enter your new password" wire:model="newPassword">
+                                <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Enter your new password" wire:model.lazy="newPassword"
+                                wire:keydown.debounce.500ms="validateField('newPassword')" >
                                 @error('newPassword')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="newPassword_confirmation">Confirm New Password</label>
-                                <input type="password" id="newPassword_confirmation" name="newPassword_confirmation" class="form-control" placeholder="Enter your new password again" wire:model="newPassword_confirmation">
+                                <input type="password" id="newPassword_confirmation" name="newPassword_confirmation" class="form-control" placeholder="Enter your new password again" wire:model.lazy="newPassword_confirmation"  wire:keydown.debounce.500ms="validateField('newPassword_confirmation')">
                                 @error('newPassword_confirmation')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -195,7 +198,7 @@
                             @endif
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" wire:model="email">
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" wire:model="email" wire:change="verifyEmailAndDOBValidation" >
                                 @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -203,7 +206,7 @@
                             <div class="form-group">
                                 <label for="dob">Date Of Birth</label>
                                 <div class="input-group">
-                                    <input type="date" id="dob" name="dob" class="form-control" wire:model="dob" max="{{ date('Y-m-d') }}">
+                                    <input type="date" id="dob" name="dob" class="form-control" max="{{ date('Y-m-d') }}" wire:model="dob" wire:change="verifyEmailAndDOBValidation">
                                 </div>
                                 @error('dob')
                                 <span class="text-danger">{{ $message }}</span>
