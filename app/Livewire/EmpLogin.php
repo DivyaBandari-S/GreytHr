@@ -51,6 +51,12 @@ class EmpLogin extends Component
     public $error = '';
     public $verify_error = '';
     public $pass_change_error = '';
+    protected $rules = [
+        'form.emp_id' => 'required',
+        'form.password' => 'required',
+        'newPassword' => 'required',
+        'newPassword_confirmation' => 'required',
+    ];
     protected $messages = [
         'form.emp_id.required' => 'ID/Mail is required.',
         'form.password.required' => 'Password is required.',
@@ -64,12 +70,15 @@ class EmpLogin extends Component
     {
         return redirect()->to('/CreateCV');
     }
+    public function validateField($field)
+    {
+        $this->validateOnly($field);
+    }
+    
     public function empLogin()
     {
-        $this->validate([
-            "form.emp_id" => 'required',
-            "form.password" => "required"
-        ]);
+        $this->validate();
+      
 
         try {
             // $this->showLoader = true;
@@ -149,9 +158,22 @@ class EmpLogin extends Component
     {
         $this->passwordChangedModal = false;
     }
+   public function verifyEmailAndDOBValidation(){
+    $this->validate([
+        'email' => ['nullable', 'email', 'required_without:company_email'],
+        'company_email' => ['nullable', 'email', 'required_without:email'],
+        'dob' => ['required', 'date'],
+    ],
+    [
+        'email.required_without' => 'Email is required.', 
+        'dob.required' => 'Date of Birth is required.', 
+        'email.email' => 'Please enter a valid email address.', 
+    ]);
+   }
     
     public function verifyEmailAndDOB()
     {
+        
 
         $this->validate([
             'email' => ['nullable', 'email', 'required_without:company_email'],
@@ -251,6 +273,7 @@ class EmpLogin extends Component
         $this->verified = true;
         $this->showSuccessModal = false;
     }
+   
     public function createNewPassword()
     {
         $this->validate([
