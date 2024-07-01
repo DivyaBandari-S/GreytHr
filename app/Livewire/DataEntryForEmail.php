@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\DataEntry;
+use App\Models\SentEmail;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
+use Illuminate\Support\Facades\Artisan;
 use Livewire\Component;
 
 class DataEntryForEmail extends Component
@@ -13,6 +15,101 @@ class DataEntryForEmail extends Component
     public $editIndex = null;
     public $editField = null;
     public $nextFridayDate;
+    public $successMessage;
+    public $to_email = 'bandaridivya1@gmail.com';
+    public $toEmail;
+    public $ccEmail;
+    public $cc_email;
+    public $subject;
+    public $showEditToAddress = false;
+    public $editSubject = false;
+    public $scheduled_time;
+    public $showCCAddress = false;
+
+
+    public $file_path; // Add a property to store file path
+
+    public function sendEmailsAndStoreData()
+    {
+        $this->validate([
+            'to_email' => 'required|email',
+            'cc_email' => 'nullable|email',
+            'subject' => 'required|string',
+        ]);
+
+        // Store data in SentEmail table
+        SentEmail::create([
+            'to_email' => $this->to_email,
+            'cc_email' => $this->cc_email,
+            'subject' => $this->subject,
+        ]);
+
+        // Optionally, you can clear the form fields after storing
+        $this->to_email = '';
+        $this->cc_email = '';
+        $this->subject = '';
+
+        // Emit a message or perform any other action upon success
+        session()->flash('message', 'Email sent successfully!');
+
+        // Call the method to send emails
+        $this->sendEmails($this->subject);
+        return redirect()->to(url()->previous());
+    }
+
+    public function sendEmails($subject)
+    {
+        // Call the Artisan command to trigger export:data-entries
+        Artisan::call('export:data-entries', ['--subject' => $subject]);
+    }
+    public function scheduleEmails()
+    {
+        $this->validate([
+            'to_email' => 'required|email',
+            'cc_email' => 'nullable|email',
+            'subject' => 'required|string',
+            'scheduled_time' => 'required|date', // Ensure scheduled time is provided
+        ]);
+
+        // Store data in SentEmail table with the scheduled time
+        SentEmail::create([
+            'to_email' => $this->to_email,
+            'cc_email' => $this->cc_email,
+            'subject' => $this->subject,
+            'scheduled_time' => $this->scheduled_time,
+        ]);
+
+        // Clear form fields after storing
+        $this->to_email = '';
+        $this->cc_email = '';
+        $this->subject = '';
+        $this->scheduled_time = null;
+        // Emit a message or perform any other action upon success
+        session()->flash('message', 'Email scheduled successfully.' . $this->scheduled_time);
+        $this->sendScheduledEmails($this->subject);
+
+        return redirect()->to(url()->previous());
+    }
+    public function sendScheduledEmails($subject)
+    {
+        // Call the Artisan command to trigger export:data-entries
+        Artisan::call('scheduled:export-data-entries', ['--subject' => $subject]);
+    }
+
+    public function editToAddress()
+    {
+        $this->showEditToAddress = !$this->showEditToAddress;
+    }
+
+    public function editCCAddress()
+    {
+        $this->showCCAddress = !$this->showCCAddress;
+    }
+
+    public function editSubject()
+    {
+        $this->editSubject = !$this->editSubject;
+    }
 
     protected $rules = [
         'dataEntries.*.employee_name' => 'nullable|string',
@@ -42,7 +139,13 @@ class DataEntryForEmail extends Component
         $today = Carbon::now();
 
         // Calculate the date of the upcoming Friday
-        $this->nextFridayDate = $today->next(CarbonInterface::FRIDAY)->format('d M, Y');
+        if ($today->isFriday()) {
+            // If today is Friday and it's the same day as the next Friday, display today's date
+            $this->nextFridayDate = $today->format('d M, Y');
+        } else {
+            // Otherwise, display the date of the upcoming Friday
+            $this->nextFridayDate = $today->next(CarbonInterface::FRIDAY)->format('d M, Y');
+        }
     }
 
     public function addRow()

@@ -14,25 +14,30 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class ExportDataEntries extends Command
+class ScheduledExportDataEntries extends Command
 {
-    protected $signature = 'export:data-entries {--subject=}';
+    protected $signature = 'scheduled:export-data-entries {--subject=}';
 
-    protected $description = 'Export data entries and send email every Friday at 12:00 PM';
+    protected $description = 'Export data entries and send email every 15 minutes or based on scheduled time';
 
     public function handle()
     {
-        $subject = $this->option('subject');
-        $emailData = SentEmail::orderBy('created_at', 'desc')->first();
+        // Fetch emails that need to be sent
+        $emailsToSend = SentEmail::where('scheduled_time', '<=', Carbon::now())
+            ->get();
 
-        if (!$emailData) {
-            $this->error('Email addresses not set. Ensure SentEmail table has valid entries.');
-            return 1; // Return non-zero to indicate error
+        foreach ($emailsToSend as $emailData) {
+            $this->sendEmail($emailData);
         }
 
+        $this->info('Scheduled data entries exported and emails sent successfully.');
+    }
+
+    protected function sendEmail($emailData)
+    {
         $toEmail = $emailData->to_email;
         $ccEmail = $emailData->cc_email;
-        $subject = $subject ?? $emailData->subject;
+        $subject = $emailData->subject;
         $filePath = storage_path('app/public/data_entries.xlsx');
 
         // Create a new spreadsheet
@@ -84,14 +89,12 @@ class ExportDataEntries extends Command
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
 
-        // Update the email details in the database and set status based on email sending
+        // Send email and update status
         $status = $this->sendEmailAndReturnStatus($toEmail, $ccEmail, $subject, $filePath);
         $emailData->update([
             'file_path' => $filePath,
             'status' => $status,
         ]);
-
-        $this->info('Data entries exported and email sent successfully with status: ' . $status);
     }
 
     protected function sendEmailAndReturnStatus($toEmail, $ccEmail, $subject, $filePath)
@@ -107,7 +110,7 @@ class ExportDataEntries extends Command
                 Mail::to($toEmail)->send($mail);
             }
             return 'sent';
-        }  catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Error sending email: ' . $e->getMessage());
             return 'pending'; // or 'failed' depending on your error handling logic
         }
