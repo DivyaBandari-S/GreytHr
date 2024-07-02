@@ -10,12 +10,11 @@
     <div class="row m-0">
         <!-- Left Side (Login Form) -->
         <div class="col-md-6 p-3">
-            <div class="text-center mb-4">
-            </div>
-            @if (Session::has('success'))
-            <div style="height: 30px;width:400px;margin-bottom:0px;margin-left:13%" class="text-center mb-4">
 
-                <div class="alert alert-success alert-dismissible fade show" role="alert" style="font-size: 12px;">
+            @if (Session::has('success'))
+            <div>
+
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="font-size: 12px; max-width: 400px; margin-left: 21%;">
 
                     {{ Session::get('success') }}
 
@@ -51,23 +50,21 @@
                 @if ($error)
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <strong style="font-size: 12px;">{{ $error }}</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
                 </div>
                 @endif
                 <div class="form-group">
-                    <label for="emp_id" style="font-size: 14px;">Login ID</label>
-                    <input type="text" class="form-control" id="emp_id" placeholder="ID / Mail"   wire:model.lazy="form.emp_id"
-                    wire:keydown.debounce.500ms="validateField('form.emp_id')"  />
-                    
+                    <label for="emp_id" style="font-size: 14px;">ID / Mail</label>
+                    <input type="text" class="form-control" id="emp_id" placeholder="Enter ID / Mail" wire:model.lazy="form.emp_id" wire:input="login" wire:keydown.debounce.500ms="validateField('form.emp_id')" />
+
                     @error('form.emp_id')
                     <p class="pt-2 px-1 text-danger">{{ str_replace('form.emp id', 'Employee ID', $message) }}</p>
                     @enderror
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
                     <label for="password" style="font-size: 14px;">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password" wire:model.lazy="form.password"
-                    wire:keydown.debounce.500ms="validateField('form.password')"/>
-                    
+                    <input type="password" class="form-control" id="password" placeholder="Enter Password" wire:model.lazy="form.password" wire:input="login" wire:keydown.debounce.500ms="validateField('form.password')" />
+
                     @error('form.password')
                     <p class="pt-2 px-1 text-danger">{{ str_replace('form.password', 'Password', $message) }}</p>
                     @enderror
@@ -160,15 +157,14 @@
                             @endif
                             <div class="form-group">
                                 <label for="newPassword">New Password</label>
-                                <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Enter your new password" wire:model.lazy="newPassword"
-                                wire:keydown.debounce.500ms="validateField('newPassword')" >
+                                <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Enter your new password" wire:model.lazy="newPassword" wire:keydown.debounce.500ms="validateField('newPassword')">
                                 @error('newPassword')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="newPassword_confirmation">Confirm New Password</label>
-                                <input type="password" id="newPassword_confirmation" name="newPassword_confirmation" class="form-control" placeholder="Enter your new password again" wire:model.lazy="newPassword_confirmation"  wire:keydown.debounce.500ms="validateField('newPassword_confirmation')">
+                                <input type="password" id="newPassword_confirmation" name="newPassword_confirmation" class="form-control" placeholder="Enter your new password" wire:model.lazy="newPassword_confirmation" wire:keydown.debounce.500ms="validateField('newPassword_confirmation')">
                                 @error('newPassword_confirmation')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -193,12 +189,13 @@
                             @if ($verify_error)
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <strong style="font-size: 10px;">{{ $verify_error }}</strong>
-                                <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <!-- <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button> -->
                             </div>
                             @endif
+
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" wire:model="email" wire:change="verifyEmailAndDOBValidation" >
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" wire:model.lazy="email" wire:keydown.debounce.500ms="validateField('email')" wire:input="forgotPassword">
                                 @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -206,7 +203,7 @@
                             <div class="form-group">
                                 <label for="dob">Date Of Birth</label>
                                 <div class="input-group">
-                                    <input type="date" id="dob" name="dob" class="form-control" max="{{ date('Y-m-d') }}" wire:model="dob" wire:change="verifyEmailAndDOBValidation">
+                                    <input type="date" id="dob" name="dob" class="form-control" max="{{ date('Y-m-d') }}" wire:model.lazy="dob" wire:keydown.debounce.500ms="validateField('dob')" wire:input="forgotPassword">
                                 </div>
                                 @error('dob')
                                 <span class="text-danger">{{ $message }}</span>
@@ -240,17 +237,19 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79);">
-                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
-                            <b>Success Message</b>
+                        <h5 style="padding: 10px; color: white; font-size: 15px;" class="modal-title">
+                            <b>Verification successful!</b>
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeSuccessModal">
                             <span aria-hidden="true" style="color: white;">x</span>
                         </button>
                     </div>
-                    <div class="modal-body" style="background-color: #f0f0f0; padding: 20px;">
-                        <p>Verification successful! Do you want to change your password?</p>
-                        <button type="button" class="btn btn-primary" wire:click="showPasswordChangeModal">Change
-                            Password</button>
+                    <div class="modal-body" style="background-color: #f0f0f0;">
+                        <p style="padding: 30px 0px; text-align: center;">Do you want to Reset your password?</p>
+                        <div class="d-flex justify-content-center">
+                            <button style="margin-bottom: 70px;" type="submit" class="btn btn-success" wire:click="showPasswordChangeModal">Reset Password</button>
+                        </div>
+
                         <!-- <button type="button" class="btn btn-secondary" wire:click="closeSuccessModal">Cancel</button> -->
                     </div>
                 </div>
@@ -259,28 +258,6 @@
         <div class="modal-backdrop fade show blurred-backdrop"></div>
         @endif
 
-        @if ($showErrorModal)
-        <!-- Error Modal -->
-        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="background-color: rgb(255, 0, 0);">
-                        <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title">
-                            <b>Error Message</b>
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeErrorModal">
-                            <span aria-hidden="true" style="color: white;">x</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" style="background-color: #f0f0f0; padding: 20px;">
-                        <p>Invalid Email or Date of Birth... Please try again!</p>
-                        <!-- <button type="button" class="btn btn-danger" wire:click="closeErrorModal">Close</button> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-backdrop fade show blurred-backdrop"></div>
-        @endif
 
 
         @if ($passwordChangedModal)
