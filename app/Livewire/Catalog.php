@@ -292,10 +292,8 @@ class Catalog extends Component
         ]);
         if ($this->image) {
             $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-
-            $this->image->storeAs('public/help-desk-images', $fileName);
-
-            $this->image = 'help-desk-images/' . $fileName;
+            $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+            $this->image = 'uploads/help-desk-images/' . $fileName;
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -335,10 +333,8 @@ class Catalog extends Component
         ]);
         if ($this->image) {
             $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-
-            $this->image->storeAs('public/help-desk-images', $fileName);
-
-            $this->image = 'help-desk-images/' . $fileName;
+            $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+            $this->image = 'uploads/help-desk-images/' . $fileName;
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -377,10 +373,8 @@ class Catalog extends Component
         ]);
         if ($this->image) {
             $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-
-            $this->image->storeAs('public/help-desk-images', $fileName);
-
-            $this->image = 'help-desk-images/' . $fileName;
+            $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+            $this->image = 'uploads/help-desk-images/' . $fileName;
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -396,6 +390,7 @@ class Catalog extends Component
             'mail' => 'N/A',
             'mobile' => 'N/A',
         ]);
+
         session()->flash('message', 'Request created successfully.');
 
 
@@ -417,10 +412,8 @@ class Catalog extends Component
         ]);
         if ($this->image) {
             $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-
-            $this->image->storeAs('public/help-desk-images', $fileName);
-
-            $this->image = 'help-desk-images/' . $fileName;
+            $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+            $this->image = 'uploads/help-desk-images/' . $fileName;
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();

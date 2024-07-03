@@ -37,31 +37,25 @@ class DataEntryForEmail extends Component
             'subject' => 'required|string',
         ]);
 
-        // Store data in SentEmail table
-        SentEmail::create([
-            'to_email' => $this->to_email,
-            'cc_email' => $this->cc_email,
-            'subject' => $this->subject,
-        ]);
+        // Send email immediately without storing in database
+        $this->sendEmails($this->subject);
 
-        // Optionally, you can clear the form fields after storing
+        // Optionally, you can clear the form fields after sending
         $this->to_email = '';
         $this->cc_email = '';
         $this->subject = '';
 
         // Emit a message or perform any other action upon success
         session()->flash('message', 'Email sent successfully!');
-
-        // Call the method to send emails
-        $this->sendEmails($this->subject);
         return redirect()->to(url()->previous());
     }
 
     public function sendEmails($subject)
     {
-        // Call the Artisan command to trigger export:data-entries
+        // Call the Artisan command to trigger export:data-entries with immediate send
         Artisan::call('export:data-entries', ['--subject' => $subject]);
     }
+
     public function scheduleEmails()
     {
         $this->validate([
@@ -84,40 +78,30 @@ class DataEntryForEmail extends Component
         $this->cc_email = '';
         $this->subject = '';
         $this->scheduled_time = null;
+
         // Emit a message or perform any other action upon success
-        session()->flash('message', 'Email scheduled successfully.' . $this->scheduled_time);
-        $this->sendScheduledEmails($this->subject);
+        session()->flash('message', 'Email scheduled successfully.');
 
         return redirect()->to(url()->previous());
     }
-    public function sendScheduledEmails($subject)
-    {
-        // Call the Artisan command to trigger export:data-entries
-        Artisan::call('scheduled:export-data-entries', ['--subject' => $subject]);
-    }
+
 
     public function scheduleEmailDefault()
     {
         // Set default scheduled time to every 15 minutes
-        $scheduledTime = Carbon::now()->addMinutes(15);
+        $scheduledTime = Carbon::now()->addMinutes(30);
 
         // Save email data with scheduled time
         SentEmail::create([
-            'to_email' => $this->to_email ?? 'default@example.com',
+            'to_email' => $this->to_email ?? 'bandaridivya1@gmail.com',
             'cc_email' => $this->cc_email,
             'subject' => $this->subject,
             'scheduled_time' => $scheduledTime,
         ]);
 
         session()->flash('message', 'Email scheduled successfully.');
-        $this->sendScheduledEmailDefault($this->subject);
     }
 
-    public function sendScheduledEmailDefault($subject)
-    {
-        // Call the Artisan command to trigger export:data-entries
-        Artisan::call('scheduled:export-data-entries', ['--subject' => $subject]);
-    }
 
     public function editToAddress()
     {

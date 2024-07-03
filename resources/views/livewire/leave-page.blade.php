@@ -1,4 +1,5 @@
 <div class="m-0 px-4" style="position: relative;">
+<a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Go Back</a>
     <div class="toggle-container">
         <style>
             /* Define your custom CSS classes */
@@ -7,6 +8,7 @@
                 border-radius: 5px;
                 display: flex;
                 font-weight: 500;
+                text-align: center;
                 color: #778899;
                 width: 50%;
                 font-size: 0.825rem;
@@ -33,7 +35,7 @@
             <span class="close-btn" onclick="closeMessage()" style="cursor:pointer;">X</span>
         </div>
         @if(session()->has('error'))
-        <div class="alert alert-danger" style="font-size:12px;"a>
+        <div class="alert alert-danger" style="font-size:12px;" a>
             {{ session('error') }}
         </div>
         @endif
@@ -53,16 +55,17 @@
             <ul class="nav custom-nav-tabs">
                 <!-- Apply the custom class to the nav -->
                 <li class="nav-item flex-grow-1">
-                    <a class="nav-link custom-nav-link active" data-section="applyButton" onclick="toggleDetails('applyButton', this)">Apply</a>
+                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleDetails('applyButton')">Apply</a>
                 </li>
                 <li class="nav-item flex-grow-1">
-                    <a class="nav-link custom-nav-link" data-section="pendingButton" onclick="toggleDetails('pendingButton', this)">Pending</a>
+                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleDetails('pendingButton')">Pending</a>
                 </li>
                 <li class="nav-item flex-grow-1">
-                    <a class="nav-link custom-nav-link" data-section="historyButton" onclick="toggleDetails('historyButton', this)">History</a>
+                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleDetails('historyButton')">History</a>
                 </li>
             </ul>
         </div>
+
 
 
         <div id="cardElement" class="side ">
@@ -95,7 +98,7 @@
         </div>
 
 
-        <div id="leave" class="row mt-2 align-items-center " style="display:none;">
+        <div id="leave" class="row mt-2 align-items-center " style="{{ $activeSection === 'applyButton' ? '' : 'display:none;' }}">
 
             <div style="width:85%; margin:0 auto;">@livewire('leave-apply') </div>
 
@@ -150,12 +153,12 @@
 
 
         {{-- Apply Tab --}}
-        <div class="row" id="applyButton">
+        <div class="row" style=" display:none">
             <div style="width:85%; margin:0 auto;">@livewire('leave-apply')</div>
         </div>
 
         {{-- pending --}}
-        <div id="pendingButton" class="row rounded mt-4" style="display: none;">
+        <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}">
 
             @if($this->leavePending->isNotEmpty())
 
@@ -301,7 +304,7 @@
 
         {{-- history --}}
 
-        <div id="historyButton" class="row rounded mt-4" style="display: none;">
+        <div id="historyButton" class="row rounded mt-4" style="{{ $activeSection === 'historyButton' ? '' : 'display:none;' }}">
             @if($this->leaveRequests->isNotEmpty())
 
             @foreach($this->leaveRequests->whereIn('status', ['approved', 'rejected','Withdrawn']) as $leaveRequest)
@@ -469,43 +472,6 @@
         infoParagraph.style.display = (infoParagraph.style.display === 'none' || infoParagraph.style.display === '') ?
             'block' : 'none';
     }
-
-    function toggleDetails(sectionId, clickedLink) {
-        const tabs = ['applyButton', 'pendingButton', 'historyButton'];
-
-        const links = document.querySelectorAll('.custom-nav-link');
-        links.forEach(link => link.classList.remove('active'));
-
-        clickedLink.classList.add('active');
-
-        tabs.forEach(tab => {
-            const tabElement = document.getElementById(tab);
-            if (tab === sectionId) {
-                tabElement.style.display = 'block';
-            } else {
-                tabElement.style.display = 'none';
-            }
-        });
-
-        // Hide the content of other containers when 'pendingButton' or 'historyButton' is clicked
-        const cardElement = document.getElementById('cardElement');
-        if (sectionId === 'pendingButton' || sectionId === 'historyButton') {
-            otherContainers.forEach(container => {
-                const containerElement = document.getElementById(container);
-                containerElement.style.display = 'none';
-                cardElement.style.display = 'none';
-            });
-        } else {
-            // Show all containers when other buttons are clicked
-            const allContainers = ['leave'];
-            allContainers.forEach(container => {
-                const containerElement = document.getElementById(container);
-                containerElement.style.display = 'block';
-            });
-        }
-    }
-
-
 
     function toggleOptions(sectionId, clickedLink) {
         const tabs = ['leave', 'restricted', 'leaveCancel', 'compOff'];

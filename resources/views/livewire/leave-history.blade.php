@@ -3,8 +3,8 @@
         <div class="row m-0 p-0">
             <div class="col-md-3 p-0 m-0 mb-2 ">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                    <ol class="breadcrumb" >
-                        <li class="breadcrumb-item"><a href="{{ route('leave-page') }}">My Leave</a></li>
+                    <ol class="breadcrumb d-flex align-items-center" >
+                        <li class="breadcrumb-item"><a class="submit-btn" type="button" href="{{ route('leave-page') }}">My Leave</a></li>
                         <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Leave - View Details</li>
                     </ol>
                 </nav>

@@ -27,6 +27,12 @@ class LeavePage extends Component
 
     public $leavePendingRequest;
     public $leavePending;
+    public $activeSection = 'applyButton';
+
+    public function toggleDetails($section)
+    {
+        $this->activeSection = $section;
+    }
     public function mount()
     {
         // Get the logged-in user's ID and company ID

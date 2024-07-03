@@ -140,7 +140,6 @@ class Tasks extends Component
              if ($this->image instanceof \Illuminate\Http\UploadedFile) {
                 $imagePath = $this->image->store('tasks-images', 'public');
             $this->isLoadingImage = false;
-            
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();

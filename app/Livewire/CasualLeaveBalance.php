@@ -7,6 +7,7 @@ use App\Models\EmployeeDetails;
 use App\Models\LeaveRequest;
 use App\Models\EmployeeLeaveBalances;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CasualLeaveBalance extends Component
 {
@@ -14,9 +15,29 @@ class CasualLeaveBalance extends Component
     public $employeeLeaveBalances;
     public $employeeleaveavlid;
     public $totalSickDays = 0;
-    public $Availablebalance;
+    public $employeeDetails;
+    public $Availablebalance,$selectedYear,$currentYear ;
 
-    
+
+    public function mount(){
+        $this->selectedYear = Carbon::now()->format('Y');
+        $this->currentYear = now()->year;
+    }
+    public function yearDropDown()
+    {
+        try {
+            $currentYear = Carbon::now()->format('Y');
+            if ($this->isTrue($currentYear - 2)) {
+            } elseif ($this->isTrue($currentYear - 1)) {
+            } elseif ($this->isTrue($currentYear)) {
+            } else {
+            }
+        } catch (\Exception $e) {
+            // Add an error message or log a message indicating that an error occurred
+            $errorMessage = 'An error occurred in yearDropDown() method: ' . $e->getMessage();
+            $this->addError('session', 'An error occurred. Please try again later.');
+        }
+    }
 
     ///calculate number of days
     public static function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
@@ -63,17 +84,15 @@ class CasualLeaveBalance extends Component
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
                 }
-            }elseif(self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)){
+            } elseif (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 1; // Add half a day
                 }
-            }
-            else {
+            } else {
                 $totalDays += (self::getSessionNumber($toSession) - self::getSessionNumber($fromSession) + 1) * 0.5;
             }
 
             return (float) $totalDays;
-
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
@@ -84,27 +103,23 @@ class CasualLeaveBalance extends Component
         // You might need to customize this based on your actual session values
         return (int) str_replace('Session ', '', $session);
     }
-    
+
     public function render()
     {
-        try{
+        try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            
-            $this->employeeLeaveBalances= EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->where('leave_type', 'Causal Leave')
-            ->get();
-            
-            // Now $employeeLeaveBalances contains all the rows from employee_leave_balances 
-            // where emp_id matches and leave_type is "Sick Leave"
-            $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_type', 'Causal Leave')
-            ->where('status', 'approved')
-            ->get();
 
-            
+            $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                ->where('leave_type', 'Causal Leave')
+                ->get();
+
+            $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_type', 'Causal Leave')
+                ->where('status', 'approved')
+                ->get();
+
             foreach ($this->employeeleaveavlid as $leaveRequest) {
-                //$leaveType = $leaveRequest->leave_type;
                 $days = self::calculateNumberOfDays(
                     $leaveRequest->from_date,
                     $leaveRequest->from_session,
@@ -112,17 +127,15 @@ class CasualLeaveBalance extends Component
                     $leaveRequest->to_session
                 );
                 $this->totalSickDays += intval($days);
-                // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
-            }
-            foreach ($this->employeeLeaveBalances as $employeeLeaveBalance) {
-                $this->Availablebalance = $employeeLeaveBalance->leave_balance - $this->totalSickDays;
-                // Do something with $this->Availablebalance
             }
 
+            foreach ($this->employeeLeaveBalances as $employeeLeaveBalance) {
+                $this->Availablebalance = $employeeLeaveBalance->leave_balance - $this->totalSickDays;
+            }
 
             $currentMonth = date('n');
             $currentYear = date('Y');
-            $startingMonth = 1; // January
+            $startingMonth = 1;
 
             $grantedLeavesByMonth = [];
             $availedLeavesByMonth = [];
@@ -132,24 +145,20 @@ class CasualLeaveBalance extends Component
                 ->sum('leave_balance');
 
             for ($month = $startingMonth; $month <= $currentMonth; $month++) {
-                // Fetch availed leaves count for this month
                 $availedLeavesCount = LeaveRequest::where('emp_id', $employeeId)
                     ->where('leave_type', 'Causal Leave')
                     ->where('status', 'approved')
                     ->whereYear('from_date', $currentYear)
                     ->whereMonth('from_date', $month)
                     ->count();
-                
-                // Adjust granted leaves count by subtracting availed leaves count
-                $grantedLeavesCount -= $availedLeavesCount;
 
-                // Ensure granted leaves count is non-negative
+                $grantedLeavesCount -= $availedLeavesCount;
                 $grantedLeavesCount = max(0, $grantedLeavesCount);
-                
-                // Store the granted leaves count and availed leaves count in their respective arrays
+
                 $grantedLeavesByMonth[] = $grantedLeavesCount;
                 $availedLeavesByMonth[] = $availedLeavesCount;
             }
+
             $chartData = [
                 'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 'datasets' => [
@@ -170,43 +179,40 @@ class CasualLeaveBalance extends Component
                 ]
             ];
 
-                $chartOptions = [
-                    'scales' => [
-                        'yAxes' => [[
-                            'ticks' => [
-                                'beginAtZero' => true,
-                                'min' => 0,
-                                'max' => 10,
-                                'stepSize' => 2 // Adjust the step size to show values at intervals of 2
-                            ],
-                            'gridLines' => [
-                                'display' => false // Remove grid lines from the y-axis
-                            ]
-                        ]],
-                        'xAxes' => [[
-                            'gridLines' => [
-                                'display' => false // Remove grid lines from the x-axis
-                            ]
-                        ]]
-                    ],
-                    'maintainAspectRatio' => false, // Allow chart to be resized
-                    'responsive' => true // Make chart responsive
-                ];
+            $chartOptions = [
+                'scales' => [
+                    'yAxes' => [[
+                        'ticks' => [
+                            'beginAtZero' => true,
+                            'min' => 0,
+                            'max' => 10,
+                            'stepSize' => 2
+                        ],
+                        'gridLines' => [
+                            'display' => false
+                        ]
+                    ]],
+                    'xAxes' => [[
+                        'gridLines' => [
+                            'display' => false
+                        ]
+                    ]]
+                ],
+                'maintainAspectRatio' => false,
+                'responsive' => true
+            ];
 
             return view('livewire.casual-leave-balance', [
                 'employeeLeaveBalances' => $this->employeeLeaveBalances,
                 'employeeleaveavlid' => $this->employeeleaveavlid,
                 'totalSickDays' => $this->totalSickDays,
                 'Availablebalance' => $this->Availablebalance,
-                'totalSickDays' => $this->totalSickDays,
                 'chartData' => $chartData,
-                'chartOptions' => $chartOptions // Pass chart options to the view
+                'chartOptions' => $chartOptions
             ]);
-        }
-        catch (\Exception $e) {
-            // Handle the exception, log the error message, and show a user-friendly message
-            \Log::error('Error in Casual Leave Balance render method: ' . $e->getMessage());
-    
+        } catch (\Exception $e) {
+            Log::error('Error in Casual Leave Balance render method: ' . $e->getMessage());
+
             return view('livewire.casual-leave-balance')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
         }
     }

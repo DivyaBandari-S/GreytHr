@@ -85,17 +85,17 @@ class HelpDesk extends Component
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
             'file_path' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
-            'cc_to' => 'required',
+            'cc_to' => 'nullable',
             'priority' => 'required|in:High,Medium,Low',
-            'image' => 'image|max:2048',
+            'image' => 'nullable|image|max:2048',
         ]);
+
         if ($this->image) {
             $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-
-            $this->image->storeAs('public/help-desk-images', $fileName);
-
-            $this->image = 'help-desk-images/' . $fileName;
+            $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+            $this->image = 'uploads/help-desk-images/' . $fileName;
         }
+
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
@@ -110,7 +110,11 @@ class HelpDesk extends Component
             'mail' => 'N/A',
             'mobile' => 'N/A',
             'distributor_name' => 'N/A',
+
         ]);
+
+
+        session()->flash('message', 'Request created successfully.');
 
         $this->reset();
     }

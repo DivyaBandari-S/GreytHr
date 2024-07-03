@@ -2,6 +2,12 @@
 
     <body>
         <div class="row ">
+            @if (session()->has('message'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('message') }}
+                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style=" font-size: 0.75rem;padding: 0.25rem 0.5rem;margin-top:6px"></button>
+            </div>
+            @endif
             <div class="d-flex align-item-center justify-content-center">
                 <div class="card " style="width:400px; ">
                     <div class="card-header px-4 py-0 m-0 ">
@@ -22,7 +28,7 @@
             </div>
 
         </div>
-        <div class="d-flex flex-row justify-content-end gap-10 mt-4">
+        <div class="d-flex flex-row justify-content-end gap-10 mt-2">
             <div class="mx-2 ">
                 <button wire:click="openFinance" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> Finance Request </button>
             </div>
@@ -31,7 +37,7 @@
             </div>
 
             <div>
-                <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding:4px 10px;font-size: 12px;" onclick="location.href='/catalog'">
+                <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 1px 0; font-size: 12px;" onclick="location.href='/catalog'">
                     IT Request
                 </button>
             </div>
@@ -42,7 +48,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>New Request</b></h5>
+                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>HR Request</b></h5>
                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
                         </button>
                     </div>
@@ -65,6 +71,7 @@
                                     </optgroup>
 
                                 </select>
+
                                 <div>
                                     @error('category') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -200,7 +207,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
                         <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Finance Request</b></h5>
-                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
+                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeFinance" style="background-color: white; height:10px;width:10px;">
                         </button>
                     </div>
                     <div class="modal-body">
@@ -373,14 +380,17 @@
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->category }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:20%;">{{ $record->subject }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->description }}</td>
-                        <td style="padding: 10px;font-size:12px;text-align:center">
+                        <td style="padding: 10px; font-size: 12px; text-align: center;">
                             @if ($record->file_path)
-                            <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF;text-transform: capitalize;width:10%;">View File</a>
+                            <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize; width: 10%;">View File</a>
                             @else
-                            N/A
+                            -
                             @endif
                         </td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:20%;">{{ $record->cc_to }}</td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                            {{ $record->cc_to ?? '-' }}
+                        </td>
+
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->priority }}</td>
 
                         </td>
@@ -424,7 +434,7 @@
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->description }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center">
                             @if ($record->file_path)
-                            <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF;text-transform: capitalize;">View File</a>
+                            <a href="{{ asset('public/help-desk-images/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
                             @else
                             N/A
                             @endif
@@ -473,7 +483,7 @@
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->description }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center">
                             @if ($record->file_path)
-                            <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF;text-transform: capitalize;">View File</a>
+                            <a href="{{ asset($record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
                             @else
                             N/A
                             @endif

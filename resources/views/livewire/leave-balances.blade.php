@@ -87,7 +87,7 @@
         <button type="button" class="leave-balance-dowload mx-2 px-2 rounded " data-toggle="modal" data-target="#exampleModalCenter">
             <i class="fa-solid fa-download" style="color: white;"></i>
        </button>
-       
+
        <select class="dropdown bg-white rounded" wire:model="selectedYear" wire:change="yearDropDown">
             <?php
             // Get the current year
@@ -101,7 +101,7 @@
         </select>
     </div>
 
-       
+
     <!-- modal -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
