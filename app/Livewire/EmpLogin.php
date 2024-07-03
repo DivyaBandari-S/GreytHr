@@ -56,12 +56,34 @@ class EmpLogin extends Component
         'form.password' => 'required',
     ];
     protected $passwordRules = [
-        'newPassword' => 'required|min:8|max:50',
+        'newPassword' => [
+            'required',
+            'min:8',
+            'max:50',
+            'regex:/[A-Z]/',
+            'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            'regex:/[0-9]/'
+        ],
         'newPassword_confirmation' => 'required|same:newPassword',
     ];
+    protected $forgotPasswordRules =  [
+        'email' => ['nullable', 'email', 'required_without:company_email'],
+        'company_email' => ['nullable', 'email', 'required_without:email'],
+        'dob' => ['required', 'date'],
+    ];
     protected $messages = [
-        'form.emp_id.required' => 'ID/Mail is required.',
+        'form.emp_id.required' => 'ID / Mail is required.',
         'form.password.required' => 'Password is required.',
+        'newPassword.required' => 'New Password is required.',
+        'newPassword.min' => 'New Password should be at least 8 characters.',
+        'newPassword.max' => 'New Password should not exceed 50 characters.',
+        'newPassword.regex' => 'New Password must contain at least one uppercase letter and one special character, and one digit.',
+        'newPassword_confirmation.required' => 'Confirm Password is required.',
+        'newPassword_confirmation.same' => 'New Password and Confirm Password should be same.',
+        'email.required_without' => 'Email is required.',
+        'dob.required' => 'Date of Birth is required.',
+        'email.email' => 'Please enter a valid email.',
+
     ];
 
     public function jobs()
@@ -74,17 +96,23 @@ class EmpLogin extends Component
     }
     public function validateField($field)
     {
-        if (in_array($field, ['newPassword', 'newPassword_confirmation'])) {
+        if (in_array($field, ['email', 'company_email', 'dob'])) {
+            $this->validateOnly($field, $this->forgotPasswordRules);
+        } elseif (in_array($field, ['newPassword', 'newPassword_confirmation'])) {
             $this->validateOnly($field, $this->passwordRules);
         } else {
             $this->validateOnly($field, $this->rules);
         }
     }
-    
+    public function login()
+    {
+        $this->error = '';
+    }
+
     public function empLogin()
     {
         $this->validate($this->rules);
-      
+
 
 
         try {
@@ -93,7 +121,7 @@ class EmpLogin extends Component
             if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/');
             } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-               return redirect('/');
+                return redirect('/');
             } elseif (Auth::guard('hr')->attempt(['hr_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/home-dashboard');
             } elseif (Auth::guard('hr')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
@@ -165,33 +193,24 @@ class EmpLogin extends Component
     {
         $this->passwordChangedModal = false;
     }
-   public function verifyEmailAndDOBValidation(){
-    $this->validate([
-        'email' => ['nullable', 'email', 'required_without:company_email'],
-        'company_email' => ['nullable', 'email', 'required_without:email'],
-        'dob' => ['required', 'date'],
-    ],
-    [
-        'email.required_without' => 'Email is required.', 
-        'dob.required' => 'Date of Birth is required.', 
-        'email.email' => 'Please enter a valid email address.', 
-    ]);
-   }
-    
+    public function forgotPassword()
+    {
+        $this->verify_error = '';
+    }
+
+
     public function verifyEmailAndDOB()
     {
-        
 
-        $this->validate([
-            'email' => ['nullable', 'email', 'required_without:company_email'],
-            'company_email' => ['nullable', 'email', 'required_without:email'],
-            'dob' => ['required', 'date'],
-        ],
-        [
-            'email.required_without' => 'Email is required.',
-            'dob.required' => 'Date of Birth is required.', 
-            'email.email' => 'Please enter a valid email address.', 
-        ]);
+
+        $this->validate(
+            [
+                'email' => ['nullable', 'email', 'required_without:company_email'],
+                'company_email' => ['nullable', 'email', 'required_without:email'],
+                'dob' => ['required', 'date'],
+            ],
+
+        );
         try {
             // Custom validation rule to ensure either email or company_email is present
 
@@ -244,12 +263,13 @@ class EmpLogin extends Component
                 $this->verified = true;
                 if ($this->verified) {
                     $this->verified = false;
+                    $this->verify_error = false;
                     $this->showSuccessModal = true;
                 }
             } else {
                 // Invalid email or DOB, show an error message or handle accordingly.
                 // $this->addError('email', 'Invalid email or date of birth');
-                $this->showErrorModal = true;
+                $this->verify_error = "Invalid Email or Date of Birth... Please try again!";
             }
         } catch (ValidationException $e) {
             // Handle validation errors
@@ -280,19 +300,15 @@ class EmpLogin extends Component
         $this->verified = true;
         $this->showSuccessModal = false;
     }
-   
+
     public function createNewPassword()
     {
-        $this->validate([
-            'newPassword' => ['required', 'min:8', 'max:50',],
-            'newPassword_confirmation' => ['required', 'same:newPassword'],
-        ]
-    ,[
-        
-        'newPassword.required' => 'New Password is required.', 
-        'newPassword_confirmation.required' => 'Confirm New Password is required.', 
-
-    ]);
+        $this->validate(
+            [
+                'newPassword' => ['required', 'min:8', 'max:50',],
+                'newPassword_confirmation' => ['required', 'same:newPassword'],
+            ]
+        );
 
         try {
             // Validate the new password and its confirmation
