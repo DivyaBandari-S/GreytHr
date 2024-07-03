@@ -1,12 +1,14 @@
 <div>
     <div class="row m-0">
         @if (session()->has('message'))
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('message') }}
+            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style=" font-size: 0.75rem;padding: 0.25rem 0.5rem;margin-top:5px"></button>
         </div>
         @endif
+
         <div class="col-md-12 mb-4">
-            <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 2px 4px; font-size: 12px;" onclick="location.href='/HelpDesk'">
+            <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 1px 0; font-size: 12px;" onclick="location.href='/HelpDesk'">
                 Back
             </button>
         </div>

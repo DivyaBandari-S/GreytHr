@@ -1,15 +1,15 @@
 <?php
- 
+
 namespace App\Livewire;
- 
+
 use App\Models\HelpDesks;
 use Livewire\Component;
- 
+
 class AuthChecking extends Component
 {
     public $activeTab = 'active';
     public $records;
- 
+
     public $selectedCatalog = 'active';
     public $selectedNew = 'active';
     public function confirmByAdmin($taskId)
@@ -19,26 +19,26 @@ class AuthChecking extends Component
             $task->update([
                 'status' => 'Open',
                 'category' => $task->category ?? 'N/A',
-                 'mail'   => $task->mail ?? 'N/A',
+                'mail'   => $task->mail ?? 'N/A',
             ]);
         }
         return redirect()->to('/HelpDesk');
     }
- 
+
     public function openForDesks($taskId)
     {
         $task = HelpDesks::find($taskId);
- 
+
         if ($task) {
             $task->update(['status' => 'Completed']);
         }
         return redirect()->to('/HelpDesk');
     }
- 
+
     public function closeForDesks($taskId)
     {
         $task = HelpDesks::find($taskId);
- 
+
         if ($task) {
             $task->update(['status' => 'Open']);
         }
@@ -47,14 +47,14 @@ class AuthChecking extends Component
     public function pendingForDesks($taskId)
     {
         $task = HelpDesks::find($taskId);
- 
+
         if ($task) {
             $task->update(['status' => 'Pending']);
         }
         return redirect()->to('/HelpDesk');
     }
-    public $forIT, $forHR, $forFinance,$forAdmin;
- 
+    public $forIT, $forHR, $forFinance, $forAdmin;
+
     public function render()
     {
         if (auth()->guard('it')->check()) {
@@ -64,11 +64,11 @@ class AuthChecking extends Component
                     $query->where('company_id', $companyId);
                 })
                 ->orderBy('created_at', 'desc')
-                ->whereIn('category', ['Other Request', 'Database Access Request', 'IT Training Request', 'New Laptop', 'New Mailbox Request', 'Request For IT Accessories', 'Software Installation', 'System Upgrade Request', 'VPN Access Request','N/A'])
+                ->whereIn('category', ['Request For IT', 'Distribution List Request', 'New Laptop', 'New Distribution Request', 'New Mailbox Request', 'Devops Access Request', 'New ID Card', 'MMS Request', 'Desktop Request', 'N/A'])
                 ->get();
         } elseif (auth()->guard('hr')->check()) {
             $companyId = auth()->guard('hr')->user()->company_id;
- 
+
             $this->forHR = HelpDesks::with('emp')
                 ->whereHas('emp', function ($query) use ($companyId) {
                     $query->where('company_id', $companyId);
@@ -78,7 +78,7 @@ class AuthChecking extends Component
                 ->get();
         } elseif (auth()->guard('finance')->check()) {
             $companyId = auth()->guard('finance')->user()->company_id;
- 
+
             $this->forFinance = HelpDesks::with('emp')
                 ->whereHas('emp', function ($query) use ($companyId) {
                     $query->where('company_id', $companyId);
@@ -86,9 +86,9 @@ class AuthChecking extends Component
                 ->orderBy('created_at', 'desc')
                 ->whereIn('category', ['Income Tax', 'Loans', 'Payslip'])
                 ->get();
-        }   elseif (auth()->guard('admins')->check()) {
+        } elseif (auth()->guard('admins')->check()) {
             $companyId = auth()->guard('admins')->user()->company_id;
-           
+
             $this->forAdmin = HelpDesks::with('emp')
                 ->whereHas('emp', function ($query) use ($companyId) {
                     $query->where('company_id', $companyId);
@@ -100,26 +100,26 @@ class AuthChecking extends Component
             $this->forAdmin = HelpDesks::with('emp')
                 ->where('status', 'Recent')
                 ->orderBy('created_at', 'desc')
-                
+
                 ->get();
         }
         if ($this->activeTab == 'active') {
             $this->forIT = HelpDesks::with('emp')
                 ->where('status', 'Open')
                 ->orderBy('created_at', 'desc')
-                ->whereIn('category', ['Other Request', 'Database Access Request', 'IT Training Request', 'New Laptop', 'New Mailbox Request', 'Request For IT Accessories', 'Software Installation', 'System Upgrade Request', 'VPN Access Request','N/A'])
+                ->whereIn('category', ['Request For IT', 'Distribution List Request', 'New Laptop', 'New Distribution Request', 'New Mailbox Request', 'Devops Access Request', 'New ID Card', 'MMS Request', 'Desktop Request', 'N/A'])
                 ->get();
         } elseif ($this->activeTab == 'pending') {
             $this->forIT = HelpDesks::with('emp')
-            ->where('status', 'Pending')
-            ->orderBy('created_at', 'desc')
-          
-            ->get();
+                ->where('status', 'Pending')
+                ->orderBy('created_at', 'desc')
+
+                ->get();
         } elseif ($this->activeTab == 'closed') {
             $this->forIT = HelpDesks::with('emp')
-            ->where('status', 'Completed')
-            ->orderBy('created_at', 'desc')
-            ->get();
+                ->where('status', 'Completed')
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
         if ($this->activeTab == 'active') {
             $this->forHR = HelpDesks::with('emp')
@@ -129,14 +129,14 @@ class AuthChecking extends Component
                 ->get();
         } elseif ($this->activeTab == 'pending') {
             $this->forHR = HelpDesks::with('emp')
-            ->where('status', 'Pending')
-            ->orderBy('created_at', 'desc')
-            ->get();
+                ->where('status', 'Pending')
+                ->orderBy('created_at', 'desc')
+                ->get();
         } elseif ($this->activeTab == 'closed') {
             $this->forHR = HelpDesks::with('emp')
-            ->where('status', 'Completed')
-            ->orderBy('created_at', 'desc')
-            ->get();
+                ->where('status', 'Completed')
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
         if ($this->activeTab == 'active') {
             $this->forFinance = HelpDesks::with('emp')
@@ -146,17 +146,17 @@ class AuthChecking extends Component
                 ->get();
         } elseif ($this->activeTab == 'pending') {
             $this->forFinance = HelpDesks::with('emp')
-            ->where('status', 'Pending')
-            ->orderBy('created_at', 'desc')
-            ->get();
+                ->where('status', 'Pending')
+                ->orderBy('created_at', 'desc')
+                ->get();
         } elseif ($this->activeTab == 'closed') {
             $this->forFinance = HelpDesks::with('emp')
-            ->where('status', 'Completed')
-            ->orderBy('created_at', 'desc')
-            ->get();
+                ->where('status', 'Completed')
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
-       
- 
+
+
         return view('livewire.auth-checking');
     }
 }

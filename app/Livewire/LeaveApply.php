@@ -92,6 +92,18 @@ class LeaveApply extends Component
         'reason' => 'required',
         'files.*' => 'nullable|file|max:10240',
     ];
+
+    protected $messages = [
+        'leave_type.required' => 'Leave type is required',
+        'from_date.required' => 'From date is required',
+        'from_session.required' => 'Session is required',
+        'to_date.required' => 'To date is required',
+        'to_session.required' => 'Session is required',
+        'contact_details.required' => 'Contact details are required',
+        'reason.required' => 'Reason is required',
+        'files.*.file' => 'Each file must be a valid file',
+        'files.*.max' => 'Each file must not exceed 10MB in size',
+    ];
     public function mount()
     {
         try {
@@ -114,7 +126,6 @@ class LeaveApply extends Component
                 if ($managerDetails) {
                     // Concatenate first_name and last_name to create the full name
                     $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
-
                     // Assign the full name to a property for later use
                     $this->loginEmpManager = $fullName;
                     $this->loginEmpManagerProfile = $managerDetails->image;
@@ -611,8 +622,13 @@ class LeaveApply extends Component
             return redirect()->back();
         }
     }
-
-
+    public  $showinfoMessage = true;
+    public  $showinfoButton = false;
+    public function toggleInfo()
+    {
+        $this->showinfoMessage = !$this->showinfoMessage;
+        $this->showinfoButton = !$this->showinfoButton;
+    }
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;

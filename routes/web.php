@@ -92,6 +92,7 @@ use App\Livewire\ImageUpload;
 use App\Livewire\ItDashboardPage;
 use App\Livewire\LeaveBalancesChart;
 use App\Livewire\OrganisationChart;
+use App\Livewire\ReportManagement;
 use App\Livewire\ReviewPendingRegularisation;
 use App\Livewire\ShiftRoaster;
 use App\Livewire\Ytdreport;
@@ -197,8 +198,8 @@ Route::middleware(['auth:hr','handleSession'])->group(function () {
     // Route::get('/hrleaveOverview', HrLeaveOverview::class)->name('hrleaveOverview');
     Route::get('/hrAttendanceOverview', HrAttendanceOverviewNew::class)->name('hrAttendanceOverview');
     Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
-    Route::get('/hremployeedirectory', EmployeeDirectory::class)->name('employee-directory');
-    Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
+    // Route::get('/hremployeedirectory', EmployeeDirectory::class)->name('employee-directory');
+    // Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
     // Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
@@ -301,6 +302,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     // TODO module
     Route::get('/tasks', Tasks::class)->name('tasks');
     Route::get('/employees-review', EmployeesReview::class)->name('review');
+    Route::get('/reports', ReportManagement::class)->name('reports');
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');
 
     // ####################################### Chat Module Routes #########################endregion

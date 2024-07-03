@@ -24,6 +24,7 @@ class ScheduledExportDataEntries extends Command
     {
         // Fetch emails that need to be sent
         $emailsToSend = SentEmail::where('scheduled_time', '<=', Carbon::now())
+            ->orWhereNull('scheduled_time') // Include immediate sends without scheduled_time
             ->get();
 
         foreach ($emailsToSend as $emailData) {

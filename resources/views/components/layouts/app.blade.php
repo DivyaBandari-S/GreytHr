@@ -131,9 +131,8 @@
 
                     <ul class="flex-column nav">
 
-                        <div style="margin-bottom: 20px;margin-top:5px">
-
-                            @livewire('company-logo')
+                        <div style="margin-bottom: 20px;margin-top:5px;cursor:pointer;">
+                            <a href="/"> @livewire('company-logo')</a>
                         </div>
 
                         @livewire('profile-card')
@@ -362,6 +361,15 @@
 
                                     </a>
                                 </li>
+                                @if ($mangerid)
+                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+
+                                    <a class="nav-link" href="/reports" onclick="setActiveLink(this)">
+
+                                        <i class="fas mr-1    fa-user-friends" style="color:#6c7e90"></i> Reports
+                                    </a>
+                                </li>
+                                @endif
                             </ul>
                         </div>
                         @endauth
@@ -460,9 +468,8 @@
 
                     <ul class="nav flex-column">
 
-                        <div style="margin-bottom: 20px;margin-top:5px">
-
-                            @livewire('company-logo')
+                        <div style="margin-bottom: 20px;margin-top:5px;cursor:pointer;">
+                            <a href="/"> @livewire('company-logo')</a>
                         </div>
 
                         @livewire('profile-card')
@@ -694,6 +701,15 @@
 
                                     </a>
                                 </li>
+                                @if ($mangerid)
+                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+
+                                    <a class="nav-link" href="/reports" onclick="setActiveLink(this)">
+
+                                        <i class="fas mr-1    fa-user-friends" style="color:#6c7e90"></i> Reports
+                                    </a>
+                                </li>
+                                @endif
                             </ul>
                         </div>
                         @endauth
@@ -783,12 +799,11 @@
 
             <div class="menucard displayNone" onclick="myMenuSmallHover()" id="menu-small" style="border-radius:0px; width: 5%; background:#55535333;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);padding:0;margin:0;  backdrop-filter: blur( 3px ); -webkit-backdrop-filter: blur( 3px )">
 
-                <div class="left-card-body" style="margin-top: 0px;padding: 0 5px;margin: 0;height: 100vh;">
+                <div class="left-card-body" style="margin-top: 0px;padding: 0 5px;margin: 0;height: 100%;">
                     <ul class="nav flex-column">
 
-                        <div class="miniBarLogo" style="margin-bottom: 15px;margin-top:20px">
-
-                            @livewire('company-logo')
+                        <div class="miniBarLogo" style="margin-bottom: 20px;margin-top:5px;cursor:pointer;">
+                            <a href="/"> @livewire('company-logo')</a>
                         </div>
 
 
@@ -1107,7 +1122,6 @@
                         </a>
                     </div>
                     <div class="col dropdown mx-2 p-0">
-
                         <button class="dropdown-btn" style="font-size: 13px;  white-space: nowrap; ">Quick
                             Links</button>
                         <div class="dropdown-content" style="font-size: 12px;font-weight:500;">
@@ -1212,7 +1226,7 @@
 
                     <div class="modal-body">
                         <div class="logo text-center mb-1" style="padding-top: 20px;">
-                            @livewire('company-logo')
+                            <a href="/">@livewire('company-logo')</a>
                         </div>
 
                         <div class="d-flex justify-content-center m-4">
@@ -1563,6 +1577,7 @@
                 helpdeskDropdownClicked = false; // Reset the flag after toggling
             }
         }
+
         function toggleHelpDeskDropdown2() {
             const helpOptions = document.getElementById("help-options");
             const helpCaret = document.getElementById("help-caret");

@@ -2,18 +2,32 @@
     @if($errorMessage)
     <div id="errorMessage" class="alert alert-danger">
         {{ $errorMessage }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
     @endif
 
+
     <div class="applyContainer bg-white">
+        @if($showinfoMessage)
+        <div class="hide-leave-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
+            <p class="mb-0" style="font-size:11px;">Leave is earned by an employee and granted by the employer to take time off work. The employee is free to avail this leave in accordance with the company policy.</p>
+            <p class="mb-0" wire:click="toggleInfo" style="font-size:12px;font-weight:500; color:#3a9efd;cursor:pointer;">Hide</p>
+        </div>
+        @endif
 
-        <p style="font-weight:500; font-size:14px;">Applying for Leave</p>
-
+        <div class="d-flex justify-content-between">
+            <p style="font-weight:500; font-size:14px;">Applying for Leave</p>
+            @if($showinfoButton)
+            <p class="info-paragraph" wire:click="toggleInfo" style="font-size:12px;font-weight:500; color:#3a9efd;cursor:pointer;">Info</p>
+            @endif
+        </div>
         <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
             <div class="form-row d-flex mt-3">
-                <div class="form-group col-md-7" style="position: relative;">
-                    <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave type</label>
-                    <select id="leaveType" class="form-control placeholder-small" wire:click="selectLeave" wire:model="leave_type" name="leaveType" style="width: 50%; font-weight: 400; color: #778899; font-size: 12px;">
+                <div class="form-group col-md-7">
+                    <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave type</label> <br>
+                    <select id="leaveType" class="dropdown p-2 outline-none rounded placeholder-small" wire:click="selectLeave" wire:model="leave_type" name="leaveType" style="width: 50%; font-weight: 400; color: #778899; font-size: 12px;border:1px solid #ccc;">
                         <option value="default">Select Type</option>
                         @php
                         $managerInfo = DB::table('employee_details')
@@ -35,7 +49,7 @@
                             <option value="Causal Leave">Casual Leave</option>
                             <option value="Marriage Leave">Marriage Leave</option>
                     </select>
-                    <span style="position: absolute; top: 75%; right: 52%; transform: translateY(-50%);font-size:12px;color:#c8cfd6;">▼</span>
+                    <br>
                     @error('leave_type') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group col-md-4 m-0 p-0">
@@ -192,14 +206,13 @@
                     <input type="date" wire:model="from_date" class="form-control placeholder-small" id="fromDate" name="fromDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('from_date')">
                     @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
-                <div class="form-group col-md-6" style="position: relative;">
-                    <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Sessions</label>
-                    <select class="form-control placeholder-small" wire:model="from_session" id="session" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('from_session')">
+                <div class="form-group col-md-6">
+                    <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Sessions</label> <br>
+                    <select class="dropdown p-2 outline-none rounded placeholder-small w-100" wire:model="from_session" id="session" name="session" style="font-size:12px;border:1px solid #ccc;" wire:change="handleFieldUpdate('from_session')">
                         <option value="default">Select session</option>
                         <option value="Session 1">Session 1</option>
                         <option value="Session 2">Session 2</option>
                     </select>
-                    <span style="position: absolute; top: 75%; right: 5%; transform: translateY(-50%);font-size:12px;color:#c8cfd6;">▼</span>
                     @error('from_session') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -209,14 +222,13 @@
                     <input type="date" wire:model="to_date" class="form-control placeholder-small" id="toDate" name="toDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('to_date')">
                     @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
-                <div class="form-group col-md-6" style="position: relative;">
-                    <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Sessions</label>
-                    <select class="form-control placeholder-small" wire:model="to_session" id="session" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('to_session')">
+                <div class="form-group col-md-6">
+                    <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Sessions</label> <br>
+                    <select class="dropdown p-2 outline-none rounded placeholder-small w-100" wire:model="to_session" id="session" name="session" style="font-size:12px;border:1px solid #ccc;" wire:change="handleFieldUpdate('to_session')">
                         <option value="default">Select session</option>
                         <option value="Session 1">Session 1</option>
                         <option value="Session 2">Session 2</option>
                     </select>
-                    <span style="position: absolute; top: 75%; right: 5%; transform: translateY(-50%);font-size:12px;color:#c8cfd6;">▼</span>
                     @error('to_session') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -303,17 +315,17 @@
                     CC to
                 </label>
                 <div class="control-wrapper" style="display: flex; flex-direction: row; gap: 10px;">
-                    <a href="javascript:void(0);" class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
+                    <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
                         <div class="icon-container" style="display: flex; justify-content: center; align-items: center;">
                             <i class="fa-solid fa-plus" style="color: #778899;"></i>
                         </div>
                     </a>
-                    <span class="text-2 text-secondary placeholder" id="ccPlaceholder" style="margin-top: 5px; background: transparent; color: #ccc;">Add</span>
-
+                    <span class="text-2 text-secondary placeholder" id="ccPlaceholder" style="margin-top: 5px; background: transparent; color: #ccc; pointer-events: none;">Add</span>
                     @foreach ($selectedPeople as $person)
                     <div>{{ $person['first_name'] }} {{ $person['last_name'] }} (#{{ $person['emp_id'] }})</div>
                     @endforeach
                 </div>
+
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false" style="max-height: 230px; overflow-y: auto;">
                     <div class="row" style="padding: 0 ; margin:0;">
@@ -362,12 +374,12 @@
 
             <div class="form-group">
                 <label for="contactDetails" style="color: #778899; font-size: 12px; font-weight: 500;">Contact Details</label>
-                <input type="text" wire:model="contact_details" class="form-control placeholder-small" id="contactDetails" name="contactDetails" style="color: #778899;width:50%;">
+                <input type="text" wire:model="contact_details" class="form-control placeholder-small" id="contactDetails" name="contactDetails" style="color: #778899;width:50%;font-size:13px;">
                 @error('contact_details') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group">
                 <label for="reason" style="color: #778899; font-size: 12px; font-weight: 500;">Reason</label>
-                <textarea class="form-control" wire:model="reason" id="reason" name="reason" placeholder="Enter a reason" rows="4" style="font-size:12px;color: #778899;"></textarea>
+                <textarea class="form-control placeholder-small" wire:model="reason" id="reason" name="reason" placeholder="Enter a reason" rows="4" style="color: #778899;font-size:13px;"></textarea>
                 @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group">
@@ -375,9 +387,9 @@
                 @error('file_paths') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
 
-            <div class="buttons1">
+            <div class="buttons-leave">
                 <button type="submit" class="btn btn-primary" style="background: rgb(2, 17, 79);border:none;font-size:12px;" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
-                <button type="button" class="btn btn-secondary" style="background: #fff;border:1px solid rgb(2, 17, 79);font-size:12px;color:rgb(2, 17, 79);">Cancel</button>
+                <button type="button" class="btn btn-secondary"  style="background: #fff;border:1px solid rgb(2, 17, 79);font-size:12px;color:rgb(2, 17, 79);">Cancel</button>
             </div>
         </form>
     </div>

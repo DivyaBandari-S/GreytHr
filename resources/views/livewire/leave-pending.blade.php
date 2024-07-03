@@ -1,15 +1,14 @@
 <div>
-
     <div class="detail-container ">
         <div class="row m-0 p-0">
             <div class="col-md-4 p-0 m-0 mb-2 ">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                    <ol class="breadcrumb " style="font-size: 14px;background:none;font-weight:500;">
-                        <li class="breadcrumb-item"><a href="{{ route('leave-page') }}">Go Back</a></li>
+                    <ol class="breadcrumb d-flex align-items-center " style="font-size: 14px;background:none;font-weight:500;">
+                        <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('leave-page') }}">Go Back</a></li>
                         <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Review - Review Leave</li>
                     </ol>
                 </nav>
-            </div>
+            </div>c
         </div>
         <div class="header-details" style="font-size: 10px; font-weight: 500; text-align:start; margin-left:150px; ">
             <h6 >Leave Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </h6>
