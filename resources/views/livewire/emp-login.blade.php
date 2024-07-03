@@ -126,7 +126,7 @@
         </div>
         <div class="text-center pb-2">
             <small>
-                © Greytip Software Pvt.Ltd |
+                © Xsilica Software Solutions Pvt.Ltd |
                 <a href="https://xsilicasoftwaresolutions.greythr.com/v2/static-content/privacy-policy" target="_blank" style="color: rgb(2, 17, 79);">Privacy Policy</a> |
                 <a href="https://xsilicasoftwaresolutions.greythr.com/v2/static-content/terms-of-use" target="_blank" style="color: rgb(2, 17, 79);">Terms of Service</a>
             </small>
