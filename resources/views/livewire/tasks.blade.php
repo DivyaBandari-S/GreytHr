@@ -51,7 +51,7 @@
                                             {{ $comment->comment }}
                                             @endforeach
                                             <!-- Add Comment link to trigger modal -->
-                                            <button type="button" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" class="btn submit-btn btn-sm" data-toggle="modal" data-target="#exampleModalCenter" >Add Comment</button>
+                                            <button type="button" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" class="btn submit-btn btn-sm" data-toggle="modal" data-target="#exampleModalCenter">Add Comment</button>
                                             <button wire:click="openForTasks('{{ $record->id }}')" style="border:1px solid rgb(2, 17, 79);width:80px" class="btn cancel-btn btn-sm">Close</button>
                                         </div>
                                     </div>

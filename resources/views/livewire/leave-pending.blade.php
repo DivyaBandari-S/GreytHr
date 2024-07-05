@@ -8,7 +8,7 @@
                         <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Review - Review Leave</li>
                     </ol>
                 </nav>
-            </div>c
+            </div>
         </div>
         <div class="header-details" style="font-size: 10px; font-weight: 500; text-align:start; margin-left:150px; ">
             <h6 >Leave Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </h6>

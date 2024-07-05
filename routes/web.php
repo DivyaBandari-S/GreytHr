@@ -5,6 +5,7 @@ use App\Livewire\ApprovedDetails;
 use App\Livewire\AddEmployeeDetails;
 use App\Livewire\AddHolidayList;
 use App\Livewire\ReviewClosedRegularisation;
+use App\Livewire\SickLeaveBalance;
 use App\Livewire\UpdateEmployeeDetails;
 use App\Livewire\Delegates;
 use App\Livewire\EmpLogin;
@@ -69,7 +70,6 @@ use App\Livewire\HomeDashboard;
 use App\Livewire\LeaveBalanaceAsOnADay;
 use App\Livewire\LetterRequests;
 use App\Livewire\TeamOnLeaveChart;
-use App\Livewire\Sickleavebalance;
 use App\Livewire\CasualLeaveBalance;
 use App\Livewire\CasualProbationLeaveBalance;
 
@@ -95,6 +95,7 @@ use App\Livewire\OrganisationChart;
 use App\Livewire\ReportManagement;
 use App\Livewire\ReviewPendingRegularisation;
 use App\Livewire\ShiftRoaster;
+use App\Livewire\SickLeaveBalances;
 use App\Livewire\Ytdreport;
 use Illuminate\Support\Facades\Route;
 
@@ -289,6 +290,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/holiday-calender', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
     Route::get('/casualleavebalance',CasualLeaveBalance::class)->name('casual-leave-balance');
+    Route::get('/sickleavebalance',SickLeaveBalances::class)->name('sick-leave-balance');
     Route::get('/casualprobationleavebalance',CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
     Route::get('/leave-cancel', LeaveCancel::class)->name('leave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');

@@ -940,11 +940,11 @@ button.close-button {
 }
 /* content slot scrolling */
 .slot {
-    max-height: 520px;
+    max-height: 88vh;
     overflow-y: auto;
     margin: 0;
     background: #f5f5f5;
-    height: calc(100vh - 84px);
+    height: 88vh;
     overflow-y: auto;
     font-family: "Montserrat", sans-serif;
 }
@@ -1033,7 +1033,7 @@ button.close-button {
         display: none !important;
     }
     .scrollable-container {
-        height: 50%;
+        height: 70%;
         max-height: 90%;
         overflow-y: auto;
     }
@@ -1054,7 +1054,7 @@ button.close-button {
 
 @media only screen and (min-width: 1440px) {
     .slot {
-        max-height: 660px;
+        max-height: 88vh;
         overflow-x: hidden;
         overflow-y: auto;
     }
@@ -1062,8 +1062,9 @@ button.close-button {
         width: 230px;
         padding: 0 5px;
         margin: 0;
+        height: 100vh;
         display: flex;
-        height: 750px;
+        max-height: 100vh;
     }
 }
 /* end of app.blade */

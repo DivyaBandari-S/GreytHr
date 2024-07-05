@@ -2,7 +2,7 @@
     <style>
         .custom-table-wrapper {
             position: relative;
-            max-height: 100px;
+            max-height: 130px;
             overflow-y: auto;
             border-collapse: collapse;
         }
@@ -88,7 +88,7 @@
                     <ol class="breadcrumb d-flex align-items-center " style="font-size: 14px;background:none;font-weight:500;">
                         <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('home') }}">Home</a></li>
                         <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('leave-balance') }}">Leave Balances</a></li>
-                        <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Casual Probation Leave</li>
+                        <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Sick Leave</li>
                     </ol>
                 </nav>
             </div>
