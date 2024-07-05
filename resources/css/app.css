@@ -10,10 +10,12 @@
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
     background-color: white;
+    background-color:rgba(52, 213, 157, 0.849);
     padding: 20px;
     width: 80%;
     margin-top: 30px;
     border-radius: 5px;
+
 }
 /* Ending of auth checking module (Kumar Asapu)*/
 
