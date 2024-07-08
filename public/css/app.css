@@ -347,6 +347,15 @@ body {
     font-size: 12px;
     border: none;
 }
+.cancel-btn1 {
+    background-color: white;
+    color: rgb(2, 17, 79);
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 6px 12px;
+    font-size: 12px;
+    border: 1px solid rgb(2, 17, 79) !important;
+}
 .comment-btn {
     background: none;
     border: none;

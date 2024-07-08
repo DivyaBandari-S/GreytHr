@@ -20,6 +20,7 @@ class Tasks extends Component
     public $status = false;
     public $searchTerm = '';
     public $showDialog = false;
+    public $showModal = false;
     public $employeeDetails;
     public $emp_id;
     public $task_name;
@@ -51,6 +52,19 @@ class Tasks extends Component
     public $commentAdded = false;
     public $showAddCommentModal = false;
     public $editCommentId = null;
+
+    protected $rules = [
+        'newComment' => 'required',
+    ];
+    protected $messages = [
+        'newComment.required' => 'Comment is required.',
+
+    ];
+    public function validateField($field)
+    {
+
+        $this->validateOnly($field, $this->rules);
+    }
 
     public function forAssignee()
     {
@@ -237,7 +251,12 @@ class Tasks extends Component
     {
         $this->taskId = $taskId;
         $this->newComment = '';
+        $this->showModal = true;
         $this->fetchTaskComments($taskId);
+    }
+    public function closeModal()
+    {
+        $this->showModal = false;
     }
     public function openEditCommentModal($commentId)
     {
@@ -258,7 +277,7 @@ class Tasks extends Component
             'comment' => $this->newComment,
         ]);
 
-        session()->flash('message', 'Comment updated successfully.');
+        session()->flash('comment_message', 'Comment updated successfully.');
 
         // Reset the edit state
         $this->editCommentId = null;
@@ -278,7 +297,8 @@ class Tasks extends Component
 
         $this->commentAdded = true; // Set the flag to indicate that a comment has been added
         $this->newComment = '';
-        session()->flash('message', 'Comment added successfully.');
+        $this->showModal = false;
+       session()->flash('comment_message', 'Comment added successfully.');
     }
     public function updatedNewComment($value)
     {
@@ -291,7 +311,7 @@ class Tasks extends Component
         try {
             $comment = TaskComment::findOrFail($commentId);
             $comment->delete();
-            session()->flash('message', 'Comment deleted successfully.');
+            session()->flash('comment_message', 'Comment deleted successfully.');
             $this->fetchTaskComments($this->taskId);
         } catch (\Exception $e) {
             // Handle any exceptions that occur during the deletion process
