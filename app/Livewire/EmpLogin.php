@@ -1,5 +1,16 @@
 <?php
 
+// File Name                       : EmpLogin.php
+// Description                     : This file contains the implementation multi guard login
+// Creator                         : Saragada Siva Kumar
+// Email                           :
+// Organization                    : PayG.
+// Date                            : 2024-03-07
+// Framework                       : Laravel (10.10 Version)
+// Programming Language            : PHP (8.1 Version)
+// Database                        : MySQL
+// Models                          : EmployeeDetails,Hr,Finance,Admin,IT
+
 namespace App\Livewire;
 
 use Illuminate\Validation\Rule;
@@ -38,9 +49,41 @@ class EmpLogin extends Component
         'password' => '',
     ];
     public $error = '';
+    public $verify_error = '';
+    public $pass_change_error = '';
+    protected $rules = [
+        'form.emp_id' => 'required',
+        'form.password' => 'required',
+    ];
+    protected $passwordRules = [
+        'newPassword' => [
+            'required',
+            'min:8',
+            'max:50',
+            'regex:/[A-Z]/',
+            'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            'regex:/[0-9]/'
+        ],
+        'newPassword_confirmation' => 'required|same:newPassword',
+    ];
+    protected $forgotPasswordRules =  [
+        'email' => ['nullable', 'email', 'required_without:company_email'],
+        'company_email' => ['nullable', 'email', 'required_without:email'],
+        'dob' => ['required', 'date'],
+    ];
     protected $messages = [
-        'form.emp_id.required' => 'ID/Mail is required.',
+        'form.emp_id.required' => 'ID / Mail is required.',
         'form.password.required' => 'Password is required.',
+        'newPassword.required' => 'New Password is required.',
+        'newPassword.min' => 'New Password should be at least 8 characters.',
+        'newPassword.max' => 'New Password should not exceed 50 characters.',
+        'newPassword.regex' => 'New Password must contain at least one uppercase letter and one special character, and one digit.',
+        'newPassword_confirmation.required' => 'Confirm Password is required.',
+        'newPassword_confirmation.same' => 'New Password and Confirm Password should be same.',
+        'email.required_without' => 'Email is required.',
+        'dob.required' => 'Date of Birth is required.',
+        'email.email' => 'Please enter a valid email.',
+
     ];
 
     public function jobs()
@@ -51,12 +94,26 @@ class EmpLogin extends Component
     {
         return redirect()->to('/CreateCV');
     }
+    public function validateField($field)
+    {
+        if (in_array($field, ['email', 'company_email', 'dob'])) {
+            $this->validateOnly($field, $this->forgotPasswordRules);
+        } elseif (in_array($field, ['newPassword', 'newPassword_confirmation'])) {
+            $this->validateOnly($field, $this->passwordRules);
+        } else {
+            $this->validateOnly($field, $this->rules);
+        }
+    }
+    public function login()
+    {
+        $this->error = '';
+    }
+
     public function empLogin()
     {
-        $this->validate([
-            "form.emp_id" => 'required',
-            "form.password" => "required"
-        ]);
+        $this->validate($this->rules);
+
+
 
         try {
             // $this->showLoader = true;
@@ -74,11 +131,11 @@ class EmpLogin extends Component
             } elseif (Auth::guard('finance')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/financePage');
             } elseif (Auth::guard('it')->attempt(['it_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/itPage');
+                return redirect('/ithomepage');
             } elseif (Auth::guard('admins')->attempt(['admin_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/adminPage');
             } elseif (Auth::guard('it')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/itPage');
+                return redirect('/ithomepage');
             } else {
                 $this->error = "Invalid ID or Password. Please try again.";
             }
@@ -136,14 +193,24 @@ class EmpLogin extends Component
     {
         $this->passwordChangedModal = false;
     }
+    public function forgotPassword()
+    {
+        $this->verify_error = '';
+    }
+
+
     public function verifyEmailAndDOB()
     {
 
-        $this->validate([
-            'email' => ['nullable', 'email', 'required_without:company_email'],
-            'company_email' => ['nullable', 'email', 'required_without:email'],
-            'dob' => ['required', 'date'],
-        ]);
+
+        $this->validate(
+            [
+                'email' => ['nullable', 'email', 'required_without:company_email'],
+                'company_email' => ['nullable', 'email', 'required_without:email'],
+                'dob' => ['required', 'date'],
+            ],
+
+        );
         try {
             // Custom validation rule to ensure either email or company_email is present
 
@@ -196,29 +263,34 @@ class EmpLogin extends Component
                 $this->verified = true;
                 if ($this->verified) {
                     $this->verified = false;
+                    $this->verify_error = false;
                     $this->showSuccessModal = true;
                 }
             } else {
                 // Invalid email or DOB, show an error message or handle accordingly.
-                $this->addError('email', 'Invalid email or date of birth');
-                $this->showErrorModal = true;
+                // $this->addError('email', 'Invalid email or date of birth');
+                $this->verify_error = "Invalid Email or Date of Birth... Please try again!";
             }
         } catch (ValidationException $e) {
             // Handle validation errors
             //$this->showErrorModal = true;
-            $this->addError('email', 'There was a problem with your input. Please check and try again.');
+            // $this->addError('email', 'There was a problem with your input. Please check and try again.');
+            $this->verify_error = "There was a problem with your input. Please check and try again.";
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database errors
             //$this->showErrorModal = true;
-            $this->addError('email', 'We are experiencing technical difficulties. Please try again later.');
+            // $this->addError('email', 'We are experiencing technical difficulties. Please try again later.');
+            $this->verify_error = 'We are experiencing technical difficulties. Please try again later.';
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
             // Handle server errors
             // $this->showErrorModal = true;
-            $this->addError('email', 'There is a server error. Please try again later.');
+            // $this->addError('email', 'There is a server error. Please try again later.');
+            $this->verify_error = 'There is a server error. Please try again later.';
         } catch (\Exception $e) {
             // Handle general errors
             // $this->showErrorModal = true;
-            $this->addError('email', 'An unexpected error occurred. Please try again.');
+            // $this->addError('email', 'An unexpected error occurred. Please try again.');
+            $this->verify_error = 'An unexpected error occurred. Please try again.';
         }
     }
 
@@ -228,12 +300,15 @@ class EmpLogin extends Component
         $this->verified = true;
         $this->showSuccessModal = false;
     }
+
     public function createNewPassword()
     {
-        $this->validate([
-            'newPassword' => ['required', 'min:8', 'max:50',],
-            'newPassword_confirmation' => ['required', 'same:newPassword'],
-        ]);
+        $this->validate(
+            [
+                'newPassword' => ['required', 'min:8', 'max:50',],
+                'newPassword_confirmation' => ['required', 'same:newPassword'],
+            ]
+        );
 
         try {
             // Validate the new password and its confirmation
@@ -308,19 +383,19 @@ class EmpLogin extends Component
         } catch (ValidationException $e) {
             // Handle validation errors
             // $this->passwordChangedModal = false;
-            $this->addError('newPassword', 'There was a problem with your input. Please check and try again.');
+            $this->pass_change_error = 'There was a problem with your input. Please check and try again.';
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database errors
             // $this->passwordChangedModal = false;
-            $this->addError('newPassword', 'We are experiencing technical difficulties. Please try again later.');
+            $this->pass_change_error = 'We are experiencing technical difficulties. Please try again later.';
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
             // Handle server errors
             // $this->passwordChangedModal = false;
-            $this->addError('newPassword', 'There is a server error. Please try again later.');
+            $this->pass_change_error = 'There is a server error. Please try again later.';
         } catch (\Exception $e) {
             // Handle general errors
             //$this->passwordChangedModal = false;
-            $this->addError('newPassword', 'An unexpected error occurred. Please try again.');
+            $this->pass_change_error = 'An unexpected error occurred. Please try again.';
         }
     }
 

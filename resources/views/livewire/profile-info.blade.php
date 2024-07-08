@@ -1,9 +1,11 @@
 <div>
-
-    <div class="row m-0 p-0">
-
-
-        <div class="card" style="width: auto; margin-left: 18%;padding:5px">
+    @if(session()->has('emp_error'))
+        <div class="alert alert-danger">
+            {{ session('emp_error') }}
+        </div>
+    @endif
+    <div class="row  p-0" style="margin:0 10px;">
+        <div class="card" style="width: auto; margin-left: 18%;padding:5px;">
             <ul class="nav custom-nav-tabss"> <!-- Apply the custom class to the nav -->
                 <li class="nav-item-pi flex-grow-1">
                     <a class="custom-nav-link-pi active" data-section="personalDetails" onclick="toggleDetails('personalDetails', this)">Personal</a>
@@ -22,9 +24,9 @@
                 </li>
             </ul>
         </div>
-<div>
+    <div>
 
-</div>
+   </div>
         @foreach($employeeDetails as $employee)
         {{-- Personal Tab --}}
         <div class="row p-0 " id="personalDetails" style=" margin:20px auto;">
@@ -95,7 +97,7 @@
                 </div>
 
                 <div class="row" style="border-radius: 5px; height: 270px; width: 100%; background-color: white;margin-bottom: 20px;">
-                    <div style="margin-top: 2%;margin-left:15px;margin-bottom:10px;color:#778899;font-weight:500;font-size:13px;">PERSONAL</div>
+                    <div style="margin-top: 2%;margin-left:15px;margin-bottom:20px;color:#778899;font-weight:500;font-size:13px;">PERSONAL</div>
                     <div class="col">
                         <div style="font-size: 11px; color: #778899; margin-left: 15px;">
                             Blood Group

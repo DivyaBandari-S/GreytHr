@@ -21,7 +21,11 @@
         "laravel/socialite": "^5.11",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.3",
-        "spatie/simple-excel": "^3.4"
+        "maatwebsite/excel": "^1.1",
+        "phpoffice/phpspreadsheet": "^2.1",
+        "power-components/livewire-powergrid": "^5.8",
+        "spatie/simple-excel": "^3.4",
+        "torann/geoip": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

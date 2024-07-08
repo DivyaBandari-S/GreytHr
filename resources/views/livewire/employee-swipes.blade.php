@@ -7,7 +7,7 @@
 </head>
 <body>
     @if($showEmployeeSwipes)
-        <p>Employee Swipes</p>
+        <p class="mb-0">Employee Swipes</p>
     @endif
 </body>
 </html>

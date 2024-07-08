@@ -130,8 +130,8 @@
                             @endif
                         </div>
                         <div class="form-actions">
-                            <button class="btn btn-primary submit" type="submit" style="color: white; background:rgb(2, 17, 79);height:30px;font-size:12px">Submit</button>
-                            <button id="cancel-button" class="btn reset" type="reset" style="color: white; background:rgb(2, 17, 79);height:30px;font-size:12px">Cancel</button>
+                            <button class="btn submit-btn submit" type="submit" >Submit</button>
+                            <button id="cancel-button" class="btn cancel-btn reset" type="reset" style="border:1px solid rgb(2,17,79)">Cancel</button>
                         </div>
                     </div>
                 </form>

@@ -87,7 +87,7 @@
         <button type="button" class="leave-balance-dowload mx-2 px-2 rounded " data-toggle="modal" data-target="#exampleModalCenter">
             <i class="fa-solid fa-download" style="color: white;"></i>
        </button>
-       
+
        <select class="dropdown bg-white rounded" wire:model="selectedYear" wire:change="yearDropDown">
             <?php
             // Get the current year
@@ -101,7 +101,7 @@
         </select>
     </div>
 
-       
+
     <!-- modal -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -447,7 +447,7 @@
                          <div class="center text-center" style="margin-top:50px;" >
                              <h5 >{{$casualLeaveBalance}}</h5>
                              <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                             <a href="#" style="font-size:12px;">View Details</a>
+                             <a href="/casualleavebalance" style="font-size:12px;">View Details</a>
                         </div>
                         <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;">
@@ -474,7 +474,7 @@
                             <div class="center text-center" style="margin-top:50px;">
                                 <h5 style="font-size:16px;">{{ $sickLeaveBalance }}</h5>
                                 <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                                <a href="#" style="font-size:12px;">View Details</a>
+                                <a href="/sickleavebalance" style="font-size:12px;">View Details</a>
                             </div>
                             <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
@@ -501,7 +501,7 @@
                             <div class="center text-center" style="margin-top:50px;">
                                 <h5 style="font-size:16px;">{{ $casualProbationLeaveBalance }}</h5>
                                 <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                                <a href="/leaveBalChart" style="font-size:12px;">View Details</a>
+                                <a href="/casualprobationleavebalance" style="font-size:12px;">View Details</a>
                             </div>
                             <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">

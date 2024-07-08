@@ -1,7 +1,7 @@
 <div>
-    <button class="back-button"><a class="a-back" href="/document">Back</a></button>
-    <div class="container" style="font-size: 0.9rem; ;font-family: 'Montserrat', sans-serif;">
-        <div class="row" style="position: relative;font-family: 'Montserrat', sans-serif;">
+    <button class="back-button" style="margin-left:20px;"><a class="a-back" href="/document">Back</a></button>
+    <div class="container" style="font-size: 0.9rem; ;">
+        <div class="row m-0 mt-2 p-0" style="position: relative;">
             <div class="row mb-2">
                 <div wire:click="$set('tab', 'Letters List')" class="col-md-2">
                     <div class="tab {{ $tab === 'Letters List' ? 'active' : '' }}">Letters List</div>
@@ -15,9 +15,9 @@
 
         <div class="row mt-4" style="background-color: white; border-radius: 5px; height: auto;">
             @if($tab=="Letters List")
-            <div class="row" style="font-family: 'Montserrat', sans-serif;">
+            <div class="row" style="">
                 <div class="col-md-3">
-                    <div style="margin-top: 5px;">
+                    <div class="mb-2" style="margin-top: 5px;">
                         <div>JUMP TO</div>
                     </div>
                     <button wire:click="$set('jumpToTab', 'Confirmation Letter')" class="jump-to {{ $jumpToTab === 'Confirmation Letter' ? 'active' : '' }}">Confirmation Letter</button>

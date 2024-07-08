@@ -92,6 +92,25 @@ class LeaveApply extends Component
         'reason' => 'required',
         'files.*' => 'nullable|file|max:10240',
     ];
+
+    protected $messages = [
+        'leave_type.required' => 'Leave type is required',
+        'from_date.required' => 'From date is required',
+        'from_session.required' => 'Session is required',
+        'to_date.required' => 'To date is required',
+        'to_session.required' => 'Session is required',
+        'contact_details.required' => 'Contact details are required',
+        'reason.required' => 'Reason is required',
+        'files.*.file' => 'Each file must be a valid file',
+        'files.*.max' => 'Each file must not exceed 10MB in size',
+    ];
+
+
+    public function validateField($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
     public function mount()
     {
         try {
@@ -114,7 +133,6 @@ class LeaveApply extends Component
                 if ($managerDetails) {
                     // Concatenate first_name and last_name to create the full name
                     $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
-
                     // Assign the full name to a property for later use
                     $this->loginEmpManager = $fullName;
                     $this->loginEmpManagerProfile = $managerDetails->image;
@@ -122,6 +140,7 @@ class LeaveApply extends Component
                     $this->loginEmpManager = $this->applying_to->report_to;
                 }
             }
+            $this->cancelLeaveApplication();
             $this->searchEmployees();
             $this->searchCCRecipients();
         } catch (\Exception $e) {
@@ -178,6 +197,8 @@ class LeaveApply extends Component
         }
     }
 
+
+
     //this method used to filter cc recipients from employee details
     public function searchCCRecipients()
     {
@@ -206,6 +227,63 @@ class LeaveApply extends Component
             session()->flash('error', 'An error occurred while searching for CC recipients. Please try again later.');
         }
     }
+    public $selectedCcTo = [];
+    public $selectedCCEmployees = [];
+
+    public function toggleSelection($empId)
+    {
+        if (isset($this->selectedPeople[$empId])) {
+            unset($this->selectedPeople[$empId]);
+        } else {
+            $this->selectedPeople[$empId] = true;
+        }
+        $this->searchCCRecipients();
+        $this->fetchEmployeeDetails();
+    }
+    public function fetchEmployeeDetails()
+    {
+        // Reset the list of selected employees
+        $this->selectedCCEmployees = [];
+
+        // Fetch details for selected employees
+        foreach ($this->selectedPeople as $empId => $selected) {
+            $employee = EmployeeDetails::where('emp_id', $empId)->first();
+
+            if ($employee) {
+                // Calculate initials
+                $firstNameInitial = strtoupper(substr($employee->first_name, 0, 1));
+                $lastNameInitial = strtoupper(substr($employee->last_name, 0, 1));
+                $initials = $firstNameInitial . $lastNameInitial;
+
+                // Add to selectedEmployees array
+                $this->selectedCCEmployees[] = [
+                    'emp_id' => $empId,
+                    'first_name' => $employee->first_name,
+                    'last_name' => $employee->last_name,
+                    'initials' => $initials,
+                ];
+            }
+        }
+    }
+    public function removeFromCcTo($empId)
+    {
+        // Remove the employee from selectedCcTo array
+        $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($empId) {
+            return $recipient['emp_id'] != $empId;
+        }));
+
+        // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
+        $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
+
+        // Toggle selection state in selectedPeople
+        unset($this->selectedPeople[$empId]);
+
+        // Fetch updated employee details
+        $this->fetchEmployeeDetails();
+        $this->searchCCRecipients();
+    }
+
+
 
     //this method will handle the search functionality
     public function handleSearch($type)
@@ -242,7 +320,6 @@ class LeaveApply extends Component
     {
         try {
             $this->showCcRecipents = !$this->showCcRecipents;
-            $this->searchCCRecipients();
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in closeCcRecipientsContainer method: ' . $e->getMessage());
@@ -375,6 +452,11 @@ class LeaveApply extends Component
                 $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
                 return;
             }
+            //to check validation for fromdate to todate
+            if ($this->to_date < $this->from_date) {
+                $this->errorMessage = 'To date must be greater than or equal to from date.';
+                return redirect()->back()->withInput();
+            }
 
             $filePaths = [];
 
@@ -443,11 +525,20 @@ class LeaveApply extends Component
 
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
 
+            $this->leave_type = '';
+            $this->from_date = '';
+            $this->from_session = '';
+            $this->to_session = '';
+            $this->to_date = '';
+            $this->selectedManager = [];
+            $this->selectedPeople = [];
+            $this->files = '';
+            $this->contact_details = '';
+            $this->reason = '';
+
             // Check if emp_id is set on the $createdLeaveRequest object
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
                 // Reset the component
-                $this->reset();
-
                 session()->flash('message', 'Leave application submitted successfully!');
                 return redirect()->to('/leave-page');
             } else {
@@ -478,8 +569,27 @@ class LeaveApply extends Component
                 session()->flash('error', 'Failed to submit leave application. Please try again later.');
             }
             // Redirect the user back to the leave application page
-            return redirect()->back();
         }
+    }
+    public function cancelLeaveApplication()
+    {
+        Log::info('Before reset:');
+        Log::info($this->reason); // Log current values before reset
+
+        // Reset properties
+        $this->leave_type = '';
+        $this->from_date = '';
+        $this->from_session = '';
+        $this->to_session = '';
+        $this->to_date = '';
+        $this->selectedManager = [];
+        $this->selectedPeople = [];
+        $this->files = '';
+        $this->contact_details = '';
+        $this->reason = '';
+
+        Log::info('After reset:');
+        Log::info($this->reason);
     }
 
     public function selectLeave()
@@ -541,8 +651,13 @@ class LeaveApply extends Component
             return redirect()->back();
         }
     }
-
-
+    public  $showinfoMessage = true;
+    public  $showinfoButton = false;
+    public function toggleInfo()
+    {
+        $this->showinfoMessage = !$this->showinfoMessage;
+        $this->showinfoButton = !$this->showinfoButton;
+    }
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;

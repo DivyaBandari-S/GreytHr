@@ -32,6 +32,8 @@ class HelpDesk extends Component
     public $selectedPeopleNames = [];
     public $employeeDetails;
     public $showDialog = false;
+    public $showDialogFinance = false;
+
     public $record;
     public $activeTab = 'active';
     protected function resetInputFields()
@@ -83,17 +85,17 @@ class HelpDesk extends Component
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
             'file_path' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
-            'cc_to' => 'required',
+            'cc_to' => 'nullable',
             'priority' => 'required|in:High,Medium,Low',
-            'image' => 'image|max:2048',
+            'image' => 'nullable|image|max:2048',
         ]);
+
         if ($this->image) {
             $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-
-            $this->image->storeAs('public/help-desk-images', $fileName);
-
-            $this->image = 'help-desk-images/' . $fileName;
+            $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+            $this->image = 'uploads/help-desk-images/' . $fileName;
         }
+
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
@@ -105,10 +107,14 @@ class HelpDesk extends Component
             'file_path' => $this->image,
             'cc_to' => $this->cc_to,
             'priority' => $this->priority,
-            'mail' =>'N/A',
+            'mail' => 'N/A',
             'mobile' => 'N/A',
             'distributor_name' => 'N/A',
+
         ]);
+
+
+        session()->flash('message', 'Request created successfully.');
 
         $this->reset();
     }
@@ -118,12 +124,20 @@ class HelpDesk extends Component
     {
         $this->showDialog = true;
     }
+    public function openFinance()
+    {
+        $this->showDialogFinance = true;
+    }
     public $selectedPeople = [];
 
 
     public function close()
     {
         $this->showDialog = false;
+    }
+    public function closeFinance()
+    {
+        $this->showDialogFinance = false;
     }
     public function closePeoples()
     {
@@ -141,9 +155,9 @@ class HelpDesk extends Component
 
         if ($selectedPerson) {
             if (in_array($personId, $this->selectedPeople)) {
-                $this->selectedPeopleNames[] = $selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')';
+                $this->selectedPeopleNames[] = $selectedPerson->first_name . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')';
             } else {
-                $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')']);
+                $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$selectedPerson->first_name . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')']);
             }
             $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
         }
@@ -181,12 +195,14 @@ class HelpDesk extends Component
         $companyId = Auth::user()->company_id;
 
         $this->peoples = EmployeeDetails::where('company_id', $companyId)
-        ->orderBy('first_name')
-        ->orderBy('last_name')
-        ->get();
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->record = HelpDesks::all();
-        $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
+        $employee = auth()->guard('emp')->user();
+        $employeeId = $employee->emp_id;
+        $employeeName = $employee->first_name . ' ' . $employee->last_name . ' #(' . $employeeId . ')';
 
         $this->records = HelpDesks::with('emp')
             ->where(function ($query) use ($employeeId, $employeeName) {
@@ -195,8 +211,8 @@ class HelpDesk extends Component
             })
             ->orderBy('created_at', 'desc')
             ->get();
-            return view('livewire.help-desk', [
-                'peopleData' => $peopleData,
-            ]);
+        return view('livewire.help-desk', [
+            'peopleData' => $peopleData,
+        ]);
     }
 }

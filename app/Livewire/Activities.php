@@ -42,8 +42,7 @@ class Activities extends Component
         $this->showFeedsDialog = false;
     }
  
- 
- 
+
     protected $rules = [
         'newComment' => 'required|string',
     ];
