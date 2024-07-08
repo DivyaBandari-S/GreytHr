@@ -1,7 +1,7 @@
 <div>
     <div class="detail-container ">
         <div class="row m-0 p-0">
-            <div class="col-md-3 p-0 m-0 mb-2 ">
+            <div class="col-md-6 p-0 m-0 mb-2 ">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center" >
                         <li class="breadcrumb-item"><a class="submit-btn" type="button" href="{{ route('leave-page') }}">My Leave</a></li>

@@ -7,7 +7,7 @@
 </head>
 <body>
     @if($showWhoIsIn)
-        <p>Who is in</p>
+        <p class="mb-0">Who is in</p>
     @endif
 </body>
 </html>

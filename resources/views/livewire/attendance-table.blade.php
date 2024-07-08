@@ -715,8 +715,6 @@ width: 170px; */
 
         .large-box-attendance-info table {
 
-
-
             max-width: 100%;
             margin-top: -20px;
             table-layout: fixed;
@@ -1320,7 +1318,7 @@ color: #fff;
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
     @endphp
 
-    <div class="large-box">
+    <div class="large-box" style="max-width:90%;margin:0 auto;">
         <div class="table-container scrollable-table" style=" width: 100%;
     overflow-x: auto;">
             <table>

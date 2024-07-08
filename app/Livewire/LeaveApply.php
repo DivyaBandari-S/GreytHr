@@ -104,6 +104,13 @@ class LeaveApply extends Component
         'files.*.file' => 'Each file must be a valid file',
         'files.*.max' => 'Each file must not exceed 10MB in size',
     ];
+
+
+    public function validateField($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
     public function mount()
     {
         try {
@@ -133,6 +140,7 @@ class LeaveApply extends Component
                     $this->loginEmpManager = $this->applying_to->report_to;
                 }
             }
+            $this->cancelLeaveApplication();
             $this->searchEmployees();
             $this->searchCCRecipients();
         } catch (\Exception $e) {
@@ -188,6 +196,9 @@ class LeaveApply extends Component
             session()->flash('error', 'An error occurred while searching for employees. Please try again later.');
         }
     }
+
+
+
     //this method used to filter cc recipients from employee details
     public function searchCCRecipients()
     {
@@ -216,34 +227,62 @@ class LeaveApply extends Component
             session()->flash('error', 'An error occurred while searching for CC recipients. Please try again later.');
         }
     }
-    public function selectPerson($employeeId)
+    public $selectedCcTo = [];
+    public $selectedCCEmployees = [];
+
+    public function toggleSelection($empId)
     {
+        if (isset($this->selectedPeople[$empId])) {
+            unset($this->selectedPeople[$empId]);
+        } else {
+            $this->selectedPeople[$empId] = true;
+        }
         $this->searchCCRecipients();
-        // Ensure $ccRecipients is not null or empty
-        if (!is_array($this->ccRecipients) || empty($this->ccRecipients)) {
-            return;
-        }
+        $this->fetchEmployeeDetails();
+    }
+    public function fetchEmployeeDetails()
+    {
+        // Reset the list of selected employees
+        $this->selectedCCEmployees = [];
 
-        // Find the selected person in $ccRecipients array
-        $selectedPerson = null;
-        foreach ($this->ccRecipients as $employee) {
-            if (isset($employee['emp_id']) && $employee['emp_id'] == $employeeId) {
-                $selectedPerson = $employee;
-                break;
+        // Fetch details for selected employees
+        foreach ($this->selectedPeople as $empId => $selected) {
+            $employee = EmployeeDetails::where('emp_id', $empId)->first();
+
+            if ($employee) {
+                // Calculate initials
+                $firstNameInitial = strtoupper(substr($employee->first_name, 0, 1));
+                $lastNameInitial = strtoupper(substr($employee->last_name, 0, 1));
+                $initials = $firstNameInitial . $lastNameInitial;
+
+                // Add to selectedEmployees array
+                $this->selectedCCEmployees[] = [
+                    'emp_id' => $empId,
+                    'first_name' => $employee->first_name,
+                    'last_name' => $employee->last_name,
+                    'initials' => $initials,
+                ];
             }
-        }
-
-        // Check if the selected person exists
-        if ($selectedPerson) {
-            // Add emp_id to selectedPeople if it's not already there
-            if (!in_array($employeeId, $this->selectedPeople)) {
-                $this->selectedPeople[] = $employeeId;
-            }
-
-            // Update cc_to field with selectedPeople
-            $this->cc_to = implode(',', $this->selectedPeople);
         }
     }
+    public function removeFromCcTo($empId)
+    {
+        // Remove the employee from selectedCcTo array
+        $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($empId) {
+            return $recipient['emp_id'] != $empId;
+        }));
+
+        // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
+        $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
+
+        // Toggle selection state in selectedPeople
+        unset($this->selectedPeople[$empId]);
+
+        // Fetch updated employee details
+        $this->fetchEmployeeDetails();
+        $this->searchCCRecipients();
+    }
+
 
 
     //this method will handle the search functionality
@@ -486,16 +525,25 @@ class LeaveApply extends Component
 
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
 
+            $this->leave_type = '';
+            $this->from_date = '';
+            $this->from_session = '';
+            $this->to_session = '';
+            $this->to_date = '';
+            $this->selectedManager = [];
+            $this->selectedPeople = [];
+            $this->files = '';
+            $this->contact_details = '';
+            $this->reason = '';
+
             // Check if emp_id is set on the $createdLeaveRequest object
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
                 // Reset the component
                 session()->flash('message', 'Leave application submitted successfully!');
-                $this->resetFields();
                 return redirect()->to('/leave-page');
             } else {
                 // Log an error if there's an issue with creating the LeaveRequest
                 logger('Error creating LeaveRequest', ['emp_id' => $employeeId]);
-                $this->resetFields();
                 session()->flash('error', 'Error submitting leave application. Please try again.');
                 return redirect()->to('/leave-page');
             }
@@ -503,34 +551,32 @@ class LeaveApply extends Component
             if ($e instanceof \Illuminate\Database\QueryException) {
                 // Handle database query exceptions
                 Log::error("Database error submitting leave application: " . $e->getMessage());
-                $this->resetFields();
                 session()->flash('error', 'Database error occurred. Please try again later.');
             } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
                 // Display a user-friendly error message for null image
-                $this->resetFields();
                 session()->flash('error', 'Please upload an image.');
             } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
                 // Handle network request exceptions
                 Log::error("Network error submitting leave application: " . $e->getMessage());
-                $this->resetFields();
                 session()->flash('error', 'Network error occurred. Please try again later.');
             } elseif ($e instanceof \PDOException) {
                 // Handle database connection errors
                 Log::error("Database connection error submitting leave application: " . $e->getMessage());
-                $this->resetFields();
                 session()->flash('error', 'Database connection error. Please try again later.');
             } else {
                 // Handle other generic exceptions
                 Log::error("Error submitting leave application: " . $e->getMessage());
                 session()->flash('error', 'Failed to submit leave application. Please try again later.');
-                $this->resetFields();
             }
             // Redirect the user back to the leave application page
-            return redirect()->back();
         }
     }
-    public function resetFields()
+    public function cancelLeaveApplication()
     {
+        Log::info('Before reset:');
+        Log::info($this->reason); // Log current values before reset
+
+        // Reset properties
         $this->leave_type = '';
         $this->from_date = '';
         $this->from_session = '';
@@ -541,28 +587,11 @@ class LeaveApply extends Component
         $this->files = '';
         $this->contact_details = '';
         $this->reason = '';
-        $this->errorMessage = '';
+
+        Log::info('After reset:');
+        Log::info($this->reason);
     }
-    public function cancelLeaveApplication()
-    {
-        // Reset the fields
-        $this->resetFields();
-    }
-    public function saveLeaveApplication()
-    {
-        $this->leaveApply();
-        $this->validate([
-            'from_date' => 'required|date',
-            'to_date' => 'required|date',
-            'reason' => 'required',
-            'contact_details' => 'required',
-            'from_session' => 'required',
-            'to_session' => 'required',
-            'leave_type' => 'required',
-            'applying_to' => 'required',
-        ]);
-        // Check for overlapping records in the database
-    }
+
     public function selectLeave()
     {
         try {

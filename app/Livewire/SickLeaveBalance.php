@@ -207,7 +207,7 @@ class SickLeaveBalance extends Component
             ]);
         } catch (\Exception $e) {
             // Handle the exception, log the error message, and show a user-friendly message
-            \Log::error('Error in Sick Leave Balance render method: ' . $e->getMessage());
+            Log::error('Error in Sick Leave Balance render method: ' . $e->getMessage());
 
             return view('livewire.sick-leave-balance')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
         }

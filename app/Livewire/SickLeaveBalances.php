@@ -2,14 +2,14 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\EmployeeDetails;
-use App\Models\LeaveRequest;
 use App\Models\EmployeeLeaveBalances;
+use App\Models\LeaveRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 
-class CasualProbationLeaveBalance extends Component
+class SickLeaveBalances extends Component
 {
     public $leaveData;
     public $employeeLeaveBalances;
@@ -92,13 +92,13 @@ class CasualProbationLeaveBalance extends Component
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             
             $this->employeeLeaveBalances= EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->where('leave_type', 'Causal Leave Probation')
+            ->where('leave_type', 'Sick Leave')
             ->get();
             
             // Now $employeeLeaveBalances contains all the rows from employee_leave_balances 
             // where emp_id matches and leave_type is "Sick Leave"
             $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_type', 'Causal Leave Probation')
+            ->where('leave_type', 'Sick Leave')
             ->where('status', 'approved')
             ->get();
 
@@ -127,14 +127,14 @@ class CasualProbationLeaveBalance extends Component
             $grantedLeavesByMonth = [];
             $availedLeavesByMonth = [];
             $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('leave_type', 'Causal Leave Probation')
+                ->where('leave_type', 'Sick Leave')
                 ->whereYear('from_date', $currentYear)
                 ->sum('leave_balance');
 
             for ($month = $startingMonth; $month <= $currentMonth; $month++) {
                 // Fetch availed leaves count for this month
                 $availedLeavesCount = LeaveRequest::where('emp_id', $employeeId)
-                    ->where('leave_type', 'Causal Leave Probation')
+                    ->where('leave_type', 'Sick Leave')
                     ->where('status', 'approved')
                     ->whereYear('from_date', $currentYear)
                     ->whereMonth('from_date', $month)
@@ -192,7 +192,7 @@ class CasualProbationLeaveBalance extends Component
                     'maintainAspectRatio' => false, // Allow chart to be resized
                     'responsive' => true // Make chart responsive
                 ];
-            return view('livewire.casual-probation-leave-balance', [
+            return view('livewire.sick-leave-balances', [
                 'employeeLeaveBalances' => $this->employeeLeaveBalances,
                 'employeeleaveavlid' => $this->employeeleaveavlid,
                 'totalSickDays' => $this->totalSickDays,
@@ -202,8 +202,9 @@ class CasualProbationLeaveBalance extends Component
             ]);
         }
         catch (\Exception $e) {
-            Log::error('Error in Casual Leave Probation Balance render method: ' . $e->getMessage());
-            return view('livewire.casual-probation-leave-balance');
+            Log::error('Error in Sick Leave Balance render method: ' . $e->getMessage());
+            return view('livewire.sick-leave-balances');
         }
     }
+
 }

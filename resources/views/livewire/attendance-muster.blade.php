@@ -7,7 +7,7 @@
 </head>
 <body>
     @if($showAttendanceMuster)
-        <p>Attendance Muster</p>
+        <p class="mb-0">Attendance Muster</p>
     @endif
 </body>
 </html>

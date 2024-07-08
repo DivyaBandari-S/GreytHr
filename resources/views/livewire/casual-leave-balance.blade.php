@@ -2,13 +2,14 @@
     <style>
         .custom-table-wrapper {
             position: relative;
-            max-height: 200px;
+            max-height: 100px;
             overflow-y: auto;
             border-collapse: collapse;
         }
 
         .custom-table-wrapper .balance-table {
             width: 100%;
+            margin: 0 auto;
             table-layout: fixed;
             border-collapse: collapse;
         }
@@ -75,14 +76,14 @@
             font-size: 11px;
         }
     </style>
-    <div class="row m-0 px-2 py-1 bg-dark">
+    <div class="row m-0 px-2 py-1 ">
         @if(session()->has('emp_error'))
         <div class="alert alert-danger">
             {{ session('emp_error') }}
         </div>
         @endif
         <div class="row m-0 p-0">
-            <div class="col-12 p-0 m-0 mb-2 ">
+            <div class="col-6 p-0 m-0 mb-2 ">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center " style="font-size: 14px;background:none;font-weight:500;">
                         <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('home') }}">Home</a></li>
@@ -91,7 +92,22 @@
                     </ol>
                 </nav>
             </div>
-
+            <div class="col-md-6 ">
+                <div class="buttons-container d-flex gap-3 justify-content-end mt-2 p-0 ">
+                    <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
+                    <select class="dropdown bg-white rounded " wire:model="selectedYear" wire:change="yearDropDown" style="margin-right:5px;">
+                        <?php
+                        // Get the current year
+                        $currentYear = date('Y');
+                        // Generate options for current year, previous year, and next year
+                        $options = [$currentYear - 2, $currentYear - 1, $currentYear, $currentYear + 1];
+                        ?>
+                        @foreach($options as $year)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             @if($Availablebalance == 0)
             <div class="row m-0 p-0">
                 <div class="col-md-12" style="max-height: 100px;">
@@ -105,27 +121,12 @@
             </div>
             @else
             <div class="row m-0 p-0">
-                <div class="navigators d-flex justify-content-end">
-                    <div class="buttons-container d-flex gap-3 justify-content-end mt-2 p-0 ">
-                        <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
-                        <select class="dropdown bg-white rounded " wire:model="selectedYear" wire:change="yearDropDown" style="margin-right:5px;">
-                            <?php
-                            // Get the current year
-                            $currentYear = date('Y');
-                            // Generate options for current year, previous year, and next year
-                            $options = [$currentYear - 2, $currentYear - 1, $currentYear, $currentYear + 1];
-                            ?>
-                            @foreach($options as $year)
-                            <option value="{{ $year }}">{{ $year }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+
                 <div class="col-12 mt-2 d-flex justify-content-start">
                     <div class="info-container">
                         <div class="info-item px-2">
                             <div class="info-title">Available Balance</div>
-                            <div class="info-value">2.5</div>
+                            <div class="info-value">{{ $Availablebalance }}</div>
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Opening Balance</div>
@@ -133,34 +134,29 @@
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Granted</div>
-                            <div class="info-value">7</div>
+                            @foreach ($employeeLeaveBalances as $leaveBalance)
+                            <div class="info-value">{{ $leaveBalance->leave_balance}}</div>
+                            @endforeach
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Availed</div>
-                            <div class="info-value">4.5</div>
+                            <div class="info-value">{{ $totalSickDays }}</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row m-0 px-2 ">
-                <div class="col-md-10 mt-4 px-4 bg-white border">
-                    <div class="chart-container" style="margin-top: 20px; margin-bottom: 20px;">
-                        <canvas id="sickLeaveChart" width="400" height="200" style="background-color: transparent;"></canvas>
-                        <script>
-                            var ctx = document.getElementById('sickLeaveChart').getContext('2d');
-                            var myChart = new Chart(ctx, {
-                                type: 'bar',
-                                data: <?php echo json_encode($chartData); ?>,
-                                options: <?php echo json_encode($chartOptions); ?>
-                            });
-                        </script>
+            <div class="conatiner mt-4 ">
+                <div class="row m-0 p-0">
+                    <div class=" p-2 bg-white border">
+                        <div class="col-md-10">
+                            <canvas id="sickLeaveChart" style="background-color: transparent;width:300px;height:200px;"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="row mt-4">
-                <div class="col">
-                    <div class="custom-table-wrapper bg-white border rounded">
+            <div class="row p-0 m-0">
+                <div class="col-md-12 mt-4">
+                    <div class="custom-table-wrapper bg-white border rounded ">
                         <table class="balance-table table-striped table-sm">
                             <thead class="thead">
                                 <tr>
@@ -202,3 +198,11 @@
         </div>
     </div>
 </div>
+<script>
+    var ctx = document.getElementById('sickLeaveChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: <?php echo json_encode($chartData); ?>,
+        options: <?php echo json_encode($chartOptions); ?>
+    });
+</script>

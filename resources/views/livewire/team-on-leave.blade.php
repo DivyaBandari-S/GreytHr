@@ -7,7 +7,7 @@
 </head>
 <body>
     @if($showTeamOnLeave)
-        <p>Team on Leave</p>
+        <p class="mb-0">Team on Leave</p>
     @endif
 </body>
 </html>
