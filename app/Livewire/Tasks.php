@@ -2,6 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Client;
+use App\Models\ClientsEmployee;
+use App\Models\ClientsWithProjects;
 use App\Models\EmployeeDetails;
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +12,7 @@ use App\Models\TaskComment;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Session;
 
 class Tasks extends Component
 {
@@ -20,7 +24,7 @@ class Tasks extends Component
     public $emp_id;
     public $task_name;
     public $assignee;
-    public $priority;
+    public $priority = "low";
     public $due_date;
     public $tags;
     public $followers;
@@ -68,22 +72,37 @@ class Tasks extends Component
 
     public $showRecipients = false;
     public $selectedPeople = [];
-    public function selectPerson($personId)
+    public $selectedPeopleName, $selectedPerson, $selectedPersonClients, $selectedPersonClientsWithProjects;
+    public function mount()
     {
-        $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-
-        if ($selectedPerson) {
-            if (in_array($personId, $this->selectedPeople)) {
-                $this->selectedPeopleNames[] = $selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')';
-            } else {
-                $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')']);
-            }
-
-            $this->assignee = implode(', ', array_unique($this->selectedPeopleNames));
-            $this->showRecipients = count($this->selectedPeopleNames) > 0;
-        }
+        $this->selectedPersonClients = collect();
+        $this->selectedPersonClientsWithProjects = collect();
     }
 
+    public function selectPerson($personId)
+    {
+        $this->showRecipients = true;
+        $this->selectedPerson = $this->peoples->where('emp_id', $personId)->first();
+        $this->assignee = $this->selectedPerson->emp_id;
+        $this->selectedPersonClients = ClientsEmployee::where('emp_id', $this->selectedPerson->emp_id)->get();
+        $this->selectedPeopleName = $this->selectedPerson->first_name . ' #(' . $this->selectedPerson->emp_id . ')';
+
+
+        if ($this->selectedPersonClients->isEmpty()) {
+            $this->selectedPersonClientsWithProjects = collect();
+        }
+        $this->assigneeList = false;
+    }
+
+    public function showProjects()
+    {
+        $this->selectedPersonClientsWithProjects = ClientsWithProjects::where('client_id', $this->client_id)->get();
+
+        if ($this->validate_tasks == "true") {
+
+            $this->autoValidate();
+        }
+    }
     public $showFollowers = false;
     public $selectedPeopleForFollowers = [];
     public function selectPersonForFollowers($personId)
@@ -121,45 +140,70 @@ class Tasks extends Component
         return redirect()->to('/tasks');
     }
 
+    public function autoValidate()
+    {
+        if ($this->validate_tasks) {
+            if (is_null($this->client_id)) {
+                $this->validate([
+                    'due_date' => 'required',
+                    'assignee' => 'required',
+                    'task_name' => 'required',
+                ]);
+            } else {
+                $this->validate([
+                    'due_date' => 'required',
+                    'client_id' => 'required',
+                    'project_name' => 'required',
+                    'assignee' => 'required',
+                    'task_name' => 'required',
+                ]);
+            }
+        }
+    }
+
     public function submit()
     {
-        $this->validate([
-            'followers' => 'required',
-            'tags' => 'required',
-            'due_date' => 'required',
-            'priority' => 'required',
-            'assignee' => 'required',
-            'subject' => 'required',
-            'description' => 'required',
-            'file_path' => 'nullable|image|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
-            'task_name' => 'required',
-            'image' => 'image|max:2048',
-        ]); // Validate the image file
-        if ($this->image) {
-            $this->isLoadingImage = true;
-             if ($this->image instanceof \Illuminate\Http\UploadedFile) {
-                $imagePath = $this->image->store('tasks-images', 'public');
-            $this->isLoadingImage = false;
-        }
+        $this->validate_tasks = true;
+        $this->autoValidate();
+
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+        // Validate and upload the image file
+        if ($this->image) {
+            $this->isLoadingImage = true;
+            if ($this->image instanceof \Illuminate\Http\UploadedFile) {
+                $imagePath = $this->image->store('tasks-images', 'public');
+                $this->image_path = $imagePath;
+                $this->isLoadingImage = false;
+            }
+        }
 
         Task::create([
             'emp_id' => $this->employeeDetails->emp_id,
             'task_name' => $this->task_name,
             'assignee' => $this->assignee,
+            'client_id' => $this->client_id,
+            'project_name' => $this->project_name,
             'priority' => $this->priority,
             'due_date' => $this->due_date,
             'tags' => $this->tags,
             'followers' => $this->followers,
             'subject' => $this->subject,
             'description' => $this->description,
-            'file_path' => $imagePath,
+            'file_path' => $this->image_path,
+            'status' => "Open",
         ]);
+
         $this->reset();
+        session()->flash('message', 'Task created successfully!');
         return redirect()->to('/tasks');
     }
-    }
+
+    public $client_id, $project_name, $image_path;
+
+    public $validate_tasks = false;
+
     public function show()
     {
         $this->showDialog = true;
@@ -167,7 +211,11 @@ class Tasks extends Component
 
     public function close()
     {
+        $this->reset();
+
         $this->showDialog = false;
+        $this->validate_tasks = false;
+        return redirect('/tasks');
     }
 
     public function filter()
@@ -245,7 +293,6 @@ class Tasks extends Component
             $comment->delete();
             session()->flash('message', 'Comment deleted successfully.');
             $this->fetchTaskComments($this->taskId);
-
         } catch (\Exception $e) {
             // Handle any exceptions that occur during the deletion process
             session()->flash('error', 'Failed to delete comment: ' . $e->getMessage());
@@ -267,22 +314,27 @@ class Tasks extends Component
         $this->taskComments = TaskComment::with(['employee' => function ($query) {
             $query->select(DB::raw("CONCAT(first_name, ' ', last_name) AS full_name"), 'emp_id');
         }])
-        ->whereHas('employee', function ($query) {
-            $query->whereColumn('emp_id', 'task_comments.emp_id');
-        })
-        ->where('task_id', $taskId)
-        ->latest()
-        ->get();
+            ->whereHas('employee', function ($query) {
+                $query->whereColumn('emp_id', 'task_comments.emp_id');
+            })
+            ->where('task_id', $taskId)
+            ->latest()
+            ->get();
     }
     public function render()
     {
+
+        $this->fetchTaskComments($this->taskId);
+        // Retrieve the authenticated employee's ID
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = Auth::user()->company_id;
-        $this->fetchTaskComments($this->taskId);
+
+        // Fetch employees, ensuring the authenticated employee is shown first
         $this->peoples = EmployeeDetails::where('company_id', $companyId)
-        ->orderBy('first_name')
-        ->orderBy('last_name')
-        ->get();
+            ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
 
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->record = Task::all();
