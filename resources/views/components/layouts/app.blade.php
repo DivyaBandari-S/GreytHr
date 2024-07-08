@@ -160,6 +160,12 @@
                                     </a>
 
                                 </li>
+                                <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                    <a class="nav-link" href="/time-sheet" onclick="setActiveLink(this)">
+                                        <i class="fas mr-1 fa-clock" style="color:#6c7e90;"></i> <!-- Clock icon -->
+                                        Time Sheet
+                                    </a>
+                                </li>
 
                                 <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item ">
 
@@ -902,6 +908,13 @@
                                         <!-- <i class="fas mr-1 fa-home" style="color:#6c7e90"></i> -->
                                     </a>
                                 </li>
+                                <li data-bs-target="#navigateLoader" title="Time Sheet" class="nav-item">
+                                    <a class="nav-link" href="/time-sheet" onclick="setActiveLink(this, '/time-sheet')">
+                                        <img width="25" height="25" src="https://img.icons8.com/3d-fluency/94/clock.png" alt="time sheet" />
+                                        <!-- Alternative text for accessibility -->
+                                    </a>
+                                </li>
+
 
                                 <li data-bs-target="#navigateLoader" title="Feeds" class="nav-item">
 
