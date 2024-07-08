@@ -314,7 +314,7 @@
                 <label for="ccToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500;">
                     CC to
                 </label>
-                <div class="control-wrapper d-flex align-items-center" style="flex-direction: row; gap: 1px;">
+                <div class="control-wrapper d-flex align-items-center" style="flex-direction: row; gap: 10px;">
                     <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
                         <div class="icon-container" style="display: flex; justify-content: center; align-items: center;">
                             <i class="fa-solid fa-plus" style="color: #778899;"></i>
@@ -326,7 +326,7 @@
                         @foreach($selectedCCEmployees as $recipient)
                         <li>
                             <div class="px-2 py-1 " style=" border-radius: 25px; border: 2px solid #adb7c1; display: flex; justify-content: space-between; align-items: center;">
-                                <span style="text-transform: uppercase; color: #adb7c1;">{{ $recipient['initials'] }}</span>
+                                <span style="text-transform: uppercase; color: #adb7c1;font-size:12px;">{{ $recipient['initials'] }}</span>
                                 <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer;color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
                             </div>
                         </li>
@@ -340,7 +340,7 @@
                     <div class="row" style="padding: 0 ; margin:0;">
                         <div class="col-md-10" style="margin: 0px; padding: 0px">
                             <div class="input-group">
-                                <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append">
                                     <button type="button" wire:click="searchCCRecipients" style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn">
                                         <i style="margin-right: 5px;" class="fa fa-search"></i>
@@ -348,6 +348,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-2 m-0 p-0">
                             <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #333;">
                                 <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>

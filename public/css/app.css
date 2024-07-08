@@ -10,6 +10,7 @@
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
     background-color: white;
+    background-color: rgb(255, 236, 248);
     padding: 20px;
     width: 80%;
     margin-top: 30px;
@@ -762,7 +763,7 @@ button.close-button {
 .nav-item .nav-link {
     color: #6c7e90;
     text-decoration: none;
-    font-size: 11px;
+    font-size: 12px;
     cursor: pointer;
     font-weight: 500;
     /* padding: 0 auto; */

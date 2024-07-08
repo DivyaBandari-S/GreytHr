@@ -250,7 +250,7 @@
                                 </p>
                             </div>
                             <div class="B mb-3" style="color:  #677A8E; font-size: 12px;display:flex;justify-content:center; margin-top: 15px;">
-                                <a href="/timesheet-page" class="button-link">
+                                <a href="/time-sheet" class="button-link">
                                     <button class="custom-btn" style="border:1px solid #fd2885;border-radius:5px;padding:4px 7px;color:#fd2885;font-weight:500;background:#fffbfd;">
                                         Submit Timesheet
                                     </button>

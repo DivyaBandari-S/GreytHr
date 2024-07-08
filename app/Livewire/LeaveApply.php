@@ -140,7 +140,6 @@ class LeaveApply extends Component
                     $this->loginEmpManager = $this->applying_to->report_to;
                 }
             }
-            $this->cancelLeaveApplication();
             $this->searchEmployees();
             $this->searchCCRecipients();
         } catch (\Exception $e) {
@@ -524,17 +523,7 @@ class LeaveApply extends Component
             ]);
 
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
-
-            $this->leave_type = '';
-            $this->from_date = '';
-            $this->from_session = '';
-            $this->to_session = '';
-            $this->to_date = '';
-            $this->selectedManager = [];
-            $this->selectedPeople = [];
-            $this->files = '';
-            $this->contact_details = '';
-            $this->reason = '';
+            $this->cancelLeaveApplication();
 
             // Check if emp_id is set on the $createdLeaveRequest object
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
@@ -591,6 +580,14 @@ class LeaveApply extends Component
         Log::info('After reset:');
         Log::info($this->reason);
     }
+
+    public function handleEnterKey()
+    {
+        // Optionally, you can perform additional logic here if needed
+        // For example, triggering the search method directly
+        $this->searchCCRecipients();
+    }
+
 
     public function selectLeave()
     {

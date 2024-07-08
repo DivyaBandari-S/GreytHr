@@ -14,26 +14,48 @@
     </style>
     <div class="container" style="margin-top:15px;width:100%; height: 85vh; border: 1px solid silver; border-radius: 5px;background-color:white">
         <div class="row">
-            <div  style="display: flex; justify-content: center; margin-top: 20px;">
+            <div class="col" style="margin-left:35%;margin-top:15px">
+                <div class="card" style="width:250px;">
+                    <div class="card-header px-4 py-0 m-0">
+                        <div class="row p-1">
+                            <button wire:click="$set('activeTab', 'open')" class="col btn @if($activeTab === 'open') active @else btn-light @endif" style="font-size:13px;font-weight:500; border-radius: 5px; margin-right: 5px; background-color: {{ $activeTab === 'open' ? 'rgb(2, 17, 79)' : 'none' }}; color: {{ $activeTab === 'open' ? '#fff !important' : '#778899' }};">
+                                Open
+                            </button>
+                            <button wire:click="$set('activeTab', 'completed')" class="col btn @if($activeTab === 'completed') active @else btn-light @endif" style="font-size:13px;font-weight:500; border-radius: 5px; background-color: {{ $activeTab === 'completed' ? 'rgb(2, 17, 79)' : 'none' }}; color: {{ $activeTab === 'completed' ? '#fff !important' : '#778899' }};">
+                                Completed
+                            </button>
+                        </div>
 
-               
-                <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="width: 20%;">
-                    <input id="radio1" name="radio1" type="radio" value="Radio1" class="btn-check" />
-                    <label for="radio1" class="btn" style="width: 50%; text-align: center; border-top-left-radius: 5px; border-bottom-left-radius: 5px;  border-color: rgb(2, 17, 79); background-color: {{ $activeTab === 'open' ? 'rgb(2, 17, 79)' : 'none' }};  color: {{ $activeTab === 'open' ? '#fff !important' : '#778899' }};" wire:click="$set('activeTab', 'open')">
-                        Open
-                    </label>
-
-                    <input id="radio2" name="radio1" type="radio" value="Radio2" class="btn-check" />
-                    <label for="radio2" class="btn" style="width: 50%; text-align: center; border-color: rgb(2, 17, 79); background-color: {{ $activeTab === 'completed' ? 'rgb(2, 17, 79)' : 'none' }};  color: {{ $activeTab === 'completed' ? '#fff !important' : '#778899' }};" wire:click="$set('activeTab', 'completed')">
-                        Closed
-                    </label>
+                    </div>
                 </div>
 
             </div>
-           
-        </div>
-        <div style="display:flex; justify-content:flex-end;">
-                <button wire:click="show" style="background-color:rgb(2, 17, 79); border: none; border-radius: 5px; color: white; font-size: 12px; height: 30px; cursor: pointer; margin-top: 15px; margin-right: 20px; width:100px;">Add
+
+            <div style="display: flex; justify-content: center; align-items: center;margin-top:5px">
+                @if (session()->has('message'))
+                <div id="flash-message" style="width: 90%; margin: 0.2rem; padding: 0.25rem; background-color: #f0fff4; border: 1px solid #68d391; color: #38a169; border-radius: 0.25rem; text-align: center;" class="success-message">
+                    {{ session('message') }}
+                </div>
+                @endif
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(function() {
+                        var flashMessage = document.getElementById('flash-message');
+                        if (flashMessage) {
+                            flashMessage.style.transition = 'opacity 0.5s ease';
+                            flashMessage.style.opacity = '0';
+                            setTimeout(function() {
+                                flashMessage.remove();
+                            }, 500); // Delay to allow the fade-out effect
+                        }
+                    }, 5000); // 5000 milliseconds = 5 seconds
+                });
+            </script>
+            
+            <div class="col" style="display:flex; justify-content:flex-end;">
+                <button wire:click="show" style="background-color:rgb(2, 17, 79); border: none; border-radius: 5px; color: white; font-size: 12px; height: 30px; cursor: pointer; margin-top: 15px;width:100px;">Add
                     New Task</button>
             </div>
        
@@ -278,124 +300,166 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                     <div class="modal-content">
-                        <div class="modal-header d-flex justify-content-between" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style=" color: white; font-size: 14px;" class="modal-title"><b>Add Task</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
+                        <div class="modal-header" style="background-color: rgb(2, 17, 79); color: white; height: 40px; padding: 8px;">
+                            <h5 class="modal-title" style="font-size: 15px; margin: 0;"><b>Add Task</b></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="close" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">
+                                <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+
                         <div class="modal-body">
                             <div class="task-container">
                                 <!-- Task Name -->
-                                <div class="form-group" style="margin-top: 10px;">
+                                <div class="form-group">
                                     <label for="task_name" style="font-size: 13px;color:#778899;">Task Name*</label>
                                     <br>
-                                    <input type="text" wire:model="task_name" class="placeholder-small" placeholder="Enter task name" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;">
+                                    <input type="text" wire:model.debounce.0ms="task_name" wire:input="autoValidate" class="placeholder-small" placeholder="Enter task name" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;">
+                                    @error('task_name') <span class="text-danger">Task name is required</span> @enderror
                                 </div>
-                                @error('task_name') <span class="text-danger">{{ $message }}</span> @enderror
 
                                 <!-- Assignee -->
-                                <div class="form-group" style="margin-top: 20px;color:grey;font-size:12px">
-                                    <label for="assignee" style="font-size: 13px;color:#778899">Assignee</label>
+                                <div class="form-group" style="margin-top: 10px;color:grey;font-size:12px">
+                                    <label for="assignee" style="font-size: 13px;color:#778899">Assignee*</label>
                                     <br>
-                                    <i wire:click="forAssignee" class="fas fa-user icon" id="profile-icon"></i>
+                                    <i wire:change="autoValidate" wire:click="forAssignee" class="fas fa-user icon" id="profile-icon"></i>
                                     @if($showRecipients)
-                                    <strong style="font-size: 12;">Selected CC recipients:
-                                    </strong>{{ implode(', ', array_unique($selectedPeopleNames)) }}
+                                    <strong style="font-size: 12;">Selected assignee:
+                                    </strong>{{$selectedPeopleName }}
                                     @else
                                     Add Assignee
-                                    @endif
+                                    @endif <br>
+                                    @error('assignee') <span class="text-danger">Assignee is required</span> @enderror
                                 </div>
-                                @error('assignee') <span class="text-danger">{{ $message }}</span> @enderror
                                 @if($assigneeList)
                                 <div style="border-radius:5px;background-color:grey;padding:8px;width:350px;margin-top:10px;max-height:250px;overflow-y:auto; ">
                                     <div class="input-group" style="margin-bottom: 10px;">
-                                        <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                        <input wire:input="filter" wire:model.debounce.0ms="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search employee name / Id" aria-label="Search" aria-describedby="basic-addon1">
                                         <div class="input-group-append">
-                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn" type="button">
+                                            <button wire:change="autoValidate" wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn" type="button">
                                                 <i style="text-align: center;" class="fa fa-search"></i>
                                             </button>
-                                            <button wire:click="closeAssignee" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true" style="color: white; font-size: 18px;">×</span>
+                                            <button wire:change="autoValidate" wire:click="closeAssignee" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true" style="color: white; font-size: 24px;margin-left:2px">×</span>
                                             </button>
+
                                         </div>
                                     </div>
                                     @if ($peopleData->isEmpty())
                                     <div class="container" style="text-align: center; color: white; font-size: 12px;">No People Found</div>
                                     @else
                                     @foreach($peopleData as $people)
-                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                    <div wire:click="selectPerson('{{$people->emp_id}}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
                                         <div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
-                                            </div>
-                                            <div class="col-auto">
-                                                <img class="profile-image" src="{{
-                                                            !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL) ? $people->image :
-                                                            (!empty($people->image) ? Storage::url($people->image) :
-                                                            ($people->gender == 'Male' ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png' :
-                                                            'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0')) }}" alt="">
-                                            </div>
-
-                                            <div class="col">
-                                                <h6 class="username" style="font-size: 12px; color: white;">
-                                                    {{ ucwords(strtolower($people->first_name )) }} {{ ucwords(strtolower($people->last_name )) }}
-                                                </h6>
-                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                            </div>
+                                            <label for="person-{{ $people->emp_id }}" style="width: 100%; display: flex; align-items: center; margin: 0;">
+                                                <div class="col-auto">
+                                                    <input type="radio" id="person-{{ $people->emp_id }}" wire:change="autoValidate" wire:model="assignee" value="{{ $people->emp_id }}">
+                                                </div>
+                                                <div class="col-auto">
+                                                    <img class="profile-image" src="{{
+                                                !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL) ? $people->image :
+                                                (!empty($people->image) ? Storage::url($people->image) :
+                                                ($people->gender == 'Male' ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png' :
+                                                'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0')) }}" alt="">
+                                                </div>
+                                                <div class="col">
+                                                    <h6 class="username" style="font-size: 12px; color: white;">
+                                                        {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
+                                                    </h6>
+                                                    <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                </div>
+                                            </label>
                                         </div>
                                     </div>
                                     @endforeach
+
                                     @endif
 
                                 </div>
                                 @endif
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        @if($selectedPersonClients->isEmpty())
+                                        @else
+                                        <div>
+                                            <label style="font-size: 13px;color:#778899" for="clientSelect">Select Client*</label>
+                                            <select wire:change="showProjects" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;" id="clientSelect" wire:model="client_id">
+                                                <option value="">Select client</option>
+                                                @foreach($selectedPersonClients as $client)
+                                                <option style="color:#778899;" value="{{ $client->client->client_id }}">{{ $client->client->client_name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('client_id') <span class="text-danger">Client ID is required</span> @enderror
+                                        </div>
+                                        @endif
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        @if($selectedPersonClientsWithProjects->isEmpty())
+                                        @else
+                                        <div>
+                                            <label style="font-size: 13px;color:#778899" for="clientSelect">Select Project*</label>
+                                            <select wire:change="autoValidate" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;" id="clientSelect" wire:model="project_name">
+                                                <option value="">Select project</option>
+                                                @foreach($selectedPersonClientsWithProjects as $project)
+                                                <option style="color:#778899;" value="{{ $project->project_name }}">{{ $project->project_name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('project_name') <span class="text-danger">Project name is required</span> @enderror
+
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+
                                 <!-- Priority -->
-                                <div class="priority-container" style="margin-top: 20px;">
+                                <div class="priority-container" style="margin-top: 15px;">
                                     <div class="row ">
                                         <div class="col-md-4">
-                                            <label for="priority" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Priority*</label>
+                                            <label for="priority" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Priority</label>
                                         </div>
                                         <div class="col-md-8 mt-1">
                                             <div id="priority" style="display: flex; align-items: center; margin-top: 0px;">
                                                 <div class="priority-option" style="margin-left: 0px; padding: 0;">
-                                                    <input type="radio" id="low-priority" name="priority" wire:model="priority" value="low">
-                                                    <span style="font-size: 12px;color:#778899; padding: 0;" class="text-xs">Low</span>
+                                                    <input type="radio" id="low-priority" name="priority" wire:change="autoValidate" wire:model="priority" value="low">
+                                                    <span style="font-size: 12px;color:#778899; padding: 0;margin-left:5px" class="text-xs">Low</span>
                                                 </div>
                                                 <div class="priority-option" style="margin-left: 20px; padding: 0;">
-                                                    <input type="radio" id="medium-priority" name="priority" wire:model="priority" value="medium">
-                                                    <span style="font-size: 12px;color:#778899; padding: 0;" class="text-xs">Medium</span>
+                                                    <input type="radio" id="medium-priority" name="priority" wire:change="autoValidate" wire:model="priority" value="medium">
+                                                    <span style="font-size: 12px;color:#778899; padding: 0;margin-left:5px" class="text-xs">Medium</span>
                                                 </div>
                                                 <div class="priority-option" style="margin-left: 20px; padding: 0;">
-                                                    <input type="radio" id="high-priority" name="priority" wire:model="priority" value="high">
-                                                    <span style="font-size: 12px;color:#778899; padding: 0;" class="text-xs">High</span>
+                                                    <input type="radio" id="high-priority" name="priority" wire:change="autoValidate" wire:model="priority" value="high">
+                                                    <span style="font-size: 12px;color:#778899; padding: 0;margin-left:5px" class="text-xs">High</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
                                 <!-- Due Date -->
-                                <div class="form-group" style="margin-top: 20px;">
-                                    <label class="form-label" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Due Date</label>
-                                    <br>
-                                    <input type="date" wire:model="due_date" class="placeholder-small" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;" min="<?= date('Y-m-d'); ?>" value="<?= date('Y-m-d'); ?>">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group" style="margin-top: 20px;">
+                                            <label class="form-label" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Due Date*</label>
+                                            <br>
+                                            <input wire:change="autoValidate" type="date" wire:model="due_date" class="placeholder-small" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;" min="<?= date('Y-m-d'); ?>" value="<?= date('Y-m-d'); ?>">
+                                            @error('due_date') <span class="text-danger">Due date is required</span> @enderror
 
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <!-- Tags -->
+                                        <div class="form-group" style="margin-top: 20px;">
+                                            <label for="tags" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Tags</label>
+                                            <br>
+                                            <input wire:change="autoValidate" type="text" wire:model="tags" placeholder="Enter tags" class="placeholder-small" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;">
+                                        </div>
+                                    </div>
                                 </div>
 
-                                @error('due_date') <span class="text-danger">{{ $message }}</span> @enderror
-
-                                <!-- Tags -->
-                                <div class="form-group" style="margin-top: 20px;">
-                                    <label for="tags" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Tags</label>
-                                    <br>
-                                    <input type="text" wire:model="tags" placeholder="Enter tags" class="placeholder-small" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;">
-                                </div>
-                                @error('tags') <span class="text-danger">{{ $message }}</span> @enderror
-
-                                <div class="form-group" style="margin-top: 20px; color: grey; font-size: 12px">
+                                <div class="form-group" style="margin-top: 10px; color: grey; font-size: 12px">
                                     <label for="assignee" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Followers</label>
                                     <br>
-                                    <i wire:click="forFollowers" class="fas fa-user icon" id="profile-icon"></i>
+                                    <i wire:change="autoValidate" wire:click="forFollowers" class="fas fa-user icon" id="profile-icon"></i>
                                     @if($showFollowers)
                                     <strong style="font-size: 12;">Selected Followers:
                                     </strong>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}
@@ -405,17 +469,16 @@
                                 </div>
 
 
-                                @error('followers') <span class="text-danger">{{ $message }}</span> @enderror
                                 @if($followersList)
                                 <div style="border-radius:5px;background-color:grey;padding:8px;width:350px;margin-top:10px;max-height:250px;overflow-y:auto;">
                                     <div class="input-group" style="margin-bottom: 10px;">
-                                        <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                        <input wire:input="filter" wire:model.debounce.0ms="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search employee name / Id" aria-label="Search" aria-describedby="basic-addon1">
                                         <div class="input-group-append">
-                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn" type="button">
+                                            <button wire:change="autoValidate" wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn" type="button">
                                                 <i style="text-align: center;" class="fa fa-search"></i>
                                             </button>
-                                            <button wire:click="closeFollowers" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                            <button wire:change="autoValidate" wire:click="closeFollowers" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true" style="color: white; font-size: 24px;margin-left:2px">×</span>
                                             </button>
                                         </div>
                                     </div>
@@ -450,48 +513,37 @@
                                     @endif
                                 </div>
                                 @endif
-                                <div class="form-group" style="margin-top: 20px;">
+                                <div class="form-group" style="margin-top: 10px;">
                                     <label for="Subject" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Subject</label>
                                     <br>
-                                    <input wire:model="subject" class="placeholder-small" placeholder="Enter Subject.." rows="4" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"></input>
+                                    <input wire:change="autoValidate" wire:model="subject" class="placeholder-small" placeholder="Enter subject" rows="4" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"></input>
                                 </div>
-                                @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                                 <!-- Description -->
-                                <div class="form-group" style="margin-top: 20px;">
+                                <div class="form-group" style="margin-top: 10px;">
                                     <label for="description" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Description</label>
                                     <br>
-                                    <textarea wire:model="description" placeholder="Add a description.." rows="4" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"></textarea>
+                                    <textarea wire:change="autoValidate" wire:model="description" placeholder="Add description" rows="4" style="width: 100%;font-size:12px;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"></textarea>
                                 </div>
-                                @error('description') <span class="text-danger">{{ $message }}</span> @enderror
 
                                 <!-- File Input -->
                                 <div class="row">
                                     <div class="col">
                                         <label for="fileInput" style="cursor: pointer; font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">
-                                            <i class="fa fa-paperclip"></i> Attach Image
+                                            Attach Image
                                         </label>
                                     </div>
                                 </div>
 
 
-                                <input style="font-size: 12px;" wire:model="image" type="file" accept="image/*">
+                                <input wire:change="autoValidate" style="font-size: 12px;" wire:model="image" type="file" accept="image/*">
 
-                                @error('file_path')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-
-                                <!-- <div style="margin-top: 30px; text-align: center;">
-                                            <button wire:click="close" class="btn btn-danger btn-medium" type="button" name="link" style="background-color: #FF3D57; color: white; width: 100px;font-size:13px">Cancel</button>
-                                            <button wire:click="submit" class="btn btn-success btn-medium" type="button" name="link" style="background-color: #4CAF50; color: white; margin-left: 20px;font-size:13px">Save
-                                                Changes</button>
-                                        </div> -->
+                                <div style="text-align: center;margin-bottom:10px">
+                                    <button style="margin-top: 5px;" wire:click="submit" class="submit-btn" type="button" name="link">Save
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div style="text-align: center;margin-bottom:10px;">
-                            <button wire:click="submit" class="submit-btn" type="button" name="link">Save
-                            </button>
-                            <button wire:click="close" class=" cancel-btn" type="button" name="link" style="border:1px solid rgb(2, 17, 79)">Cancel</button>
-                        </div>
+
                     </div>
                 </div>
             </div>

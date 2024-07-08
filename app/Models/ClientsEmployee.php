@@ -12,6 +12,7 @@ class ClientsEmployee extends Model
     protected $fillable = [
         'client_id',
         'employee_id',
+        'project_name',
         'start_date',
         'end_date',
     ];

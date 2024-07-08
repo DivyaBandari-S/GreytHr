@@ -246,7 +246,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/Settings', Settings::class)->name('settings');
     Route::get('/review-pending-regularation/{id}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
-    Route::get('/timesheet-page', EmpTimeSheet::class)->name('time-sheet');
+    Route::get('/time-sheet', EmpTimeSheet::class)->name('time-sheet');
 
 
     //Feeds Module
