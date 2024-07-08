@@ -97,11 +97,10 @@
                 <hr style="width: 100%;border-bottom: 1px solid grey;">
 
 
-                <p style="font-weight: 500;font-size:13px;color:#47515b;">Activities</p>
-
+                <p style="font-weight: 500;font-size:13px;color:#47515b;cursor:pointer">Activities</p>
                 <div class="activities">
                     <label class="custom-radio-label">
-                        <input type="radio" name="radio" value="activities" checked>
+                        <input type="radio" name="radio" value="activities" checked   data-url="/Feeds">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trello stroke-current text-salmon-400 stroke-1" style="width: 1rem; height: 1rem; margin-left: 10px;">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                             <rect x="7" y="7" width="3" height="9"></rect>
@@ -113,7 +112,7 @@
                 </div>
                 <div class="posts" style="display:flex">
                     <label class="custom-radio-label" style="display:flex; align-items:center;">
-                        <input type="radio" name="radio" value=""><span>
+                        <input type="radio" name="radio" value=""   data-url="/everyone"><span>
                             <div class="icon-containers" style="margin-left:10px">
                                 <circle cx="12" cy="12" r="12" fill="#F9D3BF" />
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
@@ -123,7 +122,7 @@
                             </div>
                         </span><span class="custom-radio-button bg-blue" style="margin-left:10px;font-size:10px"></span> <span style="color:#778899;font-size:12px;font-weight:500;">Posts</span></label>
                 </div>
-
+                
                 <hr style="width: 100%;border-bottom: 1px solid grey;">
                 <div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
                     <div class="row">
@@ -201,7 +200,7 @@
                         <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
                             <ul style="font-size: 12px; margin: 0; padding: 0;">
                                 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">HR</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations</a>
+                           
                                 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations Team</a>
                                 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">QA</a>
                                 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Production Team</a>
@@ -214,11 +213,28 @@
                     </div>
                 </div>
             </div>
+         
             <div class="col" style="max-height: 80vh; overflow-y: auto;scroll-behavior: smooth;">
-                <div class="col-md-8 ">
-                    @foreach ($combinedData as $index => $data)
+      
+   
+            <div class="col-md-8 mt-1">
+            <div class="column text-right" style="display:flex; justify-content: flex-end;">
+    
+        
+    <p style="margin-top: 1px;font-size:12px">Sort:</p>
+    
+       
+            <p style="font-size:14px;font-weight:500;">Newest first</p>
+           
+                   <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="2 0 24 24" stroke="currentColor"style="height:12px;width:14px;margin-left:2px;margin-top:4px">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+
+    
+</div>
+                @foreach ($combinedData as $index => $data)
                     @if ($data['type'] === 'date_of_birth' )
-                    <div class="birthday-card  ">
+                    <div class="birthday-card  mt-2">
                         <!-- Upcoming Birthdays List -->
                         <div class="F mb-4" style="padding: 15px; background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top: 5px">
                             <div class="row m-0">
@@ -238,15 +254,15 @@
                                 </div>
                                 <div class="col-md-8 m-auto">
                                     <p style="color: #778899;font-size: 12px;font-weight:normal;">
-                                        Happy Birthday {{ ucwords(strtolower($data['employee']->first_name)) }}
-                                        {{ ucwords(strtolower($data['employee']->last_name)) }},
+                                        Happy Birthday {{ ucwords(strtoupper($data['employee']->first_name)) }}
+                                        {{ ucwords(strtoupper($data['employee']->last_name)) }},
                                         Have a great year ahead!
                                     </p>
                                     <div style="display: flex; align-items: center;">
                                         <img src="https://logodix.com/logo/1984436.jpg" alt="Image Description" style="height: 25px; width: 20px;">
                                         <p style="margin-left: 10px; font-size: 12px; color: #47515b;margin-bottom:0;font-weight:600;">
-                                            Happy Birthday {{ ucwords(strtolower($data['employee']->first_name)) }}
-                                            {{ ucwords(strtolower($data['employee']->last_name)) }}! 🎂
+                                            Happy Birthday {{ ucwords(strtoupper($data['employee']->first_name)) }}
+                                            {{ ucwords(strtoupper($data['employee']->last_name)) }}! 🎂
                                         </p>
                                     </div>
                                 </div>
@@ -449,7 +465,7 @@
                                                 <textarea wire:model="newComment" placeholder="Post comment something here" style="font-size:10px" name="comment" class="form-control"></textarea>
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="submit" class="btn btn-primary" style="text-align: center; line-height: 10px; font-size:12px;margin-left:-10px" value="comment" wire:target="add_comment">
+                                                <input type="submit" class="btn btn-primary" style="text-align: center; line-height: 10px; font-size:12px;margin-left:-10px;background-color:rgb(2, 17, 79);" value="comment" wire:target="add_comment">
                                             </div>
                                         </div>
                                     </div>
@@ -457,8 +473,10 @@
                             </form>
                         </div>
                     </div>
-                    <!-- Display existing comments for the current birthday card -->
-                    <div class="row m-0">
+                  
+     
+     
+        <div class="row m-0">
                         @php
                         $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
                         @endphp
@@ -488,20 +506,21 @@
                         <p style="font-size: 10px;">No comments available.</p>
                         @endif
                     </div>
-                </div>
-            </div>
-            @elseif ($data['type'] === 'hire_date' )
-            <div class="hire-card ">
-                <!-- Upcoming Hire Dates List -->
-                <div class="F mb-4" style="padding: 15px; background-color:white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top:5px">
-                    <div class="row m-0">
-                        <div class="col-md-4 mb-2" style="text-align: center;">
-                        <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo">
-                        </div>
-                        <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
-                            Group Events
-                        </div>
-                        <div class="c col-md-4 m-auto" style="font-size: 12px; font-weight: 100px; color: #9E9696; text-align: center;">
+
+                    </div>
+                    @elseif ($data['type'] === 'hire_date' )
+               
+                    <div class="hire-card  mt-2">
+                        <!-- Upcoming Birthdays List -->
+                        <div class="F mb-4" style="padding: 15px; background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top: 5px">
+                            <div class="row m-0">
+                                <div class="col-md-4 mb-2" style="text-align: center;">
+                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo">
+                                </div>
+                                <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
+                                    Group Events
+                                </div>
+                                <div class="c col-md-4 m-auto" style="font-size: 12px; font-weight: 100px; color: #9E9696; text-align: center;">
                             {{ date('d M ', strtotime($data['employee']->hire_date)) }}
                         </div>
                     </div>
@@ -517,8 +536,8 @@
                                 $yearText = $yearsSinceHire == 1 ? 'year' : 'years';
                                 @endphp
 
-                                Our congratulations to {{ ucwords(strtolower($data['employee']->first_name)) }}
-                                {{ ucwords(strtolower($data['employee']->last_name)) }},on completing {{ $yearsSinceHire }} successful {{$yearText}}.
+                                Our congratulations to {{ ucwords(strtoupper($data['employee']->first_name)) }}
+                                {{ ucwords(strtoupper($data['employee']->last_name)) }},on completing {{ $yearsSinceHire }} successful {{$yearText}}.
 
 
                             </p>
@@ -531,30 +550,15 @@
                                 </div>
                                 @endif
                                 <p style="margin-left: 10px; font-size: 12px; color: #47515b;margin-bottom:0;font-weight:600;">
-                                    Congratulations, {{ ucwords(strtolower($data['employee']->first_name)) }}
-                                    {{ ucwords(strtolower($data['employee']->last_name)) }}
+                                    Congratulations, {{ ucwords(strtoupper($data['employee']->first_name)) }}
+                                    {{ ucwords(strtoupper($data['employee']->last_name)) }}
                                 </p>
                             </div>
                         </div>
 
-                        <confirmation-modal class="confirmation-modal">
-                            <gt-popup-modal label="modal" size="sm" class="hydrated">
-                                <div class="body-content">
-                                    <div slot="modal-body">
-                                        <!-- Content for modal body -->
-                                    </div>
-                                </div>
-                                <div slot="modal-footer">
-                                    <div class="flex justify-end">
-                                        <gt-button shade="secondary" name="Cancel" class="mr-2x hydrated">
-                                        </gt-button>
-                                        <gt-button shade="primary" name="Confirm" class="hydrated"></gt-button>
-                                    </div>
-                                </div>
-                            </gt-popup-modal>
-                        </confirmation-modal>
-
+                   
                     </div>
+
                     <div class="col-md-2 p-0" style="margin-left: 9px;">
                         @php
                         $currentCardEmojis = $storedemojis->where('emp_id', $data['employee']->emp_id);
@@ -736,7 +740,7 @@
                                         <i class="comment-icon">💬</i>
                                     </span>
                                     <span style="margin-left: 5px;">
-                                        <a href="#" onclick="comment({{ $index }})" style="font-size: 10px;">Comment</a>
+                                        <a href="#" onclick="comment({{ $index }})" style="font-size: 10px;background:">Comment</a>
                                     </span>
                                 </div>
 
@@ -747,23 +751,25 @@
                                         <textarea wire:model="newComment" placeholder="Post comment something here" style="font-size: 10px;" name="comment" class="form-control"></textarea>
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="submit" class="btn btn-primary" style="text-align: center; line-height: 10px; font-size: 10px; margin-left: -20px;" value="Comment" wire:target="addcomment">
+                                        <input type="submit" class="btn btn-primary" style="text-align: center; line-height: 10px; font-size: 10px; margin-left: -20px;background-color:rgb(2, 17, 79);" value="Comment" wire:target="addcomment">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </form>
-                </div>
 
 
-                <!-- Display existing comments for the current birthday card -->
-                <div class="row m-0">
-                    @php
-                    $currentCardComments = $addcomments->where('card_id', $data['employee']->emp_id);
+
+                                </div>
+                            </div>
+                               <div class="row m-0">
+                               @php
+                    $currentCardComments = $addcomments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
                     @endphp
-                    @if($currentCardComments && $currentCardComments->count() > 0)
-                    <div class="m-0 px-2" style="overflow-y:auto; max-height:150px;"></div>
-                    @foreach ($currentCardComments as $comment)
+                         @if($currentCardComments && $currentCardComments->count() > 0)
+                        <div class="m-0 mt-2 px-2" style="overflow-y:auto; max-height:150px;">
+                            @foreach ($currentCardComments as $comment)
+                       
                     <div class="mb-3" style="display: flex;gap:10px;align-items:center;">
                         <img style="border-radius: 50%; " height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
                         <div class="comment" style="font-size: 10px;">
@@ -771,22 +777,23 @@
                             <p class="mb-0" style="font-size: 11px;">
                                 {{ ucfirst($comment->addcomment) }}
                             </p>
+
+                                </div>
+                            </div>
+                            @endforeach
                         </div>
+                        @else
+                        <p style="font-size: 10px;">No comments available.</p>
+                        @endif
                     </div>
-                    @endforeach
-                </div>
-                @else
-                <p style="font-size:10px">No comments available.</p>
-                @endif
-            </div>
-        </div>
+                        </div>
+                  </div>
+                  
+        @endif
+        @endforeach
 
 
-    </div>
 
-
-    @endif
-    @endforeach
 </div>
 </div>
 </div>
@@ -825,7 +832,17 @@
         background-color: #D8D8D8;
         /* You can change this to any desired background color */
     }
-
+    .sort {
+            border: none;
+            background: none;
+            font-size: 1rem;
+            margin-left: 2px;
+            padding: 2px ;
+            align-items: end;
+        }
+        .sort:focus {
+            outline: none;
+        }
     .feather {
         width: 1rem;
         height: 1rem;
@@ -837,12 +854,15 @@
         background-color: #e1e7f0;
         height: 30px;
         width: 100%;
+
+        cursor:pointer,
     }
 
     .posts:hover {
         background-color: #e1e7f0;
         height: 30px;
         width: 100%;
+        cursor:pointer,
     }
 </style>
 <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
@@ -972,25 +992,26 @@
     }
 </script>
 <script>
-    tinymce.init({
-        height: 140,
-        selector: "textarea#mytextarea",
-        plugins: "emoticons",
-        toolbar: "emoticons",
-        toolbar_location: "bottom",
-        menubar: false,
-        setup: function(editor) {
-            editor.on('input', function() {
-                autoResizeTextarea();
+        $(document).ready(function() {
+            $('input[name="radio"]').on('change', function() {
+                var url = $(this).data('url');
+                window.location.href = url;
             });
-        }
-    });
 
-    function autoResizeTextarea() {
-        var textarea = document.getElementById('mytextarea');
-        textarea.style.height = '140';
-    }
-</script>
+            // Ensures the corresponding radio button is selected based on current URL
+            var currentUrl = window.location.pathname;
+            $('input[name="radio"]').each(function() {
+                if ($(this).data('url') === currentUrl) {
+                    $(this).prop('checked', true);
+                }
+            });
+
+            // Click handler for the custom radio label to trigger the radio input change
+            $('.custom-radio-label').on('click', function() {
+                $(this).find('input[type="radio"]').prop('checked', true).trigger('change');
+            });
+        });
+    </script>
 @push('scripts')
 <script>
     Livewire.on('commentAdded', () => {
@@ -1069,6 +1090,16 @@
         /* Adjust margin as needed */
         cursor: pointer;
     }
+    .medium-header {
+    border-left-width: 0.125rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--e-color-emoji-text);
+  
+  margin-left: 20px;
+  margin-top:5px
+}
 
     /* CSS for labels */
     .radio-label {
@@ -1185,6 +1216,12 @@
             arrowSvg.classList.add('arrow-rotate');
         }
     }
+    document.querySelectorAll('.custom-radio-label a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        // Ensure no preventDefault() call is here unless necessary for custom handling
+    });
+});
+
 </script>
 @push('scripts')
 <script src="dist/emoji-popover.umd.js"></script>
@@ -1215,7 +1252,7 @@
 </script>
 @endpush
 
-</div>
+
 <script>
     function filterDropdowns() {
         var input, filter, ul, li, a, i;

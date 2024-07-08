@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('clients_employees', function (Blueprint $table) {
             $table->id();
             $table->string('client_id');
+            $table->string('project_name');
             $table->string('emp_id');
             $table->date('start_date');
             $table->date('end_date')->nullable();

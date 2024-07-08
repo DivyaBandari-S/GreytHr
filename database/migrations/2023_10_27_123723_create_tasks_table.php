@@ -19,6 +19,8 @@ return new class extends Migration
             $table->enum('priority', ['High', 'Medium', 'Low']); 
             $table->string('due_date');
             $table->string('tags'); 
+            $table->string('client_id'); 
+            $table->string('project_name'); 
             $table->string('followers');
             $table->string('subject');
             $table->text('description');

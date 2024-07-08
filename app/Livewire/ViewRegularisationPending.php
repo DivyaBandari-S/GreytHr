@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\EmployeeDetails;
 use App\Models\RegularisationNew;
 use App\Models\RegularisationNew1;
+use App\Models\SwipeRecord;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
@@ -28,6 +29,7 @@ class ViewRegularisationPending extends Component
     {
         $currentDateTime = Carbon::now();
         $item = RegularisationNew1::find($id);
+        $employeeId=$item->emp_id;
         $item->status='approved';
         if(empty($this->remarks))
         {
@@ -40,6 +42,49 @@ class ViewRegularisationPending extends Component
         $item->approved_date = $currentDateTime;
         $item->approved_by=$this->user->first_name . ' ' . $this->user->last_name;
         $item->save();
+        $regularisationEntries = json_decode($item['regularisation_entries'], true);
+        if (!empty($regularisationEntries) && is_array($regularisationEntries)) {
+            foreach ($regularisationEntries as $entry) {
+                $swiperecord=new SwipeRecord();
+                $swiperecord->emp_id=$employeeId;
+                $date = $regularisationEntries[0]['date'];
+                if (empty($entry['from'])) {
+                    
+                    
+                    $swiperecord->in_or_out='IN';
+                    $swiperecord->swipe_time= '10:00';
+                    $swiperecord->created_at=$date;
+                    $swiperecord->is_regularised=true;
+                    
+                } else {
+                    $swiperecord->in_or_out='IN';
+                    $swiperecord->swipe_time= $entry['from'];
+                    $swiperecord->created_at=$date;
+                    $swiperecord->is_regularised=true;
+                }
+                $swiperecord->save();
+                $swiperecord1=new SwipeRecord();
+                $swiperecord1->emp_id=$employeeId;
+                
+                if (empty($entry['to'])) {
+                    
+                    
+                    $swiperecord1->in_or_out='OUT';
+                    $swiperecord1->swipe_time= '19:00';
+                    $swiperecord1->created_at=$date;
+                    $swiperecord1->is_regularised=true;
+                    
+                } else {
+                    $swiperecord1->in_or_out='OUT';
+                    $swiperecord1->swipe_time= $entry['to'];
+                    $swiperecord1->created_at=$date;
+                    $swiperecord1->is_regularised=true;
+                }
+                $swiperecord1->save();
+                // Exit the loop after the first entry since the example has one entry
+                break;
+            }
+        }
         $this->countofregularisations--;
         Session::flash('success', 'Regularisation Request approved successfully');
     }
@@ -79,6 +124,7 @@ class ViewRegularisationPending extends Component
         ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
         ->with('employee') 
         ->get();
+        
               
         $this->countofregularisations=$this->regularisations->count();     
         return view('livewire.view-regularisation-pending');

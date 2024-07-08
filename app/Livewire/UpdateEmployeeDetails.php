@@ -14,6 +14,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\EmployeeDetails;
 use App\Models\Company;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
@@ -107,9 +108,13 @@ class UpdateEmployeeDetails extends Component
             // Redirect back or to a specific route
             return redirect()->back(); // Or redirect()->route('route.name');
         }
-
+        
+        foreach ($this->employees as $employee) {
+            $employee->encrypted_emp_id = Crypt::encrypt($employee->emp_id);
+        }
     
         return view('livewire.update-employee-details');
     }
+
 
 }

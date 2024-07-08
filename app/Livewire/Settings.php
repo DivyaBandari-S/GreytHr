@@ -50,121 +50,165 @@ class Settings extends Component
     public $error = '';
     public function editBiography()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-        $this->editingBiography = true;
-        $this->biography = $this->employeeDetails->biography ?? '';
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->editingBiography = true;
+            $this->biography = $this->employeeDetails->biography ?? '';
+        } catch (\Exception $e) {
+            \Log::error('Error in editBiography method: ' . $e->getMessage());
+        }
     }
+
 
     public function cancelBiography()
     {
         $this->editingBiography = false;
     }
 
+
     public function saveBiography()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-        $this->employeeDetails->biography = $this->biography;
-        $this->employeeDetails->save();
-
-        $this->editingBiography = false;
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->employeeDetails->biography = $this->biography;
+            $this->employeeDetails->save();
+            $this->editingBiography = false;
+        } catch (\Exception $e) {
+            \Log::error('Error in saveBiography method: ' . $e->getMessage());
+        }
     }
+
     public function editSocialMedia()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-        $this->editingSocialMedia = true;
-        $this->faceBook = $this->employeeDetails->facebook ?? '';
-        $this->twitter = $this->employeeDetails->twitter ?? '';
-        $this->linkedIn = $this->employeeDetails->linked_in ?? '';
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->editingSocialMedia = true;
+            $this->faceBook = $this->employeeDetails->facebook ?? '';
+            $this->twitter = $this->employeeDetails->twitter ?? '';
+            $this->linkedIn = $this->employeeDetails->linked_in ?? '';
+        } catch (\Exception $e) {
+            \Log::error('Error in editSocialMedia method: ' . $e->getMessage());
+        }
     }
+
 
     public function cancelSocialMedia()
     {
         $this->editingSocialMedia = false;
     }
 
+
     public function saveSocialMedia()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-        $this->employeeDetails->facebook = $this->faceBook;
-        $this->employeeDetails->twitter = $this->twitter;
-        $this->employeeDetails->linked_in = $this->linkedIn;
-        $this->employeeDetails->save();
-        $this->editingSocialMedia = false;
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->employeeDetails->facebook = $this->faceBook;
+            $this->employeeDetails->twitter = $this->twitter;
+            $this->employeeDetails->linked_in = $this->linkedIn;
+            $this->employeeDetails->save();
+            $this->editingSocialMedia = false;
+        } catch (\Exception $e) {
+            \Log::error('Error in saveSocialMedia method: ' . $e->getMessage());
+        }
     }
+
     public function editProfile()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-        $this->nickName = $this->employeeDetails->nick_name ?? '';
-        $this->wishMeOn = $this->employeeDetails->date_of_birth ?? '';
-        $this->editingNickName = true;
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->nickName = $this->employeeDetails->nick_name ?? '';
+            $this->wishMeOn = $this->employeeDetails->date_of_birth ?? '';
+            $this->editingNickName = true;
+        } catch (\Exception $e) {
+            \Log::error('Error in editProfile method: ' . $e->getMessage());
+        }
     }
+
 
     public function cancelProfile()
     {
         $this->editingNickName = false;
     }
+
     public function saveProfile()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-        $this->employeeDetails->nick_name = $this->nickName;
-        $this->employeeDetails->date_of_birth = $this->wishMeOn;
-        $this->employeeDetails->save();
-        $this->editingNickName = false;
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->employeeDetails->nick_name = $this->nickName;
+            $this->employeeDetails->date_of_birth = $this->wishMeOn;
+            $this->employeeDetails->save();
+            $this->editingNickName = false;
+        } catch (\Exception $e) {
+            \Log::error('Error in saveProfile method: ' . $e->getMessage());
+        }
     }
+
 
     public function editTimeZone()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-        $this->editingTimeZone = true;
-        $this->selectedTimeZone = $this->employeeDetails->time_zone ?? '';
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->editingTimeZone = true;
+            $this->selectedTimeZone = $this->employeeDetails->time_zone ?? '';
+        } catch (\Exception $e) {
+            \Log::error('Error in editTimeZone method: ' . $e->getMessage());
+        }
     }
+
 
     public function cancelTimeZone()
     {
         $this->editingTimeZone = false;
     }
 
+
     public function saveTimeZone()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-        $this->employeeDetails->time_zone = $this->selectedTimeZone;
-        $this->employeeDetails->save();
-        $this->editingTimeZone = false;
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->employeeDetails->time_zone = $this->selectedTimeZone;
+            $this->employeeDetails->save();
+            $this->editingTimeZone = false;
+        } catch (\Exception $e) {
+            \Log::error('Error in saveTimeZone method: ' . $e->getMessage());
+        }
     }
+
     public $showAlertDialog = false;
     public $showDialog = false;
+
 
     public function open()
     {
         $this->showAlertDialog = true;
     }
+
     public function show()
     {
         $this->resetForm();
         $this->showDialog = true;
     }
+
     public function remove()
     {
         $this->resetForm();
         $this->showDialog = false;
     }
+
     public function close()
     {
         $this->resetForm();
         $this->showAlertDialog = false;
+        $this->showAlertDialog = false;
     }
-
-
 
     public function resetForm()
     {
@@ -173,93 +217,49 @@ class Settings extends Component
         $this->oldPassword = '';
         $this->newPassword = '';
         $this->confirmNewPassword = '';
+        $this->oldPassword = '';
+        $this->newPassword = '';
+        $this->confirmNewPassword = '';
     }
 
     public function changePassword()
     {
-        $this->validate([
-
-            'oldPassword' => 'required',
-            'newPassword' => 'required|min:8',
-            'confirmNewPassword' => 'required|same:newPassword',
-        ]);
-
         try {
+            $this->validate([
+                'oldPassword' => 'required',
+                'newPassword' => 'required|min:8',
+                'confirmNewPassword' => 'required|same:newPassword',
+            ]);
 
-            // $employeeId = auth()->guard('emp')->user()->emp_id;
-            // DB::connection()->getPdo();
-
-
-            // $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            // if (!Hash::check($this->oldPassword,  $this->employeeDetails->password)) {
-            //     $this->addError('oldPassword', 'The old password is incorrect.');
-            //     return;
-            // }
-
-            // // Update the password
-            // $this->employeeDetails->password = Hash::make($this->newPassword);
-            // $this->employeeDetails->save();
-
-
-            // Define an array of guards with their respective models and ID fields
-            $guards = [
-                'emp' => [EmployeeDetails::class, 'emp_id'],
-                'hr' => [Hr::class, 'hr_emp_id'],
-                'it' => [It::class, 'it_emp_id'],
-                'finance' => [Finance::class, 'fi_emp_id'],
-                'admins' => [Admin::class, 'admin_emp_id']
-            ];
-
-
-            $user = null;
-
-            // Loop through each guard to find the authenticated user
-            foreach ($guards as $guard => [$model, $idField]) {
-                if (auth()->guard($guard)->check()) {
-                    $userId = auth()->guard($guard)->user()->{$idField};
-                    $user = $model::where($idField, $userId)->first();
-                    break;
-                }
-            }
-            if (!$user) {
-                throw new \Exception('User details not found.');
-            }
-
-            if (!Hash::check($this->oldPassword, $user->password)) {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            if (!Hash::check($this->oldPassword, $this->employeeDetails->password)) {
                 $this->addError('oldPassword', 'The old password is incorrect.');
                 return;
             }
 
             // Update the password
-            $user->password = Hash::make($this->newPassword);
-            $user->save();
+            $this->employeeDetails->password = Hash::make($this->newPassword);
+            $this->employeeDetails->save();
 
             session()->flash('success', 'Password changed successfully.');
             $this->resetForm();
             $this->showDialog = false;
             $this->passwordChanged = true;
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // Handle validation errors
-            $this->error='There was an issue with your input. Please check and try again.';
-        } catch (\Illuminate\Auth\AuthenticationException $e) {
-            // Handle authentication errors
-            $this->error= 'Authentication failed. Please try logging in again.';
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database query errors
-            $this->error='There was a problem with the database query. Please try again later.';
-        } catch (\PDOException $e) {
-            // Handle database connection errors
-            $this->error='Unable to connect to the database. Please check your database credentials and connection.';
         } catch (\Exception $e) {
-            // Handle general errors
-            $this->error='An unexpected error occurred. Please try again later.';
+            \Log::error('Error in changePassword method: ' . $e->getMessage());
         }
     }
 
     public function render()
     {
-        $this->timeZones = timezone_identifiers_list();
-        $this->employees = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
-        return view('livewire.settings', ['employees' => $this->employees]);
+        try {
+            $this->timeZones = timezone_identifiers_list();
+            $this->employees = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
+            return view('livewire.settings', ['employees' => $this->employees]);
+        } catch (\Exception $e) {
+            \Log::error('Error in render method: ' . $e->getMessage());
+            return view('livewire.settings')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
+        }
     }
 }

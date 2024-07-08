@@ -844,10 +844,10 @@ td {
 
 
 .toggle-box-attendance-info i.fas.fa-calendar:hover {
-    color: rgb(2, 17, 79);
+    color: rgb(2,17,79);
     /* Icon color on hover */
     /* Background color for icon on hover */
-    border-color: rgb(2, 17, 79);
+    border-color: rgb(2,17,79);
     /* Border color on hover */
 }
 
@@ -1132,10 +1132,10 @@ margin-top:10px;
 border: 1px solid #cecece;
 }
 
-.active, .accordion:hover {
+/* .active, .accordion:hover {
 background-color: #02114f;
 color: #fff;
-}
+} */
 
 .panel {
 /* padding: 0 18px; */
@@ -1231,6 +1231,7 @@ pointer-events: none;
                 <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info" id="myButton">My Regularisations</a>
             </div>
         </div>
+
         <div class="row m-0" style="text-align: center;">
             <div class="col-md-2"></div>
             <div class="col-md-8">
@@ -1409,8 +1410,8 @@ pointer-events: none;
             </div>
             <div class="col-6" style="text-align: -webkit-right;">
                 <div class="toggle-box-attendance-info">
-                    <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;"wire:click="showBars"></i>
-                    <i class="fas fa-bars" id="bars-icon"style="cursor:pointer;" ></i>
+                    <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;color: {{ ($defaultfaCalendar == 1 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 1 )? 'rgb(2,17,79)' : '#fff' }}"wire:click="showBars"></i>
+                    <i class="fas fa-bars" id="bars-icon"style="cursor:pointer;color: {{ ($defaultfaCalendar == 0 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 0 )? 'rgb(2,17,79)' : '#fff' }}"wire:click="showTable"></i>
                 </div>
             </div>
         </div>
@@ -1419,19 +1420,21 @@ pointer-events: none;
    
     
    
-    @if($showMessage=="true")
+   
         @php
 
             $presentCount = 0;
             $offCount = 0;
             $absentCount=0;
             $holidayCount = 0;
+            $Regularised=false;
         @endphp
         
        
        
-    @else($showMessage=="false")
+    
     <div class="row m-0 p-0">
+            @if($defaultfaCalendar==1)
             <div class="col-md-7 m-0 p-1 custom-scrollbar">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="calendar-heading-container">
@@ -1504,7 +1507,7 @@ pointer-events: none;
                                                 @elseif($day['status'] == 'SL')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">SL</span>
                                                 @elseif($day['status'] == 'LOP')
-                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: px;white-space: nowrap;padding-top:5px">LOP</span>
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">LOP</span>
                                                 @elseif($day['status'] == 'A')
                                                 <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
                                                 @elseif($day['status'] == 'P')
@@ -1512,6 +1515,16 @@ pointer-events: none;
                                                 @endif
 
 
+                                                </span>
+                                                @endif
+                                                @if($day['isRegularised']==true)
+                                                    @php
+                                                         $Regularised=true;
+                                                    @endphp
+                                                <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
+                                                    <p class="me-2 mb-0">
+                                                      <div class="down-arrow-reg"></div>
+                                                    </p>
                                                 </span>
                                                 @endif
                                                 @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
@@ -1541,6 +1554,8 @@ pointer-events: none;
 
 
 
+
+                
                 <button class="accordion">Legends</button>
                 <div class="panel">
                     <div class="row m-0 mt-3 mb-3">
@@ -1669,9 +1684,14 @@ pointer-events: none;
                         </div>
                     </div>
                 </div>
-
+                
             </div>
+            @endif
+            @if($defaultfaCalendar==0)
+                @livewire('attendance-table')
+            @endif
             <div class="col-md-5">
+              @if($defaultfaCalendar==1)
                 <div class="container1" style="background-color:white;">
                     <!-- Content goes here -->
                     <div class="row m-0">
@@ -1743,7 +1763,7 @@ pointer-events: none;
                                     </td>
                                     <td>
                                     @if($this->first_in_time!=$this->last_out_time)
-                                         {{$this->hours}}:{{$this->minutesFormatted}}
+                                         {{str_pad($this->hours, 2, '0', STR_PAD_LEFT)}}:{{str_pad($this->minutesFormatted,2,'0',STR_PAD_LEFT)}}
                                     @else
                                             -
                                     @endif     
@@ -1765,6 +1785,8 @@ pointer-events: none;
 
                     </div>
                 </div>
+                @endif
+                @if($defaultfaCalendar==1)
                 <div class="container2">
                     <h3 style="margin-left:20px;margin-top:10px;color: #7f8fa4;font-size:14px;">Status Details</h3>
 
@@ -1774,14 +1796,63 @@ pointer-events: none;
                                 <tr>
                                     <th style="font-weight:normal;font-size:12px;padding-top:16px;">Status</th>
                                     <th style="font-weight:normal;font-size:12px;padding-top:16px;">Remarks</th>
-
+                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td>
+                                        @php
+                                            $swipeRecordExists = $swiperecord->contains(function ($record) use ($CurrentDate) {
+                                                        return \Carbon\Carbon::parse($record->created_at)->toDateString() === $CurrentDate;
+                                                    });    
+                                        @endphp  
+                                        @if($swipeRecordExists==true)
+                                            Regularisation
+                                        @else
+                                            -
+                                        @endif                           
+                                    </td>
                                     <td>-</td>
-                                    <td>-</td>
+                                    @if($swipeRecordExists==true)
+                                            <td>
+                                            <button type="button"style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;"wire:click="checkDateInRegularisationEntries('{{$CurrentDate}}')">
+                                                Info
+                                            </button>
+                                            @if($showRegularisationDialog==true)
+                                           
+                                            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                           
+                            <div class="modal-header" style="background-color: #eef7fa; height: 50px">
+                                <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Regularisation&nbsp;&nbsp;Details</b></h5>
+                                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeRegularisationModal" style="background-color: white; height:10px;width:10px;" >
+                                </button>
+                            </div>
+                            <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                                <div class="row">
 
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Status : <br/><span style="color: #000000;">Regularization</span></div>
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized By: <br/><span style="color: #000000;">{{ucwords(strtolower($regularised_by))}}</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Date : <br/><span style="color: #000000;">{{ date('jS M,Y', strtotime($regularised_date)) }}</span></div>
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Time: <br/><span style="color: #000000;">{{ date('H:i:s', strtotime($regularised_date)) }}</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;"> Reason:<br/> <span style="color: #000000;">{{$regularised_reason}}</span></div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>
+                
+                @endif
+                                            </td>
+                                    @endif 
                                 </tr>
                                 <!-- Add more rows with dashes as needed -->
                             </tbody>
@@ -1789,7 +1860,8 @@ pointer-events: none;
                         </table>
                     </div>
                 </div>
-
+                @endif
+                @if($defaultfaCalendar==1)
                 <div class="container3">
                     <h3 style="margin-left:20px;margin-top:20px;color: #7f8fa4;font-size:14px;">Session Details</h3>
 
@@ -1840,6 +1912,8 @@ pointer-events: none;
                     </div>
 
                 </div>
+                @endif
+                @if($defaultfaCalendar==1)
                 <div class="container6">
                     <h3 style="margin-left:20px;color: #7f8fa4;font-size:14px;">Swipes</h3>
                     <div class="arrow-button" style="float:right;margin-top:-30px;margin-right:20px;" id="toggleButton">
@@ -1865,7 +1939,7 @@ pointer-events: none;
                                         <td style="font-weight:normal;font-size:12px;">{{ $swiperecord->in_or_out }}</td>
                                         <td>
                                             <div style="display:flex;flex-direction:column;">
-                                                <p style="margin-bottom: 0;font-weight:normal;font-size:12px;">
+                                                <p style="margin-bottom: 0;font-weight:normal;font-size:12px;white-space:nowrap;">
                                                     {{ date('h:i:s A', strtotime($swiperecord->swipe_time)) }}
                                                 </p>
                                                 <p style="margin-bottom: 0;font-size: 10px;color: #a3b2c7;">
@@ -1875,7 +1949,7 @@ pointer-events: none;
                                         </td>
                                         <td>-</td>
 
-                                        <td><button class="info-button" style="background-color:pink; border: 2px solid rgb(2, 17, 79);height:20px; color: white; border-radius: 5px;font-size:12px;margin-top:-10px" data-toggle="modal" data-target="#viewStudentModal" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
+                                        <td><button class="info-button" style="background-color:#007bff; border: 2px solid #007bff;height:20px; color: white; border-radius: 5px;font-size:12px;margin-top:-10px"wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
 
                                     </tr>
                                     @if (($index + 1) % 2 == 0)
@@ -1893,7 +1967,7 @@ pointer-events: none;
                                 </tbody>
                                 <!-- Add table rows (tbody) and data here if needed -->
                                 @else
-                                <img src="whttps://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
+                                <img src="https://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
                                 <div class="text-muted">No record Found</div>
                                 @endif
                             </table>
@@ -1901,69 +1975,57 @@ pointer-events: none;
                         </div>
 
                     </div>
-
+                    @endif
                     @if($showSR=="true")
-                    <div class="modal" tabindex="-1" role="dialog" style="display: block;overflow-y:auto;">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content-attendance-info">
-                                <div class="modal-header-attendance-info">
-                                    <h5 class="modal-title">Swipe Details</h5>
-                                    <button type="button" class="close" wire:click="closeSWIPESR">
-                                        <span aria-hidden="true"style="cursor:pointer;">&times;</span>
-                                    </button>
+                       <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #eef7fa; height: 50px">
+                                <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Swipes</b></h5>
+                                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeSWIPESR" style="background-color: #eef7fa; height:10px;width:10px;" >
+                                </button>
+                            </div>
+                            <div class="modal-body" style="max-height:300px;">
+                            @if($swiperecord)
+                                <div class="row">
+                                 
+                                     @if ($data->isNotEmpty())
+                                       <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br/><span style="color: #000000;">{{ $data[0]->first_name }} {{ $data[0]->last_name }}</span></div>
+                                     @endif  
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br/><span style="color: #000000;">{{ $swiperecord->emp_id }}</span></div>
+                                
                                 </div>
-                                <div class="modal-body pt-4 pb-4">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            @if($swiperecord)
-                                            @if ($data->isNotEmpty())
-                                            <tr>
-                                                <th>Employee&nbsp;Name: </th>
-                                                <td>{{ $data[0]->first_name }} {{ $data[0]->last_name }}</td>
-                                            </tr>
-                                            @endif
-                                            <tr>
-                                                <th>Employee&nbsp;Id</th>
-                                                <td>{{ $swiperecord->emp_id }}</td>
-                                            </tr>
-
-                                            <tr>
-                                                <th>Swipe&nbsp;Date:</th>
-                                                <td>{{\Carbon\Carbon::parse($swiperecord->created_at)->format('jS F, Y')}}
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <th>Swipe&nbsp;Time:</th>
-                                                <td>{{ $view_student_swipe_time }}</td>
-                                            </tr>
-
-                                            <tr>
-                                                <th>In/Out:</th>
-                                                <td>{{ $view_student_in_or_out }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Access&nbsp;Card&nbsp;Number:</th>
-                                                <td>-</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Location:</th>
-                                                <td>-</td>
-                                            </tr>
-                                            @endif
-                                    </table>
-
+                                <div class="row">
+                                 
+                                     
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Date:<br/><span style="color: #000000;">{{\Carbon\Carbon::parse($swiperecord->created_at)->format('jS F, Y')}}</span></div>
+                                   
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Time:<br/><span style="color: #000000;">{{ $view_student_swipe_time }}</span></div>
+                                   
                                 </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-sm btn-danger"style="cursor:pointer;" type="button" wire:click="closeSWIPESR">Cancel</button>
+                                <div class="row">
+                                 
+                                     
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">In/Out:<br/><span style="color: #000000;">{{ $view_student_in_or_out }}</span></div>
+                                   
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Access&nbsp;Card&nbsp;Number:<br/><span style="color: #000000;">-</span></div>
+                                   
                                 </div>
+                                <div class="row">
+                                 
+                                     
+                                    
+                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Location<br/><span style="color: #000000;">-</span></div>
+                                   
+                                </div>
+                                @endif
                             </div>
                         </div>
-
                     </div>
-                    <div class="modal-backdrop fade show blurred-backdrop"></div>
+                </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>
                     @endif
-
+                    
                 </div>
             </div>
         </div>
@@ -1971,90 +2033,14 @@ pointer-events: none;
 
 
     </div>
-    @endif
+   
     
     
     
 
 
    
-    <div class="modal fade" id="largeBoxModal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content-attendance-info" style="width:100%">
-                <div class="modal-header-attendance-info">
-                    <h5 class="modal-title">Swipe Details</h5>
-                    <button type="button" class="close" aria-label="Close" wire:click="closeViewStudentModal">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-bordered">
-                        <tbody>
-                            @if($swiperecord)
-                            @if ($data->isNotEmpty())
-                            <tr>
-                                <th>Employee&nbsp;Name: </th>
-                                <td>{{ $data[0]->first_name }} {{ $data[0]->last_name }}</td>
-                            </tr>
-                            @endif
-                            <tr>
-                                <th>Employee&nbsp;Id</th>
-                                <td>{{ $swiperecord->emp_id }}</td>
-                            </tr>
-
-
-                            <tr>
-                                <th>Access&nbsp;Card&nbsp;Number:</th>
-                                <td>-</td>
-                            </tr>
-
-                            @endif
-                    </table>
-                    <div style=" overflow-x: auto;
-    max-width: 100%;">
-                        <table>
-
-                            <thead>
-                                <tr>
-                                    <th>In/Out</th>
-                                    <th>Swipe&nbsp;Time</th>
-                                    <th>Location</th>
-                                    <th>Status</th>
-                                    <th>Last&nbsp;Updated&nbsp;On</th>
-                                    <th>Modified&nbsp;Time</th>
-                                    <th>Updated&nbsp;By</th>
-                                    <th>Longitude</th>
-                                    <th>Latitude</th>
-                                    <th>Mobile ID</th>
-                                    <th>Remarks</th>
-                                </tr>
-
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>
-                                <!-- Add more rows with dashes as needed -->
-                            </tbody>
-                            <!-- Add table rows (tbody) and data here if needed -->
-                        </table>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-danger" wire:click="cancel()" aria-label="Close">Cancel</button>
-
-                </div>
-            </div>
-        </div>
-    </div>
+   
    
    
     <script>

@@ -1,10 +1,6 @@
 <div class="container">
-    <div style="text-align: center;">
-        <button style="padding: 0.2rem;border-radius:0" class="button-dl {{ $tab === 'timeSheet' ? 'active' : '' }}" wire:click="$set('tab', 'timeSheet')">Time
-            Sheets</button>
-        <button style="font-size: 0.8rem;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#timesheetHistoryModal">
-            View Time Sheet History
-        </button>
+    <div class="container" style="width:auto;max-width:60rem;padding: 0.6rem; background-color:rgb(2,17,79);color:white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);text-align:center">
+        <b> Time Sheet Entries</b>
     </div>
 
     @if($tab=="timeSheet")
@@ -19,11 +15,12 @@
             <!-- Start Date -->
             <div class="col-md-3" style="display: flex; flex-direction: column; align-items: flex-start">
                 @php
-                $start_date = \Carbon\Carbon::parse($start_date)->format('Y-m-d');
+                $start_date_string = \Carbon\Carbon::parse($start_date_string)->format('Y-m-d');
                 @endphp
                 <div style="display: flex; align-items: center;">
-                    <label for="start_date" class="input-label" style="font-weight: bold; font-size: 0.8rem;margin-right: 0.25rem;">Start Date:</label>
-                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" wire:model.lazy="start_date_string" id="start_date" class="input-field" style="font-size: 0.8rem; width: 56%; border: 1px solid #ccc;padding:0.2rem">
+                    <label for="start_date" class="input-label" style="font-weight: bold; font-size: 0.8rem; margin-right: 0.25rem;">Start Date:</label>
+                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" wire:model.lazy="start_date_string" id="start_date" class="input-field" style="font-size: 0.8rem; width: 90px; border: 1px solid #ccc; margin-bottom: 5px;">
+                    <input type="hidden" id="formatted_start_date" value="{{ \Carbon\Carbon::parse($start_date_string)->format('d-M-Y') }}">
                 </div>
                 @error('start_date_string')
                 <span class="error-message" style="color: #e53e3e; font-size: 0.8rem; margin-top: 0.25rem; display: block;">
@@ -37,12 +34,6 @@
                     <div style="display: flex; gap: 1rem;">
                         <label style="font-size: 0.8rem; display: flex; align-items: center;">
                             <input wire:change="addTask" wire:model="time_sheet_type" type="radio" name="time_sheet_type" value="weekly" style="margin-right: 0.25rem;"> Weekly
-                        </label>
-                        <label style="font-size: 0.8rem; display: flex; align-items: center;">
-                            <input wire:change="addTask" wire:model="time_sheet_type" type="radio" name="time_sheet_type" value="semi-monthly" style="margin-right: 0.25rem;"> Semi-Monthly
-                        </label>
-                        <label style="font-size: 0.8rem; display: flex; align-items: center;">
-                            <input wire:change="addTask" wire:model="time_sheet_type" type="radio" name="time_sheet_type" value="monthly" style="margin-right: 0.25rem;"> Monthly
                         </label>
                     </div>
                 </div>
@@ -109,7 +100,7 @@
                 <table style="width: 100%; border-collapse: collapse;" class="task-table">
                     <thead style="background-color: rgba(2,17,79); color: white;">
                         <tr>
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Date</th>
+                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center;width:40px">Date</th>
                             <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Day</th>
                             @if(count($client_names) > 0)
                             <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Client</th>
@@ -121,11 +112,14 @@
                     <tbody>
                         @foreach ($default_date_and_day_with_tasks as $index => $task)
                         @php
-                        $formattedDate = \Carbon\Carbon::parse($task['date'])->format('d-m-y');
+                        $date = \Carbon\Carbon::parse($task['date']);
+                        $formattedDate = $date->format('d-M-Y');
+                        $isWeekend = $date->isWeekend();
+                        $rowColor = $isWeekend ? 'rgb(255, 236, 248)' : ($index % 2 === 0 ? '#f7fafc' : '#edf2f7');
                         @endphp
-                        <tr style="padding:0;{{ $index % 2 === 0 ? 'background-color: #f7fafc;' : 'background-color: #edf2f7;' }}">
-                            <td style="border: 1px solid #ddd; padding: 0rem; text-align: center;">
-                                <input type="text" value="{{ $formattedDate }}" style="width: 50px;text-align:center; padding: 0rem; border: none; background: transparent;" readonly>
+                        <tr style="padding:0; background-color: {{ $rowColor }};">
+                            <td style="border: 1px solid #ddd; padding: 0rem; text-align: center;width:40px">
+                                <input type="text" value="{{ $formattedDate }}" style="text-align:center; padding: 0rem; border: none; background: transparent;" readonly>
                             </td>
                             <td style="border: 1px solid #ddd; padding: 0rem;">
                                 <input type="text" readonly wire:model="default_date_and_day_with_tasks.{{ $index }}.day" style="width: 95px;text-align:center; padding: 0rem; border: none; background: transparent;">
@@ -155,10 +149,10 @@
                             <td style="border: 1px solid #ddd; padding: 0.2rem;">
                                 @if(count($client_names) >= 1)
                                 @foreach($default_date_and_day_with_tasks[$index]['tasks'] as $taskIndex => $taskDescription)
-                                <textarea wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="defaultSaveTimeSheet" style="height:15px;margin-left:8px;width: 470px;  padding: 0rem; border: none;border-radius:0; background: transparent;"></textarea><br>
+                                <textarea wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="defaultSaveTimeSheet" style="height:15px;margin-left:8px;width: 480px;  padding: 0rem; border: none;border-radius:0; background: transparent;"></textarea><br>
                                 @endforeach
                                 @else
-                                <textarea wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks" wire:change="defaultSaveTimeSheet" style="height:15px;margin-left:8px;width: 570px;  padding: 0rem; border: none; background: transparent;border-radius:0;"></textarea><br>
+                                <textarea wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks" wire:change="defaultSaveTimeSheet" style="height:15px;margin-left:8px;width: 580px;  padding: 0rem; border: none; background: transparent;border-radius:0;"></textarea><br>
                                 @endif
                             </td>
                         </tr>
@@ -241,8 +235,8 @@
                 <table style="width: 100%; border-collapse: collapse;" class="task-table">
                     <thead style="background-color: rgba(2,17,79); color: white;">
                         <tr>
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Date</th>
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Day</th>
+                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center;width:20px">Date</th>
+                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center;width:30px">Day</th>
                             @if(count($client_names) > 0)
                             <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Client</th>
                             @endif
@@ -253,14 +247,17 @@
                     <tbody>
                         @foreach ($date_and_day_with_tasks as $index => $task)
                         @php
-                        $formattedDate = \Carbon\Carbon::parse($task['date'])->format('d-m-y');
+                        $date = \Carbon\Carbon::parse($task['date']);
+                        $formattedDate = $date->format('d-M-Y');
+                        $isWeekend = $date->isWeekend();
+                        $rowColor = $isWeekend ? 'rgb(255, 236, 248)' : ($index % 2 === 0 ? '#f7fafc' : '#edf2f7');
                         @endphp
-                        <tr style="padding:0;{{ $index % 2 === 0 ? 'background-color: #f7fafc;' : 'background-color: #edf2f7;' }}">
-                            <td style="border: 1px solid #ddd; padding: 0rem; text-align: center;">
-                                <input type="text" value="{{ $formattedDate }}" style="width: 50px;text-align:center; padding: 0rem; border: none; background: transparent;" readonly>
+                        <tr style="padding:0; background-color: {{ $rowColor }};">
+                            <td style="border: 1px solid #ddd; padding: 0rem; text-align: center;width:20px">
+                                <input type="text" value="{{ $formattedDate }}" style="text-align: center; padding: 0rem; border: none; background: transparent;" readonly>
                             </td>
-                            <td style="border: 1px solid #ddd; padding: 0rem;">
-                                <input type="text" readonly wire:model="date_and_day_with_tasks.{{ $index }}.day" style="width: 95px;text-align:center; padding: 0rem; border: none; background: transparent;">
+                            <td style="border: 1px solid #ddd; padding: 0rem;width:30px;text-align:center;">
+                                <input type="text" readonly wire:model="date_and_day_with_tasks.{{ $index }}.day" style="text-align:center; padding: 0rem; border: none; background: transparent;">
                             </td>
                             @if(count($client_names) >= 1)
                             <td style="border: 1px solid #ddd; padding: 0rem;">
@@ -520,19 +517,40 @@
     </div>
 </div>
 <script>
-     document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         let startDateInput = document.getElementById('start_date');
+        let formattedStartDateInput = document.getElementById('formatted_start_date');
+
+        // Function to format date as d-M-Y
+        function formatDate(d) {
+            let day = ('0' + d.getDate()).slice(-2);
+            let month = d.toLocaleString('default', {
+                month: 'short'
+            });
+            let year = d.getFullYear();
+            return `${day}-${month}-${year}`;
+        }
+
+        // Set initial value if not set
         if (!startDateInput.value) {
             let now = new Date();
             let day = now.getDay();
-            let diff = now.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+            let diff = now.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
             let monday = new Date(now.setDate(diff));
-            let year = monday.getFullYear();
-            let month = ('0' + (monday.getMonth() + 1)).slice(-2);
-            let date = ('0' + monday.getDate()).slice(-2);
-            let formattedDate = `${year}-${month}-${date}`;
-            startDateInput.value = formattedDate;
+
+            let formattedDate = formatDate(monday);
+            startDateInput.value = monday.toISOString().split('T')[0];
+            formattedStartDateInput.value = formattedDate;
             startDateInput.dispatchEvent(new Event('change'));
         }
+
+        // Update displayed date on change
+        startDateInput.addEventListener('change', function() {
+            let date = new Date(this.value);
+            let formattedDate = formatDate(date);
+            formattedStartDateInput.value = formattedDate;
+            // Trigger Livewire update if needed
+            formattedStartDateInput.dispatchEvent(new Event('input'));
+        });
     });
 </script>

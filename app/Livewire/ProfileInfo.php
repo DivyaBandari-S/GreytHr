@@ -22,39 +22,52 @@ class ProfileInfo extends Component
     public $father_last_name;
     public $empBankDetails;
     public $employeeDetails;
-
     public $image, $employee;
     public $showSuccessMessage = false;
-
-    public function closeMessage(){
-         $this->showSuccessMessage = false;
+    
+    public function closeMessage()
+    {
+        $this->showSuccessMessage = false;
     }
+    
     public function updateProfile()
     {
-        $empId = Auth::guard('emp')->user()->emp_id;
-        $employee = EmployeeDetails::where('emp_id', $empId)->first();
-        $this->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:1024', // 1024 kilobytes = 1 megabyte
-        ]);
-
-        if ($this->image) {
-            if ($this->image instanceof \Illuminate\Http\UploadedFile) {
-                $imagePath = $this->image->store('employee_image', 'public');
-            } else {
-                $imagePath = $this->image;
+        try {
+            $empId = Auth::guard('emp')->user()->emp_id;
+            $employee = EmployeeDetails::where('emp_id', $empId)->first();
+    
+            $this->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:1024', // 1024 kilobytes = 1 megabyte
+            ]);
+    
+            if ($this->image) {
+                if ($this->image instanceof \Illuminate\Http\UploadedFile) {
+                    $imagePath = $this->image->store('employee_image', 'public');
+                } else {
+                    $imagePath = $this->image;
+                }
+                $employee->image = $imagePath;
+                $employee->save();
             }
-            $employee->image = $imagePath;
-            $employee->save();
-            
+    
+            $this->showSuccessMessage = true;
+        } catch (\Exception $e) {
+            \Log::error('Error in updateProfile method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while updating the profile. Please try again later.');
         }
-
-        $this->showSuccessMessage = true;
     }
+    
     public function render()
     {
-        $this->employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
-        $this->empBankDetails = EmpBankDetail::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
-        $this->parentDetails = ParentDetail::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
-        return view('livewire.profile-info');
+        try {
+            $this->employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
+            $this->empBankDetails = EmpBankDetail::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
+            $this->parentDetails = ParentDetail::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
+    
+            return view('livewire.profile-info');
+        } catch (\Exception $e) {
+            \Log::error('Error in render method: ' . $e->getMessage());
+            return view('livewire.profile-info')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
+        }
     }
 }
