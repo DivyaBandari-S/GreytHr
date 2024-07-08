@@ -518,7 +518,7 @@ class EmpTimeSheet extends Component
         }
 
         // Redirect to the timesheet page after saving
-        return redirect('/timesheet-page');
+        return redirect('/time-sheet');
     }
 
     public function defaultSubmit()
@@ -572,7 +572,7 @@ class EmpTimeSheet extends Component
         }
 
         // Redirect to the timesheet page after saving
-        return redirect('/timesheet-page');
+        return redirect('/time-sheet');
     }
 
     public function render()

@@ -35,12 +35,6 @@
                         <label style="font-size: 0.8rem; display: flex; align-items: center;">
                             <input wire:change="addTask" wire:model="time_sheet_type" type="radio" name="time_sheet_type" value="weekly" style="margin-right: 0.25rem;"> Weekly
                         </label>
-                        <label style="font-size: 0.8rem; display: flex; align-items: center;">
-                            <input wire:change="addTask" wire:model="time_sheet_type" type="radio" name="time_sheet_type" value="semi-monthly" style="margin-right: 0.25rem;"> Semi-Monthly
-                        </label>
-                        <label style="font-size: 0.8rem; display: flex; align-items: center;">
-                            <input wire:change="addTask" wire:model="time_sheet_type" type="radio" name="time_sheet_type" value="monthly" style="margin-right: 0.25rem;"> Monthly
-                        </label>
                     </div>
                 </div>
                 @error('time_sheet_type')
