@@ -187,8 +187,7 @@
                                 $isWeekend = in_array($carbonDate->dayOfWeek, [0, 6]); // 0 for Sunday, 6 for Saturday
                                 $isActiveDate = ($selectedDate === $carbonDate->toDateString());
                                 @endphp
-                                <td wire:click="dateClicked($event.target.textContent)" class="calendar-date{{ $selectedDate === $day['day'] ? ' active-date' : '' }}" data-date="{{ $day['day'] }}" style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};" onclick="stopAccordionClosing(event)">
-
+                                <td wire:click="dateClicked($event.target.textContent)" class="calendar-date{{ $selectedDate === $day['day'] ? ' active-date' : '' }}" data-date="{{ $day['day'] }}" style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};" >
 
                                     @if ($day)
                                     <div>
@@ -347,7 +346,7 @@
                                     <tr>
                                         <td colspan="3">
                                             <div class="leave-trans" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                                <img src="/images/pending.png" alt="Pending Image" style="width: %; margin: 0 auto;">
+                                                <img src="/images/pending.png" alt="Pending Image" style=" margin: 0 auto;">
                                                 <span style="font-size: 0.75rem; font-weight: 500; color:#778899;">No Employees are on leave</span>
                                             </div>
                                         </td>
@@ -379,34 +378,44 @@
             function toggleAccordion(element) {
                 const accordionBody = element.closest('.accordion').querySelector('.accordion-body');
                 const arrowIcon = element.querySelector('i');
+                const isOpen = accordionBody.style.display === 'block';
 
-                if (accordionBody.style.display === 'block') {
-                    // If accordion is open, close it
+                if (isOpen) {
                     accordionBody.style.display = 'none';
-                    arrowIcon.classList.remove('fa-angle-up'); // Change arrow icon to indicate closing
+                    arrowIcon.classList.remove('fa-angle-up');
                     arrowIcon.classList.add('fa-angle-down');
-                    localStorage.setItem('accordionState', 'closed'); // Store state in local storage
+                    localStorage.setItem('accordionState', 'closed');
                 } else {
-                    // If accordion is closed, open it
                     accordionBody.style.display = 'block';
-                    arrowIcon.classList.remove('fa-angle-down'); // Change arrow icon to indicate opening
+                    arrowIcon.classList.remove('fa-angle-down');
                     arrowIcon.classList.add('fa-angle-up');
-                    localStorage.setItem('accordionState', 'open'); // Store state in local storage
+                    localStorage.setItem('accordionState', 'open');
                 }
             }
 
             // Check the accordion state on page load and set it accordingly
             window.addEventListener('load', function() {
+                const accordionState = localStorage.getItem('accordionState');
                 const accordionBodies = document.querySelectorAll('.accordion-body');
-                accordionBodies.forEach(body => {
-                    body.style.display = 'block'; // Open the accordion body by default
-                    const arrowIcon = body.previousElementSibling.querySelector('i');
-                    arrowIcon.classList.remove('fa-angle-down'); // Change arrow icon to indicate opening
-                    arrowIcon.classList.add('fa-angle-up');
-                    localStorage.setItem('accordionState', 'open'); // Store state in local storage
-                });
+
+                if (accordionState === 'closed') {
+                    accordionBodies.forEach(body => {
+                        body.style.display = 'none';
+                        const arrowIcon = body.previousElementSibling.querySelector('i');
+                        arrowIcon.classList.remove('fa-angle-up');
+                        arrowIcon.classList.add('fa-angle-down');
+                    });
+                } else {
+                    accordionBodies.forEach(body => {
+                        body.style.display = 'block';
+                        const arrowIcon = body.previousElementSibling.querySelector('i');
+                        arrowIcon.classList.remove('fa-angle-down');
+                        arrowIcon.classList.add('fa-angle-up');
+                    });
+                }
             });
         </script>
+
 
 
     </div>
