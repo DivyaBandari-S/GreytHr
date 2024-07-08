@@ -99,13 +99,14 @@ class LeaveCalender extends Component
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
             Log::error('Database Error: ' . $e->getMessage());
-            return view('error', ['message' => 'An error occurred while processing your request. Please try again later.']);
+            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
             // Handle other general exceptions
             Log::error('General Error: ' . $e->getMessage());
-            return view('error', ['message' => 'An unexpected error occurred. Please try again later.']);
+            session()->flash('error', 'An unexpected error occurred. Please try again later.');
         }
     }
+
 
     public function isSelectedAll()
     {
@@ -151,15 +152,11 @@ class LeaveCalender extends Component
 
         $this->generateCalendar();
     }
-
-    public function resetFilter()
+    public function isSelectedAllDept()
     {
-        // Reset selected locations to default (All)
-        $this->selectedLocations = ['All'];
-
-        // Reset selected departments to default (All)
-        $this->selectedDepartments = ['All'];
+        return count($this->selectedDepartments) === 1 && in_array('All', $this->selectedDepartments);
     }
+
 
     public function mount()
     {
@@ -376,6 +373,15 @@ class LeaveCalender extends Component
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
                     ->where('status', 'approved');
+                // Filter by department
+                if (!empty($this->selectedDepartments) && !in_array('All', $this->selectedDepartments)) {
+                    $leaveTransactionsOfTeam->whereIn('department', $this->selectedDepartments);
+                }
+
+                // Filter by location
+                if (!empty($this->selectedLocations) && !in_array('All', $this->selectedLocations)) {
+                    $leaveTransactionsOfTeam->whereIn('location', $this->selectedLocations);
+                }
                 $leaveTransactionsOfTeam->where(function ($query) {
                     $query->where('emp_id', 'like', '%' . $this->searchTerm . '%')
                         ->orWhereHas('employee', function ($query) {
@@ -391,6 +397,7 @@ class LeaveCalender extends Component
             }
 
             return $leaveCount;
+
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
             Log::error('Database Error: ' . $e->getMessage());
@@ -400,6 +407,14 @@ class LeaveCalender extends Component
             Log::error('General Error: ' . $e->getMessage());
             session()->flash('error', 'An unexpected error occurred. Please try again later.');
         }
+    }
+    public function resetFilter()
+    {
+        $this->reset(['selectedLocations', 'selectedDepartments', 'searchTerm']);
+        $this->loadLeaveTransactions($this->selectedDate); // Update this to pass the selected date
+
+        // Optionally, you can close the sidebar after resetting filters
+        $this->close(); // Assuming you have a method to close the sidebar
     }
 
 

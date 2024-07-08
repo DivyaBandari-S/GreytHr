@@ -293,6 +293,7 @@
         .accordion-heading {
 
             background-color: white;
+
             cursor: pointer;
 
         }
@@ -324,6 +325,9 @@
         margin-top: 120px; */
             background-color: white;
             border-radius: 10px;
+            border: 1px solid #ccc;
+
+
         }
 
         .nav1-button {
@@ -415,36 +419,33 @@
         }
 
         .hidden-pending-box {
-            margin: 0 auto;
-            width: 80%;
+
             background-color: #fff;
-            margin-top: 30px;
+            margin-top: 230px;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
             text-align: center;
-            /* margin-left: 550px; */
-            /* position: absolute; */
-            /* height: 320px;
-        width: 900px; */
-            /* transform: translate(-50%, -50%); */
+            margin-left: 550px;
+            position: absolute;
+            height: 320px;
+            width: 900px;
+            transform: translate(-50%, -50%);
         }
 
         .history-box {
 
-            margin: 0 auto;
             background-color: #fff;
-            width: 80%;
-            /* margin-top: 200px; */
+            margin-top: 200px;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
             text-align: center;
-            /* margin-left: 550px; */
-            /* position: absolute;
-        height: 320px;
-        width: 900px;
-        transform: translate(-50%, -50%); */
+            margin-left: 550px;
+            position: absolute;
+            height: 320px;
+            width: 900px;
+            transform: translate(-50%, -50%);
         }
 
         .hidden-pending-box1 {
@@ -576,17 +577,19 @@
 
         .hidden-history-box {
 
-            /* margin-top: 280px; */
+
+            margin-top: 280px;
             padding: 20px;
             border-radius: 5px;
+
             text-align: center;
             margin-left: 30px;
-            /* position: absolute;
-        top: 50%;
-        left: 50%;
-        height: 320px;
-        width: 900px;
-        transform: translate(-50%, -50%); */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 320px;
+            width: 900px;
+            transform: translate(-50%, -50%);
         }
 
 
@@ -717,6 +720,17 @@
             cursor: pointer;
             margin-left: -40px;
             /* Add a pointer cursor on hover */
+        }
+
+        .hidden-history-box1 {
+            width: 350px;
+            height: 70px;
+            background-color: #ffff;
+            text-align: center;
+            padding: 10px;
+            margin-right: 4px;
+            margin-top: 80px;
+
         }
 
         .accordion {
@@ -858,6 +872,7 @@
                 <div class="calendar-header">
                     <button class="btn btn-outline-primary p-0" wire:click="previousMonth"><i style="line-height: inherit;" class="fas fa-chevron-left"></i></button>
                     <p style="margin-top:7px; font-weight: 600">
+
                         {{ \Carbon\Carbon::createFromDate($this->year, $this->month, 1)->format('F Y') }}
                     </p>
                     <button class="btn btn-outline-primary p-0" wire:click="nextMonth"><i style="line-height: inherit;" class="fas fa-chevron-right"></i></button>
@@ -885,8 +900,8 @@
                                     background-color: rgb(176, 255, 176);
                                     color: green; /* Change text color accordingly */
                                 @else
-                                    background: rgb(2, 17, 79);
-                                    color: #fff;
+                                    background: #ecf7fe;
+                                    color: #7f8fa4;
                                 @endif
                                 padding: 8px;">
 
@@ -982,9 +997,9 @@
         </div>
         @else
         <div class="apply-box">
-            <img src="{{ asset('images/regularisation.png') }} " height="100" width="100" style="margin-top:80px;">
-            <p style="color: #7f8fa4;font-weight:400;font-size: 16px;">Smart! Your attendance is sorted.</p>
-            <p style="color: #a3b2c7;font-weight:400;font-size: 14px;margin-top:-20px;">Still want to apply
+            <img src="https://gt-linckia.s3.amazonaws.com/static-ess-v6.3.0-prod-144/emptystate_regularisation.svg" style="margin-top:80px;">
+            <p style="color: #7f8fa4;font-weight:400;font-size: 20px;">Smart! Your attendance is sorted.</p>
+            <p style="color: #a3b2c7;font-weight:400;font-size: 16px;margin-top:-20px;">Still want to apply
                 regularization? Select dates(s).</p>
         </div>
         @endif
@@ -1001,7 +1016,7 @@ $numberOfEntries = count($regularisationEntries);
 $firstItem = reset($regularisationEntries); // Get the first item
 $lastItem = end($regularisationEntries); // Get the last item
 @endphp
-<div class="accordion-heading rounded border " onclick="toggleAccordion(this)" style="margin:20px auto; width: 80%; ">
+<div class="accordion-heading rounded" onclick="toggleAccordion(this)" style="margin-top:10px;">
 
     <div class="accordion-title p-2 rounded">
 
@@ -1133,8 +1148,8 @@ $lastItem = end($regularisationEntries); // Get the last item
 
 @else
 <div class="hidden-pending-box">
-    <img src="{{ asset('images/pending.png') }}" style="height:150px;width:150px;">
-    <p style="color: #a3b2c7;font-weight:400;font-size: 14px;margin-top:20px;">Hey, you have no
+    <img src="https://gt-linckia.s3.amazonaws.com/static-ess-v6.3.0-prod-144/review-list-empty.svg" style="margin-top:80px;">
+    <p style="color: #a3b2c7;font-weight:400;font-size: 20px;margin-top:20px;">Hey, you have no
         regularization records to view.</p>
 </div>
 @endif
@@ -1151,7 +1166,7 @@ $lastEntry = end($regularisationEntries);
 @endphp
 
 @if(($hr->status=='pending'&&$hr->is_withdraw==1)||$hr->status=='approved'||$hr->status=='rejected')
-<div class="accordion-heading border rounded" onclick="toggleAccordion(this)" style="margin:20px auto;width:80%;">
+<div class="accordion-heading rounded" onclick="toggleAccordion(this)" style="margin-top:10px;">
 
     <div class="accordion-title p-2 rounded">
 
@@ -1256,10 +1271,10 @@ $lastEntry = end($regularisationEntries);
 </div>
 @endif
 @endforeach
-@elses
+@else
 <div class="history-box">
-    <img src="{{ asset('images/pending.png') }}" style="width:150px;height:150px;">
-    <p style="color: #a3b2c7;font-weight:400;font-size: 14px;margin-top:20px;">Hey, you have no
+    <img src="https://gt-linckia.s3.amazonaws.com/static-ess-v6.3.0-prod-144/review-list-empty.svg" style="margin-top:80px;">
+    <p style="color: #a3b2c7;font-weight:400;font-size: 20px;margin-top:20px;">Hey, you have no
         regularization records to view.</p>
 </div>
 

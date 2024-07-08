@@ -84,16 +84,16 @@
                             <input type="checkbox" wire:click="toggleSelection('Rajasthan')" wire:model="selectedLocations" value="Rajasthan"> Rajasthan
                         </label>
                     </div>
-
                 </div>
                 @endif
-                <!-- department -->
-                <label for="locations" style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Department</label>
+
+                <!-- Department -->
+                <label for="departments" style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Department</label>
                 <div wire:click="openDept" class="loc-dropdown">
                     <div style="position: relative;">
                         <div style="display: flex;justify-content:space-between; align-items: center;">
                             <p>
-                                @if($this->isSelecteDeptdAll())
+                                @if($this->isSelectedAllDept())
                                 All
                                 @else
                                 {{ implode(', ', $selectedDepartments) }}
@@ -117,7 +117,7 @@
                             <input type="checkbox" wire:click="toggleDeptSelection('All')" wire:model="selectedDepartments" value="All"> All
                         </label>
                         <label>
-                            <input type="checkbox" wire:click="toggleDeptSelection('Developement')" wire:model="selectedDepartments" value="Developement"> Developement
+                            <input type="checkbox" wire:click="toggleDeptSelection('Development')" wire:model="selectedDepartments" value="Development"> Development
                         </label>
                         <label>
                             <input type="checkbox" wire:click="toggleDeptSelection('Sales')" wire:model="selectedDepartments" value="Sales"> Sales
@@ -126,12 +126,13 @@
                             <input type="checkbox" wire:click="toggleDeptSelection('IT')" wire:model="selectedDepartments" value="IT"> IT
                         </label>
                     </div>
-
                 </div>
                 @endif
-                <!-- end -->
+
+
+                <!-- Buttons -->
                 <div style="margin-top: 30px;">
-                    <button class="btn-1" wire:click="applyFilter">Apply</button>
+                    <button class="btn-1" wire:click="searchData">Apply</button>
                     <button class="btn-2" wire:click="resetFilter">Reset</button>
                 </div>
             </div>
@@ -149,7 +150,7 @@
             </div>
 
 
-            <button class="custom-button-leave">
+            <button class="submit-btn">
                 <i class="fa fa-download" aria-hidden="true" wire:click="downloadexcelforLeave"></i>
             </button>
         </div>

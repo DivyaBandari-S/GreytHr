@@ -32,7 +32,7 @@
         <div class="modal-footer" style="background-color: rgb(2, 17, 79); height: 50px">
             <button type="button" style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;">Options</button>
             <button type="button" style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;" wire:click="downloadAttendanceMusterReportInExcel">Run</button>
-            <button type="button" data-dismiss="modal" wire:click="close" style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;">Close</button>
+            <button type="button" data-dismiss="modal"  style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;">Close</button>
 
         </div>
     </div>

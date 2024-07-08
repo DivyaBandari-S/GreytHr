@@ -314,25 +314,24 @@
                 <label for="ccToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500;">
                     CC to
                 </label>
-                <div class="control-wrapper" style="display: flex; flex-direction: row; gap: 10px;">
+                <div class="control-wrapper d-flex align-items-center" style="flex-direction: row; gap: 1px;">
                     <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
                         <div class="icon-container" style="display: flex; justify-content: center; align-items: center;">
                             <i class="fa-solid fa-plus" style="color: #778899;"></i>
                         </div>
                     </a>
                     <span class="text-2 text-secondary placeholder" id="ccPlaceholder" style="margin-top: 5px; background: transparent; color: #ccc; pointer-events: none;">Add</span>
-                    @if(count($selectedCcTo) > 0)
-                    <div >
-                        <ul style="list-style-type: none; padding: 0; display: flex; gap: 10px;">
-                            @foreach($selectedCcTo as $recipient)
-                            <li>
-                                <div style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ccc; display: flex; justify-content: center; align-items: center;">
-                                    <span style="text-transform: uppercase;">{{ $recipient['initials'] }}</span>
-                                </div>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </div>
+                    @if(count($selectedCCEmployees) > 0)
+                    <ul class=" d-flex align-items-center mb-0" style="list-style-type: none;gap:10px;">
+                        @foreach($selectedCCEmployees as $recipient)
+                        <li>
+                            <div class="px-2 py-1 " style=" border-radius: 25px; border: 2px solid #adb7c1; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="text-transform: uppercase; color: #adb7c1;">{{ $recipient['initials'] }}</span>
+                                <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer;color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
                     @endif
                 </div>
 
@@ -355,7 +354,26 @@
                             </button>
                         </div>
                     </div>
-                   e
+                    @foreach($ccRecipients as $employee)
+                    <div wire:key="{{ $employee['emp_id'] }}">
+                        <div style="margin-top: 10px; display: flex; gap: 10px; text-transform: capitalize; align-items: center; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
+                            <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px;cursor:pointer;">
+                            @if($employee['image'])
+                            <div class="employee-profile-image-container">
+                                <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius: 50%;">
+                            </div>
+                            @else
+                            <div class="employee-profile-image-container">
+                                <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
+                            </div>
+                            @endif
+                            <div class="center mb-2 mt-2">
+                                <p style="font-size: 12px; font-weight: 500; text-transform: capitalize; margin-bottom: 0;">{{ ucwords(strtolower($employee['full_name'])) }}</p>
+                                <p style="color: #778899; font-size: 0.69rem; margin-bottom: 0;">#{{ $employee['emp_id'] }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
                 @endif
                 @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
