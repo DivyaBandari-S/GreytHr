@@ -277,7 +277,7 @@ class Tasks extends Component
             'comment' => $this->newComment,
         ]);
 
-        session()->flash('message', 'Comment updated successfully.');
+        session()->flash('comment_message', 'Comment updated successfully.');
 
         // Reset the edit state
         $this->editCommentId = null;
@@ -298,7 +298,7 @@ class Tasks extends Component
         $this->commentAdded = true; // Set the flag to indicate that a comment has been added
         $this->newComment = '';
         $this->showModal = false;
-        session()->flash('message', 'Comment added successfully.');
+       session()->flash('comment_message', 'Comment added successfully.');
     }
     public function updatedNewComment($value)
     {
@@ -311,7 +311,7 @@ class Tasks extends Component
         try {
             $comment = TaskComment::findOrFail($commentId);
             $comment->delete();
-            session()->flash('message', 'Comment deleted successfully.');
+            session()->flash('comment_message', 'Comment deleted successfully.');
             $this->fetchTaskComments($this->taskId);
         } catch (\Exception $e) {
             // Handle any exceptions that occur during the deletion process
