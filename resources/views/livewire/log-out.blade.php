@@ -9,15 +9,16 @@
     <div class="modal" id="logoutModal" tabindex="-1" style="display: block;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header text-white" style="background-color: #9E9E9E;">
-                    <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+                <div class="modal-header text-white" style=" background-color: rgb(2, 17, 79);">
+                    <h6 class="modal-title " id="logoutModalLabel" style="align-items: center;">Confirm Logout</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="cancelLogout"></button>
                 </div>
-                <div class="modal-body text-start">
+                <div class="modal-body text-center" style="font-size: 18px;">
                     Are you sure you want to logout?
                 </div>
-                <div class="d-flex justify-content-start p-3">
-                    <button type="button" class="btn btn-primary" wire:click="confirmLogout">Confirm</button>
+                <div class="d-flex justify-content-center p-3">
+                    <button type="button" class="submit-btn mr-3" wire:click="confirmLogout">Logout</button>
+                    <button type="button" class="cancel-btn1" wire:click="cancelLogout">Cancel</button>
                 </div>
             </div>
         </div>

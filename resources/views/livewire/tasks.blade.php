@@ -1,26 +1,43 @@
 <div>
-    <div class="container" style="margin-top:15px;width:100%; height: 450px; border: 1px solid silver; border-radius: 5px;background-color:white">
+    <style>
+        .truncate-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            max-width: 100px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 0;
+            color: #000;
+        }
+    </style>
+    <div class="container" style="margin-top:15px;width:100%; height: 85vh; border: 1px solid silver; border-radius: 5px;background-color:white">
         <div class="row">
-            <div class="col" style="margin-left:35%;margin-top:15px">
-                <div class="card" style="width:250px;">
-                    <div class="card-header px-4 py-0 m-0">
-                        <div class="row">
-                            <button wire:click="$set('activeTab', 'open')" class="col btn @if($activeTab === 'open') active @else btn-light @endif" style="font-size:13px;font-weight:500; border-radius: 5px; margin-right: 5px; background-color: {{ $activeTab === 'open' ? 'rgb(2, 17, 79)' : 'none' }}; color: {{ $activeTab === 'open' ? '#fff !important' : '#778899' }};">
-                                Open
-                            </button>
-                            <button wire:click="$set('activeTab', 'completed')" class="col btn @if($activeTab === 'completed') active @else btn-light @endif" style="font-size:13px;font-weight:500; border-radius: 5px; background-color: {{ $activeTab === 'completed' ? 'rgb(2, 17, 79)' : 'none' }}; color: {{ $activeTab === 'completed' ? '#fff !important' : '#778899' }};">
-                                Completed
-                            </button>
-                        </div>
+            <div  style="display: flex; justify-content: center; margin-top: 20px;">
 
-                    </div>
+               
+                <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="width: 20%;">
+                    <input id="radio1" name="radio1" type="radio" value="Radio1" class="btn-check" />
+                    <label for="radio1" class="btn" style="width: 50%; text-align: center; border-top-left-radius: 5px; border-bottom-left-radius: 5px;  border-color: rgb(2, 17, 79); background-color: {{ $activeTab === 'open' ? 'rgb(2, 17, 79)' : 'none' }};  color: {{ $activeTab === 'open' ? '#fff !important' : '#778899' }};" wire:click="$set('activeTab', 'open')">
+                        Open
+                    </label>
+
+                    <input id="radio2" name="radio1" type="radio" value="Radio2" class="btn-check" />
+                    <label for="radio2" class="btn" style="width: 50%; text-align: center; border-color: rgb(2, 17, 79); background-color: {{ $activeTab === 'completed' ? 'rgb(2, 17, 79)' : 'none' }};  color: {{ $activeTab === 'completed' ? '#fff !important' : '#778899' }};" wire:click="$set('activeTab', 'completed')">
+                        Closed
+                    </label>
                 </div>
+
             </div>
-            <div class="col" style="display:flex; justify-content:flex-end;">
-                <button wire:click="show" style="background-color:rgb(2, 17, 79); border: none; border-radius: 5px; color: white; font-size: 12px; height: 30px; cursor: pointer; margin-top: 15px;width:100px;">Add
+           
+        </div>
+        <div style="display:flex; justify-content:flex-end;">
+                <button wire:click="show" style="background-color:rgb(2, 17, 79); border: none; border-radius: 5px; color: white; font-size: 12px; height: 30px; cursor: pointer; margin-top: 15px; margin-right: 20px; width:100px;">Add
                     New Task</button>
             </div>
-        </div>
+       
+
         @if ($activeTab == "open")
         <div class="card-body" style="background-color:white;width:100%;margin-top:30px;border-radius:5px;overflow-y:auto;max-height:350px;overflow-x:hidden">
             @if ($records->isEmpty())
@@ -32,8 +49,8 @@
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background-color: rgb(2, 17, 79); color: white;">
-                            <th style="padding: 10px; font-size: 12px; text-align: start; width: 60%">Task Name</th>
-                            <th style="padding: 10px; font-size: 12px; text-align: start;width: 30%">Assignee</th>
+                            <th style="padding: 10px; font-size: 12px; text-align: start; width: 50%" >Assignee</th>
+                            <th style="padding: 10px; font-size: 12px; text-align: start;width: 30%">Task Name</th>
                             <th style="padding: 10px; font-size: 12px; text-align: center; width: 30%">Actions</th>
                         </tr>
                     </thead>
@@ -45,13 +62,14 @@
                                 <div class="accordion m-0 m-auto p-0 border-none" style="width: 100%;  color: #778899;border:none">
                                     <div class="accordion-title p-0 m-0 border-none font-weight-500" onclick="toggleAccordion(this)">
                                         <!-- Content for accordion title -->
-                                        <div class="col-6"> {{ ucfirst($record->task_name) }}</div>
-                                        <div class="col-3 text-center">{{ucwords(strtolower($record->assignee))}}</div>
+                                       
+                                        <div  class="col-6">{{ucwords(strtolower($record->assignee))}}</div>
+                                        <div class="col-3 "> {{ ucfirst($record->task_name) }}</div>
                                         <div class="col-3 text-end">@foreach ($record->comments ?? [] as $comment)
                                             {{ $comment->comment }}
                                             @endforeach
                                             <!-- Add Comment link to trigger modal -->
-                                            <button type="button" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" class="btn submit-btn btn-sm" data-toggle="modal" data-target="#exampleModalCenter" >Add Comment</button>
+                                            <button type="button" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" class="btn submit-btn btn-sm">Add Comment</button>
                                             <button wire:click="openForTasks('{{ $record->id }}')" style="border:1px solid rgb(2, 17, 79);width:80px" class="btn cancel-btn btn-sm">Close</button>
                                         </div>
                                     </div>
@@ -94,12 +112,13 @@
                 </table>
 
                 <!-- Add Comment Modal -->
-                <div wire:ignore.self class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                @if($showModal)
+                <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header" style="background-color: #eceff3;">
                                 <h6 class="modal-title" id="exampleModalLongTitle">Add Comment</h6>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeModal">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -116,11 +135,14 @@
                                     <div class="form-group">
                                         <label for="comment" style="color: #778899;font-size:13px;font-weight:500;">Comment:</label>
                                         <p>
-                                            <textarea class="form-control" id="comment" wire:model.defer="newComment"></textarea>
+                                            <textarea class="form-control" id="comment" wire:model.lazy="newComment" wire:keydown.debounce.500ms="validateField('newComment')"></textarea>
                                         </p>
                                         @error('newComment') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
-                                    <button type="submit" class="submit-btn btn-primary btn-sm" style="font-size:12px;">Submit</button>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="submit" class="submit-btn btn-primary btn-sm" style="font-size:12px;">Submit</button>
+                                    </div>
+
                                 </form>
                                 <div style="max-height: 300px;overflow-y:auto;">
                                     @if ($taskComments->count() > 0)
@@ -128,16 +150,26 @@
                                     <div class="comment mb-4 mt-2">
                                         <div class="d-flex align-items-center gap-5">
                                             <div class="col-md-4 p-0 comment-details">
-                                                <p style="color: #000;font-size:12px;font-weight:500;margin-bottom:0;">{{ $comment->employee->full_name }}
+                                                <p style="color: #000;font-size:12px;font-weight:500;margin-bottom:0;" class="truncate-text" title="{{ $comment->employee->full_name }}">{{ $comment->employee->full_name }}
                                                 </p>
                                             </div>
                                             <div class=" col-md-3 p-0 comment-time">
                                                 <span style="color: #778899;font-size:10px;font-weight:normal;margin-left:15px;">{{ $comment->created_at->diffForHumans() }}</span>
                                             </div>
-                                            <div class=" col-md-2 p-0 comment-actions">
+                                            <!-- <div class=" col-md-2 p-0 comment-actions">
                                                 <button class="comment-btn" wire:click="openEditCommentModal({{ $comment->id }})"> <i class="fas fa-edit" style="color: #778899;height:7px;width:7px;"></i></button>
                                                 <button class="comment-btn" wire:click="deleteComment({{ $comment->id }})"><i class="fas fa-trash" style="color: #778899;height:7px;width:7px;"></i></button>
+                                            </div> -->
+                                            @if(Auth::guard('emp')->user()->emp_id == $comment->emp_id)
+                                            <div class="col-md-2 p-0 comment-actions">
+                                                <button class="comment-btn" wire:click="openEditCommentModal({{ $comment->id }})">
+                                                    <i class="fas fa-edit" style="color: #778899;height:7px;width:7px;"></i>
+                                                </button>
+                                                <button class="comment-btn" wire:click="deleteComment({{ $comment->id }})">
+                                                    <i class="fas fa-trash" style="color: #778899;height:7px;width:7px;"></i>
+                                                </button>
                                             </div>
+                                            @endif
                                         </div>
                                         <div class="col p-0 comment-content">
                                             @if($editCommentId == $comment->id)
@@ -153,8 +185,7 @@
                                         </div>
                                     </div>
                                     @endforeach
-                                    @else
-                                    <p>No comments available.</p>
+
                                     @endif
 
                                 </div>
@@ -162,6 +193,8 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal-backdrop fade show"></div>
+                @endif
                 @endif
             </div>
             @endif
@@ -177,8 +210,8 @@
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr style="background-color: rgb(2, 17, 79); color: white;">
-                                <th style="padding: 10px; font-size: 12px; text-align: start; width: 60%">Task Name</th>
-                                <th style="padding: 10px; font-size: 12px; text-align: start;width: 30%">Assignee</th>
+                                <th style="padding: 10px; font-size: 12px; text-align: start;width: 50%">Assignee</th>
+                                <th style="padding: 10px; font-size: 12px; text-align: start; width: 30%">Task Name</th>
                                 <th style="padding: 10px; font-size: 12px; text-align: center; width: 30%">Actions</th>
                             </tr>
                         </thead>
@@ -190,8 +223,8 @@
                                     <div class="accordion m-0 m-auto p-0 border-none" style="width: 100%;  color: #778899;border:none">
                                         <div class="accordion-title p-0 m-0 border-none font-weight-500" onclick="toggleAccordion(this)">
                                             <!-- Content for accordion title -->
-                                            <div class="col-6"> {{ ucfirst($record->task_name) }}</div>
-                                            <div class="col-3 text-center">{{ucwords(strtolower($record->assignee))}}</div>
+                                            <div class="col-6">{{ucwords(strtolower($record->assignee))}}</div>
+                                            <div class="col-3"> {{ ucfirst($record->task_name) }}</div>
                                             <div class="col-3 text-end">@foreach ($record->comments ?? [] as $comment)
                                                 {{ $comment->comment }}
                                                 @endforeach

@@ -176,7 +176,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" onclick="toggleToDoDropdown()">
                                         <i class="fas mr-1    fa-file-alt" id="todo-icon" style="color:#6c7e90"></i>
-                                        Todo
+                                        To Do
                                         <i class="fas mr-1    fa-caret-down" id="todo-caret" style="color:#6c7e90"></i>
                                     </a>
                                     <div id="todo-options" style="display: none;">
@@ -515,7 +515,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" onclick="toggleToDoDropdown2()">
                                         <i class="fas mr-1    fa-file-alt" id="todo-icon" style="color:#6c7e90"></i>
-                                        Todo
+                                        To Do
                                         <i class="fas mr-1    fa-caret-down" id="todo-caret-2" style="color:#6c7e90"></i>
                                     </a>
                                     <div id="todo-options-2" style="display: none;">

@@ -16,6 +16,7 @@ class Tasks extends Component
     public $status = false;
     public $searchTerm = '';
     public $showDialog = false;
+    public $showModal = false;
     public $employeeDetails;
     public $emp_id;
     public $task_name;
@@ -47,6 +48,19 @@ class Tasks extends Component
     public $commentAdded = false;
     public $showAddCommentModal = false;
     public $editCommentId = null;
+
+    protected $rules = [
+        'newComment' => 'required',
+    ];
+    protected $messages = [
+        'newComment.required' => 'Comment is required.',
+
+    ];
+    public function validateField($field)
+    {
+
+        $this->validateOnly($field, $this->rules);
+    }
 
     public function forAssignee()
     {
@@ -137,28 +151,29 @@ class Tasks extends Component
         ]); // Validate the image file
         if ($this->image) {
             $this->isLoadingImage = true;
-             if ($this->image instanceof \Illuminate\Http\UploadedFile) {
+            if ($this->image instanceof \Illuminate\Http\UploadedFile) {
                 $imagePath = $this->image->store('tasks-images', 'public');
-            $this->isLoadingImage = false;
-        }
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+                $this->isLoadingImage = false;
+            }
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
-        Task::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-            'task_name' => $this->task_name,
-            'assignee' => $this->assignee,
-            'priority' => $this->priority,
-            'due_date' => $this->due_date,
-            'tags' => $this->tags,
-            'followers' => $this->followers,
-            'subject' => $this->subject,
-            'description' => $this->description,
-            'file_path' => $imagePath,
-        ]);
-        $this->reset();
-        return redirect()->to('/tasks');
-    }
+
+            Task::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+                'task_name' => $this->task_name,
+                'assignee' => $this->assignee,
+                'priority' => $this->priority,
+                'due_date' => $this->due_date,
+                'tags' => $this->tags,
+                'followers' => $this->followers,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path' => $imagePath,
+            ]);
+            $this->reset();
+            return redirect()->to('/tasks');
+        }
     }
     public function show()
     {
@@ -189,7 +204,12 @@ class Tasks extends Component
     {
         $this->taskId = $taskId;
         $this->newComment = '';
+        $this->showModal = true;
         $this->fetchTaskComments($taskId);
+    }
+    public function closeModal()
+    {
+        $this->showModal = false;
     }
     public function openEditCommentModal($commentId)
     {
@@ -230,6 +250,7 @@ class Tasks extends Component
 
         $this->commentAdded = true; // Set the flag to indicate that a comment has been added
         $this->newComment = '';
+        $this->showModal = false;
         session()->flash('message', 'Comment added successfully.');
     }
     public function updatedNewComment($value)
@@ -245,7 +266,6 @@ class Tasks extends Component
             $comment->delete();
             session()->flash('message', 'Comment deleted successfully.');
             $this->fetchTaskComments($this->taskId);
-
         } catch (\Exception $e) {
             // Handle any exceptions that occur during the deletion process
             session()->flash('error', 'Failed to delete comment: ' . $e->getMessage());
@@ -267,12 +287,12 @@ class Tasks extends Component
         $this->taskComments = TaskComment::with(['employee' => function ($query) {
             $query->select(DB::raw("CONCAT(first_name, ' ', last_name) AS full_name"), 'emp_id');
         }])
-        ->whereHas('employee', function ($query) {
-            $query->whereColumn('emp_id', 'task_comments.emp_id');
-        })
-        ->where('task_id', $taskId)
-        ->latest()
-        ->get();
+            ->whereHas('employee', function ($query) {
+                $query->whereColumn('emp_id', 'task_comments.emp_id');
+            })
+            ->where('task_id', $taskId)
+            ->latest()
+            ->get();
     }
     public function render()
     {
@@ -280,9 +300,9 @@ class Tasks extends Component
         $companyId = Auth::user()->company_id;
         $this->fetchTaskComments($this->taskId);
         $this->peoples = EmployeeDetails::where('company_id', $companyId)
-        ->orderBy('first_name')
-        ->orderBy('last_name')
-        ->get();
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
 
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->record = Task::all();
