@@ -337,16 +337,17 @@ class LeaveCalender extends Component
 
     public function loadLeaveTransactions($date)
     {
+
         try {
             // Retrieve leave transactions for the selected date from the database
             $employeeId = auth()->guard('emp')->user()->emp_id;
+
             $companyId = auth()->guard('emp')->user()->company_id;
             $dateFormatted = Carbon::parse($date)->format('Y-m-d');
             $leaveCount = 0; // Initialize leave count variable
 
             // Filter data based on the selected filter type
             if ($this->filterCriteria === 'Me') {
-
                 $leaveTransactions = LeaveRequest::with('employee')
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
@@ -373,15 +374,7 @@ class LeaveCalender extends Component
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
                     ->where('status', 'approved');
-                // Filter by department
-                if (!empty($this->selectedDepartments) && !in_array('All', $this->selectedDepartments)) {
-                    $leaveTransactionsOfTeam->whereIn('department', $this->selectedDepartments);
-                }
 
-                // Filter by location
-                if (!empty($this->selectedLocations) && !in_array('All', $this->selectedLocations)) {
-                    $leaveTransactionsOfTeam->whereIn('location', $this->selectedLocations);
-                }
                 $leaveTransactionsOfTeam->where(function ($query) {
                     $query->where('emp_id', 'like', '%' . $this->searchTerm . '%')
                         ->orWhereHas('employee', function ($query) {
