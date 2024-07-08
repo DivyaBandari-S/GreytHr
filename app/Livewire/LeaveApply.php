@@ -140,6 +140,7 @@ class LeaveApply extends Component
                     $this->loginEmpManager = $this->applying_to->report_to;
                 }
             }
+            $this->cancelLeaveApplication();
             $this->searchEmployees();
             $this->searchCCRecipients();
         } catch (\Exception $e) {
@@ -195,6 +196,9 @@ class LeaveApply extends Component
             session()->flash('error', 'An error occurred while searching for employees. Please try again later.');
         }
     }
+
+
+
     //this method used to filter cc recipients from employee details
     public function searchCCRecipients()
     {
@@ -224,60 +228,61 @@ class LeaveApply extends Component
         }
     }
     public $selectedCcTo = [];
-    public function selectPerson($employeeId)
+    public $selectedCCEmployees = [];
+
+    public function toggleSelection($empId)
     {
-        $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        if (isset($this->selectedPeople[$empId])) {
+            unset($this->selectedPeople[$empId]);
+        } else {
+            $this->selectedPeople[$empId] = true;
+        }
+        $this->searchCCRecipients();
+        $this->fetchEmployeeDetails();
+    }
+    public function fetchEmployeeDetails()
+    {
+        // Reset the list of selected employees
+        $this->selectedCCEmployees = [];
 
-        // Ensure employee details are found
-        if ($employeeDetails) {
-            // Calculate initials
-            $firstNameInitial = strtoupper(substr($employeeDetails->first_name, 0, 1));
-            $lastNameInitial = strtoupper(substr($employeeDetails->last_name, 0, 1));
-            $initials = $firstNameInitial . $lastNameInitial;
+        // Fetch details for selected employees
+        foreach ($this->selectedPeople as $empId => $selected) {
+            $employee = EmployeeDetails::where('emp_id', $empId)->first();
 
-            // Add emp_id with initials to selectedCcTo if it's not already there
-            if (in_array($employeeId, array_column($this->selectedCcTo, 'emp_id'))) {
-                // Remove the entry from selectedCcTo
-                $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($employeeId) {
-                    return $recipient['emp_id'] != $employeeId;
-                }));
-            } else {
-                // Add emp_id with initials to selectedCcTo
-                $this->selectedCcTo[] = [
-                    'emp_id' => $employeeId,
+            if ($employee) {
+                // Calculate initials
+                $firstNameInitial = strtoupper(substr($employee->first_name, 0, 1));
+                $lastNameInitial = strtoupper(substr($employee->last_name, 0, 1));
+                $initials = $firstNameInitial . $lastNameInitial;
+
+                // Add to selectedEmployees array
+                $this->selectedCCEmployees[] = [
+                    'emp_id' => $empId,
+                    'first_name' => $employee->first_name,
+                    'last_name' => $employee->last_name,
                     'initials' => $initials,
                 ];
             }
-
-            // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
-            $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
-        }
-        $this->searchCCRecipients();
-        // Ensure $ccRecipients is not null or empty
-        if (!is_array($this->ccRecipients) || empty($this->ccRecipients)) {
-            return;
-        }
-
-        // Find the selected person in $ccRecipients array
-        $selectedPerson = null;
-        foreach ($this->ccRecipients as $employee) {
-            if (isset($employee['emp_id']) && $employee['emp_id'] == $employeeId) {
-                $selectedPerson = $employee;
-                break;
-            }
-        }
-
-        // Check if the selected person exists
-        if ($selectedPerson) {
-            // Add emp_id to selectedPeople if it's not already there
-            if (!in_array($employeeId, $this->selectedPeople)) {
-                $this->selectedPeople[] = $employeeId;
-            }
-
-            // Update cc_to field with selectedPeople
-            $this->cc_to = implode(',', $this->selectedPeople);
         }
     }
+    public function removeFromCcTo($empId)
+    {
+        // Remove the employee from selectedCcTo array
+        $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($empId) {
+            return $recipient['emp_id'] != $empId;
+        }));
+
+        // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
+        $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
+
+        // Toggle selection state in selectedPeople
+        unset($this->selectedPeople[$empId]);
+
+        // Fetch updated employee details
+        $this->fetchEmployeeDetails();
+        $this->searchCCRecipients();
+    }
+
 
 
     //this method will handle the search functionality
@@ -566,8 +571,12 @@ class LeaveApply extends Component
             // Redirect the user back to the leave application page
         }
     }
-    public function resetFields()
+    public function cancelLeaveApplication()
     {
+        Log::info('Before reset:');
+        Log::info($this->reason); // Log current values before reset
+
+        // Reset properties
         $this->leave_type = '';
         $this->from_date = '';
         $this->from_session = '';
@@ -578,11 +587,9 @@ class LeaveApply extends Component
         $this->files = '';
         $this->contact_details = '';
         $this->reason = '';
-    }
-    public function cancelLeaveApplication()
-    {
-        // Reset the fields
-        $this->resetFields();
+
+        Log::info('After reset:');
+        Log::info($this->reason);
     }
 
     public function selectLeave()
