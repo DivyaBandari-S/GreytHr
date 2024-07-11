@@ -1,6 +1,6 @@
 <div class="m-0 px-4" style="position: relative;">
-<a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Go Back</a>
-    <div class="toggle-container">
+    <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Go Back</a>
+    <div class="toggle-container position-relative">
         <style>
             /* Define your custom CSS classes */
             .custom-nav-tabs {
@@ -25,136 +25,180 @@
                 background-color: rgb(2, 17, 79);
                 border-radius: 5px;
             }
+
+            .applyingFor {
+                color: #333;
+                font-size: 14px;
+                font-weight: 500;
+                text-align: start;
+            }
+
+            .restrictedHoliday {
+                color: #778899;
+                font-size: 12px;
+                font-weight: normal;
+                text-align: center;
+            }
+
+            .containerWidth {
+                width: 85%;
+                margin: 0 auto;
+            }
+
+            .imgContainer {
+                width: 40%;
+                margin: 0 auto;
+            }
+
+            .verticalLine {
+                width: 100%;
+                height: 1px;
+                border-bottom: 1px solid #ccc;
+                margin-bottom: 10px;
+            }
+
+            .headerText {
+                color: #778899;
+                font-size: 12px;
+                font-weight: 500;
+            }
+
+            .paragraphContent {
+                color: #333;
+                font-size: 12px;
+                font-weight: 500;
+            }
+
+            .viewDetails {
+                color: rgb(2, 17, 53);
+                font-size: 12px;
+                font-weight: 500;
+            }
         </style>
         <!-- leave-page.blade.php -->
 
-
         @if(session()->has('message'))
-        <div class="alert alert-success d-flex justify-content-between" style="font-size:12px;">
+        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%;font-size:14px;">
             {{ session('message') }}
-            <span class="close-btn" onclick="closeMessage()" style="cursor:pointer;">X</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
+        @endif
+
         @if(session()->has('error'))
-        <div class="alert alert-danger" style="font-size:12px;" a>
+        <div class="alert alert-danger" style="font-size:12px;">
             {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
         @endif
-        <script>
-            // Close the success message after a certain time
-            setTimeout(function() {
-                closeMessage();
-            }, 5000); // Adjust the time limit (in milliseconds) as needed
 
-            function closeMessage() {
-                document.querySelector('.alert-success').style.display = 'none';
-            }
-        </script>
-        @endif
-
+        <!-- Navigation Buttons -->
         <div class="nav-buttons d-flex justify-content-center mx-2 p-0">
             <ul class="nav custom-nav-tabs">
-                <!-- Apply the custom class to the nav -->
                 <li class="nav-item flex-grow-1">
-                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleDetails('applyButton')">Apply</a>
+                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</a>
                 </li>
                 <li class="nav-item flex-grow-1">
-                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleDetails('pendingButton')">Pending</a>
+                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
                 </li>
                 <li class="nav-item flex-grow-1">
-                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleDetails('historyButton')">History</a>
+                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
                 </li>
             </ul>
         </div>
 
 
-
-        <div id="cardElement" class="side ">
-
-            <div>
-
-                <a onclick="toggleOptions('leave', this)" data-section="leave">Leave</a>
-
-            </div>
-            <div class="line"></div>
-            <div>
-
-                <a onclick="toggleOptions('restricted', this)" data-section="restricted">Restricted Holiday</a>
-
-            </div>
-
-            <div class="line"></div>
-            <div>
-
-                <a onclick="toggleOptions('leaveCancel', this)" data-section="leaveCancel">Leave Cancel</a>
-
-            </div>
-            <div class="line"></div>
-            <div>
-
-                <a onclick="toggleOptions('compOff', this)" data-section="compOff">Comp Off Grant</a>
-
-            </div>
-
-        </div>
-
-
-        <div id="leave" class="row mt-2 align-items-center " style="{{ $activeSection === 'applyButton' ? '' : 'display:none;' }}">
-
-            <div style="width:85%; margin:0 auto;">@livewire('leave-apply') </div>
-
-        </div>
-
-        <div id="restricted" class="row mt-2 w-85 align-items-center" style="display:none;">
-            <div style="width:85%; margin:0 auto;">
-                <div class="leave-pending rounded">
-                    <div class="hide-info">
-                        <p style="font-size:10px;">Restricted Holidays (RH) are a set of holidays allocated by the
-                            company that are optional for the employee to utilize. The company sets a limit on the
-                            amount of holidays that can be used.</p>
-                        <p onclick="toggleInfo()" style="font-weight:500; color:#3a9efd;cursor:pointer;">Hide</p>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <p style="color:#333; font-size:14px; font-weight:500;text-align:start; ">Applying for
-                            Restricted Holiday</p>
-                        <p class="info-paragraph" onclick="toggleInfo()">Info</p>
-                    </div>
-                    <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:40%; margin:0 auto;">
-                    <p style="color:#778899; font-size:10px; font-weight:500;  text-align:center;">You have no
-                        Restricted Holiday balance, as per our record.</p>
-                </div>
-            </div>
-        </div>
-        <div id="leaveCancel" class="row w-85 mt-2 align-items-center" style="display: none;">
-            <div style="width:85%; margin:0 auto;"> @livewire('leave-cancel') </div>
-        </div>
-
-        <div id="compOff" class="row w-85 mt-2 align-items-center" style="display: none;">
-            <div style="width:85%; margin:0 auto;">
-                <div>
-                    <div class="leave-pending rounded">
-                        <div class="hide-info">
-                            <p>Compensatory Off is additional leave granted as a compensation for working overtime or on
-                                an off day.</p>
-                            <p onclick="toggleInfo()" style="font-weight:500; color:#3a9efd;cursor:pointer;">Hide</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p style="color:#333; font-size:14px; font-weight:500;text-align:start; ">Applying for Comp.
-                                Off Grant</p>
-                            <p class="info-paragraph" onclick="toggleInfo()">Info</p>
-                        </div>
-                        <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:40%; margin:0 auto;">
-                        <p style="color:#778899; font-size:0.825rem; font-weight:500;  text-align:center;">You are not
-                            eligible to request for compensatory off grant. Please contact your HR for further
-                            information.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
         {{-- Apply Tab --}}
-        <div class="row" style=" display:none">
-            <div style="width:85%; margin:0 auto;">@livewire('leave-apply')</div>
+        <div class="row m-0 p-0" style="{{ $activeSection === 'applyButton' ? '' : 'display:none;' }}">
+            <!-- Side Container with Sections -->
+            <div class="containerWidth">
+                <div id="cardElement" class="side">
+                    <div>
+                        <a href="#" class="side-nav-link {{ ($activeSection === 'applyButton' && $showLeaveApply) ? 'active' : '' }}" wire:click.prevent="toggleSideSection('leave')">Leave</a>
+                    </div>
+                    <div class="line"></div>
+                    <div>
+                        <a href="#" class="side-nav-link {{ ($activeSection === 'applyButton' && $showRestricted) ? 'active' : '' }}" wire:click.prevent="toggleSideSection('restricted')">Restricted Holiday</a>
+                    </div>
+                    <div class="line"></div>
+                    <div>
+                        <a href="#" class="side-nav-link {{ ($activeSection === 'applyButton' && $showLeaveCancel) ? 'active' : '' }}" wire:click.prevent="toggleSideSection('leaveCancel')">Leave Cancel</a>
+                    </div>
+                    <div class="line"></div>
+                    <div>
+                        <a href="#" class="side-nav-link {{ ($activeSection === 'applyButton' && $showCompOff) ? 'active' : '' }}" wire:click.prevent="toggleSideSection('compOff')">Comp Off Grant</a>
+                    </div>
+                </div>
+            </div>
+            <!-- content -->
+            <div id="leave" class="row mt-2 align-items-center " style="{{ $showLeave ? '' : 'display:none;' }}">
+
+                <div class="containerWidth">@livewire('leave-apply') </div>
+
+            </div>
+
+            <div id="restricted" class="row mt-2 w-85 align-items-center" style="{{ $showRestricted ? '' : 'display:none;' }}">
+                <div class="containerWidth">
+                    <div class="leave-pending rounded">
+                        @if($resShowinfoMessage)
+                        <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
+                            <p class="mb-0" style="font-size:10px;">Restricted Holidays (RH) are a set of holidays allocated by the
+                                company that are optional for the employee to utilize. The company sets a limit on the
+                                amount of holidays that can be used.</p>
+                            <p class="mb-0 hideInfo" wire:click="toggleInfoRes">Hide</p>
+                        </div>
+                        @endif
+                        <div class="d-flex justify-content-between">
+                            <p class="applyingFor">Applying for
+                                Restricted Holiday</p>
+                            @if($resShowinfoButton)
+                            <p class="info-paragraph" wire:click="toggleInfoRes">Info</p>
+                            @endif
+                        </div>
+                        <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
+                        <p class="restrictedHoliday">You have no
+                            Restricted Holiday balance, as per our record.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="leaveCancel" class="row w-85 mt-2 align-items-center" style="{{ $showLeaveCancel ? '' : 'display:none;' }}">
+                <div class="containerWidth"> @livewire('leave-cancel') </div>
+            </div>
+
+            <div id="compOff" class="row w-85 mt-2 align-items-center" style="{{ $showCompOff ? '' : 'display:none;' }}">
+                <div class="containerWidth">
+                    <div>
+                        <div class="leave-pending rounded">
+                            @if($compOffShowinfoMessage)
+                            <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
+                                <p class="mb-0" style="font-size:11px;">Compensatory Off is additional leave granted as a compensation for working overtime or on
+                                    an off day.</p>
+                                <p class="mb-0 hideInfo" wire:click="toggleInfoCompOff">Hide</p>
+                            </div>
+                            @endif
+                            <div class="d-flex justify-content-between">
+                                <p class="applyingFor">Applying for Comp.
+                                    Off Grant</p>
+                                @if($compOffShowinfoButton)
+                                <p class="info-paragraph" wire:click="toggleInfoCompOff">Info</p>
+                                @endif
+                            </div>
+                            <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
+                            <p class="restrictedHoliday">You are not
+                                eligible to request for compensatory off grant. Please contact your HR for further
+                                information.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- endcontent -->
+            @if($showLeaveApply)
+            <div class="containerWidth">@livewire('leave-apply')</div>
+            @endif
         </div>
 
         {{-- pending --}}
@@ -164,7 +208,7 @@
 
             @foreach($this->leavePending as $leaveRequest)
 
-            <div class="container-pending mt-4" style="width:85%; margin:0 auto;">
+            <div class="container-pending mt-4 containerWidth">
 
                 <div class="accordion rounded">
 
@@ -176,25 +220,25 @@
 
                             <div class="col accordion-content">
 
-                                <span style="color: #778899; font-size: 12px; font-weight: 500;">Category</span>
+                                <span class="accordionContentSpan">Category</span>
 
-                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">Leave</span>
-
-                            </div>
-
-                            <div class="col accordion-content">
-
-                                <span style="color: #778899; font-size: 12px; font-weight: 500;">Leave Type</span>
-
-                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest->leave_type}}</span>
+                                <span class="accordionContentSpanValue">Leave</span>
 
                             </div>
 
                             <div class="col accordion-content">
 
-                                <span style="color: #778899; font-size: 12px; font-weight: 500;">No. of Days</span>
+                                <span class="accordionContentSpan">Leave Type</span>
 
-                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">
+                                <span class="accordionContentSpanValue">{{ $leaveRequest->leave_type}}</span>
+
+                            </div>
+
+                            <div class="col accordion-content">
+
+                                <span class="accordionContentSpan">No. of Days</span>
+
+                                <span class="accordionContentSpanValue">
 
                                     {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}
 
@@ -207,7 +251,7 @@
 
                             <div class="col accordion-content">
 
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#cf9b17;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($leaveRequest->status) }}</span>
 
                             </div>
 
@@ -286,15 +330,18 @@
             @endforeach
 
             @else
+            <div class="containerWidth">
+                <div class="leave-pending rounded">
 
-            <div class="leave-pending" style="margin-top:30px; background:#fff; margin-left:120px; display:flex; width:75%;flex-direction:column; text-align:center;justify-content:center; border:1px solid #ccc; padding:20px;gap:10px;">
+                    <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
 
-                <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:60%; margin:0 auto;">
+                    <p class="restrictedHoliday">There are no pending records of any leave
+                        transaction</p>
 
-                <p style="color:#969ea9; font-size:13px; font-weight:400; ">There are no pending records of any leave
-                    transaction</p>
-
+                </div>
             </div>
+
+
 
             @endif
 
@@ -357,15 +404,15 @@
 
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="accordionContentSpanValue" style="color:#32CD32 !important;">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
 
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#FF0000;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="accordionContentSpanValue" style="color:#FF0000 !important;">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @else
 
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#778899;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="accordionContentSpanValue" style="color:#778899 !important;">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @endif
 
@@ -381,11 +428,11 @@
 
                     <div class="accordion-body m-0 p-0">
 
-                        <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
+                        <div class="verticalLine"></div>
 
                         <div class="content px-2">
 
-                            <span style="color: #778899; font-size:12px; font-weight: 500;">Duration:</span>
+                            <span class="headerText">Duration:</span>
 
                             <span style="font-size: 11px;">
 
@@ -403,28 +450,28 @@
 
                         <div class="content px-2">
 
-                            <span style="color: #778899; font-size:12px; font-weight: 500;">Reason:</span>
+                            <span class="headerText">Reason:</span>
 
                             <span style="font-size: 11px;">{{ ucfirst($leaveRequest->reason) }}</span>
 
                         </div>
 
-                        <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
+                        <div class="verticalLine"></div>
 
-                        <div style="display:flex; flex-direction:row; justify-content:space-between;">
+                        <div class="d-flex flex-row justify-content-between">
 
                             <div class="content px-2 mb-2">
 
-                                <span style="color: #778899; font-size:12px; font-weight: 400;">Applied on:</span>
+                                <span class="headerText">Applied on:</span>
 
-                                <span style="color: #333; font-size: 12px; font-weight: 500;">{{ $leaveRequest->created_at->format('d M, Y') }}</span>
+                                <span class="paragraphContent">{{ $leaveRequest->created_at->format('d M, Y') }}</span>
 
                             </div>
 
                             <div class="content px-2 mb-2">
 
                                 <a href="{{ route('leave-pending', ['leaveRequestId' => $leaveRequest->id]) }}">
-                                    <span style="color: rgb(2,17,53); font-size:12px; font-weight: 500;">View
+                                    <span class="viewDetails">View
                                         Details</span>
                                 </a>
 
@@ -444,13 +491,15 @@
 
             @else
 
-            <div class="leave-pending" style="margin-top:30px; background:#fff; margin-left:120px; display:flex; width:75%;flex-direction:column; text-align:center;justify-content:center; border:1px solid #ccc; padding:20px;gap:10px;">
+            <div class="containerWidth">
+                <div class="leave-pending rounded">
 
-                <img src="{{asset('/images/pending.png')}}" alt="Pending Image" style="width:60%; margin:0 auto;">
+                    <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
 
-                <p style="color:#969ea9; font-size:13px; font-weight:400; ">There are no history records of any leave
-                    transaction</p>
+                    <p class="restrictedHoliday">There are no history records of any leave
+                        transaction</p>
 
+                </div>
             </div>
 
             @endif
@@ -463,53 +512,8 @@
 
 
 <script>
-    function toggleInfo() {
-        const hideInfoDiv = document.querySelector('.hide-info');
-        const infoParagraph = document.querySelector('.info-paragraph');
-
-        hideInfoDiv.style.display = (hideInfoDiv.style.display === 'none' || hideInfoDiv.style.display === '') ? 'flex' :
-            'none';
-        infoParagraph.style.display = (infoParagraph.style.display === 'none' || infoParagraph.style.display === '') ?
-            'block' : 'none';
-    }
-
-    function toggleOptions(sectionId, clickedLink) {
-        const tabs = ['leave', 'restricted', 'leaveCancel', 'compOff'];
-
-        const links = document.querySelectorAll('.side a');
-        links.forEach(link => link.classList.remove('active'));
-
-        clickedLink.classList.add('active');
-
-        tabs.forEach(tab => {
-            const tabElement = document.getElementById(tab);
-            if (tab === sectionId) {
-                tabElement.style.display = 'block';
-            } else {
-                tabElement.style.display = 'none';
-            }
-        });
-
-        // Hide the content of other containers
-        const otherContainers = ['pendingButton', 'historyButton'];
-        otherContainers.forEach(container => {
-            const containerElement = document.getElementById(container);
-            containerElement.style.display = 'none';
-        });
-        if (sectionId !== 'leave' && sectionId !== 'applyButton') {
-            // Hide the 'applyButton' and 'leave' sections
-            document.getElementById('leave').style.display = 'none';
-            document.getElementById('applyButton').style.display = 'none';
-        } else {
-            // Show the 'applyButton' and 'leave' sections for other sections
-            document.getElementById('leave').style.display = 'block';
-            document.getElementById('applyButton').style.display = 'block';
-        }
-    }
-
     function toggleAccordion(element) {
         const accordionBody = element.nextElementSibling;
-
         if (accordionBody.style.display === 'block') {
             accordionBody.style.display = 'none';
             element.classList.remove('active'); // Remove active class

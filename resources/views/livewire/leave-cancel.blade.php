@@ -1,14 +1,18 @@
 <div>
 
     <div class="applyContainer">
-        <div class="hide-info mb-2">
-            <p style="font-size:0.725rem;">Leave Cancel enables you to apply for cancellation of approved leave applications. Please select a leave type to get started..</p>
-            <p onclick="toggleInfo()" style="font-weight:500; color:#3a9efd; cursor:pointer;">Hide</p>
-            <p class="info-paragraph" style="font-weight:500; color:#3a9efd; cursor:pointer;" onclick="toggleInfo()">Info</p>
+        @if($LeaveShowinfoMessage)
+        <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
+            <p class="mb-0" style="font-size:11px;">Leave Cancel enables you to apply for cancellation of approved leave applications. Please select a leave type to get started..</p>
+            <p class="mb-0 hideInfo" wire:click="toggleInfoLeave">Hide</p>
         </div>
+        @endif
 
-        <div>
-            <p style="font-size:14px;font-weight:500;">Applying for Leave Cancel</p>
+        <div class="d-flex justify-content-between">
+            <p class="applyingFor">Applying for Leave Cancel</p>
+            @if($LeaveShowinfoButton)
+            <p class="info-paragraph"  wire:click="toggleInfoLeave">Info</p>
+            @endif
         </div>
 
         <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">

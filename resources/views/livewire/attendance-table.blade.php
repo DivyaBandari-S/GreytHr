@@ -1318,7 +1318,7 @@ color: #fff;
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
     @endphp
 
-    <div class="large-box" style="max-width:90%;margin:0 auto;">
+    <div class="m-auto" >
         <div class="table-container scrollable-table" style=" width: 100%;
     overflow-x: auto;">
             <table>

@@ -1336,7 +1336,7 @@
                             <div class="leave-request-container mb-4">
                                 <div class="border rounded bg-white p-2" style="text-decoration:none;">
                                     <p class="mb-0 notification-text">Chat Notifications</p>
-                                    <a href="{{ route('employee', ['query' => $request->chating_id]) }}"
+                                    <a href="{{ route('chat', ['query' => $request->chating_id]) }}"
                                         class="notification-head"
                                         onclick="updateNotificationCount($matchingLeaveRequestsCount, $chatNotificationCount)">
                                         {{ ucwords(strtolower($request->first_name))}}

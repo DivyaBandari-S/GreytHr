@@ -19,12 +19,12 @@
 
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="width: 20%;">
                     <input id="radio1" name="radio1" type="radio" value="Radio1" class="btn-check" />
-                    <label for="radio1" class="btn" style="width: 50%; text-align: center; border-top-left-radius: 5px; border-bottom-left-radius: 5px;  border-color: rgb(2, 17, 79); background-color: {{ $activeTab === 'open' ? 'rgb(2, 17, 79)' : 'none' }};  color: {{ $activeTab === 'open' ? '#fff !important' : '#778899' }};" wire:click="$set('activeTab', 'open')">
+                    <label for="radio1" class="btn" style="font-size:14px;width: 50%; text-align: center; border-top-left-radius: 5px; border-bottom-left-radius: 5px;  border-color: rgb(2, 17, 79); background-color: {{ $activeTab === 'open' ? 'rgb(2, 17, 79)' : 'none' }};  color: {{ $activeTab === 'open' ? '#fff !important' : '#778899' }};" wire:click="$set('activeTab', 'open')">
                         Open
                     </label>
 
                     <input id="radio2" name="radio1" type="radio" value="Radio2" class="btn-check" />
-                    <label for="radio2" class="btn" style="width: 50%; text-align: center; border-color: rgb(2, 17, 79); background-color: {{ $activeTab === 'completed' ? 'rgb(2, 17, 79)' : 'none' }};  color: {{ $activeTab === 'completed' ? '#fff !important' : '#778899' }};" wire:click="$set('activeTab', 'completed')">
+                    <label for="radio2" class="btn" style="font-size:14px;width: 50%; text-align: center; border-color: rgb(2, 17, 79); background-color: {{ $activeTab === 'completed' ? 'rgb(2, 17, 79)' : 'none' }};  color: {{ $activeTab === 'completed' ? '#fff !important' : '#778899' }};" wire:click="$set('activeTab', 'completed')">
                         Closed
                     </label>
                 </div>
@@ -74,60 +74,63 @@
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background-color: rgb(2, 17, 79); color: white;">
-                            <th style="padding: 10px; font-size: 12px; text-align: start; width: 50%">Assignee</th>
-                            <th style="padding: 10px; font-size: 12px; text-align: start;width: 30%">Task Name</th>
+                            <th style="padding: 10px; font-size: 12px; text-align: start; width: 10%">#</th>
+                            <th style="padding: 10px; font-size: 12px; text-align: start; width: 25%">Assignee</th>
+                            <th style="padding: 10px; font-size: 12px; text-align: start; width: 35%">Task Name</th>
                             <th style="padding: 10px; font-size: 12px; text-align: center; width: 30%">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($records as $record)
+                        @foreach ($records as $index => $record)
                         @if($record->status=="Open")
                         <tr>
-                            <td colspan="3 m-0 p-0" style="background-color: #fff;padding:10px 0;margin:0;">
-                                <div class="accordion m-0 m-auto p-0 border-none" style="width: 100%;  color: #778899;border:none">
-                                    <div class="accordion-title p-0 m-0 border-none font-weight-500" onclick="toggleAccordion(this)">
-                                        <!-- Content for accordion title -->
+                            <td style="padding: 10px; font-size: 12px; text-align: start; width: 10%;">
+                                <div class="arrow-btn" onclick="toggleAccordion(this)">
+                                    <i class="fa fa-angle-down"></i>
+                                </div>
+                            </td>
 
-                                        <div class="col-6">{{ucwords(strtolower($record->assignee))}}</div>
-                                        <div class="col-3 "> {{ ucfirst($record->task_name) }}</div>
-                                        <div class="col-3 text-end">@foreach ($record->comments ?? [] as $comment)
-                                            {{ $comment->comment }}
-                                            @endforeach
-                                            <!-- Add Comment link to trigger modal -->
-                                            <button type="button" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" class="btn submit-btn btn-sm" data-toggle="modal" data-target="#exampleModalCenter">Add Comment</button>
-                                            <button wire:click="openForTasks('{{ $record->id }}')" style="border:1px solid rgb(2, 17, 79);width:80px" class="btn cancel-btn btn-sm">Close</button>
-                                        </div>
-                                    </div>
-                                    <div class="accordion-content" style="display: none;padding:0 10px;">
-                                        <!-- Content for accordion body -->
-                                        <table class="rounded border" style="margin-top:20px;width: 100%; border-collapse: collapse; ">
-                                            <thead class="py-0" style=" background-color: #ecf9ff;    box-shadow: 1px 0px 2px 0px rgba(0, 0, 0, 0.2);border-bottom: 1px solid #ccc;padding:5px;">
-                                                <tr style=" color: #778899;">
-                                                    <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Priority</th>
-                                                    <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Due Date</th>
-                                                    <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Subject</th>
-                                                    <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Description</th>
-                                                    <th style="font-weight:500;width: 20%; padding: 10px; font-size: 12px; text-align: start;">Attach</th>
-                                                </tr>
-
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td style="border:none;width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ $record->priority }}</td>
-                                                    <td style="border:none;width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ \Carbon\Carbon::parse($record->due_date)->format('d-M-y') }}</td>
-                                                    <td style="border:none;width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ ucfirst($record->subject) }}</td>
-                                                    <td style="border:none;width: 20%;padding: 10px; font-size: 12px; text-align: start;">{{ ucfirst($record->description) }}</td>
-                                                    <td style="border:none;width: 20%;padding: 10px; font-size: 12px; text-align: start;">
-                                                        @if ($record->file_path)
-                                                        <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF;">View File</a>
-                                                        @else
-                                                        N/A
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                            <td style="padding: 10px; font-size: 12px; text-align: start; width: 25%">{{ ucwords(strtolower($record->assignee)) }}</td>
+                            <td style="padding: 10px; font-size: 12px; text-align: start; width: 35%">{{ ucfirst($record->task_name) }}</td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; width: 30%">
+                                @foreach ($record->comments ?? [] as $comment)
+                                {{ $comment->comment }}
+                                @endforeach
+                                <!-- Add Comment link to trigger modal -->
+                                <button type="button" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" class="btn submit-btn btn-sm" data-toggle="modal" data-target="#exampleModalCenter">Add Comment</button>
+                                <button wire:click="openForTasks('{{ $record->id }}')" style="border:1px solid rgb(2, 17, 79);width:80px" class="btn cancel-btn btn-sm">Close</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="m-0 p-0" style="background-color: #fff; padding: 0; margin: 0;">
+                                <div class="accordion-content mt-0" style="display: none; padding: 0 10px;margin-bottom:20px;">
+                                    <!-- Content for accordion body -->
+                                    <table class="rounded border" style="margin-top: 20px; width: 100%; border-collapse: collapse;">
+                                        <thead class="py-0" style="background-color: #ecf9ff; box-shadow: 1px 0px 2px 0px rgba(0, 0, 0, 0.2); border-bottom: 1px solid #ccc; padding: 5px;">
+                                            <tr style="color: #778899;">
+                                                <th style="font-weight: 500; width: 20%; padding: 10px; font-size: 12px; text-align: start;">Priority</th>
+                                                <th style="font-weight: 500; width: 20%; padding: 10px; font-size: 12px; text-align: start;">Due Date</th>
+                                                <th style="font-weight: 500; width: 20%; padding: 10px; font-size: 12px; text-align: start;">Subject</th>
+                                                <th style="font-weight: 500; width: 20%; padding: 10px; font-size: 12px; text-align: start;">Description</th>
+                                                <th style="font-weight: 500; width: 20%; padding: 10px; font-size: 12px; text-align: start;">Attach</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="border: none; width: 20%; padding: 10px; font-size: 12px; text-align: start;">{{ $record->priority }}</td>
+                                                <td style="border: none; width: 20%; padding: 10px; font-size: 12px; text-align: start;">{{ \Carbon\Carbon::parse($record->due_date)->format('d-M-y') }}</td>
+                                                <td style="border: none; width: 20%; padding: 10px; font-size: 12px; text-align: start;">{{ ucfirst($record->subject) }}</td>
+                                                <td style="border: none; width: 20%; padding: 10px; font-size: 12px; text-align: start;">{{ ucfirst($record->description) }}</td>
+                                                <td style="border: none; width: 20%; padding: 10px; font-size: 12px; text-align: start;">
+                                                    @if ($record->file_path)
+                                                    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF;">View File</a>
+                                                    @else
+                                                    N/A
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </td>
                         </tr>
@@ -557,21 +560,19 @@
         </div>
         <script>
             function toggleAccordion(element) {
+                const accordionContent = element.closest('tr').nextElementSibling.querySelector('.accordion-content');
+                const arrowIcon = element.querySelector('i');
 
-                const accordionBody = element.nextElementSibling;
-
-                if (accordionBody.style.display === 'block') {
-
-                    accordionBody.style.display = 'none';
-
-                    element.classList.remove('active'); // Remove active class
-
+                if (accordionContent.style.display === 'none') {
+                    accordionContent.style.display = 'block';
+                    arrowIcon.classList.remove('fa-angle-down');
+                    arrowIcon.classList.add('fa-angle-up');
+                    element.classList.add('active');
                 } else {
-
-                    accordionBody.style.display = 'block';
-
-                    element.classList.add('active'); // Add active class
-
+                    accordionContent.style.display = 'none';
+                    arrowIcon.classList.remove('fa-angle-up');
+                    arrowIcon.classList.add('fa-angle-down');
+                    element.classList.remove('active');
                 }
             }
         </script>

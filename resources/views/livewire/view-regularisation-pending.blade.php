@@ -20,7 +20,7 @@
     @endif
 
     @endforeach
-    <div class="accordion bg-white rounded">
+    <div class="accordion bg-white  mb-3 rounded">
         <div class="accordion-heading  rounded" onclick="toggleAccordion(this)">
 
             <div class="accordion-title p-2 rounded">
@@ -104,7 +104,7 @@
                 <div class="content mb-2 px-4 d-flex gap-2">
                     <a href="{{ route('review-pending-regularation', ['id' => $r->id]) }}" style="color:rgb(2,17,79);font-size:12px;margin-top:3px;">View Details</a>
                     <button class="rejectBtn" data-toggle="modal" data-target="#rejectModal">Reject</button>
-                    <button class="approveBtn btn-primary" data-toggle="modal" data-target="#approveModal">Approve</button>
+                    <button class="approveBtn" data-toggle="modal" data-target="#approveModal">Approve</button>
                 </div>
                 <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -116,8 +116,6 @@
                                         <span aria-hidden="true" style="font-weight:400;font-size:30px;color:666">&times;</span>
                                     </button>
                                 </div>
-
-
                             </div>
                             <div class="modal-body">
                                 <p style="font-size:14px;">Are you sure you want to reject this application?</p>
@@ -127,7 +125,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer justify-content-center" style="border:none;">
-                                <button type="button" class="approveBtn btn-primary" data-dismiss="modal" style="width:90px;">Cancel</button>
+                                <button type="button" class="approveBtn" data-dismiss="modal" style="width:90px;">Cancel</button>
                                 <button type="button" class="rejectBtn" wire:click="reject({{$r->id}})" style="width:90px;">Confirm</button>
                             </div>
                         </div>
@@ -164,9 +162,9 @@
         </div>
 
 
-        @endforeach
-    </div>
 
+    </div>
+    @endforeach
     @else
     <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
         <img src="/images/pending.png" alt="Pending Image" style="width:60%; margin:0 auto;">

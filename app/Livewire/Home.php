@@ -292,6 +292,7 @@ class Home extends Component
 
             $this->count = count($matchingLeaveApplications);
 
+
             //team on leave
             $currentDate = Carbon::today();
             $this->teamOnLeaveRequests = LeaveRequest::with('employee')
@@ -321,6 +322,7 @@ class Home extends Component
             // Get the count of  leave applications
             $this->teamCount = count($teamOnLeaveApplications);
 
+            $currentDate = Carbon::today();
             $this->upcomingLeaveRequests = LeaveRequest::with('employee')
                 ->where('status', 'approved')
                 ->where(function ($query) use ($currentDate) {
@@ -328,17 +330,19 @@ class Home extends Component
                 })
                 ->orderBy('created_at', 'desc')
                 ->get();
+            //Process each leave request to add initials and random color
+            // foreach ($this->upcomingLeaveRequests as $request) {
+            //     $employee = $request->employee;
+            //     if ($employee) {
+            //         $initialsForThisMonth = strtoupper(substr($employee->first_name, 0, 1) . substr($employee->last_name, 0, 1));
+            //        // $randomLeaveColor = '#' . str_pad(dechex(mt_rand(0xC0C0C0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT); // Generate random color
+            //         // $request->initials = $initialsForThisMonth;
+            //         //$request->randomColor = $randomLeaveColor;
+            //     }
+            // }
             $this->upcomingLeaveApplications = count($this->upcomingLeaveRequests);
 
-            //team on leave for attendance
-            $currentDate = Carbon::today();
-            $this->teamOnLeaveRequests = LeaveRequest::with('employee')
-                ->where('status', 'approved')
-                ->where(function ($query) use ($currentDate) {
-                    $query->whereDate('from_date', '=', $currentDate)
-                        ->orWhereDate('to_date', '=', $currentDate);
-                })
-                ->get();
+            //attendance related query
             $this->absent_employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
                 ->select('emp_id', 'first_name', 'last_name')
                 ->whereNotIn('emp_id', function ($query) {
@@ -440,36 +444,6 @@ class Home extends Component
 
             $swipes_late1 = $swipes_late->count();
 
-            $teamOnLeaveApplications = [];
-
-            foreach ($this->teamOnLeaveRequests as $teamOnLeaveRequest) {
-                $applyingToJson = trim($teamOnLeaveRequest->applying_to);
-                $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
-
-                $ccToJson = trim($teamOnLeaveRequest->cc_to);
-                $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
-
-                $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
-                $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
-
-                if ($isManagerInApplyingTo || $isEmpInCcTo) {
-                    $teamOnLeaveApplications[] = $teamOnLeaveRequest;
-                }
-            }
-            $this->teamOnLeave = $teamOnLeaveApplications;
-
-            // Get the count of matching leave applications
-            $this->teamCount = count($teamOnLeaveApplications);
-
-            $this->upcomingLeaveRequests = LeaveRequest::with('employee')
-                ->where('status', 'approved')
-                ->where(function ($query) use ($currentDate) {
-                    $query->whereMonth('from_date', Carbon::now()->month); // Filter for the current month
-                })
-                ->orderBy('created_at', 'desc')
-                ->get();
-            $this->upcomingLeaveApplications = count($this->upcomingLeaveRequests);
-
             $this->swipeDetails = DB::table('swipe_records')
                 ->whereDate('created_at', $today)
                 ->where('emp_id', $employeeId)
@@ -556,6 +530,5 @@ class Home extends Component
             Log::error('General Error: ' . $e->getMessage());
             session()->flash('error', 'An unexpected error occurred. Please try again later.');
         }
-
     }
 }

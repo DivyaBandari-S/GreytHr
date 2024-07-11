@@ -8,15 +8,20 @@
         <div class="row m-0 p-0">
             <div class="col-md-4 p-0 m-0 mb-2 ">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                    <ol class="breadcrumb " style="font-size: 14px;background:none;font-weight:500;">
-                        <li class="breadcrumb-item"><a href="{{ route('review') }}">Go Back</a></li>
+                    <ol class="breadcrumb d-flex align-items-center" style="font-size: 14px;background:none;font-weight:500;">
+                        <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('review') }}">Go Back</a></li>
                         <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Review - Review Leave</li>
                     </ol>
                 </nav>
             </div>
         </div>
         <div class="header-details" style="font-size: 14px; font-weight: 500; text-align:start; margin-left:150px; ">
-            <p>Leave Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </p>
+            @if ($leaveRequest)
+            <p>Leave Applied on {{ optional($leaveRequest->created_at)->format('d M, Y') }}</p>
+            @else
+            <p>Leave request details not found.</p>
+            @endif
+
         </div>
         <div class="view-details-container ">
             <div class="heading mb-2
@@ -143,18 +148,30 @@
                         </div>
 
                         <p style="font-size: 12px;"><span style="color: #778899; font-size: 12px; font-weight: 400; padding-right: 82px;">Contact</span>{{ $leaveRequest->contact_details }} </p>
-                        @if(!empty($leaveRequest->cc_to))
-                        <p style="font-size: 12px; font-weight: 500;">
-                            <span style="color: #778899; font-size: 12px; font-weight: 400; padding-right: 90px;">CC to</span>
+                        @if (!empty($leaveRequest->cc_to))
+                        <p style="font-size: 0.975rem; font-weight: 500;">
+                            <span style="color: #778899; font-size: 12px; font-weight: 500; padding-right: 94px;">CC to</span>
+                            @if (is_string($leaveRequest->cc_to))
+                            @foreach(json_decode($leaveRequest->cc_to, true) as $ccToItem)
+                            <span style="font-size: 12px;">
+                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id']['emp_id'] }})
+                            </span>
+                            @if (!$loop->last)
+                            ,
+                            @endif
+                            @endforeach
+                            @else
                             @foreach($leaveRequest->cc_to as $ccToItem)
-                        <p style="font-size: 12px;">{{ $ccToItem['full_name'] }} (#{{ $ccToItem['emp_id'] }})</p>
-                        @if(!$loop->last)
-                        ,
-                        @endif
-                        @endforeach
+                            <span style="font-size: 12px;">
+                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id']['emp_id'] }})
+                            </span>
+                            @if (!$loop->last)
+                            ,
+                            @endif
+                            @endforeach
+                            @endif
                         </p>
                         @endif
-
                     </div>
                 </div>
             </div>

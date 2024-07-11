@@ -69,6 +69,14 @@ class LeaveCancel extends Component
         $this->searchEmployees();
         $this->searchCCRecipients();
     }
+
+    public  $LeaveShowinfoMessage = true;
+    public  $LeaveShowinfoButton = false;
+    public function toggleInfoLeave()
+    {
+        $this->LeaveShowinfoMessage = !$this->LeaveShowinfoMessage;
+        $this->LeaveShowinfoButton = !$this->LeaveShowinfoButton;
+    }
     // Add this method to your Livewire component
     public function searchEmployees()
     {

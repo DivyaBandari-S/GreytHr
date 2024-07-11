@@ -1,4 +1,5 @@
 <div>
+<x-loading-indicator />
 <body>
     <div class="msg-container">
     @if (session()->has('success'))
@@ -16,7 +17,6 @@
                             <h1 class="greet-text text-secondary-500 pb-1.5x" style="font-size: 24px; font-family: montserrat;;color:rgb(2, 17, 79); font-weight: 600;">{{$greetingText}}</h1>
                         @endif
                         </div>
-
                         <!-- <div>
                             <carousel class="ng-star-inserted" style="width:470px">
                             </carousel>
@@ -47,7 +47,7 @@
                             <div style="color: black; padding:10px 15px;">
                                 <p style="font-size:12px;">{{$currentDate}}</p>
                                 <p style="margin-top: 10px; color: #778899; font-size: 11px;">
-                                    {{$currentDay}} | 10:00 Am to 07:00 Pm
+                                    {{$currentDay}} | 10:00 am to 19:00 pm
                                 </p>
                                 <div style="font-size: 14px; display: flex;margin-top:2em;">
                                     <img src="/images/stopwatch.png" class="me-4" alt="Image Description" style="width: 2.7em;">
@@ -142,7 +142,7 @@
                                 @else
                                     <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
                                         <img src="/images/not_found.png" alt="Image Description" style="width: 7em;">
-                                        <p class="mb-2" style="color: #677A8E; font-size: 12px; text-align:center;">
+                                        <p class="mb-2 homeText">
                                             Hurrah! You've nothing to review.
                                         </p>
                                     </div>
@@ -244,15 +244,15 @@
                             <div style="display:flex; justify-content:space-between;">
                                 <p style="font-size:12px;color:#778899;font-weight:500;">Time Sheet</p>
                             </div>
-                            <div class="mt-2" style="display: flex;align-items:center;text-align:center;">
-                                <p style="font-size:11px;color:#778899;margin-top:5px;">
-                                    Kindly click on the "Submit" button below to submit your timesheet for this week.
+                            <div class="mt-2" class="d-flex align-items-center justify-content-center">
+                                <p class="homeText mt-2">
+                                    Submit your time sheet for this week.
                                 </p>
                             </div>
                             <div class="B mb-3" style="color:  #677A8E; font-size: 12px;display:flex;justify-content:center; margin-top: 15px;">
                                 <a href="/time-sheet" class="button-link">
                                     <button class="custom-btn" style="border:1px solid #fd2885;border-radius:5px;padding:4px 7px;color:#fd2885;font-weight:500;background:#fffbfd;">
-                                        Submit Timesheet
+                                        Submit Time Sheet
                                     </button>
                                 </a>
                             </div>
@@ -268,11 +268,11 @@
                                 <p style="font-size:12px;color:#778899;font-weight:500;">Apply for a Leave</p>
                             </div>
                             <div class="mt-2" style="display: flex;align-items:center;text-align:center;">
-                                <p style="font-size:11px;color:#778899;margin-top:5px;">Kindly click on the "Apply" button below to submit your leave application.</p>
+                                <p class="homeText">Kindly click on the "Apply" button below to submit your leave application.</p>
                             </div>
                             <div class="B mb-3" style="color:  #677A8E; font-size: 12px;display:flex;justify-content:center; margin-top: 15px;">
                                 <a href="/leave-page" class="button-link">
-                                    <button class="custom-btn" style="width:100px;border:1px solid #058383;border-radius:5px;padding:4px 7px;color:#058383;font-weight:500;background:#e6f2f2;">Apply</button>
+                                    <button class="leaveCustom-btn">Apply</button>
                                 </a>
                             </div>
                         </div>
@@ -298,8 +298,8 @@
                                                             $colors = ['#FFD1DC', '#D2E0FB', '#ADD8E6', '#E6E6FA', '#F1EAFF','#FFC5C5'];
                                                             return $colors[array_rand($colors)];
                                                         }
-                                                @endphp 
-                                            @for ($i = 0; $i < min($CountAbsentEmployees, 9); $i++)
+                                                @endphp
+                                            @for ($i = 0; $i < min($CountAbsentEmployees, 4); $i++)
                                             @if(isset($AbsentEmployees[$i]))
                                             @php
                                                 $employee = $AbsentEmployees[$i];
@@ -314,7 +314,7 @@
                                             </div>
                                         @endif
                                     @endfor
-                                        @if ($CountAbsentEmployees > 9)
+                                        @if ($CountAbsentEmployees > 5)
                                         <div class="circle-notify" style="color:blue;cursor:pointer;display:flex;flex-direction:column;align-items:center;margin-top:10px;">
                                             <a href="#" style="color:blue;font-size:10px;">+{{ $CountAbsentEmployees - 9 }}</a>
                                             <p style="font-size:10px;margin-top:-5px;"><span class="remaining" >More</span></p>
@@ -326,7 +326,7 @@
                                 
                                 <div class="who-is-in d-flex flex-column justify-content-start ">
                                             <p  class="section-name mt-1">
-                                                    Late Arrival({{ $CountLateSwipes }})
+                                                    Late Arrival ({{ $CountLateSwipes }})
                                                 </p>
                                             <div class="team-leave d-flex flex-row  gap-3">
                                             @php
@@ -361,7 +361,7 @@
                                 
                                 <div class="who-is-in d-flex flex-column justify-content-start">
                                             <p  class="section-name mt-1">
-                                                    On Time({{ $CountEarlySwipes }})
+                                                    On Time ({{ $CountEarlySwipes }})
                                                 </p>
                                             <div class="team-leave d-flex flex-row mr gap-3">
                                             @php
@@ -418,7 +418,7 @@
                                 @if(($this->teamCount) > 0)
                                     <div class="team-Notify px-3">
                                         <p style="color: #778899; font-size: 11px; font-weight: 500;">
-                                            Today({{$teamCount}}) </p>
+                                            Today ({{$teamCount}}) </p>
                                             <div class="team-leave d-flex flex-row mr gap-3" >
                                                 @php
                                                     function getRandomLightColor() {
@@ -449,17 +449,28 @@
                                                     @endif
                                                 </div>
 
-                                            <div style="margin-top:20px;">
-                                            <p style="color: #778899; font-size: 11px; font-weight: 500;">
-                                            This month({{$upcomingLeaveApplications}}) </p>
-                                            <p style="color: #778899; font-size: 11px; font-weight: 400;"><a href="/team-on-leave-chart">Click here</a> to see who will be on leave in the upcoming days!</p>
+                                            <div class="mt-4">
+                                            <p class="homeText font-weight-500 text-start">
+                                            This month ({{$upcomingLeaveApplications}}) </p>
+                                            @if($upcomingLeaveRequests)
+                                            <div class="mt-2">
+                                                @foreach($upcomingLeaveRequests as $requests)
+                                                <div class="d-flex gap-4 align-items-center">
+                                                    <div class="thisCircle">
+                                                        <span>{{ $requests->employee->first_name }}</span>
+                                                    </div>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                            @endif
+                                            <p class="homeText"><a href="/team-on-leave-chart">Click here</a> to see who will be on leave in the upcoming days!</p>
                                             </div>
                                     </div>
                                 @else
                                     <div style="display:flex;justify-content:center;flex-direction:column;align-items:center;">
                                         <img src="https://i.pinimg.com/originals/52/4c/6c/524c6c3d7bd258cd165729ba9b28a9a2.png" alt="Image Description" style="width: 120px; height:100px;">
-                                        <p style="color: #677A8E; font-size: 11px;margin-bottom:10px; ">
-                                            Wow!No leaves planned today.
+                                        <p class="homeText">
+                                            Wow! No leaves planned today.
                                         </p>
                                     </div>
                                 @endif
@@ -575,7 +586,7 @@
                             </div>
                             <div style="display:flex;gap:10px;align-items:center;margin:10px auto;">
                                 <img src="images/pen.png" alt="Image Description" style="width: 4em;">
-                                <p style="color: #677A8E;  font-size: 12px;margin-top:5px;">Hold on! You can submit your Proof of Investments (POI) once released.</p>
+                                <p class="homeText">Hold on! You can submit your Proof of Investments (POI) once released.</p>
                             </div>
                         </div>
                     </div>
@@ -646,8 +657,8 @@
                             @else
                             <div style="text-align: center">
                                 <img src="images/track.png" alt="Image Description" style="width: 9em;">
-                                <div class="B" style="color: black; ">
-                                    <p style="color: #677A8E; font-size: 11px; margin: 20px 0;">All good! You've nothing new to track.</p>
+                                <div class="track">
+                                    <p class="homeText">All good! You've nothing new to track.</p>
                                 </div>
                             </div>
                             @endif
@@ -658,9 +669,9 @@
                             <div>
                                 <p style="font-size:12px;color:#778899;font-weight:500;">IT Declaration</p>
                             </div>
-                            <div class="pt-2" style="display: flex;gap:10px;">
+                            <div class="pt-2 d-flex align-items-center gap-2">
                                 <img src="images/thumb-up.png" alt="Image Description" style="width: 5em;">
-                                <p style="font-size:12px;color:#778899;margin-top:10px;">Hurrah! Considered your IT declaration for Apr 2023.</p>
+                                <p class="homeText">Hurrah! Considered your IT declaration for Apr 2023.</p>
                             </div>
                             <div class="B" style="color:  #677A8E;   font-size: 12px;display:flex;justify-content:end; margin-top: 1em;">
                                 <a href="/formdeclaration" class="button-link">
@@ -682,13 +693,13 @@
                             </div>
                             <div class="modal-body" style="max-height:300px;overflow-y:auto">
                                 <div class="row">
-                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Date : <span style="color: #000000;">{{$currentDate}}</span></div>
-                                    <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Shift Time : <span style="color: #000000;">10:00 to 19:00</span></div>
+                                    <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Date : <span style="color: #333;">{{$currentDate}}</span></div>
+                                    <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Shift Time : <span style="color: #333;">10:00 to 19:00</span></div>
                                 </div>
                                 <table class="swipes-table mt-2 border" style="width: 100%;">
                                     <tr style="background-color: #f6fbfc;">
-                                        <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Swipe Time</th>
-                                        <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Sign-In / Sign-Out</th>
+                                        <th style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Swipe Time</th>
+                                        <th style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Sign-In / Sign-Out</th>
                                     </tr>
 
                                     @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
@@ -700,7 +711,7 @@
                                     @endforeach
                                     @else
                                     <tr>
-                                        <td style="font-size: 10px; color: black;text-align:center;padding:5px" colspan="2">No swipe records found for today.</td>
+                                        <td class="homeText" colspan="2">No swipe records found for today.</td>
                                     </tr>
                                     @endif
 
