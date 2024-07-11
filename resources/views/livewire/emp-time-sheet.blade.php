@@ -1,13 +1,20 @@
 <div class="container">
-    <div class="container" style="width:auto;max-width:60rem;padding: 1rem; background-color:rgb(2,17,79);color:white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);text-align:center">
-    </div>
-
+<style>
+    .totalDays{
+        font-size: 0.8rem; font-weight: 500;color:#778899;
+    }
+    .timeValue{
+        color: #000;
+        font-weight: 500;
+        font-size:12px;
+    }
+</style>
     @if($tab=="timeSheet")
-    <div class="container" style="margin-bottom: 0.1rem; background-color: #ffffff;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 0.8rem; max-width: 60rem;">
+    <div class="container mt-2" style="background-color: #fff; padding: 0.8rem; max-width: 60rem;">
         <div class="row">
             <div class="col-md-3" style="display: flex; align-items: center">
-                <label for="emp_id" class="input-label" style="font-weight: bold; font-size: 0.8rem; margin-right: 0.25rem;">Employee ID:</label>
-                <label style="font-size:0.8rem">{{ $auth_empId }}</label>
+                <label for="emp_id" class="input-label" style="font-weight: 500; font-size: 0.8rem; margin-right: 0.25rem;color:#778899;">Employee ID :</label>
+                <label style="font-size:12px;color:#000;font-weight:normal;">{{ $auth_empId }}</label>
             </div>
 
 
@@ -17,9 +24,9 @@
                 $start_date_string = \Carbon\Carbon::parse($start_date_string)->format('Y-m-d');
                 @endphp
                 <div style="display: flex; align-items: center;">
-                    <label for="start_date" class="input-label" style="font-weight: bold; font-size: 0.8rem; margin-right: 0.25rem;">Start Date:</label>
+                    <label for="start_date" class="input-label" style="font-weight: 500; font-size: 0.8rem; margin-right: 0.25rem;color:#778899;">Start Date :</label>
                     <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" wire:model.lazy="start_date_string" id="start_date" class="input-field" style="font-size: 0.8rem; width: 90px; border: 1px solid #ccc; margin-bottom: 5px;">
-                    <input type="hidden" id="formatted_start_date" value="{{ \Carbon\Carbon::parse($start_date_string)->format('d-M-Y') }}">
+                    <input type="hidden" class="form-control placeholder-small" id="formatted_start_date" value="{{ \Carbon\Carbon::parse($start_date_string)->format('d-M-Y') }}">
                 </div>
                 @error('start_date_string')
                 <span class="error-message" style="color: #e53e3e; font-size: 0.8rem; margin-top: 0.25rem; display: block;">
@@ -29,10 +36,10 @@
             </div>
             <div class="col-md-6" style="display: flex; flex-direction: column; align-items: flex-start;">
                 <div style="display: flex; align-items: center;">
-                    <label for="time_sheet_type" class="input-label" style="font-weight: bold; font-size: 0.8rem; margin-right: 10px;">Time Sheet Type:</label>
+                    <label for="time_sheet_type" class="input-label" style="font-weight: 500; font-size: 0.8rem; margin-right: 10px;color:#778899;">Time Sheet Type :</label>
                     <div style="display: flex; gap: 1rem;">
                         <label style="font-size: 0.8rem; display: flex; align-items: center;">
-                            <div wire:change="addTask" wire:model="time_sheet_type"name="time_sheet_type" value="weekly" style="margin-right: 0.25rem;"> Weekly</div>
+                            <div wire:change="addTask" wire:model="time_sheet_type"name="time_sheet_type" value="weekly" style="margin-right: 0.25rem;color:#000;font-size:12px;"> Weekly</div>
                         </label>
 
                     </div>
@@ -164,19 +171,19 @@
 
             <div style="background-color: #f7fafc; border: 1px solid #ddd; border-radius: 0.25rem; display: flex; justify-content: space-between; align-items: center;padding:0.25rem">
                 <div style="text-align: center; flex-grow: 1;">
-                    <div class="row">
+                    <div class="row m-0 p-0 d-flex align-items-center">
                         <div class="col">
-                            <p style="font-size: 0.9rem; font-weight: bold;">Total days: {{ $defaultTotalDays }}</p>
+                            <p style="font-size: 0.9rem; font-weight: 500;color:#778899;">Total days: {{ $defaultTotalDays }}</p>
                         </div>
                         <div class="col">
-                            <p style="font-size: 0.9rem; font-weight: bold;">Total hours: {{ $allDefaultTotalHours }}</p>
+                            <p style="font-size: 0.9rem; font-weight: 500;color:#778899;">Total hours: {{ $allDefaultTotalHours }}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div style="text-align: center;margin-top:1rem">
-                <button type="submit"  class="submit-btn">Submit</button>
+                <button type="submit" class="submit-btn">Submit</button>
             </div>
         </form>
 
@@ -297,21 +304,21 @@
 
             </div>
 
-            <div style="background-color: #f7fafc; border: 1px solid #ddd; border-radius: 0.25rem; display: flex; justify-content: space-between; align-items: center;padding:0.25rem">
+            <div  class="totalContainer py-2" style="background-color: #f7fafc; border: 1px solid #ddd; border-radius: 0.25rem; display: flex; justify-content: space-between; align-items: center;padding:0.25rem">
                 <div style="text-align: center; flex-grow: 1;">
-                    <div class="row">
+                    <div class="row m-0 p-0 d-flex align-items-center">
                         <div class="col">
-                            <p style="font-size: 0.9rem; font-weight: bold;">Total days: {{ $totalDays }}</p>
+                            <p class="totalDays mb-0">Total days : <span class="timeValue">{{ $totalDays }}</span> </p>
                         </div>
                         <div class="col">
-                            <p style="font-size: 0.9rem; font-weight: bold;">Total hours: {{ $allTotalHours }}</p>
+                            <p class="totalDays mb-0">Total hours : <span class="timeValue">{{ $allTotalHours }}</span> </p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div style="text-align: center;margin-top:1rem">
-                <button type="submit" style="width: 10%; padding: 0.25rem; background-color: #3498db; color: #fff; border: none; border-radius: 0.25rem; cursor: pointer; transition: background-color 0.3s ease;font-size:0.8rem" class="submit-btn">Submit</button>
+                <button type="submit"  class="submit-btn">Submit</button>
             </div>
         </form>
 
