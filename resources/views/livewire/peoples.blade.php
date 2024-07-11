@@ -28,7 +28,7 @@
         <div class="row mt-3">
 
             <div class="col-12 col-md-4 bg-white w-100" style="margin-right: 20px; padding: 20px; border-radius: 5px; height: 500px;">
-                <div class="input-group">
+                <div class="input-group" style="margin-bottom: 30px;">
                     <input wire:model="search" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                     <div class="input-group-append">
                         <button wire:click="starredFilter" style="height: 28px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="btn" type="button">
@@ -38,7 +38,7 @@
                 </div>
                 <div class="mt-3" style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
                     @if ($starredPeoples->isEmpty())
-                    <div class="container" style="text-align: center; color: gray;">Looks like you don't have any records</div>
+                    <div class="container" style="text-align: center; color: #778899; font-size: 12px;">Looks like you don't have any records</div>
                     @else
                     @foreach ($starredPeoples->where('starred_status', 'starred') as $people)
                     <div wire:click="starredPersonById('{{ $people->id }}')" class="container" style="height:auto;cursor: pointer; background-color: {{ $selectStarredPeoples && $selectStarredPeoples->id == $people->id ? '#ccc' : 'grey' }}; padding: 5px; margin-bottom: 8px;  border-radius: 5px;">
@@ -89,7 +89,7 @@
                     </div>
                     <div class="col-8">
                         <div style="display: flex; align-items: center;">
-                            <div style="font-size: 18px; margin-right: 5px;">{{ ucwords(strtolower(optional($selectStarredPeoples)->name)) }}</div>
+                            <div style="font-size: 16px; margin-right: 5px;">{{ ucwords(strtolower(optional($selectStarredPeoples)->name)) }}</div>
                             <a style="text-decoration: none;" wire:click="removeToggleStar('{{ optional($selectStarredPeoples)->people_id }}')">
                                 <button style="background-color:white;border:1px solid white; padding: 0;">
                                     <i class="fa fa-star" style="cursor: pointer; color: yellow;"></i>
@@ -137,7 +137,7 @@
                 </div>
             </div>
             @elseif (!$starredPeoples->isEmpty())
-           
+
             <!-- Code to display details of the first person in $starredPeoples when $selectStarredPeoples is not set -->
             @php
             $firstStarredPerson = $starredPeoples->first();
@@ -157,7 +157,7 @@
                 </div>
                 <div class="col-8">
                     <div style="display: flex; align-items: center;">
-                        <div style="font-size: 18px; margin-right: 5px;">{{ ucwords(strtolower(optional($firstStarredPerson)->name)) }}</div>
+                        <div style="font-size: 16px; margin-right: 5px;">{{ ucwords(strtolower(optional($firstStarredPerson)->name)) }}</div>
                         <a style="text-decoration: none;" wire:click="removeToggleStar('{{ optional($firstStarredPerson)->people_id }}')">
                             <button style="background-color:white;border:1px solid white; padding: 0;">
                                 <i class="fa fa-star" style="cursor: pointer; color: yellow;"></i>
@@ -206,7 +206,16 @@
             </div>
 
             @else
-            <p>hi</p>
+            <div class="col-12">
+                <div class="d-flex flex-column justify-content-center align-items-center h-100" style="margin-top: 140px">
+                    <div class="d-flex flex-column align-items-center">
+                        <img src="{{ asset('images/star.png') }}" style="height: 150px; width: 150px;" alt="">
+                        <p style="text-align: center; color: #778899; font-size: 12px;">Hey, you haven't starred any peers!</p>
+                    </div>
+                </div>
+            </div>
+
+
             @endif
 
         </div>
@@ -224,7 +233,7 @@
 <div class="row mt-3">
 
     <div class="col-12 col-md-4 bg-white w-100" style="margin-right: 20px; padding: 20px; border-radius: 5px; height: 500px;">
-        <div class="input-group">
+        <div class="input-group" style="margin-bottom: 30px;">
             <input wire:model="searchTerm" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
             <div class="input-group-append">
                 <button wire:click="filter" style="height: 28px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="btn" type="button">
@@ -234,7 +243,7 @@
         </div>
         <div class="mt-3">
             @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: gray;">No People Found</div>
+            <div class="container" style="text-align: center; color: #778899; font-size: 12px;">No People Found</div>
             @else
             <div style="max-height:400px;overflow-y:auto; overflow-x:hidden;">
                 @foreach($peopleData as $people)
@@ -290,7 +299,7 @@
                 @endphp
 
                 <div style="display: flex; align-items: center;">
-                    <div style="font-size: 18px; margin-right: 5px;">{{ ucwords(strtolower(optional($selectedPerson)->first_name )) }} {{ ucwords(strtolower(optional($selectedPerson)->last_name )) }}</div>
+                    <div style="font-size: 16px; margin-right: 5px;">{{ ucwords(strtolower(optional($selectedPerson)->first_name )) }} {{ ucwords(strtolower(optional($selectedPerson)->last_name )) }}</div>
                     <a style="text-decoration: none;" wire:click="toggleStar('{{ optional($selectedPerson)->emp_id }}')">
                         <button style="background-color:white;border:1px solid white; padding: 0;">
                             <i class="fa fa-star{{ $starredPerson && $starredPerson->starred_status == 'starred' ? ' text-yellow' : ' text-gray' }}" style="cursor: pointer;"></i>
@@ -357,7 +366,7 @@
         </div>
         <div class="col-8">
             <div style="display: flex; align-items: center;">
-                <div style="font-size: 18px; margin-right: 5px;">{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</div>
+                <div style="font-size: 16px; margin-right: 5px;">{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</div>
                 <a style="text-decoration: none;" wire:click="toggleStar('{{ optional($firstPerson)->emp_id }}')">
                     <button style="background-color:white;border:1px solid white; padding: 0;">
                         <i class="fa fa-star{{ $starredPerson && $starredPerson->starred_status == 'starred' ? ' text-yellow' : ' text-gray' }}" style="cursor: pointer;"></i>
@@ -404,6 +413,16 @@
 
         </div>
 
+    </div>
+
+    @else
+    <div class="col-12">
+        <div class="d-flex flex-column justify-content-center align-items-center h-100" style="margin-top: 100px">
+            <div class="d-flex flex-column align-items-center">
+                <img src="{{ asset('images/nodata.png') }}" style="height: 200px; width: 200px;" alt="">
+                <p style="text-align: center; color: #778899;font-size: 12px;">No People Found!</p>
+            </div>
+        </div>
     </div>
     @endif
 
