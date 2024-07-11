@@ -43,6 +43,7 @@ class Employee extends Component
     public $employeeDetails;
     public $showDialog = false;
     public $record;
+    public $selectedDepartment;
     public function message($employeeId)
     {
         $authenticatedUserId = auth()->id();
@@ -76,14 +77,19 @@ class Employee extends Component
     {
         $companyId = Auth::user()->company_id;
         $trimmedSearchTerm = trim($this->searchTerm);
+        $query = EmployeeDetails::where('company_id', $companyId);
 
-        $this->employeeDetails = EmployeeDetails::where('company_id', $companyId)
-            ->where(function ($query) use ($trimmedSearchTerm) {
-                $query->where('first_name', 'like', '%' . $trimmedSearchTerm . '%')
-                    ->orWhere('last_name', 'like', '%' . $trimmedSearchTerm . '%')
-                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
-            })
-            ->get();
+    // Filter by selected department if one is selected
+    if ($this->selectedDepartment) {
+        $query->where('department', $this->selectedDepartment);
+    }
+
+    $this->employeeDetails = $query->where(function ($query) use ($trimmedSearchTerm) {
+            $query->where('first_name', 'like', '%' . $trimmedSearchTerm . '%')
+                ->orWhere('last_name', 'like', '%' . $trimmedSearchTerm . '%')
+                ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+        })
+        ->orderBy('first_name', 'asc')->get();
 
         $this->peopleFound = $this->employeeDetails->isNotEmpty();
     }
@@ -95,7 +101,7 @@ class Employee extends Component
         $loggedInCompanyId = auth()->user()->company_id;
 
         // Fetching all employee details for the company
-        $this->employeeDetails = EmployeeDetails::where('company_id', $loggedInCompanyId)->get();
+        $this->employeeDetails = EmployeeDetails::where('company_id', $loggedInCompanyId)->orderBy('first_name', 'asc')->get();
 
         // Filter out the logged-in user
         $this->employeeDetails = $this->employeeDetails->reject(function ($employee) {
@@ -105,7 +111,7 @@ class Employee extends Component
         });
 
         // Search functionality
-        if ($this->searchTerm) {
+        if ($this->searchTerm || $this->selectedDepartment) {
             $this->filter();
         }
 

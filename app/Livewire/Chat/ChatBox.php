@@ -7,7 +7,6 @@ use App\Notifications\MessageRead;
 use App\Notifications\MessageSent;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\EmployeeDetails;
 class ChatBox extends Component
 {
 
@@ -99,7 +98,6 @@ class ChatBox extends Component
 
 
 
-
     public function loadMessages()
     {
 
@@ -120,22 +118,17 @@ class ChatBox extends Component
 
         #skip and query
         $this->loadedMessages = Message::where('chating_id', $this->selectedConversation->id)
-            ->where(function ($query) use ($userId) {
-
-                $query->where('sender_id', $userId)
-                    ->whereNull('sender_deleted_at');
-            })->orWhere(function ($query) use ($userId) {
-
-                $query->where('receiver_id', $userId)
-                    ->whereNull('receiver_deleted_at');
-            })
-            ->skip($count - $this->paginate_var)
-            ->take($this->paginate_var)
-            ->get();
+    ->where(function ($query) {
+        $query->where('sender_id', auth()->user()->emp_id)
+            ->orWhere('receiver_id', auth()->user()->emp_id);
+    })
+    ->get();
 
 
         return $this->loadedMessages;
     }
+
+
 
     public function sendMessage()
     {
@@ -200,7 +193,6 @@ class ChatBox extends Component
             ));
 
     }
-
 
 
     public $isStreaming = false;

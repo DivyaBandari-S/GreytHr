@@ -1,262 +1,272 @@
-<div>
+<div wire:poll>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="script.js"></script>
-    <section class="gradient-custom">
-        <div class="chat-container ">
-            <div class="people-list" id="people-list" style=" border: 1px solid silver;">
-                <div class="row" style="display: flex;">
-                    <p style="font-size:20px; font-weight: 500; color: black; margin: 20px 10px 20px 20px;">Chats</p>
 
+    <div class="chat-container ">
+        <div class="people-list" id="people-list" style=" border: 2px solid silver;border-radius:5px;">
+            <div class="row justify-content-center" style="margin: 0;">
+                <div class="col-md-10 d-flex align-items-center justify-content-between"
+                    style="background: rgb(2, 17, 79); color: white; height: 50px; border-radius: 10px;margin-top:10px">
+                    <p style="font-size: 20px; font-weight: 600; margin: 0 10px;">Chats</p>
                 </div>
-
-
-                <div class="search-container">
-                    <input type="text" placeholder="Search..." class="search-bar">
-
-
-                </div>
-
-                <main class="grow h-full relative" style="contain: content; ">
-
-                    <ul class="p-2 grid w-full space-y-2" style="list-style: none; padding: 0;">
-                        <div class="c"
-                            style="contain: content; overflow-y: auto; max-height: 400px;margin-left:20px">
-                            @if ($conversations)
-
-
-                                @foreach ($conversations as $key => $conversation)
-                                    <li id="conversation-{{ $conversation->id }}" wire:key="{{ $conversation->id }}"
-                                        class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2 {{ $conversation->id == $selectedConversation?->emp_id ? 'bg-gray-100/70' : '' }}"
-                                        style="margin-bottom: 10px;height:70px;width:90%; ">
-                                        <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;"
-                                            src="{{ asset('storage/' . $conversation->getReceiver()->image) }}" class="card-img-top"
-                                            alt="...">
-                                        <aside class="grid grid-cols-12 w-full">
-                                            <a href="{{ route('chat', $conversation->id) }}"
-                                                class="col-span-11 border-b pb-2 border-gray-200 relative overflow-hidden truncate leading-5 w-full flex-nowrap p-1"
-                                                style="display: block; color: #000000; text-decoration: none;">
-                                                <div class="flex justify-between w-full items-center">
-                                                    <div style="display:flex">
-                                                        <h6 class="truncate font-medium tracking-wider text-gray-900"
-                                                            style="color: #333333;font-size:12px">
-                                                            {{ ucfirst(strtolower($conversation->getReceiver()->first_name)) }}&nbsp;{{ ucwords(strtolower($conversation->getReceiver()->last_name)) }}
-                                                             </h6>
-                                                        <small class="text-gray-700"
-                                                            style="color: #888888;margin-left: auto;">{{ $conversation->messages?->last()?->created_at?->shortAbsoluteDiffForHumans() }}</small>
-                                                    </div>
-                                                    <div class="flex gap-x-2 items-center ">
-                                                        @if ($conversation->messages?->last()?->sender_id == auth()->id())
-                                                        @endif
-                                                        @php
-                                                            $lastMessage = $conversation->messages
-                                                                ? $conversation->messages->last()
-                                                                : null;
-                                                        @endphp
-                                                        <span>
-                                                            <p class="grow truncate text-sm font-[100]"
-                                                                style="color: #555555;font-size:10px">
-                                                                {{ Str::limit($lastMessage ? $lastMessage->body : '', 15) }}
-                                                            </p>
-                                                            {{-- unread count --}}
-                                                            @if ($conversation->unreadMessagesCount() > 0)
-                                                                <span
-                                                                    style="font-weight: bold; padding: 1px 4px; font-size: 0.75rem; border-radius: 12px; background-color: #007bff; color: #ffffff;">
-                                                                    {{ $conversation->unreadMessagesCount() }}
-                                                                </span>
-                                                            @endif
-                                                        </span>
-
-                                                    </div>
-
-
-
-                                            </a>
-
-                                            {{-- Dropdown --}}
-
-
-
-
-
-
-                        </div>
-
-                        </aside>
-
-                        </li>
-                        @endforeach
-
-                        @endif
-                    </ul>
-                </main>
             </div>
-            <hr>
 
-            <div class="chat">
-                <div class="chat-header clearfix">
-                    <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 50px; width: 50px;margin-top:5px" src="{{ asset('storage/' . $selectedConversation->getReceiver()->image) }}" class="card-img-top" alt="...">
-                         <div class="chat-about">
-                        <div class="chat-with mt-1">
-                        <div class="d-flex align-items-center">
-                          <div class="mr-1">
-                            <span> Chat with:</span>
-                          </div>
-                          <div class="name-box" style="background-color: #f0f8f7; padding: 10px; border-radius: 5px;">
-                            <div style="color: #28a745;">
-                              <div>{{ ucfirst(strtolower($selectedConversation->getReceiver()->first_name)) }}&nbsp;{{ ucwords(strtolower($selectedConversation->getReceiver()->last_name)) }}</div>
-                              <div class="text-muted">{{ $selectedConversation->getReceiver()->emp_id }}</div>
-                            </div>
-                          </div>
-                          
-                        </div>
-                      </div>
-                      
+
+
+            <div id="search">
+                <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
+                <input type="text" placeholder="Search contacts..." />
+            </div>
+
+
+
+            <main class="grow h-full relative" style="contain: content; ">
+
+                <ul class="p-2 grid w-full space-y-2" style="list-style: none; padding: 0;">
+                    <div class="c" style="contain: content; margin-left:20px;overflow-y: auto; height: 300px;">
+                        @if ($conversations)
+
+
+                            @foreach ($conversations as $key => $conversation)
+                                <li id="conversation-{{ $conversation->id }}" wire:key="{{ $conversation->id }}"
+                                    class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2 {{ $conversation->id == $selectedConversation?->emp_id ? 'bg-gray-100/70' : '' }}"
+                                    style="margin-bottom: 10px;height:70px;width:90%; ">
+                                    <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;"
+                                        src="{{ asset('storage/' . $conversation->getReceiver()->image) }}"
+                                        class="card-img-top" alt="...">
+                                    <aside class="grid grid-cols-12 w-full">
+                                        <a href="{{ route('chat', $conversation->id) }}"
+                                            class="col-span-11 border-b pb-2 border-gray-200 relative truncate leading-5 w-full flex-nowrap p-1"
+                                            style="display: block; text-decoration: none;">
+                                            <div class="flex justify-between w-full items-center">
+                                                <div style="display:flex">
+                                                    <h6 class="truncate font-medium tracking-wider "
+                                                        style="color: #333333;font-size:12px">
+                                                        {{ ucfirst(strtolower($conversation->getReceiver()->first_name)) }}&nbsp;{{ ucwords(strtolower($conversation->getReceiver()->last_name)) }}
+                                                    </h6>
+                                                    <small class="text-gray-700"
+                                                        style="color: #888888;margin-left: auto;">{{ $conversation->messages?->last()?->created_at?->shortAbsoluteDiffForHumans() }}</small>
+                                                </div>
+                                                <div class="flex gap-x-2 items-center ">
+                                                    @if ($conversation->messages?->last()?->sender_id == auth()->id())
+                                                    @endif
+                                                    @php
+                                                        $lastMessage = $conversation->messages
+                                                            ? $conversation->messages->last()
+                                                            : null;
+                                                    @endphp
+                                                    <div
+                                                        style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                                        <p class="grow truncate text-sm font-[100]"
+                                                            style="font-size: 10px; margin-right: 5px; flex: 1;color:#000">
+                                                            {{ Str::limit($lastMessage ? $lastMessage->body : '', 15) }}
+                                                        </p>
+                                                        {{-- unread count --}}
+                                                        @if ($conversation->unreadMessagesCount() > 0)
+                                                            <span
+                                                                style="font-weight: bold; padding: 1px 4px; font-size: 0.75rem; border-radius: 50%; background-color: #007bff; color: #ffffff; display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; flex-shrink: 0;">
+                                                                {{ $conversation->unreadMessagesCount() }}
+                                                            </span>
+                                                        @endif
+                                                    </div>
+
+                                                </div>
+
+
+
+                                        </a>
+
+                                        {{-- Dropdown --}}
+
+
+
+
+
 
                     </div>
 
+                    </aside>
+
+                    </li>
+                    @endforeach
+
+                    @endif
+                </ul>
+            </main>
+        </div>
+        <hr>
+
+        <div class="chat">
+            <div class="chat-header clearfix" style="border-radius:5px;border:2px solid silver">
+                <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 50px; width: 50px;margin-top:5px"
+                    src="{{ asset('storage/' . $selectedConversation->getReceiver()->image) }}" class="card-img-top"
+                    alt="...">
+                <div class="chat-about">
+                    <div class="chat-with mt-1">
+                        <div class="d-flex align-items-center">
+                            <div class="mr-1">
+                                <span style="color:rgb(40, 40, 122)"> Chat with:</span>
+                            </div>
+                            <div class="name-box" style="background-color: #f0f8f7; padding: 10px; border-radius: 5px;">
+                                <div style="color: #28a745;">
+                                    <div>
+                                        {{ ucfirst(strtolower($selectedConversation->getReceiver()->first_name)) }}&nbsp;{{ ucwords(strtolower($selectedConversation->getReceiver()->last_name)) }}
+                                    </div>
+                                    <div class="text-muted">{{ $selectedConversation->getReceiver()->emp_id }}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
                 </div>
 
-                <div class="chat-history" id="messageList">
-                    <ul>
-                        <li class="message clearfix" id="conversation">
-                            <!-- end chat-header -->
-                            @if ($loadedMessages)
-                                @foreach ($loadedMessages as $key => $message)
-                                    {{-- keep track of the previous message --}}
-                                    @php
-                                        $previousMessage = $key > 0 ? $loadedMessages[$key - 1] : null;
-                                    @endphp
-                                    <div
-                                        class="message-container clearfix @if ($message->sender_id === auth()->id()) sent @else received @endif">
-                                        {{-- message body --}}
-                                        <div class="message-body" style="display:flex">
-                                            <div style="display: flex; flex-direction: column;">
-                                                <p class="message-content" style="font-size:10px">{{ $message->body }}
-                                                </p>
-                                                @if ($message->file_path)
-                                                    {{-- Display the image if the file path is for an image --}}
-                                                    @if (Str::startsWith($message->file_path, 'chating-files') &&
-                                                            Str::endsWith($message->file_path, ['.jpg', '.jpeg', '.png', '.gif']))
-                                                        <img src="{{ asset('uploads/' . $message->file_path) }}"
-                                                            alt="Attached Image" style="max-width: 100px;">
-                                                        {{-- Display a link to download PDF or a generic download link for other file types --}}
-                                                    @else
-                                                        <button class="message-content"
-                                                            style="font-size: 10px;background:white;border:1px solid silver;border-radius:4px;display:flex">
-                                                            <a href="{{ asset('uploads/' . $message->file_path) }}"
-                                                                target="_blank">
-                                                                <span
-                                                                    style="font-size: 30px;margin-top:10px;color:black">&#8595;</span>
-                                                                {{ basename($message->file_path) }}
-                                                            </a>
-                                                        </button>
-                                                    @endif
+            </div>
+
+            <div class="chat-history" id="messageList">
+                <ul>
+                    <li class="message clearfix" id="conversation">
+                        <!-- end chat-header -->
+                        @if ($loadedMessages)
+                            @foreach ($loadedMessages as $key => $message)
+                                {{-- keep track of the previous message --}}
+                                @php
+                                    $previousMessage = $key > 0 ? $loadedMessages[$key - 1] : null;
+                                @endphp
+                                <div
+                                    class="message-container clearfix @if ($message->sender_id === auth()->id()) sent @else received @endif">
+                                    {{-- message body --}}
+                                    <div class="message-body" style="display:flex">
+                                        <div style="display: flex; flex-direction: column;">
+                                            <p class="message-content" style="font-size:10px">{{ $message->body }}
+                                            </p>
+                                            @if ($message->file_path)
+                                                {{-- Display the image if the file path is for an image --}}
+                                                @if (Str::startsWith($message->file_path, 'chating-files') &&
+                                                        Str::endsWith($message->file_path, ['.jpg', '.jpeg', '.png', '.gif']))
+                                                    <img src="{{ asset('uploads/' . $message->file_path) }}"
+                                                        alt="Attached Image" style="max-width: 100px;">
+                                                    {{-- Display a link to download PDF or a generic download link for other file types --}}
+                                                @else
+                                                    <button class="message-content"
+                                                        style="font-size: 10px;background:white;border:1px solid silver;border-radius:4px;display:flex">
+                                                        <a href="{{ asset('uploads/' . $message->file_path) }}"
+                                                            target="_blank">
+                                                            <span
+                                                                style="font-size: 30px;margin-top:10px;color:black">&#8595;</span>
+                                                            {{ basename($message->file_path) }}
+                                                        </a>
+                                                    </button>
                                                 @endif
-                                            </div>
-                                            {{-- Display message time and status --}}
-                                            <div style="display: flex; ">
-                                                <span class="message-time"
-                                                    style="font-size:10px;margin-left:20px">{{ $message->created_at->format('g:i a') }}</span>
-                                                {{-- message status, only show if message belongs to auth --}}
-                                                @if ($message->sender_id === auth()->id())
-                                                    <div x-data="{ markAsRead: @json($message->isRead()) }">
-                                                        {{-- double ticks --}}
-                                                        <span x-cloak x-show="markAsRead" @class('text-gray-200')>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                                height="16" fill="currentColor"
-                                                                class="bi bi-check2-all" viewBox="0 0 16 16">
-                                                                <path
-                                                                    d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l7-7zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0z" />
-                                                                <path
-                                                                    d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z" />
-                                                            </svg>
-                                                        </span>
-                                                        {{-- single ticks --}}
-                                                        <span x-show="!markAsRead" @class('text-gray-200')>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                                height="16" fill="currentColor" class="bi bi-check2"
-                                                                viewBox="0 0 16 16">
-                                                                <path
-                                                                    d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
-                                                            </svg>
-                                                        </span>
-                                                    </div>
-                                                @endif
-                                            </div>
+                                            @endif
+                                        </div>
+                                        {{-- Display message time and status --}}
+                                        <div style="display: flex; ">
+                                            <span class="message-time"
+                                                style="font-size:10px;margin-left:20px">{{ $message->created_at->format('g:i a') }}</span>
+                                            {{-- message status, only show if message belongs to auth --}}
+                                            @if ($message->sender_id === auth()->id())
+                                                <div x-data="{ markAsRead: @json($message->isRead()) }">
+                                                    {{-- double ticks --}}
+                                                    <span x-cloak x-show="markAsRead" @class('text-gray-200')>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" fill="currentColor" class="bi bi-check2-all"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l7-7zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0z" />
+                                                            <path
+                                                                d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z" />
+                                                        </svg>
+                                                    </span>
+                                                    {{-- single ticks --}}
+                                                    <span x-show="!markAsRead" @class('text-gray-200')>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" fill="currentColor" class="bi bi-check2"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
-                                @endforeach
+                                </div>
+                            @endforeach
+                        @endif
+
+                    </li>
+                </ul>
+            </div>
+            <form wire:submit.prevent="sendMessage" method="POST" enctype="multipart/form-data" id="messageForm">
+                @csrf
+
+                <div class="card-footer">
+
+                    <div class="input-group">
+                        <!-- Attachment -->
+                        <div class="row" style="width:100%;">
+                            @if ($attachment && !$body)
+                                <div class="container attachment-container" style="width:100%;height:60px">
+                                    @if (Str::startsWith($attachment->getMimeType(), 'image/'))
+                                        <img src="{{ $attachment->temporaryUrl() }}" alt="Selected Image"
+                                            class="attachment-image" style="height: 50px; width: 100%;">
+                                    @else
+                                        <i class="fas fa-file attachment-icon"></i>
+                                        {{ $attachment->getClientOriginalName() }}
+                                    @endif
+
+                                </div>
                             @endif
-
-                        </li>
-                    </ul>
-                </div>
-                <form wire:submit.prevent="sendMessage" method="POST" enctype="multipart/form-data" id="messageForm">
-                    @csrf
-
-                    <div class="card-footer">
-
-                        <div class="input-group">
-                            <!-- Attachment -->
-                            <div class="row" style="width:100%;">
-                                @if ($attachment && !$body)
-                                    <div class="container attachment-container" style="width:100%;height:60px">
-                                        @if (Str::startsWith($attachment->getMimeType(), 'image/'))
-                                            <img src="{{ $attachment->temporaryUrl() }}" alt="Selected Image"
-                                                class="attachment-image" style="height: 50px; width: 100%;">
-                                        @else
-                                            <i class="fas fa-file attachment-icon"></i>
-                                            {{ $attachment->getClientOriginalName() }}
-                                        @endif
-
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="input-group-prepend">
-                                <label class="btn btn-secondary attach-btn">
-                                    <i class="fas fa-paperclip"></i>
-                                    <input type="file" accept="image/*, .pdf, .doc, .docx" wire:model="attachment"
-                                        style="display: none;width:100%;height:auto;">
-                                </label>
-                            </div>
-
-                            <!-- Message body -->
-
-                            <textarea name="message-to-send" id="messageInput" placeholder="Type your message..." wire:model="body"
-                                class="form-control message-input"></textarea>
-
-                            <!-- Send button -->
-                            <div class="input-group-append">
-                                @if ($attachment || $body)
-                                    <button id="sendMessageButton" type="submit" class="btn btn-primary send-btn">
-                                        <i class="fas fa-location-arrow"></i> Send
-                                    </button>
-                                @else
-                                    <button id="sendMessageButton" type="submit" class="btn btn-primary send-btn">
-                                        <i class="fas fa-location-arrow"></i> Send
-                                    </button>
-                                @endif
-                            </div>
+                        </div>
+                        <div class="input-group-prepend">
+                            <label class="btn btn-secondary attach-btn">
+                                <i class="fas fa-paperclip"></i>
+                                <input type="file" accept="image/*, .pdf, .doc, .docx" wire:model="attachment"
+                                    style="display: none;width:100%;height:auto;">
+                            </label>
                         </div>
 
-                        <!-- Display selected attachment -->
+                        <!-- Message body -->
 
+                        <textarea name="message-to-send" id="messageInput" placeholder="Type your message..." wire:model="body"
+                            class="form-control message-input"></textarea>
+
+                        <!-- Send button -->
+                        <div class="input-group-append">
+                            @if ($attachment || $body)
+                                <button id="sendMessageButton" type="submit" class="btn btn send-btn"
+                                    style="background-color: rgb(2, 17, 79);color:white">
+                                    <i class="fas fa-location-arrow"></i> Send
+                                </button>
+                            @else
+                                <button id="sendMessageButton" type="submit" class="btn btn send-btn"
+                                    style="background-color: rgb(2, 17, 79);color:white">
+                                    <i class="fas fa-location-arrow"></i> Send
+                                </button>
+                            @endif
+                        </div>
                     </div>
-                </form>
+
+                    <!-- Display selected attachment -->
+
+                </div>
+            </form>
 
 
-            </div>
-
-    </section>
-
-    <!-- end chat-history -->
+        </div>
 
 
 
-    @error('body')
-        <p>{{ $message }}</p>
-    @enderror
-</div>
+        <!-- end chat-history -->
+
+
+
+        @error('body')
+            <p>{{ $message }}</p>
+        @enderror
+    </div>
 
 </div>
 <script>
@@ -378,33 +388,68 @@
     .search-container {
         display: flex;
         align-items: center;
-        height: 40px;
-        width: 250px;
-
+        max-width: 600px;
+        margin: 20px auto;
         border-radius: 5px;
+    }
 
+    .search-container {
+        display: flex;
+        align-items: center;
+        max-width: 600px;
+        margin: 20px auto;
+        border-radius: 5px;
     }
 
     .search-bar {
         flex: 1;
-        border: none;
-        height: 40px;
-        padding: 10px;
-        font-size: 14px;
+        padding: 10px 15px;
+        border: 2px solid #027abf;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        font-size: 16px;
+        height: 50px;
+        /* Set height for consistency */
     }
 
     .search-button {
-        background-color: blue;
-        color: white;
+        padding: 0 20px;
+        /* Adjust padding to align height */
         border: none;
-        cursor: pointer;
-        padding: 10px 20px;
-        height: 40px;
-        margin-top: 17px;
+        background: #027abf;
+        color: white;
         border-radius: 0 5px 5px 0;
-        transition: background-color 0.3s ease;
+        cursor: pointer;
+        font-size: 16px;
+        height: 50px;
+        /* Match the height of the input */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
+    .search-button:hover {
+        background: #025f91;
+    }
+
+    /* Send Button Styling */
+    .send-button {
+        margin-left: 10px;
+        /* Add some space between the search bar and the send button */
+        border-radius: 5px;
+        color: white;
+        width: 100px;
+        height: 50px;
+        /* Match the height of the search bar */
+        font-size: 16px;
+        background-color: #007bff;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease;
+    }
 
     /* Styling for the send button */
     .send-button {
@@ -416,6 +461,7 @@
         background-color: #007bff;
         border: none;
         cursor: pointer;
+        justify-content: center;
         transition: background-color 0.3s ease;
     }
 
@@ -473,6 +519,8 @@
         width: 100%;
         background: white;
         border-radius: 0;
+
+
         display: flex;
 
     }
@@ -553,11 +601,13 @@
         background: #f2f5f8;
         color: #434651;
         height: 100%;
+        border-radius: 5px;
     }
 
     .chat .chat-header {
-        padding: 20px;
+        padding: 0.8px;
         background: white;
+        /* background: rgb(1, 16, 70); */
         border-bottom: 2px solid white;
     }
 
@@ -583,7 +633,7 @@
 
     .chat .chat-header .fa-star {
         float: right;
-        color: #d8dadf;
+        color: white;
         font-size: 20px;
         margin-top: 12px;
     }
@@ -811,8 +861,8 @@
     }
 
     .sent .message-body {
-        background-color: #b0c4de;
-        color: #fff;
+        background-color: rgb(2, 17, 79);
+        color: white;
 
         float: right;
     }

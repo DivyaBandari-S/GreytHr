@@ -19,6 +19,7 @@ use Livewire\Component;
 use App\Helpers\LeaveHelper;
 use Carbon\Carbon;
 use App\Livewire\LeavePage;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 
 class LeavePending extends Component
@@ -35,8 +36,9 @@ class LeavePending extends Component
     {
         try {
             // Fetch leave request details based on $leaveRequestId with employee details
+            $decryptedLeaveRequestId = Crypt::decrypt($leaveRequestId);
             $this->selectedYear = Carbon::now()->format('Y');
-            $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
+            $this->leaveRequest = LeaveRequest::with('employee')->find($decryptedLeaveRequestId);
             $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
             $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
         } catch (\Exception $e) {

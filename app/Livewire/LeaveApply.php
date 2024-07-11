@@ -74,6 +74,7 @@ class LeaveApply extends Component
     public $show_reporting = false;
     public $showApplyingTo = true;
     public $showNumberOfDays = false;
+    public $showApplyingToContainer = false;
     public $fromDate;
     public $fromSession;
     public $toSession;
@@ -197,7 +198,6 @@ class LeaveApply extends Component
     }
 
 
-
     //this method used to filter cc recipients from employee details
     public function searchCCRecipients()
     {
@@ -298,6 +298,11 @@ class LeaveApply extends Component
             Log::error('Error in handleSearch method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while handling the search. Please try again later.');
         }
+    }
+
+    public function applyingTo()
+    {
+        $this->showApplyingToContainer = !$this->showApplyingToContainer;
     }
 
 
@@ -419,6 +424,50 @@ class LeaveApply extends Component
         return (int) str_replace('Session ', '', $session);
     }
 
+    //selected applying to manager details
+    public function toggleManager($empId)
+    {
+        if (in_array($empId, $this->selectedManager)) {
+            // Manager is already selected, deselect it
+            $this->selectedManager = [];
+        } else {
+            // Deselect any previously selected manager
+            $this->selectedManager = [$empId];
+        }
+
+        // Update details based on selected manager
+        if (empty($this->selectedManager)) {
+            // No manager selected, reset details
+            $this->resetManagerDetails();
+        } else {
+            // Fetch details for the selected manager
+            $this->fetchManagerDetails($empId);
+        }
+    }
+
+
+    // Method to fetch manager details
+    private function fetchManagerDetails($managerId)
+    {
+        $employeeDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+
+        if ($employeeDetails) {
+            $this->loginEmpManagerProfile = $employeeDetails->image ? asset('storage/' . $employeeDetails->image) : null;
+            $this->loginEmpManager = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
+            $this->loginEmpManagerId = $employeeDetails->emp_id;
+        } else {
+            // Handle case if details are not found
+            $this->resetManagerDetails(); // Reset to default values or show N/A
+        }
+    }
+
+    // Method to reset manager details
+    private function resetManagerDetails()
+    {
+        $this->loginEmpManagerProfile = null;
+        $this->loginEmpManager = null;
+        $this->loginEmpManagerId = null;
+    }
 
     //method to apply for a leave
     public function leaveApply()
@@ -470,10 +519,12 @@ class LeaveApply extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $ccToDetails = [];
-            foreach ($this->selectedPeople as $selectedEmployeeId) {
+            foreach ($this->selectedCCEmployees as $selectedEmployeeId) {
                 // Check if the employee ID already exists in ccToDetails
                 $existingIds = array_column($ccToDetails, 'emp_id');
+
                 if (!in_array($selectedEmployeeId, $existingIds)) {
+
                     // Fetch additional details from EmployeeDetails table
                     $employeeDetails = EmployeeDetails::where('emp_id', $selectedEmployeeId)->first();
 
@@ -501,9 +552,10 @@ class LeaveApply extends Component
                 foreach ($this->selectedManager as $selectedManagerId) {
                     $employeeDetails = EmployeeDetails::where('emp_id', $selectedManagerId)->first();
                     if ($employeeDetails) {
+                        $managerfullName = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
                         $applyingToDetails[] = [
                             'manager_id' => $selectedManagerId,
-                            'report_to' => $employeeDetails->report_to,
+                            'report_to' =>  $managerfullName,
                         ];
                     }
                 }
@@ -521,9 +573,7 @@ class LeaveApply extends Component
                 'contact_details' => $this->contact_details,
                 'reason' => $this->reason,
             ]);
-
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
-            $this->cancelLeaveApplication();
 
             // Check if emp_id is set on the $createdLeaveRequest object
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {

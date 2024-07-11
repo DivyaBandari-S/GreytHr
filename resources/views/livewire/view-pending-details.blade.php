@@ -166,13 +166,11 @@
                                     </div>
                                 @endif
                             </div>
-
-
                             <div class="content1">
                                 <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" style="color:#007BFF;font-size:11px;">View Details</a>
                                 <button class="rejectBtn" wire:click="rejectLeave({{ $loop->index }})">Reject</button>
                                 <button class="rejectBtn" >Forward</button>
-                                <button class="approveBtn btn-primary" wire:click="approveLeave({{ $loop->index }})">Approve</button>
+                                <button class="approveBtn" wire:click="approveLeave({{ $loop->index }})">Approve</button>
                             </div>
                         </div>
                     </div>

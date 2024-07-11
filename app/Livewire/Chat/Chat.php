@@ -16,17 +16,17 @@ class Chat extends Component
     {
 
         $this->selectedConversation= Chating::findOrFail($this->query);
-        
 
-      
 
-       #mark message belogning to receiver as read 
+
+
+       #mark message belogning to receiver as read
        Message::where('chating_id', $this->selectedConversation->id)
        ->where('receiver_id', auth()->user()->emp_id)
        ->whereNull('read_at')
        ->update(['read_at' => now()]);
-   
-   
+
+
 
 
     }

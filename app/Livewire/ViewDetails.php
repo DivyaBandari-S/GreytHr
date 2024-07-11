@@ -160,7 +160,8 @@ class ViewDetails extends Component
             $ccToJson = trim($this->leaveRequest->cc_to);
             $this->leaveRequest->cc_to = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
         } catch (\Exception $e) {
-            dd("Error in JSON decoding: " . $e->getMessage());
+            Log::error("Exception occurred: " . $e->getMessage());
+            session()->flash('error_message', 'An error occurred while processing the details. Please try again later.');
         }
 
         // Pass the leaveRequest data and leaveBalances to the Blade view
