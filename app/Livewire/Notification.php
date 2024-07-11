@@ -33,7 +33,7 @@ class Notification extends Component
                 $query->whereJsonContains('leave_applications.applying_to', [['manager_id' => $loggedInEmpId]])
                       ->orWhereJsonContains('leave_applications.cc_to', [['emp_id' => $loggedInEmpId]]);
             })
-            ->where('leave_applications.is_read', 0) 
+            ->where('leave_applications.is_read', 0)
             ->get();
 
         $this->matchingLeaveRequestsCount = $this->matchingLeaveRequests->count();

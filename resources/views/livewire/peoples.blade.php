@@ -101,7 +101,7 @@
                         <br>
                         <div style="display: flex; align-items: center;">
                             <span style="margin-right: 10px; font-weight:500; color: #778899; font-size: 12px;">CONTACT DETAILS</span>
-                            <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid black; margin: 0;">
+                            <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
                         </div>
                         <br>
                         <div class="row">
@@ -111,7 +111,7 @@
                         <br>
                         <div style="display: flex; align-items: center;">
                             <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CATEGORY</span>
-                            <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid black; margin: 0;">
+                            <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
                         </div>
                         <br>
                         <div class="row">
@@ -121,7 +121,7 @@
                         <br>
                         <div style="display: flex; align-items: center;">
                             <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">OTHER INFORMATION</span>
-                            <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid black; margin: 0;">
+                            <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid #778899; margin: 0;">
                         </div>
                         <br>
                         <div class="row">
@@ -169,7 +169,7 @@
                     <br>
                     <div style="display: flex; align-items: center;">
                         <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CONTACT DETAILS</span>
-                        <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid black; margin: 0;">
+                        <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
                     </div>
                     <br>
                     <div class="row">
@@ -179,7 +179,7 @@
                     <br>
                     <div style="display: flex; align-items: center;">
                         <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CATEGORY</span>
-                        <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid black; margin: 0;">
+                        <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
                     </div>
                     <br>
                     <div class="row">
@@ -189,7 +189,7 @@
                     <br>
                     <div style="display: flex; align-items: center;">
                         <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">OTHER INFORMATION</span>
-                        <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid black; margin: 0;">
+                        <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid #778899; margin: 0;">
                     </div>
                     <br>
                     <div class="row">
@@ -312,7 +312,7 @@
                 <br>
                 <div style="display: flex; align-items: center;">
                     <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CONTACT DETAILS</span>
-                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid black; margin: 0;">
+                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
                 </div>
                 <br>
                 <div class="row">
@@ -322,7 +322,7 @@
                 <br>
                 <div style="display: flex; align-items: center;">
                     <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CATEGORY</span>
-                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid black; margin: 0;">
+                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
                 </div>
                 <br>
                 <div class="row">
@@ -332,7 +332,7 @@
                 <br>
                 <div style="display: flex; align-items: center;">
                     <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">OTHER INFORMATION</span>
-                    <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid black; margin: 0;">
+                    <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid #778899; margin: 0;">
                 </div>
                 <br>
                 <div class="row">

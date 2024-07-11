@@ -13,6 +13,7 @@ class LeaveRequest extends Model
     protected $table = 'leave_applications';
     protected $fillable = [
         'emp_id',
+        'category_type',
         'leave_type',
         'from_date',
         'from_session',

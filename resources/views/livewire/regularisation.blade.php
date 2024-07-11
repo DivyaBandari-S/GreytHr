@@ -1263,7 +1263,6 @@ $lastEntry = end($regularisationEntries);
 
             </a>
 
-
         </div>
 
     </div>
