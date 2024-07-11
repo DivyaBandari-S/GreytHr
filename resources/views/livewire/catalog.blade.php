@@ -70,22 +70,35 @@
                                                     <hr style="border: 1px solid #ccc;margin: 10px 0;">
 
                                                     <form wire:submit.prevent="DistributorRequest">
-                                                        <div class="row m-0">
-                                                            <div class="form-group mt-2">
-                                                                <label for="contactDetails">Provide the Name of Distribution List</label>
-                                                                <input wire:model="distributor_name" type="text" class="form-control">
-                                                                @error('distributor_name') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
 
+                                                        <div class="form-group mt-2">
+                                                            <label for="contactDetails">Provide the Name of Distribution List</label>
+                                                            <input wire:model.lazy="distributor_name" type="text" class="form-control">
+                                                            @error('distributor_name') <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+
+
+
+                                                        <div class="form-group mt-2">
+                                                            <label for="contactDetails">Business Justification</label>
+                                                            <input wire:model.lazy="subject" type="text" class="form-control">
+                                                            @error('subject') <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group mt-2">
+                                                            <label for="reason">Specific Information</label>
+                                                            <textarea wire:model.lazy="description" class="form-control"></textarea>
+                                                            @error('description') <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="row m-0" style="margin-left:-10px">
                                                             <div class="row">
                                                                 <div class="mb-3">
-                                                                    <label for="cc_to" class="form-label"> Members to be Added</label>
+
                                                                     <div class="row m-0 p-0">
-                                                                        <p style="font-size: 12px;">
-                                                                            <strong>Request: </strong>
-                                                                            {{ implode(', ', array_unique($selectedPeopleNames)) }}
-                                                                        </p>
+                                                                        <label for="cc_to" class="form-label" style="margin-left:-13px"> Members to be Added :<span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+
                                                                     </div>
                                                                 </div>
                                                                 <div class="row m-0">
@@ -119,14 +132,11 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData as $people)
-
-                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
                                                                         <div class="row align-items-center">
-
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
                                                                             </div>
-
                                                                             <div class="col">
                                                                                 <h6 class="username" style="font-size: 12px; color: white;">
                                                                                     {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
@@ -135,27 +145,13 @@
                                                                                     (#{{ $people->emp_id }})</p>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-
+                                                                    </label>
                                                                     @endforeach
                                                                     @endif
                                                                 </div>
                                                             </div>
+
                                                             @endif
-                                                        </div>
-
-
-                                                        <div class="form-group mt-2">
-                                                            <label for="contactDetails">Business Justification</label>
-                                                            <input wire:model="subject" type="text" class="form-control">
-                                                            @error('subject') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="reason">Specific Information</label>
-                                                            <textarea wire:model="description" class="form-control"></textarea>
-                                                            @error('description') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
                                                         </div>
                                                         <div class="row m-0">
                                                             <label for="fileInput" style="cursor: pointer;">
@@ -183,7 +179,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="modal-backdrop fade show blurred-backdrop"></div>
+                                    <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                     @endif
 
                                 </div>
@@ -223,16 +219,41 @@
                                                     </div>
                                                     <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                     <form wire:submit.prevent="submit">
+
+
+                                                        <div class="form-group mt-2">
+                                                            <label for="selectedEquipment">Select Equipment</label>
+                                                            <select wire:model.lazy="selected_equipment" class="form-control">
+                                                                <option value="keyboard">Select Equipment</option>
+                                                                <option value="keyboard">Keyboard</option>
+                                                                <option value="mouse">Mouse</option>
+                                                                <option value="headset">Headset</option>
+                                                                <option value="monitor">Monitor</option>
+                                                            </select>
+
+                                                            @error('selected_equipment')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+
+
+                                                        <div class="form-group mt-2">
+                                                            <label for="contactDetails">Business Justification</label>
+                                                            <input wire:model.lazy="subject" type="text" class="form-control">
+                                                            @error('subject') <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group mt-2">
+                                                            <label for="reason">Specific Information</label>
+                                                            <textarea wire:model="description" class="form-control"></textarea>
+                                                            @error('description') <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
                                                         <div class="row m-0">
                                                             <div class="row">
                                                                 <div class="mb-3">
-                                                                    <label for="cc_to" class="form-label">Request For</label>
-                                                                    <div class="row m-0 p-0">
-                                                                        <p style="font-size: 12px;">
-                                                                            <strong>Request: </strong>
-                                                                            {{ implode(', ', array_unique($selectedPeopleNames)) }}
-                                                                        </p>
-                                                                    </div>
+                                                                    <label for="cc_to" class="form-label">Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+
                                                                 </div>
                                                                 <div class="row m-0">
                                                                     <div class="mb-3 p-0">
@@ -265,14 +286,11 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData as $people)
-
-                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
                                                                         <div class="row align-items-center">
-
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
                                                                             </div>
-
                                                                             <div class="col">
                                                                                 <h6 class="username" style="font-size: 12px; color: white;">
                                                                                     {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
@@ -281,42 +299,13 @@
                                                                                     (#{{ $people->emp_id }})</p>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-
+                                                                    </label>
                                                                     @endforeach
                                                                     @endif
                                                                 </div>
                                                             </div>
+
                                                             @endif
-                                                        </div>
-
-                                                        <div class="form-group mt-2">
-                                                            <label for="selectedEquipment">Select Equipment</label>
-                                                            <select wire:model="selected_equipment" class="form-control">
-                                                                <option value="keyboard">Select Equipment</option>
-                                                                <option value="keyboard">Keyboard</option>
-                                                                <option value="mouse">Mouse</option>
-                                                                <option value="headset">Headset</option>
-                                                                <option value="monitor">Monitor</option>
-                                                            </select>
-
-                                                            @error('selected_equipment')
-                                                            <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-
-
-                                                        <div class="form-group mt-2">
-                                                            <label for="contactDetails">Business Justification</label>
-                                                            <input wire:model="subject" type="text" class="form-control">
-                                                            @error('subject') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="reason">Specific Information</label>
-                                                            <textarea wire:model="description" class="form-control"></textarea>
-                                                            @error('description') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
                                                         </div>
                                                         <div class="row m-0">
                                                             <label for="fileInput" style="cursor: pointer;">
@@ -346,7 +335,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="modal-backdrop fade show blurred-backdrop"></div>
+                                    <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                     @endif
 
                                 </div>
@@ -383,16 +372,33 @@
                                                     </div>
                                                     <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                     <form wire:submit.prevent="Request">
+
+
+
+                                                        <div class="form-group mt-2">
+                                                            <label for="contactDetails">Provide the Name of Mailbox</label>
+                                                            <input wire:model.lazy="mail" type="text" class="form-control">
+                                                            @error('mail') <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="form-group mt-2">
+                                                            <label for="contactDetails">Business Justification</label>
+                                                            <input wire:model.lazy="subject" type="text" class="form-control">
+                                                            @error('subject') <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group mt-2">
+                                                            <label for="reason">Specific Information</label>
+                                                            <textarea wire:model.lazy="description" class="form-control"></textarea>
+                                                            @error('description') <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
                                                         <div class="row m-0">
-                                                            <div class="row">
+                                                            <div class="row m-0">
                                                                 <div class="mb-3">
-                                                                    <label for="cc_to" class="form-label">Please select the users to be added to New Mailbox</label>
-                                                                    <div class="row m-0 p-0">
-                                                                        <p style="font-size: 12px;">
-                                                                            <strong>Request: </strong>
-                                                                            {{ implode(', ', array_unique($selectedPeopleNames)) }}
-                                                                        </p>
-                                                                    </div>
+                                                                    <label for="cc_to" class="form-label" style="margin-left:-15px">Add users to be a New Mailbox : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+
                                                                 </div>
                                                                 <div class="row m-0">
                                                                     <div class="mb-3 p-0">
@@ -425,14 +431,11 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData as $people)
-
-                                                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
                                                                         <div class="row align-items-center">
-
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
                                                                             </div>
-
                                                                             <div class="col">
                                                                                 <h6 class="username" style="font-size: 12px; color: white;">
                                                                                     {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
@@ -441,35 +444,13 @@
                                                                                     (#{{ $people->emp_id }})</p>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-
+                                                                    </label>
                                                                     @endforeach
                                                                     @endif
                                                                 </div>
                                                             </div>
+
                                                             @endif
-                                                        </div>
-
-
-
-                                                        <div class="form-group mt-2">
-                                                            <label for="contactDetails">Provide the Name of Mailbox</label>
-                                                            <input wire:model="mail" type="text" class="form-control">
-                                                            @error('mail') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-
-                                                        <div class="form-group mt-2">
-                                                            <label for="contactDetails">Business Justification</label>
-                                                            <input wire:model="subject" type="text" class="form-control">
-                                                            @error('subject') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="reason">Specific Information</label>
-                                                            <textarea wire:model="description" class="form-control"></textarea>
-                                                            @error('description') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
                                                         </div>
                                                         <div class="row m-0">
                                                             <label for="fileInput" style="cursor: pointer;">
@@ -499,7 +480,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="modal-backdrop fade show blurred-backdrop"></div>
+                                    <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                     @endif
 
                                 </div>
@@ -538,16 +519,40 @@
                                                         </div>
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                         <form wire:submit.prevent="Devops">
+
+
+
+                                                            <div style="display:flex">
+                                                                <div class="form-group mt-2">
+                                                                    <label for="contactDetails">Mobile Number</label>
+                                                                    <input wire:model="mobile" type="text" class="form-control">
+                                                                    @error('mobile') <span class="text-danger">{{ $message }}</span>
+                                                                    @enderror
+                                                                </div>
+                                                                <div class="form-group mt-2 ml-3">
+                                                                    <label for="contactDetails">Email</label>
+                                                                    <input wire:model="mail" type="text" class="form-control">
+                                                                    @error('mail') <span class="text-danger">{{ $message }}</span>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group mt-2">
+                                                                <label for="contactDetails">Business Justification</label>
+                                                                <input wire:model="subject" type="text" class="form-control">
+                                                                @error('subject') <span class="text-danger">{{ $message }}</span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="form-group mt-2">
+                                                                <label for="reason">Specific Information</label>
+                                                                <textarea wire:model="description" class="form-control"></textarea>
+                                                                @error('description') <span class="text-danger">{{ $message }}</span>
+                                                                @enderror
+                                                            </div>
                                                             <div class="row m-0">
                                                                 <div class="row">
                                                                     <div class="mb-3">
-                                                                        <label for="cc_to" class="form-label"> Request For</label>
-                                                                        <div class="row m-0 p-0">
-                                                                            <p style="font-size: 12px;">
-                                                                                <strong>Request: </strong>
-                                                                                {{ implode(', ', array_unique($selectedPeopleNames)) }}
-                                                                            </p>
-                                                                        </div>
+                                                                        <label for="cc_to" class="form-label"> Request For :<span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+
                                                                     </div>
                                                                     <div class="row m-0">
                                                                         <div class="mb-3 p-0">
@@ -580,14 +585,11 @@
                                                                         </div>
                                                                         @else
                                                                         @foreach($peopleData as $people)
-
-                                                                        <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <label wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
                                                                             <div class="row align-items-center">
-
                                                                                 <div class="col-auto">
-                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
                                                                                 </div>
-
                                                                                 <div class="col">
                                                                                     <h6 class="username" style="font-size: 12px; color: white;">
                                                                                         {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
@@ -596,41 +598,13 @@
                                                                                         (#{{ $people->emp_id }})</p>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-
+                                                                        </label>
                                                                         @endforeach
                                                                         @endif
                                                                     </div>
                                                                 </div>
+
                                                                 @endif
-                                                            </div>
-
-
-                                                            <div style="display:flex">
-                                                                <div class="form-group mt-2">
-                                                                    <label for="contactDetails">Mobile Number</label>
-                                                                    <input wire:model="mobile" type="text" class="form-control">
-                                                                    @error('mobile') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
-                                                                <div class="form-group mt-2 ml-3">
-                                                                    <label for="contactDetails">Email</label>
-                                                                    <input wire:model="mail" type="text" class="form-control">
-                                                                    @error('mail') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group mt-2">
-                                                                <label for="contactDetails">Business Justification</label>
-                                                                <input wire:model="subject" type="text" class="form-control">
-                                                                @error('subject') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="form-group mt-2">
-                                                                <label for="reason">Specific Information</label>
-                                                                <textarea wire:model="description" class="form-control"></textarea>
-                                                                @error('description') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
                                                             </div>
                                                             <div class="row m-0">
                                                                 <label for="fileInput" style="cursor: pointer;">
@@ -660,7 +634,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                                        <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
                                     <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="IdRequest">View Details</p>
@@ -696,77 +670,6 @@
                                                         </div>
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                         <form wire:submit.prevent="Devops">
-                                                            <div class="row m-0">
-                                                                <div class="row">
-                                                                    <div class="mb-3">
-                                                                        <label for="cc_to" class="form-label"> Request For</label>
-                                                                        <div class="row m-0 p-0">
-                                                                            <p style="font-size: 12px;">
-                                                                                <strong>Request: </strong>
-                                                                                {{ implode(', ', array_unique($selectedPeopleNames)) }}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row m-0">
-                                                                        <div class="mb-3 p-0">
-                                                                            <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
-                                                                                <i class="fa fa-plus me-3"></i>
-                                                                                Add
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="row m-0 p-0">
-                                                                            <p style="font-size: 12px;">
-                                                                                <strong>Request: </strong>
-                                                                                {{ implode(', ', array_unique($selectedPeopleNames)) }}
-                                                                            </p>
-                                                                        </div>
-                                                                        @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
-                                                                    </div>
-                                                                </div>
-                                                                @if($isNames)
-                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;">
-                                                                    <div style="overflow-y:auto;max-height:300px;width:330px">
-                                                                        <div class="input-group" style="margin-bottom: 10px;">
-                                                                            <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                            <div class="input-group-append">
-                                                                                <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn me-3" type="button">
-                                                                                    <i style="text-align: center;" class="fa fa-search"></i>
-                                                                                </button>
-                                                                                <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                    <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                        @if ($peopleData->isEmpty())
-                                                                        <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
-                                                                            No People Found
-                                                                        </div>
-                                                                        @else
-                                                                        @foreach($peopleData as $people)
-
-                                                                        <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                                                            <div class="row align-items-center">
-
-                                                                                <div class="col-auto">
-                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
-                                                                                </div>
-
-                                                                                <div class="col">
-                                                                                    <h6 class="username" style="font-size: 12px; color: white;">
-                                                                                        {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
-                                                                                    </h6>
-                                                                                    <p class="mb-0" style="font-size: 12px; color: white;">
-                                                                                        (#{{ $people->emp_id }})</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        @endforeach
-                                                                        @endif
-                                                                    </div>
-                                                                </div>
-                                                                @endif
-                                                            </div>
 
 
                                                             <div style="display:flex">
@@ -796,6 +699,70 @@
                                                                 @enderror
                                                             </div>
                                                             <div class="row m-0">
+                                                                <div class="row">
+                                                                    <div class="mb-3">
+                                                                        <label for="cc_to" class="form-label"> Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+                                                                        <div class="row m-0 p-0">
+                                                                            <p style="font-size: 12px;">
+                                                                                <strong>Request: </strong>
+                                                                                {{ implode(', ', array_unique($selectedPeopleNames)) }}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-0">
+                                                                        <div class="mb-3 p-0">
+                                                                            <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
+                                                                                <i class="fa fa-plus me-3"></i>
+                                                                                Add
+                                                                            </button>
+                                                                        </div>
+
+                                                                        @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
+                                                                    </div>
+                                                                </div>
+                                                                @if($isNames)
+                                                                <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;">
+                                                                    <div style="overflow-y:auto;max-height:300px;width:330px">
+                                                                        <div class="input-group" style="margin-bottom: 10px;">
+                                                                            <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                            <div class="input-group-append">
+                                                                                <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn me-3" type="button">
+                                                                                    <i style="text-align: center;" class="fa fa-search"></i>
+                                                                                </button>
+                                                                                <button wire:click="closePeoples" type="button" style="margin-top: -7px;" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true" style="color: white; font-size: 24px; font-weight: 300">x</span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                        @if ($peopleData->isEmpty())
+                                                                        <div class="container" style="text-align: center; color: white;font-size:12px;overflow-y:auto;max-height:300px">
+                                                                            No People Found
+                                                                        </div>
+                                                                        @else
+                                                                        @foreach($peopleData as $people)
+                                                                        <label wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                            <div class="row align-items-center">
+                                                                                <div class="col-auto">
+                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
+                                                                                </div>
+                                                                                <div class="col">
+                                                                                    <h6 class="username" style="font-size: 12px; color: white;">
+                                                                                        {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
+                                                                                    </h6>
+                                                                                    <p class="mb-0" style="font-size: 12px; color: white;">
+                                                                                        (#{{ $people->emp_id }})</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </label>
+                                                                        @endforeach
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+
+                                                                @endif
+                                                            </div>
+
+                                                            <div class="row m-0">
                                                                 <label for="fileInput" style="cursor: pointer;">
                                                                     <i class="fa fa-paperclip"></i> Attach Image
                                                                 </label>
@@ -823,7 +790,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                                        <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
                                     <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;" wire:click="MmsRequest">View Details</p>
@@ -860,22 +827,35 @@
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
 
                                                         <form wire:submit.prevent="DistributorRequest">
-                                                            <div class="row m-0">
-                                                                <div class="form-group mt-2">
-                                                                    <label for="contactDetails">Provide the Name of Distribution List</label>
-                                                                    <input wire:model="distributor_name" type="text" class="form-control">
-                                                                    @error('distributor_name') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
 
+                                                            <div class="form-group mt-2">
+                                                                <label for="contactDetails">Provide the Name of Distribution List</label>
+                                                                <input wire:model.lazy="distributor_name" type="text" class="form-control">
+                                                                @error('distributor_name') <span class="text-danger">{{ $message }}</span>
+                                                                @enderror
+                                                            </div>
+
+
+
+                                                            <div class="form-group mt-2">
+                                                                <label for="contactDetails">Business Justification</label>
+                                                                <input wire:model.lazy="subject" type="text" class="form-control">
+                                                                @error('subject') <span class="text-danger">{{ $message }}</span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="form-group mt-2">
+                                                                <label for="reason">Specific Information</label>
+                                                                <textarea wire:model.lazy="description" class="form-control"></textarea>
+                                                                @error('description') <span class="text-danger">{{ $message }}</span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="row m-0" style="margin-left:-10px">
                                                                 <div class="row">
                                                                     <div class="mb-3">
-                                                                        <label for="cc_to" class="form-label"> Members to be Added</label>
+
                                                                         <div class="row m-0 p-0">
-                                                                            <p style="font-size: 12px;">
-                                                                                <strong>Request: </strong>
-                                                                                {{ implode(', ', array_unique($selectedPeopleNames)) }}
-                                                                            </p>
+                                                                            <label for="cc_to" class="form-label" style="margin-left:-13px"> Members to be Added :<span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+
                                                                         </div>
                                                                     </div>
                                                                     <div class="row m-0">
@@ -886,7 +866,7 @@
                                                                             </button>
                                                                         </div>
 
-                                                                        @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
+                                                                        @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
@@ -909,14 +889,11 @@
                                                                         </div>
                                                                         @else
                                                                         @foreach($peopleData as $people)
-
-                                                                        <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <label wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
                                                                             <div class="row align-items-center">
-
                                                                                 <div class="col-auto">
-                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
                                                                                 </div>
-
                                                                                 <div class="col">
                                                                                     <h6 class="username" style="font-size: 12px; color: white;">
                                                                                         {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
@@ -925,27 +902,13 @@
                                                                                         (#{{ $people->emp_id }})</p>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-
+                                                                        </label>
                                                                         @endforeach
                                                                         @endif
                                                                     </div>
                                                                 </div>
+
                                                                 @endif
-                                                            </div>
-
-
-                                                            <div class="form-group mt-2">
-                                                                <label for="contactDetails">Business Justification</label>
-                                                                <input wire:model="subject" type="text" class="form-control">
-                                                                @error('subject') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="form-group mt-2">
-                                                                <label for="reason">Specific Information</label>
-                                                                <textarea wire:model="description" class="form-control"></textarea>
-                                                                @error('description') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
                                                             </div>
                                                             <div class="row m-0">
                                                                 <label for="fileInput" style="cursor: pointer;">
@@ -975,7 +938,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                                        <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
                                     <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="DistributionRequest">View Details</p>
@@ -1017,13 +980,8 @@
                                                             <div class="row m-0">
                                                                 <div class="row">
                                                                     <div class="mb-3">
-                                                                        <label for="cc_to" class="form-label"> Request For</label>
-                                                                        <div class="row m-0 p-0">
-                                                                            <p style="font-size: 12px;">
-                                                                                <strong>Request: </strong>
-                                                                                {{ implode(', ', array_unique($selectedPeopleNames)) }}
-                                                                            </p>
-                                                                        </div>
+                                                                        <label for="cc_to" class="form-label"> Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+
                                                                     </div>
                                                                     <div class="row m-0">
                                                                         <div class="mb-3 p-0">
@@ -1056,14 +1014,11 @@
                                                                         </div>
                                                                         @else
                                                                         @foreach($peopleData as $people)
-
-                                                                        <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <label wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
                                                                             <div class="row align-items-center">
-
                                                                                 <div class="col-auto">
-                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
                                                                                 </div>
-
                                                                                 <div class="col">
                                                                                     <h6 class="username" style="font-size: 12px; color: white;">
                                                                                         {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
@@ -1072,12 +1027,12 @@
                                                                                         (#{{ $people->emp_id }})</p>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-
+                                                                        </label>
                                                                         @endforeach
                                                                         @endif
                                                                     </div>
                                                                 </div>
+
                                                                 @endif
                                                             </div>
 
@@ -1085,26 +1040,26 @@
                                                             <div style="display:flex">
                                                                 <div class="form-group mt-2">
                                                                     <label for="contactDetails">Mobile Number</label>
-                                                                    <input wire:model="mobile" type="text" class="form-control">
+                                                                    <input wire:model.lazy="mobile" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                                 <div class="form-group mt-2 ml-3">
                                                                     <label for="contactDetails">Email</label>
-                                                                    <input wire:model="mail" type="text" class="form-control">
+                                                                    <input wire:model.lazy="mail" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification</label>
-                                                                <input wire:model="subject" type="text" class="form-control">
+                                                                <input wire:model.lazy="subject" type="text" class="form-control">
                                                                 @error('subject') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="reason">Specific Information</label>
-                                                                <textarea wire:model="description" class="form-control"></textarea>
+                                                                <textarea wire:model.lazy="description" class="form-control"></textarea>
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
@@ -1136,7 +1091,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                                        <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
                                     <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="LapRequest">View Details</p>
@@ -1189,13 +1144,8 @@
                                                             <div class="row m-0">
                                                                 <div class="row">
                                                                     <div class="mb-3">
-                                                                        <label for="cc_to" class="form-label"> Request For</label>
-                                                                        <div class="row m-0 p-0">
-                                                                            <p style="font-size: 12px;">
-                                                                                <strong>Request: </strong>
-                                                                                {{ implode(', ', array_unique($selectedPeopleNames)) }}
-                                                                            </p>
-                                                                        </div>
+                                                                        <label for="cc_to" class="form-label"> Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+
                                                                     </div>
                                                                     <div class="row m-0">
                                                                         <div class="mb-3 p-0">
@@ -1228,14 +1178,11 @@
                                                                         </div>
                                                                         @else
                                                                         @foreach($peopleData as $people)
-
-                                                                        <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <label wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
                                                                             <div class="row align-items-center">
-
                                                                                 <div class="col-auto">
-                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                                                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
                                                                                 </div>
-
                                                                                 <div class="col">
                                                                                     <h6 class="username" style="font-size: 12px; color: white;">
                                                                                         {{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}
@@ -1244,12 +1191,12 @@
                                                                                         (#{{ $people->emp_id }})</p>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-
+                                                                        </label>
                                                                         @endforeach
                                                                         @endif
                                                                     </div>
                                                                 </div>
+
                                                                 @endif
                                                             </div>
 
@@ -1257,26 +1204,26 @@
                                                             <div style="display:flex">
                                                                 <div class="form-group mt-2">
                                                                     <label for="contactDetails">Mobile Number</label>
-                                                                    <input wire:model="mobile" type="text" class="form-control">
+                                                                    <input wire:model.lazy="mobile" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                                 <div class="form-group mt-2 ml-3">
                                                                     <label for="contactDetails">Email</label>
-                                                                    <input wire:model="mail" type="text" class="form-control">
+                                                                    <input wire:model.lazy="mail" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification</label>
-                                                                <input wire:model="subject" type="text" class="form-control">
+                                                                <input wire:model.lazy="subject" type="text" class="form-control">
                                                                 @error('subject') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="reason">Specific Information</label>
-                                                                <textarea wire:model="description" class="form-control"></textarea>
+                                                                <textarea wire:model.lazy="description" class="form-control"></textarea>
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
@@ -1308,7 +1255,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                                        <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
                                     <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="DevopsRequest">View Details</p>

@@ -28,11 +28,104 @@ class LeavePage extends Component
     public $leavePendingRequest;
     public $leavePending;
     public $activeSection = 'applyButton';
+    public $showRestricted = false;
+    public $showLeave = false;
+    public $showPending = false;
+    public $showHistory = false;
+    public $showLeaveCancel = false;
+    public $showCompOff = false;
+    public $showLeaveApply = true;
 
-    public function toggleDetails($section)
+
+    public function toggleSection($section)
     {
-        $this->activeSection = $section;
+        // Toggle active section and other section flags based on the clicked section
+        switch ($section) {
+            case 'applyButton':
+                $this->activeSection = 'applyButton';
+                $this->showRestricted = false;
+                $this->showLeave = false;
+                $this->showPending = false;
+                $this->showHistory = false;
+                $this->showLeaveCancel = false;
+                $this->showCompOff = false;
+                $this->showLeaveApply =true;
+                break;
+            case 'pendingButton':
+                $this->activeSection = 'pendingButton';
+                $this->showPending = true;
+                $this->showRestricted = false;
+                $this->showLeave = false;
+                $this->showLeaveCancel = false;
+                $this->showCompOff = false;
+                break;
+            case 'historyButton':
+                $this->activeSection = 'historyButton';
+                $this->showPending = false;
+                $this->showHistory = true;
+                $this->showRestricted = false;
+                $this->showLeave = false;
+                $this->showLeaveCancel = false;
+                $this->showCompOff = false;
+                break;
+            default:
+                $this->activeSection = 'applyButton';
+                $this->showRestricted = false;
+                $this->showLeave = false;
+                $this->showLeaveCancel = false;
+                $this->showCompOff = false;
+                break;
+        }
     }
+
+    public function toggleSideSection($section)
+    {
+        switch ($section) {
+            case 'restricted':
+                $this->showRestricted = true;
+                $this->showLeave = false;
+                $this->showLeaveCancel = false;
+                $this->showCompOff = false;
+                $this->showLeaveApply = false;
+                break;
+            case 'leave':
+                $this->showRestricted = false;
+                $this->showLeave = false;
+                $this->showLeaveCancel = false;
+                $this->showCompOff = false;
+                $this->showLeaveApply = true;
+                break;
+            case 'leaveCancel':
+                $this->showRestricted = false;
+                $this->showLeave = false;
+                $this->showLeaveCancel = true;
+                $this->showCompOff = false;
+                $this->showLeaveApply = false;
+                break;
+            case 'compOff':
+                $this->showRestricted = false;
+                $this->showLeave = false;
+                $this->showLeaveCancel = false;
+                $this->showCompOff = true;
+                $this->showLeaveApply = false;
+                break;
+        }
+    }
+    public  $resShowinfoMessage = true;
+    public  $resShowinfoButton = false;
+    public function toggleInfoRes()
+    {
+        $this->resShowinfoMessage = !$this->resShowinfoMessage;
+        $this->resShowinfoButton = !$this->resShowinfoButton;
+    }
+    public  $compOffShowinfoMessage = true;
+    public  $compOffShowinfoButton = false;
+    public function toggleInfoCompOff()
+    {
+        $this->compOffShowinfoMessage = !$this->compOffShowinfoMessage;
+        $this->compOffShowinfoButton = !$this->compOffShowinfoButton;
+    }
+
     public function mount()
     {
         // Get the logged-in user's ID and company ID
@@ -159,17 +252,17 @@ class LeavePage extends Component
         try {
             // Find the leave request by ID
             $leaveRequest = LeaveRequest::find($leaveRequestId);
-            
+
             // Check if leave request exists
             if (!$leaveRequest) {
                 throw new \Exception("Leave request not found.");
             }
-            
+
             // Update status to 'Withdrawn'
             $leaveRequest->status = 'Withdrawn';
             $leaveRequest->save();
             $leaveRequest->touch();
-            
+
             // Flash success message
             session()->flash('message', 'Leave application Withdrawn.');
         } catch (\Exception $e) {
@@ -177,7 +270,7 @@ class LeavePage extends Component
             Log::error('Error canceling leave: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while canceling leave request. Please try again later.');
         }
-        
+
         // Redirect back to leave page
         return redirect()->to('/leave-page');
     }

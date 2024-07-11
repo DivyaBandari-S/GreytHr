@@ -1,6 +1,5 @@
 <div class="container">
-    <div class="container" style="width:auto;max-width:60rem;padding: 0.6rem; background-color:rgb(2,17,79);color:white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);text-align:center">
-        <b> Time Sheet Entries</b>
+    <div class="container" style="width:auto;max-width:60rem;padding: 1rem; background-color:rgb(2,17,79);color:white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);text-align:center">
     </div>
 
     @if($tab=="timeSheet")
@@ -33,8 +32,9 @@
                     <label for="time_sheet_type" class="input-label" style="font-weight: bold; font-size: 0.8rem; margin-right: 10px;">Time Sheet Type:</label>
                     <div style="display: flex; gap: 1rem;">
                         <label style="font-size: 0.8rem; display: flex; align-items: center;">
-                            <input wire:change="addTask" wire:model="time_sheet_type" type="radio" name="time_sheet_type" value="weekly" style="margin-right: 0.25rem;"> Weekly
+                            <div wire:change="addTask" wire:model="time_sheet_type"name="time_sheet_type" value="weekly" style="margin-right: 0.25rem;"> Weekly</div>
                         </label>
+
                     </div>
                 </div>
                 @error('time_sheet_type')
@@ -176,7 +176,7 @@
             </div>
 
             <div style="text-align: center;margin-top:1rem">
-                <button type="submit" style="width: 10%; padding: 0.25rem; background-color: #3498db; color: #fff; border: none; border-radius: 0.25rem; cursor: pointer; transition: background-color 0.3s ease;font-size:0.8rem" class="submit-btn">Submit</button>
+                <button type="submit"  class="submit-btn">Submit</button>
             </div>
         </form>
 

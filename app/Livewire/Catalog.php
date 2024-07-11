@@ -1,4 +1,16 @@
 <?php
+// File Name                       : Catalog.php
+// Description                     : This file contains the information about various IT requests related to the catalog. 
+//                                   It includes functionality for adding members to distribution lists and mailboxes, requesting IT accessories, 
+//                                   new ID cards, MMS accounts, new distribution lists, laptops, new mailboxes, and DevOps access. 
+// Creator                         : Ashannagari Archana
+// Email                           : archanaashannagari@gmail.com
+// Organization                    : PayG.
+// Date                            : 2023-09-07
+// Framework                       : Laravel (10.10 Version)
+// Programming Language            : PHP (8.1 Version)
+// Database                        : MySQL
+// Models                          : HelpDesk,EmployeeDetails
 
 namespace App\Livewire;
 
@@ -10,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 
 
 use App\Models\HelpDesks;
+use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 
 class Catalog extends Component
@@ -71,6 +84,31 @@ class Catalog extends Component
     public $AddRequestaceessDialog = false;
     public $justification;
     public $information;
+    protected $rules = [
+        'subject' => 'required|string|max:255',
+        'mail' => 'required|email|unique:help_desks',
+        'mobile' => 'required|string|max:15',
+        'description' => 'required|string',
+
+
+        'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
+
+    ];
+    protected $messages = [
+        'distributor_name' => 'distributor name field is required.',
+        'subject.required' => 'subject field is required.',
+        'mail.required' => ' email field is required.',
+        'mail.email' => ' email must be a valid email address.',
+        'mobile.required' => ' mobile number is required.',
+        'mobile.max' => ' mobile number must not exceed 15 characters.',
+        'description.required' => ' description field is required.',
+        'selected_equipment.required' => 'You must select at least one equipment.',
+
+    ];
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
     public function ItRequest()
     {
         $this->ItRequestaceessDialog = true; // Open the Medical (Sec 80D) modal
@@ -234,17 +272,25 @@ class Catalog extends Component
 
     public function selectPerson($personId)
     {
-        $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
+        try {
+            $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
 
-        if ($selectedPerson) {
-            if (in_array($personId, $this->selectedPeople)) {
-                $this->selectedPeopleNames[] = $selectedPerson->first_name . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')';
-            } else {
-                $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$selectedPerson->first_name . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')']);
+            if ($selectedPerson) {
+                if (in_array($personId, $this->selectedPeople)) {
+                    $this->selectedPeopleNames[] =  ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
+                } else {
+                    $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')']);
+                }
+                $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
             }
-            $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+        } catch (\Exception $e) {
+            // Log the exception message or handle it as needed
+            Log::error('Error selecting person: ' . $e->getMessage());
+            // Optionally, you can set an error message to display to the user
+            $this->dispatchBrowserEvent('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
         }
     }
+
 
 
     public function filter()
@@ -279,162 +325,184 @@ class Catalog extends Component
 
     public function Devops()
     {
-
         $this->validate([
-
             'subject' => 'required|string|max:255',
             'mail' => 'required|email|unique:help_desks',
             'mobile' => 'required|string|max:15',
             'description' => 'required|string',
-            'file_path' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
-            'cc_to' => 'required',
-            'image' => 'image|max:2048',
         ]);
-        if ($this->image) {
-            $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-            $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-            $this->image = 'uploads/help-desk-images/' . $fileName;
+
+        try {
+
+
+            if ($this->image) {
+                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
+                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+                $filePath = 'uploads/help-desk-images/' . $fileName;
+            } else {
+                $filePath = 'N/A';
+            }
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+            HelpDesks::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+                'mail' => $this->mail,
+                'mobile' => $this->mobile,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path' => $this->image ?? '-',
+                'cc_to' => $this->cc_to ?? '-',
+                'category' => $this->category,
+                'distributor_name' => 'N/A',
+            ]);
+
+            session()->flash('message', 'Request created successfully.');
+            $this->reset();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->setErrorBag($e->validator->getMessageBag());
+        } catch (\Exception $e) {
+            Log::error('Error creating request: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-        HelpDesks::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-            'mail' => $this->mail,
-            'mobile' => $this->mobile,
-            'subject' => $this->subject,
-            'description' => $this->description,
-            'file_path' => $this->image,
-            'cc_to' => $this->cc_to,
-            'category' => $this->category,
-            'distributor_name' => 'N/A',
-
-        ]);
-
-        session()->flash('message', ' Request created successfully.');
-
-        $this->reset();
     }
-
 
     public function Request()
     {
 
         $this->validate([
-
             'subject' => 'required|string|max:255',
             'mail' => 'required|email|unique:help_desks',
             'description' => 'required|string',
-            'file_path' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
-            'cc_to' => 'required',
-
-
-            'image' => 'image|max:2048',
         ]);
-        if ($this->image) {
-            $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-            $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-            $this->image = 'uploads/help-desk-images/' . $fileName;
+        try {
+
+
+            if ($this->image) {
+                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
+                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+                $filePath = 'uploads/help-desk-images/' . $fileName;
+            } else {
+                $filePath = 'N/A';
+            }
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+            HelpDesks::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+                'mail' => $this->mail,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path' => $this->image,
+                'cc_to' => $this->cc_to ?? '-',
+                'category' => $this->category,
+                'mobile' => 'N/A',
+                'distributor_name' => 'N/A',
+            ]);
+
+            session()->flash('message', 'Request created successfully.');
+            $this->reset();
+        } catch (\Exception $e) {
+            Log::error('Error creating request: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-        HelpDesks::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-            'mail' => $this->mail,
-            'subject' => $this->subject,
-            'description' => $this->description,
-            'file_path' => $this->image,
-            'cc_to' => $this->cc_to,
-            'category' => $this->category,
-            'mobile' => 'N/A',
-            'distributor_name' => 'N/A',
-
-        ]);
-
-        session()->flash('message', 'Request created successfully.');
-        $this->reset();
     }
-
 
     public function DistributorRequest()
     {
 
         $this->validate([
-
-            'distributor_name' => 'required',
+            'distributor_name' => 'required|string',
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
-            'file_path' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
-            'cc_to' => 'required',
-
-
-            'image' => 'image|max:2048',
         ]);
-        if ($this->image) {
-            $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-            $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-            $this->image = 'uploads/help-desk-images/' . $fileName;
+        try {
+
+
+            if ($this->image) {
+                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
+                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+                $filePath = 'uploads/help-desk-images/' . $fileName;
+            } else {
+                $filePath = 'N/A';
+            }
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+            HelpDesks::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+                'distributor_name' => $this->distributor_name,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path' => $this->image,
+                'cc_to' => $this->cc_to ?? '-',
+                'category' => $this->category,
+                'mail' => 'N/A',
+                'mobile' => 'N/A',
+            ]);
+
+            session()->flash('message', 'Request created successfully.');
+            $this->reset();
+        } catch (\Exception $e) {
+            Log::error('Error creating request: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-        HelpDesks::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-            'distributor_name' => $this->distributor_name,
-            'subject' => $this->subject,
-            'description' => $this->description,
-            'file_path' => $this->image,
-            'cc_to' => $this->cc_to,
-            'category' => $this->category,
-            'mail' => 'N/A',
-            'mobile' => 'N/A',
-        ]);
-
-        session()->flash('message', 'Request created successfully.');
-
-
-        $this->reset();
     }
+
 
     public function submit()
     {
-
+        // Validate the input data
         $this->validate([
-
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
-            'file_path' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
-            'cc_to' => 'required',
             'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
-
-            'image' => 'image|max:2048',
         ]);
-        if ($this->image) {
-            $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-            $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-            $this->image = 'uploads/help-desk-images/' . $fileName;
+
+        try {
+            // Handle file upload
+            if ($this->image) {
+                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
+                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+                $filePath = 'uploads/help-desk-images/' . $fileName;
+            } else {
+                $filePath = 'N/A';
+            }
+
+            // Get the employee details
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+            // Create the HelpDesk request
+            HelpDesks::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path' => $this->image,
+                'cc_to' => $this->cc_to ?? '-',
+                'selected_equipment' => $this->selected_equipment,
+                'category' => $this->category ?? '-',
+                'mail' => 'N/A',
+                'mobile' => 'N/A',
+                'distributor_name' => 'N/A',
+            ]);
+
+            // Flash success message
+            session()->flash('message', 'Request for IT Accessories created successfully.');
+
+            // Reset the form fields
+            $this->reset();
+        } catch (\Exception $e) {
+            // Log the exception
+            Log::error('Error creating IT Accessories request: ' . $e->getMessage());
+
+            // Flash error message
+            session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-        HelpDesks::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-
-            'subject' => $this->subject,
-            'description' => $this->description,
-            'file_path' => $this->image,
-            'cc_to' => $this->cc_to,
-            'selected_equipment' => $this->selected_equipment,
-            'category' => $this->category,
-            'mail' => 'N/A',
-            'mobile' => 'N/A',
-            'distributor_name' => 'N/A',
-        ]);
-
-        session()->flash('message', 'Request for IT Accessories created successfully.');
-        $this->reset();
     }
+
 
 
     protected $listeners = ['closeModal'];

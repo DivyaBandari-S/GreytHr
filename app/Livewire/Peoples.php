@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Services\GoogleDriveService;
+use Illuminate\Support\Facades\Log;
+
 class Peoples extends Component
 {
     public $searchTerm = '';
@@ -24,7 +26,7 @@ class Peoples extends Component
         try {
             $this->selectedPerson = EmployeeDetails::where('emp_id', $empId)->first();
         } catch (\Exception $e) {
-            \Log::error('Error in selectPerson method: ' . $e->getMessage());
+            Log::error('Error in selectPerson method: ' . $e->getMessage());
         }
     }
     
@@ -35,7 +37,7 @@ class Peoples extends Component
         try {
             $this->selectStarredPeoples = StarredPeople::with('emp')->where('id', $id)->first();
         } catch (\Exception $e) {
-            \Log::error('Error in starredPersonById method: ' . $e->getMessage());
+            Log::error('Error in starredPersonById method: ' . $e->getMessage());
         }
     }
     
@@ -54,7 +56,7 @@ class Peoples extends Component
     
             $this->peopleFound = count($this->filteredPeoples) > 0;
         } catch (\Exception $e) {
-            \Log::error('Error in filter method: ' . $e->getMessage());
+            Log::error('Error in filter method: ' . $e->getMessage());
         }
     }
     
@@ -76,7 +78,7 @@ class Peoples extends Component
     
             $this->peopleFound = count($this->filteredStarredPeoples) > 0;
         } catch (\Exception $e) {
-            \Log::error('Error in starredFilter method: ' . $e->getMessage());
+            Log::error('Error in starredFilter method: ' . $e->getMessage());
         }
     }
     
@@ -117,7 +119,7 @@ class Peoples extends Component
             }
             return redirect()->to('/PeoplesList');
         } catch (\Exception $e) {
-            \Log::error('Error in toggleStar method: ' . $e->getMessage());
+            Log::error('Error in toggleStar method: ' . $e->getMessage());
         }
     }
     
@@ -134,24 +136,23 @@ class Peoples extends Component
     
             return redirect('/PeoplesList');
         } catch (\Exception $e) {
-            \Log::error('Error in removeToggleStar method: ' . $e->getMessage());
+            Log::error('Error in removeToggleStar method: ' . $e->getMessage());
         }
     }
     
     public $starredPeoples;
     public $starredList;
     public $starredfirst;
-    
+
     public function render()
     {
         try {
             $companyId = Auth::user()->company_id;
-    
             $this->peoples = EmployeeDetails::with('starredPeople')->where('company_id', $companyId)
                 ->orderBy('first_name')
                 ->orderBy('last_name')
                 ->get();
-    
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
     
             $this->starredList = StarredPeople::with('emp')->where('emp_id', $employeeId)->orderBy('created_at', 'desc')->get();
@@ -163,7 +164,7 @@ class Peoples extends Component
                 'peopleData' => $peopleData,
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error in render method: ' . $e->getMessage());
+            Log::error('Error in render method: ' . $e->getMessage());
             return view('livewire.peoples')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
         }
     }

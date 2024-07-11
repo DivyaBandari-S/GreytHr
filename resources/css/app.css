@@ -10,12 +10,11 @@
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
     background-color: white;
-    background-color:rgba(52, 213, 157, 0.849);
+    background-color: rgb(255, 236, 248);
     padding: 20px;
     width: 80%;
     margin-top: 30px;
     border-radius: 5px;
-
 }
 .primarySideBar {
     font-family: "Montserrat", sans-serif;
@@ -352,7 +351,7 @@ body {
     background-color: white;
     color: rgb(2, 17, 79);
     font-weight: 500;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 6px 12px;
     font-size: 12px;
     border: 1px solid rgb(2, 17, 79) !important;
@@ -764,7 +763,7 @@ button.close-button {
 .nav-item .nav-link {
     color: #6c7e90;
     text-decoration: none;
-    font-size: 11px;
+    font-size: 12px;
     cursor: pointer;
     font-weight: 500;
     /* padding: 0 auto; */
@@ -951,11 +950,11 @@ button.close-button {
 }
 /* content slot scrolling */
 .slot {
-    max-height: 520px;
+    max-height: 88vh;
     overflow-y: auto;
     margin: 0;
     background: #f5f5f5;
-    height: calc(100vh - 84px);
+    height: 88vh;
     overflow-y: auto;
     font-family: "Montserrat", sans-serif;
 }
@@ -1044,7 +1043,7 @@ button.close-button {
         display: none !important;
     }
     .scrollable-container {
-        height: 50%;
+        height: 70%;
         max-height: 90%;
         overflow-y: auto;
     }
@@ -1065,7 +1064,7 @@ button.close-button {
 
 @media only screen and (min-width: 1440px) {
     .slot {
-        max-height: 660px;
+        max-height: 88vh;
         overflow-x: hidden;
         overflow-y: auto;
     }
@@ -1073,8 +1072,9 @@ button.close-button {
         width: 230px;
         padding: 0 5px;
         margin: 0;
+        height: 100vh;
         display: flex;
-        height: 750px;
+        max-height: 100vh;
     }
 }
 /* end of app.blade */
@@ -1715,7 +1715,7 @@ td {
     font-size: 0.795rem;
 }
 .table tbody td {
-    border-right: 1px solid #d5d5d5; /* Vertical border color and width */a
+    border-right: 1px solid #d5d5d5; /* Vertical border color and width */
 }
 
 /* Remove right border for the last cell in each row to avoid extra border */
@@ -2110,10 +2110,18 @@ input[type="radio"] {
 
 .info-paragraph {
     font-size: 12px;
+    font-weight:500; color:#3a9efd;cursor:pointer;
+}
+.hideInfo {
+    font-weight: 500;
+    color: #3a9efd;
+    font-size: 12px;
+    cursor: pointer;
 }
 .hide-leave-info {
     background-color: #ffffe8;
 }
+
 
 .accordion-heading {
     background-color: #fff;
@@ -2166,6 +2174,11 @@ input[type="radio"] {
     color: #3a9efd;
     border: 1px solid #3a9efd;
 }
+
+.arrow-btn.active {
+    color: #3a9efd; /* Color for active state */
+    border-color: #3a9efd; /* Border color for active state */
+}
 .side {
     display: flex;
     flex-direction: row;
@@ -2214,6 +2227,14 @@ input[type="radio"] {
     border: 1px solid #ccc;
     padding: 20px;
     gap: 10px;
+}
+.accordionContentSpan{
+    color: #778899;
+    font-size: 12px;
+    font-weight: 500;
+}
+.accordionContentSpanValue{
+    color: #36454F; font-size: 12px; font-weight: 500;
 }
 .hide-info {
     display: flex;
@@ -3152,7 +3173,7 @@ select .yearSelect {
     padding: 10px 15px;
     justify-content: space-between;
 }
-.custom-button-leave {
+/* .custom-button-leave {
     padding: 2px;
     margin-bottom: 15px;
     background-color: #3eb0f7;
@@ -3161,7 +3182,7 @@ select .yearSelect {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-}
+} */
 
 .search-input-leave input[type="text"] {
     padding: 3px;
@@ -4073,6 +4094,13 @@ p::first-letter {
 }
 
 /* ///chat styles */
+.hover-shadow {
+    transition: box-shadow 0.3s ease;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
 .employees-details-chat {
     color: #333;
     font-weight: 500;
@@ -4170,6 +4198,7 @@ p::first-letter {
 .position-relative {
     position: relative;
 }
+
 .arrow-down {
     position: absolute;
     top: 50%;

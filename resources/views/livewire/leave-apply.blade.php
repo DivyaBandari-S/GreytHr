@@ -12,15 +12,16 @@
     <div class="applyContainer bg-white">
         @if($showinfoMessage)
         <div class="hide-leave-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
-            <p class="mb-0" style="font-size:11px;">Leave is earned by an employee and granted by the employer to take time off work. The employee is free to avail this leave in accordance with the company policy.</p>
-            <p class="mb-0" wire:click="toggleInfo" style="font-size:12px;font-weight:500; color:#3a9efd;cursor:pointer;">Hide</p>
+            <p class="mb-0" style="font-size:11px;">Leave is earned by an employee and granted by the employer to take time off work.  The employee is free to<br>
+                 avail this leave in accordance with the company policy.</p>
+            <p class="mb-0 hideInfo" wire:click="toggleInfo">Hide</p>
         </div>
         @endif
 
         <div class="d-flex justify-content-between">
-            <p style="font-weight:500; font-size:14px;">Applying for Leave</p>
+            <p class="applyingFor">Applying for Leave</p>
             @if($showinfoButton)
-            <p class="info-paragraph" wire:click="toggleInfo" style="font-size:12px;font-weight:500; color:#3a9efd;cursor:pointer;">Info</p>
+            <p class="info-paragraph" wire:click="toggleInfo">Info</p>
             @endif
         </div>
         <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
@@ -36,18 +37,18 @@
                         ->select('companies.company_logo', 'companies.company_name')
                         ->first();
                         @endphp
+                        <option value="Causal Leave">Casual Leave</option>
                         @if (($differenceInMonths < 6) && ($employeeId !==$managerInfo->manager_id))
                             <option value="Causal Leave Probation">Casual Leave Probation</option>
                             @endif
                             <option value="Loss of Pay">Loss of Pay</option>
+                            <option value="Marriage Leave">Marriage Leave</option>
                             @if($employeeGender && $employeeGender->gender === 'Female')
                             <option value="Maternity Leave">Maternity Leave</option>
                             @else
                             <option value="Paternity Leave">Paternity Leave</option>
                             @endif
                             <option value="Sick Leave">Sick Leave</option>
-                            <option value="Causal Leave">Casual Leave</option>
-                            <option value="Marriage Leave">Marriage Leave</option>
                     </select>
                     <br>
                     @error('leave_type') <span class="text-danger">{{ $message }}</span> @enderror
@@ -194,7 +195,7 @@
                         @endif
                         @endif
                         @else
-                        0
+                        <span class="normalText">0</span>
                         @endif
                     </div>
 
@@ -244,70 +245,78 @@
                     </div>
                 </div>
                 @endif
+                <!-- Your Blade file -->
                 @if($show_reporting)
                 <div class="reporting" wire:ignore.self>
-                    @empty($loginEmpManagerProfile)
+                    @if(!$loginEmpManagerProfile)
                     <div class="employee-profile-image-container">
                         <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
                     @else
                     <div class="employee-profile-image-container">
-                        <img height="40" width="40" src="{{ asset('storage/' . $loginEmpManagerProfile) }}" style="border-radius:50%;">
+                        <img height="40" width="40" src="{{ $loginEmpManagerProfile }}" style="border-radius:50%;">
                     </div>
                     @endif
                     <div class="center p-0 m-0">
-                        @empty($loginEmpManager)
+                        @if(!$loginEmpManager)
                         <p style="font-size:10px;margin-bottom:0;">N/A</p>
                         @else
                         <p id="reportToText" class="ellipsis" style="font-size:12px; text-transform: capitalize;padding:0;margin:0;">{{$loginEmpManager}}</p>
-                        @endempty
+                        @endif
 
-                        @empty($loginEmpManagerId)
+                        @if(!$loginEmpManagerId)
                         <p style="font-size:10px;margin-bottom:0;">#(N/A)</p>
                         @else
                         <p style="color:#778899; font-size:10px;margin-bottom:0;" id="managerIdText"><span class="remaining">#{{$loginEmpManagerId}}</span></p>
-                        @endempty
+                        @endif
                     </div>
-                    <div class="downArrow" onclick="toggleSearchContainer()">
+                    <div class="downArrow" wire:click="applyingTo">
                         <i class="fas fa-chevron-down" style=" cursor:pointer"></i>
                     </div>
                 </div>
                 @endif
-                <div class="searchContainer" style="display:none;">
+
+
+                @if($showApplyingToContainer)
+                <div class="searchContainer">
                     <!-- Content for the search container -->
                     <div class="row" style="padding: 0 15px; margin-bottom: 10px;">
                         <div class="col" style="margin: 0px; padding: 0px">
                             <div class="input-group">
                                 <input style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                                 <div class="input-group-append">
-                                    <button wire:click="handleSearch('employees')" style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn" type="button">
+                                    <button wire:click="searchCCRecipients" style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn" type="button">
                                         <i style="margin-right: 5px;" class="fa fa-search"></i> <!-- Adjust margin-right as needed -->
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!-- Your Blade file -->
+                    <div class="scrollApplyingTO">
                     @foreach($managerFullName as $employee)
-                    <div style="display:flex; gap:10px;align-items:center;" onclick="updateApplyingTo('{{ $employee['full_name'] }}', '{{ $employee['emp_id'] }}')">
-                        <div>
-                            <input type="checkbox" wire:model="selectedManager" value="{{ $employee['emp_id'] }}">
+                        <div style="display:flex; gap:10px;align-items:center; cursor: pointer;" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
+                            <div>
+                                <input type="checkbox" wire:model="selectedManager" value="{{ $employee['emp_id'] }}" >
+                            </div>
+                            @if($employee['image'])
+                            <div class="employee-profile-image-container">
+                                <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius:50%;">
+                            </div>
+                            @else
+                            <div class="employee-profile-image-container">
+                                <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                            </div>
+                            @endif
+                            <div class="center mt-2 mb-2">
+                                <p style="font-size:12px; font-weight:500;margin-bottom:0;" value="{{ $employee['full_name'] }}">{{ $employee['full_name'] }}</p>
+                                <p style="color:#778899; font-size:10px;margin-bottom:0;" value="{{ $employee['full_name'] }}"> #{{ $employee['emp_id'] }} </p>
+                            </div>
                         </div>
-                        @if($employee['image'])
-                        <div class="employee-profile-image-container">
-                            <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius:50%;">
-                        </div>
-                        @else
-                        <div class="employee-profile-image-container">
-                            <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
-                        </div>
-                        @endif
-                        <div class="center mt-2 mb-2">
-                            <p style=" font-size:12px; font-weight:500;margin-bottom:0;" value="{{ $employee['full_name'] }}">{{ $employee['full_name'] }}</p>
-                            <p style="color:#778899; font-size:10px;margin-bottom:0;" value="{{ $employee['full_name'] }}"> #{{ $employee['emp_id'] }} </p>
-                        </div>
-                    </div>
                     @endforeach
+                    </div>
                 </div>
+                @endif
                 @error('applying_to') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group">
@@ -402,58 +411,4 @@
             </div>
         </form>
     </div>
-    <script>
-        // Define a variable to track the visibility state of the search container
-        let searchContainerVisible = false;
-
-        function toggleSearchContainer() {
-            const searchContainer = document.querySelector('.searchContainer');
-            const reportingContainer = document.querySelector('.reporting');
-
-            // Toggle the display of the search container
-            searchContainer.style.display = searchContainerVisible ? 'none' : 'block';
-            reportingContainer.classList.toggle('active', searchContainerVisible);
-
-            // Update the visibility state
-            searchContainerVisible = !searchContainerVisible;
-        }
-
-        // Function to handle form submission
-        function handleFormSubmission() {
-            // You may have additional logic here related to form submission
-
-            // Ensure that the search container remains visible after form submission
-            if (!searchContainerVisible) {
-                toggleSearchContainer();
-            }
-
-            // Optionally, you can submit the form programmatically if needed
-            // document.querySelector('form').submit();
-        }
-
-
-        function updateApplyingTo(reportTo, managerId) {
-            // Update the values in the reporting container
-            document.getElementById('reportToText').innerText = reportTo;
-            document.getElementById('managerIdText').innerText = '#' + managerId;
-
-            // Optionally, you can also hide the search container here
-            toggleSearchContainer();
-        }
-
-
-        function toggleDetails(tabId) {
-            const tabs = ['leaveApply', 'restricted-content', 'leaveCancel-content', 'compOff-content'];
-
-            tabs.forEach(tab => {
-                const tabElement = document.getElementById(tab);
-                if (tab === tabId) {
-                    tabElement.style.display = 'block';
-                } else {
-                    tabElement.style.display = 'none';
-                }
-            });
-        }
-    </script>
-    </body>
 </div>

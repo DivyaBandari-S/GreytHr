@@ -99,7 +99,18 @@
     font-size: 11px;
     font-weight: 500;
 }
-
+.normalText{
+    color: #333;
+    font-size: 12px;
+}
+.homeText{
+    color: #778899;
+    text-align: center;
+    font-size: 12px;
+}
+.leaveCustom-btn{
+    width:100px;border:1px solid #058383;border-radius:5px;padding:4px 7px;color:#058383;font-weight:500;background:#e6f2f2;
+}
 .banner-ad {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     tab-size: 4;
@@ -1174,7 +1185,7 @@ button.close-button {
 .search-text::placeholder {
     font-weight: 60;
     /* Change the font weight */
-    font-size: 14px;
+    font-size: 12px;
     /* Change the font size */
     color: #6c757d;
 }
@@ -1331,7 +1342,7 @@ input[type="date"]::before {
 }
 
 .shift-selector-who-is-in::placeholder {
-    font-size: 14px;
+    font-size: 12px;
     /* Adjust font size as needed */
     font-weight: 500;
     /* Adjust font weight as needed */
@@ -2110,10 +2121,18 @@ input[type="radio"] {
 
 .info-paragraph {
     font-size: 12px;
+    font-weight:500; color:#3a9efd;cursor:pointer;
+}
+.hideInfo {
+    font-weight: 500;
+    color: #3a9efd;
+    font-size: 12px;
+    cursor: pointer;
 }
 .hide-leave-info {
     background-color: #ffffe8;
 }
+
 
 .accordion-heading {
     background-color: #fff;
@@ -2166,6 +2185,11 @@ input[type="radio"] {
     color: #3a9efd;
     border: 1px solid #3a9efd;
 }
+
+.arrow-btn.active {
+    color: #3a9efd; /* Color for active state */
+    border-color: #3a9efd; /* Border color for active state */
+}
 .side {
     display: flex;
     flex-direction: row;
@@ -2214,6 +2238,14 @@ input[type="radio"] {
     border: 1px solid #ccc;
     padding: 20px;
     gap: 10px;
+}
+.accordionContentSpan{
+    color: #778899;
+    font-size: 12px;
+    font-weight: 500;
+}
+.accordionContentSpanValue{
+    color: #36454F; font-size: 12px; font-weight: 500;
 }
 .hide-info {
     display: flex;
@@ -2387,8 +2419,13 @@ input[type="radio"] {
     padding: 12px 15px;
     width: 60%;
     margin-top: 15px;
+
+}
+.scrollApplyingTO{
+    height: 200px;
     max-height: 200px;
     overflow-y: auto;
+
 }
 .ccContainer {
     background: #fff;
@@ -2550,6 +2587,22 @@ input[type="radio"] {
     background: #778899;
     border-radius: 50%;
 }
+.thisCircle{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    color: #778899;
+    font-weight: 500;
+    background-color: #fff;
+    font-size: 12px;
+}
+.remainContent{
+    color: #0000ff;
+    font-size: 12px;
+}
 .v-line {
     height: 120px;
     width: 0.5px;
@@ -2629,20 +2682,20 @@ input[type="radio"] {
     margin-bottom: 0.3125rem;
 }
 .approveBtn {
-    background: #007bff;
-    border: 1px solid #007bff;
-    padding: 2px 5px;
+    background: rgb(2, 17, 79);
+    border: 1px solid rgb(2, 17, 79);
+    padding: 3px 5px;
     color: #fff;
-    font-size: 0.755rem;
+    font-size: 12px;
     font-weight: 500;
     border-radius: 5px;
 }
 .rejectBtn {
     background: #fff;
-    border: 1px solid #007bff;
-    padding: 2px 5px;
-    color: #007bff;
-    font-size: 0.755rem;
+    border: 1px solid rgb(2, 17, 79);
+    padding: 3px 5px;
+    color: rgb(2, 17, 79);
+    font-size: 12px;
     font-weight: 500;
     border-radius: 5px;
 }
@@ -2776,7 +2829,7 @@ input[type="radio"] {
     font-weight: 500;
 }
 .placeholder-small::placeholder {
-    font-size: 11px;
+    font-size: 12px;
     color: #778899;
     font-weight: 500;
 }
@@ -3417,7 +3470,7 @@ select .yearSelect {
     border-radius: 5px;
 }
 ::placeholder {
-    font-size: 10px; /* Adjust the font size as needed */
+    font-size: 12px; /* Adjust the font size as needed */
     color: #778899;
 }
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
@@ -4073,6 +4126,13 @@ p::first-letter {
 }
 
 /* ///chat styles */
+.hover-shadow {
+    transition: box-shadow 0.3s ease;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
 .employees-details-chat {
     color: #333;
     font-weight: 500;

@@ -1,19 +1,18 @@
-<div class="container-fluid my-5">
-    <div class="d-flex justify-content-between mb-2">
+<div class="container-fluid pt-4 bg-white border rounded">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="col-md-6 ">
-            <h6 class="text-start text-5xl font-bold py-3 px-4 employees-details-chat" style="margin-left:55px;">Users</h6>
+            <h6 class="text-start text-5xl font-bold py-3 employees-details-chat" >Users</h6>
         </div>
         <div class="col-md-6 input-group">
             <input type="text" class="form-control" placeholder="Search..." wire:model.debounce.500ms="searchTerm" aria-label="Search" aria-describedby="search-addon" wire:keydown.enter="filter">
             <button class="submit-btn" wire:click="filter" id="search-addon" style="height:37px; line-height: 2;">Search</button>
         </div>
-
     </div>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-5 justify-content-center">
+    <div class="row row-cols-1 row-cols-md-4  m-0 p-0 justify-content-center">
         @forelse ($employeeDetails as $key => $employee)
         {{-- child --}}
         <div class="col mb-4">
-            <div class="card h-100">
+            <div class="card h-100 shadow hover-shadow">
                 <div class="col d-flex align-items-center justify-content-center mt-4">
                     @if($employee->image)
                     <div>

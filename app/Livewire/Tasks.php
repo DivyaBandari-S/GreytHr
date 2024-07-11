@@ -251,6 +251,7 @@ class Tasks extends Component
     {
         $this->taskId = $taskId;
         $this->newComment = '';
+        $this->resetErrorBag('newComment');
         $this->showModal = true;
         $this->fetchTaskComments($taskId);
     }
