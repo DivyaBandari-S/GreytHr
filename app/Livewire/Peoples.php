@@ -64,10 +64,12 @@ class Peoples extends Component
     public function starredFilter()
     {
         try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
             $companyId = Auth::user()->company_id;
             $trimmedSearchTerm = trim($this->search);
     
             $this->filteredStarredPeoples = StarredPeople::where('company_id', $companyId)
+            ->where('emp_id', $employeeId)
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->where('name', 'LIKE', '%' . $trimmedSearchTerm . '%')
                         ->orWhere('people_id', 'LIKE', '%' . $trimmedSearchTerm . '%');

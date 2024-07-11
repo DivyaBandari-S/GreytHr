@@ -485,9 +485,10 @@ button.close-button {
 
 /* Starting of peoples module (Kumar Asapu)*/
 .people-image {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
+    background:#f9f9f9;
 }
 
 .text-yellow {
@@ -734,7 +735,7 @@ button.close-button {
 
     width: 32px;
 
-    background-color: green;
+    background-color: lightgray;
 
     border-radius: 50%;
 }

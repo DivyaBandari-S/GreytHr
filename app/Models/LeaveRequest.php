@@ -22,6 +22,7 @@ class LeaveRequest extends Model
         'cc_to',
         'contact_details',
         'reason',
+        'is_read',
         'file_paths'
         // Add other fields that you want to be fillable here
     ];

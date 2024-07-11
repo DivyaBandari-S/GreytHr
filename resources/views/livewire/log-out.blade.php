@@ -1,7 +1,7 @@
 <div>
     <div class="logout-icon-container">
         <i wire:click="handleLogout" class="fas fa-sign-out-alt"></i>
-        <div wire:click="handleLogout" class="tooltip">Logout</div>a
+        <div wire:click="handleLogout" class="tooltip">Logout</div>
     </div>
 
     <!-- Logout Modal -->
@@ -11,9 +11,8 @@
             <div class="modal-content">
                 <div class="modal-header text-white" style=" background-color: rgb(2, 17, 79);">
                     <h6 class="modal-title " id="logoutModalLabel" style="align-items: center;">Confirm Logout</h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="cancelLogout"></button>
                 </div>
-                <div class="modal-body text-center" style="font-size: 18px;">
+                <div class="modal-body text-center" style="font-size: 16px;">
                     Are you sure you want to logout?
                 </div>
                 <div class="d-flex justify-content-center p-3">

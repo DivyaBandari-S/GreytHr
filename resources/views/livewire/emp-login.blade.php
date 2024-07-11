@@ -55,7 +55,7 @@
                 @endif
                 <div class="form-group">
                     <label for="emp_id" style="font-size: 14px;">ID / Mail</label>
-                    <input type="text" class="form-control" id="emp_id" placeholder="Enter ID / Mail" wire:model.lazy="form.emp_id" wire:input="login" wire:keydown.debounce.500ms="validateField('form.emp_id')" />
+                    <input type="text" class="form-control" id="emp_id" placeholder="Enter ID / Mail" wire:model.lazy="form.emp_id" wire:input="login" wire:keydown.debounce.500ms="validateField('form.emp_id')" oninput="this.value = this.value.toUpperCase()"/>
 
                     @error('form.emp_id')
                     <p class="pt-2 px-1 text-danger">{{ str_replace('form.emp id', 'Employee ID', $message) }}</p>
