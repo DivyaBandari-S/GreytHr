@@ -8,11 +8,11 @@ class Index extends Component
 {
     public $query;
     public $selectedConversation;
- 
+
 
     protected $listeners=['refresh'=>'$refresh'];
 
-    
+
    public function deleteByUser($id) {
 
     $userId= auth()->id();
@@ -41,7 +41,7 @@ class Index extends Component
 
                 $query->where('sender_id',$userId)
                       ->orWhere('receiver_id',$userId);
-                   
+
             })->where(function ($query) use($userId){
 
                 $query->whereNull('sender_deleted_at')
@@ -61,14 +61,14 @@ class Index extends Component
 
     return redirect(route('chat.index'));
 
-    
-    
+
+
    }
 
     public function render()
     {
         $user= auth()->user();
-      
+
         return view('livewire.chat.index',[
     'conversations'=>$user->conversations()->latest('updated_at')->get()
 ]);
