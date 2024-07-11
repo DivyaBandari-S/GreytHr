@@ -197,6 +197,10 @@ class EmpLogin extends Component
     {
         $this->verify_error = '';
     }
+    public function updatedFormEmpId($value)
+    {
+        $this->form['emp_id'] = strtoupper($value);
+    }
 
 
     public function verifyEmailAndDOB()

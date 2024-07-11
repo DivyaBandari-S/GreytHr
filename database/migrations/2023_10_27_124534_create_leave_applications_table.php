@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('status')->default('Pending');
             $table->string('contact_details');
             $table->text('reason');
+            $table->boolean('is_read')->default(false);
            
             // $table->enum('sick_leave', ['yes', 'no'])->default('no');
             // $table->enum('casual_leave', ['yes', 'no'])->default('no');
