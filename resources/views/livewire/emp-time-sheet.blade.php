@@ -1,31 +1,142 @@
 <div class="container">
-<style>
-    .totalDays{
-        font-size: 0.8rem; font-weight: 500;color:#778899;
-    }
-    .timeValue{
-        color: #000;
-        font-weight: 500;
-        font-size:12px;
-    }
-</style>
+    <style>
+        .timesheetContainer {
+            width: 80%;
+        }
+
+        .totalHoursContainer {
+            background-color: #f7fafc;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.25rem;
+        }
+
+        .totalDays {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #778899;
+        }
+
+        .timeValue {
+            color: #000;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .task-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .task-table td {
+            border: 1px solid #ddd;
+            padding: 0px;
+            color: #778899;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .task-table th {
+            border: 1px solid #ddd;
+            padding: 0.3rem;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .task-table thead {
+            background-color: rgba(2, 17, 79);
+            color: white;
+        }
+
+        .task-table tbody tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+
+        .task-table tbody tr:nth-child(odd) {
+            background-color: #edf2f7;
+        }
+
+        .task-table tbody tr.weekend {
+            background-color: rgb(255, 236, 248);
+        }
+
+        .task-table input[type="text"] {
+            text-align: center;
+            padding: 5px;
+            border: none;
+            background: transparent;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .task-table textarea {
+            text-align: center;
+            padding: 0;
+            height: 26px;
+            border: none;
+            background: transparent;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .task-table input[type="text"][readonly],
+        .task-table textarea[readonly] {
+            pointer-events: none;
+        }
+
+        .task-table input[type="text"]:invalid,
+        .task-table textarea:invalid {
+            border: 1px solid red;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.5rem;
+            width: 50px;
+        }
+
+        .date-header,
+        .day-header,
+        .client-header,
+        .hours-header {
+            width: 15%;
+        }
+
+        .tasks-header {
+            width: 40%;
+        }
+
+        .input-label {
+            font-weight: 500;
+            font-size: 0.8rem;
+            margin-right: 0.25rem;
+            color: #778899;
+        }
+
+        .inputValue {
+            font-size: 0.8rem;
+            color: #000;
+            font-weight: normal;
+        }
+    </style>
     @if($tab=="timeSheet")
-    <div class="container mt-2" style="background-color: #fff; padding: 0.8rem; max-width: 60rem;">
-        <div class="row">
-            <div class="col-md-3" style="display: flex; align-items: center">
-                <label for="emp_id" class="input-label" style="font-weight: 500; font-size: 0.8rem; margin-right: 0.25rem;color:#778899;">Employee ID :</label>
-                <label style="font-size:12px;color:#000;font-weight:normal;">{{ $auth_empId }}</label>
+    <div class="timesheetContainer mt-2 bg-white p-4 m-auto">
+        <div class="row m-0 p-0">
+            <div class="col-md-4 d-flex align-items-center">
+                <label for="emp_id" class="input-label mb-0">Employee ID :</label>
+                <label class="inputValue mb-0">{{ $auth_empId }}</label>
             </div>
-
-
             <!-- Start Date -->
-            <div class="col-md-3" style="display: flex; flex-direction: column; align-items: flex-start">
+            <div class="col-md-4 d-flex align-items-center">
                 @php
                 $start_date_string = \Carbon\Carbon::parse($start_date_string)->format('Y-m-d');
                 @endphp
                 <div style="display: flex; align-items: center;">
-                    <label for="start_date" class="input-label" style="font-weight: 500; font-size: 0.8rem; margin-right: 0.25rem;color:#778899;">Start Date :</label>
-                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" wire:model.lazy="start_date_string" id="start_date" class="input-field" style="font-size: 0.8rem; width: 90px; border: 1px solid #ccc; margin-bottom: 5px;">
+                    <label for="start_date" class="input-label mb-0">Start Date :</label>
+                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" wire:model.lazy="start_date_string" id="start_date" class="inputValue mb-0 border rounded py-1 px-2 outline-none">
                     <input type="hidden" class="form-control placeholder-small" id="formatted_start_date" value="{{ \Carbon\Carbon::parse($start_date_string)->format('d-M-Y') }}">
                 </div>
                 @error('start_date_string')
@@ -34,12 +145,12 @@
                 </span>
                 @enderror
             </div>
-            <div class="col-md-6" style="display: flex; flex-direction: column; align-items: flex-start;">
-                <div style="display: flex; align-items: center;">
-                    <label for="time_sheet_type" class="input-label" style="font-weight: 500; font-size: 0.8rem; margin-right: 10px;color:#778899;">Time Sheet Type :</label>
-                    <div style="display: flex; gap: 1rem;">
-                        <label style="font-size: 0.8rem; display: flex; align-items: center;">
-                            <div wire:change="addTask" wire:model="time_sheet_type"name="time_sheet_type" value="weekly" style="margin-right: 0.25rem;color:#000;font-size:12px;"> Weekly</div>
+            <div class="col-md-4 d-flex align-items-center">
+                <div class="d-flex align-items-center">
+                    <label for="time_sheet_type" class="input-label mb-0">Time Sheet Type :</label>
+                    <div class="d-flex align-items-center">
+                        <label class="d-flex align-items-center mb-0" style="font-size: 0.8rem;">
+                            <div wire:change="addTask" wire:model="time_sheet_type" name="time_sheet_type" value="weekly" class="inputValue mb-0"> Weekly</div>
                         </label>
 
                     </div>
@@ -56,7 +167,7 @@
     </div>
 
     @if($defaultTimesheetEntry=="true")
-    <div class="container" style="width:auto;max-width:{{ count($client_names) > 0 ? '60rem' : '60rem' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="container" style="width:80%;max-width:{{ count($client_names) > 0 ? '80%' : '80%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div class="subTotalExceed">
             @php
             $subTotalExceed = false;
@@ -104,16 +215,16 @@
 
         <form wire:submit.prevent="defaultSubmit">
             <div class="task-table-container">
-                <table style="width: 100%; border-collapse: collapse;" class="task-table">
-                    <thead style="background-color: rgba(2,17,79); color: white;">
+                <table class="task-table">
+                    <thead>
                         <tr>
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center;width:40px">Date</th>
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Day</th>
+                            <th class="date-header">Date</th>
+                            <th class="day-header">Day</th>
                             @if(count($client_names) > 0)
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Client</th>
+                            <th class="client-header">Client</th>
                             @endif
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Hours</th>
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Tasks</th>
+                            <th class="hours-header">Hours</th>
+                            <th class="tasks-header">Tasks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,41 +236,41 @@
                         $rowColor = $isWeekend ? 'rgb(255, 236, 248)' : ($index % 2 === 0 ? '#f7fafc' : '#edf2f7');
                         @endphp
                         <tr style="padding:0; background-color: {{ $rowColor }};">
-                            <td style="border: 1px solid #ddd; padding: 0rem; text-align: center;width:40px">
-                                <input type="text" value="{{ $formattedDate }}" style="text-align:center; padding: 0rem; border: none; background: transparent;" readonly>
+                            <td class="date-header py-0">
+                                <input type="text" value="{{ $formattedDate }}"  readonly>
                             </td>
-                            <td style="border: 1px solid #ddd; padding: 0rem;">
-                                <input type="text" readonly wire:model="default_date_and_day_with_tasks.{{ $index }}.day" style="width: 95px;text-align:center; padding: 0rem; border: none; background: transparent;">
+                            <td class="day-header py-0">
+                                <input type="text" readonly wire:model="default_date_and_day_with_tasks.{{ $index }}.day" >
                             </td>
                             @if(count($client_names) >= 1)
-                            <td style="border: 1px solid #ddd; padding: 0rem;">
+                            <td class="client-header py-0">
                                 @foreach($task['clients'] as $client)
-                                <input type="text" readonly value="{{ $client }}" style="text-align:center;width: 95px; padding: 0rem; border: none; background: transparent;">
+                                <input type="text" readonly value="{{ $client }}" >
                                 @endforeach
                             </td>
                             @endif
-                            <td style="border: 1px solid #ddd; padding: 0rem;">
+                            <td class="hours-header py-0">
                                 @if(count($client_names) >= 1)
                                 @foreach($default_date_and_day_with_tasks[$index]['hours'] as $hourIndex => $hour)
-                                <input type="text" wire:model="default_date_and_day_with_tasks.{{ $index }}.hours.{{ $hourIndex }}" wire:change="defaultSaveTimeSheet" style=" width: 40px; padding: 0rem;text-align:center; border: none; background: transparent;" pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours.'.$hourIndex) style="border: 1px solid red;" @enderror>
+                                <input type="text" wire:model="default_date_and_day_with_tasks.{{ $index }}.hours.{{ $hourIndex }}" wire:change="defaultSaveTimeSheet"  pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours.'.$hourIndex) style="border: 1px solid red;" @enderror>
                                 @error('default_date_and_day_with_tasks.'.$index.'.hours.'.$hourIndex)
                                 <span style="color: red; font-size: 0.5rem; width: 50px;">{{ $message }}</span>
                                 @enderror
                                 @endforeach
                                 @else
-                                <input type="text" wire:model="default_date_and_day_with_tasks.{{ $index }}.hours" wire:change="defaultSaveTimeSheet" style="width: 40px;text-align:center;  padding: 0rem; border: none; background: transparent;" pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours') style="border: 1px solid red;" @enderror>
+                                <input type="text" wire:model="default_date_and_day_with_tasks.{{ $index }}.hours" wire:change="defaultSaveTimeSheet"  pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours') style="border: 1px solid red;" @enderror>
                                 @error('default_date_and_day_with_tasks.'.$index.'.hours')
                                 <span style="color: red; font-size: 0.5rem; width: 50px;">{{ $message }}</span>
                                 @enderror
                                 @endif
                             </td>
-                            <td style="border: 1px solid #ddd; padding: 0.2rem;">
+                            <td class="class-header py-0">
                                 @if(count($client_names) >= 1)
                                 @foreach($default_date_and_day_with_tasks[$index]['tasks'] as $taskIndex => $taskDescription)
-                                <textarea wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="defaultSaveTimeSheet" style="height:15px;margin-left:8px;width: 480px;  padding: 0rem; border: none;border-radius:0; background: transparent;"></textarea><br>
+                                <textarea wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="defaultSaveTimeSheet" ></textarea><br>
                                 @endforeach
                                 @else
-                                <textarea wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks" wire:change="defaultSaveTimeSheet" style="height:15px;margin-left:8px;width: 580px;  padding: 0rem; border: none; background: transparent;border-radius:0;"></textarea><br>
+                                <textarea wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks" wire:change="defaultSaveTimeSheet"></textarea><br>
                                 @endif
                             </td>
                         </tr>
@@ -169,20 +280,20 @@
 
             </div>
 
-            <div style="background-color: #f7fafc; border: 1px solid #ddd; border-radius: 0.25rem; display: flex; justify-content: space-between; align-items: center;padding:0.25rem">
+            <div class="totalHoursContainer py-2">
                 <div style="text-align: center; flex-grow: 1;">
                     <div class="row m-0 p-0 d-flex align-items-center">
                         <div class="col">
-                            <p style="font-size: 0.9rem; font-weight: 500;color:#778899;">Total days: {{ $defaultTotalDays }}</p>
+                            <p class="mb-0 totalDays"> Total days : <span class="timeValue">  {{ $defaultTotalDays }}</span></p>
                         </div>
                         <div class="col">
-                            <p style="font-size: 0.9rem; font-weight: 500;color:#778899;">Total hours: {{ $allDefaultTotalHours }}</p>
+                            <p class="mb-0 totalDays"> Total days : <span class="timeValue">{{ $allDefaultTotalHours }} </span> </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div style="text-align: center;margin-top:1rem">
+            <div class="text-align-center mt-4">
                 <button type="submit" class="submit-btn">Submit</button>
             </div>
         </form>
@@ -191,7 +302,7 @@
 
     </div>
     @elseif($defaultTimesheetEntry=="false")
-    <div class="container" style="width:auto;max-width:{{ count($client_names) > 0 ? '60rem' : '60rem' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="container" style="width:80%;max-width:{{ count($client_names) > 0 ? '80%' : '80%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div class="subTotalExceed">
             @php
             $subTotalExceed = false;
@@ -239,16 +350,16 @@
 
         <form wire:submit.prevent="submit">
             <div class="task-table-container">
-                <table style="width: 100%; border-collapse: collapse;" class="task-table">
-                    <thead style="background-color: rgba(2,17,79); color: white;">
+                <table class="task-table">
+                    <thead>
                         <tr>
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center;width:20px">Date</th>
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center;width:30px">Day</th>
+                            <th class="date-header">Date</th>
+                            <th class="day-header">Day</th>
                             @if(count($client_names) > 0)
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Client</th>
+                            <th class="client-header">Client</th>
                             @endif
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Hours</th>
-                            <th style="font-weight: normal; border: 1px solid #ddd; font-size: 0.8rem; padding: 0.3rem;text-align:center">Tasks</th>
+                            <th class="hours-header">Hours</th>
+                            <th class="tasks-header">Tasks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -257,44 +368,44 @@
                         $date = \Carbon\Carbon::parse($task['date']);
                         $formattedDate = $date->format('d-M-Y');
                         $isWeekend = $date->isWeekend();
-                        $rowColor = $isWeekend ? 'rgb(255, 236, 248)' : ($index % 2 === 0 ? '#f7fafc' : '#edf2f7');
+                        $rowClass = $isWeekend ? 'weekend' : ($index % 2 === 0 ? 'even' : 'odd');
                         @endphp
-                        <tr style="padding:0; background-color: {{ $rowColor }};">
-                            <td style="border: 1px solid #ddd; padding: 0rem; text-align: center;width:20px">
-                                <input type="text" value="{{ $formattedDate }}" style="text-align: center; padding: 0rem; border: none; background: transparent;" readonly>
+                        <tr class="{{ $rowClass }}">
+                            <td class="date-header py-0">
+                                <input type="text" value="{{ $formattedDate }}" readonly>
                             </td>
-                            <td style="border: 1px solid #ddd; padding: 0rem;width:30px;text-align:center;">
-                                <input type="text" readonly wire:model="date_and_day_with_tasks.{{ $index }}.day" style="text-align:center; padding: 0rem; border: none; background: transparent;">
+                            <td class="day-header py-0">
+                                <input type="text" readonly wire:model="date_and_day_with_tasks.{{ $index }}.day">
                             </td>
                             @if(count($client_names) >= 1)
-                            <td style="border: 1px solid #ddd; padding: 0rem;">
+                            <td class="client-header py-0">
                                 @foreach($task['clients'] as $client)
-                                <input type="text" readonly value="{{ $client }}" style="text-align:center;width: 95px; padding: 0rem; border: none; background: transparent;">
+                                <input type="text" readonly value="{{ $client }}">
                                 @endforeach
                             </td>
                             @endif
-                            <td style="border: 1px solid #ddd; padding: 0rem;">
+                            <td class="hours-header py-0">
                                 @if(count($client_names) >= 1)
                                 @foreach($date_and_day_with_tasks[$index]['hours'] as $hourIndex => $hour)
-                                <input type="text" wire:model="date_and_day_with_tasks.{{ $index }}.hours.{{ $hourIndex }}" wire:change="saveTimeSheet" style=" width: 40px; padding: 0rem;text-align:center; border: none; background: transparent;" pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours.'.$hourIndex) style="border: 1px solid red;" @enderror>
+                                <input type="text" wire:model="date_and_day_with_tasks.{{ $index }}.hours.{{ $hourIndex }}" wire:change="saveTimeSheet" pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours.'.$hourIndex) class="error" @enderror>
                                 @error('date_and_day_with_tasks.'.$index.'.hours.'.$hourIndex)
-                                <span style="color: red; font-size: 0.5rem; width: 50px;">{{ $message }}</span>
+                                <span class="error-message">{{ $message }}</span>
                                 @enderror
                                 @endforeach
                                 @else
-                                <input type="text" wire:model="date_and_day_with_tasks.{{ $index }}.hours" wire:change="saveTimeSheet" style="width: 40px;text-align:center;  padding: 0rem; border: none; background: transparent;" pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours') style="border: 1px solid red;" @enderror>
+                                <input type="text" wire:model="date_and_day_with_tasks.{{ $index }}.hours" wire:change="saveTimeSheet" pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours') class="error" @enderror>
                                 @error('date_and_day_with_tasks.'.$index.'.hours')
-                                <span style="color: red; font-size: 0.5rem; width: 50px;">{{ $message }}</span>
+                                <span class="error-message">{{ $message }}</span>
                                 @enderror
                                 @endif
                             </td>
-                            <td style="border: 1px solid #ddd; padding: 0.2rem;">
+                            <td class="tasks-header py-0">
                                 @if(count($client_names) >= 1)
                                 @foreach($date_and_day_with_tasks[$index]['tasks'] as $taskIndex => $taskDescription)
-                                <textarea wire:model="date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="saveTimeSheet" style="height:15px;margin-left:8px;width: 470px;  padding: 0rem; border: none;border-radius:0; background: transparent;"></textarea><br>
+                                <textarea wire:model="date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="saveTimeSheet" title="Enter tasks" @error('date_and_day_with_tasks.'.$index.'.tasks.'.$taskIndex) class="error" @enderror></textarea><br>
                                 @endforeach
                                 @else
-                                <textarea wire:model="date_and_day_with_tasks.{{ $index }}.tasks" wire:change="saveTimeSheet" style="height:15px;margin-left:8px;width: 570px;  padding: 0rem; border: none; background: transparent;border-radius:0;"></textarea><br>
+                                <textarea wire:model="date_and_day_with_tasks.{{ $index }}.tasks" wire:change="saveTimeSheet" title="Enter tasks" @error('date_and_day_with_tasks.'.$index.'.tasks') class="error" @enderror></textarea><br>
                                 @endif
                             </td>
                         </tr>
@@ -304,7 +415,7 @@
 
             </div>
 
-            <div  class="totalContainer py-2" style="background-color: #f7fafc; border: 1px solid #ddd; border-radius: 0.25rem; display: flex; justify-content: space-between; align-items: center;padding:0.25rem">
+            <div class="totalHoursContainer py-2">
                 <div style="text-align: center; flex-grow: 1;">
                     <div class="row m-0 p-0 d-flex align-items-center">
                         <div class="col">
@@ -318,7 +429,7 @@
             </div>
 
             <div style="text-align: center;margin-top:1rem">
-                <button type="submit"  class="submit-btn">Submit</button>
+                <button type="submit" class="submit-btn">Submit</button>
             </div>
         </form>
 

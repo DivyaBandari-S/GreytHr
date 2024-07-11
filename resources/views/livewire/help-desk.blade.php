@@ -8,6 +8,12 @@
                 <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style=" font-size: 0.75rem;padding: 0.25rem 0.5rem;margin-top:6px"></button>
             </div>
             @endif
+            @if (session()->has('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; margin-top: 5px;"></button>
+            </div>
+            @endif
             <div class="d-flex align-item-center justify-content-center">
                 <div class="card " style="width:400px; ">
                     <div class="card-header px-4 py-0 m-0 ">
@@ -29,6 +35,9 @@
 
         </div>
         <div class="d-flex flex-row justify-content-end gap-10 mt-2">
+            <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 1px 0; font-size: 12px;" onclick="location.href='/catalog'">
+                IT Request
+            </button>
             <div class="mx-2 ">
                 <button wire:click="openFinance" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> Finance Request </button>
             </div>
@@ -37,9 +46,7 @@
             </div>
 
             <div>
-                <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 1px 0; font-size: 12px;" onclick="location.href='/catalog'">
-                    IT Request
-                </button>
+
             </div>
         </div>
 
@@ -56,7 +63,7 @@
                         <div class="form-group">
                             <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category</label>
                             <div class="input-group">
-                                <select wire:model="category" id="category" class="custom-select placeholder" style="font-size: 12px;">
+                                <select wire:model.lazy="category" id="category" class="custom-select placeholder" style="font-size: 12px;">
                                     <option style="color: #778899; " value="">Select Category</option>
 
 
@@ -80,12 +87,12 @@
 
                         <div class="form-group">
                             <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject</label>
-                            <input type="text" wire:model="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject">
+                            <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject">
                             @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description</label>
-                            <textarea wire:model="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
+                            <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="row">
@@ -112,7 +119,7 @@
                                 <div class="form-group">
                                     <label for="category" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority</label>
                                     <div class="input-group">
-                                        <select name="category" id="category" wire:model="priority" class="custom-select" style="font-size: 12px;">
+                                        <select name="category" id="category" wire:model.lazy="priority" class="custom-select" style="font-size: 12px;">
                                             <option style="color: gray;" value="">Select Priority</option>
                                             <option value="High">
                                                 <span></span> High
@@ -135,7 +142,7 @@
                                     <div class="row m-0 p-0">
                                         <div style="margin: 0px;padding:0;">
                                             <div>
-                                                <div style="font-size: 12px;color:#778899;margin-bottom:10px;font-weight:500;">Selected CC recipients : {{ implode(', ', array_unique($selectedPeopleNames)) }}</div>
+                                                <div style="font-size: 12px;color:#778899;margin-bottom:10px;font-weight:500;" wire:model.lazy="cc_to" id="cc_to">Selected CC recipients : {{ implode(', ', array_unique($selectedPeopleNames)) }}</div>
                                             </div>
                                             <button type="button" style="border-radius: 50%;margin-right:10px;color:#778899;border:1px solid #778899;" class="add-button" wire:click="toggleRotation">
                                                 <i class="fa fa-plus" style="color:#778899;"></i>
@@ -146,11 +153,11 @@
                                     </div>
                                 </div>
                                 @if($isRotated)
-                                <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px;height:200px;overflow-y:auto;">
+                                <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;height:200px;overflow-y:auto;">
                                     <div class="input-group" style="margin-bottom: 10px;">
                                         <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                                         <div class="input-group-append">
-                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn" type="button">
+                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0;  background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                                                 <i style="text-align: center;" class="fa fa-search"></i>
                                             </button>
                                             <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -163,10 +170,10 @@
                                     </div>
                                     @else
                                     @foreach($peopleData as $people)
-                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                        <div class="row align-items-center ">
+                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                        <div class="row align-items-center">
                                             <div class="col-auto">
-                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
                                             </div>
                                             <div class="col-auto">
                                                 @if($people->image=="")
@@ -184,7 +191,7 @@
                                                 <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
                                             </div>
                                         </div>
-                                    </div>
+                                    </label>
                                     @endforeach
                                     @endif
                                 </div>
@@ -214,7 +221,7 @@
                         <div class="form-group">
                             <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category</label>
                             <div class="input-group">
-                                <select wire:model="category" id="category" class="custom-select placeholder" style="font-size: 12px;">
+                                <select wire:model.lazy="category" id="category" class="custom-select placeholder" style="font-size: 12px;">
                                     <option style="color: #778899; " value="">Select Category</option>
 
 
@@ -235,12 +242,12 @@
 
                         <div class="form-group">
                             <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject</label>
-                            <input type="text" wire:model="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject">
+                            <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject">
                             @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description</label>
-                            <textarea wire:model="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
+                            <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="row">
@@ -267,7 +274,7 @@
                                 <div class="form-group">
                                     <label for="category" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority</label>
                                     <div class="input-group">
-                                        <select name="category" id="category" wire:model="priority" class="custom-select" style="font-size: 12px;">
+                                        <select name="category" id="category" wire:model.lazy="priority" class="custom-select" style="font-size: 12px;">
                                             <option style="color: gray;" value="">Select Priority</option>
                                             <option value="High">
                                                 <span></span> High
@@ -301,11 +308,11 @@
                                     </div>
                                 </div>
                                 @if($isRotated)
-                                <div style="border-radius:5px;background-color:grey;padding:8px;width:320px;margin-top:10px;height:200px;overflow-y:auto;">
+                                <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;height:200px;overflow-y:auto;">
                                     <div class="input-group" style="margin-bottom: 10px;">
                                         <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                                         <div class="input-group-append">
-                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;" class="btn" type="button">
+                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0;  background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                                                 <i style="text-align: center;" class="fa fa-search"></i>
                                             </button>
                                             <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -318,10 +325,10 @@
                                     </div>
                                     @else
                                     @foreach($peopleData as $people)
-                                    <div wire:model="cc_to" wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                        <div class="row align-items-center ">
+                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                        <div class="row align-items-center">
                                             <div class="col-auto">
-                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" wire:click="selectPerson({{ $people->emp_id }})">
+                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
                                             </div>
                                             <div class="col-auto">
                                                 @if($people->image=="")
@@ -339,11 +346,12 @@
                                                 <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
                                             </div>
                                         </div>
-                                    </div>
+                                    </label>
                                     @endforeach
                                     @endif
                                 </div>
                                 @endif
+
                             </div>
                         </div>
                         <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
