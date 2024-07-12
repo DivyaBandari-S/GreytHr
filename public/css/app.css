@@ -2157,6 +2157,9 @@ input[type="radio"] {
 .empIdStyle{
     color: var(--label-color); font-size: 0.69rem;
 }
+.seacrh-btn{
+    height: 29px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; align-items: center; display: flex;
+}
 .accordion-heading {
     background-color: #fff;
     cursor: pointer;
@@ -2441,7 +2444,7 @@ input[type="radio"] {
     border-radius: 3px;
     box-shadow: 2px 0 5px 0 #ccc;
     padding: 12px 15px;
-    width: 60%;
+    width: 35%;
     margin-top: 15px;
 
 }
@@ -2457,7 +2460,7 @@ input[type="radio"] {
     border-radius: 3px;
     box-shadow: 2px 0 5px 0 #ccc;
     padding: 12px 15px;
-    width: 60%;
+    width: 35%;
     margin-top: 15px;
 }
 .ellipsis {
