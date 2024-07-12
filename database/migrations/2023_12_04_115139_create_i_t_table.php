@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('it_emp_id')->nullable()->default(null)->unique();
             $table->string('employee_name');
+            $table->string('emp_id');
             $table->string('image');
             $table->string('company_id');
             $table->string('designation');
@@ -40,7 +41,12 @@ return new class extends Migration
                 ->on('companies')
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
-            $table->timestamps();
+                $table->foreign('emp_id')
+                ->references('emp_id')
+                ->on('employee_details')
+                ->onDelete('restrict')
+                ->onUpdate('cascade');
+           
         });
         $triggerSQL = <<<SQL
         CREATE TRIGGER generate_it_emp_id BEFORE INSERT ON i_t FOR EACH ROW

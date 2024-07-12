@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('sender_id')->references('emp_id')->on('employee_details')->nullOnDelete();
 
             $table->string('receiver_id')->nullable();// or uuid()
-            $table->foreign('receiver_id')->references('it_emp_id')->on('employee_details')->nullOnDelete();
+            $table->foreign('receiver_id')->references('emp_id')->on('employee_details')->nullOnDelete();
 
 
             $table->timestamp('read_at')->nullable();

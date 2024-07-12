@@ -86,6 +86,12 @@ class EmployeeDetails extends Authenticatable
     {
         return $this->hasMany(Comment::class, 'emp_id', 'emp_id');
     }
+    public function canCreatePost()
+    {
+       
+        return $this->emp_id === 'emp_id'  || $this->hasPermission('create-post');
+        
+    }
 
     // Inside the EmployeeDetails model
     public function starredPeople()
