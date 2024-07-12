@@ -8,7 +8,8 @@ use App\Notifications\MessageSent;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Crypt;
-use Hashids;
+// use Hashids;
+use Vinkla\Hashids\Facades\Hashids;
 class ChatBox extends Component
 {
 
@@ -33,6 +34,7 @@ class ChatBox extends Component
     ];
     public function redirectToEncryptedLink($id)
     {
+        // $hashids = new Hashids('default-salt', 50);
         $encryptedId = Hashids::encode($id);
         return redirect()->to(route('chat', $encryptedId));
     }

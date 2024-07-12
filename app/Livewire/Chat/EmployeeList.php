@@ -8,7 +8,9 @@ use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
-use Hashids;
+// use Hashids;
+// use Hashids\Hashids;
+use Vinkla\Hashids\Facades\Hashids;
 class EmployeeList extends Component
 {
 
@@ -50,6 +52,7 @@ class EmployeeList extends Component
 
     public function message($employeeId)
     {
+        // $hashids = new Hashids('default-salt', 50);
         $authenticatedUserId = auth()->id();
         // $conversation= Chating::find(decrypt($id));
 

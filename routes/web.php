@@ -271,7 +271,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/document-center-letters', DocumentCenterLetters::class);
     Route::get('/delegates', Delegates::class)->name('work-flow-delegates');
     Route::get('/salary-revision', SalaryRevisions::class)->name('salary-revision');
-    Route::get('/plan-C', PlanA::class)->name('plan-a');
+    Route::get('/plan-C', PlanA::class)->name('plan-c');
     Route::get('/formdeclaration', Declaration::class)->name('IT-Declaration');
     Route::get('/document', Documentcenter::class)->name('Document-center');
     Route::get('/reimbursement', Reimbursement::class)->name('reimbursement');

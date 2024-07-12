@@ -7,7 +7,8 @@ use App\Models\Message;
 use Livewire\Component;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Hashids;
+// use Hashids;
+use Vinkla\Hashids\Facades\Hashids;
 class Chat extends Component
 {
     public $query;
@@ -16,6 +17,7 @@ class Chat extends Component
     public function mount($query)
 {
     try {
+        // $hashids = new Hashids('default-salt', 50); // Initialize with the same salt and minimum length
         // Decode the query string
         $decodedIds = Hashids::decode($query);
 

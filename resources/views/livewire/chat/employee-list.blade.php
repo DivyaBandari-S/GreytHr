@@ -1,5 +1,4 @@
 <div class="container-fluid my-1">
-    <x-loading-indicator />
     <div class="row">
         <!-- Left Side: Department Dropdown -->
         <div class="col-md-3 border-end bg-white" style="height: 100vh; overflow-y: auto;">

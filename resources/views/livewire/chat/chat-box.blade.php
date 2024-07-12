@@ -1,8 +1,8 @@
-<div wire:poll>
+<div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="script.js"></script>
 
-    <div class="chat-container ">
+    <div class="chat-container " wire:poll>
         <div class="people-list" id="people-list" style=" border: 2px solid silver;border-radius:5px;">
             <div class="row justify-content-center" style="margin: 0;">
             </div>
