@@ -288,7 +288,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/holiday-calender', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
     Route::get('/casualleavebalance',CasualLeaveBalance::class)->name('casual-leave-balance');
-    Route::get('/sickleavebalance',SickLeaveBalances::class)->name('sick-leave-balance');
+    // Route::get('/sickleavebalance',SickLeaveBalances::class)->name('sick-leave-balance');
     Route::get('/casualprobationleavebalance',CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
     Route::get('/leave-cancel', LeaveCancel::class)->name('leave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');

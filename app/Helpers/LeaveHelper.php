@@ -78,7 +78,7 @@ class LeaveHelper
         // Fetch approved leave requests
         $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where('status', 'approved')
-            ->whereIn('leave_type', ['Causal Leave Probation', 'Loss Of Pay', 'Sick Leave', 'Causal Leave', 'Maternity Leave', 'Marriage Leave', 'Petarnity Leave'])
+            ->whereIn('leave_type', ['Casual Leave Probation', 'Loss Of Pay', 'Sick Leave', 'Casual Leave', 'Maternity Leave', 'Marriage Leave', 'Petarnity Leave'])
             ->get();
 
         $totalCasualDays = 0;
@@ -100,7 +100,7 @@ class LeaveHelper
             );
             // Accumulate days based on leave type
             switch ($leaveType) {
-                case 'Causal Leave':
+                case 'Casual Leave':
                     $totalCasualDays += intval($days);
                     break;
                 case 'Sick Leave':
@@ -109,7 +109,7 @@ class LeaveHelper
                 case 'Loss Of Pay':
                     $totalLossOfPayDays += intval($days);
                     break;
-                case 'Causal Leave Probation':
+                case 'Casual Leave Probation':
                     $totalCasualLeaveProbationDays += intval($days);
                     break;
                 case 'Maternity Leave':
