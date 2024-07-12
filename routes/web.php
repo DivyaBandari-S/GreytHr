@@ -30,7 +30,6 @@ use App\Livewire\AttendanceMusterData;
 use App\Livewire\AttendanceMuster;
 use App\Livewire\AttendenceMasterDataNew;
 use App\Livewire\Chat\Chat;
-use App\Livewire\Chat\Index;
 use App\Livewire\EmployeeSwipesData;
 use App\Livewire\HelpDesk;
 use App\Livewire\Home;
@@ -72,7 +71,7 @@ use App\Livewire\LetterRequests;
 use App\Livewire\TeamOnLeaveChart;
 use App\Livewire\CasualLeaveBalance;
 use App\Livewire\CasualProbationLeaveBalance;
-
+use App\Livewire\Chat\EmployeeList;
 use App\Livewire\ViewDetails;
 use App\Livewire\ViewDetails1;
 use App\Livewire\ListOfAppliedJobs;
@@ -83,7 +82,6 @@ use App\Livewire\TeamOnAttendance;
 use App\Livewire\TeamOnAttendanceChart;
 use App\Livewire\ViewPendingDetails;
 use App\Livewire\Emojies;
-use App\Livewire\Employee;
 use App\Livewire\EmployeeAssetsDetails;
 use App\Livewire\EmployeeDirectory;
 use App\Livewire\EmpTimeSheet;
@@ -308,9 +306,9 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');
 
     // ####################################### Chat Module Routes #########################endregion
-    Route::get('/chat',Index::class)->name('chat.index');
+    // Route::get('/chat',Index::class)->name('chat.index');
     Route::get('/chat/{query}',Chat::class)->name('chat');
-    Route::get('/users',Employee::class)->name('employee');
+    Route::get('/users',EmployeeList::class)->name('employee');
     Route::get('/image',ImageUpload::class)->name('image');
     //*******************************************  End Of Chat Module Routes *************************/
 });
