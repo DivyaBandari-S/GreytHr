@@ -27,7 +27,7 @@
         <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
             <div class="form-row d-flex mt-3">
                 <div class="form-group col-md-7">
-                    <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave type</label> <br>
+                    <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave Type</label> <br>
                     <select id="leaveType" class="dropdown p-2 outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType" style="width: 50%; font-weight: 400; color: #778899; font-size: 12px;border:1px solid #ccc;">
                         <option value="default">Select Type</option>
                         @php
