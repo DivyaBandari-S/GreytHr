@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Message;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class Notification extends Component
@@ -17,11 +18,18 @@ class Notification extends Component
 
     public function mount()
     {
-        $this->fetchNotifications();
+        try{
+            $this->fetchNotifications();
+        }
+        catch (\Exception $e) {
+            abort(404);
+        }
+        
     }
 
     public function fetchNotifications()
     {
+        try {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
 
         // Fetch matching leave requests
@@ -49,10 +57,15 @@ class Notification extends Component
             ->groupBy('sender_id');
 
         $this->chatNotificationCount = $this->senderDetails->count();
+        }
+        catch (\Exception $e) {
+            abort(404); 
+        }
     }
 
     public function reduceLeaveRequestCount($requestId)
     {
+        try {
        DB::table('leave_applications')
             ->where('emp_id', $requestId)
             ->update(['is_read' => 1]);
@@ -60,19 +73,27 @@ class Notification extends Component
         $this->fetchNotifications();
 
         return redirect()->route('review');
+        }
+        catch (\Exception $e) {
+            abort(404);
+        }
     }
     
 
     public function markAsRead($messageId)
     {
         
-       
+        try {
       DB::table('messages')
             ->where('id', $messageId)
             ->update(['read_at' => Carbon::now()]);
           
 
         $this->fetchNotifications();
+        }
+        catch (\Exception $e) {
+            abort(404); 
+        }
        
     }
     
