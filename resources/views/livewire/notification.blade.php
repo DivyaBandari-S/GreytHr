@@ -1,9 +1,9 @@
 <div class="d-flex align-items-center">
-    
+
     <div>
 
         <a href="/users" style="color: white; text-decoration: none;">
-            <i class="fa fa-comment" style="position: relative;display: inline-block; vertical-align: middle;font-size: 20px; margin-left: 10px; margin-right: 8px;">
+            <i class="fa fa-comment" style="position: relative;display: inline-block; vertical-align: middle;font-size: 18px; margin-left: 10px; margin-right: 8px;">
                 @if ($chatNotificationCount > 0)
                 <span class="badge bg-danger" style="position: absolute; top: -10px; right: -3px; font-size:10px;">
                     {{ $chatNotificationCount }}
