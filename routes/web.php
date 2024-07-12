@@ -30,7 +30,6 @@ use App\Livewire\AttendanceMusterData;
 use App\Livewire\AttendanceMuster;
 use App\Livewire\AttendenceMasterDataNew;
 use App\Livewire\Chat\Chat;
-use App\Livewire\Chat\Index;
 use App\Livewire\EmployeeSwipesData;
 use App\Livewire\HelpDesk;
 use App\Livewire\Home;
@@ -72,7 +71,7 @@ use App\Livewire\LetterRequests;
 use App\Livewire\TeamOnLeaveChart;
 use App\Livewire\CasualLeaveBalance;
 use App\Livewire\CasualProbationLeaveBalance;
-
+use App\Livewire\Chat\EmployeeList;
 use App\Livewire\ViewDetails;
 use App\Livewire\ViewDetails1;
 use App\Livewire\ListOfAppliedJobs;
@@ -83,7 +82,6 @@ use App\Livewire\TeamOnAttendance;
 use App\Livewire\TeamOnAttendanceChart;
 use App\Livewire\ViewPendingDetails;
 use App\Livewire\Emojies;
-use App\Livewire\Employee;
 use App\Livewire\EmployeeAssetsDetails;
 use App\Livewire\EmployeeDirectory;
 use App\Livewire\EmpTimeSheet;
@@ -276,7 +274,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/document-center-letters', DocumentCenterLetters::class);
     Route::get('/delegates', Delegates::class)->name('work-flow-delegates');
     Route::get('/salary-revision', SalaryRevisions::class)->name('salary-revision');
-    Route::get('/plan-C', PlanA::class)->name('plan-a');
+    Route::get('/plan-C', PlanA::class)->name('plan-c');
     Route::get('/formdeclaration', Declaration::class)->name('IT-Declaration');
     Route::get('/document', Documentcenter::class)->name('Document-center');
     Route::get('/reimbursement', Reimbursement::class)->name('reimbursement');
@@ -293,7 +291,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/holiday-calender', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
     Route::get('/casualleavebalance',CasualLeaveBalance::class)->name('casual-leave-balance');
-    Route::get('/sickleavebalance',SickLeaveBalances::class)->name('sick-leave-balance');
+    // Route::get('/sickleavebalance',SickLeaveBalances::class)->name('sick-leave-balance');
     Route::get('/casualprobationleavebalance',CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
     Route::get('/leave-cancel', LeaveCancel::class)->name('leave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
@@ -311,9 +309,9 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');
 
     // ####################################### Chat Module Routes #########################endregion
-    Route::get('/chat',Index::class)->name('chat.index');
+    // Route::get('/chat',Index::class)->name('chat.index');
     Route::get('/chat/{query}',Chat::class)->name('chat');
-    Route::get('/users',Employee::class)->name('employee');
+    Route::get('/users',EmployeeList::class)->name('employee');
     Route::get('/image',ImageUpload::class)->name('image');
     //*******************************************  End Of Chat Module Routes *************************/
 });

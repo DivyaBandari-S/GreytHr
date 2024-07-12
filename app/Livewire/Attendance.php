@@ -379,7 +379,7 @@ public function generateCalendar()
                         $leaveType = $this->getLeaveType($date, $employeeId);
 
                         switch ($leaveType) {
-                            case 'Causal Leave Probation':
+                            case 'Casual Leave Probation':
                                 $status = 'CLP'; // Casual Leave Probation
                                 break;
                             case 'Sick Leave':

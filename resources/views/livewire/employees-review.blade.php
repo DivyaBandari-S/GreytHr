@@ -1,4 +1,5 @@
 <div>
+    <x-loading-indicator />
     <div class="row p-0 m-0 mt-3 p-2">
         @if(session()->has('emp_error'))
         <div class="alert alert-danger">
@@ -48,14 +49,30 @@
         <div class="col-md-9 mx-0 px-0">
             @if($currentSection === 'Attendance Regularization')
             <div class="d-flex align-items-center justify-content-center gap-3">
-                <button wire:click="toggleActiveContent('Attendance Regularization')" class="btn" style="font-size:12px;background-color: {{ $activeButton['Attendance Regularization'] ? 'rgb(2, 17, 79)' : 'white' }};
-                            color: {{ $activeButton['Attendance Regularization'] ? 'white' : 'black' }}">
-                    Active
-                </button>
-                <button wire:click="toggleClosedContent('Attendance Regularization')" class="btn" style="border: 1px solid rgb(2,17,79);font-size:12px;background-color: {{ $activeButton['Attendance Regularization'] ? 'white' : 'rgb(2, 17, 79)' }};
-                            color: {{ $activeButton['Attendance Regularization'] ? 'rgb(2, 17, 79)' : 'white' }}">
-                    Closed
-                </button>
+                <div style="display: flex;">
+
+                    <button wire:click="toggleActiveContent('Attendance Regularization')" class="btn" style="flex: 1;
+               border-top-left-radius: 5px;
+               border-bottom-left-radius: 5px;
+               font-size: 12px;
+               background-color: {{ $activeButton['Attendance Regularization'] ? 'rgb(2, 17, 79)' : 'white' }};
+               color: {{ $activeButton['Attendance Regularization'] ? 'white' : 'black' }}">
+                        Active
+                    </button>
+
+                    <button wire:click="toggleClosedContent('Attendance Regularization')" class="btn" style="flex: 1;
+               border-top-right-radius: 5px;
+               border-bottom-right-radius: 5px;
+               border: 1px solid rgb(2, 17, 79);
+               font-size: 12px;
+               background-color: {{ $activeButton['Attendance Regularization'] ? 'white' : 'rgb(2, 17, 79)' }};
+               color: {{ $activeButton['Attendance Regularization'] ? 'rgb(2, 17, 79)' : 'white' }};
+               {{ $activeButton['Attendance Regularization'] ? '' : 'pointer-events: none; opacity: 0.5;' }}">
+                        Closed
+                    </button>
+
+                </div>
+
             </div>
 
             <div class="mt-5">

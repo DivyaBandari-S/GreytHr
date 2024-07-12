@@ -179,6 +179,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
+        Vinkla\Hashids\HashidsServiceProvider::class,
 
     ])->toArray(),
 
@@ -200,6 +201,7 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
+        'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
     ])->toArray(),
 
 ];

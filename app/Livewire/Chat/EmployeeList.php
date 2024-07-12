@@ -1,16 +1,21 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Chat;
 
+use Livewire\Component;
 use App\Models\Chating;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Livewire\Component;
-
-
-class Employee extends Component
+use Illuminate\Support\Facades\Crypt;
+// use Hashids;
+// use Hashids\Hashids;
+use Vinkla\Hashids\Facades\Hashids;
+class EmployeeList extends Component
 {
+
+
+
     public $employees;
     public $peopleData;
 
@@ -44,10 +49,11 @@ class Employee extends Component
     public $showDialog = false;
     public $record;
     public $selectedDepartment;
+
     public function message($employeeId)
     {
+        // $hashids = new Hashids('default-salt', 50);
         $authenticatedUserId = auth()->id();
-        $userId = auth()->id();
         // $conversation= Chating::find(decrypt($id));
 
         // Check if conversation already exists
@@ -61,7 +67,9 @@ class Employee extends Component
 
         if ($existingConversation) {
             // Conversation already exists, redirect to existing conversation
-            return redirect()->route('chat', ['query' => $existingConversation->id]);
+            //$ExistingConversationEncryptedId = Crypt::encryptString($existingConversation->id);
+            $ExistingConversationEncryptedId = Hashids::encode($existingConversation->id);
+            return redirect()->route('chat', ['query' => $ExistingConversationEncryptedId]);
         }
 
         // Create new conversation
@@ -69,9 +77,10 @@ class Employee extends Component
             'sender_id' => $authenticatedUserId,
             'receiver_id' => $employeeId,
         ]);
-
+        // $encryptedId = Crypt::encryptString($createdConversation->id);
+          $encryptedId = Hashids::encode($createdConversation->id);
         // Redirect to the chat component with the newly created conversation's ID
-        return redirect()->route('chat', ['query' => $createdConversation->id]);
+        return redirect()->route('chat', ['query' => $encryptedId]);
     }
     public function filter()
     {
@@ -115,9 +124,10 @@ class Employee extends Component
             $this->filter();
         }
 
-        return view('livewire.employee', [
+        return view('livewire.chat.employee-list', [
             'employeeDetails' => $this->employeeDetails, // Change 'employees' to 'employeeDetails'
             'peopleData' => $this->filteredPeoples ? $this->filteredPeoples : $this->peoples,
         ]);
-    }
+}
+
 }

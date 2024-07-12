@@ -485,9 +485,10 @@ button.close-button {
 
 /* Starting of peoples module (Kumar Asapu)*/
 .people-image {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
+    background:#f9f9f9;
 }
 
 .text-yellow {
@@ -4211,3 +4212,14 @@ p::first-letter {
     border-top: 5px solid #778899; /* Change the color as needed */
     pointer-events: none; /* Ensure the arrow doesn't interfere with select clicks */
 }
+
+
+
+
+
+
+
+
+
+
+

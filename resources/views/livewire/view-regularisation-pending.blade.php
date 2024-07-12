@@ -2,7 +2,9 @@
     <style>
         #remarks::placeholder {
             color: #a3b2c7;
+            font-size: 12px;
         }
+     
     </style>
     @if(count($regularisations)>0)
     @foreach($regularisations as $r)
@@ -20,8 +22,26 @@
     @endif
 
     @endforeach
-    <div class="accordion bg-white  mb-3 rounded">
-        <div class="accordion-heading  rounded" onclick="toggleAccordion(this)">
+    @if (session()->has('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+    @elseif (session()->has('success'))  
+           <div class="alert alert-danger">
+                {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>     
+    @endif
+    
+    <div class="accordion bg-white border mb-3 rounded">
+        <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
             <div class="accordion-title p-2 rounded">
 
@@ -31,7 +51,7 @@
 
                     <span style="color: #778899; font-size: 12px; font-weight: 500;">{{ucwords(strtolower($r->employee->first_name))}}&nbsp;{{ucwords(strtolower($r->employee->last_name))}}</span>
 
-                    <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{$r->emp_id}}</span>
+                    <span style="color: #36454F; font-size: 10px; font-weight: 500;">{{$r->emp_id}}</span>
 
                 </div>
 
@@ -103,68 +123,70 @@
 
                 <div class="content mb-2 px-4 d-flex gap-2">
                     <a href="{{ route('review-pending-regularation', ['id' => $r->id]) }}" style="color:rgb(2,17,79);font-size:12px;margin-top:3px;">View Details</a>
-                    <button class="rejectBtn" data-toggle="modal" data-target="#rejectModal">Reject</button>
-                    <button class="approveBtn" data-toggle="modal" data-target="#approveModal">Approve</button>
+                    <button class="rejectBtn"wire:click="openRejectModal">Reject</button>
+                    <button class="approveBtn"wire:click="openApproveModal">Approve</button>
                 </div>
-                <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
+                @if($openRejectPopupModal==true)
+                <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <div class="modal-header" style="background-color:rgba(163, 178, 199, 0.15);">
-                                <h6 class="modal-title" id="rejectModalLabel" style="color:#666;font-weight:600;">Reject Request</h6>
-                                <div style="width: 25px; height: 25px; border-radius: 50%; border:2px solid #666; display: flex; justify-content: center; align-items: center; position: relative;">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="border: none; background-color: transparent; position: absolute; left: 2px;margin-left:-16px">
-                                        <span aria-hidden="true" style="font-weight:400;font-size:30px;color:666">&times;</span>
-                                    </button>
-                                </div>
+                            <div class="modal-header" style="background-color: #f5f5f5; height: 50px">
+                                <h5 class="modal-title" id="rejectModalTitle"style="color:#778899;">Reject Request</h5>
+                                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeRejectModal" style="background-color: #f5f5f5;border-radius:20px;border:2px solid #778899;height:20px;width:20px;" >
+                                </button>
                             </div>
-                            <div class="modal-body">
-                                <p style="font-size:14px;">Are you sure you want to reject this application?</p>
-                                <div class="form-group">
-                                    <label for="remarks" style="font-size:12px;color:#666;font-weight:400;">Remarks</label>
-                                    <input type="text" class="form-control" id="remarks" placeholder="Enter reason here" wire:model="remarks" style="height: 100px; padding-bottom: 70px;">
-                                </div>
+                            <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                                    <p style="font-size:14px;">Are you sure you want to reject this application?</p>
+                                    <div class="form-group">
+                                            <label for="remarks" style="font-size:12px;color:#666;font-weight:400;">Remarks</label>
+                                            <input type="text" class="form-control placeholder-small" id="remarks" placeholder="Enter reason here" wire:model="remarks" style="height: 100px; padding-bottom: 70px;">
+                                    </div>
+                               
                             </div>
-                            <div class="modal-footer justify-content-center" style="border:none;">
-                                <button type="button" class="approveBtn" data-dismiss="modal" style="width:90px;">Cancel</button>
-                                <button type="button" class="rejectBtn" wire:click="reject({{$r->id}})" style="width:90px;">Confirm</button>
+                            <div class="modal-footer">
+                                    <button type=
+                                    "button"class="approveBtn"wire:click="closeRejectModal">Cancel</button>
+                                    <button type="button"class="rejectBtn"wire:click="reject({{$r->id}})">Confirm</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color:rgba(163, 178, 199, 0.15);">
-                                <h5 class="modal-title" id="approveModalLabel" style="color:#666;font-weight:600;">Approve Request</h5>
-                                <div style="width: 25px; height: 25px; border-radius: 50%; border:2px solid #666; display: flex; justify-content: center; align-items: center; position: relative;">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="border: none; background-color: transparent; position: absolute; left: 2px;margin-left:-16px">
-                                        <span aria-hidden="true" style="font-weight:400;font-size:30px;color:666">&times;</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="modal-body">
-                                <p style="font-size:14px;">Are you sure you want to approve this application?</p>
-                                <div class="form-group">
-                                    <label for="remarks" style="font-size:12px;color:#666;font-weight:400;">Remarks:</label>
-                                    <input type="text" class="form-control" id="remarks" placeholder="Enter remarks" wire:model="remarks" style="height: 100px; padding-bottom: 70px;">
-                                </div>
-                            </div>
-                            <div class="modal-footer justify-content-center" style="border:none;"> <!-- Centered footer -->
-                                <div> <!-- Button wrapper -->
-                                    <button type="button" class="approveBtn btn-primary" style="width:90px;" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="rejectBtn" style="width:90px;" wire:click="approve({{$r->id}})">Confirm</button>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>
+                @endif
+                @if($openApprovePopupModal==true)
+                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #f5f5f5; height: 50px">
+                                        <h5 class="modal-title" id="approveModalTitle"style="color:#778899;">Approve Request</h5>
+                                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeApproveModal" style="background-color: #f5f5f5;border-radius:20px;border:2px solid #778899;height:20px;width:20px;" >
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                                            <p style="font-size:14px;">Are you sure you want to approve this application?</p>
+                                            <div class="form-group">
+                                                    <label for="remarks" style="font-size:12px;color:#666;font-weight:400;">Remarks</label>
+                                                    <input type="text" class="form-control" id="remarks" placeholder="Enter reason here" wire:model="remarks" style="height: 100px; padding-bottom: 70px;">
+                                            </div>
+                                    
+                                    </div>
+                                    <div class="modal-footer">
+                                            <button type=
+                                            "button"class="approveBtn"wire:click="closeApproveModal">Cancel</button>
+                                            <button type="button"class="rejectBtn"wire:click="approve({{$r->id}})">Confirm</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                @endif
             </div>
         </div>
 
 
-
+        
     </div>
-    @endforeach
+      @endforeach
     @else
     <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
         <img src="/images/pending.png" alt="Pending Image" style="width:60%; margin:0 auto;">
@@ -172,5 +194,4 @@
     </div>
     @endif
 
-
-</div>
+</div>    

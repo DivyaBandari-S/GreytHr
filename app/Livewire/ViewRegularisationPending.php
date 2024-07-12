@@ -19,11 +19,30 @@ class ViewRegularisationPending extends Component
 
     public $remarks;
 
+    public $openRejectPopupModal=false;
+
+    public $openApprovePopupModal=false;
     public $countofregularisations;
     public function mount()
     {
         $this->employeeId = auth()->guard('emp')->user()->emp_id;
         $this->user = EmployeeDetails::where('emp_id', $this->employeeId)->first();
+    }
+    public function openRejectModal()
+    {
+       $this->openRejectPopupModal=true;
+    }
+    public function closeRejectModal()
+    {
+        $this->openRejectPopupModal=false;
+    }
+    public function openApproveModal()
+    {
+        $this->openApprovePopupModal=true;
+    }
+    public function closeApproveModal()
+    {
+        $this->openApprovePopupModal=false;
     }
     public function approve($id)
     {
@@ -87,8 +106,10 @@ class ViewRegularisationPending extends Component
         }
         $this->countofregularisations--;
         Session::flash('success', 'Regularisation Request approved successfully');
+        $this->remarks='';
+        $this->closeApproveModal();
     }
-    
+     
     public function reject($id)
     {
         $currentDateTime = Carbon::now();
@@ -105,8 +126,11 @@ class ViewRegularisationPending extends Component
         $item->rejected_date = $currentDateTime; 
         $item->rejected_by=$this->user->first_name . ' ' . $this->user->last_name;
         $item->save();
+
         $this->countofregularisations--;
         Session::flash('success', 'Regularisation Request rejected successfully');
+        $this->remarks='';
+        $this->closeRejectModal();
     }
  
   
