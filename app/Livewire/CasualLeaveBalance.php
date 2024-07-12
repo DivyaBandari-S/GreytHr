@@ -111,11 +111,11 @@ class CasualLeaveBalance extends Component
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
             $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('leave_type', 'Causal Leave')
+                ->where('leave_type', 'Casual Leave')
                 ->get();
 
             $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
-                ->where('leave_type', 'Causal Leave')
+                ->where('leave_type', 'Casual Leave')
                 ->where('status', 'approved')
                 ->get();
 
@@ -140,13 +140,13 @@ class CasualLeaveBalance extends Component
             $grantedLeavesByMonth = [];
             $availedLeavesByMonth = [];
             $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('leave_type', 'Causal Leave')
+                ->where('leave_type', 'Casual Leave')
                 ->whereYear('from_date', $currentYear)
                 ->sum('leave_balance');
 
             for ($month = $startingMonth; $month <= $currentMonth; $month++) {
                 $availedLeavesCount = LeaveRequest::where('emp_id', $employeeId)
-                    ->where('leave_type', 'Causal Leave')
+                    ->where('leave_type', 'Casual Leave')
                     ->where('status', 'approved')
                     ->whereYear('from_date', $currentYear)
                     ->whereMonth('from_date', $month)

@@ -337,7 +337,7 @@
                                 <p style="color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;">
                                         {{ $casualLeavePerYear }} of {{ $casualLeavePerYear }} Consumed
                             </p>
-                            <div class="tube" style="width: 100%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Causal Leave Probation') }};"></div>
+                            <div class="tube" style="width: 100%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave Probation') }};"></div>
                             </div>
                         </div>
                     </div>
@@ -457,7 +457,7 @@
                                         0 of {{ $casualLeavePerYear }} Consumed
                                     @endif
                             </p>
-                            <div class="tube" style="width: {{ $percentageCasual }}%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Causal Leave Probation') }};"></div>
+                            <div class="tube" style="width: {{ $percentageCasual }}%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave Probation') }};"></div>
                             </div>
                         </div>
                     </div>
@@ -511,7 +511,7 @@
                                         0 of {{ $casualProbationLeaveBalance }} Consumed
                                     @endif
                                 </p>
-                                <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Causal Leave Probation') }};"></div>
+                                <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
                             </div>
                         </div>
                     </div>

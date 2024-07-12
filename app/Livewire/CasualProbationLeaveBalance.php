@@ -92,13 +92,13 @@ class CasualProbationLeaveBalance extends Component
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             
             $this->employeeLeaveBalances= EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->where('leave_type', 'Causal Leave Probation')
+            ->where('leave_type', 'Casual Leave Probation')
             ->get();
             
             // Now $employeeLeaveBalances contains all the rows from employee_leave_balances 
             // where emp_id matches and leave_type is "Sick Leave"
             $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_type', 'Causal Leave Probation')
+            ->where('leave_type', 'Casual Leave Probation')
             ->where('status', 'approved')
             ->get();
 
@@ -127,14 +127,14 @@ class CasualProbationLeaveBalance extends Component
             $grantedLeavesByMonth = [];
             $availedLeavesByMonth = [];
             $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('leave_type', 'Causal Leave Probation')
+                ->where('leave_type', 'Casual Leave Probation')
                 ->whereYear('from_date', $currentYear)
                 ->sum('leave_balance');
 
             for ($month = $startingMonth; $month <= $currentMonth; $month++) {
                 // Fetch availed leaves count for this month
                 $availedLeavesCount = LeaveRequest::where('emp_id', $employeeId)
-                    ->where('leave_type', 'Causal Leave Probation')
+                    ->where('leave_type', 'Casual Leave Probation')
                     ->where('status', 'approved')
                     ->whereYear('from_date', $currentYear)
                     ->whereMonth('from_date', $month)

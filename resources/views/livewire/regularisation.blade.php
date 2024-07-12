@@ -997,9 +997,9 @@
         </div>
         @else
         <div class="apply-box">
-            <img src="https://gt-linckia.s3.amazonaws.com/static-ess-v6.3.0-prod-144/emptystate_regularisation.svg" style="margin-top:80px;">
-            <p style="color: #7f8fa4;font-weight:400;font-size: 20px;">Smart! Your attendance is sorted.</p>
-            <p style="color: #a3b2c7;font-weight:400;font-size: 16px;margin-top:-20px;">Still want to apply
+            <img src="{{ asset('images/pending.png') }}" style="margin-top:50px;" height="180" width="180">
+            <p style="color: #7f8fa4;font-weight:400;font-size: 14px;">Smart! Your attendance is sorted.</p>
+            <p style="color: #a3b2c7;font-weight:400;font-size: 12px;margin-top:-20px;">Still want to apply
                 regularization? Select dates(s).</p>
         </div>
         @endif
@@ -1148,7 +1148,7 @@ $lastItem = end($regularisationEntries); // Get the last item
 
 @else
 <div class="hidden-pending-box">
-    <img src="https://gt-linckia.s3.amazonaws.com/static-ess-v6.3.0-prod-144/review-list-empty.svg" style="margin-top:80px;">
+    <img src="{{ asset('images/regularisation.png') }}" style="margin-top:80px;">
     <p style="color: #a3b2c7;font-weight:400;font-size: 20px;margin-top:20px;">Hey, you have no
         regularization records to view.</p>
 </div>

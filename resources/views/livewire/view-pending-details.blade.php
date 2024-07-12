@@ -17,7 +17,7 @@
                                         @endif
                                         <div>
                                             @if(isset($leaveRequest['leaveRequest']->first_name))
-                                            <p style="font-size: 12px; font-weight: 500; text-align: center; margin: auto; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ ucwords(strtolower($leaveRequest['leaveRequest']->first_name)) }} {{ ucwords(strtolower($leaveRequest['leaveRequest']->last_name)) }}">
+                                            <p class="mb-0" style="font-size: 12px; font-weight: 500; text-align: center; margin: auto; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ ucwords(strtolower($leaveRequest['leaveRequest']->first_name)) }} {{ ucwords(strtolower($leaveRequest['leaveRequest']->last_name)) }}">
                                                 {{ ucwords(strtolower($leaveRequest['leaveRequest']->first_name)) }} {{ ucwords(strtolower($leaveRequest['leaveRequest']->last_name)) }}
                                             <br>
                                             @if(isset($leaveRequest['leaveRequest']->emp_id))
@@ -25,7 +25,7 @@
                                             @endif
                                             </p>
                                             @else
-                                                <p style="font-size: 12px; font-weight: 500;">Name Not Available</p>
+                                                <p class="mb-0" style="font-size: 12px; font-weight: 500;">Name Not Available</p>
                                             @endif
                                         </div>
                                  </div>
@@ -41,7 +41,7 @@
                                 </p>
                             </div>
 
-                            <div class="col accordion-content" >
+                            <div class="col accordion-content mb-0" >
                                     @php
                                         $numberOfDays = $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session);
                                     @endphp
@@ -52,7 +52,7 @@
                                             @if(isset($leaveRequest['leaveRequest']->from_date))
                                                {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}
                                             @else
-                                                Date Not Available
+                                                <span>Date Not Available</span>
                                             @endif
                                         </span> <br>
                                         <span style="color: #778899; font-size: 10px;">Full Day</span>
@@ -61,7 +61,7 @@
                                             @if(isset($leaveRequest['leaveRequest']->from_date))
                                             <span style="font-size: 12px; font-weight: 600;"> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span style="color: #494F55;font-size:10px;font-weight:normal; ">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
                                             @else
-                                                Date Not Available
+                                                <span>Date Not Available</span>
                                             @endif
                                         </span> <br>
                                         <span style="color: #778899; font-size: 10px;">Half Day</span>
@@ -74,7 +74,7 @@
                                                     <span style="font-size: 12px; font-weight: 600;"> {{ $leaveRequest['leaveRequest']->to_date->format('d M Y') }}<br><span style="color: #494F55;font-size:10px;font-weight:normal; ">{{$leaveRequest['leaveRequest']->to_session }}</span></span>
                                                 </div>
                                             @else
-                                                Date Not Available
+                                              <span>  Date Not Available</span>
                                             @endif
                                         </span>
                                         @endif
