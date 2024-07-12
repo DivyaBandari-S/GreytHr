@@ -188,6 +188,9 @@ Route::middleware(['auth:com','handleSession'])->group(function () {
 });
 
 Route::middleware(['auth:hr','handleSession'])->group(function () {
+    Route::get('/hrFeeds', Feeds::class)->name('hrfeeds');
+    Route::get('/hreveryone', Everyone::class)->name('hreveryone');
+    Route::get('/hrevents', Activities::class);
     Route::get('/hrPage', AuthChecking::class)->name('hrPage');
     Route::get('/home-dashboard', HomeDashboard::class)->name('admin-home');
     Route::get('/letter-requests', LetterRequests::class)->name('letter-requests');

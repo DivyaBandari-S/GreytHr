@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('hr_emp_id');
             $table->string('admin_emp_id')->nullable();
             $table->string('emp_id')->nullable();
-            $table->enum('category', ['appreciations', 'buy_sell_rent', 'company_news', 'events', 'everyone']);
+            $table->enum('category',  ['Appreciations', 'Buy/Sell/Rent', 'Companynews', 'Events', 'Everyone','Hyderabad','US']);
             $table->text('description');
             $table->string('attachment')->nullable();
             $table->timestamps();

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('fi_emp_id')->nullable()->default(null)->unique();
             $table->string('company_id');
+            $table->string('emp_id');
             $table->string('employee_name');
             $table->string('image');
             $table->date('date_of_birth');
@@ -41,6 +42,11 @@ return new class extends Migration
             $table->foreign('company_id')
                 ->references('company_id') // Assuming the primary key of the companies table is 'id'
                 ->on('companies')
+                ->onDelete('restrict')
+                ->onUpdate('cascade');
+                $table->foreign('emp_id')
+                ->references('emp_id')
+                ->on('employee_details')
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
             $table->timestamps();

@@ -1,18 +1,29 @@
 <div class="px-4">
     <div class="container mt-3" style="height:60px;">
+
+
         <div class="row bg-white" style="height:80px">
             <div class="col-md-1 mt-3" style="height:60px">
-                @foreach($employeeDetails as $employee)
-                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/'. $employee->image) }}">
-                @endforeach
+            @if(auth()->guard('emp')->check() || auth()->guard('hr')->check())
+    @if($employeeDetails)
+        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $employeeDetails->image) }}">
+    @else
+        <p>No employee details found.</p>
+    @endif
+@else
+    <p>No employee details available.</p>
+@endif
+
             </div>
             <div class="col-md-10 mt-2 bg-white d-flex align-items-center justify-content-between">
                 <div>
-                    @if(Auth::check())
-                    <span class="text-base font-semibold">Hey {{ ucwords(strtolower(Auth::user()->first_name)) }} {{ ucwords(strtolower(Auth::user()->last_name)) }}</span>
-                    @else
-                    <p>No employee details available.</p>
-                    @endif
+                @if(auth()->guard('emp')->check())
+    <span class="text-base">Hey {{ ucwords(strtolower(auth()->guard('emp')->user()->first_name)) }} {{ ucwords(strtolower(auth()->guard('emp')->user()->last_name)) }}</span>
+@elseif(auth()->guard('hr')->check())
+    <span class="text-base">Hey {{ ucwords(strtolower(auth()->guard('hr')->user()->employee_name)) }}</span>
+@else
+    <p>No employee details available.</p>
+@endif
                     <div class="text-xs">Ready to dive in?</div>
                 </div>
                 <div>
@@ -28,52 +39,69 @@
                             <div class="text-left text-xs">Posts</div>
                         </div>
                     </button>
-
                     @if($showFeedsDialog)
-                    <!-- Modal -->
                     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+        
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
-                                <!-- Modal Header -->
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Creating a Post</h5>
-                                    <button wire:click="closeFeeds" type="button" class="btn-close" aria-label="Close"></button>
+                                          <h5 class="modal-title">Creating a Post</h5>
 
+                                    <button wire:click="closeFeeds" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
                                 </div>
-                                <!-- Modal Body -->
+                                @if(Session::has('error'))
+    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert" style="font-size: 12px; width: 90%; margin: 10px auto 0;">
+        {{ Session::get('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+
+
                                 <form wire:submit.prevent="submit">
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label for="category">You are posting in:</label>
-                                            <select wire:model="category" class="form-select" id="category">
-                                                <option value="Appreciations">Appreciations</option>
-                                                <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
-                                                <option value="Companynews">Companynews</option>
-                                                <option value="Events">Events</option>
-                                                <option value="Everyone">Everyone</option>
-                                                <option value="Hyderabad">Hyderabad</option>
-                                                <option value="US">US</option>
-                                            </select>
+                                        <select wire:model="category" class="form-select" id="category">
+                                        <option value="Appreciations">Appreciations</option>
+                                        <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
+                                        <option value="Companynews">Companynews</option>
+                                        <option value="Events">Events</option>
+                                        <option value="Everyone">Everyone</option>
+                                        <option value="Hyderabad">Hyderabad</option>
+                                        <option value="US">US</option>
+                                    </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="content">Write something here:</label>
-                                            <textarea wire:model="description" class="form-control" id="content" rows="3"></textarea>
+                                            <label for="content" style="display: block; font-weight: 600;text-align:start">Write something here:</label>
+                                            <textarea wire:model="description" class="form-control" id="content" rows="2"></textarea>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="attachment">Upload Attachment:</label>
-                                            <input wire:model="attachment" type="file" id="attachment" class="form-control-file">
-                                            @if ($attachment)
-                                            <p>File: {{ $attachment->getClientOriginalName() }}</p>
-                                            @endif
-                                            @if ($message)
-                                            <p>{{ $message }}</p>
-                                            @endif
+                                        <div class="form-group" >
+                                            <label for="attachment" style="display: block; font-weight: 600;text-align:start">Upload Attachment:</label>
+                                           
+                                            <div  style="text-align:start">
+    <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+
+    @if ($image)
+    <div class="mt-3">
+        
+        <div>
+            <img src="{{ $image->temporaryUrl() }}" height="50" width="50" alt="Image Preview" style="max-width: 300px;">
+        </div>
+    </div>
+    @endif
+</div>
+
                                         </div>
                                     </div>
-                                    <!-- Modal Footer -->
+                                  
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Post</button>
-                                        <button wire:click="closeFeeds" class="btn btn-secondary">Cancel</button>
+                                    <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
+                                    <button wire:click="submit" class="submit-btn" type="button">Submit</button>
+                            <button wire:click="closeFeeds" class="cancel-btn" type="button" style="border: 1px solid rgb(2, 17, 79);">Cancel</button>
+                       
+                                    </div>
                                     </div>
                                 </form>
                             </div>
@@ -86,137 +114,213 @@
         </div>
         <!-- Additional row -->
         <div class="row mt-5 d-flex" style="overflow-x: hidden;">
-            <div class="col-md-3 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:500px">
+        <div class="col-md-3 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:400;overflow-x: hidden;">
 
-                <p style="font-weight: 400;color:grey">Filters</p>
-                <hr style="width: 100%;border-bottom: 1px solid grey;">
-
-
-                <p style="font-weight: 400;color:grey">Activities</p>
-
-                <div class="activities">
-                    <label class="custom-radio-label">
-                        <input type="radio" name="radio" value="activities" checked data-url="/Feeds">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trello stroke-current text-salmon-400 stroke-1" style="width: 1rem; height: 1rem; margin-left: 10px;">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <rect x="7" y="7" width="3" height="9"></rect>
-                            <rect x="14" y="7" width="3" height="5"></rect>
-                        </svg>
-                        <span class="custom-radio-button bg-blue" style="margin-left:10px;font-size:8px"></span>
-                        <span style="color:#778899;font-size:12px;font-weight:500;">All Activities</span>
-                    </label>
-                </div>
-                <div class="posts" style="display:flex">
-                    <label class="custom-radio-label" style="display:flex; align-items:center;">
-                        <input type="radio" name="radio" value="" data-url="/everyone"><span>
-                            <div class="icon-containers" style="margin-left:10px">
-                                <circle cx="12" cy="12" r="12" fill="#F9D3BF" />
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
-                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                    <polyline points="13 2 13 9 20 9"></polyline>
-                                </svg>
-                            </div>
-                        </span><span class="custom-radio-button bg-blue" style="margin-left:10px;font-size:10px"></span> <span style="color:#778899;font-size:12px;font-weight:500;">Posts</span></label>
-                </div>
+<p style="font-weight: 500;font-size:13px;color:#47515b;">Filters</p>
+<hr style="width: 100%;border-bottom: 1px solid grey;">
 
 
-                <hr style="width: 100%;border-bottom: 1px solid grey;">
-                <div style="overflow-y:auto;max-height:300px; overflow-x: hidden;">
-                    <div class="row">
-                        <div class="col " style="margin: 0px;">
-                            <div class="input-group">
-                                <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; " type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
-                                <button style=" border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="search-btn" type="button">
-                                    <i style="text-align: center;" class="fa fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+<p style="font-weight: 500;font-size:13px;color:#47515b;cursor:pointer">Activities</p>
+<div class="activities">
+<label class="custom-radio-label" style="display: flex; align-items: center;">
+<input type="radio" name="radio" value="activities" checked data-url="/Feeds">
+<div class="icon-container" style="margin-left: 10px;">
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
+<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
 
-                    <div class="w-full visible mt-1" style="margin-top:20px">
-                        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;" onclick="toggleDropdown('dropdownContent1', 'arrowSvg1')">
-                            <span class="text-xs leading-4" style="font-weight:bold; color: grey;">Groups</span>
+<rect x="7" y="7" width="3" height="9"></rect>
+<rect x="14" y="7" width="3" height="5"></rect>
+</svg>
+</div>
+<span class="custom-radio-button bg-blue" style="margin-left: 10px; font-size: 8px;"></span>
+<span style="color: #778899; font-size: 12px; font-weight: 500;">All Activities</span>
+</label>
+</div>
 
-                            <span class="arrow-icon" id="arrowIcon1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:black">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
-                        </div>
-                        <div id="dropdownContent1" style="display: none;">
-                            <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
-                                <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">All Feeds</a>
-                                <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Events</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Company News</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Appreciation</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Buy/Sell/Rent</a>
-                            </ul>
-                        </div>
-                    </div>
+<div class="posts" style="display:flex">
+    <label class="custom-radio-label" style="display:flex; align-items:center;">
+       
+        @if(auth()->guard('emp')->check())
+        <input type="radio" name="radio" value=""   data-url="/everyone"><span>
+@elseif(auth()->guard('hr')->check())
+<input type="radio" name="radio" value=""   data-url="/hreveryone"><span>
+@else
+<p>No employee details available.</p>
+@endif
 
+        <div class="icon-container" style="margin-left: 10px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
 
-                    <div class="w-full visible mt-1" style="margin-top: 20px;">
-                        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
-                            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Location</span>
-                            <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg2" style="color: black;">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
-                        </div>
-                        <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
-                            <ul style="font-size: 12px; margin: 0; padding: 0;">
-                                <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">India</b>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Guntur</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hyderabad</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Doddaballapur</a>
+<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+<polyline points="13 2 13 9 20 9"></polyline>
+</svg>
+</div>
 
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Tirupati</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Vijayawada</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Adilabad</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Trivandrum</a>
-                                <b class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</b>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">California</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> New York</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> Alaska</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hawaii</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> Texas</a>
-                            </ul>
-                        </div>
-                    </div>
+        </span><span class="custom-radio-button bg-blue" style="margin-left:10px;font-size:10px"></span> <span style="color:#778899;font-size:12px;font-weight:500;">Posts</span></label>
+</div>
 
-                    <div class="w-full visible mt-1" style="margin-top: 20px;">
-                        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
-                            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Department</span>
-                            <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color: black;">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
-                        </div>
-                        <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
-                            <ul style="font-size: 12px; margin: 0; padding: 0;">
-
-
-
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">HR</a>
-
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations Team</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">QA</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Production Team</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Technology</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Sales Team</a>
-                                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Testing Team</a>
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-
-
+<hr style="width: 100%;border-bottom: 1px solid grey;">
+<div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
+    <div class="row">
+        <div class="col " style="margin: 0px;">
+            <div class="input-group">
+                <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; " type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
+                <button style=" border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="search-btn" type="button">
+                    <i style="text-align: center;" class="fa fa-search"></i>
+                </button>
             </div>
+        </div>
+    </div>
+
+    <div class="w-full visible mt-1" style="margin-top:20px">
+        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;" onclick="toggleDropdown('dropdownContent1', 'arrowSvg1')">
+            <span class="text-xs leading-4" style="font-weight:bold; color: grey;">Groups</span>
+
+            <span class="arrow-icon" id="arrowIcon1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:black">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </span>
+        </div>
+        <div id="dropdownContent1" style="display: none;">
+            <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
+                <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">All Feeds</a>
+                @if (Auth::guard('hr')->check())
+          
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One </a>
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One </a>
+@endif
+
+
+
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Events</a>
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Events</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Company News</a>
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Company News</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Appreciation</a>
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Appreciation</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Buy/Sell/Rent</a>
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Buy/Sell/Rent</a>
+@endif
+            </ul>
+        </div>
+    </div>
+
+    <div class="w-full visible mt-1" style="margin-top: 20px;">
+        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
+            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Location</span>
+            <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg2" style="color: black;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </span>
+        </div>
+        <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
+            <ul style="font-size: 12px; margin: 0; padding: 0;">
+                <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">India</b>
+                @if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Guntur</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hyderabad</a>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Doddaballapur</a>
+
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Tirupati</a>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Vijayawada</a>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Adilabad</a>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Trivandrum</a>
+                <b class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</b>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">California</a>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> New York</a>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> Alaska</a>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hawaii</a>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> Texas</a>
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Guntur</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hyderabad</a>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Doddaballapur</a>
+
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Tirupati</a>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Vijayawada</a>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Adilabad</a>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Trivandrum</a>
+                <b class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</b>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">California</a>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> New York</a>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> Alaska</a>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hawaii</a>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;"> Texas</a>
+@endif
+              
+            </ul>
+        </div>
+    </div>
+
+    <div class="w-full visible mt-1" style="margin-top: 20px;">
+        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
+            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Department</span>
+            <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color: black;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </span>
+        </div>
+        <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
+        <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
+                                <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">All Feeds</a>
+                                @if (Auth::guard('hr')->check())
+                          
+        <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One </a>
+    @elseif (Auth::guard('emp')->check())
+        <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One </a>
+    @endif
+
+
+
+    @if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Events</a>
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Events</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Company News</a>
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Company News</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Appreciation</a>
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Appreciation</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Buy/Sell/Rent</a>
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Buy/Sell/Rent</a>
+@endif
+                            </ul>
+        </div>
+    </div>
+</div>
+</div>
             <div class="menu col-md-8" style="text-align: -webkit-center;">
                 <div id="eventsSection" style="margin-top: 20px">
 
@@ -233,55 +337,7 @@
 
                     <!-- Begin the form outside the .form-group div -->
                     @if($showFeedsDialog)
-                    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Creating a Post</h5>
-
-                                    <button wire:click="closeFeeds" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <form wire:submit.prevent="submit">
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label for="category">You are posting in:</label>
-                                            <select wire:model="category" class="form-select" id="category">
-
-                                                <option value="Appreciations">Appreciations</option>
-                                                <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
-                                                <option value="CompanyNews">Companynews</option>
-                                                <option value="Events">Events</option>
-                                                <option value="Everyone">Everyone</option>
-                                                <option value="Everyone">Hyderabad</option>
-                                                <option value="Everyone">US</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="content">Write something here:</label>
-                                            <textarea wire:model="description" class="form-control" id="content" rows="3"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="attachment">Upload Attachment:</label>
-                                            <input wire:model="attachment" type="file" id="attachment" class="form-control-file">
-                                            @if ($attachment)
-                                            <p>File: {{ $attachment->getClientOriginalName() }}</p>
-                                            @endif
-                                            @if ($message)
-                                            <p>{{ $message }}</p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn" style="background-color:rgb(2, 17, 79);">Post</button>
-                                        <button wire:click="closeFeeds" class="btn btn-secondary">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-backdrop fade show"></div>
+                  
                     @endif
                 </div>
                 @else
@@ -305,16 +361,20 @@
                     <!-- Upcoming Birthdays List -->
                     <div class="F" style="background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top:20px">
                         <div class="m-0 mb-3 mt-1 row">
-                            <div class="col-6" style="text-align: left;">
-                                @livewire('company-logo')
-                            </div>
-                            <div class="col-6 m-auto" style="font-size: 13px; font-weight: normal; color: #9E9696;text-align:end;">
+                        <div class="col-md-4 mb-2" style="text-align: center;">
+                        @livewire('company-logo')
+                                </div>
+                         
+                            <div class="col-4 m-auto" style="font-size: 13px; font-weight: normal; color: #9E9696;text-align:center;">
                                 {{ $post->category }}
                             </div>
+                            <div class="col-4 m-auto" style="font-size: 11px; font-weight: normal; color: #9E9696; text-align: end;">
+                    {{ $post->created_at->diffForHumans() }}
+                </div>
                         </div>
                         <div class="row m-0 mb-3">
                             @php
-                            $employee = \App\Models\EmployeeDetails::where('emp_id', $post->emp_id)->first();
+                            $employee = \App\Models\Hr::where('hr_emp_id', $post->hr_emp_id)->first();
                             @endphp
                             @if($employee)
                             <div class="col-3">
@@ -322,7 +382,7 @@
                             </div>
                             <div class="col-9 m-auto" style="text-align: left">
                                 <p class="text-base m-0" style="margin-left: 20px; font-size: 14px;">
-                                    {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}
+                                    {{ ucwords(strtolower($employee->employee_name)) }}
                                 </p>
 
                             </div>
@@ -763,6 +823,7 @@
                     }
                 }
             </script>
+
 
             <script>
                 document.addEventListener('click', function(event) {

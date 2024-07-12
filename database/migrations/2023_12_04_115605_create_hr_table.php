@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('hr_emp_id')->nullable()->default(null)->unique();
             $table->string('company_id');
+            $table->string('emp_id');
             $table->string('employee_name');
             $table->string('image');
             $table->string('position');
@@ -39,6 +40,12 @@ return new class extends Migration
                 ->on('companies')
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
+                $table->foreign('emp_id')
+                ->references('emp_id')
+                ->on('employee_details')
+                ->onDelete('restrict')
+                ->onUpdate('cascade');
+            
             $table->timestamps();
         });
 
