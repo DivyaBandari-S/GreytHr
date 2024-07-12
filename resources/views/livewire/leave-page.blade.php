@@ -26,13 +26,6 @@
                 border-radius: 5px;
             }
 
-            .applyingFor {
-                color: #333;
-                font-size: 14px;
-                font-weight: 500;
-                text-align: start;
-            }
-
             .restrictedHoliday {
                 color: #778899;
                 font-size: 12px;
