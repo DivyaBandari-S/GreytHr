@@ -54,7 +54,7 @@
                     @foreach ($senderDetails as $senderId => $messages)
 
                     <div class="border rounded bg-white p-2 mb-2">
-                        <a href="{{ route('chat', ['query' => $messages[0]->chating_id]) }}" class="notification-head" wire:click="markAsRead({{ $messages[0]->id }})">
+                        <a href="{{ route('chat', ['query' => Hashids::encode($messages[0]->chating_id)]) }}" class="notification-head" wire:click="markAsRead({{ $messages[0]->id }})">
                             {{ ucwords(strtolower($messages[0]->first_name)) }}
                             {{ ucwords(strtolower($messages[0]->last_name)) }} (#{{ $senderId }})
                             @if (count($messages) > 1)
