@@ -353,6 +353,7 @@ body {
 }
 .submit-btn:hover {
     background-color: #272d48;
+    color: #fff;
 }
 .cancel-btn {
     background-color: #fff;
