@@ -1,22 +1,21 @@
-<div wire:poll>
+<div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="script.js"></script>
 
-    <div class="chat-container ">
+    <div class="chat-container " wire:poll>
         <div class="people-list" id="people-list" style=" border: 2px solid silver;border-radius:5px;">
             <div class="row justify-content-center" style="margin: 0;">
-                <div class="col-md-10 d-flex align-items-center justify-content-between"
-                    style="background: rgb(2, 17, 79); color: white; height: 50px; border-radius: 10px;margin-top:10px">
-                    <p style="font-size: 20px; font-weight: 600; margin: 0 10px;">Chats</p>
-                </div>
             </div>
 
 
 
-            <div id="search">
-                <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
-                <input type="text" placeholder="Search contacts..." />
+            <div class="col-md-10 d-flex align-items-center justify-content-between"
+            style="height: 50px; border-radius: 10px; margin-top: 10px;">
+            <div class="input-group" style="width: 100%;">
+                <input type="text" class="form-control" placeholder="Search..." wire:model="searchTerm"
+                    aria-label="Search" aria-describedby="search-addon" wire:input="filter">
             </div>
+        </div>
 
 
 
@@ -35,7 +34,9 @@
                                         src="{{ asset('storage/' . $conversation->getReceiver()->image) }}"
                                         class="card-img-top" alt="...">
                                     <aside class="grid grid-cols-12 w-full">
-                                        <a href="{{ route('chat', $conversation->id) }}"
+                                        {{ $conversation->id }}
+                                        <a href="#"
+                                            wire:click="redirectToEncryptedLink('{{ $conversation->id }}')"
                                             class="col-span-11 border-b pb-2 border-gray-200 relative truncate leading-5 w-full flex-nowrap p-1"
                                             style="display: block; text-decoration: none;">
                                             <div class="flex justify-between w-full items-center">

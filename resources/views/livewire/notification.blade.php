@@ -1,7 +1,6 @@
 <div class="d-flex align-items-center">
 
     <div>
-
         <a href="/users" style="color: white; text-decoration: none;">
             <i class="fa fa-comment" style="position: relative;display: inline-block; vertical-align: middle;font-size: 18px; margin-left: 10px; margin-right: 8px;">
                 @if ($chatNotificationCount > 0)

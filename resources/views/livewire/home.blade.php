@@ -106,7 +106,7 @@
                                         </p>
                                         <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg" alt="" style="height: 40px; width: 40px;">
                                     </div>
-                                    <div class="leave-display d-flex border-top p-3 gap-1" >
+                                    <div class="leave-display d-flex align-items-center border-top p-3 gap-1" >
                                     @php
                                         function getRandomColor() {
                                             $colors = ['#FFD1DC', '#B0E57C', '#ADD8E6', '#E6E6FA', '#FFB6C1'];
@@ -122,10 +122,10 @@
                                             $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
                                         ?>
                                         <div class="circle-container d-flex flex-column mr-3">
-                                        <div class="circle d-flex" style="border-radius: 50%;width: 35px;height: 35px;align-items: center;justify-content: center;border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
-                                            <span style="color: #778899; font-weight: 500; font-size: 11px;">{{ $initials }}</span>
+                                        <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                            <span >{{ $initials }}</span>
                                         </div>
-                                        <span style="display: block; text-align: center;font-size:10px;color:#778899;">Leave</span>
+                                        <span class="leaveText">Leave</span>
                                     </div>
 
                                         <?php
@@ -133,14 +133,14 @@
                                         ?>
                                     @endfor
                                         @if ($count > 3)
-                                            <div class="circle-notify d-flex flex-column mt-3" style="cursor:pointer; align-items:center;" data-toggle="modal" data-target="#exampleModalCenter">
-                                                <a href=" " style="color:blue;font-size:10px">+{{ $count - 3}}</a>
-                                                <p style="color:blue;font-size:10px;margin-top:-5px;"><span class="remaining">More</span></p>
+                                            <div class=" remainContent d-flex flex-column align-items-center" data-toggle="modal" data-target="#exampleModalCenter">
+                                                <span>+{{ $count - 3}}</span>
+                                                <span class="remaining">More</span>
                                             </div>
                                         @endif
                                     </div>
                                 @else
-                                    <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
+                                    <div class="d-flex flex-column justify-content-center align-items-center">
                                         <img src="/images/not_found.png" alt="Image Description" style="width: 7em;">
                                         <p class="mb-2 homeText">
                                             Hurrah! You've nothing to review.
@@ -172,8 +172,8 @@
                                             $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
                                         ?>
                                     <div class=" d-flex flex-column mr-3">
-                                        <div class="circle d-flex" style="border-radius: 50%;width: 35px;height: 35px;align-items: center;justify-content: center;border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
-                                            <span style="color: #778899; font-weight: 500; font-size: 11px;">{{ $initials }}</span>
+                                        <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                            <span >{{ $initials }}</span>
                                         </div>
                                         <span style="display: block;font-size:10px;color:#778899;">Leave</span>
                                     </div>
@@ -307,7 +307,7 @@
                                                 $randomColorAbsent = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
                                             @endphp
 
-                                            <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
+                                            <div class="thisCircle" style="border: 2px solid {{getRandomAbsentColor() }};" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
                                                 <span class="initials">
                                                     {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
                                                 </span>
@@ -315,9 +315,9 @@
                                         @endif
                                     @endfor
                                         @if ($CountAbsentEmployees > 5)
-                                        <div class="circle-notify" style="color:blue;cursor:pointer;display:flex;flex-direction:column;align-items:center;margin-top:10px;">
-                                            <a href="#" style="color:blue;font-size:10px;">+{{ $CountAbsentEmployees - 9 }}</a>
-                                            <p style="font-size:10px;margin-top:-5px;"><span class="remaining" >More</span></p>
+                                        <div class="remainContent d-flex flex-column align-items-center mt-2">
+                                            <span>+{{ $CountAbsentEmployees - 9 }}</span>
+                                            <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
                                         @endif
                                     </div>
@@ -349,9 +349,9 @@
                                                 @endif
                                             @endfor
                                         @if ($CountLateSwipes > 9)
-                                        <div class="circle-notify" style="color:blue;cursor:pointer;display:flex;flex-direction:column;align-items:center;margin-top:10px;">
-                                            <a href="#" style="color:blue;font-size:0.725rem;">+{{ $CountLateSwipes - 9 }}</a>
-                                            <p style="font-size:0.725rem;margin-top:-5px;"><span class="remaining" >More</span></p>
+                                        <div class="remainContent d-flex flex-column align-items-center mt-2">
+                                            <span>+{{ $CountLateSwipes - 9 }}</span>
+                                            <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
                                         @endif
                                     </div>
@@ -387,9 +387,9 @@
                                         @endif
                                     @endfor
                                         @if ($CountEarlySwipes > 9)
-                                        <div class="circle-notify" style="color:blue;cursor:pointer;display:flex;flex-direction:column;align-items:center;margin-top:10px;">
-                                            <a href="#" style="color:blue;font-size:0.725rem;">+{{ $CountEarlySwipes - 9 }}</a>
-                                            <p style="font-size:0.725rem;margin-top:-5px;"><span class="remaining" >More</span></p>
+                                        <div class="remainContent d-flex flex-column align-items-center mt-2">
+                                            <span>+{{ $CountEarlySwipes - 9 }}</span>
+                                            <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
                                         @endif
                                     </div>
@@ -407,9 +407,9 @@
                     <div class="home-hover">
                         <div class="reviews">
                             <div class="homeCard4">
-                                <div class="team-heading px-3 mt-2" style="display:flex; justify-content:space-between;">
+                                <div class="team-heading px-3 mt-2 d-flex justify-content-between" >
                                     <div>
-                                        <p class="pt-1" style="font-size:12px;color:#778899;font-weight:500;"> Team On Leave</pclass>
+                                        <p class="pt-1 teamOnLeave"> Team On Leave</pclass>
                                     </div>
                                     <div >
                                         <a href="/team-on-leave-chart" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
@@ -419,7 +419,7 @@
                                     <div class="team-Notify px-3">
                                         <p style="color: #778899; font-size: 11px; font-weight: 500;">
                                             Today ({{$teamCount}}) </p>
-                                            <div class="team-leave d-flex flex-row mr gap-3" >
+                                            <div class="team-leave d-flex flex-row  gap-3" >
                                                 @php
                                                     function getRandomLightColor() {
                                                         $colors = ['#FFD1DC', '#B0E57C', '#ADD8E6', '#E6E6FA', '#FFB6C1'];
@@ -433,8 +433,8 @@
                                                             if ($teamLeave) {
                                                                 $initials = strtoupper(substr($teamLeave->employee->first_name, 0, 1) . substr($teamLeave->employee->last_name, 0, 1));
                                                         ?>
-                                                            <div class="circle-notify" style=" border-radius: 50%; background: #fcfdfe;     width: 35px;height: 35px;display: flex;align-items: center;justify-content: center; border: 2px solid {{ getRandomLightColor() }};" data-toggle="tooltip" data-placement="top" title="{{ucwords(strtolower($teamLeave->employee->first_name))}} {{ucwords(strtolower($teamLeave->employee->last_name))}}">
-                                                                <span style="color:#778899;font-weight:500;font-size:11px;">{{$initials}}</span>
+                                                            <div class="thisCircle" style="  border: 2px solid {{ getRandomLightColor() }};" data-toggle="tooltip" data-placement="top" title="{{ucwords(strtolower($teamLeave->employee->first_name))}} {{ucwords(strtolower($teamLeave->employee->last_name))}}">
+                                                                <span>{{$initials}}</span>
                                                             </div>
 
                                                         <?php
@@ -442,9 +442,9 @@
                                                         ?>
                                                 @endfor
                                                     @if ($teamCount > 4)
-                                                        <div class="circle-notify" style="color:blue;cursor:pointer; margin-top:20px;display:flex;flex-direction:column;align-items:center;">
-                                                        <a href="#" style="color:blue;font-size:0.725rem;">+{{ $teamCount - 4 }}</a>
-                                                        <p style="font-size:10px;margin-top:-5px;"><span class="remaining" >More</span></p>
+                                                        <div class="remainContent d-flex mt-3 flex-column align-items-center" >
+                                                        <span >+{{ $teamCount - 4 }}</span>
+                                                        <p class="mb-0" style="margin-top:-5px;">More</p>
                                                         </div>
                                                     @endif
                                                 </div>
@@ -453,14 +453,23 @@
                                             <p class="homeText font-weight-500 text-start">
                                             This month ({{$upcomingLeaveApplications}}) </p>
                                             @if($upcomingLeaveRequests)
-                                            <div class="mt-2">
-                                                @foreach($upcomingLeaveRequests as $requests)
-                                                <div class="d-flex gap-4 align-items-center">
-                                                    <div class="thisCircle">
-                                                        <span>{{ $requests->employee->first_name }}</span>
+                                            <div wire:ignore class="mt-2 d-flex align-items-center gap-3 mb-3">
+                                                @foreach($upcomingLeaveRequests->take(5) as $requests)
+                                                @php
+                                                $randomColorList = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+                                                @endphp
+                                                <div wire:ignore class="d-flex gap-4 align-items-center">
+                                                    <div class="thisCircle" style="border: 1px solid {{ $randomColorList }}">
+                                                        <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }} </span>
                                                     </div>
                                                 </div>
                                                 @endforeach
+                                                @if($upcomingLeaveRequests->count() > 5)
+                                                    <div class="remainContent d-flex flex-column align-items-center"> <!-- Placeholder color -->
+                                                        <span>+{{ $upcomingLeaveRequests->count() - 5 }} </span>
+                                                        <span style="margin-top:-5px;">More</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                             @endif
                                             <p class="homeText"><a href="/team-on-leave-chart">Click here</a> to see who will be on leave in the upcoming days!</p>
@@ -507,7 +516,7 @@
                                         <a href="/slip" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
                                     </div>
 
-                                    <div wire:ignore style="display:flex;justify-content:space-between;margin-top:20px;">
+                                    <div wire:ignore class="d-flex justify-content-between align-items-center mt-3">
                                             <div style="position: relative;">
                                                     <!-- {{-- <canvas id="outerPieChart" width="120" height="120"></canvas>
                                                         <canvas id="innerPieChart" width="60" height="60" style="position: absolute; top: 5px;"></canvas> --}} -->

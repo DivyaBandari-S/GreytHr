@@ -74,8 +74,8 @@ class LeaveBalances extends Component
             $this->employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
             $this->sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Sick Leave', $this->currentYear);
             $this->lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Loss Of Pay', $this->currentYear);
-            $this->casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Causal Leave', $this->currentYear);
-            $this->casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Causal Leave Probation', $this->currentYear);
+            $this->casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave', $this->currentYear);
+            $this->casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave Probation', $this->currentYear);
             $this->marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Marriage Leave', $this->currentYear);
             $this->maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Maternity Leave', $this->currentYear);
             $this->paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Petarnity Leave', $this->currentYear);
@@ -83,7 +83,7 @@ class LeaveBalances extends Component
             // Check if employeeDetails is not null before accessing its properties
             if ($this->employeeDetails) {
 
-                // Get the logged-in employee's approved leave days for sick, causal, and loss of pay leave
+                // Get the logged-in employee's approved leave days for sick, Casual, and loss of pay leave
                 $leaveBalances = LeaveHelper::getApprovedLeaveDays($this->employeeId, $this->selectedYear);
 
                 // Use the returned values in your component
@@ -121,9 +121,9 @@ class LeaveBalances extends Component
                 switch ($leaveType) {
                     case 'Sick Leave':
                         return $this->getSickLeaveColor($percentage);
-                    case 'Causal Leave Probation':
+                    case 'Casual Leave Probation':
                         return $this->getSickLeaveColor($percentage);
-                    case 'Causal Leave':
+                    case 'Casual Leave':
                         return $this->getSickLeaveColor($percentage);
                     default:
                         return '#000000';
@@ -215,8 +215,8 @@ class LeaveBalances extends Component
             $selectedYear = now()->year;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $selectedYear);
-            $casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Causal Leave', $selectedYear);
-            $casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Causal Leave Probation', $selectedYear);
+            $casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $selectedYear);
+            $casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $selectedYear);
             $marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $selectedYear);
             $maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $selectedYear);
             $paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Petarnity Leave', $selectedYear);

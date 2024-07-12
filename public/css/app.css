@@ -2223,8 +2223,8 @@ input[type="radio"] {
 }
 
 .withdraw {
-    background: #3a9efd;
-    border: none;
+    background: rgb(2, 17, 79);
+    border: 1px solid rgb(2, 17, 79);
     font-size: 12px;
     padding: 5px 10px;
     color: white;
@@ -2603,7 +2603,15 @@ input[type="radio"] {
 }
 .remainContent{
     color: #0000ff;
-    font-size: 12px;
+    cursor:pointer;
+    font-size: 10px;
+}
+.teamOnLeave{
+    font-size:12px;color:#778899;font-weight:500;
+}
+.leaveText{
+    font-size: 10px;
+    color: #778899;
 }
 .v-line {
     height: 120px;

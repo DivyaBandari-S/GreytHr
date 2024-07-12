@@ -650,12 +650,12 @@ class LeaveApply extends Component
             $allLeaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
             // Filter leave balances based on the selected leave type
             switch ($this->leave_type) {
-                case 'Causal Leave Probation':
+                case 'Casual Leave Probation':
                     $this->leaveBalances = [
                         'casualProbationLeaveBalance' => $allLeaveBalances['casualProbationLeaveBalance']
                     ];
                     break;
-                case 'Causal Leave':
+                case 'Casual Leave':
                     $this->leaveBalances = [
                         'casualLeaveBalance' => $allLeaveBalances['casualLeaveBalance']
                     ];

@@ -27,7 +27,7 @@
         <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
             <div class="form-row d-flex mt-3">
                 <div class="form-group col-md-7">
-                    <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave type</label> <br>
+                    <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave Type</label> <br>
                     <select id="leaveType" class="dropdown p-2 outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType" style="width: 50%; font-weight: 400; color: #778899; font-size: 12px;border:1px solid #ccc;">
                         <option value="default">Select Type</option>
                         @php
@@ -37,9 +37,9 @@
                         ->select('companies.company_logo', 'companies.company_name')
                         ->first();
                         @endphp
-                        <option value="Causal Leave">Casual Leave</option>
+                        <option value="Casual Leave">Casual Leave</option>
                         @if (($differenceInMonths < 6) && ($employeeId !==$managerInfo->manager_id))
-                            <option value="Causal Leave Probation">Casual Leave Probation</option>
+                            <option value="Casual Leave Probation">Casual Leave Probation</option>
                             @endif
                             <option value="Loss of Pay">Loss of Pay</option>
                             <option value="Marriage Leave">Marriage Leave</option>
@@ -64,16 +64,16 @@
                                 <span style="font-size: 10px; color: #50327c;font-weight:500;">SL</span>
                             </div>
                             <span style="font-size: 11px; font-weight: 500; color: #50327c; margin-left: 5px;" title="Sick Leave">{{ $this->leaveBalances['sickLeaveBalance'] }}</span>
-                            @elseif($this->leave_type == 'Causal Leave')
+                            @elseif($this->leave_type == 'Casual Leave')
                             <!-- Casual Leave -->
                             <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e7fae7; display: flex; align-items: center; justify-content: center; ">
                                 <span style="font-size: 10px; color: #1d421e;font-weight:500;">CL</span>
                             </div>
-                            <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;" title="Causal Leave">{{ $this->leaveBalances['casualLeaveBalance'] }}</span>
-                            @elseif($this->leave_type == 'Causal Leave Probation')
+                            <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;" title="Casual Leave">{{ $this->leaveBalances['casualLeaveBalance'] }}</span>
+                            @elseif($this->leave_type == 'Casual Leave Probation')
                             <!-- Casual Leave Probation -->
                             <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #fff6e5; display: flex; align-items: center; justify-content: center; ">
-                                <span style="font-size: 9px; color: #e59400;font-weight:500;" title="Causal Leave Probation">CLP</span>
+                                <span style="font-size: 9px; color: #e59400;font-weight:500;" title="Casual Leave Probation">CLP</span>
                             </div>
                             <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;">{{ $this->leaveBalances['casualProbationLeaveBalance'] }}</span>
                             @elseif($this->leave_type == 'Loss of Pay')
@@ -118,7 +118,7 @@
                         @php
                         $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session);
                         @endphp
-                        @if($this->leave_type == 'Causal Leave Probation')
+                        @if($this->leave_type == 'Casual Leave Probation')
                         <!-- Casual Leave Probation -->
                         @if($calculatedNumberOfDays > $this->leaveBalances['casualProbationLeaveBalance'])
                         <!-- Display an error message if the number of days exceeds the leave balance -->
@@ -131,7 +131,7 @@
                         <span></span>
                         @endif
 
-                        @elseif($this->leave_type == 'Causal Leave')
+                        @elseif($this->leave_type == 'Casual Leave')
                         <!-- Casual Leave Probation -->
                         @if($calculatedNumberOfDays > $this->leaveBalances['casualLeaveBalance'])
                         <!-- Display an error message if the number of days exceeds the leave balance -->

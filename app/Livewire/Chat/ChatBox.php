@@ -7,6 +7,9 @@ use App\Notifications\MessageRead;
 use App\Notifications\MessageSent;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Crypt;
+// use Hashids;
+use Vinkla\Hashids\Facades\Hashids;
 class ChatBox extends Component
 {
 
@@ -15,6 +18,7 @@ class ChatBox extends Component
     public $body = '';
     public $loadedMessages;
     public $attachment;
+    public $searchTerm;
     public $file_path;
     public $isCalling = false;
 
@@ -22,14 +26,22 @@ class ChatBox extends Component
     use WithFileUploads;
     public $paginate_var = 10;
 
+
+
+
     protected $listeners = [
         'loadMore'
     ];
+    public function redirectToEncryptedLink($id)
+    {
+        // $hashids = new Hashids('default-salt', 50);
+        $encryptedId = Hashids::encode($id);
+        return redirect()->to(route('chat', $encryptedId));
+    }
     protected function resetInputFields()
     {
         $this->body = '';
-        $this->file_path ='';
-
+        $this->file_path = '';
     }
 
 
@@ -97,6 +109,31 @@ class ChatBox extends Component
     }
 
 
+    public function filter()
+    {
+        $trimmedSearchTerm = trim($this->searchTerm);
+        $user = auth()->user();
+
+        // Retrieve all conversations
+        $conversations = $user->conversations()->latest('updated_at')->get();
+
+        // Filter the conversations by the name of the receiver
+        $filteredConversations = $conversations->filter(function ($conversation) use ($trimmedSearchTerm) {
+            $receiver = $conversation->getReceiver();
+            return $receiver && (
+                stripos($receiver->first_name, $trimmedSearchTerm) !== false ||
+                stripos($receiver->last_name, $trimmedSearchTerm) !== false ||
+                stripos($receiver->department, $trimmedSearchTerm) !== false
+            );
+        });
+
+        return $filteredConversations;
+    }
+
+
+
+
+
 
     public function loadMessages()
     {
@@ -118,11 +155,11 @@ class ChatBox extends Component
 
         #skip and query
         $this->loadedMessages = Message::where('chating_id', $this->selectedConversation->id)
-    ->where(function ($query) {
-        $query->where('sender_id', auth()->user()->emp_id)
-            ->orWhere('receiver_id', auth()->user()->emp_id);
-    })
-    ->get();
+            ->where(function ($query) {
+                $query->where('sender_id', auth()->user()->emp_id)
+                    ->orWhere('receiver_id', auth()->user()->emp_id);
+            })
+            ->get();
 
 
         return $this->loadedMessages;
@@ -191,7 +228,6 @@ class ChatBox extends Component
                 $this->selectedConversation,
                 optional($this->selectedConversation->getReceiver())->id
             ));
-
     }
 
 
@@ -206,12 +242,11 @@ class ChatBox extends Component
     {
         $this->isStreaming = false;
     }
-        public function mount()
+    public function mount()
     {
 
 
         $this->loadMessages();
-
     }
 
 
@@ -219,11 +254,15 @@ class ChatBox extends Component
 
     public function render()
     {
-        $user= auth()->user();
+        $user = auth()->user();
+        // Retrieve all conversations
+        $conversations = $user->conversations()->latest('updated_at')->get();
+        if ($this->searchTerm) {
+            $conversations = $this->filter();
+        }
 
-        return view('livewire.chat.chat-box',[
-    'conversations'=>$user->conversations()->latest('updated_at')->get()
-]);
-
+        return view('livewire.chat.chat-box', [
+            'conversations' => $conversations,
+        ]);
     }
 }

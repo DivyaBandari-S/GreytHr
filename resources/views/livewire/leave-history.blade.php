@@ -85,9 +85,9 @@
                             @if($leaveBalances)
                             @if($leaveRequest->leave_type === 'Sick Leave' && isset($leaveBalances['sickLeaveBalance']))
                             <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['sickLeaveBalance'] }}</span>
-                            @elseif($leaveRequest->leave_type === 'Causal Leave Probation' && isset($leaveBalances['casualProbationLeaveBalance']))
+                            @elseif($leaveRequest->leave_type === 'Casual Leave Probation' && isset($leaveBalances['casualProbationLeaveBalance']))
                             <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
-                            @elseif($leaveRequest->leave_type === 'Causal Leave' && isset($leaveBalances['casualLeaveBalance']))
+                            @elseif($leaveRequest->leave_type === 'Casual Leave' && isset($leaveBalances['casualLeaveBalance']))
                             <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['casualLeaveBalance'] }}</span>
                             @elseif($leaveRequest->leave_type === 'Loss Of Pay' && isset($leaveBalances['lossOfPayBalance']))
                             <span style="font-size: 12px; font-weight: 500;">{{ $leaveBalances['lossOfPayBalance'] }}</span>
