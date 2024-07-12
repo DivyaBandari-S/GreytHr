@@ -13,6 +13,7 @@ class LeaveRequest extends Model
     protected $table = 'leave_applications';
     protected $fillable = [
         'emp_id',
+        'category_type',
         'leave_type',
         'from_date',
         'from_session',
@@ -22,6 +23,7 @@ class LeaveRequest extends Model
         'cc_to',
         'contact_details',
         'reason',
+        'is_read',
         'file_paths'
         // Add other fields that you want to be fillable here
     ];

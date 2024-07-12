@@ -1090,9 +1090,6 @@ width: 170px; */
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         }
 
-        .fa-info-circle:hover {
-            text-decoration: underline;
-        }
 
         .circle.IRIS {
             background-color: #d29be1;
@@ -1293,16 +1290,16 @@ color: #fff;
 
         <div class="row m-0" style="text-align: center;">
             <div class="col-md-2"></div>
-            <div class="col-md-8">
+            <div class="col-md-4">
                 <div class="row m-0 topMsg-attendance-info">
 
                     <div class="col-8 p-0">
                         <!-- Small box with the text -->
-                        <div>Access card details not available</div>
+                        <div style="white-space:nowrap;">Access card details not available</div>
                     </div>
 
                     <!-- Blue info icon on the right -->
-                    <div class="info-icon-container-attendance-info col-2">
+                    <div class="info-icon-container-attendance-info col-4">
 
                         <i class="fa fa-info-circle" aria-hidden="true" style="font-size: 14px; color: blue;"></i>
                         <div class="info-box-attendance-info">
@@ -1316,14 +1313,14 @@ color: #fff;
 
         <div class="row m-0 mt-3">
             <div class="col-md-2">
-                <div class="insight-card bg-white pt-2 pb-2">
+                <div class="insight-card bg-white pt-2 pb-2" style="height: 100px;">
                     <h6 class="text-secondary text-regular text-center" style="font-size:12px;"> Penalty Days </h6>
                     <section class="text-center">
                         <p class="text-2"> 0 </p>
                     </section>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="insight-card bg-white pt-2 pb-2">
                     <h6 class="text-secondary text-regular text-center" style="font-size:12px;">
                         Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
@@ -1338,7 +1335,7 @@ color: #fff;
                     </section>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="insight-card bg-white pt-2 pb-2">
                     <h6 class="text-secondary text-regular text-center" style="font-size:12px;">Avg. Work Hrs
                     </h6>
@@ -1738,9 +1735,8 @@ color: #fff;
                 </div>
                 @endif
                 @if($defaultfaCalendar==0)
-                <div class="row m-0 p-0">
-                    @livewire('attendance-table')
-                </div>
+                @livewire('attendance-table')
+
                 @endif
                 <div class="col-md-5">
                     @if($defaultfaCalendar==1)
@@ -1754,6 +1750,7 @@ color: #fff;
                                 </p>
                             </div>
                             <div class="col-5 pb-1 pt-1">
+
                                 <p class="text-overflow mb-1" style="font-size:12px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-weight: 500;">
                                     10:00 am to 07:00 pm</p>
                                 <p class="text-muted m-0" style="font-size:12px;">Shift:10:00 to
@@ -1967,7 +1964,7 @@ color: #fff;
                     @endif
                     @if($defaultfaCalendar==1)
                     <div class="container6">
-                        <h3 style="margin-left:20px;color: #7f8fa4;font-size:14px;">Swipe Details</h3>
+                        <h3 style="margin-left:20px;color: #7f8fa4;font-size:14px;margin-top:15px;align-items:center;">Swipe Details</h3>
                         <div class="arrow-button" style="float:right;margin-top:-30px;margin-right:20px;" id="toggleButton">
                         </div>
 
@@ -2184,11 +2181,6 @@ color: #fff;
             const calendarIcon = document.getElementById('calendar-icon');
             calendarIcon.addEventListener('click', hideBoxContainer);
         </script>
-
-
-
-
-
 
         <script>
             $(document).ready(function() {
