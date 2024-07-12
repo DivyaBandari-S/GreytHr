@@ -453,7 +453,11 @@ class LeaveApply extends Component
             // Fetch details for the selected manager
             $this->fetchManagerDetails($empId);
         }
+
+        // Ensure showApplyingToContainer remains false
+        $this->showApplyingToContainer = false;
     }
+
 
 
     // Method to fetch manager details
