@@ -80,7 +80,7 @@ class EmployeeList extends Component
         // $encryptedId = Crypt::encryptString($createdConversation->id);
           $encryptedId = Hashids::encode($createdConversation->id);
         // Redirect to the chat component with the newly created conversation's ID
-        return redirect()->route('chat', c);
+        return redirect()->route('chat', ['query' => $encryptedId]);
     }
     public function filter()
     {

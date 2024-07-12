@@ -25,7 +25,7 @@
             @endif
         </div>
         <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
-            <div class="form-row d-flex mt-3">
+            <div class="form-row d-flex align-itmes-center mt-3">
                 <div class="form-group col-md-7">
                     <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave Type</label> <br>
                     <select id="leaveType" class="dropdown p-2 outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType" style="width: 50%; font-weight: 400; color: #778899; font-size: 12px;border:1px solid #ccc;">
@@ -297,7 +297,7 @@
                         @foreach($managerFullName as $employee)
                         <div style="display:flex; gap:10px;align-items:center; cursor: pointer;" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             <div>
-                                <input type="checkbox" wire:model="selectedManager" value="{{ $employee['emp_id'] }}">
+                                <input type="checkbox" wire:model="selectedManager" value="{{ $employee['emp_id'] }}" wire:click="toggleManager('{{ $employee['emp_id'] }}')">
                             </div>
                             @if($employee['image'])
                             <div class="employee-profile-image-container">
@@ -351,7 +351,7 @@
                             <div class="input-group">
                                 <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append">
-                                    <button type="button" wire:click="searchCCRecipients" style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn">
+                                    <button type="button" wire:click="searchCCRecipients" class="btn">
                                         <i style="margin-right: 5px;" class="fa fa-search"></i>
                                     </button>
                                 </div>
