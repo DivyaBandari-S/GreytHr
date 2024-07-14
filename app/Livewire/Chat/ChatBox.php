@@ -167,6 +167,71 @@ class ChatBox extends Component
 
 
 
+    // public function sendMessage()
+    // {
+    //     if (!$this->selectedConversation) {
+    //         // Handle error when selectedConversation is null
+    //         return;
+    //     }
+
+    //     // Validate the input
+    //     $this->validate([
+    //         'body' => 'required|string|max:255',
+    //     ]);
+
+    //     // Check if there's an attachment
+    //     if ($this->attachment) {
+    //         // Generate a unique file name
+    //         $fileName = uniqid() . '_' . $this->attachment->getClientOriginalName();
+
+    //         // Store the attachment
+    //         // $this->attachment->storeAs('public/help-desk-files', $fileName);
+    //         $this->attachment->storeAs('chating-files', $fileName);
+
+    //         // Save the file path
+    //         $filePath = 'chating-files/' . $fileName;
+    //     } else {
+    //         // No attachment provided
+    //         $filePath = null;
+    //     }
+
+    //     // Create a new message
+    //     $createdMessage = Message::create([
+    //         'chating_id' => $this->selectedConversation->id,
+    //         'sender_id' => auth()->User()->emp_id,
+    //         'receiver_id' => optional($this->selectedConversation->getReceiver())->emp_id,
+    //         'file_path' => $filePath,
+    //         'body' => $this->body,
+    //     ]);
+
+    //     // Push the created message to the loadedMessages collection
+    //     $this->loadedMessages->push($createdMessage);
+
+    //     // Update the conversation model
+    //     $this->selectedConversation->updated_at = now();
+    //     $this->selectedConversation->save();
+
+    //     // Reset the attachment property
+    //     $this->attachment = null;
+
+    //     // Reset the body property
+
+    //     $this->body = '';
+
+    //     $this->reset('body');
+
+    //     // Broadcast notification
+    //     optional($this->selectedConversation->getReceiver())
+    //         ->notify(new MessageSent(
+    //             auth()->user(),
+    //             $createdMessage,
+    //             $this->selectedConversation,
+    //             optional($this->selectedConversation->getReceiver())->id
+    //         ));
+    // }
+
+
+
     public function sendMessage()
     {
         if (!$this->selectedConversation) {
@@ -176,7 +241,8 @@ class ChatBox extends Component
 
         // Validate the input
         $this->validate([
-            'body' => 'required|string|max:255',
+            'body' => 'nullable|string|max:255',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240', // max 10MB
         ]);
 
         // Check if there's an attachment
@@ -185,11 +251,10 @@ class ChatBox extends Component
             $fileName = uniqid() . '_' . $this->attachment->getClientOriginalName();
 
             // Store the attachment
-            // $this->attachment->storeAs('public/help-desk-files', $fileName);
-            $this->attachment->storeAs('chating-files', $fileName);
+            $this->attachment->storeAs('public/chating-files', $fileName);
 
             // Save the file path
-            $filePath = 'chating-files/' . $fileName;
+            $filePath = 'storage/chating-files/' . $fileName;
         } else {
             // No attachment provided
             $filePath = null;
@@ -198,7 +263,7 @@ class ChatBox extends Component
         // Create a new message
         $createdMessage = Message::create([
             'chating_id' => $this->selectedConversation->id,
-            'sender_id' => auth()->User()->emp_id,
+            'sender_id' => auth()->user()->emp_id,
             'receiver_id' => optional($this->selectedConversation->getReceiver())->emp_id,
             'file_path' => $filePath,
             'body' => $this->body,
@@ -211,14 +276,8 @@ class ChatBox extends Component
         $this->selectedConversation->updated_at = now();
         $this->selectedConversation->save();
 
-        // Reset the attachment property
-        $this->attachment = null;
-
-        // Reset the body property
-
-        $this->body = '';
-
-        $this->reset('body');
+        // Reset the attachment and body properties
+        $this->reset(['body', 'attachment']);
 
         // Broadcast notification
         optional($this->selectedConversation->getReceiver())
@@ -229,8 +288,6 @@ class ChatBox extends Component
                 optional($this->selectedConversation->getReceiver())->id
             ));
     }
-
-
     public $isStreaming = false;
 
     public function startStreaming()
