@@ -6,6 +6,11 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+ :root {
+    --heading-color: #3b4452;
+    --requiredAlert: red;
+    --label-color: #7f8fa4;
+}
 
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
@@ -348,6 +353,7 @@ body {
 }
 .submit-btn:hover {
     background-color: #272d48;
+    color: #fff;
 }
 .cancel-btn {
     background-color: #fff;
@@ -1279,7 +1285,8 @@ input[type="date"]::before {
 }
 .form-group label {
     font-size: 12px;
-    color: #778899;
+    color: var(--label-color);
+    font-weight: 500;
 }
 .search-input-who-is-in {
     border: none;
@@ -2108,12 +2115,21 @@ input[type="radio"] {
     font-size: 14px;
     transition: color 0.3s;
 }
-
+.applyingFor {
+    color: var(--heading-color);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: start;
+}
 .accordion {
     border: 0.0625rem solid #ccc;
     margin-bottom: 0.625rem;
     width: 100%;
     margin: 0 auto;
+}
+.requiredMark{
+    color: var(--requiredAlert);
+    font-size: 12px;
 }
 
 .accordion:hover {
@@ -2132,9 +2148,23 @@ input[type="radio"] {
 }
 .hide-leave-info {
     background-color: #ffffe8;
+    color: var(--heading-color);
 }
-
-
+.empCcName{
+    color: var(--heading-color);
+    font-size: 12px; font-weight: 500; text-transform: capitalize;
+}
+.empIdStyle{
+    color: var(--label-color); font-size: 0.69rem;
+}
+.search-btn{
+    background-color: rgb(2, 17, 79);
+    border-radius: 0 5px 5px 0;  color: #fff; border: none; align-items: center; display: flex;
+}
+.searchBtnBg{
+    background-color: rgb(2, 17, 79);
+    border-radius: 0 5px 5px 0;
+}
 .accordion-heading {
     background-color: #fff;
     cursor: pointer;
@@ -2263,6 +2293,7 @@ input[type="radio"] {
 }
 .placeholder-small {
     font-size: 11px;
+    color: #778899;
 }
 #category::placeholder {
     color: #778899; /* Placeholder text color */
@@ -2418,7 +2449,7 @@ input[type="radio"] {
     border-radius: 3px;
     box-shadow: 2px 0 5px 0 #ccc;
     padding: 12px 15px;
-    width: 60%;
+    width: 35%;
     margin-top: 15px;
 
 }
@@ -2434,7 +2465,7 @@ input[type="radio"] {
     border-radius: 3px;
     box-shadow: 2px 0 5px 0 #ccc;
     padding: 12px 15px;
-    width: 60%;
+    width: 35%;
     margin-top: 15px;
 }
 .ellipsis {
@@ -2838,9 +2869,8 @@ input[type="radio"] {
     font-weight: 500;
 }
 .placeholder-small::placeholder {
-    font-size: 12px;
+    font-size: 11px;
     color: #778899;
-    font-weight: 500;
 }
 
 /* end of leave balance */

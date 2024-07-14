@@ -31,8 +31,8 @@ class LeaveApply extends Component
     public $leave_type;
     public $emp_id;
     public $from_date;
-    public $from_session;
-    public $to_session;
+    public $from_session = 'Session 1';
+    public $to_session = 'Session 2';
     public $to_date;
     public $applying_to;
     public $contact_details;
@@ -264,6 +264,16 @@ class LeaveApply extends Component
             }
         }
     }
+    public function handleCheckboxChange($empId)
+    {
+        if (isset($this->selectedPeople[$empId])) {
+            // If the checkbox is unchecked, remove from CC
+            $this->removeFromCcTo($empId);
+        } else {
+            // If the checkbox is checked, add to CC
+            $this->selectedPeople[$empId] = true;
+        }
+    }
     public function removeFromCcTo($empId)
     {
         // Remove the employee from selectedCcTo array
@@ -443,7 +453,11 @@ class LeaveApply extends Component
             // Fetch details for the selected manager
             $this->fetchManagerDetails($empId);
         }
+
+        // Ensure showApplyingToContainer remains false
+        $this->showApplyingToContainer = false;
     }
+
 
 
     // Method to fetch manager details
@@ -633,8 +647,6 @@ class LeaveApply extends Component
 
     public function handleEnterKey()
     {
-        // Optionally, you can perform additional logic here if needed
-        // For example, triggering the search method directly
         $this->searchCCRecipients();
     }
 

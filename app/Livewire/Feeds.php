@@ -1,5 +1,14 @@
 <?php
-
+// File Name                       : Feeds.php
+// Description                     : This file contains the information about Activities and Posts in this implemented functionality for adding comments and emojis.
+// Creator                         : Ashannagari Archana
+// Email                           : archanaashannagari@gmail.com
+// Organization                    : PayG.
+// Date                            : 2023-09-07
+// Framework                       : Laravel (10.10 Version)
+// Programming Language            : PHP (8.1 Version)
+// Database                        : MySQL
+// Models                          : Comment,AddComment,Emoji,EmojiReaction,EmployeeDetails
 namespace App\Livewire;
 
 use App\Models\Comment;
@@ -15,13 +24,16 @@ use Livewire\WithFileUploads;
 use App\Services\GoogleDriveService;
 use App\Models\Addcomment;
 use App\Models\Company;
+use App\Models\Hr;
+use Illuminate\Support\Facades\Session;
 use App\Models\Post;
+
 
 class Feeds extends Component
 {
 
     use WithFileUploads;
-
+   public $image;
     public $category;
     public $description;
 
@@ -33,6 +45,7 @@ class Feeds extends Component
     public $emojis;
 
     public $employees;
+    public $hr;
     public $combinedData;
     public $monthAndDay;
     public $currentCardEmpId;
@@ -196,6 +209,8 @@ class Feeds extends Component
 
         $this->validate();
         $employeeId = auth()->guard('emp')->user()->emp_id;
+ 
+
         Comment::create([
             'card_id' => $emp_id,
             'emp_id' => $employeeId,
@@ -205,7 +220,7 @@ class Feeds extends Component
         $this->reset(['newComment']);
         $this->isSubmitting = false;
         $this->comments = Comment::with('employee')
-            ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+            ->whereIn('emp_id', $this->employees->pluck('emp_id', 'hr'))
             ->orderByDesc('created_at')
             ->get();
         session()->flash('message', 'Comment added successfully.');
@@ -220,11 +235,16 @@ class Feeds extends Component
         $this->isSubmitting = true; // Set submitting flag to true
         // Validate the input fields
         $this->validate();
-        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $employeeId = auth()->user()->emp_id;
+        $hrId = HR::where('emp_id', $employeeId)->value('emp_id'); // Fetch HR emp_id based on Employee emp_id
+
+        // Create a new comment record using the Comment model
+     
         // Create a new comment record using the Addcomment model
         Addcomment::create([
             'emp_id' => $employeeId,
             'card_id' => $emp_id,
+            'hr_emp_id' => $hrId,
             'addcomment' => $this->newComment ?? '',
         ]);
 
@@ -253,28 +273,43 @@ class Feeds extends Component
 
     public function submit()
     {
+        // Validate the form data
         $this->validate($this->newCommentRules);
-        // Get the authenticated employee's ID
-        $emp_id = Auth::user()->emp_id;
+    
+        // Get the authenticated user
+        $user = Auth::user();
+        $employeeDetails = $user->employeeDetails;
+        $this->employeeDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
+       
+     
+        // Check if employee details exist and hr_emp_id is not null
+        if (!$this->employeeDetails || !$this->employeeDetails->hr_emp_id) {
+            // Handle case where hr_emp_id is null or not found
+            Session::flash('error', 'Employees are not allowed to Post Feeds');
+            return;
+        }
 
-        // Create the post with the provided emp_id and category
+        
         $post = Post::create([
-            'emp_id' => $emp_id,
+            'hr_emp_id' =>$user->hr_emp_id,
             'category' => $this->category,
             'description' => $this->description,
         ]);
 
+        // Handle the attachment if provided
         if ($this->attachment) {
             // Store the attachment and update the post's attachment field
             $attachmentPath = $this->attachment->store('attachments', 'public');
             $post->update(['attachment' => $attachmentPath]);
         }
-
-        // Reset form fields and display messages
+    
+        // Reset form fields and display success message
         $this->reset(['category', 'description', 'attachment']);
         $this->message = 'Post created successfully!';
         $this->showFeedsDialog = false;
     }
+    
+    
     public function setCurrentCardEmpId($empId)
     {
         // Set the current card's emp_id
@@ -303,29 +338,59 @@ class Feeds extends Component
     private function getEmpCompanyLogoUrl()
     {
         // Get the current authenticated employee's company ID
-        $empCompanyId = auth()->guard('emp')->user()->company_id;
+        if (auth()->guard('emp')->check()) {
+            // Get the current authenticated employee's company ID
+            $empCompanyId = auth()->guard('emp')->user()->company_id;
+    
+            // Assuming you have a Company model with a 'company_logo' attribute
+            $company = Company::where('company_id', $empCompanyId)->first();
+    
+            // Return the company logo URL, or a default if company not found
+            return $company ? $company->company_logo : asset('user.jpg');
+        } elseif (auth()->guard('hr')->check()) {
+            $empCompanyId = auth()->guard('hr')->user()->company_id;
+    
+            // Assuming you have a Company model with a 'company_logo' attribute
+            $company = Company::where('company_id', $empCompanyId)->first();
+            return $company ? $company->company_logo : asset('user.jpg');
+        }
+    
 
-        // Assuming you have a Company model with a 'company_logo' attribute
-        $company = Company::where('company_id', $empCompanyId)->first();
-
-        // Return the company logo URL, or a default if not found
-        return $company ? $company->company_logo : asset('user.jpg');
+        
+      
     }
 
     public function render()
-    {
+{
+    // Initialize variables
+    $this->employeeDetails = collect();
+    $this->hr = collect();
+    $storedEmojis = collect();
+    $emojis = collect();
 
+    // Check if 'emp' guard is authenticated
+    if (auth()->guard('emp')->check()) {
         $this->employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
         $storedEmojis = Emoji::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
         $emojis = EmojiReaction::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
-
-        return view('livewire.feeds', [
-            'comments' => $this->comments,
-            'addcomments' => $this->addcomments,
-            'empCompanyLogoUrl' => $this->empCompanyLogoUrl,
-            'employees' => $this->employeeDetails, 'emojis' => $emojis, 'storedEmojis' => $storedEmojis,
-        ]);
+    } 
+    // Check if 'hr' guard is authenticated
+    elseif (auth()->guard('hr')->check()) {
+        $this->employeeDetails = Hr::where('hr_emp_id', auth()->guard('hr')->user()->hr_emp_id)->get();
+    
     }
+
+    // Return the view with the necessary data
+    return view('livewire.feeds', [
+        'comments' => $this->comments,
+        'addcomments' => $this->addcomments,
+        'empCompanyLogoUrl' => $this->empCompanyLogoUrl,
+        'hr' => $this->employeeDetails,
+        'employees' => $this->employeeDetails,
+        'emojis' => $emojis,
+        'storedEmojis' => $storedEmojis,
+    ]);
+}
 
 
     public function saveEmoji()

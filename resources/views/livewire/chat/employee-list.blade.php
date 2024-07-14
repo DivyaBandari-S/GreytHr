@@ -12,7 +12,7 @@
                         @endforeach
                     </select>
                 </div>
-            </div>e
+            </div>
         </div>
 
         <!-- Right Side: Search and Employee Details -->

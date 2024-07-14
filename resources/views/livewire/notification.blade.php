@@ -1,9 +1,8 @@
 <div class="d-flex align-items-center">
-    
-    <div>
 
+    <div>
         <a href="/users" style="color: white; text-decoration: none;">
-            <i class="fa fa-comment" style="position: relative;display: inline-block; vertical-align: middle;font-size: 20px; margin-left: 10px; margin-right: 8px;">
+            <i class="fa fa-comment" style="position: relative;display: inline-block; vertical-align: middle;font-size: 18px; margin-left: 10px; margin-right: 8px;">
                 @if ($chatNotificationCount > 0)
                 <span class="badge bg-danger" style="position: absolute; top: -10px; right: -3px; font-size:10px;">
                     {{ $chatNotificationCount }}
@@ -55,7 +54,7 @@
                     @foreach ($senderDetails as $senderId => $messages)
 
                     <div class="border rounded bg-white p-2 mb-2">
-                        <a href="{{ route('chat', ['query' => $messages[0]->chating_id]) }}" class="notification-head" wire:click="markAsRead({{ $messages[0]->id }})">
+                        <a href="{{ route('chat', ['query' => Hashids::encode($messages[0]->chating_id)]) }}" class="notification-head" wire:click="markAsRead({{ $messages[0]->id }})">
                             {{ ucwords(strtolower($messages[0]->first_name)) }}
                             {{ ucwords(strtolower($messages[0]->last_name)) }} (#{{ $senderId }})
                             @if (count($messages) > 1)

@@ -16,7 +16,7 @@ class Finance extends Authenticatable
     protected $table = 'finance';
 
     protected $fillable = [
-        'fi_emp_id','image',
+        'fi_emp_id','image','emp_id',
         'company_id', 'employee_name', 'date_of_birth','role', 'salary', 'hire_date',
         'department', 'work_location', 'manager_name', 'bank_name',
         'account_number', 'routing_number', 'beneficiary_name', 'beneficiary_relationship',
@@ -29,6 +29,10 @@ class Finance extends Authenticatable
         'hire_date' => 'date',
         'is_active' => 'boolean',
     ];
+    public function employeeDetails()
+    {
+        return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
+    }
 
     public function com()
     {

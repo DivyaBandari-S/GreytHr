@@ -11,9 +11,9 @@
 
     <div class="applyContainer bg-white">
         @if($showinfoMessage)
-        <div class="hide-leave-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
-            <p class="mb-0" style="font-size:11px;">Leave is earned by an employee and granted by the employer to take time off work.  The employee is free to<br>
-                 avail this leave in accordance with the company policy.</p>
+        <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
+            <p class="mb-0" style="font-size:11px;">Leave is earned by an employee and granted by the employer to take time off work. The employee is free to<br>
+                avail this leave in accordance with the company policy.</p>
             <p class="mb-0 hideInfo" wire:click="toggleInfo">Hide</p>
         </div>
         @endif
@@ -25,9 +25,9 @@
             @endif
         </div>
         <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
-            <div class="form-row d-flex mt-3">
+            <div class="form-row d-flex align-itmes-center mt-3">
                 <div class="form-group col-md-7">
-                    <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave type</label> <br>
+                    <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave Type</label> <br>
                     <select id="leaveType" class="dropdown p-2 outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType" style="width: 50%; font-weight: 400; color: #778899; font-size: 12px;border:1px solid #ccc;">
                         <option value="default">Select Type</option>
                         @php
@@ -203,7 +203,7 @@
             </div>
             <div class="form-row d-flex mt-3">
                 <div class="form-group col-md-6">
-                    <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From date</label>
+                    <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From Date</label>
                     <input type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('from_date')">
                     @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
@@ -219,7 +219,7 @@
             </div>
             <div class="form-row d-flex  mt-3">
                 <div class="form-group col-md-6">
-                    <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To date</label>
+                    <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To Date</label>
                     <input type="date" wire:model.lazy="to_date" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('to_date')" name="toDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('to_date')">
                     @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
@@ -240,7 +240,7 @@
                     <div style="display:flex; flex-direction:row;">
                         <label for="applyingToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500; cursor: pointer;">
                             <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
-                            Applying to
+                            Applying To
                         </label>
                     </div>
                 </div>
@@ -284,8 +284,8 @@
                         <div class="col" style="margin: 0px; padding: 0px">
                             <div class="input-group">
                                 <input style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                <div class="input-group-append">
-                                    <button wire:click="searchCCRecipients" style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn" type="button">
+                                <div class="input-group-append input-group-append searchBtnBg d-flex align-items-center">
+                                    <button wire:click="searchCCRecipients"  class="search-btn" type="button">
                                         <i style="margin-right: 5px;" class="fa fa-search"></i> <!-- Adjust margin-right as needed -->
                                     </button>
                                 </div>
@@ -294,10 +294,10 @@
                     </div>
                     <!-- Your Blade file -->
                     <div class="scrollApplyingTO">
-                    @foreach($managerFullName as $employee)
+                        @foreach($managerFullName as $employee)
                         <div style="display:flex; gap:10px;align-items:center; cursor: pointer;" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             <div>
-                                <input type="checkbox" wire:model="selectedManager" value="{{ $employee['emp_id'] }}" >
+                                <input type="checkbox" wire:model="selectedManager" value="{{ $employee['emp_id'] }}" wire:click="toggleManager('{{ $employee['emp_id'] }}')">
                             </div>
                             @if($employee['image'])
                             <div class="employee-profile-image-container">
@@ -313,7 +313,7 @@
                                 <p style="color:#778899; font-size:10px;margin-bottom:0;" value="{{ $employee['full_name'] }}"> #{{ $employee['emp_id'] }} </p>
                             </div>
                         </div>
-                    @endforeach
+                        @endforeach
                     </div>
                 </div>
                 @endif
@@ -321,7 +321,7 @@
             </div>
             <div class="form-group">
                 <label for="ccToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500;">
-                    CC to
+                    CC To
                 </label>
                 <div class="control-wrapper d-flex align-items-center" style="flex-direction: row; gap: 10px;">
                     <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
@@ -346,12 +346,12 @@
 
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false" style="max-height: 230px; overflow-y: auto;">
-                    <div class="row" style="padding: 0 ; margin:0;">
+                    <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
                         <div class="col-md-10" style="margin: 0px; padding: 0px">
                             <div class="input-group">
-                                <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
-                                <div class="input-group-append">
-                                    <button type="button" wire:click="searchCCRecipients" style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn">
+                                <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                <div class="input-group-append searchBtnBg d-flex align-items-center">
+                                    <button type="button" wire:click="searchCCRecipients" class="search-btn">
                                         <i style="margin-right: 5px;" class="fa fa-search"></i>
                                     </button>
                                 </div>
@@ -359,7 +359,7 @@
                         </div>
 
                         <div class="col-md-2 m-0 p-0">
-                            <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #333;">
+                            <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:35px;width:35px;">
                                 <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
                             </button>
                         </div>
@@ -367,7 +367,9 @@
                     @foreach($ccRecipients as $employee)
                     <div wire:key="{{ $employee['emp_id'] }}">
                         <div style="margin-top: 10px; display: flex; gap: 10px; text-transform: capitalize; align-items: center; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
-                            <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px;cursor:pointer;">
+
+                            <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
+
                             @if($employee['image'])
                             <div class="employee-profile-image-container">
                                 <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius: 50%;">
@@ -377,13 +379,15 @@
                                 <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
                             </div>
                             @endif
+
                             <div class="center mb-2 mt-2">
-                                <p style="font-size: 12px; font-weight: 500; text-transform: capitalize; margin-bottom: 0;">{{ ucwords(strtolower($employee['full_name'])) }}</p>
-                                <p style="color: #778899; font-size: 0.69rem; margin-bottom: 0;">#{{ $employee['emp_id'] }}</p>
+                                <p class="mb-0 empCcName" >{{ ucwords(strtolower($employee['full_name'])) }}</p>
+                                <p class="mb-0 empIdStyle">#{{ $employee['emp_id'] }}</p>
                             </div>
                         </div>
                     </div>
                     @endforeach
+
                 </div>
                 @endif
                 @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
