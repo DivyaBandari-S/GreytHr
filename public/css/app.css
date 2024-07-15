@@ -106,12 +106,12 @@
 }
 .normalText{
     color: #333;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .homeText{
     color: #778899;
     text-align: center;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .leaveCustom-btn{
     width:100px;border:1px solid #058383;border-radius:5px;padding:4px 7px;color:#058383;font-weight:500;background:#e6f2f2;
@@ -272,7 +272,7 @@
     box-shadow: 0 0 1px 1px rgba(184, 183, 183, 0.18);
 }
 .earning-details {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #000;
 }
 
@@ -318,7 +318,7 @@
 }
 .emp-details-p {
     color: #778899;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .emp-details-span {
     color: #000;
@@ -348,7 +348,7 @@ body {
     font-weight: 500;
     border-radius: 5px;
     padding: 6px 12px;
-    font-size: 12px;
+    font-size: 0.75rem;
     border: none;
 }
 .submit-btn:hover {
@@ -361,7 +361,7 @@ body {
     font-weight: 500;
     border-radius: 5px;
     padding: 6px 12px;
-    font-size: 12px;
+    font-size: 0.75rem;
     border: none;
 }
 .cancel-btn1 {
@@ -370,7 +370,7 @@ body {
     font-weight: 500;
     border-radius: 5px;
     padding: 6px 12px;
-    font-size: 12px;
+    font-size: 0.75rem;
     border: 1px solid rgb(2, 17, 79) !important;
 }
 .comment-btn {
@@ -384,7 +384,7 @@ body {
     border: none;
     outline: none;
     color: white;
-    font-size: 12px;
+    font-size: 0.75rem;
     margin-top: 10px;
     border-radius: 3px;
 }
@@ -461,7 +461,7 @@ body {
 }
 
 .text-danger {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 /* Style the "View File" link */
@@ -483,7 +483,7 @@ button.close-button {
     color: rgb(2, 17, 79);
     cursor: pointer;
     margin-right: 15px;
-    font-size: 12px;
+    font-size: 0.75rem;
     text-decoration: none;
 }
 
@@ -514,7 +514,7 @@ button.close-button {
 
 .text-gray {
     color: #778899;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .col-6 {
@@ -532,7 +532,7 @@ button.close-button {
 }
 
 .text-danger {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .rotate {
@@ -587,7 +587,7 @@ button.close-button {
 }
 
 .tab {
-    font-size: 12px;
+    font-size: 0.75rem;
     cursor: pointer;
     transition: color 0.3s ease-in-out;
 }
@@ -598,7 +598,7 @@ button.close-button {
 
 .jump-to {
     cursor: pointer;
-    font-size: 12px;
+    font-size: 0.75rem;
     margin-top: 5px;
     transition: color 0.3s ease-in-out;
     border: none;
@@ -619,7 +619,7 @@ button.close-button {
 .button-dl {
     width: 100%;
     max-width: 120px;
-    font-size: 12px;
+    font-size: 0.75rem;
     padding: 10px;
     background-color: white;
     border: none;
@@ -742,7 +742,7 @@ button.close-button {
 }
 .sidebar-heading {
     color: #4d5256;
-    font-size: 12px;
+    font-size: 0.75rem;
     text-transform: uppercase;
     font-weight: 600;
 }
@@ -781,7 +781,7 @@ button.close-button {
 .nav-item .nav-link {
     color: #6c7e90;
     text-decoration: none;
-    font-size: 12px;
+    font-size: 0.75rem;
     cursor: pointer;
     font-weight: 500;
     /* padding: 0 auto; */
@@ -1132,7 +1132,7 @@ button.close-button {
 }
 
 .employee-count-who-is-in {
-    font-size: 12px;
+    font-size: 0.75rem;
 
     padding-top: 5px;
 }
@@ -1192,7 +1192,7 @@ button.close-button {
 .search-text::placeholder {
     font-weight: 60;
     /* Change the font weight */
-    font-size: 12px;
+    font-size: 0.75rem;
     /* Change the font size */
     color: #6c757d;
 }
@@ -1226,7 +1226,7 @@ input::placeholder {
     text-align: left;
     width: 100%;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #6c757d;
 }
 
@@ -1284,7 +1284,7 @@ input[type="date"]::before {
     margin-right: 10px;
 }
 .form-group label {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: var(--label-color);
     font-weight: 500;
 }
@@ -1350,7 +1350,7 @@ input[type="date"]::before {
 }
 
 .shift-selector-who-is-in::placeholder {
-    font-size: 12px;
+    font-size: 0.75rem;
     /* Adjust font size as needed */
     font-weight: 500;
     /* Adjust font weight as needed */
@@ -1478,7 +1478,7 @@ td {
 
 .employee-swipes-table th {
     font-weight: bold;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .dropdown-container1-employee-swipes input[type="text"] {
@@ -1486,10 +1486,10 @@ td {
     border: 1px solid #ccc;
     border-radius: 4px;
     width: 200px;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .employee-swipes-table td {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .green-section-employee-swipes {
     height: 150px;
@@ -1506,7 +1506,7 @@ td {
 }
 .record-not-found-who-is-in {
     text-align: center;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .dropdown-container1-employee-swipes:hover .dropdown-content1-employee-swipes {
     display: block;
@@ -1520,7 +1520,7 @@ td {
     border: 1px solid #ccc;
     border-radius: 4px;
     height: 30px;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .button2 {
     margin-top: 30px;
@@ -1532,7 +1532,7 @@ td {
 
 .dropdown-btn1::after {
     content: "\25BE"; /* Unicode character for a down-pointing triangle */
-    font-size: 12px; /* Adjust the size of the arrow */
+    font-size: 0.75rem; /* Adjust the size of the arrow */
     margin-left: 5px; /* Add some spacing between the text and arrow */
 }
 
@@ -1583,7 +1583,7 @@ td {
 }
 .green-section-employee-swipes h6 {
     margin-top: 10px;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #000;
 }
 
@@ -1601,7 +1601,7 @@ td {
 }
 .employee-swipes-name-and-id {
     white-space: nowrap;
-    font-size: 12px;
+    font-size: 0.75rem;
     padding-left: 10px;
 }
 .employee-swipes-checkbox {
@@ -1633,12 +1633,12 @@ td {
     margin-top: -5px;
 }
 .swipe-deatils-title {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #778899;
     margin-bottom: 0;
 }
 .swipe-details-description {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
 }
 
@@ -2129,7 +2129,7 @@ input[type="radio"] {
 }
 .requiredMark{
     color: var(--requiredAlert);
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .accordion:hover {
@@ -2137,13 +2137,13 @@ input[type="radio"] {
 }
 
 .info-paragraph {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight:500; color:#3a9efd;cursor:pointer;
 }
 .hideInfo {
     font-weight: 500;
     color: #3a9efd;
-    font-size: 12px;
+    font-size: 0.75rem;
     cursor: pointer;
 }
 .hide-leave-info {
@@ -2152,7 +2152,7 @@ input[type="radio"] {
 }
 .empCcName{
     color: var(--heading-color);
-    font-size: 12px; font-weight: 500; text-transform: capitalize;
+    font-size: 0.75rem; font-weight: 500; text-transform: capitalize;
 }
 .empIdStyle{
     color: var(--label-color); font-size: 0.69rem;
@@ -2249,7 +2249,7 @@ input[type="radio"] {
 .withdraw {
     background: rgb(2, 17, 79);
     border: 1px solid rgb(2, 17, 79);
-    font-size: 12px;
+    font-size: 0.75rem;
     padding: 5px 10px;
     color: white;
     font-weight: 500;
@@ -2267,11 +2267,11 @@ input[type="radio"] {
 }
 .accordionContentSpan{
     color: #778899;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
 }
 .accordionContentSpanValue{
-    color: #36454F; font-size: 12px; font-weight: 500;
+    color: #36454F; font-size: 0.75rem; font-weight: 500;
 }
 .hide-info {
     display: flex;
@@ -2279,7 +2279,7 @@ input[type="radio"] {
     background: #fffff2;
     gap: 50px;
     padding: 5px 10px;
-    font-size: 12px;
+    font-size: 0.75rem;
     text-align: start;
     align-items: center;
 }
@@ -2298,12 +2298,12 @@ input[type="radio"] {
 /* //leave apply styles */
 .leave-type-hide {
     display: inline-block;
-    font-size: 12px;
+    font-size: 0.75rem;
     max-width: 110px; /* Adjust this value as needed */
     overflow: hidden;
     text-overflow: ellipsis;
     color: #36454f;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
     white-space: nowrap;
 }
@@ -2464,7 +2464,7 @@ input[type="radio"] {
     margin-top: 15px;
 }
 .ellipsis {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
@@ -2594,7 +2594,7 @@ input[type="radio"] {
 }
 .group h5 {
     font-weight: 400;
-    font-size: 12px;
+    font-size: 0.75rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2624,7 +2624,7 @@ input[type="radio"] {
     color: #778899;
     font-weight: 500;
     background-color: #fff;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .remainContent{
     color: #0000ff;
@@ -2721,7 +2721,7 @@ input[type="radio"] {
     border: 1px solid rgb(2, 17, 79);
     padding: 3px 5px;
     color: #fff;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
     border-radius: 5px;
 }
@@ -2730,7 +2730,7 @@ input[type="radio"] {
     border: 1px solid rgb(2, 17, 79);
     padding: 3px 5px;
     color: rgb(2, 17, 79);
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
     border-radius: 5px;
 }
@@ -2792,7 +2792,7 @@ input[type="radio"] {
 .header-style {
     background-color: #ecf5ff;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #778899;
     text-align: start;
 }
@@ -2803,7 +2803,7 @@ input[type="radio"] {
 }
 .leaveApply-balance-buttons {
     background-color: rgb(2, 17, 79);
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
     color: white;
     border: none;
@@ -2835,11 +2835,11 @@ input[type="radio"] {
     transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 .balance {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #778899;
 }
 .field {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
 }
 .bal-container .row.my-3 .col-md-4 > .leave-bal {
@@ -2859,7 +2859,7 @@ input[type="radio"] {
     flex-direction: column;
 }
 .label-style {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #778899;
     font-weight: 500;
 }
@@ -2921,7 +2921,7 @@ input[type="radio"] {
 
 .inner-container h6 {
     font-weight: 600;
-    font-size: 12px;
+    font-size: 0.75rem;
     margin-bottom: 20px;
     color: #02114f;
 }
@@ -3504,7 +3504,7 @@ select .yearSelect {
     border-radius: 5px;
 }
 ::placeholder {
-    font-size: 12px; /* Adjust the font size as needed */
+    font-size: 0.75rem; /* Adjust the font size as needed */
     color: #778899;
 }
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
@@ -3530,7 +3530,7 @@ select .yearSelect {
 /* attendace muster styles by pranitha and uttej */
 .legend-text {
     color: #778899;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 /* end of attendace muster styles by pranitha and uttej */
 
@@ -3618,7 +3618,7 @@ select .yearSelect {
     margin: 0px 4px 8px 0px;
     display: inline-block;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #778899;
 }
 .helpChip:hover {
@@ -3994,7 +3994,7 @@ option {
 .employee-timesheet span {
     margin-bottom: 0;
     color: #778899;
-    font-size: 12px;
+    font-size: 0.75rem;
     max-width: 100%;
     overflow-x: auto;
     font-weight: normal;
@@ -4002,12 +4002,12 @@ option {
 .employee-timesheet .week-details-heading {
     margin-bottom: 0;
     color: #778899;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
 }
 .timesheet-table {
     border-collapse: collapse;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .timesheet-table th,
@@ -4030,7 +4030,7 @@ option {
     border-bottom: 2px solid #dee2e6; /* Make header border thicker */
 }
 .timesheet-table td {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #778899;
     font-weight: normal;
     border-bottom: 1px solid #dee2e6;
@@ -4045,13 +4045,13 @@ option {
 }
 .placeholder-timesheet {
     color: #000;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .basic-container {
     border-radius: 10px;
     display: flex;
     border: 1px solid #bbc3cc;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
     color: #47515b;
 }
@@ -4077,7 +4077,7 @@ p::first-letter {
     font-size: 11px;
 }
 .notification-head {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .notification-text-para {
     color: #778899;
@@ -4173,7 +4173,7 @@ p::first-letter {
 }
 .chat-employee-name {
     color: #333;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 600;
 }
 .chat-emp-details {
@@ -4194,7 +4194,7 @@ p::first-letter {
 .employee-asset-details th,
 .employee-asset-details td {
     width: 150px;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #fff;
     font-weight: 500;
     border-bottom: 1px solid #ccc; /* Add horizontal borders */
