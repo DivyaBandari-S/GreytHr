@@ -37,7 +37,7 @@ class Feeds extends Component
     public $category;
     public $description;
 
-
+  
     public $showEmojiPicker = false;
     public $employeeId;
     public $open = false;
@@ -205,39 +205,83 @@ class Feeds extends Component
 
     public function add_comment($emp_id)
     {
-        $user = Auth::user();
-
         $this->validate();
-        $employeeId = auth()->guard('emp')->user()->emp_id;
- 
-
-        Comment::create([
-            'card_id' => $emp_id,
-            'emp_id' => $employeeId,
-            'comment' => $this->newComment ?? '',
-        ]);
+    
+        $employeeId = null;
+        $hrId = null;
+    
+        if (auth()->guard('emp')->check()) {
+            // Get the current authenticated employee's emp_id
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+        } elseif (auth()->guard('hr')->check()) {
+            // Get the current authenticated HR's emp_id
+            $hrEmployee = auth()->guard('hr')->user();
+            $hrId = $hrEmployee->emp_id;
+        }
+    
+        // Ensure that either $employeeId or $hrId is set
+        if (is_null($employeeId) && is_null($hrId)) {
+            session()->flash('error', 'Employee ID cannot be null.');
+            return;
+        }
+    
+        // Create the comment based on the authenticated role
+        if ($employeeId) {
+            Comment::create([
+                'card_id' => $emp_id,
+                'emp_id' => $employeeId,
+                'hr_emp_id' => null,
+                'comment' => $this->newComment ?? '',
+            ]);
+        } elseif ($hrId) {
+            Comment::create([
+                'card_id' => $emp_id,
+                'emp_id' => $employeeId,
+                'hr_emp_id' => $hrId,
+                'comment' => $this->newComment ?? '',
+            ]);
+        }
+    
+    
         // Clear the input field after adding the comment
         $this->reset(['newComment']);
         $this->isSubmitting = false;
+    
         $this->comments = Comment::with('employee')
-            ->whereIn('emp_id', $this->employees->pluck('emp_id', 'hr'))
+            ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+            ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'))
             ->orderByDesc('created_at')
             ->get();
+    
         session()->flash('message', 'Comment added successfully.');
     }
-
+    
+    
     public function employee()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id');
     }
     public function createcomment($emp_id)
     {
+   
         $this->isSubmitting = true; // Set submitting flag to true
         // Validate the input fields
         $this->validate();
-        $employeeId = auth()->user()->emp_id;
-        $hrId = HR::where('emp_id', $employeeId)->value('emp_id'); // Fetch HR emp_id based on Employee emp_id
-
+       
+        if (auth()->guard('emp')->check()) {
+            // Get the current authenticated employee's company ID
+            $employeeId = auth()->user()->emp_id;
+    
+    
+   
+        } elseif (auth()->guard('hr')->check()) {
+            $hrEmployee = auth()->guard('hr')->user();
+            $hrId = $hrEmployee->emp_id;
+    
+      
+        }
+  
+    
         // Create a new comment record using the Comment model
      
         // Create a new comment record using the Addcomment model
@@ -247,7 +291,7 @@ class Feeds extends Component
             'hr_emp_id' => $hrId,
             'addcomment' => $this->newComment ?? '',
         ]);
-
+dd($hrId);
         // Clear the input field after adding the comment
         $this->reset(['newComment']);
 

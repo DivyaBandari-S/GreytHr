@@ -2157,8 +2157,13 @@ input[type="radio"] {
 .empIdStyle{
     color: var(--label-color); font-size: 0.69rem;
 }
-.seacrh-btn{
-    height: 29px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; align-items: center; display: flex;
+.search-btn{
+    background-color: rgb(2, 17, 79);
+    border-radius: 0 5px 5px 0;  color: #fff; border: none; align-items: center; display: flex;
+}
+.searchBtnBg{
+    background-color: rgb(2, 17, 79);
+    border-radius: 0 5px 5px 0;
 }
 .accordion-heading {
     background-color: #fff;

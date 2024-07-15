@@ -284,8 +284,8 @@
                         <div class="col" style="margin: 0px; padding: 0px">
                             <div class="input-group">
                                 <input style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                <div class="input-group-append">
-                                    <button wire:click="searchCCRecipients" style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn" type="button">
+                                <div class="input-group-append input-group-append searchBtnBg d-flex align-items-center">
+                                    <button wire:click="searchCCRecipients"  class="search-btn" type="button">
                                         <i style="margin-right: 5px;" class="fa fa-search"></i> <!-- Adjust margin-right as needed -->
                                     </button>
                                 </div>
@@ -346,12 +346,12 @@
 
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false" style="max-height: 230px; overflow-y: auto;">
-                    <div class="row" style="padding: 0 ; margin:0;">
+                    <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
                         <div class="col-md-10" style="margin: 0px; padding: 0px">
                             <div class="input-group">
-                                <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
-                                <div class="input-group-append">
-                                    <button type="button" wire:click="searchCCRecipients" class="btn">
+                                <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                <div class="input-group-append searchBtnBg d-flex align-items-center">
+                                    <button type="button" wire:click="searchCCRecipients" class="search-btn">
                                         <i style="margin-right: 5px;" class="fa fa-search"></i>
                                     </button>
                                 </div>
@@ -359,7 +359,7 @@
                         </div>
 
                         <div class="col-md-2 m-0 p-0">
-                            <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #333;">
+                            <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:35px;width:35px;">
                                 <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
                             </button>
                         </div>

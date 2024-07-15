@@ -27,6 +27,7 @@ class HelpDesk extends Component
     use WithFileUploads;
 
     public $searchTerm = '';
+  
     public $isRotated = false;
     public $selectedPerson = null;
     public $peoples;
@@ -61,6 +62,10 @@ class HelpDesk extends Component
     public function close()
     {
         $this->showDialog = false;
+        
+        $this->resetErrorBag(); // Reset validation errors if any
+        $this->resetValidation(); // Reset validation state
+        $this->reset(['subject', 'description', 'cc_to','category','file_path','priority','image','selectedPeopleNames','selectedPeople']);
     }
 
     public function closeFinance()
@@ -72,22 +77,22 @@ class HelpDesk extends Component
         'subject' => 'required|string|max:255',
         'description' => 'required|string',
         'file_path' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
-        'cc_to' => 'required',
+        'cc_to' => 'nullable',
         'priority' => 'required|in:High,Medium,Low',
         'image' => 'nullable|image|max:2048',
     ];
 
     protected $messages = [
-        'category.required' => ' category is required.',
-        'subject.required' => ' subject is required.',
-        'description.required' => ' description is required.',
-        'priority.required' => ' priority is required.',
-        'priority.in' => ' priority must be one of: High, Medium, Low.',
-        'image.image' => ' file must be an image.',
-        'image.max' => ' image size must not exceed 2MB.',
-        'file_path.mimes' => ' file must be a document of type: pdf, xls, xlsx, doc, docx, txt, ppt, pptx, gif, jpg, jpeg, png.',
-        'file_path.max' => ' document size must not exceed 2MB.',
-        'cc_to.required' => 'CC To is required.',
+        'category.required' => ' Category is required.',
+        'subject.required' => ' Subject is required.',
+        'description.required' => ' Description is required.',
+        'priority.required' => ' Priority is required.',
+        'priority.in' => ' Priority must be one of: High, Medium, Low.',
+        'image.image' => ' File must be an image.',
+        'image.max' => ' Image size must not exceed 2MB.',
+        'file_path.mimes' => ' File must be a document of type: pdf, xls, xlsx, doc, docx, txt, ppt, pptx, gif, jpg, jpeg, png.',
+        'file_path.max' => ' Document size must not exceed 2MB.',
+       
 
 
 
@@ -160,8 +165,9 @@ class HelpDesk extends Component
 
             if ($this->image) {
                 $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-                $filePath = 'uploads/help-desk-images/' . $fileName;
+                $this->image->storeAs('uploads/public/help-desk-images', $fileName, 'public');
+                $filePath = 'uploads/public/help-desk-images/' . $fileName;
+              
             } else {
                 $filePath = 'N/A';
             }
@@ -173,14 +179,14 @@ class HelpDesk extends Component
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' => $this->image,
+                'file_path' => $filePath,
                 'cc_to' => $this->cc_to,
                 'priority' => $this->priority,
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
             ]);
-
+  
             session()->flash('message', 'Request created successfully.');
             $this->reset();
         } catch (\Illuminate\Validation\ValidationException $e) {
