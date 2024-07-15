@@ -20,6 +20,6 @@ class Comment extends Model
     }
     public function hr()
     {
-        return $this->belongsTo(HR::class, 'hr_emp_id', 'emp_id');
+        return $this->belongsTo(HR::class, 'hr_emp_id', 'hr_emp_id');
     }
 }

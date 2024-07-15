@@ -63,6 +63,7 @@ class Catalog extends Component
     public $selectedPeople = [];
     public $records;
     public $peopleFound = true;
+    public $attachment;
 
     public $file_path;
     public $DevopsRequestaceessDialog = false;
@@ -90,18 +91,18 @@ class Catalog extends Component
         'mobile' => 'required|string|max:15',
         'description' => 'required|string',
 
-
+         
         'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
 
     ];
     protected $messages = [
-        'distributor_name' => 'distributor name field is required.',
-        'subject.required' => 'subject field is required.',
-        'mail.required' => ' email field is required.',
-        'mail.email' => ' email must be a valid email address.',
-        'mobile.required' => ' mobile number is required.',
-        'mobile.max' => ' mobile number must not exceed 15 characters.',
-        'description.required' => ' description field is required.',
+        'distributor_name' => 'Distributor name  is required.',
+        'subject.required' => 'Subject  is required.',
+        'mail.required' => ' Email  is required.',
+        'mail.email' => ' Email must be a valid email address.',
+        'mobile.required' => ' Mobile number is required.',
+        'mobile.max' => ' Mobile number must not exceed 15 characters.',
+        'description.required' => ' Description field is required.',
         'selected_equipment.required' => 'You must select at least one equipment.',
 
     ];
@@ -221,42 +222,79 @@ class Catalog extends Component
     {
         $this->DistributionRequestaceessDialog = true;
     }
-    public function closeMMSRequestaccess()
-    {
-        $this->MmsRequestaceessDialog = false; // Open the Sec 80C modal
-    }
     public function closeItRequestaccess()
     {
-        $this->ItRequestaceessDialog = false; // Open the Sec 80C modal
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
+        $this->ItRequestaceessDialog = false;
     }
+
     public function closeAddRequestaccess()
     {
-        $this->AddRequestaceessDialog = false; // Open the Sec 80C modal
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
+        $this->AddRequestaceessDialog = false;
     }
+    
     public function closeDesktopRequestaccess()
     {
-        $this->DesktopRequestaceessDialog = false; // Open the Sec 80C modal
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
+        $this->DesktopRequestaceessDialog = false;
     }
+    
     public function closeDistributionRequestaccess()
     {
-        $this->DistributionRequestaceessDialog = false; // Open the Sec 80C modal
+ 
+        $this->DistributionRequestaceessDialog = false;
+        $this->resetErrorBag(); // Reset validation errors if any
+        $this->resetValidation(); // Reset validation state
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
     }
+    
     public function closeDevopsRequestaccess()
     {
-        $this->DevopsRequestaceessDialog = false; // Open the Sec 80C modal
+       
+        $this->DevopsRequestaceessDialog = false;
+        $this->resetErrorBag(); // Reset validation errors if any
+        $this->resetValidation(); // Reset validation state
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
     }
+    
     public function closeLapRequestaccess()
     {
-        $this->LapRequestaceessDialog = false; // Open the Sec 80C modal
+        $this->reset();
+        $this->LapRequestaceessDialog = false;
+        $this->resetErrorBag(); // Reset validation errors if any
+        $this->resetValidation(); // Reset validation state
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
     }
+    
     public function closeIdRequestaccess()
     {
-        $this->IdRequestaceessDialog = false; // Open the Sec 80C modal
+      
+        $this->IdRequestaceessDialog = false;
+        $this->resetErrorBag(); // Reset validation errors if any
+        $this->resetValidation(); // Reset validation state
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
     }
+    
     public function closeMailRequestaccess()
     {
-        $this->MailRequestaceessDialog = false; // Open the Sec 80C modal
+      
+        $this->MailRequestaceessDialog = false;
+        $this->resetErrorBag(); // Reset validation errors if any
+        $this->resetValidation(); // Reset validation state
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
     }
+    
+    public function closeMMSRequestaccess()
+    {
+     
+        $this->MmsRequestaceessDialog = false;
+        $this->resetErrorBag(); // Reset validation errors if any
+        $this->resetValidation(); // Reset validation state
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
+    }
+    
+   
     public function closePeoples()
     {
         $this->isNames = false;
@@ -512,10 +550,21 @@ class Catalog extends Component
         // Handle modal closing logic here
         $this->showModal = false;
     }
+   
     public function closecatalog()
     {
+        $this->resetErrorBag(); // Reset validation errors if any
+        $this->resetValidation(); // Reset validation state
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeopleNames','image','selectedPeople', 
+        'selectedPeople' ,]);
+        $this->DistributionRequestaceessDialog = false;
         $this->showModal = false;
+
+ 
+      
+       
     }
+    
 
 
     public function render()
