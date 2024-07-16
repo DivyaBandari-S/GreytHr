@@ -2,97 +2,7 @@
     <x-loading-indicator />
     <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
     <div class="toggle-container position-relative">
-        <style>
-            /* Define your custom CSS classes */
-            .custom-nav-tabs {
-                background-color: #fff;
-                border-radius: 5px;
-                /* Border radius for the entire navigation container */
-                display: flex;
-                font-weight: 500;
-                text-align: center;
-                color: #778899;
-                width: 40%;
-                padding: 0;
-                margin: 0;
-                font-size: 0.75rem;
-            }
-
-            .custom-nav-tabs .custom-item {
-                flex-grow: 1;
-                overflow: hidden;
-            }
-
-            .custom-nav-link {
-                color: #778899;
-                padding: 8px 5px;
-                text-decoration: none;
-                display: block;
-                transition: color 0.3s ease, background-color 0.3s ease;
-                border: 1px solid transparent;
-                box-sizing: border-box;
-            }
-
-            .custom-nav-link:hover {
-                color: rgb(2, 17, 79);
-                background-color: #fff;
-                border-color: rgb(2, 17, 79);
-            }
-
-            .custom-nav-link.active {
-                color: white;
-                background-color: rgb(2, 17, 79);
-                border-color: rgb(2, 17, 79);
-                border-bottom-color: transparent;
-            }
-
-
-            .custom-item a {
-                text-decoration: none;
-            }
-
-            .restrictedHoliday {
-                color: #778899;
-                font-size: 12px;
-                font-weight: normal;
-                text-align: center;
-            }
-
-            .containerWidth {
-                width: 85%;
-                margin: 0 auto;
-            }
-
-            .imgContainer {
-                width: 40%;
-                margin: 0 auto;
-            }
-
-            .verticalLine {
-                width: 100%;
-                height: 1px;
-                border-bottom: 1px solid #ccc;
-                margin-bottom: 10px;
-            }
-
-            .headerText {
-                color: #778899;
-                font-size: 12px;
-                font-weight: 500;
-            }
-
-            .paragraphContent {
-                color: #333;
-                font-size: 12px;
-                font-weight: 500;
-            }
-
-            .viewDetails {
-                color: rgb(2, 17, 53);
-                font-size: 12px;
-                font-weight: 500;
-            }
-        </style>
+       
         <!-- leave-page.blade.php -->
 
         @if(session()->has('message'))
@@ -127,11 +37,11 @@
 
         <!-- Navigation Buttons -->
         <div class="nav-buttons d-flex justify-content-center">
-            <ul class="nav custom-nav-tabs">
+            <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
                     <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</a>
                 </li>
-                <li class="custom-item m-0 p-0 flex-grow-1">
+                <li class="custom-item m-0 p-0 flex-grow-1" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
                     <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">

@@ -6,7 +6,7 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
- :root {
+:root {
     --heading-color: #3b4452;
     --requiredAlert: red;
     --label-color: #7f8fa4;
@@ -104,17 +104,23 @@
     font-size: 11px;
     font-weight: 500;
 }
-.normalText{
+.normalText {
     color: #333;
     font-size: 0.75rem;
 }
-.homeText{
+.homeText {
     color: #778899;
     text-align: center;
     font-size: 0.75rem;
 }
-.leaveCustom-btn{
-    width:100px;border:1px solid #058383;border-radius:5px;padding:4px 7px;color:#058383;font-weight:500;background:#e6f2f2;
+.leaveCustom-btn {
+    width: 100px;
+    border: 1px solid #058383;
+    border-radius: 5px;
+    padding: 4px 7px;
+    color: #058383;
+    font-weight: 500;
+    background: #e6f2f2;
 }
 .banner-ad {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -505,7 +511,7 @@ button.close-button {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background:#f9f9f9;
+    background: #f9f9f9;
 }
 
 .text-yellow {
@@ -2114,6 +2120,104 @@ input[type="radio"] {
     font-size: 14px;
     transition: color 0.3s;
 }
+/* Define custom tabs for CSS classes */
+.custom-nav-tabs {
+    margin-top: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    display: flex;
+    font-weight: 500;
+    text-align: center;
+    color: #778899;
+    padding: 0;
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+.custom-nav-tabs .custom-item {
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.custom-nav-link {
+    color: #778899;
+    padding: 8px 30px;
+    text-decoration: none;
+    display: block;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+}
+
+.custom-nav-link:hover {
+    color: rgb(2, 17, 79);
+    background-color: #fff;
+    border-color: rgb(2, 17, 79);
+}
+
+.custom-nav-link.active {
+    color: white;
+    background-color: rgb(2, 17, 79);
+    border-color: rgb(2, 17, 79);
+    border-bottom-color: transparent;
+}
+
+.custom-item a {
+    text-decoration: none !important;
+}
+
+.restrictedHoliday {
+    color: #778899;
+    font-size: 12px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.containerWidth {
+    width: 85%;
+    margin: 0 auto;
+}
+
+.imgContainer {
+    width: 40%;
+    margin: 0 auto;
+}
+
+.verticalLine {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.headerText {
+    color: #778899;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.paragraphContent {
+    color: #333;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.viewDetails {
+    color: rgb(2, 17, 53);
+    font-size: 12px;
+    font-weight: 500;
+}
+@media (max-width: 460px) {
+    .custom-nav-link {
+        padding: 8px 20px !important;
+    }
+    .custom-nav-tabs {
+        margin-top: 20px !important;
+    }
+    .containerWidth {
+        width: 100% !important;
+    }
+}
 .applyingFor {
     color: var(--heading-color);
     font-size: 14px;
@@ -2126,7 +2230,7 @@ input[type="radio"] {
     width: 100%;
     margin: 0 auto;
 }
-.requiredMark{
+.requiredMark {
     color: var(--requiredAlert);
     font-size: 0.75rem;
 }
@@ -2137,7 +2241,9 @@ input[type="radio"] {
 
 .info-paragraph {
     font-size: 0.75rem;
-    font-weight:500; color:#3a9efd;cursor:pointer;
+    font-weight: 500;
+    color: #3a9efd;
+    cursor: pointer;
 }
 .hideInfo {
     font-weight: 500;
@@ -2157,7 +2263,6 @@ input[type="radio"] {
     font-size: 0.75rem;
 }
 
-
 .empCcName {
     color: var(--heading-color);
     font-size: 0.75rem;
@@ -2169,14 +2274,19 @@ input[type="radio"] {
     text-overflow: ellipsis;
 }
 
-.empIdStyle{
-    color: var(--label-color); font-size: 0.69rem;
+.empIdStyle {
+    color: var(--label-color);
+    font-size: 0.69rem;
 }
-.search-btn{
+.search-btn {
     background-color: rgb(2, 17, 79);
-    border-radius: 0 5px 5px 0;  color: #fff; border: none; align-items: center; display: flex;
+    border-radius: 0 5px 5px 0;
+    color: #fff;
+    border: none;
+    align-items: center;
+    display: flex;
 }
-.searchBtnBg{
+.searchBtnBg {
     background-color: rgb(2, 17, 79);
     border-radius: 0 5px 5px 0;
 }
@@ -2184,7 +2294,7 @@ input[type="radio"] {
     background-color: #fff;
     cursor: pointer;
 }
-.historyContent{
+.historyContent {
     max-height: 80vh;
     overflow-y: auto;
 }
@@ -2290,13 +2400,15 @@ input[type="radio"] {
     padding: 20px;
     gap: 10px;
 }
-.accordionContentSpan{
+.accordionContentSpan {
     color: #778899;
     font-size: 0.75rem;
     font-weight: 500;
 }
-.accordionContentSpanValue{
-    color: #36454F; font-size: 0.75rem; font-weight: 500;
+.accordionContentSpanValue {
+    color: #36454f;
+    font-size: 0.75rem;
+    font-weight: 500;
 }
 .hide-info {
     display: flex;
@@ -2458,9 +2570,8 @@ input[type="radio"] {
     padding: 12px 15px;
     width: 250px;
     margin-top: 15px;
-
 }
-.scrollApplyingTO{
+.scrollApplyingTO {
     height: 200px;
     max-height: 200px;
     overflow-y: auto;
@@ -2625,7 +2736,7 @@ input[type="radio"] {
     background: #778899;
     border-radius: 50%;
 }
-.thisCircle{
+.thisCircle {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2637,15 +2748,17 @@ input[type="radio"] {
     background-color: #fff;
     font-size: 0.75rem;
 }
-.remainContent{
+.remainContent {
     color: #0000ff;
-    cursor:pointer;
+    cursor: pointer;
     font-size: 10px;
 }
-.teamOnLeave{
-    font-size:12px;color:#778899;font-weight:500;
+.teamOnLeave {
+    font-size: 12px;
+    color: #778899;
+    font-weight: 500;
 }
-.leaveText{
+.leaveText {
     font-size: 10px;
     color: #778899;
 }
@@ -3504,7 +3617,7 @@ select .yearSelect {
 }
 .breadcrumb-item a {
     text-decoration: none;
-    color: #fff;
+    color: #02114f;
 }
 .btn-1 {
     color: rgb(2, 17, 79);
