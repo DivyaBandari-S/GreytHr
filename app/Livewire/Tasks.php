@@ -52,6 +52,7 @@ class Tasks extends Component
     public $commentAdded = false;
     public $showAddCommentModal = false;
     public $editCommentId = null;
+    
 
     protected $rules = [
         'newComment' => 'required',
@@ -97,9 +98,9 @@ class Tasks extends Component
     {
         $this->showRecipients = true;
         $this->selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-        $this->assignee = $this->selectedPerson->emp_id;
         $this->selectedPersonClients = ClientsEmployee::where('emp_id', $this->selectedPerson->emp_id)->get();
         $this->selectedPeopleName = $this->selectedPerson->first_name . ' #(' . $this->selectedPerson->emp_id . ')';
+        $this->assignee=$this->selectedPeopleName;
 
 
         if ($this->selectedPersonClients->isEmpty()) {
@@ -141,6 +142,7 @@ class Tasks extends Component
         if ($task) {
             $task->update(['status' => 'Completed']);
         }
+        session()->flash('message', 'Task closed successfully!');
         return redirect()->to('/tasks');
     }
 
@@ -221,7 +223,9 @@ class Tasks extends Component
     public function show()
     {
         $this->showDialog = true;
+       
     }
+   
 
     public function close()
     {
