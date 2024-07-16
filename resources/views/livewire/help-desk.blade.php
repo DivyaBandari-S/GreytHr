@@ -14,22 +14,22 @@
                 <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; margin-top: 5px;"></button>
             </div>
             @endif
-            <div class="d-flex align-items-center justify-content-center">
-    <div class="card" style="width: 380px;">
-        <div class="card-header px-0 py-0 m-0">
-            <div class="row no-gutters">
+            <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
+    <div class="card border-0 m-0" style="width: 380px; border-radius: 5px;">
+        <div class="card-header px-0 py-0 m-0 border-0 " style="border-radius: 5px;">
+            <div class="row no-gutters" style="height: 100%; width: 100%;">
                 <div class="col">
-                    <button wire:click="$set('activeTab', 'active')" class="btn btn-block @if($activeTab === 'active') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 5px; background-color: @if($activeTab === 'active') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'active') #fff @else #778899 @endif;">
+                    <button wire:click="$set('activeTab', 'active')" class="btn btn-block @if($activeTab === 'active') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 5px 0 0 5px; background-color: @if($activeTab === 'active') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'active') #fff @else #778899 @endif; height: 100%;">
                         Active
                     </button>
                 </div>
                 <div class="col">
-                    <button wire:click="$set('activeTab', 'pending')" class="btn btn-block @if($activeTab === 'pending') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 5px; background-color: @if($activeTab === 'pending') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'pending') #fff @else #778899 @endif;">
+                    <button wire:click="$set('activeTab', 'pending')" class="btn btn-block @if($activeTab === 'pending') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 0; background-color: @if($activeTab === 'pending') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'pending') #fff @else #778899 @endif; height: 100%;">
                         Pending
                     </button>
                 </div>
                 <div class="col">
-                    <button wire:click="$set('activeTab', 'closed')" class="btn btn-block @if($activeTab === 'closed') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 5px; background-color: @if($activeTab === 'closed') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'closed') #fff @else #778899 @endif;">
+                    <button wire:click="$set('activeTab', 'closed')" class="btn btn-block @if($activeTab === 'closed') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 0 5px 5px 0; background-color: @if($activeTab === 'closed') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'closed') #fff @else #778899 @endif; height: 100%;">
                         Closed
                     </button>
                 </div>
@@ -37,6 +37,11 @@
         </div>
     </div>
 </div>
+
+
+
+
+
 
 
         </div>
@@ -89,12 +94,12 @@
 
 
                         <div class="form-group">
-                            <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject<span>*</span></label>
+                            <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject<span style="color:red">*</span></label>
                             <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject">
                             @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
-                            <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description<span>*</span></label>
+                            <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description<span style="color:red">*</span></label>
                             <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
@@ -120,7 +125,7 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span>*</span></label>
+                                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
                                     <div class="input-group">
                                         <select name="category" id="category" wire:model.lazy="priority" class="custom-select" style="font-size: 12px;">
                                             <option style="color: gray;" value="">Select Priority</option>
@@ -220,9 +225,9 @@
 
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" >
                         <div class="form-group">
-                            <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category <span>*</span></label>
+                            <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category <span  style="color:red">*</span></label>
                             <div class="input-group">
                                 <select wire:model.lazy="category" id="category" class="custom-select" style="font-size: 12px;">
                                     <option style="color: #778899; " value="">Select Category</option>
@@ -245,12 +250,12 @@
                      
 
                         <div class="form-group">
-                            <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject<span>*</span></label>
+                            <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject<span  style="color:red">*</span></label>
                             <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject">
                             @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
-                            <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description<span>*</span></label>
+                            <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description<span  style="color:red">*</span></label>
                             <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
@@ -276,10 +281,10 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority</label>
+                                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
                                     <div class="input-group">
                                         <select name="category" id="category" wire:model.lazy="priority" class="custom-select" style="font-size: 12px;">
-                                            <option style="color: gray;" value="">Select Priority<span>*</span></option>
+                                            <option style="color: gray;" value="">Select Priority<span  style="color:red">*</span></option>
                                             <option value="High">
                                                 <span></span> High
                                             </option>
