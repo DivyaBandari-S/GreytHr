@@ -49,7 +49,7 @@ class LeavePage extends Component
                 $this->showHistory = false;
                 $this->showLeaveCancel = false;
                 $this->showCompOff = false;
-                $this->showLeaveApply =true;
+                $this->showLeaveApply = true;
                 break;
             case 'pendingButton':
                 $this->activeSection = 'pendingButton';
@@ -135,17 +135,16 @@ class LeavePage extends Component
             ->whereIn('status', ['approved', 'rejected', 'Withdrawn'])
             ->orderBy('created_at', 'desc')
             ->get();
-
-        // Fetch pending leave requests for the logged-in user and company
-        $this->leavePending = LeaveRequest::where('emp_id', $employeeId)
-            ->where('status', 'pending')
-            ->orderBy('created_at', 'desc')
-            ->get();
         // Format the date properties
         foreach ($this->leaveRequests as $leaveRequest) {
             $leaveRequest->formatted_from_date = Carbon::parse($leaveRequest->from_date)->format('d-m-Y');
             $leaveRequest->formatted_to_date = Carbon::parse($leaveRequest->to_date)->format('d-m-Y');
         }
+
+        $this->leavePending = LeaveRequest::where('emp_id', $employeeId)
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         foreach ($this->leavePending as $leaveRequest) {
             $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
@@ -158,7 +157,17 @@ class LeavePage extends Component
     {
         try {
             // Check if there are pending leave requests
-            return $this->leaveRequests->where('status', 'pending')->isNotEmpty();
+            // Fetch pending leave requests for the logged-in user and company
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->leavePending = LeaveRequest::where('emp_id', $employeeId)
+                ->where('status', 'pending')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            foreach ($this->leavePending as $leaveRequest) {
+                $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
+                $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
+            }
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message
             Log::error('Error in hasPendingLeave method: ' . $e->getMessage());
@@ -262,7 +271,7 @@ class LeavePage extends Component
             $leaveRequest->status = 'Withdrawn';
             $leaveRequest->save();
             $leaveRequest->touch();
-
+            $this->hasPendingLeave();
             // Flash success message
             session()->flash('message', 'Leave application Withdrawn.');
         } catch (\Exception $e) {
@@ -270,14 +279,13 @@ class LeavePage extends Component
             Log::error('Error canceling leave: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while canceling leave request. Please try again later.');
         }
-
-        // Redirect back to leave page
-        return redirect()->to('/leave-page');
     }
 
 
     public function render()
     {
-        return view('livewire.leave-page');
+        return view('livewire.leave-page', [
+            'leavePending' => $this->leavePending,
+        ]);
     }
 }

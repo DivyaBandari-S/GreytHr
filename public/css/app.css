@@ -2150,10 +2150,26 @@ input[type="radio"] {
     background-color: #ffffe8;
     color: var(--heading-color);
 }
-.empCcName{
-    color: var(--heading-color);
-    font-size: 0.75rem; font-weight: 500; text-transform: capitalize;
+/* CSS Stylesheet */
+.addText {
+    cursor: pointer; /* Ensure cursor is pointer on hover */
+    background: none;
+    color: var(--label-color);
+    font-size: 0.75rem;
 }
+
+
+.empCcName {
+    color: var(--heading-color);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    max-width: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .empIdStyle{
     color: var(--label-color); font-size: 0.69rem;
 }
@@ -2168,6 +2184,10 @@ input[type="radio"] {
 .accordion-heading {
     background-color: #fff;
     cursor: pointer;
+}
+.historyContent{
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .accordion-body {
@@ -2224,10 +2244,11 @@ input[type="radio"] {
 .side {
     display: flex;
     flex-direction: row;
-    width: 55%;
+    width: 85%;
     padding: 5px;
+    text-align: center;
     border-radius: 5px;
-    justify-content: space-between;
+    justify-content: space-evenly;
     margin: 15px auto;
     cursor: pointer;
     background-color: white;
@@ -2393,20 +2414,7 @@ input[type="radio"] {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
-.added-email {
-    border: 2px solid #778899;
-    color: #778899;
-    border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    text-transform: uppercase;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    overflow: hidden;
-    white-space: nowrap;
-}
+
 .buttons-leave {
     display: flex;
     justify-content: center;
@@ -2449,7 +2457,7 @@ input[type="radio"] {
     border-radius: 3px;
     box-shadow: 2px 0 5px 0 #ccc;
     padding: 12px 15px;
-    width: 35%;
+    width: 250px;
     margin-top: 15px;
 
 }
@@ -2457,7 +2465,6 @@ input[type="radio"] {
     height: 200px;
     max-height: 200px;
     overflow-y: auto;
-
 }
 .ccContainer {
     background: #fff;
@@ -2465,7 +2472,7 @@ input[type="radio"] {
     border-radius: 3px;
     box-shadow: 2px 0 5px 0 #ccc;
     padding: 12px 15px;
-    width: 35%;
+    width: 250px;
     margin-top: 15px;
 }
 .ellipsis {
@@ -2474,7 +2481,7 @@ input[type="radio"] {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 150px;
+    max-width: 110px;
     display: inline-block;
 }
 .reporting:hover .details {

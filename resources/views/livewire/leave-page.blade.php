@@ -1,29 +1,54 @@
 <div class="m-0 px-4" style="position: relative;">
-    <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Go Back</a>
+    <x-loading-indicator />
+    <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
     <div class="toggle-container position-relative">
         <style>
             /* Define your custom CSS classes */
             .custom-nav-tabs {
                 background-color: #fff;
                 border-radius: 5px;
+                /* Border radius for the entire navigation container */
                 display: flex;
                 font-weight: 500;
                 text-align: center;
                 color: #778899;
-                width: 50%;
-                font-size: 0.825rem;
+                width: 40%;
+                padding: 0;
+                margin: 0;
+                font-size: 0.75rem;
+            }
+
+            .custom-nav-tabs .custom-item {
+                flex-grow: 1;
+                overflow: hidden;
             }
 
             .custom-nav-link {
-                color: #ccc;
-                /* Text color for inactive tabs */
+                color: #778899;
+                padding: 8px 5px;
+                text-decoration: none;
+                display: block;
+                transition: color 0.3s ease, background-color 0.3s ease;
+                border: 1px solid transparent;
+                box-sizing: border-box;
+            }
+
+            .custom-nav-link:hover {
+                color: rgb(2, 17, 79);
+                background-color: #fff;
+                border-color: rgb(2, 17, 79);
             }
 
             .custom-nav-link.active {
-                margin-top: 5px;
-                color: white !important;
+                color: white;
                 background-color: rgb(2, 17, 79);
-                border-radius: 5px;
+                border-color: rgb(2, 17, 79);
+                border-bottom-color: transparent;
+            }
+
+
+            .custom-item a {
+                text-decoration: none;
             }
 
             .restrictedHoliday {
@@ -71,7 +96,7 @@
         <!-- leave-page.blade.php -->
 
         @if(session()->has('message'))
-        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%;font-size:14px;">
+        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%; font-size: 14px;" id="success-alert">
             {{ session('message') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -80,7 +105,7 @@
         @endif
 
         @if(session()->has('error'))
-        <div class="alert alert-danger" style="font-size:12px;">
+        <div class="alert alert-danger" style="font-size: 12px;" id="error-alert">
             {{ session('error') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -88,20 +113,33 @@
         </div>
         @endif
 
+        <script>
+            // Auto-dismiss alert messages after 3 seconds
+            setTimeout(function() {
+                $('#success-alert').fadeOut('slow');
+            }, 3000); // 3 seconds
+
+            setTimeout(function() {
+                $('#error-alert').fadeOut('slow');
+            }, 3000); // 3 seconds
+        </script>
+
+
         <!-- Navigation Buttons -->
-        <div class="nav-buttons d-flex justify-content-center mx-2 p-0">
+        <div class="nav-buttons d-flex justify-content-center">
             <ul class="nav custom-nav-tabs">
-                <li class="nav-item flex-grow-1">
-                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</a>
+                <li class="custom-item m-0 p-0 flex-grow-1">
+                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</a>
                 </li>
-                <li class="nav-item flex-grow-1">
-                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
+                <li class="custom-item m-0 p-0 flex-grow-1">
+                    <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
                 </li>
-                <li class="nav-item flex-grow-1">
-                    <a href="#" class="nav-link custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
+                <li class="custom-item m-0 p-0 flex-grow-1">
+                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
                 </li>
             </ul>
         </div>
+
 
 
         {{-- Apply Tab --}}
@@ -196,10 +234,21 @@
 
         {{-- pending --}}
         <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}">
+            @if(!empty($leavePending))
+            <div class="containerWidth mt-2">
+                <div class="leave-pending rounded">
 
-            @if($this->leavePending->isNotEmpty())
+                    <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
 
-            @foreach($this->leavePending as $leaveRequest)
+                    <p class="restrictedHoliday">There are no pending records of any leave
+                        transaction</p>
+
+                </div>
+            </div>
+            @endif
+            @if(!empty($leavePending))
+
+            @foreach($leavePending as $leaveRequest)
 
             <div class="container-pending mt-4 containerWidth">
 
@@ -322,20 +371,6 @@
 
             @endforeach
 
-            @else
-            <div class="containerWidth">
-                <div class="leave-pending rounded">
-
-                    <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
-
-                    <p class="restrictedHoliday">There are no pending records of any leave
-                        transaction</p>
-
-                </div>
-            </div>
-
-
-
             @endif
 
         </div>
@@ -344,7 +379,7 @@
 
         {{-- history --}}
 
-        <div id="historyButton" class="row rounded mt-4" style="{{ $activeSection === 'historyButton' ? '' : 'display:none;' }}">
+        <div id="historyButton" class="row historyContent rounded mt-4" style="{{ $activeSection === 'historyButton' ? '' : 'display:none;' }}">
             @if($this->leaveRequests->isNotEmpty())
 
             @foreach($this->leaveRequests->whereIn('status', ['approved', 'rejected','Withdrawn']) as $leaveRequest)
