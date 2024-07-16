@@ -124,7 +124,6 @@
 <body>
 
     <div>
-
         <div class="row m-0 p-0 " style="height: 100vh;background:#f5f5f5;">
 
             <div class="menucard displayNone hideMinBar" id="menu-popup" style="border-radius:0px; width: auto; background:#fff;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);padding:0;margin:0; backdrop-filter: blur( 3px ); -webkit-backdrop-filter: blur( 3px );">
@@ -403,14 +402,14 @@
                         </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item ">
 
-<a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
+                            <a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
 
-    <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
-    Feeds
+                                <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
+                                Feeds
 
-</a>
+                            </a>
 
-</li>
+                        </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
 
                             <a class="nav-link" href="/addLeaves" onclick="setActiveLink(this)">
@@ -760,14 +759,14 @@
                         </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item ">
 
-<a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
+                            <a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
 
-    <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
-    Feeds
+                                <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
+                                Feeds
 
-</a>
+                            </a>
 
-</li>
+                        </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
 
                             <a class="nav-link" href="/letter-requests" onclick="setActiveLink(this)">
@@ -1076,14 +1075,14 @@
                         </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item ">
 
-<a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
+                            <a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
 
-    <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
- 
+                                <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
 
-</a>
 
-</li>
+                            </a>
+
+                        </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
 
                             <a class="nav-link" href="/addLeaves" onclick="setActiveLink(this)">
@@ -1166,7 +1165,7 @@
 
                     @auth('emp')
 
-                   
+
                     @livewire('notification')
                     <div class="col dropdown mx-2 p-0">
                         <button class="dropdown-btn" style="font-size: 13px;  white-space: nowrap; ">Quick
@@ -1177,8 +1176,8 @@
                         </div>
                     </div>
 
-                   
-                   
+
+
                     @endauth
 
                     <div style="text-align:end;cursor:pointer; margin-right:10px;">
@@ -1187,7 +1186,7 @@
 
                 </div>
 
-                <div  class="slot mt-4 ">
+                <div class="slot mt-4 ">
                     {{ $slot }}
                 </div>
 

@@ -95,7 +95,7 @@
                                         <p style="font-size:12px;color:#778899;font-weight:500;">  Review</p>
                                     </div>
                                     <div >
-                                        <a href="/navigate-to-helpdesk" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
+                                        <a href="/employees-review" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
                                     </div>
                                 </div>
                                 @if(($this->count) > 0)

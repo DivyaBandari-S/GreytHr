@@ -20,7 +20,6 @@ class AddHolidayList extends Component
         'date' => 'required|date',
         'month' => 'required|string',
         'year' => 'required|string',
-        'festivals' => 'required|string',
     ];
 
     // Save holiday to the database

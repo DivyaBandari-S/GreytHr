@@ -225,6 +225,7 @@ class Settings extends Component
     public function changePassword()
     {
         try {
+
             $this->validate([
                 'oldPassword' => 'required',
                 'newPassword' => 'required|min:8',

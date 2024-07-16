@@ -1,4 +1,5 @@
 <div>
+<x-loading-indicator />
     <style>
     .truncate-text {
         white-space: nowrap;

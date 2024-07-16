@@ -285,7 +285,7 @@
                         <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
                             <div class="col-md-10" style="margin: 0px; padding: 0px">
                                 <div class="input-group">
-                                    <input wire:model.debounce.500ms="filter" wire:input="searchEmployees" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                    <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button type="button" wire:click="searchEmployees" class="search-btn">
                                             <i style="margin-right: 5px;" class="fa fa-search"></i>
