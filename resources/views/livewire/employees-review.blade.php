@@ -1,17 +1,19 @@
 <div>
-    <div class="row m-0 p-0">
+    <div class="row m-0 p-0 " >
         <div class="col-md-3">
-            <div>
-                <h6>Attendance</h6>
-                <p>Attendance Regularisation</p>
-            </div>
+            <p>Attendance</p>
+            <p>Leave</p>
         </div>
         <div class="col-md-9">
             <div>
-            <div>
-                <h6>Leave</h6>
-                <p>Leave</p>
+                <button>Active</button>
             </div>
+            <div class="attendace-content-active">
+                <p>attendance</p>
+            </div>
+
+            <div class="leaveContent">
+                <p>Leave </p>
             </div>
         </div>
     </div>

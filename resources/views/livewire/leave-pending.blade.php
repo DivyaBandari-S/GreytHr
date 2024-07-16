@@ -1,11 +1,11 @@
-w<div>
+<div>
     <div class="detail-container ">
         <div class="row m-0 p-0">
             <div class="col-md-4 p-0 m-0 mb-2 ">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                    <ol class="breadcrumb d-flex align-items-center " style="font-size: 14px;background:none;font-weight:500;">
-                        <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('leave-page') }}">Go Back</a></li>
-                        <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Review - Review Leave</li>
+                    <ol class="breadcrumb d-flex align-items-center " style="font-size: 12px;background:none;font-weight:500;">
+                        <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('leave-page') }}">Back</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Leave - View Details</li>
                     </ol>
                 </nav>
             </div>
@@ -111,7 +111,7 @@ w<div>
                         <p><span style="color: #333; font-weight: 500; font-size:12px;">Details</span></p>
                         @if(is_array($leaveRequest['applying_to']) || is_object($leaveRequest['applying_to']))
                         @foreach($leaveRequest['applying_to'] as $applyingTo)
-                        <p style=" font-size: 12px; "><span style="color: #778899; font-size: 12px; font-weight: 400;padding-right: 58px;">Applying to</span>{{ ucwords(strtolower($applyingTo['report_to'])) }}
+                        <p style=" font-size: 12px; "><span style="color: #778899; font-size: 12px; font-weight: 400;padding-right: 58px;">Applied to</span>{{ ucwords(strtolower($applyingTo['report_to'])) }}
                         </p>
                         @endforeach
                         @endif

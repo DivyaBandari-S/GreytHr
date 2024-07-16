@@ -1,9 +1,9 @@
 <?php
-
+ 
 namespace App\Http\Middleware;
 
-use Closure;
 use Illuminate\Http\Request;
+use Closure;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -21,11 +21,11 @@ class CheckAuthAndHandleSession
     {
         // Define an array of guards to check
         $guards = ['emp', 'it', 'hr', 'com', 'finance', 'admins'];
-
+ 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 $user = Auth::guard($guard)->user();
-
+ 
                 switch ($guard) {
                     case 'emp':
                         $id = $user->emp_id;
@@ -80,17 +80,18 @@ class CheckAuthAndHandleSession
                         'updated_at' => now(), // Set the updated_at timestamp
                     ]
                 );
-
+ 
                 // If user is authenticated, stop checking other guards
                 break;
             }
         }
-
+ 
         if (!Auth::check()) {
             session(['user_type' => 'guest']);
             Log::info('Session has timed out');
         }
-
+ 
         return $next($request);
     }
 }
+ 
