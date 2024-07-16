@@ -55,9 +55,15 @@
 
         .topMsg-attendance-info {
             border: 1px solid #ccc;
-            padding: 10px;
-            font-size: 14px;
+            border-radius: 5px;
+              /* Adjust the height as needed */
+              /* Adjust the padding as needed */
+            padding: 12px;
+            font-size: 12px;
             background-color: #FFFFFF;
+           
+           
+            
         }
 
         .container-attendance-info {
@@ -81,11 +87,16 @@
         }
 
         .insight-card[_ngcontent-hbw-c670] {
-            border: 1px solid #cbd5e1;
+            border: 1px solid red;
             border-radius: 4px;
             /* margin-right: 15px;
 min-height: 102px;
 width: 170px; */
+        }
+        .insight-card
+        {
+            border: 1px solid #ccc;
+            border-radius: 5px;  
         }
 
         .insight-card[_ngcontent-hbw-c670] h6[_ngcontent-hbw-c670] {
@@ -214,7 +225,10 @@ width: 170px; */
             margin-top: 10px;
             margin-bottom: 10px;
         }
-
+        .legendtext{
+            color:#778899;
+            font-size:12px;
+        }
         .bg-white {
             --tw-bg-opacity: 1;
             background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
@@ -844,14 +858,13 @@ width: 170px; */
         }
 
         .toggle-box-attendance-info {
-            display: flex;
-            align-items: center;
-            background-color: #f0f0f0;
+            
+            /* background-color: #f0f0f0; */
 
-            width: 73px;
+           
             /* margin-left: 850px; */
             /* margin-top: -40px; */
-            padding: 5.5px 6px;
+            /* padding: 5.5px 6px; */
             /* Adjust padding as needed */
         }
 
@@ -859,9 +872,9 @@ width: 170px; */
         .toggle-box-attendance-info i {
             color: grey;
             /* Set the icon color */
-            background-color: white;
+            background-color: pink;
             /* Set the background color for icons */
-            padding: 7px 7px;
+            padding: 6px 6px;
             /* Set padding for icons */
             margin-right: 0px;
             /* Add spacing between icons if desired */
@@ -870,11 +883,12 @@ width: 170px; */
         .toggle-box-attendance-info i.fas.fa-calendar {
             /* Initial icon color */
             /* Initial background color for icon */
-            padding: 7px 7px;
+            padding: 10px 10px;
             /* Initial padding for icon */
             margin-right: 0px;
             /* Initial spacing between icons */
             border: 2px solid transparent;
+            
 
             /* Initial border color (transparent) */
         }
@@ -892,7 +906,7 @@ width: 170px; */
             color: grey;
             /* Initial icon color */
             /* Initial background color for icon */
-            padding: 7px 7px;
+            padding: 10px 10px;
             /* Initial padding for icon */
             margin-right: 0px;
             /* Initial spacing between icons */
@@ -1271,6 +1285,8 @@ color: #fff;
 
         .attendance-legend-text {
             white-space: nowrap;
+            font-size: 12px;
+            color:#778899;
         }
     </style>
     @php
@@ -1287,21 +1303,22 @@ color: #fff;
                 <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info" id="myButton">My Regularisations</a>
             </div>
         </div>
-
-        <div class="row m-0" style="text-align: center;">
-            <div class="col-md-2"></div>
+   
+       
+        <div class="row m-0 d-flex justify-content-center" style="text-align: center;">
             <div class="col-md-4">
-                <div class="row m-0 topMsg-attendance-info">
+                <div class="row m-0 topMsg-attendance-info d-flex align-items-center">
 
                     <div class="col-8 p-0">
                         <!-- Small box with the text -->
-                        <div style="white-space:nowrap;">Access card details not available</div>
+                        <div style="white-space:nowrap;text-align:center;margin-left:40px;">Access card details not available</div>
+                        
                     </div>
 
                     <!-- Blue info icon on the right -->
                     <div class="info-icon-container-attendance-info col-4">
 
-                        <i class="fa fa-info-circle" aria-hidden="true" style="font-size: 14px; color: blue;"></i>
+                    <i class="fa fa-info-circle" aria-hidden="true" style="font-size: 14px; color: blue;"></i>
                         <div class="info-box-attendance-info">
                             Contact administrator to get access card assigned.
                         </div>
@@ -1312,21 +1329,22 @@ color: #fff;
         </div>
 
         <div class="row m-0 mt-3">
-            <div class="col-md-2">
-                <div class="insight-card bg-white pt-2 pb-2" style="height: 100px;">
-                    <h6 class="text-secondary text-regular text-center" style="font-size:12px;"> Penalty Days </h6>
+          <div class="row m-0 d-flex justify-content-center"style="display:flex;justify-content:center;"> 
+            <div class="col-md-3">
+                <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
+                    <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
                     <section class="text-center">
-                        <p class="text-2"> 0 </p>
+                        <p class="text-2"style="margin-top:30px;"> 0 </p>
                     </section>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="insight-card bg-white pt-2 pb-2">
-                    <h6 class="text-secondary text-regular text-center" style="font-size:12px;">
+                    <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">
                         Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
                     <section class="text-center">
 
-                        <p class="text-2">02:00</p>
+                        <p class="text-2"style="margin-top:30px;">02:00</p>
                         <div>
                             <span class="text-success ng-star-inserted" style="font-size:10px;"> +233%
                             </span>
@@ -1335,12 +1353,12 @@ color: #fff;
                     </section>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="insight-card bg-white pt-2 pb-2">
-                    <h6 class="text-secondary text-regular text-center" style="font-size:12px;">Avg. Work Hrs
+                    <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
                     </h6>
                     <section class="text-center">
-                        <p class="text-2">02:00</p>
+                        <p class="text-2"style="margin-top:30px;">02:00</p>
                         <div>
                             <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
                                 +233% </span>
@@ -1350,11 +1368,12 @@ color: #fff;
                     </section>
                 </div>
             </div>
-            <div class="col-md-2" style="margin: auto; text-align: center">
+            <div class="col-md-2 mt-5" style="text-align: center">
                 <a href="#" data-toggle="modal" data-target="#exampleModalCenter" style="text-transform:uppercase;margin-top:40px;color:rgb(2, 17, 79);">
                     +3 Insights
                 </a>
             </div>
+            </div>  
             <div wire:ignore.self class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 
 
@@ -1458,8 +1477,8 @@ color: #fff;
                 </div>
                 <div class="col-6" style="text-align: -webkit-right;">
                     <div class="toggle-box-attendance-info">
-                        <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;color: {{ ($defaultfaCalendar == 1 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 1 )? 'rgb(2,17,79)' : '#fff' }}" wire:click="showBars"></i>
-                        <i class="fas fa-bars" id="bars-icon" style="cursor:pointer;color: {{ ($defaultfaCalendar == 0 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 0 )? 'rgb(2,17,79)' : '#fff' }}" wire:click="showTable"></i>
+                        <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 1 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 1 )? 'rgb(2,17,79)' : '#fff' }}" wire:click="showBars"></i>
+                        <i class="fas fa-bars" id="bars-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 0 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 0 )? 'rgb(2,17,79)' : '#fff' }}" wire:click="showTable"></i>
                     </div>
                 </div>
             </div>
@@ -1576,11 +1595,11 @@ color: #fff;
                                                     @endif
                                                     @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
                                                     <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
-                                                        <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">GS</p>
+                                                        <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
                                                     </span>
                                                     @elseif($isCurrentMonth)
                                                     <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                        <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">GS</p>
+                                                        <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
                                                     </span>
                                                     @endif
                                                     @endif
@@ -1610,91 +1629,91 @@ color: #fff;
                                 <p class="me-2 mb-0">
                                     <span class="legendsIcon presentIcon">P</span>
                                 </p>
-                                <p class="m-0">Present</p>
+                                <p class="legendtext m-0">Present</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <span class="legendsIcon absentIcon">A</span>
                                 </p>
-                                <p class="m-0">Absent</p>
+                                <p class="legendtext m-0">Absent</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <span class="legendsIcon offDayIcon">O</span>
                                 </p>
-                                <p class="m-0">Off Day</p>
+                                <p class="legendtext m-0">Off Day</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <span class="legendsIcon offDayIcon">R</span>
                                 </p>
-                                <p class="m-0">Rest Day</p>
+                                <p class="legendtext m-0">Rest Day</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <span class="legendsIcon leaveIcon">L</span>
                                 </p>
-                                <p class="m-0">Leave</p>
+                                <p class="legendtext m-0">Leave</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <span class="legendsIcon onDutyIcon">OD</span>
                                 </p>
-                                <p class="m-0">On Duty</p>
+                                <p class="legendtext m-0">On Duty</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <span class="legendsIcon holidayIcon">H</span>
                                 </p>
-                                <p class="m-0">Holiday</p>
+                                <p class="legendtext m-0">Holiday</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <span class="legendsIcon deductionIcon">&nbsp;&nbsp;</span>
                                 </p>
-                                <p class="m-0" style="word-break: break-all;"> Deduction</p>
+                                <p class="legendtext m-0" style="word-break: break-all;"> Deduction</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <span class="legendsIcon alertForDeIcon">&nbsp;&nbsp;</span>
                                 </p>
-                                <p class="m-0">Allert for Deduction</p>
+                                <p class="legendtext m-0">Allert for Deduction</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <span class="legendsIcon absentIcon">?</span>
                                 </p>
-                                <p class="m-0">Status Unknown</p>
+                                <p class="legendtext m-0">Status Unknown</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <i class="far fa-clock"></i>
                                 </p>
-                                <p class="m-0">Overtime</p>
+                                <p class="legendtext m-0">Overtime</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                     <i class="far fa-edit"></i>
                                 </p>
-                                <p class="m-0">Override</p>
+                                <p class="legendtext m-0">Override</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                 <div class="down-arrow-ign-attendance-info"></div>
                                 </p>
-                                <p class="m-0">Ignored</p>
+                                <p class="legendtext m-0">Ignored</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                 <div class="down-arrow-gra"></div>
                                 </p>
-                                <p class="m-0">Grace</p>
+                                <p class="legendtext m-0">Grace</p>
                             </div>
                             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                                 <p class="me-2 mb-0">
                                 <div class="down-arrow-reg"></div>
                                 </p>
-                                <p class="m-0">Regularized</p>
+                                <p class="legendtext m-0">Regularized</p>
                             </div>
                         </div>
                         <div class="row m-0 mb-3">

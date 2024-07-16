@@ -213,6 +213,36 @@
           </div>
 
         </div>
+        <div class="wide-short-container">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <label class="checkbox-label">
+              <input type="checkbox">
+              02:00 Pm to 11:00 Pm(AS)
+            </label>
+            <span class="total-employee-count">166 employee(s)</span>
+          </div>
+          <div class="time-range">
+            <span class="start-time">02:00</span>
+            <hr class="time-separator">
+            <span class="end-time">11:00</span>
+          </div>
+
+        </div>
+        <div class="wide-short-container">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <label class="checkbox-label">
+              <input type="checkbox">
+              05:00 Pm to 01:00 Am(ES)
+            </label>
+            <span class="total-employee-count">166 employee(s)</span>
+          </div>
+          <div class="time-range">
+            <span class="start-time">05:00</span>
+            <hr class="time-separator">
+            <span class="end-time">01:00</span>
+          </div>
+
+        </div>
         <!-- Collapsible Content -->
         <div class="text-center" style="margin-top: 100px;">
           <button type="button" class="btn save-selectshift-button">Save</button>
@@ -326,7 +356,7 @@
                 {{ ucwords(strtolower($e1->first_name)) }} {{ ucwords(strtolower($e1->last_name)) }}<br />
                 <span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$e1->emp_id}}</span>
               </td>
-              <td style="font-weight:700;font-size:10px;">10:00:00</td>
+              <td style="font-weight:700;font-size:10px;">{{$e1->shift_start_time}}</td>
             </tr>
 
             <!-- Add more rows with dashes as needed -->

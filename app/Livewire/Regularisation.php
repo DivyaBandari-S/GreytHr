@@ -3,8 +3,8 @@
 // About this component: It shows allowing employees to adjust or provide reasons for discrepancies in their recorded work hours
 namespace App\Livewire;
 use App\Models\EmployeeDetails;
-use App\Models\RegularisationNew;
-use App\Models\RegularisationNew1;
+use App\Models\RegularisationDates;
+
 use App\Models\Regularisations;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -262,7 +262,7 @@ public function nextMonth()
         // Count the number of items
         $this->numberOfItems = count($regularisationEntriesArray);
 
-        RegularisationNew1::create([
+        RegularisationDates::create([
             'emp_id' => $emp_id,
             'employee_remarks' => $this->remarks,
             'regularisation_entries' => $regularisationEntriesJson,
@@ -349,7 +349,7 @@ public function historyButton()
     {
         try {
             $currentDateTime = Carbon::now();
-            $this->data = RegularisationNew1::where('id', $id)->update([
+            $this->data = RegularisationDates::where('id', $id)->update([
                 'is_withdraw' => 1,
                 'withdraw_date' => $currentDateTime,
             ]);
@@ -389,7 +389,7 @@ public function historyButton()
         $subordinateEmployeeIds = EmployeeDetails::where('manager_id',auth()->guard('emp')->user()->emp_id)
        ->pluck('first_name','last_name')
        ->toArray();
-        $pendingRegularisations = RegularisationNew1::where('emp_id', $loggedInEmpId)
+        $pendingRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
         ->where('status', 'pending')
         ->where('is_withdraw', 0)
         ->orderByDesc('id')
@@ -398,7 +398,7 @@ public function historyButton()
           return $regularisation->regularisation_entries !== "[]";
         });
 
-      $historyRegularisations = RegularisationNew1::where('emp_id', $loggedInEmpId)
+      $historyRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
                     ->whereIn('status', ['pending', 'approved', 'rejected'])
                     ->orderByDesc('id')
                     ->get();            

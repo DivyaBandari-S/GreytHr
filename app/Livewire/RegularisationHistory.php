@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
+use App\Models\RegularisationDates;
 use App\Models\RegularisationNew1;
 use App\Models\Regularisations;
 use Livewire\Component;
@@ -29,7 +30,7 @@ class RegularisationHistory extends Component
     {
         $this->empid = Auth::guard('emp')->user()->emp_id;
         $this->empName = EmployeeDetails::where('emp_id', $this->empid)->first();
-        $this->regularisationrequest = RegularisationNew1::with('employee')->find($id);
+        $this->regularisationrequest = RegularisationDates::with('employee')->find($id);
         $this->ManagerId=$this->regularisationrequest->employee->manager_id;
         $this->ManagerName=EmployeeDetails::select('first_name','last_name')->where('emp_id',$this->ManagerId)->first();
         $this->regularisationEntries = json_decode($this->regularisationrequest->regularisation_entries, true);

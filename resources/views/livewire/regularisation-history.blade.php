@@ -209,8 +209,8 @@
                                     </span>
 
                                  @elseif($regularisationrequest->status=='approved'||$regularisationrequest->status=='rejected')  
-                                    <span style="color: #333; font-weight: 500;font-size:12px; text-transform:uppercase;">
-                                       {{$ManagerName->first_name}}&nbsp;{{$ManagerName->last_name}}
+                                    <span style="color: #333; font-weight: 500;font-size:12px;">
+                                       {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
                                     </span>
                                  @endif
                         </div>
@@ -279,8 +279,8 @@
                                     </span>
                     @elseif($regularisationrequest->status=='approved')
                         Accept<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
-                        <span style="color: #778899; font-weight: 500; text-transform: uppercase;">
-                           {{$ManagerName->first_name}}&nbsp;{{$ManagerName->last_name}}
+                        <span style="color: #778899; font-weight: 500;">
+                           {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
                         </span> 
                         <br>
                                     <span style="color: #778899; font-weight: 400;font-size:11px;">
@@ -295,8 +295,8 @@
                                     </span>
                     @elseif($regularisationrequest->status=='rejected')
                        rccept<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
-                        <span style="color: #778899; font-weight: 500; text-transform: uppercase;">
-                           {{$ManagerName->first_name}}&nbsp;{{$ManagerName->last_name}}
+                        <span style="color: #778899; font-weight: 500;">
+                           {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
                         </span>  
                         <br>
                                     <span style="color: #778899; font-weight: 400;font-size:11px;">

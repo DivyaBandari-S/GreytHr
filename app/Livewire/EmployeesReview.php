@@ -13,11 +13,11 @@ namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
 use App\Models\LeaveRequest;
+use App\Models\RegularisationDates;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\RegularisationNew;
-use App\Models\RegularisationNew1;
+
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
@@ -240,7 +240,7 @@ class EmployeesReview extends Component
             $empIds = $employees->pluck('emp_id')->toArray();
             // Retrieve records from AttendanceRegularisationNew for the extracted emp_ids
 
-            $this->regularisations = RegularisationNew1::whereIn('emp_id', $empIds)
+            $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
                 ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
                 ->where('status', 'pending')
                 ->whereJsonDoesntContain('regularisation_entries', [])
@@ -348,7 +348,7 @@ class EmployeesReview extends Component
 
             $empIds = $employees->pluck('emp_id')->toArray();
 
-            $this->approvedRegularisationRequestList = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $empIds)
+            $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_new1s.emp_id', $empIds)
 
                 ->whereIn('regularisation_new1s.status', ['approved', 'rejected'])
 
@@ -362,7 +362,7 @@ class EmployeesReview extends Component
 
                 ->get();
 
-            $this->regularisations = RegularisationNew1::whereIn('emp_id', $empIds)
+            $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
 
                 ->where('is_withdraw', 0)
 

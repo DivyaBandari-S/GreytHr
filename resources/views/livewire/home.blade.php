@@ -133,7 +133,7 @@
                                         ?>
                                     @endfor
                                         @if ($count > 3)
-                                            <div class=" remainContent d-flex flex-column align-items-center" data-toggle="modal" data-target="#exampleModalCenter">
+                                            <div class=" remainContent d-flex flex-column align-items-center"wire:click="reviewLeaveAndAttendance">
                                                 <span>+{{ $count - 3}}</span>
                                                 <span class="remaining">More</span>
                                             </div>
@@ -151,19 +151,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                @if($showReviewLeaveAndAttendance)
+                <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h6 class="modal-title" id="exampleModalLongTitle" style="color:#778899;">Leave Requests</h6>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Review</b></h5>
+                                <button type="button" class="btn-close btn-primary"aria-label="Close" wire:click="closereviewLeaveAndAttendance" style="background-color: white; height:10px;width:10px;" >
                                 </button>
                             </div>
-                            <div class="modal-body d-flex">
-                                @if($count > 3)
+                            <div class="modal-body">
+                            <h6 style="color:#778899;font-size:14px;">Leave Requests</h6>    
+                            @if($count > 3)
                                 @for ($i = 3; $i <= $count; $i++)
-
+ 
                                         <?php
                                         $leaveRequest = $this->leaveApplied[$i]['leaveRequest'] ?? null;
                                         if ($leaveRequest && $leaveRequest->employee) {
@@ -177,12 +178,36 @@
                                         </div>
                                         <span style="display: block;font-size:10px;color:#778899;">Leave</span>
                                     </div>
-
+ 
                                         <?php
                                         }
                                         ?>
                                     @endfor
                                 @endif
+                                <h6 style="color:#778899;font-size:14px;">Attendance Requests</h6> 
+                               
+                                    @for ($i = 1; $i <= $countofregularisations; $i++)
+ 
+                                        <?php
+                                        // $leaveRequest = $this->regularisations[$i]['leaveRequest'] ?? null;
+                                           $regularisations=$this->regularisations[$i] ?? null;
+                                        if ($regularisations && $regularisations->employee) {
+                                            $firstName = $regularisations->employee->first_name;
+                                            $lastName = $regularisations->employee->last_name;
+                                            $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
+                                        ?>
+                                    <div class=" d-flex flex-column mr-3">
+                                        <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                            <span >{{ $initials }}</span>
+                                        </div>
+                                        <span style="display: block;font-size:10px;color:#778899;">Attendance Regularisation</span>
+                                    </div>
+ 
+                                        <?php
+                                        }
+                                        ?>
+                                    @endfor
+                                 
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);" data-dismiss="modal">Close</button>
@@ -190,6 +215,8 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>
+                @endif
                 @endif
 
                 <div class="col-md-3 mb-4 ">
