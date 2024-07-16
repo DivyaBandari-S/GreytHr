@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use DateTime;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Spatie\SimpleExcel\SimpleExcelWriter;
@@ -130,7 +129,6 @@ class AttendenceMasterDataNew extends Component
                 ->get()
                 ->keyBy('emp_id')
                 ->toArray();
-                
     
             $distinctDatesMap = SwipeRecord::whereIn('emp_id', $employeeIds)
                 ->whereMonth('created_at', $currentMonth1)
@@ -142,8 +140,7 @@ class AttendenceMasterDataNew extends Component
                     return $dates->pluck('distinct_date')->toArray();
                 })
                 ->toArray();
-                
-            
+    
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->where('leave_applications.status', 'approved')
                 ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
@@ -237,14 +234,6 @@ class AttendenceMasterDataNew extends Component
         $this->holiday = HolidayCalendar::where('month',$currentMonth)
             ->where('year', $year)
             ->pluck('date');
-        $holidays = HolidayCalendar::where('month', $currentMonth)
-            ->where('year', $this->selectedYear)
-            ->pluck('date')
-            ->map(function($date) {
-                return Carbon::parse($date)->toDateString();
-            })
-            ->toArray();
-            
         $daysInMonth1= cal_days_in_month(CAL_GREGORIAN, $currentMonth1, $currentYear1);
         $currentMonth = now()->format('n');
         $this->daysInMonth = now()->daysInMonth;
@@ -288,20 +277,16 @@ class AttendenceMasterDataNew extends Component
                 return $dates->pluck('distinct_date')->toArray();
             })
             ->toArray();
-            $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
-            ->whereMonth('swipe_records.created_at', $currentMonth)
-            ->whereYear('swipe_records.created_at', $this->selectedYear)
+        $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
+            ->whereMonth('swipe_records.created_at', $currentMonth) // December
+            ->whereYear('swipe_records.created_at',$this->selectedYear)
             ->whereRaw('DAYOFWEEK(swipe_records.created_at) NOT IN (1, 7)') // Exclude Sunday (1) and Saturday (7)
-            ->whereNotIn(DB::raw('DATE(swipe_records.created_at)'), $holidays) // Exclude holidays
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
             ->selectRaw('swipe_records.emp_id, COUNT(DISTINCT DATE(swipe_records.created_at)) as date_count, employee_details.first_name, employee_details.last_name')
             ->groupBy('swipe_records.emp_id', 'employee_details.first_name', 'employee_details.last_name')
             ->get()
             ->keyBy('emp_id')
             ->toArray();
-        
-                    
-        
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->where('leave_applications.status', 'approved')
             ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
@@ -337,8 +322,6 @@ class AttendenceMasterDataNew extends Component
                     ],
                 ];
             }); 
-            
-           
    
             return view('livewire.attendence-master-data-new',['Employees'=>$filteredEmployees,'EmployeesCount'=>$employeescount,'DistinctDatesMap'=>$distinctDatesMap,'DistinctDatesMapCount'=>$distinctDatesMapCount,'Holiday'=> $this->holiday,'ApprovedLeaveRequests1'=>$approvedLeaveRequests1,'SelectedYear'=>$this->selectedYear ]);
     
