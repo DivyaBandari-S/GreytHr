@@ -126,11 +126,11 @@
                         <br>
                         <div class="row">
                             <label class="col-6" style="color: #778899; font-size: 14px;">Joining Date</label>
-                            <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($selectStarredPeoples)->joining_date ? date('d M y', strtotime(optional($selectedPerson)->joining_date)) : '' }}</p>
+                            <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($selectStarredPeoples)->joining_date ? date('d M, Y', strtotime(optional($selectedPerson)->joining_date)) : '' }}</p>
                         </div>
                         <div class="row">
                             <label class="col-6" style="color: #778899; font-size: 14px;">Date Of Birth</label>
-                            <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($selectStarredPeoples)->date_of_birth ? date('d M y', strtotime(optional($selectStarredPeoples)->date_of_birth)) : '' }}</p>
+                            <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($selectStarredPeoples)->date_of_birth ? date('d M, Y', strtotime(optional($selectStarredPeoples)->date_of_birth)) : '' }}</p>
                         </div>
 
                     </div>
@@ -194,11 +194,11 @@
                     <br>
                     <div class="row">
                         <label class="col-6" style="color: #778899; font-size: 14px;">Joining Date</label>
-                        <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($firstStarredPerson)->joining_date ? date('d M y', strtotime(optional($firstStarredPerson)->joining_date)) : '' }}</p>
+                        <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($firstStarredPerson)->joining_date ? date('d M, Y', strtotime(optional($firstStarredPerson)->joining_date)) : '' }}</p>
                     </div>
                     <div class="row">
                         <label class="col-6" style="color: #778899; font-size: 14px;">Date Of Birth</label>
-                        <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($firstStarredPerson)->date_of_birth ? date('d M y', strtotime(optional($firstStarredPerson)->date_of_birth)) : '' }}</p>
+                        <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($firstStarredPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstStarredPerson)->date_of_birth)) : '' }}</p>
                     </div>
 
                 </div>
@@ -337,11 +337,11 @@
                 <br>
                 <div class="row">
                     <label class="col-6" style="color: #778899; font-size: 14px;">Joining Date</label>
-                    <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($selectedPerson)->hire_date ? date('d M y', strtotime(optional($selectedPerson)->hire_date)) : '' }}</p>
+                    <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($selectedPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedPerson)->hire_date)) : '' }}</p>
                 </div>
                 <div class="row">
                     <label class="col-6" style="color: #778899; font-size: 14px;">Date Of Birth</label>
-                    <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($selectedPerson)->date_of_birth ? date('d M y', strtotime(optional($selectedPerson)->date_of_birth)) : '' }}</p>
+                    <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($selectedPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedPerson)->date_of_birth)) : '' }}</p>
                 </div>
 
             </div>
@@ -404,11 +404,11 @@
             <br>
             <div class="row">
                 <label class="col-6" style="color: #778899; font-size: 14px;">Joining Date</label>
-                <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($firstPerson)->hire_date ? date('d M y', strtotime(optional($firstPerson)->hire_date)) : '' }}</p>
+                <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '' }}</p>
             </div>
             <div class="row">
                 <label class="col-6" style="color: #778899; font-size: 14px;">Date Of Birth</label>
-                <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($firstPerson)->date_of_birth ? date('d M y', strtotime(optional($firstPerson)->date_of_birth)) : '' }}</p>
+                <p class="col-6" style="font-weight: 500; color: #333; font-size: 14px;">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '' }}</p>
             </div>
 
         </div>

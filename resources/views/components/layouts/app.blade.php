@@ -129,7 +129,7 @@
 
             <div class="menucard displayNone hideMinBar" id="menu-popup" style="border-radius:0px; width: auto; background:#fff;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);padding:0;margin:0; backdrop-filter: blur( 3px ); -webkit-backdrop-filter: blur( 3px );">
 
-                <div class="left-card-body" style="padding: 0 5px;margin: 0;height: 100%;">
+                <div class="left-card-body" style="padding: 0 5px;margin: 0;">
 
                     <ul class="flex-column nav">
 
@@ -1187,7 +1187,7 @@
 
                 </div>
 
-                <div onscroll="checkFadeIn()" class="slot mt-4 ">
+                <div  class="slot mt-4 ">
                     {{ $slot }}
                 </div>
 
