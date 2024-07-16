@@ -14,7 +14,7 @@
                 <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; margin-top: 5px;"></button>
             </div>
             @endif
-            <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
+            <div class="d-flex border  align-items-center justify-content-center" style="height: 100px;">
     <div class="card border-0 m-0" style="width: 380px; border-radius: 5px;">
         <div class="card-header px-0 py-0 m-0 border-0 " style="border-radius: 5px;">
             <div class="row no-gutters" style="height: 100%; width: 100%;">

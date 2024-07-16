@@ -2336,6 +2336,7 @@ input[type="radio"] {
     height: 22px;
     width: 22px;
     display: flex;
+    cursor: pointers;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
@@ -3613,7 +3614,7 @@ select .yearSelect {
     background: #ebf5ff;
 }
 .breadcrumb-item a:hover {
-    color: #808080;
+    color: rgb(2, 17, 79);
     text-decoration: none;
 }
 .breadcrumb-item a {
@@ -4402,3 +4403,5 @@ p::first-letter {
     border-top: 5px solid #778899; /* Change the color as needed */
     pointer-events: none; /* Ensure the arrow doesn't interfere with select clicks */
 }
+
+
