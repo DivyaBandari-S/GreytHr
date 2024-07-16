@@ -113,9 +113,8 @@ class Feeds extends Component
         // Combine and sort data
         $this->combinedData = $this->combineAndSortData($this->employees);
 
-        // Fetch comments for the initial set of cards
-        $this->comments = Comment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-        $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+      $this->loadComments();       
+       $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         // Retrieve and set the company logo URL for the current employee
@@ -247,13 +246,23 @@ class Feeds extends Component
         $this->reset(['newComment']);
         $this->isSubmitting = false;
     
-        $this->comments = Comment::with('employee')
+        $this->comments = Comment::with('employee','hr')
             ->whereIn('emp_id', $this->employees->pluck('emp_id'))
             ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'))
             ->orderByDesc('created_at')
             ->get();
     
+   
         session()->flash('message', 'Comment added successfully.');
+    }
+    
+    public function loadComments()
+    {
+        $this->comments = Comment::with('employee','hr')
+        ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+        ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'))
+        ->orderByDesc('created_at')
+        ->get();
     }
     
     
@@ -363,7 +372,11 @@ dd($hrId);
         $this->employeeDetails = EmployeeDetails::where('emp_id', $empId)->first();
 
         // Fetch comments for the current card
-        $this->comments = Comment::where('card_id', $this->currentCardEmpId)->get();
+        $this->comments = Comment::with('employee', 'hr')
+        ->where('card_id', $empId)
+        ->orderByDesc('created_at')
+        ->get();
+      
         $this->addcomments = Addcomment::where('card_id', $this->currentCardEmpId)->get();
         $this->storedemojis = Emoji::where('emp_id', $this->currentCardEmpId)->get();
         $this->emojis = EmojiReaction::where('emp_id', $this->currentCardEmpId)->get();
@@ -432,10 +445,21 @@ dd($hrId);
         'hr' => $this->employeeDetails,
         'employees' => $this->employeeDetails,
         'emojis' => $emojis,
-        'storedEmojis' => $storedEmojis,
+        'storedEmojis' => $storedEmojis
     ]);
 }
 
+public function showEmployee($id)
+{
+    $employee = EmployeeDetails::find($id);
+    $comments = Comment::with(['employee', 'hr'])
+                        ->where('card_id', $employee->emp_id)
+                        ->orWhere('hr_emp_id', $employee->emp_id)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+    return view('yourview', compact('employee', 'comments'));
+}
 
     public function saveEmoji()
     {

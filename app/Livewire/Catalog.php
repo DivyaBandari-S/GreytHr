@@ -90,8 +90,8 @@ class Catalog extends Component
         'mail' => 'required|email|unique:help_desks',
         'mobile' => 'required|string|max:15',
         'description' => 'required|string',
-
-         
+        'mail' => 'required|email|unique:help_desks',
+        'mobile' => 'required|string|max:15',
         'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
 
     ];
@@ -102,7 +102,7 @@ class Catalog extends Component
         'mail.email' => ' Email must be a valid email address.',
         'mobile.required' => ' Mobile number is required.',
         'mobile.max' => ' Mobile number must not exceed 15 characters.',
-        'description.required' => ' Description field is required.',
+        'description.required' => ' Description  is required.',
         'selected_equipment.required' => 'You must select at least one equipment.',
 
     ];
