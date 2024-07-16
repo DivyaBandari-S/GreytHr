@@ -13,24 +13,21 @@
         }
     </style>
     <div class="container" style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow: hidden;">
-        <div class="row">
-            <div style="display: flex; justify-content: center; margin-top: 20px;">
 
-
-                <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="width: 200px;">
-                    <input id="radio1" name="radio1" type="radio" value="Radio1" class="btn-check" />
-                    <label for="radio1" class="btn" style="font-size:0.75rem;width: 30%; text-align: center; border-top-left-radius: 5px; border-bottom-left-radius: 5px;  border-color: rgb(2, 17, 79); background-color: {{ $activeTab === 'open' ? 'rgb(2, 17, 79)' : 'none' }};  color: {{ $activeTab === 'open' ? '#fff !important' : '#778899' }};" wire:click="$set('activeTab', 'open')">
-                        Open
-                    </label>
-
-                    <input id="radio2" name="radio1" type="radio" value="Radio2" class="btn-check" />
-                    <label for="radio2" class="btn" style="font-size:0.75rem;width: 30%; text-align: center; border-color: rgb(2, 17, 79); background-color: {{ $activeTab === 'completed' ? 'rgb(2, 17, 79)' : 'none' }};  color: {{ $activeTab === 'completed' ? '#fff !important' : '#778899' }};" wire:click="$set('activeTab', 'completed')">
-                        Closed
-                    </label>
-                </div>
-
-            </div>
+        <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
+            <ul class="nav custom-nav-tabs border">
+                <li class="custom-item m-0 p-0 flex-grow-1">
+                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeTab === 'open' ? 'active' : '' }}" wire:click.prevent="$set('activeTab', 'open')">Open</a>
+                </li>
+                <li class="custom-item m-0 p-0 flex-grow-1">
+                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeTab === 'completed' ? 'active' : '' }}" wire:click.prevent="$set('activeTab', 'completed')">Closed</a>
+                </li>
+            </ul>
         </div>
+
+
+
+
 
 
 
@@ -46,7 +43,7 @@
             document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(function() {
                     var flashMessage = document.getElementById('flash-message');
-                    
+
                     if (flashMessage) {
                         flashMessage.style.transition = 'opacity 0.5s ease';
                         flashMessage.style.opacity = '0';
@@ -146,7 +143,7 @@
                     </tbody>
                 </table>
 
-              
+
                 @endif
             </div>
             @endif
@@ -261,12 +258,12 @@
                                 <div wire:click="forAssignee" class="form-group" style="color:grey;font-size:0.75rem;cursor:pointer">
                                     <label for="assignee" style="font-size: 13px;color:#778899">Assignee*</label>
                                     <br>
-                                    <i wire:change="autoValidate"  class="fas fa-user icon" id="profile-icon"></i>
+                                    <i wire:change="autoValidate" class="fas fa-user icon" id="profile-icon"></i>
                                     @if($showRecipients)
                                     <strong style="font-size: 12;">Selected assignee:
                                     </strong>{{$selectedPeopleName }}
                                     @else
-                                   <a class="hover-link" style="color:black;cursor:pointer"> Add Assignee</a>
+                                    <a class="hover-link" style="color:black;cursor:pointer"> Add Assignee</a>
                                     @endif <br>
                                     @error('assignee') <span class="text-danger">Assignee is required</span> @enderror
                                 </div>
@@ -388,7 +385,7 @@
                                     </div>
                                     <div class="col">
                                         <!-- Tags -->
-                                        <div class="form-group" >
+                                        <div class="form-group">
                                             <label for="tags" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Tags</label>
                                             <br>
                                             <input wire:change="autoValidate" type="text" wire:model="tags" placeholder="Enter tags" class="placeholder-small" style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;">
@@ -399,12 +396,12 @@
                                 <div wire:click="forFollowers" class="form-group" style=" color: grey; font-size: 0.75rem">
                                     <label for="assignee" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Followers</label>
                                     <br>
-                                    <i wire:change="autoValidate"  class="fas fa-user icon" id="profile-icon"></i>
+                                    <i wire:change="autoValidate" class="fas fa-user icon" id="profile-icon"></i>
                                     @if($showFollowers)
                                     <strong style="font-size: 12;">Selected Followers:
                                     </strong>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}
                                     @else
-                                   <a class="hover-link" style="color:black;cursor:pointer"> Add Followers</a>
+                                    <a class="hover-link" style="color:black;cursor:pointer"> Add Followers</a>
 
                                     @endif
                                 </div>
@@ -454,13 +451,13 @@
                                     @endif
                                 </div>
                                 @endif
-                                <div class="form-group" >
+                                <div class="form-group">
                                     <label for="Subject" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Subject</label>
                                     <br>
                                     <input wire:change="autoValidate" wire:model="subject" class="placeholder-small" placeholder="Enter subject" rows="4" style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"></input>
                                 </div>
                                 <!-- Description -->
-                                <div class="form-group" >
+                                <div class="form-group">
                                     <label for="description" style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Description</label>
                                     <br>
                                     <textarea wire:change="autoValidate" wire:model="description" class="placeholder-small" placeholder="Add description" rows="4" style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"></textarea>
@@ -493,95 +490,95 @@
 
             @endif
 
-              <!-- Add Comment Modal -->
-              @if($showModal)
-                <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #eceff3;">
-                                <h6 class="modal-title" id="exampleModalLongTitle">Add Comment</h6>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeModal">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            @if (session()->has('comment_message'))
-                            <div id="flash-comment-message" style="margin: 0.2rem; padding: 0.25rem; background-color: #f0fff4; border: 1px solid #68d391; color: #38a169; border-radius: 0.25rem; text-align: center;">
-                                {{ session('comment_message') }}
-                            </div>
-                            <!-- <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+            <!-- Add Comment Modal -->
+            @if($showModal)
+            <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: #eceff3;">
+                            <h6 class="modal-title" id="exampleModalLongTitle">Add Comment</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeModal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        @if (session()->has('comment_message'))
+                        <div id="flash-comment-message" style="margin: 0.2rem; padding: 0.25rem; background-color: #f0fff4; border: 1px solid #68d391; color: #38a169; border-radius: 0.25rem; text-align: center;">
+                            {{ session('comment_message') }}
+                        </div>
+                        <!-- <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert">
                                 <span>{{ session('comment_message') }}</span>
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div> -->
-                            @endif
-                            <div class="modal-body">
-                                <form wire:submit.prevent="addComment">
-                                    <div class="form-group">
-                                        <label for="comment" style="color: #778899;font-size:13px;font-weight:500;">Comment:</label>
-                                        <p>
-                                            <textarea class="form-control" id="comment"  wire:model.lazy="newComment" wire:keydown.debounce.500ms="validateField('newComment')"></textarea>
-                                        </p>
-                                        @error('newComment') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
-                                    <div class="d-flex justify-content-center">
-                                        <button type="submit" class="submit-btn" style="font-size:0.75rem;">Submit</button>
-                                    </div>
+                        @endif
+                        <div class="modal-body">
+                            <form wire:submit.prevent="addComment">
+                                <div class="form-group">
+                                    <label for="comment" style="color: #778899;font-size:13px;font-weight:500;">Comment:</label>
+                                    <p>
+                                        <textarea class="form-control" id="comment" wire:model.lazy="newComment" wire:keydown.debounce.500ms="validateField('newComment')"></textarea>
+                                    </p>
+                                    @error('newComment') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="submit-btn" style="font-size:0.75rem;">Submit</button>
+                                </div>
 
-                                </form>
-                                <div style="max-height: 300px;overflow-y:auto;">
-                                    @if ($taskComments->count() > 0)
-                                    @foreach($taskComments as $comment)
-                                    <div class="comment mb-4 mt-2">
-                                        <div class="d-flex align-items-center gap-5">
-                                            <div class="col-md-4 p-0 comment-details">
-                                                <p style="color: #000;font-size:0.75rem;font-weight:500;margin-bottom:0;" class="truncate-text" title="{{ $comment->employee->full_name }}">{{ $comment->employee->full_name }}
-                                                </p>
-                                            </div>
-                                            <div class=" col-md-3 p-0 comment-time">
-                                                <span style="color: #778899;font-size:10px;font-weight:normal;margin-left:15px;">{{ $comment->created_at->diffForHumans() }}</span>
-                                            </div>
-                                            <!-- <div class=" col-md-2 p-0 comment-actions">
+                            </form>
+                            <div style="max-height: 300px;overflow-y:auto;">
+                                @if ($taskComments->count() > 0)
+                                @foreach($taskComments as $comment)
+                                <div class="comment mb-4 mt-2">
+                                    <div class="d-flex align-items-center gap-5">
+                                        <div class="col-md-4 p-0 comment-details">
+                                            <p style="color: #000;font-size:0.75rem;font-weight:500;margin-bottom:0;" class="truncate-text" title="{{ $comment->employee->full_name }}">{{ $comment->employee->full_name }}
+                                            </p>
+                                        </div>
+                                        <div class=" col-md-3 p-0 comment-time">
+                                            <span style="color: #778899;font-size:10px;font-weight:normal;margin-left:15px;">{{ $comment->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        <!-- <div class=" col-md-2 p-0 comment-actions">
                                                 <button class="comment-btn" wire:click="openEditCommentModal({{ $comment->id }})"> <i class="fas fa-edit" style="color: #778899;height:7px;width:7px;"></i></button>
                                                 <button class="comment-btn" wire:click="deleteComment({{ $comment->id }})"><i class="fas fa-trash" style="color: #778899;height:7px;width:7px;"></i></button>
                                             </div> -->
-                                            @if(Auth::guard('emp')->user()->emp_id == $comment->emp_id)
-                                            <div class="col-md-2 p-0 comment-actions">
-                                                <button class="comment-btn" wire:click="openEditCommentModal({{ $comment->id }})">
-                                                    <i class="fas fa-edit" style="color: #778899;height:7px;width:7px;"></i>
-                                                </button>
-                                                <button class="comment-btn" wire:click="deleteComment({{ $comment->id }})">
-                                                    <i class="fas fa-trash" style="color: #778899;height:7px;width:7px;"></i>
-                                                </button>
-                                            </div>
-                                            @endif
+                                        @if(Auth::guard('emp')->user()->emp_id == $comment->emp_id)
+                                        <div class="col-md-2 p-0 comment-actions">
+                                            <button class="comment-btn" wire:click="openEditCommentModal({{ $comment->id }})">
+                                                <i class="fas fa-edit" style="color: #778899;height:7px;width:7px;"></i>
+                                            </button>
+                                            <button class="comment-btn" wire:click="deleteComment({{ $comment->id }})">
+                                                <i class="fas fa-trash" style="color: #778899;height:7px;width:7px;"></i>
+                                            </button>
                                         </div>
-                                        <div class="col p-0 comment-content">
-                                            @if($editCommentId == $comment->id)
-                                            <!-- Input field for editing -->
-                                            <input class="form-control" wire:model.defer="newComment" type="text">
-                                            <!-- Button to update comment -->
-                                            <button class="update-btn p-1" wire:click="updateComment({{ $comment->id }})">Update</button>
-                                            <button class="btn btn-secondary p-1 m-0" wire:click="cancelEdit" style="font-size: 0.75rem;">Cancel</button>
-                                            @else
-                                            <!-- Display comment content -->
-                                            <p style="margin-bottom: 0;font-size:0.75rem;color:#515963;">{{ ucfirst($comment->comment) }}</p>
-                                            @endif
-                                        </div>
+                                        @endif
                                     </div>
-                                    @endforeach
-
-                                    @endif
-
+                                    <div class="col p-0 comment-content">
+                                        @if($editCommentId == $comment->id)
+                                        <!-- Input field for editing -->
+                                        <input class="form-control" wire:model.defer="newComment" type="text">
+                                        <!-- Button to update comment -->
+                                        <button class="update-btn p-1" wire:click="updateComment({{ $comment->id }})">Update</button>
+                                        <button class="btn btn-secondary p-1 m-0" wire:click="cancelEdit" style="font-size: 0.75rem;">Cancel</button>
+                                        @else
+                                        <!-- Display comment content -->
+                                        <p style="margin-bottom: 0;font-size:0.75rem;color:#515963;">{{ ucfirst($comment->comment) }}</p>
+                                        @endif
+                                    </div>
                                 </div>
+                                @endforeach
+
+                                @endif
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-backdrop fade show"></div>
+            </div>
+            <div class="modal-backdrop fade show"></div>
 
 
-                @endif
+            @endif
 
             </body>
 
@@ -612,7 +609,7 @@
             function showFlashMessage(message) {
                 const container = document.getElementById('flash-message-container');
                 container.textContent = message;
-                container.style.fontSize = '0.75rem'; 
+                container.style.fontSize = '0.75rem';
                 container.style.display = 'block';
 
                 // Hide the message after 3 seconds
