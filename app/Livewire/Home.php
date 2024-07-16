@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\HolidayCalendar;
+use App\Models\RegularisationDates;
 use App\Models\SalaryRevision;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -57,6 +58,12 @@ class Home extends Component
     public $leaveRequests;
     public $showLeaveApplies;
     public $greetingImage;
+
+    public $showReviewLeaveAndAttendance=false;
+
+    public $countofregularisations;
+
+    public $regularisations;
     public $greetingText;
     public $teamOnLeave;
     public $leaveApplied;
@@ -151,8 +158,34 @@ class Home extends Component
             $this->greetingImage = 'night.jpeg';
             $this->greetingText = 'Good Night';
         }
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $employees=EmployeeDetails::where('manager_id',$employeeId)->select('emp_id', 'first_name', 'last_name')->get();
+        $empIds = $employees->pluck('emp_id')->toArray();
+        $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
+        ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+        ->where('status','pending')
+        ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
+        ->with('employee') 
+        ->get();
+        
+        $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
+        ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+        ->where('status','pending')
+        ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
+        ->with('employee') 
+        ->count();
+        
     }
-
+    public function reviewLeaveAndAttendance()
+    {
+        $this->showReviewLeaveAndAttendance=true;
+    }
+    public function closereviewLeaveAndAttendance()
+    {
+        $this->showReviewLeaveAndAttendance=false;
+    }
     public function hideMessage()
     {
         $this->showMessage = false;

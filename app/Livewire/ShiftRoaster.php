@@ -50,7 +50,7 @@ class ShiftRoaster extends Component
     public function downloadExcel()
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-        $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+        $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','shift_type')->get();
         $currentMonth = $this->selectedMonth;
         $currentMonth1 = DateTime::createFromFormat('F', $currentMonth)->format('n');
         $currentYear = date('Y');
@@ -102,7 +102,7 @@ class ShiftRoaster extends Component
                 $rowData[] = 'H'; 
             }
             else{
-                $rowData[] = 'GS'; 
+                $rowData[] = $employee->shift_type; 
             } 
            
         }
@@ -119,7 +119,7 @@ class ShiftRoaster extends Component
         $currentMonth=$this->selectedMonth;
         $currentYear = date('Y');  
         $year = $currentYear;
-        $employees=EmployeeDetails::where('manager_id',$loggedInEmpId)->select('emp_id', 'first_name', 'last_name','job_title','city','state')->get();
+        $employees=EmployeeDetails::where('manager_id',$loggedInEmpId)->select('emp_id', 'first_name', 'last_name','job_title','city','state','shift_type')->get();
         $this->holiday = HolidayCalendar::where('month',$currentMonth)
         ->where('year', $year)
         ->get('date');

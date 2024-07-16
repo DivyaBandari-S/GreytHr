@@ -222,7 +222,7 @@ class WhoIsInChart extends Component
     {
         try {
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','shift_start_time')->get();
 
             if ($this->isdatepickerclicked == 0) {
                 $currentDate = now()->toDateString();
@@ -244,7 +244,7 @@ class WhoIsInChart extends Component
                 });
 
             $employees1 = EmployeeDetails::where('manager_id', $loggedInEmpId)
-                ->select('emp_id', 'first_name', 'last_name')
+                ->select('emp_id', 'first_name', 'last_name','shift_start_time')
                 ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
                     $query->select('emp_id')
                         ->from('swipe_records')
@@ -255,11 +255,11 @@ class WhoIsInChart extends Component
                 ->get()->toArray();
             $data = [
                 ['List of Absent Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
-                ['Employee ID', 'Name'],
+                ['Employee ID', 'Name','Shift_Start_Time'],
 
             ];
             foreach ($employees1 as $employee) {
-                $data[] = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name']];
+                $data[] = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name'],$employee['shift_start_time']];
             }
             $filePath = storage_path('app/absent_employees.xlsx');
             SimpleExcelWriter::create($filePath)->addRows($data);
@@ -328,8 +328,8 @@ class WhoIsInChart extends Component
     public function render()
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-        $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
-        $employees2 = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->count();
+        $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status','active')->get();
+        $employees2 = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status','active')->count();
         if ($this->isdatepickerclicked == 0) {
             $currentDate = now()->toDateString();
         } else {
@@ -362,7 +362,7 @@ class WhoIsInChart extends Component
 
 
         $employees1 = EmployeeDetails::where('manager_id', $loggedInEmpId)
-            ->select('emp_id', 'first_name', 'last_name')
+            ->select('emp_id', 'first_name', 'last_name','shift_type','shift_start_time','shift_end_time')
             ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
                 $query->select('emp_id')
                     ->from('swipe_records')
@@ -370,10 +370,11 @@ class WhoIsInChart extends Component
                     ->whereDate('created_at', $currentDate);
             })
             ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
+            ->where('employee_status','active')
             ->get();
 
         $employeesCount = EmployeeDetails::where('manager_id', $loggedInEmpId)
-            ->select('emp_id', 'first_name', 'last_name')
+            ->select('emp_id', 'first_name', 'last_name','shift_type','shift_start_time','shift_end_time')
             ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
                 $query->select('emp_id')
                     ->from('swipe_records')
@@ -381,6 +382,7 @@ class WhoIsInChart extends Component
                     ->whereDate('created_at', $currentDate);
             })
             ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
+            ->where('employee_status','active')
             ->count();
         $swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
             $query->selectRaw('MIN(id)')

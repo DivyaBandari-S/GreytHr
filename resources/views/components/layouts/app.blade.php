@@ -326,6 +326,13 @@
                                                 </a>
                                             </li>
                                             @endif
+                                            @if ($mangerid)
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/shift-roaster-data" onclick="setActiveLink(this)">
+                                                    @livewire('shift-roaster-submodule')
+                                                </a>
+                                            </li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </li>
@@ -675,6 +682,13 @@
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/attendance-muster-data" onclick="setActiveLink(this)">
                                                     @livewire('attendance-muster')
+                                                </a>
+                                            </li>
+                                            @endif
+                                            @if ($mangerid)
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/shift-roaster-data" onclick="setActiveLink(this)">
+                                                    @livewire('shift-roaster-submodule')
                                                 </a>
                                             </li>
                                             @endif

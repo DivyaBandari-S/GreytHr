@@ -13,11 +13,11 @@ namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
 use App\Models\LeaveRequest;
+use App\Models\RegularisationDates;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\RegularisationNew;
-use App\Models\RegularisationNew1;
+
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
