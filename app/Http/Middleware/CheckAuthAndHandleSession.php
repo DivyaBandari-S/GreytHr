@@ -25,7 +25,7 @@ class CheckAuthAndHandleSession
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 $user = Auth::guard($guard)->user();
- 
+
                 switch ($guard) {
                     case 'emp':
                         $id = $user->emp_id;
@@ -51,6 +51,8 @@ class CheckAuthAndHandleSession
                 }
 
                 Session::put($guard . '_id', $id);
+                Session::put($guard . 'first_name', $id);
+                //need to add firstname lastname
                 Log::info("$guard ID set: $id");
                 Session::put('user_type', $guard);
                 // Get GeoIP data

@@ -917,6 +917,7 @@ button.close-button {
     position: relative;
     display: inline-block;
     color: #778899;
+    width: 10%;
     /* border:1px solid #ccc; */
     background: transparent;
     outline: none;
@@ -2188,7 +2189,6 @@ input[type="radio"] {
     width: 100%;
     height: 1px;
     border-bottom: 1px solid #ccc;
-    margin-bottom: 10px;
 }
 
 .headerText {
@@ -2336,6 +2336,7 @@ input[type="radio"] {
     height: 22px;
     width: 22px;
     display: flex;
+    cursor: pointers;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
@@ -2385,8 +2386,8 @@ input[type="radio"] {
 .withdraw {
     background: rgb(2, 17, 79);
     border: 1px solid rgb(2, 17, 79);
-    font-size: 0.75rem;
-    padding: 5px 10px;
+    font-size: 0.725rem;
+    padding: 6px 12px;
     color: white;
     font-weight: 500;
     border-radius: 5px;
@@ -3612,12 +3613,12 @@ select .yearSelect {
     background: #ebf5ff;
 }
 .breadcrumb-item a:hover {
-    color: #808080;
+    color: rgb(2, 17, 79);
     text-decoration: none;
 }
 .breadcrumb-item a {
     text-decoration: none;
-    color: #02114f;
+    color: #333;
 }
 .btn-1 {
     color: rgb(2, 17, 79);
@@ -4401,3 +4402,5 @@ p::first-letter {
     border-top: 5px solid #778899; /* Change the color as needed */
     pointer-events: none; /* Ensure the arrow doesn't interfere with select clicks */
 }
+
+

@@ -909,7 +909,7 @@
                     <i class="far fa-check-circle"></i>
                     All exception days are already applied.
                     @else
-                    No exceptions dates to regularise.
+                    No exception dates to regularise.
                     @endif
                 </div>
             </div>
@@ -1148,8 +1148,8 @@ $lastItem = end($regularisationEntries); // Get the last item
 
 @else
 <div class="hidden-pending-box">
-    <img src="{{ asset('images/regularisation.png') }}" style="margin-top:80px;">
-    <p style="color: #a3b2c7;font-weight:400;font-size: 20px;margin-top:20px;">Hey, you have no
+<img src="{{ asset('images/pending.png') }}" style="margin-top:50px;" height="180" width="180">
+    <p style="color: #a3b2c7;font-weight:400;font-size: 14px;margin-top:20px;">Hey, you have no
         regularization records to view.</p>
 </div>
 @endif

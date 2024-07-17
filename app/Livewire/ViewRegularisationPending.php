@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
+use App\Models\RegularisationDates;
 use App\Models\RegularisationNew;
 use App\Models\RegularisationNew1;
 use App\Models\SwipeRecord;
@@ -47,7 +48,7 @@ class ViewRegularisationPending extends Component
     public function approve($id)
     {
         $currentDateTime = Carbon::now();
-        $item = RegularisationNew1::find($id);
+        $item = RegularisationDates::find($id);
         $employeeId=$item->emp_id;
         $item->status='approved';
         if(empty($this->remarks))
@@ -113,7 +114,7 @@ class ViewRegularisationPending extends Component
     public function reject($id)
     {
         $currentDateTime = Carbon::now();
-        $item = RegularisationNew1::find($id);
+        $item = RegularisationDates::find($id);
         if(empty($this->remarks))
         {
 
@@ -141,7 +142,7 @@ class ViewRegularisationPending extends Component
         $empIds = $employees->pluck('emp_id')->toArray();
         
 // Retrieve records from AttendanceRegularisationNew for the extracted emp_ids
-        $this->regularisations = RegularisationNew1::whereIn('emp_id', $empIds)
+        $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
         ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
         ->where('status','pending')
         ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')

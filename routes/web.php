@@ -202,7 +202,7 @@ Route::middleware(['auth:hr','handleSession'])->group(function () {
     Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
     // Route::get('/hremployeedirectory', EmployeeDirectory::class)->name('employee-directory');
     // Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
-    // Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
+    Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
 
@@ -300,7 +300,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/team-on-leave', TeamOnLeave::class);
     Route::get('/team-on-leave-chart', TeamOnLeaveChart::class)->name('team-on-leave');
     // Route::get('/leaveBalChart', LeaveBalancesChart::class)->name('leave-details');
-    Route::get('/navigate-to-helpdesk', [EmployeesReview::class, 'navigateToHelpdesk'])->name('navigate.to.helpdesk');
+    // Route::get('/navigate-to-helpdesk', [EmployeesReview::class, 'navigateToHelpdesk'])->name('navigate.to.helpdesk');
 
     // TODO module
     Route::get('/tasks', Tasks::class)->name('tasks');
