@@ -481,7 +481,7 @@
                                             This month ({{$upcomingLeaveApplications}}) </p>
                                             @if($upcomingLeaveRequests)
                                             <div wire:ignore class="mt-2 d-flex align-items-center gap-3 mb-3">
-                                                @foreach($upcomingLeaveRequests->take(5) as $requests)
+                                                @foreach($upcomingLeaveRequests->take(3) as $requests)
                                                 @php
                                                 $randomColorList = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
                                                 @endphp
@@ -491,9 +491,9 @@
                                                     </div>
                                                 </div>
                                                 @endforeach
-                                                @if($upcomingLeaveRequests->count() > 5)
+                                                @if($upcomingLeaveRequests->count() > 3)
                                                     <div class="remainContent d-flex flex-column align-items-center"> <!-- Placeholder color -->
-                                                        <span>+{{ $upcomingLeaveRequests->count() - 5 }} </span>
+                                                        <span>+{{ $upcomingLeaveRequests->count() - 3 }} </span>
                                                         <span style="margin-top:-5px;">More</span>
                                                     </div>
                                                 @endif

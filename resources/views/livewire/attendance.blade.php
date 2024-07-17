@@ -1525,6 +1525,7 @@ color: #fff;
                                 </tr>
                             </thead>
                             <tbody id="calendar-body">
+                                @if($calendar)
                                 @foreach($calendar as $week)
                                 <tr>
                                     @foreach($week as $day)
@@ -1614,7 +1615,9 @@ color: #fff;
                             </tbody>
 
                         </table>
-
+@else
+<p>no data</p>
+@endif
                     </div>
 
 

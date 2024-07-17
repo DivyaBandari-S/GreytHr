@@ -140,7 +140,7 @@ class LeaveBalances extends Component
 
     protected function getSickLeaveColor($percentage)
     {
-        return '#0ea8fc';
+        return 'rgb()';
     }
 
     //this method will fetch the oldest nd newest  data

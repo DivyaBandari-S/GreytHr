@@ -49,14 +49,13 @@ class GrantLeaveBalance extends Component
 
         foreach ($this->selectedEmpIds as $emp_id) {
             try {
-                EmployeeLeaveBalances::create([
+             $data =  EmployeeLeaveBalances::create([
                     'emp_id' => $emp_id,
                     'leave_type' => $this->leave_type,
                     'leave_balance' => $this->leave_balance,
                     'from_date' => $this->from_date,
                     'to_date' => $this->to_date,
                 ]);
-
                 $this->reset();
 
                 // Flash success message

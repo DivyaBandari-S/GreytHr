@@ -331,7 +331,7 @@ public function historyButton()
         $emp_id = $employeeDetails->emp_id;
         
         try {
-            Regularisations::create([
+            RegularisationDates::create([
                 'emp_id' => $emp_id,
                 'from' => $this->from,
                 'to' => $this->to,
@@ -406,13 +406,13 @@ public function historyButton()
         return $regularisation->regularisation_entries !== "[]";
        });
       $manager = EmployeeDetails::select('manager_id', 'report_to')->distinct()->get();   
-      $this->data10= Regularisations::where('status', 'pending')->get();
+      $this->data10= RegularisationDates::where('status', 'pending')->get();
       $this->manager1 = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
-      $this->data = Regularisations::where('is_withdraw', '0')->count();
-      $this->data8 = Regularisations::where('is_withdraw', '0')->get();
-      $this->data1 = Regularisations::where('status', 'pending')->first();
-      $this->data4 = Regularisations::where('is_withdraw', '1')->count();
-      $this->data7= Regularisations::all();
+      $this->data = RegularisationDates::where('is_withdraw', '0')->count();
+      $this->data8 = RegularisationDates::where('is_withdraw', '0')->get();
+      $this->data1 = RegularisationDates::where('status', 'pending')->first();
+      $this->data4 = RegularisationDates::where('is_withdraw', '1')->count();
+      $this->data7= RegularisationDates::all();
       $employee = EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
       if ($employee) {
             $this->manager3 = EmployeeDetails::find($employee->manager_id);
