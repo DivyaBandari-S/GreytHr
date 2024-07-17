@@ -204,7 +204,7 @@
               <input type="checkbox">
               10:00 Am to 07:00 Pm(GS)
             </label>
-            <span class="total-employee-count">166 employee(s)</span>
+            <span class="total-employee-count">{{$dayShiftEmployeesCount}} employee(s)</span>
           </div>
           <div class="time-range">
             <span class="start-time">10:00</span>
@@ -219,7 +219,7 @@
               <input type="checkbox">
               02:00 Pm to 11:00 Pm(AS)
             </label>
-            <span class="total-employee-count">166 employee(s)</span>
+            <span class="total-employee-count">{{$afternoonShiftEmployeesCount}} employee(s)</span>
           </div>
           <div class="time-range">
             <span class="start-time">02:00</span>
@@ -234,7 +234,7 @@
               <input type="checkbox">
               05:00 Pm to 01:00 Am(ES)
             </label>
-            <span class="total-employee-count">166 employee(s)</span>
+            <span class="total-employee-count">{{$eveningShiftEmployeesCount}} employee(s)</span>
           </div>
           <div class="time-range">
             <span class="start-time">05:00</span>
