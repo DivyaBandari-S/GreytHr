@@ -313,7 +313,6 @@
                 <div class="center text-center" style="margin-top:50px;">
                     <h5 style="font-size:16px;">0</h5>
                     <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                    <a href="#" class="view" style="font-size:12px;">View Details</a>
                 </div>
                
             </div>
@@ -331,7 +330,6 @@
                          <div class="center text-center" style="margin-top:50px;" >
                              <h5 style="font-size:16px;">{{ $casualLeavePerYear }} </h5>
                              <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                             <a href="#" style="font-size:12px;">View Details</a>
                         </div>
                         <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;">
@@ -354,7 +352,6 @@
                             <div class="center text-center" style="margin-top:50px;" >
                                 <h5 style="font-size:16px;">{{ $sickLeavePerYear }}</h5>
                                 <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                                <a href="#" style="font-size:12px;">View Details</a>
                             </div>
                             <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
