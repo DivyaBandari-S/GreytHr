@@ -63,6 +63,7 @@ class Home extends Component
 
     public $countofregularisations;
 
+    public $employeeShiftDetails;
     public $regularisations;
     public $greetingText;
     public $teamOnLeave;
@@ -177,6 +178,7 @@ class Home extends Component
         ->with('employee') 
         ->count();
         
+        
     }
     public function reviewLeaveAndAttendance()
     {
@@ -256,7 +258,9 @@ class Home extends Component
             $loggedInEmpId = Session::get('emp_id');
             // Check if the logged-in user is a manager by comparing emp_id with manager_id in employeedetails
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
+          
             $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeShiftDetails=EmployeeDetails::where('emp_id',$employeeId)->first();
             $this->currentDay = now()->format('l');
             $this->currentDate = now()->format('d M Y');
             $today = Carbon::now()->format('Y-m-d');
@@ -324,7 +328,6 @@ class Home extends Component
             $this->leaveApplied = $matchingLeaveApplications;
 
             $this->count = count($matchingLeaveApplications);
-
 
             //team on leave
             $currentDate = Carbon::today();
@@ -431,6 +434,7 @@ class Home extends Component
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                ->where('employee_status','active')
                 ->get();
 
             $arrayofabsentemployees = $this->absent_employees->toArray();
@@ -444,6 +448,7 @@ class Home extends Component
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                ->where('employee_status','active')
                 ->count();
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $swipes_early = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate, $approvedLeaveRequests) {
@@ -457,6 +462,7 @@ class Home extends Component
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+                ->where('employee_details.employee_status','active')
                 ->get();
 
             $swipes_early1 = $swipes_early->count();
@@ -473,6 +479,7 @@ class Home extends Component
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+                ->where('employee_details.employee_status','active')
                 ->get();
 
             $swipes_late1 = $swipes_late->count();

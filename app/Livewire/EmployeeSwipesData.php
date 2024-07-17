@@ -33,6 +33,9 @@ class EmployeeSwipesData extends Component
     public $startDate;
     public $endDate;
 
+    public $employeeShiftDetails;
+    public $selectedSwipeTime;
+
     public $search;
     public $sw_ipes;
     public $notFound;
@@ -79,6 +82,11 @@ class EmployeeSwipesData extends Component
                     Log::error('Error in mount method: ' . $e->getMessage());
                     $this->status = 'Error';
             }
+    }
+    public function updateselectedSwipeTime($value)
+    {
+        $this->selectedSwipeTime=$value;
+        
     }
     public function testMethod()
     {
@@ -181,8 +189,8 @@ class EmployeeSwipesData extends Component
     try {
         $currentDate = now()->toDateString();
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-        $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
-        
+        $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','shift_start_time','shift_end_time')->get();
+        $this->employeeShiftDetails=EmployeeDetails::where('emp_id',$loggedInEmpId)->first();
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->where('leave_applications.status', 'approved')
             ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
@@ -214,7 +222,7 @@ class EmployeeSwipesData extends Component
             ->orderBy('created_at')
             ->get();
         } else {
-            $this->swipes = SwipeRecord::select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+            $this->swipes = SwipeRecord::select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time')
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id')) // Specify swipe_records.emp_id
                 ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id')) // Specify swipe_records.emp_id

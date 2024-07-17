@@ -1311,14 +1311,14 @@ color: #fff;
 
                     <div class="col-8 p-0">
                         <!-- Small box with the text -->
-                        <div style="white-space:nowrap;text-align:center;margin-left:40px;">Access card details not available</div>
+                        <div style="white-space:nowrap;text-align:center;margin-left:30px;">Access card details not available</div>
                         
                     </div>
 
                     <!-- Blue info icon on the right -->
                     <div class="info-icon-container-attendance-info col-4">
 
-                    <i class="fa fa-info-circle" aria-hidden="true" style="font-size: 14px; color: blue;"></i>
+                    <i class="fa fa-info-circle" aria-hidden="true" style="margin-left:25px;font-size: 14px; color: blue;"></i>
                         <div class="info-box-attendance-info">
                             Contact administrator to get access card assigned.
                         </div>
@@ -1525,7 +1525,7 @@ color: #fff;
                                 </tr>
                             </thead>
                             <tbody id="calendar-body">
-                                @if($calendar)
+                                @if(!empty($calendar))
                                 @foreach($calendar as $week)
                                 <tr>
                                     @foreach($week as $day)
@@ -1612,6 +1612,9 @@ color: #fff;
                                         @endforeach
                                 </tr>
                                 @endforeach
+                                @else
+                                  <p>No calendar data available</p>
+                                @endif  
                             </tbody>
 
                         </table>
