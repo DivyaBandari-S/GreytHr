@@ -2,7 +2,7 @@
     <x-loading-indicator />
     <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
     <div class="toggle-container position-relative">
-       
+
         <!-- leave-page.blade.php -->
 
         @if(session()->has('message'))
@@ -144,7 +144,7 @@
 
         {{-- pending --}}
         <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}">
-            @if(!empty($leavePending))
+            @if(empty($leavePending))
             <div class="containerWidth mt-2">
                 <div class="leave-pending rounded">
 
@@ -217,9 +217,9 @@
 
                     <div class="accordion-body m-0 p-0">
 
-                        <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
+                        <div style="width:100%; height:1px; border-bottom:1px solid #ccc;"></div>
 
-                        <div class="content px-2">
+                        <div class="content pt-1 px-4">
 
                             <span style="color: #778899; font-size: 12px; font-weight: 500;">Duration:</span>
 
@@ -228,7 +228,7 @@
                                 <span style="font-size: 11px; font-weight: 500;">
                                     {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }} </span>
 
-                                ( {{ $leaveRequest->from_session }} )to
+                                ( {{ $leaveRequest->from_session }} ) to
 
                                 <span style="font-size: 11px; font-weight: 500;">
                                     {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
@@ -239,7 +239,7 @@
 
                         </div>
 
-                        <div class="content px-2">
+                        <div class="content pb-1 px-4">
 
                             <span style="color: #778899; font-size: 12px; font-weight: 500;">Reason:</span>
 
@@ -247,9 +247,9 @@
 
                         </div>
 
-                        <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
+                        <div style="width:100%; height:1px; border-bottom:1px solid #ccc;"></div>
 
-                        <div style="display:flex; flex-direction:row; justify-content:space-between;">
+                        <div class="d-flex justify-content-between align-items-center py-2 px-3">
 
                             <div class="content px-2">
 
@@ -259,7 +259,7 @@
 
                             </div>
 
-                            <div class="content px-2">
+                            <div class="content d-flex gap-2 align-items-center px-2">
 
                                 <a href="{{ route('leave-history', ['leaveRequestId' => $leaveRequest->id]) }}">
 
@@ -267,7 +267,7 @@
                                         Details</span>
 
                                 </a>
-                                <button class="withdraw mb-2" wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
+                                <button class="withdraw" wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
 
                             </div>
 
@@ -368,17 +368,17 @@
 
                         <div class="verticalLine"></div>
 
-                        <div class="content px-2">
+                        <div class="content pt-1 px-4">
 
                             <span class="headerText">Duration:</span>
 
                             <span style="font-size: 11px;">
 
-                                <span style="font-size: 11px; font-weight: 500;">{{ $leaveRequest->formatted_from_date }}</span>
+                                <span style="font-size: 11px; font-weight: 500;">   {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }}</span>
 
                                 ({{ $leaveRequest->from_session }} ) to
 
-                                <span style="font-size: 11px; font-weight: 500;">{{ $leaveRequest->formatted_to_date }}</span>
+                                <span style="font-size: 11px; font-weight: 500;">   {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
 
                                 ( {{ $leaveRequest->to_session }} )
 
@@ -386,7 +386,7 @@
 
                         </div>
 
-                        <div class="content px-2">
+                        <div class="content  pb-1 px-4">
 
                             <span class="headerText">Reason:</span>
 
@@ -396,9 +396,9 @@
 
                         <div class="verticalLine"></div>
 
-                        <div class="d-flex flex-row justify-content-between">
+                        <div class="d-flex flex-row justify-content-between px-3 py-2">
 
-                            <div class="content px-2 mb-2">
+                            <div class="content px-2 ">
 
                                 <span class="headerText">Applied on:</span>
 
@@ -406,7 +406,7 @@
 
                             </div>
 
-                            <div class="content px-2 mb-2">
+                            <div class="content px-2 ">
 
                                 <a href="{{ route('leave-pending', ['leaveRequestId' => $leaveRequest->id]) }}">
                                     <span class="viewDetails">View
