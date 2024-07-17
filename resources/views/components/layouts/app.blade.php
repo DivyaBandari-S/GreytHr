@@ -1160,7 +1160,7 @@
                         <i class="fas fa-bars showHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px;  cursor: pointer;" onclick="myMenuSmall()"></i> -->
                     <img src="/images/app-drawer.png" class="app-drawer-img hideHamburger" onclick="myMenu()">
                     <img src="/images/app-drawer.png" class="app-drawer-img showHamburger" onclick="myMenuSmall()">
-                    <h6 class="mx-2 my-0" style="color: white; width: -webkit-fill-available;"> @livewire('page-title')
+                    <h6 class="mx-2 my-0" style="color: white; width: -webkit-fill-available; margin-bottom: 10px;"> @livewire('page-title')
                     </h6>
 
                     @auth('emp')
@@ -1168,7 +1168,7 @@
 
                     @livewire('notification')
                     <div class="col dropdown mx-2 p-0">
-                        <button class="dropdown-btn" style="font-size: 13px;  white-space: nowrap; ">Quick
+                        <button class="dropdown-btn" style="font-size: 13px;  white-space: nowrap; margin-bottom: 5px; ">Quick
                             Links</button>
                         <div class="dropdown-content" style="font-size: 12px;font-weight:500;">
                             <a href="/tasks">Tasks</a>

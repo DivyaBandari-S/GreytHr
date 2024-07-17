@@ -2,7 +2,7 @@
 
     <div>
         <a href="/users" style="color: white; text-decoration: none;">
-            <i class="fa fa-comment" style="position: relative;display: inline-block; vertical-align: middle;font-size: 18px; margin-left: 10px; margin-right: 8px;">
+            <i class="fa fa-comment" style="position: relative;display: inline-block; vertical-align: middle;font-size: 18px; margin-left: 10px; margin-right: 8px;margin-bottom: 5px;">
                 @if ($chatNotificationCount > 0)
                 <span class="badge bg-danger" style="position: absolute; top: -10px; right: -3px; font-size:10px;">
                     {{ $chatNotificationCount }}
@@ -14,7 +14,7 @@
     </div>
     <div class="notification-icon" style="margin-right: -10px; margin-top: 5px;">
         <button id="notificationButton" class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="background:none;border:none;">
-            <i style="color: white; position: relative;" class="fas mr-1 fa-bell">
+            <i style="color: white; position: relative;" class="fas mr-1 fa-bell" style="margin-bottom: 7px;">
                 @if (($matchingLeaveRequestsCount + $chatNotificationCount) > 0)
                 <span id="notificationCount" class="badge bg-danger" style="position: absolute; top: -9px; right: -1px; font-size:10px;">
                     {{ $matchingLeaveRequestsCount + $chatNotificationCount }}
