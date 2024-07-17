@@ -167,8 +167,8 @@
   @foreach($Swipes as $s1)
   @php
   $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-  $isLateBy10AM = $swipeTime->format('H:i') > '10:00';
-  $isEarlyBy10AM= $swipeTime->format('H:i') <= '10:00' ; @endphp @if($isLateBy10AM) @php $notyetin++; $lateArrival++; @endphp @endif @if($isEarlyBy10AM) @php $onTime++; @endphp @endif @endforeach @php $CalculatePresentOnTime=($EarlySwipesCount/$TotalEmployees)*100; $CalculatePresentButLate=($LateSwipesCount/$TotalEmployees)*100; @endphp <div class="date-form-who-is-in">
+  $isLateBy10AM = $swipeTime->format('H:i') > $s1->shift_start_time;
+  $isEarlyBy10AM= $swipeTime->format('H:i') <= $s1->shift_start_time ; @endphp @if($isLateBy10AM) @php $notyetin++; $lateArrival++; @endphp @endif @if($isEarlyBy10AM) @php $onTime++; @endphp @endif @endforeach @php $CalculatePresentOnTime=($EarlySwipesCount/$TotalEmployees)*100; $CalculatePresentButLate=($LateSwipesCount/$TotalEmployees)*100; @endphp <div class="date-form-who-is-in">
     <input type="date" wire:model="from_date" wire:change="updateDate" class="form-control" id="fromDate" name="fromDate" style="color: #778899;">
 </div>
 <div class="shift-selector-container-who-is-in">
@@ -392,8 +392,8 @@
 
             @php
             $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-            $lateArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse('10:00'))->format('%H:%I');
-            $isLateBy10AM = $swipeTime->format('H:i') > '10:00';
+            $lateArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I');
+            $isLateBy10AM = $swipeTime->format('H:i') > $s1->shift_start_time;
             @endphp
 
             @if($isLateBy10AM)
@@ -461,11 +461,14 @@
             @foreach($Swipes as $s1)
             @php
             $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-            $earlyArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse('10:00'))->format('%H:%I');
-            $isEarlyBy10AM = $swipeTime->format('H:i') <= '10:00' ; @endphp @if($isEarlyBy10AM) <tr style="border-bottom: 1px solid #ddd;">
+            $earlyArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I');
+            $isEarlyBy10AM = $swipeTime->format('H:i') <= $s1->shift_start_time ; 
+            @endphp 
+            @if($isEarlyBy10AM) 
+            <tr style="border-bottom: 1px solid #ddd;">
               <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;">{{ ucwords(strtolower($s1->first_name)) }}{{ ucwords(strtolower($s1->last_name)) }}<br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span></td>
               <td style="font-weight:700;font-size:10px;">{{$earlyArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
-              </tr>
+            </tr>
 
               @endif
               @endforeach
