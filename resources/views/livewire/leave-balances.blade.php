@@ -200,9 +200,9 @@
                             <span class="leave-gran font-weight-500">Granted:0</span>
                         </div>
                     </div>
-                    <div class="center text-center" style="margin-top:50px;" >
+                    <div class="center text-center" style="margin-top:30px;" >
                         <h5 style="font-size:16px;">0</h5>
-                        <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                        <p class=" mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                     </div>
                 </div>
             </div>
@@ -225,11 +225,11 @@
                         <span class="leave-gran font-weight-500">Granted:0</span>
                     </div>
                 </div>
-                <div class="center text-center" style="margin-top:50px;">
+                <div class="center text-center" style="margin-top:30px;">
                     <h5 style="font-size:16px;">0</h5>
-                    <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                    <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                 </div>
-                
+
             </div>
               </div>
                 <div class="col-md-4 mb-2">
@@ -242,9 +242,9 @@
                                     <span class="leave-gran font-weight-500">Granted:0</span>
                                 </div>
                          </div>
-                         <div class="center text-center" style="margin-top:50px;" >
+                         <div class="center text-center" style="margin-top:30px;" >
                              <h5 style="font-size:16px;">0</h5>
-                             <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                             <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                         </div>
                         
                         </div>
@@ -259,9 +259,9 @@
                                     <span class="leave-gran font-weight-500">Granted:0</span>
                                 </div>
                          </div>
-                            <div class="center text-center" style="margin-top:50px;" >
+                            <div class="center text-center" style="margin-top:30px;" >
                                 <h5 style="font-size:16px;">0</h5>
-                                <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                                <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                             </div>
                             
                         </div>
@@ -285,15 +285,15 @@
                             <span class="leave-gran font-weight-500">Granted:0</span>
                         </div>
                     </div>
-                    <div class="center text-center" style="margin-top:50px;" >
+                    <div class="center text-center" style="margin-top:30px;" >
                         <h5 style="font-size:16px;">0 </h5>
-                        <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                        <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                     </div>
                 </div>
             </div>
          <!-- ... (previous code) ... -->
             <div class="col-md-4 mb-2">
-               <div     class="leave-bal mb-2 bg-white rounded  p-3"  >
+               <div  class="leave-bal mb-2 bg-white rounded  p-3"  >
                 <div class="balance d-flex flex-row justify-content-between " >
                     <div class="field">
                         <span class="leave-type font-weight-500">
@@ -310,9 +310,9 @@
                         <span class="leave-gran font-weight-500">Granted:{{ $grantedLeave }}</span>
                     </div>
                 </div>
-                <div class="center text-center" style="margin-top:50px;">
+                <div class="center text-center" style="margin-top:30px;">
                     <h5 style="font-size:16px;">0</h5>
-                    <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                    <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                 </div>
                
             </div>
@@ -327,17 +327,11 @@
                                     <span class="leave-gran font-weight-500">Granted:{{ $casualLeavePerYear }} </span>
                                 </div>
                          </div>
-                         <div class="center text-center" style="margin-top:50px;" >
+                         <div class="center text-center" style="margin-top:30px;" >
                              <h5 style="font-size:16px;">{{ $casualLeavePerYear }} </h5>
-                             <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                             <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                         </div>
-                        <div class="tube-container">
-                                <p style="color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;">
-                                        {{ $casualLeavePerYear }} of {{ $casualLeavePerYear }} Consumed
-                            </p>
-                            <div class="tube" style="width: 100%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave Probation') }};"></div>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="col-md-4 mb-2">
                     <div     class="leave-bal mb-2 bg-white rounded  p-3"   >
@@ -349,18 +343,11 @@
                                     <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
                                 </div>
                          </div>
-                            <div class="center text-center" style="margin-top:50px;" >
+                            <div class="center text-center" style="margin-top:30px;" >
                                 <h5 style="font-size:16px;">{{ $sickLeavePerYear }}</h5>
-                                <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                                <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                             </div>
-                            <div class="tube-container">
-                                <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
-                                 
-                                        {{ $sickLeavePerYear }} of {{ $sickLeavePerYear }} Consumed
 
-                                </p>
-                                <div class="tube" style="width: 100%; background-color: {{ $this->getTubeColor($consumedSickLeaves, $sickLeavePerYear, 'Sick Leave') }};"></div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -381,14 +368,14 @@
                             <span class="leave-type font-weight-500" >Loss Of Pay</span>
                         </div>
                         <div>
-                            <span class="leave-gran font-weight-500">Granted:{{$lossOfPayPerYear}}</span>
+                            <span class="leave-grane font-weight-500">Granted:{{$lossOfPayPerYear}}</span>
                         </div>
                     </div>
-                    <div class="center text-center" style="margin-top:50px;" >
+                    <div class="center text-center" style="margin-top:30px;" >
                         <h5 style="font-size:16px;">
                             {{$lossOfPayBalance}}
                         </h5>
-                        <p style="margin-top:-14px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                        <p  class="mb-0" style="margin-top:-14px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                     </div>
                 </div>
             </div>
@@ -418,7 +405,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="center text-center" style="margin-top:50px;">
+                <div class="center text-center" style="margin-top:30px;">
                     <h5 style="font-size:16px;">  @if($gender === 'Female')
                             {{$maternityLeaves}}
                             @elseif($gender === 'Male')
@@ -427,7 +414,7 @@
                             no
                             @endif
                         </h5>
-                    <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                    <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                 </div>
             </div>
               </div>
@@ -441,9 +428,9 @@
                                     <span class="leave-gran font-weight-500">Granted:{{$casualLeavePerYear}}</span>
                                 </div>
                          </div>
-                         <div class="center text-center" style="margin-top:50px;" >
-                             <h5 >{{$casualLeaveBalance}}</h5>
-                             <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                         <div class="center text-center" style="margin-top:30px;" >
+                             <h5 style="font-size:16px;" >{{$casualLeaveBalance}}</h5>
+                             <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                              <a href="/casualleavebalance" style="font-size:12px;">View Details</a>
                         </div>
                         <div class="tube-container">
@@ -468,9 +455,9 @@
                                     <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
                                 </div>
                             </div>
-                            <div class="center text-center" style="margin-top:50px;">
+                            <div class="center text-center" style="margin-top:30px;">
                                 <h5 style="font-size:16px;">{{ $sickLeaveBalance }}</h5>
-                                <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                                <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                                 <a href="/sickleavebalance" style="font-size:12px;">View Details</a>
                             </div>
                             <div class="tube-container">
@@ -495,9 +482,9 @@
                                     <span class="leave-gran font-weight-500">Granted:{{ $casualProbationLeavePerYear }}</span>
                                 </div>
                             </div>
-                            <div class="center text-center" style="margin-top:50px;">
+                            <div class="center text-center" style="margin-top:30px;">
                                 <h5 style="font-size:16px;">{{ $casualProbationLeaveBalance }}</h5>
-                                <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                                <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                                 <a href="/casualprobationleavebalance" style="font-size:12px;">View Details</a>
                             </div>
                             <div class="tube-container">
@@ -522,9 +509,9 @@
                                     <span class="leave-gran font-weight-500">Granted:{{ $marriageLeaves }}</span>
                                 </div>
                             </div>
-                            <div class="center text-center" style="margin-top:50px;">
+                            <div class="center text-center" style="margin-top:30px;">
                                 <h5 style="font-size:16px;">{{ $marriageLeaves }}</h5>
-                                <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                                <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                                 <a href="#" style="font-size:12px;">View Details</a>
                             </div>
 
@@ -549,9 +536,9 @@
                             <span class="leave-gran font-weight-500">Granted:0</span>
                         </div>
                     </div>
-                    <div class="center text-center" style="margin-top:50px;" >
+                    <div class="center text-center" style="margin-top:30px;" >
                         <h5 style="font-size:16px;">0 </h5>
-                        <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                        <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                     </div>
                 </div>
             </div>
@@ -574,9 +561,9 @@
                         <span class="leave-gran font-weight-500">Granted:{{ $grantedLeave }}</span>
                     </div>
                 </div>
-                <div class="center text-center" style="margin-top:50px;">
+                <div class="center text-center" style="margin-top:30px;">
                     <h5 style="font-size:16px;">0</h5>
-                    <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                    <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                 </div>
                
             </div>
@@ -591,9 +578,9 @@
                                     <span class="leave-gran font-weight-500">Granted:0</span>
                                 </div>
                          </div>
-                         <div class="center text-center" style="margin-top:50px;" >
+                         <div class="center text-center" style="margin-top:30px;" >
                              <h5 style="font-size:16px;">0</h5>
-                             <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                             <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                         </div>
                            
                         </div>
@@ -608,9 +595,9 @@
                                     <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
                                 </div>
                          </div>
-                            <div class="center text-center" style="margin-top:50px;" >
+                            <div class="center text-center" style="margin-top:30px;" >
                                 <h5 style="font-size:16px;">0</h5>
-                                <p style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                                <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                             </div>
                             
                         </div>
