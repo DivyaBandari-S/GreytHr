@@ -285,7 +285,7 @@
                         <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
                             <div class="col-md-10" style="margin: 0px; padding: 0px">
                                 <div class="input-group">
-                                    <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                    <input wire:model="filter" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button type="button" wire:click="searchEmployees" class="search-btn">
                                             <i style="margin-right: 5px;" class="fa fa-search"></i>
@@ -304,6 +304,7 @@
 
                     <!-- Your Blade file -->
                     <div class="scrollApplyingTO">
+                        @if(!empty($managerFullName))
                         @foreach($managerFullName as $employee)
                         <div class="d-flex gap-4 align-items-center" style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             @if($employee['image'])
@@ -321,6 +322,9 @@
                             </div>
                         </div>
                         @endforeach
+                        @else
+                        <p>No managers found.</p>
+                        @endif
                     </div>
                 </div>
                 @endif
@@ -337,7 +341,7 @@
                         </div>
                     </a>
                     <!-- Blade Template: your-component.blade.php -->
-                   <span class="addText" wire:click="openCcRecipientsContainer">Add</span>
+                    <span class="addText" wire:click="openCcRecipientsContainer">Add</span>
 
                     @if(count($selectedCCEmployees) > 0)
                     <ul class=" d-flex align-items-center mb-0" style="list-style-type: none;gap:10px;">
@@ -358,7 +362,7 @@
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
                         <div class="col-md-10" style="margin: 0px; padding: 0px">
                             <div class="input-group">
-                                <input wire:model.debounce.500ms="searchTerm" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
                                     <button type="button" wire:click="searchCCRecipients" class="search-btn">
                                         <i style="margin-right: 5px;" class="fa fa-search"></i>

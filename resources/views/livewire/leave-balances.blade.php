@@ -82,7 +82,7 @@
 </div>
 
     
-<div class="buttons-container d-flex justify-content-end mt-2 p-0 ">
+<div class="buttons-container d-flex justify-content-end mt-2 px-3 ">
     <button class="leaveApply-balance-buttons  py-2 px-4  rounded"  onclick="window.location.href='/leave-page'">Apply</button>
         <button type="button" class="leave-balance-dowload mx-2 px-2 rounded " data-toggle="modal" data-target="#exampleModalCenter">
             <i class="fa-solid fa-download" style="color: white;"></i>
