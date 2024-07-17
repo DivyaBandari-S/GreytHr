@@ -11,6 +11,7 @@
         margin-bottom: 0;
         color: #000;
     }
+   
     </style>
     <div class="container"
         style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow: hidden;">
@@ -340,7 +341,8 @@
                                     <label for="task_name" style="font-size: 13px;color:#778899;">Task Name*</label>
                                     <br>
                                     <input type="text" wire:model.debounce.0ms="task_name" wire:input="autoValidate"
-                                        class="placeholder-small" placeholder="Enter task name"
+                                    class="placeholder-small"
+                                         placeholder="Enter task name"
                                         style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;">
                                     @error('task_name') <span class="text-danger">Task name is required</span> @enderror
                                 </div>
@@ -469,32 +471,32 @@
                                 </div>
 
                                 <!-- Priority -->
-                                <div class="priority-container" style="margin-bottom: 10px; margin-top: 0px;">
+                                <div class="priority-container" style="margin-top: 0px;">
                                     <div class="row ">
                                         <div class="col-md-4">
                                             <label for="priority"
-                                                style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Priority</label>
+                                                style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Priority*</label>
                                         </div>
                                         <div class="col-md-8 mt-1">
                                             <div id="priority"
                                                 style="display: flex; align-items: center; margin-top: 0px;">
                                                 <div class="priority-option" style="margin-left: 0px; padding: 0;">
                                                     <input type="radio" id="low-priority" name="priority"
-                                                        wire:change="autoValidate" wire:model="priority" value="low">
+                                                        wire:change="autoValidate" wire:model="priority" value="Low">
                                                     <span
                                                         style="font-size: 0.75rem;color:#778899; padding: 0;margin-left:5px"
                                                         class="text-xs">Low</span>
                                                 </div>
                                                 <div class="priority-option" style="margin-left: 20px; padding: 0;">
                                                     <input type="radio" id="medium-priority" name="priority"
-                                                        wire:change="autoValidate" wire:model="priority" value="medium">
+                                                        wire:change="autoValidate" wire:model="priority" value="Medium">
                                                     <span
                                                         style="font-size: 0.75rem;color:#778899; padding: 0;margin-left:5px"
                                                         class="text-xs">Medium</span>
                                                 </div>
                                                 <div class="priority-option" style="margin-left: 20px; padding: 0;">
                                                     <input type="radio" id="high-priority" name="priority"
-                                                        wire:change="autoValidate" wire:model="priority" value="high">
+                                                        wire:change="autoValidate" wire:model="priority" value="High">
                                                     <span
                                                         style="font-size: 0.75rem;color:#778899; padding: 0;margin-left:5px"
                                                         class="text-xs">High</span>
@@ -503,8 +505,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                @error('priority') <span class="text-danger">Priority is
+                                required</span> @enderror
                                 <!-- Due Date -->
-                                <div class="row">
+                                <div class="row" style="margin-top: 10px;">
                                     <div class="col">
                                         <div class="form-group">
                                             <label class="form-label"

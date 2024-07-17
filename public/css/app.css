@@ -508,8 +508,8 @@ button.close-button {
 
 /* Starting of peoples module (Kumar Asapu)*/
 .people-image {
-    width: 120px;
-    height: 120px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     background: #f9f9f9;
 }
@@ -2425,8 +2425,7 @@ input[type="radio"] {
     font-size: 10px;
 }
 .placeholder-small {
-    font-size: 11px;
-    color: #778899;
+    color: #778899 !important;
 }
 #category::placeholder {
     color: #778899; /* Placeholder text color */
