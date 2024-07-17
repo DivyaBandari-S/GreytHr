@@ -300,7 +300,6 @@ class Feeds extends Component
             'hr_emp_id' => $hrId,
             'addcomment' => $this->newComment ?? '',
         ]);
-dd($hrId);
         // Clear the input field after adding the comment
         $this->reset(['newComment']);
 

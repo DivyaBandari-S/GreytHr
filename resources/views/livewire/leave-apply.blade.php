@@ -1,4 +1,5 @@
 <div class="mx-2">
+<x-loading-indicator />
     @if($errorMessage)
     <div id="errorMessage" class="alert alert-danger">
         {{ $errorMessage }}
@@ -253,9 +254,13 @@
                     <div class="employee-profile-image-container">
                         <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
+                    @elseif($managerDetails)
+                    <div class="employee-profile-image-container">
+                        <img height="40" width="40" src="{{ asset('storage/' . $managerDetails->image) }}" style="border-radius:50%;">
+                    </div>
                     @else
                     <div class="employee-profile-image-container">
-                        <img height="40" width="40" src="{{ $loginEmpManagerProfile }}" style="border-radius:50%;">
+                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
                     @endif
                     <div class="center p-0 m-0">

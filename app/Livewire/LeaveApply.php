@@ -84,6 +84,7 @@ class LeaveApply extends Component
     public $loginEmpManagerProfile;
     public $differenceInMonths;
     public $probationDetails;
+    public $managerDetails;
     protected $rules = [
         'leave_type' => 'required',
         'from_date' => 'required|date',
@@ -117,6 +118,7 @@ class LeaveApply extends Component
     {
         try {
             $this->searchTerm = '';
+            $this->filter = '';
             $this->selectedYear = Carbon::now()->format('Y');
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();

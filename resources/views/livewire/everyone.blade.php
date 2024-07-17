@@ -459,7 +459,7 @@
                         <div class="row m-0 mb-3">
                             <div class="col-md-6">
                                 <img src="{{ asset('storage/' . $post->attachment) }}" alt="Post Image" style="width: 200px; height: 60px">
-                            </div>
+                            </div>e
                             <div class="col-md-6 m-auto">
                                 <p style="font-size: 14px; font-family: 'Open Sans', sans-serif; margin-top: 10px; font-weight: 100; color: #677A8E;">
                                     {{ $post->description }}
