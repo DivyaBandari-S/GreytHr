@@ -56,14 +56,14 @@
         .topMsg-attendance-info {
             border: 1px solid #ccc;
             border-radius: 5px;
-              /* Adjust the height as needed */
-              /* Adjust the padding as needed */
+            /* Adjust the height as needed */
+            /* Adjust the padding as needed */
             padding: 12px;
             font-size: 12px;
             background-color: #FFFFFF;
-           
-           
-            
+
+
+
         }
 
         .container-attendance-info {
@@ -93,10 +93,10 @@
 min-height: 102px;
 width: 170px; */
         }
-        .insight-card
-        {
+
+        .insight-card {
             border: 1px solid #ccc;
-            border-radius: 5px;  
+            border-radius: 5px;
         }
 
         .insight-card[_ngcontent-hbw-c670] h6[_ngcontent-hbw-c670] {
@@ -225,10 +225,12 @@ width: 170px; */
             margin-top: 10px;
             margin-bottom: 10px;
         }
-        .legendtext{
-            color:#778899;
-            font-size:12px;
+
+        .legendtext {
+            color: #778899;
+            font-size: 12px;
         }
+
         .bg-white {
             --tw-bg-opacity: 1;
             background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
@@ -858,10 +860,10 @@ width: 170px; */
         }
 
         .toggle-box-attendance-info {
-            
+
             /* background-color: #f0f0f0; */
 
-           
+
             /* margin-left: 850px; */
             /* margin-top: -40px; */
             /* padding: 5.5px 6px; */
@@ -888,7 +890,7 @@ width: 170px; */
             margin-right: 0px;
             /* Initial spacing between icons */
             border: 2px solid transparent;
-            
+
 
             /* Initial border color (transparent) */
         }
@@ -1286,7 +1288,7 @@ color: #fff;
         .attendance-legend-text {
             white-space: nowrap;
             font-size: 12px;
-            color:#778899;
+            color: #778899;
         }
     </style>
     @php
@@ -1303,22 +1305,21 @@ color: #fff;
                 <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info" id="myButton">My Regularisations</a>
             </div>
         </div>
-   
-       
+
         <div class="row m-0 d-flex justify-content-center" style="text-align: center;">
             <div class="col-md-4">
                 <div class="row m-0 topMsg-attendance-info d-flex align-items-center">
 
                     <div class="col-8 p-0">
                         <!-- Small box with the text -->
-                        <div style="white-space:nowrap;text-align:center;margin-left:40px;">Access card details not available</div>
-                        
+                        <div style="white-space:nowrap;text-align:center;margin-left:30px;">Access card details not available</div>
+
                     </div>
 
                     <!-- Blue info icon on the right -->
                     <div class="info-icon-container-attendance-info col-4">
 
-                    <i class="fa fa-info-circle" aria-hidden="true" style="font-size: 14px; color: blue;"></i>
+                        <i class="fa fa-info-circle" aria-hidden="true" style="margin-left:25px;font-size: 14px; color: blue;"></i>
                         <div class="info-box-attendance-info">
                             Contact administrator to get access card assigned.
                         </div>
@@ -1329,51 +1330,51 @@ color: #fff;
         </div>
 
         <div class="row m-0 mt-3">
-          <div class="row m-0 d-flex justify-content-center"style="display:flex;justify-content:center;"> 
-            <div class="col-md-3">
-                <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
-                    <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
-                    <section class="text-center">
-                        <p class="text-2"style="margin-top:30px;"> 0 </p>
-                    </section>
+            <div class="row m-0 d-flex justify-content-center" style="display:flex;justify-content:center;">
+                <div class="col-md-3">
+                    <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
+                        <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
+                        <section class="text-center">
+                            <p class="text-2" style="margin-top:30px;"> 0 </p>
+                        </section>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="insight-card bg-white pt-2 pb-2">
-                    <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">
-                        Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
-                    <section class="text-center">
+                <div class="col-md-3">
+                    <div class="insight-card bg-white pt-2 pb-2">
+                        <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">
+                            Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
+                        <section class="text-center">
 
-                        <p class="text-2"style="margin-top:30px;">02:00</p>
-                        <div>
-                            <span class="text-success ng-star-inserted" style="font-size:10px;"> +233%
-                            </span>
-                            <span class="text-muted" style="font-size:10px;margin-left:0px;"> From August </span>
-                        </div>
-                    </section>
+                            <p class="text-2" style="margin-top:30px;">02:00</p>
+                            <div>
+                                <span class="text-success ng-star-inserted" style="font-size:10px;"> +233%
+                                </span>
+                                <span class="text-muted" style="font-size:10px;margin-left:0px;"> From August </span>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="insight-card bg-white pt-2 pb-2">
+                        <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
+                        </h6>
+                        <section class="text-center">
+                            <p class="text-2" style="margin-top:30px;">02:00</p>
+                            <div>
+                                <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
+                                    +233% </span>
+                                <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From August
+                                </span>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="col-md-2 mt-5" style="text-align: center">
+                    <a href="#" data-toggle="modal" data-target="#exampleModalCenter" style="text-transform:uppercase;margin-top:40px;color:rgb(2, 17, 79);">
+                        +3 Insights
+                    </a>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="insight-card bg-white pt-2 pb-2">
-                    <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
-                    </h6>
-                    <section class="text-center">
-                        <p class="text-2"style="margin-top:30px;">02:00</p>
-                        <div>
-                            <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
-                                +233% </span>
-                            <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From August
-                            </span>
-                        </div>
-                    </section>
-                </div>
-            </div>
-            <div class="col-md-2 mt-5" style="text-align: center">
-                <a href="#" data-toggle="modal" data-target="#exampleModalCenter" style="text-transform:uppercase;margin-top:40px;color:rgb(2, 17, 79);">
-                    +3 Insights
-                </a>
-            </div>
-            </div>  
             <div wire:ignore.self class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 
 
@@ -1525,6 +1526,7 @@ color: #fff;
                                 </tr>
                             </thead>
                             <tbody id="calendar-body">
+                                @if(!empty($calendar))
                                 @foreach($calendar as $week)
                                 <tr>
                                     @foreach($week as $day)
@@ -1611,16 +1613,14 @@ color: #fff;
                                         @endforeach
                                 </tr>
                                 @endforeach
+
                             </tbody>
 
                         </table>
-
+                        @else
+                        <p>No calendar data available</p>
+                        @endif
                     </div>
-
-
-
-
-
 
                     <button class="accordion">Legends</button>
                     <div class="panel">
@@ -1754,7 +1754,7 @@ color: #fff;
                 </div>
                 @endif
                 @if($defaultfaCalendar==0)
-                @livewire('attendance-table')
+                @livewire('livewire.attendance-table')
 
                 @endif
                 <div class="col-md-5">

@@ -86,9 +86,9 @@
         <div class="row m-0 p-0">
             <div class="col-7 p-0 m-0 mb-2 ">
                 <nav  style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                    <ol class="breadcrumb d-flex align-items-center  " style="font-size: 12px;background:none;font-weight:500;">
-                        <li class="breadcrumb-item"><a type="button" href="{{ route('home') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a type="button" href="{{ route('leave-balance') }}">Leave Balances</a></li>
+                    <ol class="breadcrumb d-flex align-items-center  " style="font-size: 14px;background:none;font-weight:500;">
+                        <li class="breadcrumb-item"><a  href="{{ route('home') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a  href="{{ route('leave-balance') }}">Leave Balances</a></li>
                         <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Sick Leave</li>
                     </ol>
                 </nav>

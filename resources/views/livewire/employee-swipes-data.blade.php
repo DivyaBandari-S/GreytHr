@@ -72,9 +72,10 @@
     <!-- Display the filtered collection or any other content -->
                         @foreach($SignedInEmployees as $swipe)
         <!-- Display swipe details -->
+   
                        <tr class="employee-swipes-table-container">
                               <td  class="employee-swipes-name-and-id">
-                                        <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" value="{{ $swipe->emp_id }}">
+                              <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" value="{{ $swipe->swipe_time }}"wire:model="selectedSwipeTime"wire:change="updateselectedSwipeTime('{{$swipe->swipe_time}}')">
                                         <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ ucwords(strtolower($swipe->first_name)) }} {{ ucwords(strtolower($swipe->last_name)) }}">
                                             {{ ucwords(strtolower($swipe->first_name)) }} {{ ucwords(strtolower($swipe->last_name)) }}
                                         </span>
@@ -83,7 +84,17 @@
                                         <span class="text-muted employee-swipes-emp-id">#{{$swipe->emp_id}}</span>
                               </td>
                               <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date">{{ \Carbon\Carbon::parse($swipe->created_at)->format('d M, Y') }}</span></td>
-                              <td class="employee-swipes-swipe-details-for-signed-employees">10:00 am to 07:00...</td>
+                              @php
+                                        $EmployeeStartshiftTime=$swipe->shift_start_time;
+                                        $EmployeeEndshiftTime=$swipe->shift_end_time;
+                                        // Create DateTime objects
+                                        $startShiftTime = new DateTime($EmployeeStartshiftTime);
+                                        $endShiftTime = new DateTime($EmployeeEndshiftTime);
+                                        // Format the times
+                                        $formattedStartShiftTime = $startShiftTime->format('H:i a');
+                                        $formattedEndShiftTime = $endShiftTime->format('H:i a');
+                                    @endphp
+                              <td class="employee-swipes-swipe-details-for-signed-employees">{{$formattedStartShiftTime}} to {{$formattedEndShiftTime}}</td>
                               <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->in_or_out}}</td>
                               <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->swipe_time}}<br /><span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe->created_at)->format('d M, Y') }}</span></td>
                               <td class="empty-text">-</td>
@@ -147,7 +158,9 @@
                  <img src="https://cdn-icons-png.flaticon.com/512/2055/2055568.png"
                             class="container-employee-swipes-right-image">
                      <h6>Swipe-in Time</h6>
-                     @if($SwipeTime)
+                     @if($selectedSwipeTime)
+                        <p>{{$selectedSwipeTime}}</p>
+                     @elseif($SwipeTime)
                         <p>{{$SwipeTime}}</p>
                      @else
                         <p>Not Swiped Yet</p>
