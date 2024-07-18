@@ -30,7 +30,7 @@
                                         </div>
                                  </div>
                             </div>
-                         
+
                             <div class="col accordion-content" >
                                 <p style="color: #778899; font-size: 12px; font-weight: 500; margin-bottom:0;">Leave Type <br>
                                 @if(isset($leaveRequest['leaveRequest']->leave_type))
@@ -82,10 +82,11 @@
                             </div>
                             <!-- Add other details based on your leave request structure -->
                             <div class="arrow-btn " >
-                               <i class="fa fa-angle-down"></i>
+                               <i class="fa fa-angle-down" ></i>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="accordion-body p-0 m-0">
                       <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
@@ -118,7 +119,7 @@
                                 @else
                                     <span style="color: #333; font-size: 12px; font-weight: 400;">No. of days not available</span>
                                 @endif
-                               </span> 
+                               </span>
                             </div>
                             <div class="content2">
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;">Leave Balance:</span>
@@ -175,6 +176,9 @@
                             </div>
                         </div>
                     </div>
+
+
+
                 </div>
             </div>
         @endforeach
