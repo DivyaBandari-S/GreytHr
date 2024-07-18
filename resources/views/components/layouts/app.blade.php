@@ -48,8 +48,8 @@
     </style>
     <livewire:styles />
 
-    @vite(['public/css/app.css', 'public/js/app.js'])
-
+    {{-- @vite(['public/css/app.css', 'public/js/app.js','resources/css/app.css','resources/js/app.js']) --}}
+      @vite(['public/css/app.css', 'public/js/app.js'])
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -1065,7 +1065,7 @@
 <a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
 
     <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
- 
+
 
 </a>
 
@@ -1152,7 +1152,7 @@
 
                     @auth('emp')
 
-                   
+
                     @livewire('notification')
                     <div class="col dropdown mx-2 p-0">
                         <button class="dropdown-btn" style="font-size: 13px;  white-space: nowrap; ">Quick
@@ -1163,8 +1163,8 @@
                         </div>
                     </div>
 
-                   
-                   
+
+
                     @endauth
 
                     <div style="text-align:end;cursor:pointer; margin-right:10px;">
