@@ -1,10 +1,10 @@
 <?php
-
+ 
 namespace App\Models;
-
+ 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+ 
 class Comment extends Model
 {
     use HasFactory;
@@ -20,6 +20,6 @@ class Comment extends Model
     }
     public function hr()
     {
-        return $this->belongsTo(HR::class, 'hr_emp_id');
+        return $this->belongsTo(EmployeeDetails::class, 'hr_emp_id', 'emp_id');
     }
 }

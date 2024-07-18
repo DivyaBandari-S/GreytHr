@@ -92,17 +92,17 @@
                                                             @error('description') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
-                                                        <div class="row m-0" style="margin-left:-10px">
+                                                        <div class="row mt-2" style="margin-left:-10px">
                                                             <div class="row">
-                                                                <div class="mb-3">
+                                                                <div class="form-group ">
 
                                                                     <div class="form-group  m-0 p-0">
-                                                                        <label for="cc_to" > Members to be Added :<span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+                                                                        <label for="cc_to"> Members to be Added :<span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
 
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group  m-0">
-                                                                    <div class="mb-3 p-0">
+                                                                    <div class="form-group  p-0">
                                                                         <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
                                                                             <i class="fa fa-plus me-3"></i>
                                                                             Add
@@ -113,74 +113,71 @@
                                                                 </div>
                                                             </div>
                                                             @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-        <div class="input-group" style="margin-bottom: 10px;">
-            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                    <i style="text-align: center;" class="fa fa-search"></i>
-                </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
-            </div>
-        </div>
-        @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: white; font-size:12px">
-                No People Found
-            </div>
-        @else
-            @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
-                        </div>
-                        <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
-                        </div>
-                        <div class="col">
-                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                        </div>
-                    </div>
-                </label>
-            @endforeach
-        @endif
-    </div>
-@endif
-
-                                                        </div>
-                                                        <div class="form-group  m-0">
-                                                            <label for="fileInput" style="cursor: pointer;">
-                                                                <i class="fa fa-paperclip"></i> Attach Image
-                                                            </label>
-                                                            @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-
-                                                        <div class="form-group  m-0">
-                                                            <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                            @if ($image)
-                                                            <div class="row m-0">
-                                                                <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
+                                                            <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+                                                                <div class="input-group" style="margin-bottom: 10px;">
+                                                                    <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                    <div class="input-group-append">
+                                                                        <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
+                                                                            <i style="text-align: center;" class="fa fa-search"></i>
+                                                                        </button>
+                                                                        <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                @if ($peopleData->isEmpty())
+                                                                <div class="container" style="text-align: center; color: white; font-size:12px">
+                                                                    No People Found
+                                                                </div>
+                                                                @else
+                                                                @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
+                                                                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-auto">
+                                                                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                                        </div>
+                                                                        <div class="col-auto">
+                                                                            @if($people->image == "")
+                                                                            @if($people->gender == "Male")
+                                                                            <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
+                                                                            @elseif($people->gender == "Female")
+                                                                            <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
+                                                                            @endif
+                                                                            @else
+                                                                            <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
+                                                                            @endif
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                                                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </label>
+                                                                @endforeach
+                                                                @endif
                                                             </div>
                                                             @endif
+
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                                    <i class="fa fa-paperclip"></i> Attach Image
+                                                                </label>
+                                                            </div>
+                                                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                        </div>
+
+                                                        <div>
+                                                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+
                                                         </div>
 
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
+                                                <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
-                                                    <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -209,7 +206,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h1 class="modal-title fs-5" id="exampleModalLabel">Request for IT Accessories</h1>
-                                                   
+
                                                 </div>
 
                                                 <div class="modal-body">
@@ -227,8 +224,8 @@
                                                     <form wire:submit.prevent="submit">
 
 
-                                                        <div class="form-group mt-2" >
-                                                            <label for="selectedEquipment "   >Select Equipment<span style="color:red">*</span></label>
+                                                        <div class="form-group mt-2">
+                                                            <label for="selectedEquipment ">Select Equipment<span style="color:red">*</span></label>
                                                             <select wire:model.lazy="selected_equipment" class="form-control" style="font-size: 12px;">
                                                                 <option value="keyboard">Select Equipment</option>
                                                                 <option value="keyboard">Keyboard</option>
@@ -255,7 +252,7 @@
                                                             @error('description') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
-                                                        <div class="form-group ml-1" >
+                                                        <div class="form-group ml-1">
                                                             <div class="row">
                                                                 <div class="form-group ">
                                                                     <label for="cc_to" class="form-label ">Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
@@ -273,76 +270,75 @@
                                                                 </div>
                                                             </div>
                                                             @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-        <div class="input-group" style="margin-bottom: 10px;">
-            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                    <i style="text-align: center;" class="fa fa-search"></i>
-                </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
-            </div>
-        </div>
-        @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: white; font-size:12px">
-                No People Found
-            </div>
-        @else
-            @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
-                        </div>
-                        <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
-                        </div>
-                        <div class="col">
-                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                        </div>
-                    </div>
-                </label>
-            @endforeach
-        @endif
-    </div>
-@endif
-
-                                                        </div>
-                                                        <div class="form-group m-0">
-                                                            <label for="fileInput" style="cursor: pointer;">
-                                                                <i class="fa fa-paperclip"></i> Attach Image
-                                                            </label>
-                                                            @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-
-                                                        <div class="row m-0">
-                                                            <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                            @if ($image)
-                                                            <div class="row m-0">
-                                                                <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
+                                                            <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+                                                                <div class="input-group" style="margin-bottom: 10px;">
+                                                                    <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                    <div class="input-group-append">
+                                                                        <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
+                                                                            <i style="text-align: center;" class="fa fa-search"></i>
+                                                                        </button>
+                                                                        <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                @if ($peopleData->isEmpty())
+                                                                <div class="container" style="text-align: center; color: white; font-size:12px">
+                                                                    No People Found
+                                                                </div>
+                                                                @else
+                                                                @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
+                                                                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-auto">
+                                                                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                                        </div>
+                                                                        <div class="col-auto">
+                                                                            @if($people->image == "")
+                                                                            @if($people->gender == "Male")
+                                                                            <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
+                                                                            @elseif($people->gender == "Female")
+                                                                            <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
+                                                                            @endif
+                                                                            @else
+                                                                            <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
+                                                                            @endif
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                                                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </label>
+                                                                @endforeach
+                                                                @endif
                                                             </div>
                                                             @endif
+
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                                    <i class="fa fa-paperclip"></i> Attach Image
+                                                                </label>
+                                                            </div>
+                                                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                        </div>
+
+                                                        <div>
+                                                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+
                                                         </div>
 
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
-
+                                                    <button type="button" wire:click="DistributorRequest" class="submit-btn">
+                                                        <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+                                                    </button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                    <button type="button" wire:click="submit" class="submit-btn">Submit</button>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -370,7 +366,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h1 class="modal-title fs-5" id="exampleModalLabel">Add Members to Mailbox</h1>
-                                                   
+
                                                 </div>
 
                                                 <div class="modal-body">
@@ -406,94 +402,93 @@
                                                             @error('description') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
-                                                        <div class="row ">
-                                                            <div class="form-group m-0">
-                                                                <div class="form-group mb-3">
-                                                                    <label for="cc_to" class="form-label" >Add users to be a New Mailbox : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
 
+                                                        <div class="form-group ">
+                                                            <div class="form-group ">
+                                                                <label for="cc_to" class="form-label">Add users to be a New Mailbox : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+
+                                                            </div>
+                                                            <div class="form-group ">
+                                                                <div class="form-group  ">
+                                                                    <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
+                                                                        <i class="fa fa-plus me-3"></i>
+                                                                        Add
+                                                                    </button>
                                                                 </div>
-                                                                <div class="form-group m-0">
-                                                                    <div class="form-group  p-0">
-                                                                        <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
-                                                                            <i class="fa fa-plus me-3"></i>
-                                                                            Add
+
+                                                                @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
+                                                            </div>
+
+                                                            @if($isNames)
+                                                            <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+                                                                <div class="input-group" style="margin-bottom: 10px;">
+                                                                    <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                    <div class="input-group-append">
+                                                                        <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
+                                                                            <i style="text-align: center;" class="fa fa-search"></i>
+                                                                        </button>
+                                                                        <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
                                                                         </button>
                                                                     </div>
-
-                                                                    @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
                                                                 </div>
-                                                            </div>
-                                                            @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-        <div class="input-group" style="margin-bottom: 10px;">
-            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                    <i style="text-align: center;" class="fa fa-search"></i>
-                </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
-            </div>
-        </div>
-        @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: white; font-size:12px">
-                No People Found
-            </div>
-        @else
-            @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
-                        </div>
-                        <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
-                        </div>
-                        <div class="col">
-                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                        </div>
-                    </div>
-                </label>
-            @endforeach
-        @endif
-    </div>
-@endif
-
-                                                        </div>
-                                                        <div class="form-group m-0">
-                                                            <label for="fileInput" style="cursor: pointer;">
-                                                                <i class="fa fa-paperclip"></i> Attach Image
-                                                            </label>
-                                                            @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-
-                                                        <div class="row m-0">
-                                                            <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                            @if ($image)
-                                                            <div class="row m-0">
-                                                                <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
+                                                                @if ($peopleData->isEmpty())
+                                                                <div class="container" style="text-align: center; color: white; font-size:12px">
+                                                                    No People Found
+                                                                </div>
+                                                                @else
+                                                                @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
+                                                                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-auto">
+                                                                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                                        </div>
+                                                                        <div class="col-auto">
+                                                                            @if($people->image == "")
+                                                                            @if($people->gender == "Male")
+                                                                            <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
+                                                                            @elseif($people->gender == "Female")
+                                                                            <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
+                                                                            @endif
+                                                                            @else
+                                                                            <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
+                                                                            @endif
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                                                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </label>
+                                                                @endforeach
+                                                                @endif
                                                             </div>
                                                             @endif
+
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                                    <i class="fa fa-paperclip"></i> Attach Image
+                                                                </label>
+                                                            </div>
+                                                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                        </div>
+
+                                                        <div>
+                                                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+
                                                         </div>
 
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
-
+                                                    <button type="button" wire:click="Request" class="submit-btn">
+                                                        <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+                                                    </button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                    <button type="button" wire:click="Request" class="submit-btn">Submit</button>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -523,7 +518,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">ID Card Request</h1>
-                                                       
+
                                                     </div>
 
                                                     <div class="modal-body">
@@ -548,20 +543,20 @@
                                                                     @enderror
                                                                 </div>
                                                                 <div class="form-group mt-2 ml-3">
-                                                                    <label for="contactDetails">Email<span  style="color:red">*</span></label>
+                                                                    <label for="contactDetails">Email<span style="color:red">*</span></label>
                                                                     <input wire:model="mail" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                             </div>
                                                             <div class="form-group mt-2">
-                                                                <label for="contactDetails">Business Justification<span  style="color:red">*</span></label>
+                                                                <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
                                                                 <input wire:model="subject" type="text" class="form-control">
                                                                 @error('subject') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group mt-2">
-                                                                <label for="reason">Specific Information<span  style="color:red">*</span></label>
+                                                                <label for="reason">Specific Information<span style="color:red">*</span></label>
                                                                 <textarea wire:model="description" class="form-control"></textarea>
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
@@ -584,67 +579,64 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-        <div class="input-group" style="margin-bottom: 10px;">
-            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                    <i style="text-align: center;" class="fa fa-search"></i>
-                </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
-            </div>
-        </div>
-        @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: white; font-size:12px">
-                No People Found
-            </div>
-        @else
-            @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
-                        </div>
-                        <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
-                        </div>
-                        <div class="col">
-                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                        </div>
-                    </div>
-                </label>
-            @endforeach
-        @endif
-    </div>
-@endif
-
-                                                            </div>
-                                                            <div class="form-group m-0">
-                                                                <label for="fileInput" style="cursor: pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
-
-                                                            <div class="form-group m-0">
-                                                                <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                                @if ($image)
-                                                                <div class="row m-0">
-                                                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
+                                                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+                                                                    <div class="input-group" style="margin-bottom: 10px;">
+                                                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                        <div class="input-group-append">
+                                                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
+                                                                                <i style="text-align: center;" class="fa fa-search"></i>
+                                                                            </button>
+                                                                            <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    @if ($peopleData->isEmpty())
+                                                                    <div class="container" style="text-align: center; color: white; font-size:12px">
+                                                                        No People Found
+                                                                    </div>
+                                                                    @else
+                                                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col-auto">
+                                                                                <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                                            </div>
+                                                                            <div class="col-auto">
+                                                                                @if($people->image == "")
+                                                                                @if($people->gender == "Male")
+                                                                                <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
+                                                                                @elseif($people->gender == "Female")
+                                                                                <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
+                                                                                @endif
+                                                                                @else
+                                                                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
+                                                                                @endif
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </label>
+                                                                    @endforeach
+                                                                    @endif
                                                                 </div>
                                                                 @endif
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                                        <i class="fa fa-paperclip"></i> Attach Image
+                                                                    </label>
+                                                                </div>
+                                                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                            </div>
+
+                                                            <div>
+                                                                <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+
                                                             </div>
 
                                                         </form>
@@ -680,7 +672,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">MMS Account Request</h1>
-                                                       
+
                                                     </div>
 
                                                     <div class="modal-body">
@@ -698,26 +690,26 @@
 
                                                             <div style="display:flex">
                                                                 <div class="form-group mt-2">
-                                                                    <label for="contactDetails">Mobile Number<span  style="color:red">*</span></label>
+                                                                    <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
                                                                     <input wire:model="mobile" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                                 <div class="form-group mt-2 ml-3">
-                                                                    <label for="contactDetails">Email<span  style="color:red">*</span></label>
+                                                                    <label for="contactDetails">Email<span style="color:red">*</span></label>
                                                                     <input wire:model="mail" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                             </div>
                                                             <div class="form-group mt-2">
-                                                                <label for="contactDetails">Business Justification<span  style="color:red">*</span></label>
+                                                                <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
                                                                 <input wire:model="subject" type="text" class="form-control">
                                                                 @error('subject') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group mt-2">
-                                                                <label for="reason">Specific Information<span  style="color:red">*</span></label>
+                                                                <label for="reason">Specific Information<span style="color:red">*</span></label>
                                                                 <textarea wire:model="description" class="form-control"></textarea>
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
@@ -726,9 +718,9 @@
                                                                 <div class="row">
                                                                     <div class="form-group mb-3">
                                                                         <label for="cc_to" class="form-label"> Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
-                                                                       
-                                                                       
-                                                                    
+
+
+
                                                                     </div>
                                                                     <div class="row m-0">
                                                                         <div class="form-group mb-3 p-0">
@@ -742,77 +734,76 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-        <div class="input-group" style="margin-bottom: 10px;">
-            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                    <i style="text-align: center;" class="fa fa-search"></i>
-                </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
-            </div>
-        </div>
-        @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: white; font-size:12px">
-                No People Found
-            </div>
-        @else
-            @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
-                        </div>
-                        <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
-                        </div>
-                        <div class="col">
-                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                        </div>
-                    </div>
-                </label>
-            @endforeach
-        @endif
-    </div>
-@endif
-
-                                                            </div>
-
-                                                            <div class="form-group m-0">
-                                                                <label for="fileInput" style="cursor: pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
-
-                                                            <div class="row m-0">
-                                                                <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                                @if ($image)
-                                                                <div class="row m-0">
-                                                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
+                                                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+                                                                    <div class="input-group" style="margin-bottom: 10px;">
+                                                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                        <div class="input-group-append">
+                                                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
+                                                                                <i style="text-align: center;" class="fa fa-search"></i>
+                                                                            </button>
+                                                                            <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    @if ($peopleData->isEmpty())
+                                                                    <div class="container" style="text-align: center; color: white; font-size:12px">
+                                                                        No People Found
+                                                                    </div>
+                                                                    @else
+                                                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col-auto">
+                                                                                <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                                            </div>
+                                                                            <div class="col-auto">
+                                                                                @if($people->image == "")
+                                                                                @if($people->gender == "Male")
+                                                                                <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
+                                                                                @elseif($people->gender == "Female")
+                                                                                <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
+                                                                                @endif
+                                                                                @else
+                                                                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
+                                                                                @endif
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </label>
+                                                                    @endforeach
+                                                                    @endif
                                                                 </div>
                                                                 @endif
+
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                                        <i class="fa fa-paperclip"></i> Attach Image
+                                                                    </label>
+                                                                </div>
+                                                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                            </div>
+
+                                                            <div>
+                                                                <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+
                                                             </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
-
+                                                        <button type="button" wire:click="Devops" class="submit-btn">
+                                                            <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+                                                        </button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -839,7 +830,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">New Distribution List</h1>
-                                                       
+
                                                     </div>
 
                                                     <div class="modal-body">
@@ -897,76 +888,75 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-        <div class="input-group" style="margin-bottom: 10px;">
-            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                    <i style="text-align: center;" class="fa fa-search"></i>
-                </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
-            </div>
-        </div>
-        @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: white; font-size:12px">
-                No People Found
-            </div>
-        @else
-            @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
-                        </div>
-                        <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
-                        </div>
-                        <div class="col">
-                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                        </div>
-                    </div>
-                </label>
-            @endforeach
-        @endif
-    </div>
-@endif
-
-                                                            </div>
-                                                            <div class="form-group m-0">
-                                                                <label for="fileInput" style="cursor: pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
-
-                                                            <div class="form-group m-0">
-                                                                <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                                @if ($image)
-                                                                <div class="row m-0">
-                                                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
+                                                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+                                                                    <div class="input-group" style="margin-bottom: 10px;">
+                                                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                        <div class="input-group-append">
+                                                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
+                                                                                <i style="text-align: center;" class="fa fa-search"></i>
+                                                                            </button>
+                                                                            <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    @if ($peopleData->isEmpty())
+                                                                    <div class="container" style="text-align: center; color: white; font-size:12px">
+                                                                        No People Found
+                                                                    </div>
+                                                                    @else
+                                                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col-auto">
+                                                                                <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                                            </div>
+                                                                            <div class="col-auto">
+                                                                                @if($people->image == "")
+                                                                                @if($people->gender == "Male")
+                                                                                <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
+                                                                                @elseif($people->gender == "Female")
+                                                                                <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
+                                                                                @endif
+                                                                                @else
+                                                                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
+                                                                                @endif
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </label>
+                                                                    @endforeach
+                                                                    @endif
                                                                 </div>
                                                                 @endif
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                                        <i class="fa fa-paperclip"></i> Attach Image
+                                                                    </label>
+                                                                </div>
+                                                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                            </div>
+
+                                                            <div>
+                                                                <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+
                                                             </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
-
+                                                        <button type="button" wire:click="DistributorRequest" class="submit-btn">
+                                                            <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+                                                        </button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -996,7 +986,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">New Laptop</h1>
-                                                       
+
                                                     </div>
 
                                                     <div class="modal-body">
@@ -1010,7 +1000,7 @@
                                                         </div>
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                         <form wire:submit.prevent="Devops">
-                                                          
+
 
 
                                                             <div style="display:flex">
@@ -1057,76 +1047,75 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-        <div class="input-group" style="margin-bottom: 10px;">
-            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                    <i style="text-align: center;" class="fa fa-search"></i>
-                </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
-            </div>
-        </div>
-        @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: white; font-size:12px">
-                No People Found
-            </div>
-        @else
-            @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
-                        </div>
-                        <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
-                        </div>
-                        <div class="col">
-                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                        </div>
-                    </div>
-                </label>
-            @endforeach
-        @endif
-    </div>
-@endif
-
-                                                            </div>
-                                                            <div class="form-group m-0">
-                                                                <label for="fileInput" style="cursor: pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
-
-                                                            <div class="row m-0">
-                                                                <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                                @if ($image)
-                                                                <div class="row m-0">
-                                                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
+                                                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+                                                                    <div class="input-group" style="margin-bottom: 10px;">
+                                                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                        <div class="input-group-append">
+                                                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
+                                                                                <i style="text-align: center;" class="fa fa-search"></i>
+                                                                            </button>
+                                                                            <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    @if ($peopleData->isEmpty())
+                                                                    <div class="container" style="text-align: center; color: white; font-size:12px">
+                                                                        No People Found
+                                                                    </div>
+                                                                    @else
+                                                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col-auto">
+                                                                                <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                                            </div>
+                                                                            <div class="col-auto">
+                                                                                @if($people->image == "")
+                                                                                @if($people->gender == "Male")
+                                                                                <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
+                                                                                @elseif($people->gender == "Female")
+                                                                                <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
+                                                                                @endif
+                                                                                @else
+                                                                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
+                                                                                @endif
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </label>
+                                                                    @endforeach
+                                                                    @endif
                                                                 </div>
                                                                 @endif
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                                        <i class="fa fa-paperclip"></i> Attach Image
+                                                                    </label>
+                                                                </div>
+                                                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                            </div>
+
+                                                            <div>
+                                                                <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+
                                                             </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
-
+                                                        <button type="button" wire:click="Devops" class="submit-btn">
+                                                            <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+                                                        </button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -1167,7 +1156,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Devops Access Request</h1>
-                                                       
+
                                                     </div>
 
                                                     <div class="modal-body">
@@ -1181,7 +1170,7 @@
                                                         </div>
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                         <form wire:submit.prevent="Devops">
-                                                         
+
 
 
                                                             <div style="display:flex">
@@ -1228,76 +1217,76 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-        <div class="input-group" style="margin-bottom: 10px;">
-            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                    <i style="text-align: center;" class="fa fa-search"></i>
-                </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
-            </div>
-        </div>
-        @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: white; font-size:12px">
-                No People Found
-            </div>
-        @else
-            @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
-                        </div>
-                        <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
-                        </div>
-                        <div class="col">
-                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                        </div>
-                    </div>
-                </label>
-            @endforeach
-        @endif
-    </div>
-@endif
-
-                                                            </div>
-                                                            <div class="form-group m-0">
-                                                                <label for="fileInput" style="cursor: pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
-
-                                                            <div class="row m-0">
-                                                                <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                                @if ($image)
-                                                                <div class="row m-0">
-                                                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
+                                                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+                                                                    <div class="input-group" style="margin-bottom: 10px;">
+                                                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                                                        <div class="input-group-append">
+                                                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
+                                                                                <i style="text-align: center;" class="fa fa-search"></i>
+                                                                            </button>
+                                                                            <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    @if ($peopleData->isEmpty())
+                                                                    <div class="container" style="text-align: center; color: white; font-size:12px">
+                                                                        No People Found
+                                                                    </div>
+                                                                    @else
+                                                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col-auto">
+                                                                                <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                                            </div>
+                                                                            <div class="col-auto">
+                                                                                @if($people->image == "")
+                                                                                @if($people->gender == "Male")
+                                                                                <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
+                                                                                @elseif($people->gender == "Female")
+                                                                                <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
+                                                                                @endif
+                                                                                @else
+                                                                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
+                                                                                @endif
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </label>
+                                                                    @endforeach
+                                                                    @endif
                                                                 </div>
                                                                 @endif
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                                        <i class="fa fa-paperclip"></i> Attach Image
+                                                                    </label>
+                                                                </div>
+                                                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                            </div>
+
+                                                            <div>
+                                                                <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+
                                                             </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
+                                                        <button type="button" wire:click="Devops" class="submit-btn">
+                                                            <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+                                                        </button>
 
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
+
                                                     </div>
                                                 </div>
                                             </div>

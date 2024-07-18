@@ -86,6 +86,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="accordion-body p-0 m-0">
                       <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
                         <div class="content1 px-2">
@@ -93,7 +94,7 @@
                                 @if(isset($leaveRequest['leaveRequest']->from_date))
                                     <span style="color: #778899; font-size: 11px ;font-weight: 400;">
                                         {{ $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session) }}
-                                    </span>
+                                 w   </span>
                                 @else
                                     <span style="color: #778899; font-size: 12px; font-weight: 400;">No. of days not available</span>
                                 @endif

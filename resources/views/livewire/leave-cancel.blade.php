@@ -72,7 +72,7 @@
                     CC to
                 </label>
                 <div class="control-wrapper" style="display: flex; flex-direction: row; gap: 10px;">
-                    <a href="javascript:void(0);" class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
+                    <a href="javascript:void(0);" class="text-3 text-secondary control" aria-haspopup="true"  style="text-decoration: none;">
                         <div class="icon-container" style="display: flex; justify-content: center; align-items: center;">
                             <i class="fa-solid fa-plus" style="color: #778899;"></i>
                         </div>

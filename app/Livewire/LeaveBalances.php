@@ -61,7 +61,7 @@ class LeaveBalances extends Component
     public $beforePreviousYear;
     public $percentageCasual;
     public $percentageSick;
-    public $percentageCasualProbation;
+    public $percentageCasualProbation,$differenceInMonths;
     public $showModal = false;
     public $dateErrorMessage;
 
@@ -93,6 +93,16 @@ class LeaveBalances extends Component
             $this->employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
             $this->fromDateModal = Carbon::createFromDate($this->currentYear, 1, 1)->format('Y-m-d');
             $this->toDateModal = Carbon::createFromDate($this->currentYear, 12, 31)->format('Y-m-d');
+            $hireDate = $this->employeeDetails->hire_date;
+            if ($hireDate) {
+                $hireDate = Carbon::parse($hireDate);
+                $currentDate = Carbon::now();
+                
+                $this->differenceInMonths = $hireDate->diffInMonths($currentDate);
+
+            } else {
+                $this->differenceInMonths = null;
+            }
             $this->sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Sick Leave', $this->currentYear);
             $this->lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Loss Of Pay', $this->currentYear);
             $this->casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave', $this->currentYear);
@@ -150,7 +160,7 @@ class LeaveBalances extends Component
                         return '#000000';
                 }
             } else {
-                return '#000000';
+                return '#0ea8fc';
             }
         } catch (\Exception $e) {
             Log::error('Error in getTubeColor method: ' . $e->getMessage());
@@ -224,6 +234,7 @@ class LeaveBalances extends Component
                     'leaveTransactions' => $this->leaveTransactions,
                     'percentageCasual' => $this->percentageCasual,
                     'percentageSick' => $this->percentageSick,
+                    'differenceInMonths' => $this->differenceInMonths,
                     'percentageCasualProbation' => $this->percentageCasualProbation
                 ]);
             }
