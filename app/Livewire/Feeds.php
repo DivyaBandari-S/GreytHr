@@ -37,7 +37,7 @@ class Feeds extends Component
     public $category;
     public $description;
 
-
+  
     public $showEmojiPicker = false;
     public $employeeId;
     public $open = false;
@@ -113,9 +113,8 @@ class Feeds extends Component
         // Combine and sort data
         $this->combinedData = $this->combineAndSortData($this->employees);
 
-        // Fetch comments for the initial set of cards
-        $this->comments = Comment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-        $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+      $this->loadComments();       
+       $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         // Retrieve and set the company logo URL for the current employee
@@ -205,39 +204,93 @@ class Feeds extends Component
 
     public function add_comment($emp_id)
     {
-        $user = Auth::user();
-
         $this->validate();
-        $employeeId = auth()->guard('emp')->user()->emp_id;
- 
-
-        Comment::create([
-            'card_id' => $emp_id,
-            'emp_id' => $employeeId,
-            'comment' => $this->newComment ?? '',
-        ]);
+    
+        $employeeId = null;
+        $hrId = null;
+    
+        if (auth()->guard('emp')->check()) {
+            // Get the current authenticated employee's emp_id
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+        } elseif (auth()->guard('hr')->check()) {
+            // Get the current authenticated HR's emp_id
+            $hrEmployee = auth()->guard('hr')->user();
+            $hrId = $hrEmployee->emp_id;
+        }
+    
+        // Ensure that either $employeeId or $hrId is set
+        if (is_null($employeeId) && is_null($hrId)) {
+            session()->flash('error', 'Employee ID cannot be null.');
+            return;
+        }
+    
+        // Create the comment based on the authenticated role
+        if ($employeeId) {
+            Comment::create([
+                'card_id' => $emp_id,
+                'emp_id' => $employeeId,
+                'hr_emp_id' => null,
+                'comment' => $this->newComment ?? '',
+            ]);
+        } elseif ($hrId) {
+            Comment::create([
+                'card_id' => $emp_id,
+                'emp_id' => $employeeId,
+                'hr_emp_id' => $hrId,
+                'comment' => $this->newComment ?? '',
+            ]);
+        }
+    
+    
         // Clear the input field after adding the comment
         $this->reset(['newComment']);
         $this->isSubmitting = false;
-        $this->comments = Comment::with('employee')
-            ->whereIn('emp_id', $this->employees->pluck('emp_id', 'hr'))
+    
+        $this->comments = Comment::with('employee','hr')
+            ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+            ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'))
             ->orderByDesc('created_at')
             ->get();
+    
+   
         session()->flash('message', 'Comment added successfully.');
     }
-
+    
+    public function loadComments()
+    {
+        $this->comments = Comment::with('employee','hr')
+        ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+        ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'))
+        ->orderByDesc('created_at')
+        ->get();
+    }
+    
+    
     public function employee()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id');
     }
     public function createcomment($emp_id)
     {
+   
         $this->isSubmitting = true; // Set submitting flag to true
         // Validate the input fields
         $this->validate();
-        $employeeId = auth()->user()->emp_id;
-        $hrId = HR::where('emp_id', $employeeId)->value('emp_id'); // Fetch HR emp_id based on Employee emp_id
-
+       
+        if (auth()->guard('emp')->check()) {
+            // Get the current authenticated employee's company ID
+            $employeeId = auth()->user()->emp_id;
+    
+    
+   
+        } elseif (auth()->guard('hr')->check()) {
+            $hrEmployee = auth()->guard('hr')->user();
+            $hrId = $hrEmployee->emp_id;
+    
+      
+        }
+  
+    
         // Create a new comment record using the Comment model
      
         // Create a new comment record using the Addcomment model
@@ -247,7 +300,6 @@ class Feeds extends Component
             'hr_emp_id' => $hrId,
             'addcomment' => $this->newComment ?? '',
         ]);
-
         // Clear the input field after adding the comment
         $this->reset(['newComment']);
 
@@ -319,7 +371,11 @@ class Feeds extends Component
         $this->employeeDetails = EmployeeDetails::where('emp_id', $empId)->first();
 
         // Fetch comments for the current card
-        $this->comments = Comment::where('card_id', $this->currentCardEmpId)->get();
+        $this->comments = Comment::with('employee', 'hr')
+        ->where('card_id', $empId)
+        ->orderByDesc('created_at')
+        ->get();
+      
         $this->addcomments = Addcomment::where('card_id', $this->currentCardEmpId)->get();
         $this->storedemojis = Emoji::where('emp_id', $this->currentCardEmpId)->get();
         $this->emojis = EmojiReaction::where('emp_id', $this->currentCardEmpId)->get();
@@ -388,10 +444,21 @@ class Feeds extends Component
         'hr' => $this->employeeDetails,
         'employees' => $this->employeeDetails,
         'emojis' => $emojis,
-        'storedEmojis' => $storedEmojis,
+        'storedEmojis' => $storedEmojis
     ]);
 }
 
+public function showEmployee($id)
+{
+    $employee = EmployeeDetails::find($id);
+    $comments = Comment::with(['employee', 'hr'])
+                        ->where('card_id', $employee->emp_id)
+                        ->orWhere('hr_emp_id', $employee->emp_id)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+    return view('yourview', compact('employee', 'comments'));
+}
 
     public function saveEmoji()
     {

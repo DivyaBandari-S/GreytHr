@@ -67,6 +67,7 @@ class LeaveApply extends Component
     public $filteredCcRecipients;
     public $loginEmpManager;
     public $errorMessage = '';
+    public $filter = '';
     public $selectedYear;
     public $leaveBalances = [];
     public $showCcRecipents = false;
@@ -83,6 +84,7 @@ class LeaveApply extends Component
     public $loginEmpManagerProfile;
     public $differenceInMonths;
     public $probationDetails;
+    public $managerDetails;
     protected $rules = [
         'leave_type' => 'required',
         'from_date' => 'required|date',
@@ -116,6 +118,7 @@ class LeaveApply extends Component
     {
         try {
             $this->searchTerm = '';
+            $this->filter = '';
             $this->selectedYear = Carbon::now()->format('Y');
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -185,9 +188,19 @@ class LeaveApply extends Component
                     ];
                 }
             }
+
+            // Apply filtering based on $filter
+            if (!empty($this->filter)) {
+                $managers = array_filter($managers, function ($manager) {
+                    return stripos($manager['full_name'], $this->filter) !== false;
+                });
+            }
+
+            // Sort the managers by full name
             usort($managers, function ($a, $b) {
                 return strcmp($a['full_name'], $b['full_name']);
             });
+
             $this->managerFullName = $managers;
         } catch (\Exception $e) {
             // Log the error
@@ -293,7 +306,6 @@ class LeaveApply extends Component
     }
 
 
-
     //this method will handle the search functionality
     public function handleSearch($type)
     {
@@ -313,6 +325,8 @@ class LeaveApply extends Component
     public function applyingTo()
     {
         $this->showApplyingToContainer = !$this->showApplyingToContainer;
+        $this->show_reporting = true;
+        $this->showApplyingTo = false;
     }
 
 
@@ -437,19 +451,10 @@ class LeaveApply extends Component
     //selected applying to manager details
     public function toggleManager($empId)
     {
-        if (in_array($empId, $this->selectedManager)) {
-            // Manager is already selected, deselect it
-            $this->selectedManager = [];
-        } else {
-            // Deselect any previously selected manager
+        // Select the manager only if it is not already selected
+        if (!in_array($empId, $this->selectedManager)) {
             $this->selectedManager = [$empId];
-        }
 
-        // Update details based on selected manager
-        if (empty($this->selectedManager)) {
-            // No manager selected, reset details
-            $this->resetManagerDetails();
-        } else {
             // Fetch details for the selected manager
             $this->fetchManagerDetails($empId);
         }
@@ -457,7 +462,6 @@ class LeaveApply extends Component
         // Ensure showApplyingToContainer remains false
         $this->showApplyingToContainer = false;
     }
-
 
 
     // Method to fetch manager details
@@ -649,6 +653,7 @@ class LeaveApply extends Component
     {
         $this->searchCCRecipients();
     }
+
 
 
     public function selectLeave()

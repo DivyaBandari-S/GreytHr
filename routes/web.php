@@ -202,7 +202,7 @@ Route::middleware(['auth:hr','handleSession'])->group(function () {
     Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
     // Route::get('/hremployeedirectory', EmployeeDirectory::class)->name('employee-directory');
     // Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
-    // Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
+    Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
 
@@ -291,16 +291,16 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/holiday-calender', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
     Route::get('/casualleavebalance',CasualLeaveBalance::class)->name('casual-leave-balance');
-    // Route::get('/sickleavebalance',SickLeaveBalances::class)->name('sick-leave-balance');
+    Route::get('/sickleavebalance',SickLeaveBalances::class)->name('sick-leave-balance');
     Route::get('/casualprobationleavebalance',CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
-    Route::get('/leave-cancel', LeaveCancel::class)->name('leave-cancel');
+    Route::get('/leave-cancel', LeaveCancel::class)->name('lseave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
     Route::get('/leave-pending/{leaveRequestId}', LeavePending::class)->name('leave-pending');
     Route::get('/team-on-leave', TeamOnLeave::class);
     Route::get('/team-on-leave-chart', TeamOnLeaveChart::class)->name('team-on-leave');
     // Route::get('/leaveBalChart', LeaveBalancesChart::class)->name('leave-details');
-    Route::get('/navigate-to-helpdesk', [EmployeesReview::class, 'navigateToHelpdesk'])->name('navigate.to.helpdesk');
+    // Route::get('/navigate-to-helpdesk', [EmployeesReview::class, 'navigateToHelpdesk'])->name('navigate.to.helpdesk');
 
     // TODO module
     Route::get('/tasks', Tasks::class)->name('tasks');

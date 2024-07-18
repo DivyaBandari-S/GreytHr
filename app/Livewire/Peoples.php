@@ -15,8 +15,10 @@ class Peoples extends Component
     public $searchTerm = '';
     public $peoples;
     public $selectedPerson = null;
+    public $selectedMyTeamPerson = null;
     public $starredPerson = null;
     public $filteredPeoples;
+    public $filteredMyTeamPeoples;
     public $activeTab = 'starred';
     public $peopleFound = true;
     public $employeeDetails;
@@ -25,6 +27,14 @@ class Peoples extends Component
     {
         try {
             $this->selectedPerson = EmployeeDetails::where('emp_id', $empId)->first();
+        } catch (\Exception $e) {
+            Log::error('Error in selectPerson method: ' . $e->getMessage());
+        }
+    }
+    public function selectMyTeamPerson($empId)
+    {
+        try {
+            $this->selectedMyTeamPerson = EmployeeDetails::where('emp_id', $empId)->first();
         } catch (\Exception $e) {
             Log::error('Error in selectPerson method: ' . $e->getMessage());
         }
@@ -52,9 +62,34 @@ class Peoples extends Component
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
                         ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
                 })
+                ->orderByRaw("CONCAT(first_name, ' ', last_name)")
                 ->get();
     
             $this->peopleFound = count($this->filteredPeoples) > 0;
+        } catch (\Exception $e) {
+            Log::error('Error in filter method: ' . $e->getMessage());
+        }
+    }
+    public function filterMyTeam()
+    {
+        try {
+            $companyId = Auth::user()->company_id;
+            $trimmedSearchTerm = trim($this->searchTerm);
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
+    
+            $this->filteredMyTeamPeoples = EmployeeDetails::with('starredPeople')
+            ->where('company_id', $companyId)
+            ->where('manager_id', $managerId)
+            ->where('employee_status', 'active')
+                ->where(function ($query) use ($trimmedSearchTerm) {
+                    $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
+                        ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
+                })
+                ->orderByRaw("CONCAT(first_name, ' ', last_name)")
+                ->get();
+    
+            $this->peopleFound = count($this->filteredMyTeamPeoples) > 0;
         } catch (\Exception $e) {
             Log::error('Error in filter method: ' . $e->getMessage());
         }
@@ -145,6 +180,7 @@ class Peoples extends Component
     public $starredPeoples;
     public $starredList;
     public $starredfirst;
+    public $myTeam;
 
     public function render()
     {
@@ -156,14 +192,26 @@ class Peoples extends Component
                 ->get();
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
+            $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
+
+            // Fetch all employees under the same manager, with the same company_id, and active status
+            $this->myTeam = EmployeeDetails::with('starredPeople')
+                ->where('company_id', $companyId)
+                ->where('manager_id', $managerId)
+                ->where('employee_status', 'active')
+                ->orderBy('first_name')
+                ->orderBy('last_name')
+                ->get();
     
             $this->starredList = StarredPeople::with('emp')->where('emp_id', $employeeId)->orderBy('created_at', 'desc')->get();
     
             $peopleData = $this->filteredPeoples ?: $this->peoples;
+            $myTeamData = $this->filteredMyTeamPeoples ?: $this->myTeam;
             $this->starredPeoples = $this->filteredStarredPeoples ?: $this->starredList;
     
             return view('livewire.peoples', [
                 'peopleData' => $peopleData,
+                'myTeamData' => $myTeamData,
             ]);
         } catch (\Exception $e) {
             Log::error('Error in render method: ' . $e->getMessage());

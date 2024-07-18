@@ -1,3 +1,5 @@
+<div>
+    <x-loading-indicator />
 <div style="overflow-x:hidden">
 
     <body>
@@ -14,28 +16,39 @@
                 <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; margin-top: 5px;"></button>
             </div>
             @endif
-            <div class="d-flex align-item-center justify-content-center">
-                <div class="card " style="width:400px; ">
-                    <div class="card-header px-4 py-0 m-0 ">
-                        <div class="row">
-                            <button wire:click="$set('activeTab', 'active')" class="col btn @if($activeTab === 'active') active @else btn-light @endif" style="font-size:13px;font-weight:500;border-radius: 5px; margin-right: 5px;background-color: @if($activeTab === 'active') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'active') #fff @else #778899 @endif;">
-                                Active
-                            </button>
-                            <button wire:click="$set('activeTab', 'pending')" class="col btn @if($activeTab === 'pending') active @else btn-light @endif" style="font-size:13px;font-weight:500;border-radius: 5px;margin-right: 5px;background-color: @if($activeTab === 'pending') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'pending') #fff @else #778899 @endif;">
-                                Pending
-                            </button>
-                            <button wire:click="$set('activeTab', 'closed')" class="col btn @if($activeTab === 'closed') active @else btn-light @endif" style="font-size:13px;font-weight:500;border-radius: 5px;background-color: @if($activeTab === 'closed') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'closed') #fff @else #778899 @endif;">
-                                Closed
-                            </button>
-                        </div>
-
-                    </div>
+            <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
+    <div class="card border-0 m-0" style="width: 380px; border-radius: 5px;">
+        <div class="card-header px-0 py-0 m-0 border-0 " style="border-radius: 5px;">
+            <div class="row no-gutters" style="height: 100%; width: 100%;">
+                <div class="col">
+                    <button wire:click="$set('activeTab', 'active')" class="btn btn-block @if($activeTab === 'active') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 5px 0 0 5px; background-color: @if($activeTab === 'active') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'active') #fff @else #778899 @endif; height: 100%;">
+                        Active
+                    </button>
+                </div>
+                <div class="col">
+                    <button wire:click="$set('activeTab', 'pending')" class="btn btn-block @if($activeTab === 'pending') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 0; background-color: @if($activeTab === 'pending') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'pending') #fff @else #778899 @endif; height: 100%;">
+                        Pending
+                    </button>
+                </div>
+                <div class="col">
+                    <button wire:click="$set('activeTab', 'closed')" class="btn btn-block @if($activeTab === 'closed') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 0 5px 5px 0; background-color: @if($activeTab === 'closed') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'closed') #fff @else #778899 @endif; height: 100%;">
+                        Closed
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
 
         </div>
         <div class="d-flex flex-row justify-content-end gap-10 mt-2">
-            <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 1px 0; font-size: 12px;" onclick="location.href='/catalog'">
+            <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 1px 0; font-size: 12px;width:100px" onclick="location.href='/catalog'">
                 IT Request
             </button>
             <div class="mx-2 ">
@@ -54,48 +67,53 @@
         <div class="modal" tabindex="-1" role="dialog" style="display: block;overflow-y:auto;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                    <div class="modal-header align-items-center" style="background-color: rgb(2, 17, 79); height: 50px">
                         <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>HR Request</b></h5>
-                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
+
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category</label>
-                            <div class="input-group">
-                                <select wire:model.lazy="category" id="category" class="custom-select placeholder" style="font-size: 12px;">
-                                    <option style="color: #778899; " value="">Select Category</option>
+                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category <span style="color:red">*</span></label>
+<div class="input" type="" class="form-control placeholder-small">
+    <div style="position: relative;">
+        <select wire:model.lazy="category" id="category" style="font-size: 12px;" class="form-control placeholder-small">
+            <option style="color: #778899; " value="">Select Category</option>
+            <optgroup label="HR">
+            <option value="Employee Information">Employee Information</option>
+            <option value="Hardware Maintenance">Hardware Maintenance</option>
+            <option value="Incident Report">Incident Report</option>
+            <option value="Privilege Access Request">Privilege Access Request</option>
+            <option value="Security Access Request">Security Access Request</option>
+            <option value="Technical Support">Technical Support</option>
+            <!-- Add more HR-related options as needed -->
+        </optgroup>
+        </select>
+        <div class="dropdown-toggle-icon" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        </div>
+  
 
 
-                                    <optgroup label="HR">
-                                        <option value="Employee Information">Employee Information</option>
-                                        <option value="Hardware Maintenance">Hardware Maintenance</option>
-                                        <option value="Incident Report">Incident Report</option>
-                                        <option value="Privilege Access Request">Privilege Access Request</option>
-                                        <option value="Security Access Request">Security Access Request</option>
-                                        <option value="Technical Support">Technical Support</option>
-                                        <!-- Add more HR-related options as needed -->
-                                    </optgroup>
-
-                                </select>
-
-                                <div>
                                     @error('category') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject</label>
-                            <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject">
-                            @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description</label>
-                            <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
-                            @error('description') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <div class="row">
+                            <div class="form-group">
+    <label for="subject" style="color: #778899; font-weight: 500; font-size: 12px;">Subject <span style="color: red;">*</span></label>
+    <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;"">
+    @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
+<div class="form-group">
+    <label for="description" style="color: #778899; font-weight: 500; font-size: 12px;">Description <span style="color: red;">*</span></label>
+    <textarea wire:model.lazy="description" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
+
+    @error('description') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
+<div class="row">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -106,34 +124,30 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                            @if ($image)
-                            <div>
-                                <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                            </div>
-                            @endif
+                         
                         </div>
-
-                        <div id="filePreview"></div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group">
-                                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority</label>
-                                    <div class="input-group">
-                                        <select name="category" id="category" wire:model.lazy="priority" class="custom-select" style="font-size: 12px;">
-                                            <option style="color: gray;" value="">Select Priority</option>
-                                            <option value="High">
-                                                <span></span> High
-                                            </option>
-                                            <option value="Low">
-                                                <span></span> Low
-                                            </option>
-                                            <option value="Medium">
-                                                <span></span> Medium
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                            <div class="form-group">
+    <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
+    <div class="input" class="form-control placeholder-small">
+        <div style="position: relative;">
+            <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                <option style="color: gray;" value="">Select Priority</option>
+                <option value="High">High</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+            </select>
+            <div class="dropdown-toggle-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
                             </div>
                         </div>
                         <div class="row " style="margin-top: 10px;">
@@ -212,42 +226,44 @@
         <div class="modal" tabindex="-1" role="dialog" style="display: block;overflow-y:auto;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                    <div class="modal-header align-items-center" style="background-color: rgb(2, 17, 79); height: 50px">
                         <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Finance Request</b></h5>
-                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeFinance" style="background-color: white; height:10px;width:10px;">
+
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category</label>
-                            <div class="input-group">
-                                <select wire:model.lazy="category" id="category" class="custom-select placeholder" style="font-size: 12px;">
-                                    <option style="color: #778899; " value="">Select Category</option>
+                    <div class="modal-body" >
+                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;font-family: Arial, sans-serif;" >Category <span style="color:red">*</span></label>
+                    <div class="input" type="" class="form-control placeholder-small">
+    <div style="position: relative;">
+        <select wire:model.lazy="category" id="category" style="font-size: 12px;" class="form-control placeholder-small">
+            <option style="color: #778899; " value="">Select Category</option>
+            <optgroup label="Finance">
+                <option value="Income Tax">Income Tax</option>
+                <option value="Loans">Loans</option>
+                <option value="Payslip">Payslip</option>
+            </optgroup>
+        </select>
+        <div class="dropdown-toggle-icon" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        </div>
+  
 
 
-                                    <optgroup label="Finance">
-                                        <option value="Income Tax">Income Tax</option>
-                                        <option value="Loans">Loans</option>
-                                        <option value="Payslip">Payslip</option>
-                                        <!-- Add more Finance-related options as needed -->
-                                    </optgroup>
-
-
-                                </select>
-                                <div>
                                     @error('category') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
-                        </div>
+                     
 
-                        <div class="form-group">
-                            <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject</label>
-                            <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject">
+                        <div class="form-group mt-2">
+                            <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject<span  style="color:red">*</span></label>
+                            <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
                             @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
-                            <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description</label>
-                            <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
+                            <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description<span  style="color:red">*</span></label>
+                            <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4" ></textarea>
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="row">
@@ -261,34 +277,30 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                            @if ($image)
-                            <div>
-                                <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                            </div>
-                            @endif
+                        
                         </div>
-
-                        <div id="filePreview"></div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group">
-                                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority</label>
-                                    <div class="input-group">
-                                        <select name="category" id="category" wire:model.lazy="priority" class="custom-select" style="font-size: 12px;">
-                                            <option style="color: gray;" value="">Select Priority</option>
-                                            <option value="High">
-                                                <span></span> High
-                                            </option>
-                                            <option value="Low">
-                                                <span></span> Low
-                                            </option>
-                                            <option value="Medium">
-                                                <span></span> Medium
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                            <div class="form-group">
+    <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
+    <div class="input" class="form-control placeholder-small">
+        <div style="position: relative;">
+            <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                <option style="color: gray;" value="">Select Priority</option>
+                <option value="High">High</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+            </select>
+            <div class="dropdown-toggle-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
                             </div>
                         </div>
                         <div class="row " style="margin-top: 10px;">
@@ -356,7 +368,7 @@
                         </div>
                         <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
                             <button wire:click="submit" class="submit-btn" type="button">Submit</button>
-                            <button wire:click="close" class="cancel-btn" type="button" style="border: 1px solid rgb(2, 17, 79);">Cancel</button>
+                            <button wire:click="closeFinance" class="cancel-btn" type="button" style="border: 1px solid rgb(2, 17, 79);">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -389,11 +401,7 @@
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:20%;">{{ $record->subject }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->description }}</td>
                         <td style="padding: 10px; font-size: 12px; text-align: center;">
-                            @if ($record->file_path)
-                            <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize; width: 10%;">View File</a>
-                            @else
-                            -
-                            @endif
+                        <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
                             {{ $record->cc_to ?? '-' }}
@@ -491,7 +499,7 @@
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->description }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center">
                             @if ($record->file_path)
-                            <a href="{{ asset($record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
+                            <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
                             @else
                             N/A
                             @endif
@@ -512,4 +520,5 @@
 
         </div>
         @endif
+</div>
 </div>

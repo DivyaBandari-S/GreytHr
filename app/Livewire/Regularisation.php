@@ -3,8 +3,8 @@
 // About this component: It shows allowing employees to adjust or provide reasons for discrepancies in their recorded work hours
 namespace App\Livewire;
 use App\Models\EmployeeDetails;
-use App\Models\RegularisationNew;
-use App\Models\RegularisationNew1;
+use App\Models\RegularisationDates;
+
 use App\Models\Regularisations;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -262,7 +262,7 @@ public function nextMonth()
         // Count the number of items
         $this->numberOfItems = count($regularisationEntriesArray);
 
-        RegularisationNew1::create([
+        RegularisationDates::create([
             'emp_id' => $emp_id,
             'employee_remarks' => $this->remarks,
             'regularisation_entries' => $regularisationEntriesJson,
@@ -331,7 +331,7 @@ public function historyButton()
         $emp_id = $employeeDetails->emp_id;
         
         try {
-            Regularisations::create([
+            RegularisationDates::create([
                 'emp_id' => $emp_id,
                 'from' => $this->from,
                 'to' => $this->to,
@@ -349,7 +349,7 @@ public function historyButton()
     {
         try {
             $currentDateTime = Carbon::now();
-            $this->data = RegularisationNew1::where('id', $id)->update([
+            $this->data = RegularisationDates::where('id', $id)->update([
                 'is_withdraw' => 1,
                 'withdraw_date' => $currentDateTime,
             ]);
@@ -389,7 +389,7 @@ public function historyButton()
         $subordinateEmployeeIds = EmployeeDetails::where('manager_id',auth()->guard('emp')->user()->emp_id)
        ->pluck('first_name','last_name')
        ->toArray();
-        $pendingRegularisations = RegularisationNew1::where('emp_id', $loggedInEmpId)
+        $pendingRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
         ->where('status', 'pending')
         ->where('is_withdraw', 0)
         ->orderByDesc('id')
@@ -398,7 +398,7 @@ public function historyButton()
           return $regularisation->regularisation_entries !== "[]";
         });
 
-      $historyRegularisations = RegularisationNew1::where('emp_id', $loggedInEmpId)
+      $historyRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
                     ->whereIn('status', ['pending', 'approved', 'rejected'])
                     ->orderByDesc('id')
                     ->get();            
@@ -406,13 +406,13 @@ public function historyButton()
         return $regularisation->regularisation_entries !== "[]";
        });
       $manager = EmployeeDetails::select('manager_id', 'report_to')->distinct()->get();   
-      $this->data10= Regularisations::where('status', 'pending')->get();
+      $this->data10= RegularisationDates::where('status', 'pending')->get();
       $this->manager1 = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
-      $this->data = Regularisations::where('is_withdraw', '0')->count();
-      $this->data8 = Regularisations::where('is_withdraw', '0')->get();
-      $this->data1 = Regularisations::where('status', 'pending')->first();
-      $this->data4 = Regularisations::where('is_withdraw', '1')->count();
-      $this->data7= Regularisations::all();
+      $this->data = RegularisationDates::where('is_withdraw', '0')->count();
+      $this->data8 = RegularisationDates::where('is_withdraw', '0')->get();
+      $this->data1 = RegularisationDates::where('status', 'pending')->first();
+      $this->data4 = RegularisationDates::where('is_withdraw', '1')->count();
+      $this->data7= RegularisationDates::all();
       $employee = EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
       if ($employee) {
             $this->manager3 = EmployeeDetails::find($employee->manager_id);

@@ -455,14 +455,20 @@
             <thead>
                 <tr>
 
-                    @for ($i = 1; $i <= $daysInMonth; $i++) @php $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format @endphp <th style="width:75%; background:#ebf5ff; color:#778899; font-weight:500; text-align:center;">
+                    @for ($i = 1; $i <= $daysInMonth; $i++) 
+                          @php 
+                             $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); 
+                             $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) 
+                             $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format 
+                          @endphp 
+                        <th style="width:75%; background:#ebf5ff; color:#778899; font-weight:500; text-align:center;">
                         <div style="font-size:0.825rem;line-height:0.8;font-weight:500;">
                             {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
                         </div>
                         <div style="margin-top:-5px; font-size:0.625rem;margin-top:1px;">{{ $dayName }}</div>
                         </th>
 
-                        @endfor
+                    @endfor
                 </tr>
             </thead>
 
@@ -475,7 +481,13 @@
 
                 <tr style="background-color:#fff;">
 
-                    @for ($i = 1; $i <= $daysInMonth; $i++) @php $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format @endphp <td style="background-color: {{ in_array($dayName, ['Sat', 'Sun']) ? '#f2f2f2' : '#fff' }};">
+                    @for ($i = 1; $i <= $daysInMonth; $i++) 
+                        @php 
+                           $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); 
+                           $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) 
+                           $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format 
+                        @endphp 
+                        <td style="background-color: {{ in_array($dayName, ['Sat', 'Sun']) ? '#f2f2f2' : '#fff' }};">
 
                         @foreach($Holiday as $h)
 
@@ -502,7 +514,7 @@
 
                         @else
 
-                        <p style="font-weight:bold;padding-top:15px;">GS</p>
+                         <p style="font-weight:bold;padding-top:15px;">{{$emp->shift_type}}</p>
                         @endif
 
                         </td>

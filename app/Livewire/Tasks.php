@@ -25,7 +25,7 @@ class Tasks extends Component
     public $emp_id;
     public $task_name;
     public $assignee;
-    public $priority = "low";
+    public $priority = "";
     public $due_date;
     public $tags;
     public $followers;
@@ -52,6 +52,7 @@ class Tasks extends Component
     public $commentAdded = false;
     public $showAddCommentModal = false;
     public $editCommentId = null;
+    
 
     protected $rules = [
         'newComment' => 'required',
@@ -97,9 +98,9 @@ class Tasks extends Component
     {
         $this->showRecipients = true;
         $this->selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-        $this->assignee = $this->selectedPerson->emp_id;
         $this->selectedPersonClients = ClientsEmployee::where('emp_id', $this->selectedPerson->emp_id)->get();
         $this->selectedPeopleName = $this->selectedPerson->first_name . ' #(' . $this->selectedPerson->emp_id . ')';
+        $this->assignee=$this->selectedPeopleName;
 
 
         if ($this->selectedPersonClients->isEmpty()) {
@@ -141,6 +142,7 @@ class Tasks extends Component
         if ($task) {
             $task->update(['status' => 'Completed']);
         }
+        session()->flash('message', 'Task closed successfully!');
         return redirect()->to('/tasks');
     }
 
@@ -151,6 +153,7 @@ class Tasks extends Component
         if ($task) {
             $task->update(['status' => 'Open']);
         }
+        session()->flash('message', 'Task has been Re-Opened.');
         return redirect()->to('/tasks');
     }
 
@@ -162,6 +165,7 @@ class Tasks extends Component
                     'due_date' => 'required',
                     'assignee' => 'required',
                     'task_name' => 'required',
+                    'priority' => 'required|in:High,Medium,Low',
                 ]);
             } else {
                 $this->validate([
@@ -170,6 +174,7 @@ class Tasks extends Component
                     'project_name' => 'required',
                     'assignee' => 'required',
                     'task_name' => 'required',
+                    'priority' => 'required|in:High,Medium,Low',
                 ]);
             }
         }
@@ -221,7 +226,9 @@ class Tasks extends Component
     public function show()
     {
         $this->showDialog = true;
+       
     }
+   
 
     public function close()
     {
@@ -299,7 +306,7 @@ class Tasks extends Component
         $this->commentAdded = true; // Set the flag to indicate that a comment has been added
         $this->newComment = '';
         $this->showModal = false;
-       session()->flash('comment_message', 'Comment added successfully.');
+        session()->flash('message', 'Comment added successfully.');
     }
     public function updatedNewComment($value)
     {

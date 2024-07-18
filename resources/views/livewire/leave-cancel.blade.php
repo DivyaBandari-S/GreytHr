@@ -121,9 +121,9 @@
                 @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
 
-            <div class="buttons1">
+            <div class="cancelButtons d-flex align-items-center gap-2 justify-content-center">
                 <button type="submit" class="submit-btn">Submit</button>
-                <button type="button" class="cancel-btn">Cancel</button>
+                <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
             </div>
         </form>
     </div>
