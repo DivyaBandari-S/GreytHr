@@ -2773,6 +2773,9 @@ input[type="radio"] {
     font-weight: 600;
     font-size: 0.875rem;
 }
+.no-holidays h6{
+    color: rgb(2, 17, 79);
+}
 .group h5 {
     font-weight: 400;
     font-size: 0.75rem;
@@ -3051,7 +3054,7 @@ input[type="radio"] {
 
 /* holiday-calendar */
 .inner-container {
-    padding: 10px 10px;
+    /* padding: 10px 10px; */
     border: 1px solid #ccc;
     border-radius: 7px;
     background: #fff;
@@ -3063,6 +3066,17 @@ input[type="radio"] {
     margin-bottom: 10px;
     margin-top: 20px;
     overflow-y: auto;
+}
+.headerMonth{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(2, 17, 79);
+    padding: 8px 10px;
+}
+.headerMonth h6{
+    color: #fff;
 }
 
 .inner-container::-webkit-scrollbar {
@@ -3100,16 +3114,15 @@ input[type="radio"] {
 
 .inner-container h6 {
     font-weight: 600;
+    margin-bottom: 0px;
     font-size: 0.75rem;
-    margin-bottom: 20px;
-    color: #02114f;
 }
 
 .inner-container .fest h5 {
     font-weight: 500;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: #02114f;
+    color: #778899;
 }
 
 .inner-container span {
@@ -3171,10 +3184,10 @@ img {
 }
 
 #yearSelect {
-    padding: 5px;
+    padding: 5px 0px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 0.875rem;
     background-color: #fff;
     color: #333;
     cursor: pointer;
@@ -3194,7 +3207,6 @@ img {
 select .yearSelect {
     padding: 10px;
     font-size: 16px;
-
     line-height: 2;
     border: 1px solid #ccc;
     border-radius: 5px;
