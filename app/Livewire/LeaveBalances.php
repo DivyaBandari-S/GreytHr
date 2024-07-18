@@ -18,7 +18,7 @@ use App\Models\EmployeeDetails;
 use App\Models\EmployeeLeaveBalances;
 use App\Models\LeaveRequest;
 use Illuminate\Support\Facades\Log;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class LeaveBalances extends Component
@@ -48,7 +48,7 @@ class LeaveBalances extends Component
     public $consumedCasualLeaves;
     public $consumedLossOfPayLeaves;
     public $consumedProbationLeaveBalance;
-    public $sortBy = 'oldest_first';
+    public $sortBy = 'newest_first';
     public $selectedYear;
 
     public $totalCasualDays;
@@ -62,6 +62,25 @@ class LeaveBalances extends Component
     public $percentageCasual;
     public $percentageSick;
     public $percentageCasualProbation;
+    public $showModal = false;
+    public $dateErrorMessage;
+
+    protected $rules = [
+        'fromDateModal' => 'required|date',
+        'toDateModal' => 'required|date|after_or_equal:fromDateModal',
+    ];
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+
+        if ($this->toDateModal < $this->fromDateModal) {
+            $this->dateErrorMessage = 'To date must be greater than to From date.';
+        } else {
+            $this->dateErrorMessage = null;
+        }
+    }
+   
 
 
     //in this method will get leave balance for each type
@@ -72,6 +91,8 @@ class LeaveBalances extends Component
             $this->currentYear = now()->year;
             $this->employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
+            $this->fromDateModal = Carbon::createFromDate($this->currentYear, 1, 1)->format('Y-m-d');
+            $this->toDateModal = Carbon::createFromDate($this->currentYear, 12, 31)->format('Y-m-d');
             $this->sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Sick Leave', $this->currentYear);
             $this->lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Loss Of Pay', $this->currentYear);
             $this->casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave', $this->currentYear);
@@ -158,13 +179,19 @@ class LeaveBalances extends Component
         }
         $this->leaveTransactions = $query->get();
     }
+    public function showPopupModal() {
+        $this->showModal=true;
+    }
+    public function closeModal() {
+        $this->showModal=false;
+    }
 
 
     public function render()
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-    
+
             if ($this->casualLeavePerYear > 0) {
                 $this->percentageCasual = ($this->consumedCasualLeaves / $this->casualLeavePerYear) * 100;
             }
@@ -174,8 +201,8 @@ class LeaveBalances extends Component
             if ($this->casualProbationLeavePerYear > 0) {
                 $this->percentageCasualProbation = ($this->consumedProbationLeaveBalance / $this->casualProbationLeavePerYear) * 100;
             }
-    
-    
+
+
             $this->yearDropDown();
             // Check if employeeDetails is not null before accessing its properties
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -184,9 +211,9 @@ class LeaveBalances extends Component
             if ($this->employeeDetails) {
                 $gender = $this->employeeDetails->gender;
                 $grantedLeave = ($gender === 'Female') ? 90 : 05;
-    
+
                 $leaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
-    
+
                 return view('livewire.leave-balances', [
                     'gender' => $gender,
                     'grantedLeave' => $grantedLeave,
@@ -259,6 +286,7 @@ class LeaveBalances extends Component
             return null;
         }
     }
+    
 
     //calcalate number of days for leave
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
@@ -366,4 +394,80 @@ class LeaveBalances extends Component
     {
         return (int) str_replace('Session ', '', $session);
     }
+    public function generatePdf()
+    {
+        $this->validate();
+
+        if ($this->dateErrorMessage) {
+            return;
+        }
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
+        // Fetch employee details
+        $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+        // Query to fetch leave transactions based on selected criteria
+        $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
+            ->when($this->fromDateModal, function ($query) {
+                $query->where('from_date', '>=', $this->fromDateModal);
+            })
+            ->when($this->toDateModal, function ($query) {
+                $query->where('to_date', '<=', $this->toDateModal);
+            })
+            ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
+                // Map leaveType input values to database enum values
+                $leaveTypes = [
+                    'casual_probation' => 'Casual Leave Probation',
+                    'maternity' => 'Maternity Leave',
+                    'paternity' => 'Paternity Leave',
+                    'sick' => 'Sick Leave',
+                    'lop' => 'Loss of Pay'
+                ];
+
+                if (array_key_exists($this->leaveType, $leaveTypes)) {
+                    $query->where('leave_type', $leaveTypes[$this->leaveType]);
+                }
+            })
+            ->when($this->transactionType && $this->transactionType != 'all', function ($query) {
+                // Map transactionType input values to database status values
+                $transactionTypes = [
+                    'granted' => 'Granted',
+                    'availed' => 'Availed',
+                    'cancelled' => 'Cancelled',
+                    'withdrawn' => 'Withdrawn',
+                    'rejected' => 'Rejected',
+                    'approved' => 'Approved'
+                ];
+
+                if (array_key_exists($this->transactionType, $transactionTypes)) {
+                    $query->where('status', $transactionTypes[$this->transactionType]);
+                }
+            })
+            ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
+            ->get()
+            ->map(function ($leaveRequest) {
+                $leaveRequest->days = $leaveRequest->calculateLeaveDays( $leaveRequest->from_date,
+                $leaveRequest->from_session,
+                $leaveRequest->to_date,
+                $leaveRequest->to_session);
+                return $leaveRequest;
+            });
+      
+
+
+        // Generate PDF using the fetched data
+        $pdf = Pdf::loadView('pdf_template', [
+            'employeeDetails' => $employeeDetails,
+            'leaveTransactions' => $leaveRequests,
+            'fromDate' => $this->fromDateModal,
+            'toDate' => $this->toDateModal,
+        ]);
+        $this->showModal=false;
+
+        // Return the PDF as a downloadable response
+        return response()->streamDownload(function() use($pdf){
+            echo $pdf->stream();
+        }, 'leave_transactions.pdf');
+    }
+   
 }
