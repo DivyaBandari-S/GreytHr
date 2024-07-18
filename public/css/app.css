@@ -2379,6 +2379,7 @@ input[type="radio"] {
     align-items: center;
     border-radius: 50%;
     border: 1px solid #dcdcdc;
+    margin-right: 10px;
 }
 
 .active .arrow-btn {
