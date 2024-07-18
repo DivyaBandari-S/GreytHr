@@ -333,9 +333,10 @@
                         </div>
 
                     </div>
+                    </div>
                     <div class="col-md-4 mb-2">
-                    <div     class="leave-bal mb-2 bg-white rounded  p-3"   >
-                        <div class="balance d-flex flex-row justify-content-between " >
+                    <div     class="leave-bal mb-2 bg-white rounded  p-3">
+                        <div class="balance d-flex flex-row justify-content-between ">
                                 <div class="field">
                                     <span class="leave-type font-weight-500">Sick Leave
                                 </div>
@@ -415,6 +416,11 @@
                             @endif
                         </h5>
                     <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                    @if($gender === 'Female' && $maternityLeaves > 0)
+                    <a href="#" style="font-size:12px;">View Details</a>
+                    @elseif($gender === 'Male' && $paternityLeaves > 0)
+                    <a href="#" style="font-size:12px;">View Details</a>
+                    @endif
                 </div>
             </div>
               </div>
@@ -431,7 +437,9 @@
                          <div class="center text-center" style="margin-top:30px;" >
                              <h5 style="font-size:16px;" >{{$casualLeaveBalance}}</h5>
                              <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                             @if($casualLeavePerYear)
                              <a href="/casualleavebalance" style="font-size:12px;">View Details</a>
+                             @endif
                         </div>
                         <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;">
@@ -458,7 +466,9 @@
                             <div class="center text-center" style="margin-top:30px;">
                                 <h5 style="font-size:16px;">{{ $sickLeaveBalance }}</h5>
                                 <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                                @if($sickLeavePerYear > 0)
                                 <a href="/sickleavebalance" style="font-size:12px;">View Details</a>
+                                @endif
                             </div>
                             <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
@@ -472,6 +482,7 @@
                             </div>
                         </div>
                     </div>
+                    @if($differenceInMonths !== null && $differenceInMonths < 6)
                     <div class="col-md-4 mb-2">
                         <div class="leave-bal mb-2 bg-white rounded  p-3">
                             <div class="balance d-flex flex-row justify-content-between">
@@ -485,7 +496,9 @@
                             <div class="center text-center" style="margin-top:30px;">
                                 <h5 style="font-size:16px;">{{ $casualProbationLeaveBalance }}</h5>
                                 <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                                @if($casualProbationLeavePerYear > 0)
                                 <a href="/casualprobationleavebalance" style="font-size:12px;">View Details</a>
+                                @endif
                             </div>
                             <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
@@ -499,6 +512,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                     <div class="col-md-4 mb-2">
                         <div class="leave-bal mb-2 bg-white rounded  p-3">
                             <div class="balance d-flex flex-row justify-content-between">
@@ -512,7 +526,9 @@
                             <div class="center text-center" style="margin-top:30px;">
                                 <h5 style="font-size:16px;">{{ $marriageLeaves }}</h5>
                                 <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                                @if($marriageLeaves > 0)
                                 <a href="#" style="font-size:12px;">View Details</a>
+                                @endif
                             </div>
 
                         </div>

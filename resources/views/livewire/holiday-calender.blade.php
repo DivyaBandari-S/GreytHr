@@ -28,11 +28,11 @@
                     @else
                     <div class="group p-0">
                         @foreach($entries as $entry)
-                        <div class="fest d-flex flex-row align-items-center py-0 m-0" style="gap:10px;">
-                            <h5>{{ date('d', strtotime($entry->date)) }}<span>
-                                    <p style="font-size: 10px;">{{ substr($entry->day, 0, 3) }}</p>
+                        <div class="fest d-flex flex-row align-items-center" style="gap:10px;">
+                            <h5 class="p-0 m-0">{{ date('d', strtotime($entry->date)) }}<span>
+                                    <p class="mb-0" style="font-size: 10px;">{{ substr($entry->day, 0, 3) }}</p>
                                 </span></h5>
-                            <p style="font-size: 12px;">{{ $entry->festivals }}</p>
+                            <p class="mb-0 festivals" style="font-size: 12px;">{{ $entry->festivals }}</p>
                         </div>
                         @endforeach
                     </div>

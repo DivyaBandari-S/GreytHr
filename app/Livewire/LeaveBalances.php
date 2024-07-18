@@ -61,7 +61,7 @@ class LeaveBalances extends Component
     public $beforePreviousYear;
     public $percentageCasual;
     public $percentageSick;
-    public $percentageCasualProbation;
+    public $percentageCasualProbation,$differenceInMonths;
 
 
     //in this method will get leave balance for each type
@@ -72,6 +72,16 @@ class LeaveBalances extends Component
             $this->currentYear = now()->year;
             $this->employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
+            $hireDate = $this->employeeDetails->hire_date;
+            if ($hireDate) {
+                $hireDate = Carbon::parse($hireDate);
+                $currentDate = Carbon::now();
+                
+                $this->differenceInMonths = $hireDate->diffInMonths($currentDate);
+
+            } else {
+                $this->differenceInMonths = null;
+            }
             $this->sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Sick Leave', $this->currentYear);
             $this->lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Loss Of Pay', $this->currentYear);
             $this->casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave', $this->currentYear);
@@ -197,6 +207,7 @@ class LeaveBalances extends Component
                     'leaveTransactions' => $this->leaveTransactions,
                     'percentageCasual' => $this->percentageCasual,
                     'percentageSick' => $this->percentageSick,
+                    'differenceInMonths' => $this->differenceInMonths,
                     'percentageCasualProbation' => $this->percentageCasualProbation
                 ]);
             }

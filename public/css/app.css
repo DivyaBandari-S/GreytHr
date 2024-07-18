@@ -1796,9 +1796,33 @@ td {
     font-size: 16px;
     outline: none;
 }
+.placeholder-small {
+    color: #778899; /* Placeholder text color */
+    font-size: 12px;
+    font-family: "Montserrat", sans-serif;
+    font-weight:normal;
+}
+#category::placeholder {
+    color: #778899; /* Placeholder text color */
+    font-size: 12px; /* Placeholder font size */
+    font-family: "Montserrat", sans-serif;
+    font-weight:normal;
+}
+#subject::placeholder {
+    color: #778899; /* Placeholder text color */
+    font-size: 12px; /* Placeholder font size */
+    font-family: "Montserrat", sans-serif;
+    font-weight:normal;
+}
+#description::placeholder {
+    font-weight:normal;
+    color: #778899; /* Placeholder text color */
+    font-size: 12px; /* Placeholder font size */
+    font-family: "Montserrat", sans-serif;
+}
 
 .search-button {
-    background-color: #007bff;
+    background-color:rgb(2, 17, 79);
     color: #fff;
     border: none;
     padding: 10px 15px;
@@ -2216,7 +2240,7 @@ input[type="radio"] {
         margin-top: 20px !important;
     }
     .containerWidth {
-        width: 100% !important;
+        width: 100% ;
     }
 }
 .applyingFor {
@@ -2336,6 +2360,7 @@ input[type="radio"] {
     height: 22px;
     width: 22px;
     display: flex;
+    margin-right: 10px;
     cursor: pointers;
     justify-content: center;
     align-items: center;
@@ -2387,7 +2412,7 @@ input[type="radio"] {
     background: rgb(2, 17, 79);
     border: 1px solid rgb(2, 17, 79);
     font-size: 0.725rem;
-    padding: 6px 12px;
+    padding: 4px 8px;
     color: white;
     font-weight: 500;
     border-radius: 5px;
@@ -2425,9 +2450,7 @@ input[type="radio"] {
 .select.form-control option {
     font-size: 10px;
 }
-.placeholder-small {
-    color: #778899 !important;
-}
+
 #category::placeholder {
     color: #778899; /* Placeholder text color */
     font-size: 10px; /* Placeholder font size */
@@ -2602,8 +2625,8 @@ input[type="radio"] {
     background-color: #d9ecff;
     border: 1px solid #ccc;
 }
-.icon-container.active {
-    background-color: #d9ecff;
+.icon-container:hover {
+    border-color: #007bff;
 }
 .icon-container {
     height: 30px;
@@ -2614,6 +2637,9 @@ input[type="radio"] {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.icon-container:hover i.fa-solid.fa-plus {
+    color: #007bff !important; /* Change color to red (#FF0000) on hover */
 }
 .details {
     display: none;
@@ -2721,10 +2747,6 @@ input[type="radio"] {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 0.975rem;
-}
-.group {
-    margin-left: 10px;
 }
 
 .data {
@@ -3064,6 +3086,7 @@ input[type="radio"] {
 
 .inner-container .group {
     display: flex;
+    gap: 20px;
     flex-direction: column;
     margin: 0 auto;
 }
@@ -3083,14 +3106,12 @@ img {
 .alone-cont {
     padding: 10px 15px;
     border: 1px solid #ccc;
-
     border-radius: 7px;
     background: #fff;
     overflow: hidden;
     color: #778899;
     width: 100%;
     display: flex;
-
     flex-direction: column;
     text-align: center;
     justify-content: center;

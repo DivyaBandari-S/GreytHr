@@ -14,7 +14,6 @@ class ListOfAppliedJobs extends Component
 
         $appliedJobs = AppliedJob::where('company_name', $companyId->company_name)->get();
         
-         dd($appliedJobs);
         return view('livewire.list-of-applied-jobs');
     }
 }

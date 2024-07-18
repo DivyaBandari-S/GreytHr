@@ -35,7 +35,16 @@ class LeavePage extends Component
     public $showLeaveCancel = false;
     public $showCompOff = false;
     public $showLeaveApply = true;
+    public $activeAccordion = null;
 
+    public function toggleAccordion($id)
+    {
+        if ($this->activeAccordion === $id) {
+            $this->activeAccordion = null; // Collapse if already open
+        } else {
+            $this->activeAccordion = $id; // Expand if closed
+        }
+    }
 
     public function toggleSection($section)
     {
