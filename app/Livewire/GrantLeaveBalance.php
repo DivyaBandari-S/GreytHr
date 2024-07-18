@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Models\EmployeeDetails;
 use App\Models\EmployeeLeaveBalances;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class GrantLeaveBalance extends Component
@@ -19,6 +18,7 @@ class GrantLeaveBalance extends Component
     public $from_date;
     public $to_date;
     public $showEmployees = 'false';
+    public $selectAllEmployees = false;
 
     public function mount()
     {
@@ -31,9 +31,21 @@ class GrantLeaveBalance extends Component
     {
         $this->showEmployees = 'true';
     }
+
     public function closeEmployeeIds()
     {
         $this->showEmployees = 'false';
+    }
+
+    public function toggleSelectAllEmployees()
+    {
+        if ($this->selectAllEmployees) {
+            // If "Select All" is checked, set selectedEmpIds to all employee IDs
+            $this->selectedEmpIds = $this->employeeIds;
+        } else {
+            // If "Select All" is unchecked, clear selectedEmpIds
+            $this->selectedEmpIds = [];
+        }
     }
 
     public function grantLeavesForEmp()
@@ -57,18 +69,17 @@ class GrantLeaveBalance extends Component
                     'to_date' => $this->to_date,
                 ]);
 
-                $this->reset();
-
                 // Flash success message
                 session()->flash('success', 'Leave balances added successfully.');
-            }
-            catch (QueryException $e) {
+            } catch (QueryException $e) {
                 if ($e->errorInfo[1] == 1062) {
                     // Handle the duplicate entry error here
                     session()->flash('error', 'Leaves have already been added for the selected employee(s).');
                 }
             }
         }
+
+        // Redirect after processing
         return redirect()->to('/addLeaves');
     }
 

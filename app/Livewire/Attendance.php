@@ -17,7 +17,7 @@ use App\Models\EmployeeDetails;
 use App\Models\SwipeRecord;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
-use App\Models\RegularisationNew1;
+use App\Models\RegularisationDates;
 use Livewire\Component;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -104,7 +104,11 @@ class Attendance extends Component
 
     public $k, $k1;
     public $showMessage = false;
+
+    public $employee;
     //This function will help us to toggle the arrow present in session fields
+
+
 public function closeRegularisationModal()
 {
     $this->showRegularisationDialog=false;
@@ -149,6 +153,7 @@ public function toggleSession2Fields()
 public function mount()
 {
     try {
+        $this->employee=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->select('first_name','last_name','shift_type','shift_start_time','shift_end_time')->first();
         //insights
         $this->from_date = now()->startOfMonth()->toDateString();
         $this->to_date = now()->toDateString();
@@ -302,7 +307,7 @@ private function getLeaveType($date, $employeeId)
 }
 private function isDateRegularized($date, $employeeId)
 {
-    $records = RegularisationNew1::where('emp_id', $employeeId)->get();
+    $records = RegularisationDates::where('emp_id', $employeeId)->get();
 
     foreach ($records as $record) {
         $regularisationEntries = json_decode($record->regularisation_entries, true);
@@ -754,7 +759,7 @@ public function closeViewStudentModal()
     {
         $this->showRegularisationDialog=true;
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $regularisationRecords = RegularisationNew1::where('emp_id', $employeeId)
+        $regularisationRecords = RegularisationDates::where('emp_id', $employeeId)
             ->where('status', 'approved')
             ->get();
         $dateFound = false;
@@ -789,6 +794,7 @@ public function closeViewStudentModal()
         try {
             $this->dynamicDate = now()->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
+            
             $this->swiperecord=SwipeRecord::where('emp_id',$employeeId)->where('is_regularised',1)->get();
             $currentDate = Carbon::now()->format('Y-m-d');
             $holiday = HolidayCalendar::all();

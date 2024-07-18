@@ -124,12 +124,11 @@
 <body>
 
     <div>
-
         <div class="row m-0 p-0 " style="height: 100vh;background:#f5f5f5;">
 
             <div class="menucard displayNone hideMinBar" id="menu-popup" style="border-radius:0px; width: auto; background:#fff;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);padding:0;margin:0; backdrop-filter: blur( 3px ); -webkit-backdrop-filter: blur( 3px );">
 
-                <div class="left-card-body" style="padding: 0 5px;margin: 0;height: 100%;">
+                <div class="left-card-body" style="padding: 0 5px;margin: 0;">
 
                     <ul class="flex-column nav">
 
@@ -327,6 +326,13 @@
                                                 </a>
                                             </li>
                                             @endif
+                                            @if ($mangerid)
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/shift-roaster-data" onclick="setActiveLink(this)">
+                                                    @livewire('shift-roaster-submodule')
+                                                </a>
+                                            </li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </li>
@@ -396,14 +402,14 @@
                         </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item ">
 
-<a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
+                            <a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
 
-    <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
-    Feeds
+                                <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
+                                Feeds
 
-</a>
+                            </a>
 
-</li>
+                        </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
 
                             <a class="nav-link" href="/addLeaves" onclick="setActiveLink(this)">
@@ -679,6 +685,13 @@
                                                 </a>
                                             </li>
                                             @endif
+                                            @if ($mangerid)
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/shift-roaster-data" onclick="setActiveLink(this)">
+                                                    @livewire('shift-roaster-submodule')
+                                                </a>
+                                            </li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </li>
@@ -746,14 +759,14 @@
                         </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item ">
 
-<a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
+                            <a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
 
-    <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
-    Feeds
+                                <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
+                                Feeds
 
-</a>
+                            </a>
 
-</li>
+                        </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
 
                             <a class="nav-link" href="/letter-requests" onclick="setActiveLink(this)">
@@ -1062,14 +1075,14 @@
                         </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item ">
 
-<a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
+                            <a class="nav-link" href="/hrFeeds" onclick="setActiveLink(this)">
 
-    <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
- 
+                                <i class="fas mr-1 fa-rss" style="color:#6c7e90"></i>
 
-</a>
 
-</li>
+                            </a>
+
+                        </li>
                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
 
                             <a class="nav-link" href="/addLeaves" onclick="setActiveLink(this)">
@@ -1147,15 +1160,15 @@
                         <i class="fas fa-bars showHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px;  cursor: pointer;" onclick="myMenuSmall()"></i> -->
                     <img src="/images/app-drawer.png" class="app-drawer-img hideHamburger" onclick="myMenu()">
                     <img src="/images/app-drawer.png" class="app-drawer-img showHamburger" onclick="myMenuSmall()">
-                    <h6 class="mx-2 my-0" style="color: white; width: -webkit-fill-available;"> @livewire('page-title')
+                    <h6 class="mx-2 my-0" style="color: white; width: -webkit-fill-available; margin-bottom: 10px;"> @livewire('page-title')
                     </h6>
 
                     @auth('emp')
 
-                   
+
                     @livewire('notification')
                     <div class="col dropdown mx-2 p-0">
-                        <button class="dropdown-btn" style="font-size: 13px;  white-space: nowrap; ">Quick
+                        <button class="dropdown-btn" style="font-size: 13px;  white-space: nowrap; margin-bottom: 5px; ">Quick
                             Links</button>
                         <div class="dropdown-content" style="font-size: 12px;font-weight:500;">
                             <a href="/tasks">Tasks</a>
@@ -1163,8 +1176,8 @@
                         </div>
                     </div>
 
-                   
-                   
+
+
                     @endauth
 
                     <div style="text-align:end;cursor:pointer; margin-right:10px;">
@@ -1173,7 +1186,7 @@
 
                 </div>
 
-                <div onscroll="checkFadeIn()" class="slot mt-4 ">
+                <div class="slot mt-4 ">
                     {{ $slot }}
                 </div>
 

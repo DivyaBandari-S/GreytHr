@@ -129,7 +129,7 @@ class LeaveBalances extends Component
                         return '#000000';
                 }
             } else {
-                return '#000000';
+                return '#0ea8fc';
             }
         } catch (\Exception $e) {
             Log::error('Error in getTubeColor method: ' . $e->getMessage());

@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\HolidayCalendar;
+use App\Models\RegularisationDates;
 use App\Models\SalaryRevision;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -57,6 +58,13 @@ class Home extends Component
     public $leaveRequests;
     public $showLeaveApplies;
     public $greetingImage;
+
+    public $showReviewLeaveAndAttendance=false;
+
+    public $countofregularisations;
+
+    public $employeeShiftDetails;
+    public $regularisations;
     public $greetingText;
     public $teamOnLeave;
     public $leaveApplied;
@@ -151,8 +159,35 @@ class Home extends Component
             $this->greetingImage = 'night.jpeg';
             $this->greetingText = 'Good Night';
         }
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $employees=EmployeeDetails::where('manager_id',$employeeId)->select('emp_id', 'first_name', 'last_name')->get();
+        $empIds = $employees->pluck('emp_id')->toArray();
+        $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
+        ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+        ->where('status','pending')
+        ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
+        ->with('employee') 
+        ->get();
+        
+        $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
+        ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+        ->where('status','pending')
+        ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
+        ->with('employee') 
+        ->count();
+        
+        
     }
-
+    public function reviewLeaveAndAttendance()
+    {
+        $this->showReviewLeaveAndAttendance=true;
+    }
+    public function closereviewLeaveAndAttendance()
+    {
+        $this->showReviewLeaveAndAttendance=false;
+    }
     public function hideMessage()
     {
         $this->showMessage = false;
@@ -223,7 +258,9 @@ class Home extends Component
             $loggedInEmpId = Session::get('emp_id');
             // Check if the logged-in user is a manager by comparing emp_id with manager_id in employeedetails
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
+          
             $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeShiftDetails=EmployeeDetails::where('emp_id',$employeeId)->first();
             $this->currentDay = now()->format('l');
             $this->currentDate = now()->format('d M Y');
             $today = Carbon::now()->format('Y-m-d');
@@ -291,7 +328,6 @@ class Home extends Component
             $this->leaveApplied = $matchingLeaveApplications;
 
             $this->count = count($matchingLeaveApplications);
-
 
             //team on leave
             $currentDate = Carbon::today();
@@ -398,6 +434,7 @@ class Home extends Component
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                ->where('employee_status','active')
                 ->get();
 
             $arrayofabsentemployees = $this->absent_employees->toArray();
@@ -411,6 +448,7 @@ class Home extends Component
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                ->where('employee_status','active')
                 ->count();
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $swipes_early = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate, $approvedLeaveRequests) {
@@ -424,6 +462,7 @@ class Home extends Component
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+                ->where('employee_details.employee_status','active')
                 ->get();
 
             $swipes_early1 = $swipes_early->count();
@@ -440,6 +479,7 @@ class Home extends Component
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+                ->where('employee_details.employee_status','active')
                 ->get();
 
             $swipes_late1 = $swipes_late->count();

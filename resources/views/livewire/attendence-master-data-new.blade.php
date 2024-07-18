@@ -666,7 +666,13 @@
             <thead>
                 <tr>
 
-                    @for ($i = 1; $i <= $daysInMonth; $i++) @php $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format @endphp <th style="width:75%; background:#ebf5ff; color:#778899; font-weight:500; text-align:center;">
+                    @for ($i = 1; $i <= $daysInMonth; $i++) 
+                        @php 
+                            $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); 
+                            $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) 
+                            $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format 
+                        @endphp 
+                        <th style="width:75%; background:#ebf5ff; color:#778899; font-weight:500; text-align:center;">
                         <div style="font-size:0.825rem;line-height:0.8;font-weight:500;">
                             {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
                         </div>
@@ -697,15 +703,21 @@
                     $currentDay = $daysInMonth;
 
                     // Check if $attendanceYear is greater than the current year
-                    if ($attendanceYear == $currentYear) {
-                    $currentDay = date('j');
-                    }
-                    elseif($attendanceYear == 0) {
-                    $currentDay = date('j');
-                    }
+                            if ($attendanceYear == $currentYear) {
+                            $currentDay = date('j');
+                            }
+                            elseif($attendanceYear == 0) {
+                            $currentDay = date('j');
+                            }
                     @endphp
 
-                    @for ($i = 1; $i <= $currentDay; $i++) @php $timestamp=mktime(0, 0, 0, $currentMonth, $i, $SelectedYear); $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format @endphp <td style="height:20px;">
+                    @for ($i = 1; $i <= $currentDay; $i++) 
+                       @php 
+                          $timestamp=mktime(0, 0, 0, $currentMonth, $i, $SelectedYear); 
+                          $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) 
+                          $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format 
+                      @endphp 
+                    <td style="height:20px;">
 
 
 

@@ -64,7 +64,7 @@
                                     </button>
                                 </div>
                                 @if(Session::has('error'))
-    <div class="alert alert alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert" style="font-size: 12px; width: 90%; margin: 10px auto 0;background:#FB9F48">
+    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert" style="font-size: 12px; width: 90%; margin: 10px auto 0;">
         {{ Session::get('error') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -657,65 +657,60 @@
                   
      
      
-        <div class="row m-0">
-        @php
-    // Fetch and sort comments associated with the current employee
+                    <div class="row m-0">
+    @php
     $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
-    
-    // Fetch and sort comments associated with the current HR employee
-    $currentHrCardComments = $comments->where('card_id', $data['employee']->hr_emp_id)->sortByDesc('created_at');
-@endphp
-
-@if(($currentCardComments && $currentCardComments->count() > 0) || ($currentHrCardComments && $currentHrCardComments->count() > 0))
-    <div class="m-0 mt-2 px-2" style="overflow-y:auto; max-height:150px;">
-        @foreach ($currentCardComments as $comment)
-            <div class="mb-3" style="display: flex; gap:10px; align-items:center;">
-                @if($comment->employee)
-                    @if($comment->employee->image)
-                        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
-                    @else
-                        @if($comment->employee->gender == "Male")
-                            <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="" height="25" width="25">
-                        @elseif($comment->employee->gender == "Female")
-                            <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="" height="25" width="25">
+    @endphp
+    @if($currentCardComments && $currentCardComments->count() > 0)
+        <div class="m-0 mt-2 px-2" style="overflow-y:auto; max-height:150px;">
+            @foreach ($currentCardComments as $comment)
+                <div class="mb-3" style="display: flex;gap:10px;align-items:center;">
+                    @if($comment->employee)
+                        @if($comment->employee->image)
+                            <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
+                        @else
+                            @if($comment->employee->gender == "Male")
+                                <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="" height="25" width="25">
+                            @elseif($comment->employee->gender == "Female")
+                                <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="" height="25" width="25">
+                            @endif
                         @endif
-                    @endif
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
-                @endif
-            </div>
-        @endforeach
-
-        @foreach ($currentHrCardComments as $comment)
-            <div class="mb-3" style="display: flex; gap:10px; align-items:center;">
-                @if($comment->hr)
+                        <div class="comment" style="font-size: 10px;">
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
+                            <p class="mb-0" style="font-size: 11px;">
+                                {{ ucfirst($comment->comment) }}
+                            </p>
+                        </div>
+                    @elseif($comment->hr)
                     @if($comment->hr->image)
-                        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
-                    @else
-                        @if($comment->hr->gender == "Male")
-                            <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="" height="25" width="25">
-                        @elseif($comment->hr->gender == "Female")
-                            <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="" height="25" width="25">
+                            <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
+                        @else
+                            @if($comment->hr->gender == "Male")
+                                <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="" height="25" width="25">
+                            @elseif($comment->hr->gender == "Female")
+                                <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="" height="25" width="25">
+                            @endif
                         @endif
+                        <div class="comment" style="font-size: 10px;">
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
+                            <p class="mb-0" style="font-size: 11px;">
+                                {{ ucfirst($comment->comment) }}
+                            </p>
+                        </div>
+                    @else
+                        <div class="comment" style="font-size: 10px;">
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+                            <p class="mb-0" style="font-size: 11px;">
+                                {{ ucfirst($comment->comment) }}
+                            </p>
+                        </div>
                     @endif
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->employee_name)) }}</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
-                @endif
-            </div>
-        @endforeach
-    </div>
-@endif
+                </div>
+            @endforeach
+        </div>
+    @endif
+</div>
 
-
-                    </div>
 
                     </div>
                     @elseif ($data['type'] === 'hire_date' )
@@ -975,7 +970,6 @@
                                <div class="row m-0">
                                @php
                     $currentCardComments = $addcomments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
-
                     @endphp
                          @if($currentCardComments && $currentCardComments->count() > 0)
                         <div class="m-0 mt-2 px-2" style="overflow-y:auto; max-height:150px;">

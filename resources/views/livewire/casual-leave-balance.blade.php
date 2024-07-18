@@ -51,6 +51,7 @@
             border-radius: 8px;
             padding: 10px;
             display: flex;
+            width: 60%;
             max-width: 100%;
             justify-content: space-around;
             align-items: center;
@@ -83,16 +84,16 @@
         </div>
         @endif
         <div class="row m-0 p-0">
-            <div class="col-6 p-0 m-0 mb-2 ">
+            <div class="col-7 p-0 m-0 mb-2 ">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center " style="font-size: 14px;background:none;font-weight:500;">
-                        <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('home') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('leave-balance') }}">Leave Balances</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route(s'home') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('leave-balance') }}">Leave Balances</a></li>
                         <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Casual Leave</li>
                     </ol>
                 </nav>
             </div>
-            <div class="col-md-6 ">
+            <div class="col-md-5 ">
                 <div class="buttons-container d-flex gap-3 justify-content-end mt-2 p-0 ">
                     <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
                     <select class="dropdown bg-white rounded " wire:model="selectedYear" wire:change="yearDropDown" style="margin-right:5px;">
