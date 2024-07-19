@@ -12,6 +12,7 @@ class EmpSpouseDetails extends Model
         'emp_id',
         'name',
         'gender',
+        'qualification',
         'profession',
         'dob',
         'nationality',
