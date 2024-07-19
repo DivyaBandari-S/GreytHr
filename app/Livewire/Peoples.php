@@ -187,6 +187,7 @@ class Peoples extends Component
         try {
             $companyId = Auth::user()->company_id;
             $this->peoples = EmployeeDetails::with('starredPeople')->where('company_id', $companyId)
+            ->where('employee_status', 'active')
                 ->orderBy('first_name')
                 ->orderBy('last_name')
                 ->get();
@@ -197,7 +198,7 @@ class Peoples extends Component
             // Fetch all employees under the same manager, with the same company_id, and active status
             $this->myTeam = EmployeeDetails::with('starredPeople')
                 ->where('company_id', $companyId)
-                ->where('manager_id', $managerId)
+                ->where('manager_id', $employeeId)
                 ->where('employee_status', 'active')
                 ->orderBy('first_name')
                 ->orderBy('last_name')

@@ -2252,7 +2252,25 @@ input[type="radio"] {
     font-size: 10px;
 }
 .placeholder-small {
-    font-size: 0.75rem;
+    font-size: 12px !important;
+    color: #778899 !important;
+}
+.people-profile-image {
+    height: 33px;
+
+    width: 33px;
+
+    background-color: lightgray;
+
+    border-radius: 50%;
+    margin-left: 13px;
+}
+.people-detail-container:hover{
+    background-color: #f3faff !important;
+}
+.input-placeholder-small {
+    font-size: 13px !important;
+    color: black !important;
 }
 #category::placeholder {
     color: #778899; /* Placeholder text color */

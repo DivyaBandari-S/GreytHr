@@ -1,5 +1,4 @@
 <div class="mx-2">
-<x-loading-indicator />
     @if($errorMessage)
     <div id="errorMessage" class="alert alert-danger">
         {{ $errorMessage }}
@@ -39,7 +38,7 @@
                         ->first();
                         @endphp
                         <option value="Casual Leave">Casual Leave</option>
-                        @if (($differenceInMonths < 6) && ($employeeId !==$managerInfo->manager_id))
+                           @if (($differenceInMonths < 6) && ($employeeId !==$managerInfo->manager_id))
                             <option value="Casual Leave Probation">Casual Leave Probation</option>
                             @endif
                             <option value="Loss of Pay">Loss of Pay</option>
@@ -341,7 +340,7 @@
                 </label>
                 <div class="control-wrapper d-flex align-items-center" style="flex-direction: row; gap: 10px;cursor:pointer;">
                     <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
-                        <div class="icon-container" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="icon-container" >
                             <i class="fa-solid fa-plus" style="color: #778899;"></i>
                         </div>
                     </a>
