@@ -88,6 +88,7 @@
             <!-- Add more HR-related options as needed -->
         </optgroup>
         </select>
+        @error('category') <span class="text-danger">{{ $message }}</span> @enderror
         <div class="dropdown-toggle-icon" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%);">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                 <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
@@ -96,13 +97,13 @@
   
 
 
-                                    @error('category') <span class="text-danger">{{ $message }}</span> @enderror
+                                   
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group mt-2">
     <label for="subject" style="color: #778899; font-weight: 500; font-size: 12px;">Subject <span style="color: red;">*</span></label>
-    <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;"">
+    <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
     @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
 </div>
 
@@ -128,7 +129,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                            <div class="form-group">
+                            <div class="form-group mt-2">
     <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
     <div class="input" class="form-control placeholder-small">
         <div style="position: relative;">
@@ -156,7 +157,7 @@
                                     <div class="row m-0 p-0">
                                         <div style="margin: 0px;padding:0;">
                                             <div>
-                                                <div style="font-size: 12px;color:#778899;margin-bottom:10px;font-weight:500;" wire:model.lazy="cc_to" id="cc_to">Selected CC recipients : {{ implode(', ', array_unique($selectedPeopleNames)) }}</div>
+                                                <div style="font-size: 12px;color:#778899;margin-bottom:10px;font-weight:500;" wire:model="cc_to" id="cc_to">Selected CC recipients : {{ implode(', ', array_unique($selectedPeopleNames)) }}</div>
                                             </div>
                                             <button type="button" style="border-radius: 50%;margin-right:10px;color:#778899;border:1px solid #778899;" class="add-button" wire:click="toggleRotation">
                                                 <i class="fa fa-plus" style="color:#778899;"></i>
@@ -281,7 +282,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                            <div class="form-group">
+                            <div class="form-group mt-2">
     <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
     <div class="input" class="form-control placeholder-small">
         <div style="position: relative;">
@@ -401,7 +402,12 @@
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:20%;">{{ $record->subject }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->description }}</td>
                         <td style="padding: 10px; font-size: 12px; text-align: center;">
-                        <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
+                       @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
+    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
+@else
+    -
+@endif
+
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
                             {{ $record->cc_to ?? '-' }}
@@ -449,11 +455,14 @@
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->subject }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->description }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center">
-                            @if ($record->file_path)
-                            <a href="{{ asset('public/help-desk-images/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
-                            @else
-                            N/A
-                            @endif
+
+                        @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
+    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
+@else
+    -
+@endif
+
+
                         </td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->cc_to }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->priority }}</td>
@@ -498,11 +507,12 @@
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->subject }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->description }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center">
-                            @if ($record->file_path)
-                            <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
-                            @else
-                            N/A
-                            @endif
+                        @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
+    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
+@else
+    -
+@endif
+
                         </td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->cc_to }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->priority }}</td>

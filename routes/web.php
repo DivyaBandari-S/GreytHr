@@ -287,6 +287,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/leave-page', LeavePage::class)->name('leave-page');
     Route::get('/approved-details/{leaveRequestId}', ApprovedDetails::class)->name('approved-details');
     Route::get('/view-details/{leaveRequestId}', ViewDetails::class)->name('view-details');
+    Route::get('/view-pending-details', ViewDetails::class)->name('pending-details');
     Route::get('/leave-apply', LeaveApply::class);
     Route::get('/holiday-calender', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');

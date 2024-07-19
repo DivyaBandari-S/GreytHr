@@ -49,6 +49,26 @@ class HelpDesk extends Component
     public $record;
     public $activeTab = 'active';
     public $selectedPeople = [];
+    protected $rules = [
+        'category' => 'required|string',
+        'subject' => 'required|string',
+        'description' => 'required|string',
+     
+        'priority' => 'required|in:High,Medium,Low',
+      
+    ];
+    
+    protected $messages = [
+        'category.required' => 'Category is required.',
+        'subject.required' => 'Subject is required.',
+        'description.required' => 'Description is required.',
+        'priority.required' => 'Priority is required.',
+        'priority.in' => 'Priority must be one of: High, Medium, Low.',
+        'image.image' => 'File must be an image.',
+        'image.max' => 'Image size must not exceed 2MB.',
+        'file_path.mimes' => 'File must be a document of type: pdf, xls, xlsx, doc, docx, txt, ppt, pptx, gif, jpg, jpeg, png.',
+        'file_path.max' => 'Document size must not exceed 2MB.',
+    ];
     public function open()
     {
         $this->showDialog = true;
@@ -72,47 +92,14 @@ class HelpDesk extends Component
     {
         $this->showDialogFinance = false;
     }
-    protected $rules = [
-        'category' => 'required|string|max:255',
-        'subject' => 'required|string|max:255',
-        'description' => 'required|string',
-        'file_path' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx,txt,ppt,pptx,gif,jpg,jpeg,png|max:2048',
-        'cc_to' => 'nullable',
-        'priority' => 'required|in:High,Medium,Low',
-        'image' => 'nullable|image|max:2048',
-    ];
 
-    protected $messages = [
-        'category.required' => ' Category is required.',
-        'subject.required' => ' Subject is required.',
-        'description.required' => ' Description is required.',
-        'priority.required' => ' Priority is required.',
-        'priority.in' => ' Priority must be one of: High, Medium, Low.',
-        'image.image' => ' File must be an image.',
-        'image.max' => ' Image size must not exceed 2MB.',
-        'file_path.mimes' => ' File must be a document of type: pdf, xls, xlsx, doc, docx, txt, ppt, pptx, gif, jpg, jpeg, png.',
-        'file_path.max' => ' Document size must not exceed 2MB.',
-       
-
-
-
-    ];
+    
 
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
     }
 
-    protected function resetInputFields()
-    {
-        $this->category = '';
-        $this->subject = '';
-        $this->description = '';
-        $this->file_path = '';
-        $this->cc_to = '';
-        $this->priority = '';
-        $this->image = '';
-    }
 
     protected function addErrorMessages($messages)
     {
@@ -158,19 +145,20 @@ class HelpDesk extends Component
 
     public function submit()
     {
-        $this->validate();
+       
+       
 
         try {
-
-
+            $validatedData = $this->validate($this->rules);
+          
             if ($this->image) {
                 $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('uploads/public/help-desk-images', $fileName, 'public');
-                $filePath = 'uploads/public/help-desk-images/' . $fileName;
-              
+                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+                $filePath = 'uploads/help-desk-images/' . $fileName;
             } else {
                 $filePath = 'N/A';
             }
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
@@ -186,9 +174,10 @@ class HelpDesk extends Component
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
             ]);
-  
+
             session()->flash('message', 'Request created successfully.');
             $this->reset();
+            return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
@@ -197,6 +186,16 @@ class HelpDesk extends Component
         }
     }
 
+    protected function resetInputFields()
+    {
+        $this->category = '';
+        $this->subject = '';
+        $this->description = '';
+        $this->file_path = '';
+        $this->cc_to = '';
+        $this->priority = '';
+        $this->image = '';
+    }
 
     public function closePeoples()
     {

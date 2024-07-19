@@ -762,6 +762,19 @@ button.close-button {
 
     border-radius: 50%;
 }
+.people-profile-image {
+    height: 33px;
+
+    width: 33px;
+
+    background-color: lightgray;
+
+    border-radius: 50%;
+    margin-left: 13px;
+}
+.people-detail-container:hover{
+    background-color: #f3faff !important;
+}
 
 .username {
     font-size: 16px;
@@ -1796,9 +1809,33 @@ td {
     font-size: 16px;
     outline: none;
 }
+.placeholder-small {
+    color: #778899; /* Placeholder text color */
+    font-size: 12px;
+    font-family: "Montserrat", sans-serif;
+    font-weight:normal;
+}
+#category::placeholder {
+    color: #778899; /* Placeholder text color */
+    font-size: 12px; /* Placeholder font size */
+    font-family: "Montserrat", sans-serif;
+    font-weight:normal;
+}
+#subject::placeholder {
+    color: #778899; /* Placeholder text color */
+    font-size: 12px; /* Placeholder font size */
+    font-family: "Montserrat", sans-serif;
+    font-weight:normal;
+}
+#description::placeholder {
+    font-weight:normal;
+    color: #778899; /* Placeholder text color */
+    font-size: 12px; /* Placeholder font size */
+    font-family: "Montserrat", sans-serif;
+}
 
 .search-button {
-    background-color: #007bff;
+    background-color:rgb(2, 17, 79);
     color: #fff;
     border: none;
     padding: 10px 15px;
@@ -2216,7 +2253,7 @@ input[type="radio"] {
         margin-top: 20px !important;
     }
     .containerWidth {
-        width: 100% !important;
+        width: 100% ;
     }
 }
 .applyingFor {
@@ -2336,11 +2373,13 @@ input[type="radio"] {
     height: 22px;
     width: 22px;
     display: flex;
+    margin-right: 10px;
     cursor: pointers;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
     border: 1px solid #dcdcdc;
+    margin-right: 10px;
 }
 
 .active .arrow-btn {
@@ -2387,7 +2426,7 @@ input[type="radio"] {
     background: rgb(2, 17, 79);
     border: 1px solid rgb(2, 17, 79);
     font-size: 0.725rem;
-    padding: 6px 12px;
+    padding: 4px 8px;
     color: white;
     font-weight: 500;
     border-radius: 5px;
@@ -2426,11 +2465,27 @@ input[type="radio"] {
     font-size: 10px;
 }
 .placeholder-small {
+    font-size: 12px !important;
     color: #778899 !important;
+}
+.input-placeholder-small {
+    font-size: 13px !important;
+    color: black !important;
 }
 #category::placeholder {
     color: #778899; /* Placeholder text color */
     font-size: 10px; /* Placeholder font size */
+}
+.truncate-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 80px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 0;
+    color: #000;
 }
 
 /* //leave apply styles */
@@ -2602,8 +2657,8 @@ input[type="radio"] {
     background-color: #d9ecff;
     border: 1px solid #ccc;
 }
-.icon-container.active {
-    background-color: #d9ecff;
+.icon-container:hover {
+    border-color: #007bff;
 }
 .icon-container {
     height: 30px;
@@ -2614,6 +2669,9 @@ input[type="radio"] {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.icon-container:hover i.fa-solid.fa-plus {
+    color: #007bff !important; /* Change color to red (#FF0000) on hover */
 }
 .details {
     display: none;
@@ -2715,16 +2773,15 @@ input[type="radio"] {
     font-weight: 600;
     font-size: 0.875rem;
 }
+.no-holidays h6{
+    color: rgb(2, 17, 79);
+}
 .group h5 {
     font-weight: 400;
     font-size: 0.75rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 0.975rem;
-}
-.group {
-    margin-left: 10px;
 }
 
 .data {
@@ -2997,7 +3054,7 @@ input[type="radio"] {
 
 /* holiday-calendar */
 .inner-container {
-    padding: 10px 10px;
+    /* padding: 10px 10px; */
     border: 1px solid #ccc;
     border-radius: 7px;
     background: #fff;
@@ -3009,6 +3066,17 @@ input[type="radio"] {
     margin-bottom: 10px;
     margin-top: 20px;
     overflow-y: auto;
+}
+.headerMonth{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(2, 17, 79);
+    padding: 8px 10px;
+}
+.headerMonth h6{
+    color: #fff;
 }
 
 .inner-container::-webkit-scrollbar {
@@ -3046,16 +3114,15 @@ input[type="radio"] {
 
 .inner-container h6 {
     font-weight: 600;
+    margin-bottom: 0px;
     font-size: 0.75rem;
-    margin-bottom: 20px;
-    color: #02114f;
 }
 
 .inner-container .fest h5 {
     font-weight: 500;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: #02114f;
+    color: #778899;
 }
 
 .inner-container span {
@@ -3064,6 +3131,7 @@ input[type="radio"] {
 
 .inner-container .group {
     display: flex;
+    gap: 20px;
     flex-direction: column;
     margin: 0 auto;
 }
@@ -3083,14 +3151,12 @@ img {
 .alone-cont {
     padding: 10px 15px;
     border: 1px solid #ccc;
-
     border-radius: 7px;
     background: #fff;
     overflow: hidden;
     color: #778899;
     width: 100%;
     display: flex;
-
     flex-direction: column;
     text-align: center;
     justify-content: center;
@@ -3118,10 +3184,10 @@ img {
 }
 
 #yearSelect {
-    padding: 5px;
+    padding: 5px 0px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 0.875rem;
     background-color: #fff;
     color: #333;
     cursor: pointer;
@@ -3141,7 +3207,6 @@ img {
 select .yearSelect {
     padding: 10px;
     font-size: 16px;
-
     line-height: 2;
     border: 1px solid #ccc;
     border-radius: 5px;
