@@ -88,17 +88,14 @@ class ViewPendingDetails extends Component
             }
 
             $this->leaveApplications = $matchingLeaveApplications;
-
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle query execution errors
             Log::error('A database query error occurred: ' . $e->getMessage());
             session()->flash('error', 'Error while getting the data. Please try again.');
-
         } catch (PDOException $e) {
             // Handle connection errors
             Log::error('Database connection error occurred: ' . $e->getMessage());
             session()->flash('error', 'Connection error . Please try again.');
-
         } catch (\Exception $e) {
             // Handle any other unexpected errors
             Log::error('An unexpected error occurred: ' . $e->getMessage());
@@ -113,8 +110,7 @@ class ViewPendingDetails extends Component
         try {
             // Check if there are pending leave requests
             return $this->leaveRequests->where('status', 'pending')->isNotEmpty();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('An error occurred win hasPendingLeave: ' . $e->getMessage());
             session()->flash('error', 'Error while getting leave application. Please try again.');
         }
@@ -206,12 +202,28 @@ class ViewPendingDetails extends Component
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
 
-            // Update status to 'approved'
-            $leaveRequest->status = 'approved';
-            $leaveRequest->save();
-            $leaveRequest->touch();
+            // Calculate the difference in days from the created date to now
+            $createdDate = Carbon::parse($leaveRequest->created_at);
+            $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
+
+            // Check if status is already approved
+            if ($leaveRequest->status === 'approved') {
+                session()->flash('message', 'Leave application is already approved.');
+            } else {
+                // Check if days since creation is more than 3 days or status is not yet approved
+                if ($daysSinceCreation > 3 || $leaveRequest->status !== 'approved') {
+                    // Update status to 'approved'
+                    $leaveRequest->status = 'approved';
+                    $leaveRequest->save();
+                    $leaveRequest->touch(); // Update timestamps
+
+                    session()->flash('message', 'Leave application approved successfully.');
+                } else {
+                    session()->flash('error', 'Leave application must be at least 3 days old or manually approved by a manager.');
+                }
+            }
+
             $this->reset();
-            session()->flash('message', 'Leave application approved successfully.');
 
             return redirect()->to('/employees-review');
         } catch (\Exception $e) {

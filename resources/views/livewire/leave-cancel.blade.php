@@ -1,4 +1,9 @@
 <div>
+@if (session()->has('message'))
+    <div>{{ session('message') }}</div>
+    @elseif (session()->has('error'))
+    <div>{{ session('error') }}</div>
+    @endif
     <style>
         .LeaveCancelTable {
             width: 100%;
@@ -59,7 +64,7 @@
             <p class="info-paragraph" wire:click="toggleInfoLeave">Info</p>
             @endif
         </div>
-        <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
+        <form wire:submit.prevent="markAsLeaveCancel" enctype="multipart/form-data">
             <div>
                 <div class="table-responsive">
                     <table class="LeaveCancelTable">
@@ -74,15 +79,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($cancelLeaveRequests as $leaveRequest)
                             <tr>
-                                <td><input type="radio" name="leaveType"></td>
-                                <td>sick leave</td>
-                                <td>fromdate</td>
-                                <td>todate></td>
-                                <td>1</td>
-                                <td>testing</td>
+                                <td wire:click="markAsLeaveCancel({{ $leaveRequest->id }})"><input type="radio" name="leaveType"></td>
+                                <td>{{ $leaveRequest->leave_type }}</td>
+                                <td>{{ $leaveRequest->from_date->format('d M, Y') }}</td>
+                                <td>{{ $leaveRequest->to_date->format('d M, Y') }}</td>
+                                <td>{{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</td>
+                                <td>{{ $leaveRequest->reason }}</td>
                             </tr>
-                            <!-- Additional rows can be added here -->
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
