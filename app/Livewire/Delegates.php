@@ -2,6 +2,7 @@
  
 namespace App\Livewire;
  
+use App\Models\HelpDesks;
 use Livewire\Component;
  
 use App\Models\Delegate;
@@ -19,7 +20,7 @@ class Delegates extends Component
     public $fromDate;
     public $toDate;
     public $delegate;
-    public $retrievedData;
+   
     public $employeeDetails;
     public $isNames = false;
     public $record;
@@ -40,8 +41,12 @@ class Delegates extends Component
     public $selectedPeople=[];
     public $records;
     public $peopleFound = true;
+    public $isRotated = false;
+
    
     public $file_path;
+    public $retrievedData = [];
+
  
     protected $rules = [
      
@@ -50,6 +55,10 @@ class Delegates extends Component
         'toDate' => 'required|date|after_or_equal:fromDate',
         'delegate' => 'required',
     ];
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
     public function filter()
     {
         $companyId = Auth::user()->company_id;
@@ -83,19 +92,29 @@ class Delegates extends Component
         $this->delegate = '';
      
     }
-    public function selectPerson($personId)
-{
-    $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
- 
-    if ($selectedPerson) {
-        if (in_array($personId, $this->selectedPeople)) {
-            $this->selectedPeopleNames[] = $selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')';
-        } else {
-            $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')']);
-        }
-        $this->delegate = implode(', ', array_unique($this->selectedPeopleNames));
+    public function toggleRotation()
+    {
+        $this->isRotated = true;
+
+        $this->selectedPeopleNames = [];
+        $this->delegate = '';
     }
-}
+    public function selectPerson($personId)
+    {
+        $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
+
+        if ($selectedPerson) {
+            if (in_array($personId, $this->selectedPeople)) {
+                $this->selectedPeopleNames[] = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
+            } else {
+                $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')']);
+            }
+            $this->delegate = implode(', ', array_unique($this->selectedPeopleNames));
+        }
+    }
+
+
+    
  
     public function submitForm()
 {
@@ -139,28 +158,28 @@ class Delegates extends Component
  
     public function render()
     {
-        $this->retrievedData = Delegate::all();
         $employeeId = auth()->guard('emp')->user()->emp_id;
+    
+        // Fetch records where emp_id or delegate contains the logged-in user's emp_id
+        $this->retrievedData = Delegate::where(function ($query) use ($employeeId) {
+            $query->where('emp_id', $employeeId)
+                  ->orWhere('delegate', 'like', "%$employeeId%");
+        })->orderBy('created_at', 'desc')->get();
+    
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
-        $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = auth()->guard('emp')->user()->company_id;
         $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+        $peopleData = $peopleData->sortBy(function ($person) {
+            return strtolower($person->first_name);
+        });
         $this->record = Delegate::all();
-        $employeeName = auth()->guard('emp')->user()->first_name . ' #(' . $employeeId . ')';
- 
-        $this->records = Delegate::with('emp')
-            ->where(function ($query) use ($employeeId, $employeeName) {
-                $query->where('emp_id', $employeeId)
-                    ->orWhere('delegate', 'LIKE', "%$employeeName%");
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
-            $records = Delegate::all();
-   
+        
         return view('livewire.delegates', [
             'employees' => $this->employeeDetails,
-            'retrievedData' => $this->retrievedData, 'peopleData' => $peopleData,'records' => $records
+            'retrievedData' => $this->retrievedData,
+            'peopleData' => $peopleData,
+            'records' => $this->records
         ]);
     }
-}
+}    

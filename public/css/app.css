@@ -2612,6 +2612,7 @@ input[type="radio"] {
     border: 1px solid #778899;
     border-radius: 50%;
     display: flex;
+    gap: 10px;
     justify-content: center;
     align-items: center;
 }
@@ -2866,6 +2867,7 @@ input[type="radio"] {
     background-color: none !important;
     border-bottom: 2px solid rgb(2, 17, 79) !important;
     color: rgb(2, 17, 79) !important;
+    align-items: center;
 }
 .custom-table-catalog th,
 .custom-table-catalog td {
@@ -2899,6 +2901,7 @@ input[type="radio"] {
     border: 1px solid;
     border-radius: 4px;
 }
+
 .custom-table {
     width: 100%;
     border-collapse: collapse;
@@ -4404,3 +4407,26 @@ p::first-letter {
 }
 
 
+.delegate-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Montserrat, sans-serif;
+}
+
+.delegate-header {
+    background-color: rgb(2, 17, 79);
+    color: white;
+    height: 40px;
+    text-align: center;
+}
+
+.delegate-cell {
+    border: 1px solid #8D939D;
+    font-size: 8px;
+    text-align: center;
+    padding: 5px;
+}
+
+.delegate-row {
+    height: auto;
+}
