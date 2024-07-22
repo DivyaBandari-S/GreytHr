@@ -14,8 +14,7 @@
         </a>
     </div>
     <div class="notification-icon" style="margin-right: -10px; margin-top: 5px;">
-        <button id="notificationButton" class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="background:none;border:none;">
+        <button id="notificationButton" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="background:none;border:none;">
             <i style="color: white; position: relative;" class="fas mr-1 fa-bell" style="margin-bottom: 7px;">
                 @if (($matchingLeaveRequestsCount + $chatNotificationCount) > 0)
                 <span id="notificationCount" class="badge bg-danger"

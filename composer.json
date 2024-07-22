@@ -16,11 +16,12 @@
         "google/apiclient": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "jenssegers/agent": "^2.6",
-        "laravel/framework": "^10.10",
+        "laravel/framework": "^10.48",
+        "laravel/reverb": "@beta",
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.11",
         "laravel/tinker": "^2.8",
-        "livewire/livewire": "^3.3",
+        "livewire/livewire": "^3.5",
         "maatwebsite/excel": "^1.1",
         "phpoffice/phpspreadsheet": "^2.1",
         "power-components/livewire-powergrid": "^5.8",
@@ -29,6 +30,7 @@
         "vinkla/hashids": "^11.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",

@@ -30,8 +30,15 @@ class CheckAuth
             // $request->session()->forget('department');
             // $request->session()->flush();
             $emp_id = Auth::guard('emp')->user()->emp_id;
+            $first_name = Auth::guard('emp')->user()->first_name;
+            $last_name = Auth::guard('emp')->user()->last_name;
             Session::put('emp_id', $emp_id);
+            Session::put('first_name', $first_name);
+            Session::put('last_name', $last_name);
+
             Log::info("Emp ID set: $emp_id");
+            Log::info("Emp first name: $first_name");
+            Log::info("Emp Last set: $last_name");
             $user = auth('emp')->user();
             //   Log::info("Session Timeout: $sessionTimeout minutes");
             //   config(['session.lifetime' => $sessionTimeout]);

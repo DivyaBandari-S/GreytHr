@@ -725,6 +725,14 @@ class LeaveCancel extends Component
 
     public function render()
     {
-        return view('livewire.leave-cancel');
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $cancelLeaveRequests = LeaveRequest::where('employee_id', $employeeId)
+        ->where('status', 'approved')
+        ->where('from_date', '>=', now()->subMonths(3))
+        ->with('employee')
+        ->get();
+        return view('livewire.leave-cancel',[
+            'cancelLeaveRequests' => $this->cancelLeaveRequests
+        ]);
     }
 }
