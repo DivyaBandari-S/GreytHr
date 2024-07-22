@@ -48,6 +48,7 @@ class Settings extends Component
     public $confirmNewPassword;
     public $passwordChanged = false;
     public $error = '';
+
     public function editBiography()
     {
         try {
@@ -186,7 +187,7 @@ class Settings extends Component
     public $showDialog = false;
 
 
-    public function open()
+    public function loginfo()
     {
         $this->showAlertDialog = true;
     }
@@ -217,20 +218,25 @@ class Settings extends Component
         $this->oldPassword = '';
         $this->newPassword = '';
         $this->confirmNewPassword = '';
-        $this->oldPassword = '';
-        $this->newPassword = '';
-        $this->confirmNewPassword = '';
+    }
+
+    protected $rules = [
+        'oldPassword' => 'required',
+        'newPassword' => 'required|min:8',
+        'confirmNewPassword' => 'required|same:newPassword',
+    ];
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
     }
 
     public function changePassword()
     {
-        try {
 
-            $this->validate([
-                'oldPassword' => 'required',
-                'newPassword' => 'required|min:8',
-                'confirmNewPassword' => 'required|same:newPassword',
-            ]);
+        $this->validate();
+
+        try {
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -243,10 +249,11 @@ class Settings extends Component
             $this->employeeDetails->password = Hash::make($this->newPassword);
             $this->employeeDetails->save();
 
-            session()->flash('success', 'Password changed successfully.');
+
+            session()->flash('password', 'Your Password changed successfully.');
             $this->resetForm();
             $this->showDialog = false;
-            $this->passwordChanged = true;
+            // $this->passwordChanged = true;
         } catch (\Exception $e) {
             \Log::error('Error in changePassword method: ' . $e->getMessage());
         }
