@@ -1,5 +1,4 @@
 <div class="m-0 px-4" style="position: relative;">
-    <x-loading-indicator />
     <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
     <div class="toggle-container position-relative">
 
@@ -145,7 +144,7 @@
         {{-- pending --}}
         <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}">
             @if(empty($leavePending))
-            <div class="containerWidth mt-2">
+            <div class="containerWidth mt-2" style="width:85%;">
                 <div class="leave-pending rounded">
 
                     <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
@@ -259,7 +258,7 @@
 
                             </div>
 
-                            <div class="content d-flex gap-2 align-items-center px-2">
+                            <div class="content d-flex gap-2 align-items-center ">
 
                                 <a href="{{ route('leave-history', ['leaveRequestId' => $leaveRequest->id]) }}">
 

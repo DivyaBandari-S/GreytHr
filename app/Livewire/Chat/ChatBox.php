@@ -5,6 +5,7 @@ namespace App\Livewire\Chat;
 use App\Models\Message;
 use App\Notifications\MessageRead;
 use App\Notifications\MessageSent;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Crypt;
@@ -25,19 +26,22 @@ class ChatBox extends Component
     public $filePath;
     use WithFileUploads;
     public $paginate_var = 10;
-
-
-
-
-    protected $listeners = [
+  protected $listeners = [
         'loadMore'
     ];
+
+
+
+
     public function redirectToEncryptedLink($id)
     {
         // $hashids = new Hashids('default-salt', 50);
         $encryptedId = Hashids::encode($id);
         return redirect()->to(route('chat', $encryptedId));
     }
+
+
+
     protected function resetInputFields()
     {
         $this->body = '';
@@ -45,11 +49,12 @@ class ChatBox extends Component
     }
 
 
-
     public function getListeners()
     {
+        $user = Auth::User();
 
         $auth_id = auth()->user()->emp_id;
+        // dd( $auth_id);
 
         return [
 
@@ -62,11 +67,11 @@ class ChatBox extends Component
     public function broadcastedNotifications($event)
     {
 
-
+               dd('hello.........');
 
         if ($event['type'] == MessageSent::class) {
 
-            if ($event['chating_id'] == $this->selectedConversation->id) {
+            if ($event['conversation_id'] == $this->selectedConversation->id) {
 
                 $this->dispatchBrowserEvent('scroll-bottom');
 
@@ -79,7 +84,6 @@ class ChatBox extends Component
 
                 #mark as read
                 $newMessage->read_at = now();
-
                 $newMessage->save();
 
                 #broadcast
@@ -88,7 +92,6 @@ class ChatBox extends Component
             }
         }
     }
-
 
 
 
@@ -107,6 +110,8 @@ class ChatBox extends Component
         #update the chat height
         $this->dispatchBrowserEvent('update-chat-height');
     }
+
+
 
 
     public function filter()
@@ -167,6 +172,9 @@ class ChatBox extends Component
 
 
 
+
+
+
     public function sendMessage()
     {
         if (!$this->selectedConversation) {
@@ -176,7 +184,8 @@ class ChatBox extends Component
 
         // Validate the input
         $this->validate([
-            'body' => 'required|string|max:255',
+            'body' => 'nullable|string|max:255',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240', // max 10MB
         ]);
 
         // Check if there's an attachment
@@ -185,11 +194,10 @@ class ChatBox extends Component
             $fileName = uniqid() . '_' . $this->attachment->getClientOriginalName();
 
             // Store the attachment
-            // $this->attachment->storeAs('public/help-desk-files', $fileName);
-            $this->attachment->storeAs('chating-files', $fileName);
+            $this->attachment->storeAs('public/chating-files', $fileName);
 
             // Save the file path
-            $filePath = 'chating-files/' . $fileName;
+            $filePath = 'storage/chating-files/' . $fileName;
         } else {
             // No attachment provided
             $filePath = null;
@@ -198,50 +206,41 @@ class ChatBox extends Component
         // Create a new message
         $createdMessage = Message::create([
             'chating_id' => $this->selectedConversation->id,
-            'sender_id' => auth()->User()->emp_id,
+            'sender_id' => auth()->user()->emp_id,
             'receiver_id' => optional($this->selectedConversation->getReceiver())->emp_id,
             'file_path' => $filePath,
             'body' => $this->body,
         ]);
 
-        // Push the created message to the loadedMessages collection
-        $this->loadedMessages->push($createdMessage);
-
-        // Update the conversation model
-        $this->selectedConversation->updated_at = now();
-        $this->selectedConversation->save();
-
-        // Reset the attachment property
-        $this->attachment = null;
-
-        // Reset the body property
-
-        $this->body = '';
-
         $this->reset('body');
+         #scroll to bottom
+         $this->dispatch('scroll-bottom');
 
-        // Broadcast notification
-        optional($this->selectedConversation->getReceiver())
-            ->notify(new MessageSent(
-                auth()->user(),
-                $createdMessage,
-                $this->selectedConversation,
-                optional($this->selectedConversation->getReceiver())->id
-            ));
+
+         #push the message
+         $this->loadedMessages->push($createdMessage);
+
+
+         #update conversation model
+         $this->selectedConversation->updated_at = now();
+         $this->selectedConversation->save();
+
+
+         #refresh chatlist
+         $this->dispatch('chat.chat-list', 'refresh');
+
+         #broadcast
+
+         $this->selectedConversation->getReceiver()
+             ->notify(new MessageSent(
+                 Auth()->User(),
+                 $createdMessage,
+                 $this->selectedConversation,
+                 $this->selectedConversation->getReceiver()->id
+
+             ));
     }
 
-
-    public $isStreaming = false;
-
-    public function startStreaming()
-    {
-        $this->isStreaming = true;
-    }
-
-    public function stopStreaming()
-    {
-        $this->isStreaming = false;
-    }
     public function mount()
     {
 

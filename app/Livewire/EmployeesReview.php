@@ -10,6 +10,7 @@
 // Database                        : MySQL
 // Models                          : LeaveRequest,EmployeeDetails -->
 namespace App\Livewire;
+use Illuminate\Http\Request;
 
 use App\Models\EmployeeDetails;
 use App\Models\LeaveRequest;
@@ -23,8 +24,238 @@ use Livewire\Component;
 
 class EmployeesReview extends Component
 {
+    public $attendenceActiveTab = 'active';
+    public $leaveactiveTab = 'active';
+    public $showattendance = true;
+    public $showleave = false;
+
+    public $count;
+    public $approvedLeaveApplicationsList;
+    public $empLeaveRequests;
+    public $activeContent;
+    public $regularisation_count;
+    public $countofregularisations;
+    public $leaveApplications;
+    public $searchQuery = '';
+    public $selectedYear;
+    public $toggleAccordian =false;
+
+
+    public $activeTab = 'attendance';
+
+    public function setActiveTab($tab)
+    {
+        $this->activeTab = $tab;
+
+        // Toggle visibility based on active tab
+        if ($tab === 'attendance') {
+            $this->showattendance = true;
+            $this->showleave = false;
+        } elseif ($tab === 'leave') {
+            $this->showattendance = false;
+            $this->showleave = true;
+        }
+    }
+
+    public function mount(Request $request)
+    {
+        if ($request->query('tab') === 'leave') {
+            $this->setActiveTab('leave');
+            $this->showleave = true;
+            $this->showattendance = false;
+
+        }
+    }
+
+
+    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    {
+        try {
+
+            $startDate = Carbon::parse($fromDate);
+            $endDate = Carbon::parse($toDate);
+            // Check if the start and end sessions are different on the same day
+            if ($startDate->isSameDay($endDate) && $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                    return 0.5;
+                } else {
+                    // If either start or end date is a weekend, return 0
+                    return 0;
+                }
+            }
+            // Check if the start and end sessions are different on the same day
+            if (
+
+                $startDate->isSameDay($endDate) &&
+                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
+            ) {
+
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                    return 0.5;
+                } else {
+                    // If either start or end date is a weekend, return 0
+                    return 0;
+                }
+            }
+            if (
+                $startDate->isSameDay($endDate) &&
+                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
+            ) {
+
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                    return 1;
+                } else {
+                    // If either start or end date is a weekend, return 0
+                    return 0;
+                }
+            }
+            $totalDays = 0;
+
+            while ($startDate->lte($endDate)) {
+                // Check if it's a weekday (Monday to Friday)
+                if ($startDate->isWeekday()) {
+                    $totalDays += 1;
+                }
+                // Move to the next day
+                $startDate->addDay();
+            }
+
+            // Deduct weekends based on the session numbers
+            if ($this->getSessionNumber($fromSession) > 1) {
+                $totalDays -= $this->getSessionNumber($fromSession) - 1; // Deduct days for the starting session
+            }
+            if ($this->getSessionNumber($toSession) < 2) {
+                $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
+            }
+            // Adjust for half days
+            if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
+                // If start and end sessions are the same, check if the session is not 1
+                if ($this->getSessionNumber($fromSession) !== 1) {
+                    $totalDays += 0.5; // Add half a day
+                }
+            } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
+                if ($this->getSessionNumber($fromSession) !== 1) {
+                    $totalDays += 1; // Add half a day
+                }
+            } else {
+                $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
+            }
+            return $totalDays;
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+    }
+
+    private function getSessionNumber($session)
+    {
+        return (int) str_replace('Session ', '', $session);
+    }
+
 
  public function render(){
-    return view('livewire.employees-review');
+
+    $employeeId = auth()->guard('emp')->user()->emp_id;
+    $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
+    $empIds = $employees->pluck('emp_id')->toArray();
+
+    $companyId = auth()->guard('emp')->user()->company_id;
+    $this->leaveRequests = LeaveRequest::where('leave_applications.status', 'Pending')
+    ->where('company_id', $companyId)
+    ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+    ->where(function ($query) {
+        $query->where('leave_applications.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
+            ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
+            ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
+    })
+    ->get();
+
+    $selectedYear = $this->selectedYear;
+    $matchingLeaveApplications = [];
+
+    foreach ($this->leaveRequests as $leaveRequest) {
+        $applyingToJson = trim($leaveRequest->applying_to);
+        $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
+
+        $ccToJson = trim($leaveRequest->cc_to);
+        $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
+
+        $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
+        $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
+
+        if ($isManagerInApplyingTo || $isEmpInCcTo) {
+            $matchingLeaveApplications[] = $leaveRequest;
+        }
+    }
+    //count of pending leaves
+    $this->count = count($matchingLeaveApplications);
+    $this->leaveApplications = $matchingLeaveApplications;
+
+
+     //query to fetch the approved leave appplications
+     $this->approvedLeaveRequests = LeaveRequest::whereIn('leave_applications.status', ['approved', 'rejected'])
+     ->where(function ($query) use ($employeeId) {
+         $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
+             ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
+     })
+     ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+     ->where(function ($query) {
+         $query->where('leave_applications.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
+             ->orWhere('leave_applications.leave_type', 'LIKE', '%' . $this->searchQuery . '%')
+             ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
+             ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
+     })
+     ->orderBy('created_at', 'desc')
+     ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
+
+ $approvedLeaveApplications = [];
+
+ foreach ($this->approvedLeaveRequests as $approvedLeaveRequest) {
+     $applyingToJson = trim($approvedLeaveRequest->applying_to);
+     $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
+
+     $ccToJson = trim($approvedLeaveRequest->cc_to);
+     $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
+
+     $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
+     $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
+     $approvedLeaveRequest->formatted_from_date = Carbon::parse($approvedLeaveRequest->from_date)->format('d-m-Y');
+     $approvedLeaveRequest->formatted_to_date = Carbon::parse($approvedLeaveRequest->to_date)->format('d-m-Y');
+
+     if ($isManagerInApplyingTo || $isEmpInCcTo) {
+         // Get leave balance for the current year only
+         $leaveBalances = LeaveBalances::getLeaveBalances($approvedLeaveRequest->emp_id, $selectedYear);
+         // Check if the from_date year is equal to the current year
+         $fromDateYear = Carbon::parse($approvedLeaveRequest->from_date)->format('Y');
+
+         if ($fromDateYear == $selectedYear) {
+             // Get leave balance for the current year only
+             $leaveBalances = LeaveBalances::getLeaveBalances($approvedLeaveRequest->emp_id, $selectedYear);
+         } else {
+             // If from_date year is not equal to the current year, set leave balance to 0
+             $leaveBalances = 0;
+         }
+         $approvedLeaveApplications[] =  [
+             'approvedLeaveRequest' => $approvedLeaveRequest,
+             'leaveBalances' => $leaveBalances,
+         ];
+     }
+ }
+
+ $this->approvedLeaveApplicationsList = $approvedLeaveApplications;
+
+
+    return view('livewire.employees-review',[
+        'leaveApplications' => $this->leaveApplications,
+
+        'count' => $this->count,
+        'approvedLeaveApplicationsList' => $this->approvedLeaveApplicationsList,
+        'empLeaveRequests' => $this->empLeaveRequests,
+        'activeContent' => $this->activeContent,
+        'regularisation_count' => $this->regularisation_count,
+        'countofregularisations' => $this->countofregularisations
+    ]);
  }
 }
