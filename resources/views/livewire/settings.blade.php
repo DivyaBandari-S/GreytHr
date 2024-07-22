@@ -7,7 +7,7 @@
     <div class="row m-0">
         <div class="d-flex align-items-center justify-content-end gap-3">
             <div class=" p-0">
-                <div wire:click="open" class="col text-primary"
+                <div wire:click="loginfo" class="col text-primary"
                     style="font-size:12px;font-weight:500;cursor:pointer;text-align:end;">
                     View Login History
                 </div>
@@ -35,12 +35,20 @@
                                 </div>
                                 <table class="table-s" border="1" style="margin-top: 10px;width:100%">
                                     <tr  class="tr-s">
-                                        <th class="th-s" style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">Date</th>
+                                        <th class="th-s" style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">Login Location</th>
+                                        <th class="th-s" style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">Device</th>
                                         <th class="th-s" style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">IP Address</th>
+                                        <th class="th-s" style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">Date</th>
+
+
                                     </tr>
                                     <tr class="tr-s">
                                         <td class="th-d" style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">04 Oct, 2023 13:48:06</td>
                                         <td class="th-d" style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">183.82.97.220</td>
+                                        <td class="th-d" style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">183.82.97.220</td>
+                                        <td class="th-d" style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">183.82.97.220</td>
+
+
                                     </tr>
                                 </table>
                             </div>
@@ -68,7 +76,7 @@
                                         <span aria-hidden="true" style="color: white;">×</span>
                                     </button>
                                 </div>
-                                <form wire:submit="changePassword">
+                                <form wire:submit.prevent="changePassword">
                                     @if ($error)
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                             <strong style="font-size: 12px;">{{ $error }}</strong>
@@ -86,7 +94,7 @@
                                                         <br><input class="form-control" style="font-size: 12px;"
                                                             type="password" id="oldPassword" name="oldPassword"
                                                             placeholder="Enter your old password"
-                                                            wire:model="oldPassword">
+                                                            wire:model.lazy="oldPassword">
                                                         @error('oldPassword')
                                                             <p class="pt-2 px-1 text-danger" style="font-size:10px">
                                                                 {{ str_replace('oldPassword', 'Password', $message) }}</p>
@@ -98,7 +106,7 @@
                                                         <br><input class="form-control" style="font-size: 12px;"
                                                             type="password" id="newPassword" name="newPassword"
                                                             placeholder="Enter your new password"
-                                                            wire:model="newPassword">
+                                                            wire:model.lazy="newPassword">
                                                         @error('newPassword')
                                                             <p class="pt-2 px-1 text-danger" style="font-size:10px">
                                                                 {{ str_replace('newPassword', 'Password', $message) }}</p>
@@ -111,7 +119,7 @@
                                                             type="password" id="confirmNewPassword"
                                                             name="confirmNewPassword"
                                                             placeholder="Enter your new password again"
-                                                            wire:model="confirmNewPassword">
+                                                            wire:model.lazy="confirmNewPassword">
                                                         @error('confirmNewPassword')
                                                             <p class="pt-2 px-1 text-danger" style="font-size:10px">
                                                                 {{ str_replace('newPassword', 'Password', $message) }}</p>
@@ -130,12 +138,22 @@
                     </div>
                     <div class="modal-backdrop fade show blurred-backdrop"></div>
                 @endif
-                <div>
+                {{-- <div>
                     @if ($passwordChanged)
-                        <div style="text-align: center; position: fixed; top: 15%; left: 50%; transform: translate(-50%, -50%); z-index: 999;background-color: #4CAF50; color: #ffffff;"
-                            wire:poll.5s>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 15%; left: 50%; transform: translate(-50%, -50%); z-index: 999; background-color: #4CAF50; color: #ffffff; text-align: center;">
                             Your password has been changed successfully...
-                        </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                </div> --}}
+
+                <div style="position: fixed; top: 15%; left: 50%; transform: translate(-50%, -50%); z-index: 999;">
+                    @if (session()->has('password'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="font-size: 12px;">
+                        <strong>{{ session('password') }}</strong>
+                        <button type="button" class="btn-close btn-xs" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     @endif
                 </div>
             </div>
