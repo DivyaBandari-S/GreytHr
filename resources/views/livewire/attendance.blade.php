@@ -1754,7 +1754,7 @@ color: #fff;
                 </div>
                 @endif
                 @if($defaultfaCalendar==0)
-                @livewire('livewire.attendance-table')
+                @livewire('attendance-table')
 
                 @endif
                 <div class="col-md-5">
