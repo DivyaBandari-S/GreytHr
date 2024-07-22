@@ -8,39 +8,52 @@
             {{ session('emp_error') }}
         </div>
         @endif
+
+
+        @php
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $mangerid = DB::table('employee_details')
+        ->join('companies', 'employee_details.company_id', '=', 'companies.company_id')
+        ->where('employee_details.manager_id', $employeeId)
+        ->select('companies.company_logo', 'companies.company_name')
+        ->first();
+        @endphp
+        @if ($mangerid)
         <div class="row justify-content-center" style="width: 35%; position: relative; padding-left: 30px;">
             <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
                 <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'starred')" class="links">
                     Starred
                 </a>
             </div>
-            @php
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $mangerid = DB::table('employee_details')
-            ->join('companies', 'employee_details.company_id', '=', 'companies.company_id')
-            ->where('employee_details.manager_id', $employeeId)
-            ->select('companies.company_logo', 'companies.company_name')
-            ->first();
-            @endphp
-            @if ($mangerid)
             <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
                 <a id="myteam-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'myteam' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'myteam')" class="links">
                     My Team
                 </a>
             </div>
-            @endif
             <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
                 <a id="everyone-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'everyone')" class="links">
                     Everyone
                 </a>
             </div>
-            <!-- Line below the active tab -->
-            @if ($mangerid)
+
             <div style="transition: left 0.3s ease-in-out; position: absolute; bottom: -11px; left: {{ $activeTab === 'starred' ? '30px' : ($activeTab === 'myteam' ? '39%' : '70%') }}; width: 30%; height: 4px; background-color: rgb(2, 17, 79); border-radius: 5px;"></div>
-            @else
-            <div style="transition: left 0.3s ease-in-out; position: absolute; bottom: -11px; left: {{ $activeTab === 'starred' ? '35px' : '135px' }}; width: 40%; height: 4px; background-color: rgb(2, 17, 79); border-radius: 5px;"></div>
-            @endif
         </div>
+        @else
+        <div class="row justify-content-start" style="width: 40%; position: relative; padding-left: 40px;">
+            <div class="col-3 text-start" style="border-radius: 5px; cursor: pointer;">
+                <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'starred')" class="links">
+                    Starred
+                </a>
+            </div>
+            <div class="col-3 text-start" style="border-radius: 5px; cursor: pointer;">
+                <a id="everyone-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'everyone')" class="links">
+                    Everyone
+                </a>
+            </div>
+            <div style="transition: left 0.3s ease-in-out; position: absolute; bottom: -11px; left: {{ $activeTab === 'starred' ? '30px' : '118px' }}; width: 26%; height: 4px; background-color: rgb(2, 17, 79); border-radius: 5px;"></div>
+        </div>
+        @endif
+
 
         @if ($activeTab === 'starred')
         <!-- Starred tab content -->
