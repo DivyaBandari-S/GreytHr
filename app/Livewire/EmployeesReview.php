@@ -28,7 +28,7 @@ class EmployeesReview extends Component
     public $leaveactiveTab = 'active';
     public $showattendance = true;
     public $showleave = false;
-
+    public $approvedRegularisationRequestList;
     public $count;
     public $approvedLeaveApplicationsList;
     public $empLeaveRequests;
@@ -59,11 +59,26 @@ class EmployeesReview extends Component
 
     public function mount(Request $request)
     {
-        if ($request->query('tab') === 'leave') {
+        // if ($request->query('tab') === 'leave') {
+        //     $this->setActiveTab('leave');
+        //     $this->showleave = true;
+        //     $this->showattendance = false;
+
+        // }
+
+        $tab = $request->query('tab');
+        Log::info('Tab parameter: ' . $tab);
+
+        if ($tab === 'leave') {
+
             $this->setActiveTab('leave');
             $this->showleave = true;
             $this->showattendance = false;
+        } else {
 
+            $this->setActiveTab('attendance'); // Default tab logic if needed
+            $this->showleave = false;
+            $this->showattendance = true;
         }
     }
 
@@ -154,8 +169,37 @@ class EmployeesReview extends Component
         return (int) str_replace('Session ', '', $session);
     }
 
+     // Search functionality for pending leave requests
+     public function searchPendingLeave()
+{
+    try {
+       $this->render();
+
+    } catch (\Exception $e) {
+        Log::error('Error in searchPendingLeave method: ' . $e->getMessage());
+        session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+    }
+}
+
+
+
+     public function searchApprovedLeave()
+{
+    try {
+        // Logic to handle the search for approved leaves
+        $this->render();
+    } catch (\Exception $e) {
+        Log::error('Error in searchApprovedLeave method: ' . $e->getMessage());
+        session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+        return redirect()->back();
+    }
+}
+
+
 
  public function render(){
+
+    //query to fetch the approved leave appplications............
 
     $employeeId = auth()->guard('emp')->user()->emp_id;
     $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
@@ -171,6 +215,29 @@ class EmployeesReview extends Component
             ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
     })
     ->get();
+    $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
+
+    ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
+
+    ->orderByDesc('regularisation_dates.id')
+
+    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+
+    ->where(function ($query) {
+        $query->where('regularisation_dates.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
+            ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
+            ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
+    })
+
+    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+
+    ->orderByDesc('id')
+
+    ->get();
+    $this->approvedRegularisationRequestList = $this->approvedRegularisationRequestList->filter(function ($regularisation) {
+
+        return $regularisation->regularisation_entries !== "[]";
+    });
 
     $selectedYear = $this->selectedYear;
     $matchingLeaveApplications = [];
@@ -194,7 +261,8 @@ class EmployeesReview extends Component
     $this->leaveApplications = $matchingLeaveApplications;
 
 
-     //query to fetch the approved leave appplications
+     //query to fetch the approved leave appplications............
+
      $this->approvedLeaveRequests = LeaveRequest::whereIn('leave_applications.status', ['approved', 'rejected'])
      ->where(function ($query) use ($employeeId) {
          $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
