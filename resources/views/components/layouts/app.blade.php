@@ -80,7 +80,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.11.0/sweetalert2.min.js" integrity="sha512-Wi5Ms24b10EBwWI9JxF03xaAXdwg9nF51qFUDND/Vhibyqbelri3QqLL+cXCgNYGEgokr+GA2zaoYaypaSDHLg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- npm Charts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ asset('js/app.js') }}" defer data-turbolinks-track="reload"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2"></script>
@@ -107,6 +106,7 @@
 
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="{{ asset('livewire/livewire.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         @import url('/public/app.css');
@@ -209,14 +209,14 @@
                                         Salary
                                         <i class="fas mr-1    fa-caret-down" id="salary-caret" style="color:#6c7e90"></i>
                                     </a>
-                                  
+
                                     <div id="salary-options" style="display: none;">
                                         <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
                                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
                                                     Payslips
                                                 </a>
-                                            </li> 
+                                            </li>
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/ytd" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
                                                     YTD Reports
@@ -232,7 +232,6 @@
                                                     IT Declaration
                                                 </a>
                                             </li>
-                                 
 
 
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
@@ -360,6 +359,11 @@
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/HelpDesk" onclick=" setActiveLink(this)">
                                                     New Requests
+                                                </a>
+                                            </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/users" onclick=" setActiveLink(this)">
+                                                    Help
                                                 </a>
                                             </li>
 
@@ -587,14 +591,14 @@
                                                     IT Statement
                                                 </a>
                                             </li>
-                                        
+
                                             <li data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/formdeclaration" id="itdeclaration" onclick="selectOption(this, 'IT Declaration');setActiveLink(this, '/formdeclaration')">
                                                     IT Declaration
                                                 </a>
                                             </li>
-                                     
-                                     
+
+
 
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/reimbursement" id="reimbursement" onclick="selectOption(this, 'Reimbursement'); setActiveLink(this)">
@@ -720,6 +724,11 @@
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/HelpDesk" onclick=" setActiveLink(this)">
                                                     New Requests
+                                                </a>
+                                            </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/users" onclick=" setActiveLink(this)">
+                                                    Help
                                                 </a>
                                             </li>
 
@@ -940,9 +949,9 @@
                                                     IT Declaration
                                                 </a>
                                             </li>
-                                        
-                                       
-                                       
+
+
+
 
 
                                             <li data-bs-target="#navigateLoader" class="nav-item">
@@ -1008,7 +1017,7 @@
                                     <div id="attendance-options" style="display: none;">
                                         <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
                                             <li data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/Attendance" onclick="setActiveLink(this. '/Attendance')">
+                                                <a class="nav-link" href="/Attendance" onclick="setActiveLink(this, '/Attendance')">
                                                     Attendance Info
                                                 </a>
                                             </li>
@@ -1048,13 +1057,28 @@
 
                                 <li data-bs-target="#navigateLoader" title="Help Desk" class="nav-item">
 
-                                    <a class="nav-link" href="/HelpDesk" onclick="setActiveLink(this, '/HelpDesk')">
+                                    <a class="nav-link" href="/HelpDesk" onclick="toggleHelpDeskDropdown2()">
 
                                         <img width="25" height="25" src="https://img.icons8.com/3d-fluency/94/headset.png" alt="headset" />
 
                                         <!-- <i class="fas mr-1    fa-headset" style="color:#6c7e90"></i> -->
 
                                     </a>
+                                    <div id="help-options" style="display: none;">
+                                        <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/HelpDesk" onclick=" setActiveLink(this)">
+                                                    New Requests
+                                                </a>
+                                            </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/users" onclick=" setActiveLink(this)">
+                                                    Help
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
 
                                 </li>
 
@@ -1202,7 +1226,7 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade backdropModal" id="navigateLoader" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="navigateLoaderLabel" aria-hidden="true">
+        <div class="modal  backdropModal" id="navigateLoader" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="navigateLoaderLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content" style="background-color : transparent; border : none">
                     <!-- <div class="modal-header">
@@ -1211,9 +1235,7 @@
         </div> -->
 
                     <div class="modal-body">
-                        <div class="d-flex justify-content-center m-4">
-                           @livewire('loader-indicator')
-                        </div>
+                     <livewire:loader-indicator/>
                     </div>
                     <!-- <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

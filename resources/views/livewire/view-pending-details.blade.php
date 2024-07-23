@@ -1,22 +1,4 @@
 <div>
-
-@if(session()->has('message'))
-        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%; font-size: 12px;" id="success-alert">
-            {{ session('message') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-
-        @if(session()->has('error'))
-        <div class="alert alert-danger" style="font-size: 12px;" id="error-alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
 <div class="col"  id="leavePending" style="width: 95%; padding: 0;border-radius: 5px; ">
    @if(!empty($this->leaveApplications))
         @foreach($this->leaveApplications as $leaveRequest)

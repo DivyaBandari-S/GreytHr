@@ -421,8 +421,8 @@
                         </tr>
                         @if(count($ccToArray) > 2)
                             <tr >
-                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
-                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}
                                     </div>
                                 </td>
@@ -482,8 +482,8 @@
                     </tr>
                     @if(count($ccToArray) > 2)
                             <tr >
-                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
-                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}
                                     </div>
                                 </td>
@@ -543,8 +543,8 @@
                     </tr>
                     @if(count($ccToArray) > 2)
                             <tr >
-                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
-                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}
                                     </div>
                                 </td>

@@ -219,21 +219,14 @@ class ViewPendingDetails extends Component
                     $leaveRequest->status = 'approved';
                     $leaveRequest->save();
                     $leaveRequest->touch(); // Update timestamps
-
                     session()->flash('message', 'Leave application approved successfully.');
-                } else {
-                    session()->flash('error', 'Leave application must be at least 3 days old or manually approved by a manager.');
                 }
             }
-
-            $this->reset();
             $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Handle the exception
             Log::error('Error approving leave: ' . $e->getMessage());
             session()->flash('error', 'Failed to approve leave application. Please try again.');
-
-            return redirect()->back(); // Redirect back to the previous page
         }
     }
 
@@ -259,19 +252,13 @@ class ViewPendingDetails extends Component
                     $leaveRequest->save();
                     $leaveRequest->touch();
                     session()->flash('message', 'Leave cancel application approved successfully.');
-                } else {
-                    session()->flash('error', 'Leave application must be at least 3 days old or manually approved by a manager.');
                 }
             }
-
-            $this->reset();
             $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Handle the exception
             Log::error('Error approving leave: ' . $e->getMessage());
             session()->flash('error', 'Failed to approve leave application. Please try again.');
-
-            return redirect()->back(); // Redirect back to the previous page
         }
     }
 
@@ -281,23 +268,17 @@ class ViewPendingDetails extends Component
         try {
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
-
             // Update status to 'rejected'
             $leaveRequest->status = 'rejected';
             $leaveRequest->save();
             $leaveRequest->touch();
-            $this->reset();
             session()->flash('message', 'Leave application rejected.');
-            return redirect()->to('/employees-review');
         } catch (\Exception $e) {
             // Log the error
             Log::error($e);
-
             // Flash a message to the session
             session()->flash('error_message', 'An error occurred while rejecting leave application.');
 
-            // Redirect back or to a specific route
-            return redirect()->back();
         }
     }
 }
