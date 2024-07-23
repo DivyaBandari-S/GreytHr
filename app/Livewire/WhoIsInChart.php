@@ -332,6 +332,7 @@ class WhoIsInChart extends Component
     {
         $this->openshiftselector = false;
     }
+    
     public function render()
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;

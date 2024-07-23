@@ -13,17 +13,48 @@
         <div class="row bg-white rounded border" style="height:80px">
      
             <div class="col-md-1 mt-3" style="height:60px">
-            @if($employeeDetails && $employeeDetails->count() > 0)
-                @foreach($employeeDetails as $employee)
-                @if($employee->image)
+            @if(auth('emp')->check())
+    @php
+        $empEmployeeId = auth('emp')->user()->emp_id;
+        $employeeDetails = \App\Models\EmployeeDetails::where('emp_id', $empEmployeeId)->get();
+    @endphp
+
+    @if($employeeDetails && $employeeDetails->count() > 0)
+        @foreach($employeeDetails as $employee)
+            @if($employee->image)
                 <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $employee->image) }}">
-                @else
-                    <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
-                @endif
-                @endforeach
-                @else
-                <p>No employee details found.</p>
-                @endif
+            @else
+                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+            @endif
+        @endforeach
+    @else
+        <p>No employee details found.</p>
+    @endif
+
+@elseif(auth('hr')->check())
+    @php
+        $hrEmployeeId = auth('hr')->user()->hr_emp_id;
+        $hrEmployeeDetails = \App\Models\Hr::where('hr_emp_id', $hrEmployeeId)->get();
+    @endphp
+
+    @if($hrEmployeeDetails && $hrEmployeeDetails->count() > 0)
+        @foreach($hrEmployeeDetails as $hr)
+            @if($hr->image)
+                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $hr->image) }}">
+            @else
+                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+            @endif
+        @endforeach
+    @else
+        <p>No HR employee details found.</p>
+    @endif
+
+@else
+    <p>User is not authenticated.</p>
+@endif
+
+
+      
             </div>
             <div class="col-md-10 mt-2 bg-white d-flex align-items-center justify-content-between">
                 <div>
@@ -395,24 +426,31 @@
                 </div>
             </div>
          
-            <div class="col" style="max-height: 80vh; overflow-y: auto;scroll-behavior: smooth;">
-      
-   
-            <div class="col-md-8 mt-1">
-            <div class="column text-right" style="display:flex; justify-content: flex-end;">
-    
+            <div class="col m-0" style="max-height: 80vh; overflow-y: auto;scroll-behavior: smooth;">
+            <div class="row">
+                <div class="col-md-3"  style=" justify-content: flex-start">
+                <gt-heading _ngcontent-eff-c648="" size="md" class="ng-tns-c648-2 hydrated"></gt-heading>
+                <div class="medium-header border-cyan-200">All Activities - All Groups</div>
+            </div>
+            
+            <div class="col-md-3 text-right" style="display: flex; justify-content: flex-end;">
+    <p style="font-size:14px; margin-right: 5px;align-items:center">Sort:</p>
+    <div class="dropdown" style="position: relative; display: inline-block;align-items:center">
+        <button id="dropdown-toggle" class="dropdown-toggle" style="background: none; border: none; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center;">
+            Newest First
         
-    <p style="margin-top: 1px;font-size:12px">Sort:</p>
-    
-       
-            <p style="font-size:14px;font-weight:500;">Newest first</p>
-           
-                   <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="2 0 24 24" stroke="currentColor"style="height:12px;width:14px;margin-left:2px;margin-top:4px">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-
-    
+        </button>
+        <div class="dropdown-menu" style="display: none; position: absolute; background-color: white; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; min-width: 190px; right: 0; border-radius: 4px; border: 1px solid #ddd;">
+            <a href="#" class="dropdown-item" data-sort="newest" style="padding: 8px 16px; display: block; font-size: 14px; text-decoration: none; color: black;">Newest First</a>
+            <a href="#" class="dropdown-item" data-sort="interacted" style="padding: 8px 16px; display: block; font-size: 14px; text-decoration: none; color: black;">Most recent interacted</a>
+        </div>
+    </div>
 </div>
+</div>
+            <div class="col-md-7 " >
+
+
+
                 @foreach ($combinedData as $index => $data)
                     @if ($data['type'] === 'date_of_birth' )
                     <div class="birthday-card  mt-2">
@@ -655,16 +693,16 @@
                         </div>
                     </div>
                   
-     
-     
-                    <div class="row m-0">
+<div class="row m-0">
     @php
     $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
+    $interactedComments = $this->getInteractedComments($data['employee']->emp_id)->where('type','date_of_birth');
     @endphp
-    @if($currentCardComments && $currentCardComments->count() > 0)
-        <div class="m-0 mt-2 px-2" style="overflow-y:auto; max-height:150px;">
+
+    <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
+        @if($currentCardComments && $currentCardComments->count() > 0)
             @foreach ($currentCardComments as $comment)
-                <div class="mb-3" style="display: flex;gap:10px;align-items:center;">
+                <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
                     @if($comment->employee)
                         @if($comment->employee->image)
                             <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
@@ -682,7 +720,57 @@
                             </p>
                         </div>
                     @elseif($comment->hr)
-                    @if($comment->hr->image)
+                        @if($comment->hr->image)
+                            <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
+                        @else
+                            @if($comment->hr->gender == "Male")
+                                <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="" height="25" width="25">
+                            @elseif($comment->hr->gender == "Female")
+                                <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="" height="25" width="25">
+                            @endif
+                        @endif
+                        <div class="comment" style="font-size: 10px;">
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
+                            <p class="mb-0" style="font-size: 11px;">
+                                {{ ucfirst($comment->comment) }}
+                            </p>
+                        </div>
+                    @else
+                        <div class="comment" style="font-size: 10px;">
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+                            <p class="mb-0" style="font-size: 11px;">
+                                {{ ucfirst($comment->comment) }}
+                            </p>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        @endif
+    </div>
+
+    @if($interactedComments->count() > 1)
+        <div class="m-0 mt-2 px-2" id="interacted-comments-container" style="overflow-y:auto; max-height:150px;">
+            <h5>Interacted Comments</h5>
+            @foreach ($interactedComments as $comment)
+                <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
+                    @if($comment->employee)
+                        @if($comment->employee->image)
+                            <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
+                        @else
+                            @if($comment->employee->gender == "Male")
+                                <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="" height="25" width="25">
+                            @elseif($comment->employee->gender == "Female")
+                                <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="" height="25" width="25">
+                            @endif
+                        @endif
+                        <div class="comment" style="font-size: 10px;">
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
+                            <p class="mb-0" style="font-size: 11px;">
+                                {{ ucfirst($comment->comment) }}
+                            </p>
+                        </div>
+                    @elseif($comment->hr)
+                        @if($comment->hr->image)
                             <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
                         @else
                             @if($comment->hr->gender == "Male")
@@ -934,7 +1022,7 @@
 
 
 
-                <div class="col-md-8 p-0">
+                <div class="col-md-7 p-0">
                     <form wire:submit.prevent="createcomment('{{ $data['employee']->emp_id }}')">
                         @csrf
                         <div class="row m-0">
@@ -991,9 +1079,12 @@
                         <p style="font-size: 10px;">No comments available.</p>
                         @endif
                     </div>
+                    <div class="col-md-2 p-0">
+                    </div>
                         </div>
-                  </div>
-                  
+                 
+                    </div>
+               
         @endif
         @endforeach
 
@@ -1223,8 +1314,64 @@
         // Reload comments after adding a new comment
         Livewire.emit('refreshComments');
     });
+    
 </script>
 @endpush
+<script>
+    document.getElementById('dropdown-toggle').addEventListener('click', function(event) {
+        event.stopPropagation();
+        var dropdownMenu = this.nextElementSibling;
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    window.addEventListener('click', function() {
+        var dropdownMenus = document.querySelectorAll('.dropdown-menu');
+        dropdownMenus.forEach(function(menu) {
+            menu.style.display = 'none';
+        });
+    });
+
+    document.querySelectorAll('.dropdown-item').forEach(function(item) {
+        item.addEventListener('click', function(event) {
+            event.preventDefault();
+            var dropdownToggle = document.getElementById('dropdown-toggle');
+            dropdownToggle.childNodes[0].textContent = this.textContent.trim();
+            dropdownToggle.nextElementSibling.style.display = 'none';
+
+            var sortType = this.getAttribute('data-sort');
+            sortComments(sortType);
+        });
+
+        item.addEventListener('mouseover', function() {
+            this.style.backgroundColor = '#E3EBF9';
+        });
+
+        item.addEventListener('mouseout', function() {
+            this.style.backgroundColor = 'white';
+        });
+    });
+
+    function sortComments(type) {
+        var commentsContainer = document.getElementById('comments-container');
+        var comments = Array.from(commentsContainer.getElementsByClassName('comment-item'));
+        
+        if (type === 'newest') {
+            comments.sort(function(a, b) {
+                return new Date(b.dataset.created) - new Date(a.dataset.created);
+            });
+        } else if (type === 'interacted' && comments.length > 2) {
+            comments.sort(function(a, b) {
+                return new Date(b.dataset.interacted) - new Date(a.dataset.interacted);
+            });
+        }
+
+        commentsContainer.innerHTML = '';
+        comments.forEach(function(comment) {
+            commentsContainer.appendChild(comment);
+        });
+    }
+</script>
+
 <script>
     // Add event listener to menu items
     const menuItems = document.querySelectorAll('.menu-item');
@@ -1485,4 +1632,4 @@
 </script>
 
 </div>
-</div>
+</div>      

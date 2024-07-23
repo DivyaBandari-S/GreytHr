@@ -48,9 +48,11 @@
 
         </div>
         <div class="d-flex flex-row justify-content-end gap-10 mt-2">
-            <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 1px 0; font-size: 12px;width:100px" onclick="location.href='/catalog'">
-                IT Request
-            </button>
+     
+            <div class="mx-2 ">
+                <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> It Request  </button>
+            </div>
+
             <div class="mx-2 ">
                 <button wire:click="openFinance" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> Finance Request </button>
             </div>
@@ -379,57 +381,65 @@
         @endif
 
         @if ($activeTab == "active")
-        <div class="card-body " style="margin:0 auto;background-color:white;width:95%;height:400px;margin-top:30px;border-radius:5px;max-height:400px;overflow-y:auto">
-
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background-color: rgb(2, 17, 79); color: white;">
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:20%">Request Raised By</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:10%">Category</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:20%">Subject</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:10%">Description</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:10%">Attach Files</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:20%">CC To</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:10%">Priority</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if($records->where('status', 'Recent')->count() > 0)
+    <div class="card-body" style="margin: 0 auto; background-color: white; width: 95%; height: 400px; margin-top: 30px; border-radius: 5px; max-height: 400px; overflow-y: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: rgb(2, 17, 79); color: white;">
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">Request Raised By</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Category</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">Subject</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Description</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Attach Files</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">CC To</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Priority</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if($records->where('status', 'Recent')->count() > 0)
                     @foreach ($records->where('status', 'Recent') as $record)
+                        @php
+                            $ccToArray = explode(',', $record->cc_to);
+                        @endphp
+                        <tr>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                                {{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }} <br> <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
+                            </td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->category }}</td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">{{ $record->subject }}</td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->description }}</td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center;">
+                                @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
+                                    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                                {{ count($ccToArray) <= 2 ? $record->cc_to ?? '-' : '-' }}
+                            </td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->priority }}</td>
+                        </tr>
+                        @if(count($ccToArray) > 2)
+                            <tr >
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                        CC TO: {{ implode(', ', $ccToArray) }}
+                                    </div>
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
+                @else
                     <tr>
-                        <td style="padding: 10px;font-size:12px;text-align:center;width:20%;text-transform: capitalize;">{{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }} <br> <strong style="font-size: 10px;">({{$record->emp_id}})</strong></td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->category }}</td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:20%;">{{ $record->subject }}</td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->description }}</td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center;">
-                       @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
-    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
-@else
-    -
+                        <td colspan="7" style="text-align: center; font-size: 12px;">Active records not found</td>
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+    </div>
 @endif
 
-                        </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
-                            {{ $record->cc_to ?? '-' }}
-                        </td>
 
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->priority }}</td>
-
-                        </td>
-                    </tr>
-                    @endforeach
-                    @else
-                    <tr>
-                        <td colspan="7" style="text-align: center;font-size:12px">Active records not found</td>
-                    </tr>
-                    @endif
-
-
-                </tbody>
-            </table>
-
-        </div>
-        @endif
 
         @if ($activeTab == "closed")
         <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
@@ -464,10 +474,21 @@
 
 
                         </td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->cc_to }}</td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                                {{ count($ccToArray) <= 2 ? $record->cc_to ?? '-' : '-' }}
+                            </td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->priority }}</td>
 
                     </tr>
+                    @if(count($ccToArray) > 2)
+                            <tr >
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                        CC TO: {{ implode(', ', $ccToArray) }}
+                                    </div>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                     @else
                     <tr>
@@ -514,10 +535,21 @@
 @endif
 
                         </td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->cc_to }}</td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                                {{ count($ccToArray) <= 2 ? $record->cc_to ?? '-' : '-' }}
+                            </td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->priority }}</td>
 
                     </tr>
+                    @if(count($ccToArray) > 2)
+                            <tr >
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                        CC TO: {{ implode(', ', $ccToArray) }}
+                                    </div>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                     @else
                     <tr>

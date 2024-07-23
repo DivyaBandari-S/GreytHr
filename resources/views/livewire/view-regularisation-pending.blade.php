@@ -4,7 +4,7 @@
             color: #a3b2c7;
             font-size: 12px;
         }
-     
+
     </style>
     @if(count($regularisations)>0)
     @foreach($regularisations as $r)
@@ -30,16 +30,16 @@
                 </button>
 
             </div>
-    @elseif (session()->has('success'))  
+    @elseif (session()->has('success'))
            <div class="alert alert-danger">
                 {{ session('success') }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
 
-            </div>     
+            </div>
     @endif
-    
+
     <div class="accordion bg-white border mb-3 rounded">
         <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
@@ -141,7 +141,7 @@
                                             <label for="remarks" style="font-size:12px;color:#666;font-weight:400;">Remarks</label>
                                             <input type="text" class="form-control placeholder-small" id="remarks" placeholder="Enter reason here" wire:model="remarks" style="height: 100px; padding-bottom: 70px;">
                                     </div>
-                               
+
                             </div>
                             <div class="modal-footer">
                                     <button type=
@@ -168,7 +168,7 @@
                                                     <label for="remarks" style="font-size:12px;color:#666;font-weight:400;">Remarks</label>
                                                     <input type="text" class="form-control" id="remarks" placeholder="Enter reason here" wire:model="remarks" style="height: 100px; padding-bottom: 70px;">
                                             </div>
-                                    
+
                                     </div>
                                     <div class="modal-footer">
                                             <button type=
@@ -184,14 +184,15 @@
         </div>
 
 
-        
+
     </div>
       @endforeach
     @else
     <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
-        <img src="/images/pending.png" alt="Pending Image" style="width:60%; margin:0 auto;">
-        <p style="color:#969ea9; font-size:13px; font-weight:400; ">Hey, you have no regularization records to view</p>
-    </div>
+                    <img src="/images/pending.png" alt="Pending Image" style="width:55%; margin:0 auto;">
+                    <p style="color:#969ea9; font-size:12px; font-weight:400; ">Hey, you have no regularization records to view
+                    </p>
+        </div>
     @endif
 
 </div>

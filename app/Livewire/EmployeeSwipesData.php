@@ -233,7 +233,7 @@ class EmployeeSwipesData extends Component
 
         $nameFilter = $this->search; // Assuming $this->search contains the name filter
         $this->swipes = $this->swipes->filter(function ($swipe) use ($nameFilter) {
-            return stripos($swipe->first_name, $nameFilter) !== false || stripos($swipe->last_name, $nameFilter) !== false || stripos($swipe->emp_id, $nameFilter) !== false || stripos($swipe->swipe_time, $nameFilter) !== false;
+            return stripos($swipe->first_name, $nameFilter) !== false || stripos($swipe->last_name, $nameFilter) !== false || stripos($swipe->emp_id, $nameFilter) !== false || stripos($swipe->swipe_time, $nameFilter) !== false || stripos($swipe->in_or_out, $nameFilter) !== false;
         });
 
         if ($this->swipes->isEmpty()) {

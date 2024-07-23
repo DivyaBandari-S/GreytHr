@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('job_title');
             $table->string('manager_id')->nullable();
             $table->string('report_to')->nullable();
-            $table->enum('employee_status', ['active', 'on-leave', 'terminated'])->default('active');
+            $table->enum('employee_status', ['active', 'on-leave', 'terminated','resigned'])->default('active');
             $table->string('emergency_contact')->nullable();
             $table->string('password')->nullable();
             $table->string('image');

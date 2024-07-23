@@ -6,9 +6,10 @@ use App\Models\EmpBankDetail;
 use App\Models\EmployeeDetails;
 use App\Models\ITStatement;
 use App\Models\SalaryRevision;
-use Barryvdh\DomPDF\PDF;
+
 use DateTime;
 use Livewire\Component;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class Ytdreport extends Component
 {
@@ -36,7 +37,8 @@ class Ytdreport extends Component
 
     public function generatePDF()
     {
-        $pdf = PDF::loadView('pdf.itform'); // Load the PDF view
+        $pdf = Pdf::loadView('pdf.ytdpayslip', compact('employees'));
+        return $pdf->download('ytdpayslip.pdf');// Load the PDF view
 
         return $pdf->download('itform.pdf'); // Download the PDF
     }
