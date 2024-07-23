@@ -1612,9 +1612,7 @@ color: #fff;
                                         @endforeach
                                 </tr>
                                 @endforeach
-                                @else
-                                  <p>No calendar data available</p>
-                                @endif  
+                                
                             </tbody>
 
                         </table>
