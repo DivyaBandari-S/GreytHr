@@ -50,7 +50,7 @@
         <div class="d-flex flex-row justify-content-end gap-10 mt-2">
      
             <div class="mx-2 ">
-                <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> It Request  </button>
+                <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> IT Request  </button>
             </div>
 
             <div class="mx-2 ">

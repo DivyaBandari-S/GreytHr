@@ -281,7 +281,6 @@ class ViewPendingDetails extends Component
         try {
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
-
             // Update status to 'rejected'
             $leaveRequest->status = 'rejected';
             $leaveRequest->save();

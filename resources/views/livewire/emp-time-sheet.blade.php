@@ -1,7 +1,7 @@
 <div class="container">
     <style>
         .timesheetContainer {
-            width: 80%;
+            width: 90%;
         }
 
         .totalHoursContainer {
@@ -125,9 +125,11 @@
     @if($tab=="timeSheet")
     <div class="timesheetContainer mt-2 bg-white p-4 m-auto">
         <div class="row m-0 p-0">
-            <div class="col-md-4 d-flex align-items-center">
+            <div class="col-md-5 d-flex align-items-center">
                 <label for="emp_id" class="input-label mb-0">Employee ID :</label>
-                <label class="inputValue mb-0">{{ $auth_empId }}</label>
+                @if ($employeeName)
+                <label class="inputValue mb-0">{{ ucwords(strtolower($employeeName->first_name )) }} {{ ucwords(strtolower($employeeName->last_name )) }}  (#{{ $employeeName->emp_id }})  </label>
+                @endif
             </div>
             <!-- Start Date -->
             <div class="col-md-4 d-flex align-items-center">
@@ -145,7 +147,7 @@
                 </span>
                 @enderror
             </div>
-            <div class="col-md-4 d-flex align-items-center">
+            <div class="col-md-3 d-flex align-items-center">
                 <div class="d-flex align-items-center">
                     <label for="time_sheet_type" class="input-label mb-0">Time Sheet Type :</label>
                     <div class="d-flex align-items-center">
@@ -167,7 +169,7 @@
     </div>
 
     @if($defaultTimesheetEntry=="true")
-    <div class="container" style="width:80%;max-width:{{ count($client_names) > 0 ? '80%' : '80%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="container" style="width:90%;max-width:{{ count($client_names) > 0 ? '90%' : '90%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div class="subTotalExceed">
             @php
             $subTotalExceed = false;
@@ -302,7 +304,7 @@
 
     </div>
     @elseif($defaultTimesheetEntry=="false")
-    <div class="container" style="width:80%;max-width:{{ count($client_names) > 0 ? '80%' : '80%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="container" style="width:90%;max-width:{{ count($client_names) > 0 ? '90%' : '90%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div class="subTotalExceed">
             @php
             $subTotalExceed = false;
