@@ -1,6 +1,183 @@
 <!-- resources/views/livewire/people-lists.blade.php -->
 
 <div>
+    <style>
+        .people-left-side-container {
+            margin-right: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            height: 450px;
+            margin-left: 25px;
+        }
+
+        .people-input-group-container {
+            margin-bottom: 30px;
+        }
+
+        .people-search-input {
+            font-size: 0.75rem;
+            border-radius: 5px 0 0 5px;
+            cursor: pointer
+        }
+
+
+        .people-search-btn {
+            height: 32px;
+            width: 40px;
+            position: relative;
+            border-radius: 0 5px 5px 0;
+            background-color: rgb(2, 17, 79);
+            color: #fff;
+            border: none;
+        }
+
+        .people-search-icon {
+            position: absolute;
+            top: 9px;
+            left: 11px;
+        }
+
+
+        .people-starred-list-container {
+            max-height: 350px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+
+        .people-empty-text {
+            text-align: center;
+            color: #778899;
+            font-size: 12px;
+        }
+
+        .people-detail-container {
+            height: auto;
+            cursor: pointer;
+            padding: 5px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: white;
+        }
+
+        .people-detail-container.selected {
+            background-color: #f3faff;
+        }
+
+        .people-default-container-name {
+            font-size: 12px;
+            color: black;
+            margin-right: 5px;
+        }
+
+        .people-default-container-empid {
+            font-size: 12px;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        .people-text-blue {
+            color: rgb(2, 17, 79);
+        }
+
+        .people-default-star-icon {
+            cursor: pointer;
+            font-size: 12px;
+            padding-left: 6px;
+            color: rgb(2, 17, 79)
+        }
+
+        .people-selectedperson-container {
+            border-radius: 5px;
+            padding: 20px;
+            height: 450px;
+        }
+
+        .people-selectedperson-detail-container {
+            background: #f9f9f9;
+            padding: 10px;
+        }
+
+        .people-selectedperson-name {
+            font-size: 16px;
+            margin-right: 5px;
+        }
+
+        .people-selectedperson-anchortag {
+            text-decoration: none;
+        }
+
+        .people-selectedperson-star-icon {
+            cursor: pointer;
+            color: rgb(2, 17, 79);
+            margin-bottom: 10px;
+        }
+
+        .people-selectedperson-empid {
+            color: #778899;
+            font-size: 14px;
+        }
+
+        .people-headings {
+            margin-right: 10px;
+            font-weight: 500;
+            color: #778899;
+            font-size: 12px;
+        }
+
+        .people-horizontal-line {
+            flex-grow: 1;
+            width: 50px;
+            color: black;
+            border: 1px solid #778899;
+            margin: 0;
+        }
+
+        .people-label {
+            color: #778899;
+            font-size: 13px;
+        }
+
+        .people-value {
+            font-weight: 500;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .people-first-person-container {
+            font-size: 13px;
+            padding: 10px;
+            height: 450px;
+        }
+
+        .people-starred-nodata-container {
+            margin-top: 140px
+        }
+
+        .people-starred-nodata-img {
+            height: 150px;
+            width: 150px;
+        }
+
+        .people-text-white {
+            text-shadow: 0 0 2px rgb(2, 17, 79);
+        }
+
+        .people-selected-person-star {
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .people-nodata-container {
+            margin-top: 100px
+        }
+
+        .people-nodata-img {
+            height: 200px;
+            width: 200px;
+        }
+    </style>
     <x-loading-indicator />
     <div class="container mt-3">
         @if(session()->has('emp_error'))
@@ -8,7 +185,6 @@
             {{ session('emp_error') }}
         </div>
         @endif
-
 
         @php
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -35,7 +211,6 @@
                     Everyone
                 </a>
             </div>
-
             <div style="transition: left 0.3s ease-in-out; position: absolute; bottom: -11px; left: {{ $activeTab === 'starred' ? '30px' : ($activeTab === 'myteam' ? '39%' : '70%') }}; width: 30%; height: 4px; background-color: rgb(2, 17, 79); border-radius: 5px;"></div>
         </div>
         @else
@@ -57,23 +232,25 @@
 
         @if ($activeTab === 'starred')
         <!-- Starred tab content -->
-        <div class="row mt-3" style="padding-left: 30px;">
+        <div class="row mt-3 people-all-tabs-container">
 
-            <div class="col-12 col-md-4 bg-white w-100" style="margin-right: 20px; padding: 20px; border-radius: 5px; height: 450px;">
-                <div class="input-group" style="margin-bottom: 30px;">
-                    <input wire:model="search" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+            <div class="col-12 col-md-4 bg-white w-100 people-left-side-container">
+                <div class="input-group people-input-group-container">
+                    <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                     <div class="input-group-append">
-                        <button wire:click="starredFilter" style="height: 29px; width: 40px; position: relative; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="btn" type="button">
-                            <i style="position: absolute; top: 7px; left: 11px;" class="fa fa-search"></i>
+                        <button wire:click="starredFilter" class="btn people-search-btn" type="button">
+                            <i class="fa fa-search people-search-icon"></i>
                         </button>
                     </div>
                 </div>
-                <div class="mt-3" style="max-height: 350px; overflow-y: auto; overflow-x: hidden;">
+                <div class="mt-3 people-starred-list-container">
+
+
                     @if ($starredPeoples->isEmpty())
-                    <div class="container" style="text-align: center; color: #778899; font-size: 12px;">Looks like you don't have any records</div>
+                    <div class="container people-empty-text">Looks like you don't have any records</div>
                     @else
                     @foreach ($starredPeoples->where('starred_status', 'starred') as $people)
-                    <div wire:click="starredPersonById('{{ $people->id }}')" class="container people-detail-container" style="height:auto;cursor: pointer; background-color: {{ $selectStarredPeoples && $selectStarredPeoples->id == $people->id ? '#f3faff' : 'white' }}; padding: 5px; margin-bottom: 8px;  border-radius: 5px; border: 1px solid #ccc;">
+                    <div wire:click="starredPersonById('{{ $people->id }}')" class="container people-detail-container {{ $selectStarredPeoples && $selectStarredPeoples->id == $people->id ? 'selected' : '' }}">
                         <div class="row align-items-center">
                             <div class="col-3">
                                 @if($people->profile == "")
@@ -88,14 +265,11 @@
 
                             </div>
                             <div class="col-9">
-                                <div style="display: flex; align-items: center;">
-                                    <h6 style="font-size: 12px; color: black; margin-right: 5px;" class="username truncate-text" title="{{ ucwords(strtolower($people->name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->name)) }}</h6>
-                                    <p class="mb-0" style="font-size: 12px; color: #333;white-space: nowrap;">(#{{ $people->people_id }})</p>
+                                <div class="d-flex align-items-center">
+                                    <h6 class="username truncate-text people-default-container-name" title="{{ ucwords(strtolower($people->name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->name)) }}</h6>
+                                    <p class="mb-0 people-default-container-empid">(#{{ $people->people_id }})</p>
                                 </div>
-                                <!-- <h6 class="username truncate-text" title="{{ ucwords(strtolower($people->name)) }}" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->name)) }}</h6>
-                            </div>
-                            <div class="col-2">
-                                <p class="mb-0" style="font-size: 12px; color: white;font-size:8px;white-space: nowrap;">(#{{ $people->people_id }})</p> -->
+
                             </div>
 
                         </div>
@@ -105,7 +279,8 @@
                 </div>
             </div>
             <!-- Details of the selected person -->
-            <div class="col-12 col-md-7 bg-white w-100" style="border-radius: 5px; padding: 20px; height: 450px;">
+            <div class="col-12 col-md-7 bg-white w-100 people-selectedperson-container">
+
                 @if ($selectStarredPeoples)
                 <!-- Code to display details when $selectStarredPeoples is set -->
                 <div class="row">
@@ -122,51 +297,51 @@
 
                     </div>
                     <div class="col-7">
-                        <div style="background: #f9f9f9; padding: 10px;">
-                            <div style="display: flex; align-items: center;">
-                                <h1 style="font-size: 16px; margin-right: 5px;">{{ ucwords(strtolower(optional($selectStarredPeoples)->name)) }}</h1>
-                                <a style="text-decoration: none;" wire:click="removeToggleStar('{{ optional($selectStarredPeoples)->people_id }}')">
+                        <div class="people-selectedperson-detail-container">
+                            <div class="d-flex align-items-center">
+                                <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($selectStarredPeoples)->name)) }}</h1>
+                                <a class="people-selectedperson-anchortag" wire:click="removeToggleStar('{{ optional($selectStarredPeoples)->people_id }}')">
 
-                                    <i class="fa fa-star" style="cursor: pointer; color: yellow; margin-bottom: 10px;"></i>
+                                    <i class="fa fa-star people-selectedperson-star-icon"></i>
 
                                 </a>
 
                             </div>
-                            <p class="mb-0" style="color: #778899; font-size: 14px;">(#{{ optional($selectStarredPeoples)->people_id }})</p>
+                            <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($selectStarredPeoples->emp)->job_title)) }} (#{{ optional($selectStarredPeoples)->people_id }})</p>
                         </div>
                         <br>
-                        <div style="display: flex; align-items: center;">
-                            <span style="margin-right: 10px; font-weight:500; color: #778899; font-size: 12px;">CONTACT DETAILS</span>
-                            <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
-                        </div>
-                        <br>
-                        <div class="row">
-                            <label class="col-6" style="color: #778899; font-size: 13px;">Mobile Number</label>
-                            <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectStarredPeoples)->contact_details }}</label>
-                        </div>
-                        <br>
-                        <div style="display: flex; align-items: center;">
-                            <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CATEGORY</span>
-                            <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
+                        <div class="d-flex align-items-center">
+                            <span class="people-headings">CONTACT DETAILS</span>
+                            <hr class="people-horizontal-line">
                         </div>
                         <br>
                         <div class="row">
-                            <label class="col-6" style="color: #778899; font-size: 13px;">Location</label>
-                            <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectStarredPeoples)->location }}</label>
+                            <label class="col-6 people-label">Mobile Number</label>
+                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->contact_details }}</label>
                         </div>
                         <br>
-                        <div style="display: flex; align-items: center;">
-                            <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">OTHER INFORMATION</span>
-                            <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid #778899; margin: 0;">
+                        <div class="d-flex align-items-center">
+                            <span class="people-headings">CATEGORY</span>
+                            <hr class="people-horizontal-line">
                         </div>
                         <br>
                         <div class="row">
-                            <label class="col-6" style="color: #778899; font-size: 13px;">Joining Date</label>
-                            <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectStarredPeoples)->joining_date ? date('d M, Y', strtotime(optional($selectedPerson)->joining_date)) : '' }}</label>
+                            <label class="col-6 people-label">Location</label>
+                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->location }}</label>
+                        </div>
+                        <br>
+                        <div class="d-flex align-items-center">
+                            <span class="people-headings">OTHER INFORMATION</span>
+                            <hr class="people-horizontal-line">
+                        </div>
+                        <br>
+                        <div class="row">
+                            <label class="col-6 people-label">Joining Date</label>
+                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->joining_date ? date('d M, Y', strtotime(optional($selectedPerson)->joining_date)) : '' }}</label>
                         </div>
                         <div class="row">
-                            <label class="col-6" style="color: #778899; font-size: 13px;">Date Of Birth</label>
-                            <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectStarredPeoples)->date_of_birth ? date('d M, Y', strtotime(optional($selectStarredPeoples)->date_of_birth)) : '' }}</label>
+                            <label class="col-6 people-label">Date Of Birth</label>
+                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->date_of_birth ? date('d M, Y', strtotime(optional($selectStarredPeoples)->date_of_birth)) : '' }}</label>
                         </div>
 
                     </div>
@@ -178,7 +353,8 @@
             @php
             $firstStarredPerson = $starredPeoples->first();
             @endphp
-            <div class="row" style="font-size: 13px; padding: 10px; height: 450px;">
+
+            <div class="row people-first-person-container">
 
                 <div class="col-3">
                     @if(empty($firstStarredPerson->profile) || $firstStarredPerson->profile == "")
@@ -192,51 +368,51 @@
                     @endif
                 </div>
                 <div class="col-7">
-                    <div style="background: #f9f9f9; padding: 10px;">
-                        <div style="display: flex; align-items: center;">
-                            <h1 style="font-size: 16px; margin-right: 5px;">{{ ucwords(strtolower(optional($firstStarredPerson)->name)) }}</h1>
-                            <a style="text-decoration: none;" wire:click="removeToggleStar('{{ optional($firstStarredPerson)->people_id }}')">
+                    <div class="people-selectedperson-detail-container">
+                        <div class="d-flex align-items-center">
+                            <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($firstStarredPerson)->name)) }}</h1>
+                            <a class="people-selectedperson-anchortag" wire:click="removeToggleStar('{{ optional($firstStarredPerson)->people_id }}')">
 
-                                <i class="fa fa-star" style="cursor: pointer; color: yellow; margin-bottom: 10px;"></i>
+                                <i class="fa fa-star people-selectedperson-star-icon"></i>
 
                             </a>
 
                         </div>
-                        <p class="mb-0" style="color: #778899; font-size: 14px;">(#{{ optional($firstStarredPerson)->people_id }})</p>
+                        <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($firstStarredPerson->emp)->job_title)) }} (#{{ optional($firstStarredPerson)->people_id }})</p>
                     </div>
                     <br>
-                    <div style="display: flex; align-items: center;">
-                        <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CONTACT DETAILS</span>
-                        <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
-                    </div>
-                    <br>
-                    <div class="row">
-                        <label class="col-6" style="color: #778899; font-size: 13px;">Mobile Number</label>
-                        <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstStarredPerson)->contact_details }}</label>
-                    </div>
-                    <br>
-                    <div style="display: flex; align-items: center;">
-                        <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CATEGORY</span>
-                        <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
+                    <div class="d-flex align-items-center">
+                        <span class="people-headings">CONTACT DETAILS</span>
+                        <hr class="people-horizontal-line">
                     </div>
                     <br>
                     <div class="row">
-                        <label class="col-6" style="color: #778899; font-size: 13px;">Location</label>
-                        <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstStarredPerson)->location }}</label>
+                        <label class="col-6 people-label">Mobile Number</label>
+                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->contact_details }}</label>
                     </div>
                     <br>
-                    <div style="display: flex; align-items: center;">
-                        <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">OTHER INFORMATION</span>
-                        <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid #778899; margin: 0;">
+                    <div class="d-flex align-items-center">
+                        <span class="people-headings">CATEGORY</span>
+                        <hr class="people-horizontal-line">
                     </div>
                     <br>
                     <div class="row">
-                        <label class="col-6" style="color: #778899; font-size: 13px;">Joining Date</label>
-                        <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstStarredPerson)->joining_date ? date('d M, Y', strtotime(optional($firstStarredPerson)->joining_date)) : '' }}</label>
+                        <label class="col-6 people-label">Location</label>
+                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->location }}</label>
+                    </div>
+                    <br>
+                    <div class="d-flex align-items-center">
+                        <span class="people-headings">OTHER INFORMATION</span>
+                        <hr class="people-horizontal-line">
+                    </div>
+                    <br>
+                    <div class="row">
+                        <label class="col-6 people-label">Joining Date</label>
+                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->joining_date ? date('d M, Y', strtotime(optional($firstStarredPerson)->joining_date)) : '' }}</label>
                     </div>
                     <div class="row">
-                        <label class="col-6" style="color: #778899; font-size: 13px;">Date Of Birth</label>
-                        <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstStarredPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstStarredPerson)->date_of_birth)) : '' }}</label>
+                        <label class="col-6 people-label">Date Of Birth</label>
+                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstStarredPerson)->date_of_birth)) : '' }}</label>
                     </div>
 
                 </div>
@@ -245,10 +421,10 @@
 
             @else
             <div class="col-12">
-                <div class="d-flex flex-column justify-content-center align-items-center h-100" style="margin-top: 140px">
+                <div class="d-flex flex-column justify-content-center align-items-center h-100 people-starred-nodata-container">
                     <div class="d-flex flex-column align-items-center">
-                        <img src="{{ asset('images/star.png') }}" style="height: 150px; width: 150px;" alt="">
-                        <p style="text-align: center; color: #778899; font-size: 12px;">Hey, you haven't starred any peers!</p>
+                        <img src="{{ asset('images/star.png') }}" class="people-starred-nodata-img" alt="">
+                        <p class="people-empty-text">Hey, you haven't starred any peers!</p>
                     </div>
                 </div>
             </div>
@@ -268,24 +444,24 @@
 @endif
 @if ($activeTab === 'everyone')
 <!-- Everyone tab content -->
-<div class="row mt-3" style="padding-left: 30px;">
+<div class="row mt-3 people-all-tabs-container">
 
-    <div class="col-12 col-md-4 bg-white w-100" style="margin-right: 20px; padding: 20px; border-radius: 5px; height: 450px;">
-        <div class="input-group" style="margin-bottom: 30px;">
-            <input wire:model="searchTerm" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+    <div class="col-12 col-md-4 bg-white w-100 people-left-side-container">
+        <div class="input-group people-input-group-container">
+            <input wire:model="searchTerm" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
             <div class="input-group-append">
-                <button wire:click="filter" style="height: 29px; width: 40px; position: relative; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="btn" type="button">
-                    <i style="position: absolute; top: 7px; left: 11px;" class="fa fa-search"></i>
+                <button wire:click="filter" class="btn people-search-btn" type="button">
+                    <i class="fa fa-search people-search-icon"></i>
                 </button>
             </div>
         </div>
         <div class="mt-3">
             @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: #778899; font-size: 12px;">No People Found</div>
+            <div class="container people-empty-text">No People Found</div>
             @else
-            <div style="max-height:350px;overflow-y:auto; overflow-x:hidden;">
+            <div class="people-starred-list-container">
                 @foreach($peopleData as $people)
-                <div wire:click="selectPerson('{{ $people->emp_id }}')" class="container people-detail-container" style="height:auto;cursor: pointer; background-color: {{ $selectedPerson && $selectedPerson->emp_id == $people->emp_id ? '#f3faff' : 'white' }}; padding: 5px; margin-bottom: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                <div wire:click="selectPerson('{{ $people->emp_id }}')" class="container people-detail-container {{ $selectedPerson && $selectedPerson->emp_id == $people->emp_id ? 'selected' : '' }}">
                     <div class="row align-items-center">
                         <div class="col-3">
                             @if($people->image=="")
@@ -306,11 +482,11 @@
                             ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                             ->first();
                             @endphp
-                            <div style="display: flex; align-items: center;">
-                                <h6 style="font-size: 12px; color: black; margin-right: 5px;" class="username truncate-text" title="{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                <p class="mb-0" style="font-size: 12px; color: #333;white-space: nowrap;">(#{{ $people->emp_id }})</p>
+                            <div class="d-flex align-items-center">
+                                <h6 class="username truncate-text people-default-container-name" title="{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                <p class="mb-0 people-default-container-empid">(#{{ $people->emp_id }})</p>
                                 @if($starredPerson && $starredPerson->starred_status == 'starred')
-                                <i class="fa fa-star text-yellow" style="cursor: pointer; font-size: 12px;padding-left: 6px;"></i>
+                                <i class="fa fa-star  people-default-star-icon"></i>
                                 @endif
                             </div>
                         </div>
@@ -321,7 +497,7 @@
             @endif
         </div>
     </div>
-    <div class="col-12 col-md-7 bg-white w-100" style="border-radius: 5px; padding: 20px; height: 450px;">
+    <div class="col-12 col-md-7 bg-white w-100 people-selectedperson-container">
         @if ($selectedPerson)
         <!-- Code to display details when $selectStarredPeoples is set -->
         <div class="row">
@@ -345,53 +521,53 @@
                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->first();
                 @endphp
-                <div style="background: #f9f9f9; padding: 10px;">
+                <div class="people-selectedperson-detail-container">
 
-                    <div style="display: flex; align-items: center;">
-                        <h1 style="font-size: 16px; margin-right: 5px;">{{ ucwords(strtolower(optional($selectedPerson)->first_name )) }} {{ ucwords(strtolower(optional($selectedPerson)->last_name )) }}</h1>
-                        <a style="text-decoration: none;" wire:click="toggleStar('{{ optional($selectedPerson)->emp_id }}')">
+                    <div class="d-flex align-items-center">
+                        <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($selectedPerson)->first_name )) }} {{ ucwords(strtolower(optional($selectedPerson)->last_name )) }}</h1>
+                        <a class="people-selectedperson-anchortag" wire:click="toggleStar('{{ optional($selectedPerson)->emp_id }}')">
 
-                            <i class="fa fa-star{{ $starredPerson && $starredPerson->starred_status == 'starred' ? ' text-yellow' : ' text-gray' }}" style="cursor: pointer; margin-bottom: 10px;"></i>
+                            <i class="fa fa-star {{ $starredPerson && $starredPerson->starred_status == 'starred' ? 'people-text-blue' : 'text-white people-text-white' }} people-selected-person-star"></i>
 
 
                         </a>
 
                     </div>
-                    <p class="mb-0" style="color: #778899; font-size: 14px;">(#{{ optional($selectedPerson)->emp_id }})</p>
+                    <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($selectedPerson)->job_title)) }} (#{{ optional($selectedPerson)->emp_id }})</p>
                 </div>
                 <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CONTACT DETAILS</span>
-                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
-                </div>
-                <br>
-                <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Mobile Number</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectedPerson)->mobile_number }}</label>
-                </div>
-                <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CATEGORY</span>
-                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">CONTACT DETAILS</span>
+                    <hr class="people-horizontal-line">
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Location</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectedPerson)->job_location }}</label>
+                    <label class="col-6 people-label">Mobile Number</label>
+                    <label class="col-6 people-value">{{ optional($selectedPerson)->mobile_number }}</label>
                 </div>
                 <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">OTHER INFORMATION</span>
-                    <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid #778899; margin: 0;">
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">CATEGORY</span>
+                    <hr class="people-horizontal-line">
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Joining Date</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectedPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedPerson)->hire_date)) : '' }}</label>
+                    <label class="col-6 people-label">Location</label>
+                    <label class="col-6 people-value">{{ optional($selectedPerson)->job_location }}</label>
+                </div>
+                <br>
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">OTHER INFORMATION</span>
+                    <hr class="people-horizontal-line">
+                </div>
+                <br>
+                <div class="row">
+                    <label class="col-6 people-label">Joining Date</label>
+                    <label class="col-6 people-value">{{ optional($selectedPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedPerson)->hire_date)) : '' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Date Of Birth</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectedPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-6 people-label">Date Of Birth</label>
+                    <label class="col-6 people-value">{{ optional($selectedPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedPerson)->date_of_birth)) : '' }}</label>
                 </div>
 
             </div>
@@ -408,59 +584,59 @@
         ->where('emp_id', auth()->guard('emp')->user()->emp_id)
         ->first();
         @endphp
-        <div class="row" style="font-size: 13px; padding: 10px; height: 450px;">
+        <div class="row people-first-person-container">
 
             <div class="col-3">
                 <img class="people-image" src="{{ Storage::url(optional($firstPerson)->image) }}" alt="">
 
             </div>
             <div class="col-7">
-                <div style="background: #f9f9f9; padding: 10px;">
-                    <div style="display: flex; align-items: center;">
-                        <h1 style="font-size: 16px; margin-right: 5px;">{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
-                        <a style="text-decoration: none;" wire:click="toggleStar('{{ optional($firstPerson)->emp_id }}')">
+                <div class="people-selectedperson-detail-container">
+                    <div class="d-flex align-items-center">
+                        <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
+                        <a class="people-selectedperson-anchortag" wire:click="toggleStar('{{ optional($firstPerson)->emp_id }}')">
 
-                            <i class="fa fa-star{{ $starredPerson && $starredPerson->starred_status == 'starred' ? ' text-yellow' : ' text-gray' }}" style="cursor: pointer; margin-bottom: 10px;"></i>
+                            <i class="fa fa-star {{ $starredPerson && $starredPerson->starred_status == 'starred' ? 'people-text-blue' : 'text-white people-text-white' }} people-selected-person-star"></i>
 
 
                         </a>
 
                     </div>
-                    <p class="mb-0" style="color: #778899; font-size: 14px;">(#{{ optional($firstPerson)->emp_id }})</p>
+                    <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($firstPerson)->job_title)) }} (#{{ optional($firstPerson)->emp_id }})</p>
                 </div>
                 <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CONTACT DETAILS</span>
-                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid black; margin: 0;">
-                </div>
-                <br>
-                <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Mobile Number</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstPerson)->mobile_number }}</label>
-                </div>
-                <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CATEGORY</span>
-                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid black; margin: 0;">
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">CONTACT DETAILS</span>
+                    <hr class="people-horizontal-line">
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Location</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstPerson)->job_location }}</label>
+                    <label class="col-6 people-label">Mobile Number</label>
+                    <label class="col-6 people-value">{{ optional($firstPerson)->mobile_number }}</label>
                 </div>
                 <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">OTHER INFORMATION</span>
-                    <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid black; margin: 0;">
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">CATEGORY</span>
+                    <hr class="people-horizontal-line">
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Joining Date</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '' }}</label>
+                    <label class="col-6 people-label">Location</label>
+                    <label class="col-6 people-value">{{ optional($firstPerson)->job_location }}</label>
+                </div>
+                <br>
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">OTHER INFORMATION</span>
+                    <hr class="people-horizontal-line">
+                </div>
+                <br>
+                <div class="row">
+                    <label class="col-6 people-label">Joining Date</label>
+                    <label class="col-6 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Date Of Birth</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-6 people-label">Date Of Birth</label>
+                    <label class="col-6 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '' }}</label>
                 </div>
 
             </div>
@@ -469,10 +645,10 @@
 
         @else
         <div class="col-12">
-            <div class="d-flex flex-column justify-content-center align-items-center h-100" style="margin-top: 100px">
+            <div class="d-flex flex-column justify-content-center align-items-center h-100 people-nodata-container">
                 <div class="d-flex flex-column align-items-center">
-                    <img src="{{ asset('images/nodata.png') }}" style="height: 200px; width: 200px;" alt="">
-                    <p style="text-align: center; color: #778899;font-size: 12px;">No People Found!</p>
+                    <img class="people-nodata-img" src="{{ asset('images/nodata.png') }}" alt="">
+                    <p class="people-empty-text">No People Found!</p>
                 </div>
             </div>
         </div>
@@ -494,26 +670,26 @@
 
 @if ($activeTab === 'myteam')
 <!-- MyTeam tab content -->
-<div class="row mt-3" style="padding-left: 30px;">
+<div class="row mt-3 people-all-tabs-container">
     <!-- Search input and filter button -->
-    <div class="col-12 col-md-4 bg-white w-100" style="margin-right: 20px; padding: 20px; border-radius: 5px; height: 450px;">
+    <div class="col-12 col-md-4 bg-white w-100 people-left-side-container">
 
-        <div class="input-group" style="margin-bottom: 30px;">
-            <input wire:model="searchTerm" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+        <div class="input-group people-input-group-container">
+            <input wire:model="searchTerm" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
             <div class="input-group-append">
-                <button wire:click="filterMyTeam" style="height: 29px; width: 40px;position: relative; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="btn" type="button">
-                    <i style="position: absolute; top: 7px; left: 11px;" class="fa fa-search"></i>
+                <button wire:click="filterMyTeam" class="btn people-search-btn" type="button">
+                    <i class="fa fa-search people-search-icon"></i>
                 </button>
             </div>
         </div>
 
         <div class="mt-3">
             @if ($myTeamData->isEmpty())
-            <div class="container" style="text-align: center; color: #778899; font-size: 12px;">No People Found</div>
+            <div class="container people-empty-text">No People Found</div>
             @else
-            <div style="max-height:350px;overflow-y:auto; overflow-x:hidden;">
+            <div class="people-starred-list-container">
                 @foreach($myTeamData as $people)
-                <div wire:click="selectMyTeamPerson('{{ $people->emp_id }}')" class="container people-detail-container" style="height:auto;cursor: pointer; background-color: {{ $selectedMyTeamPerson && $selectedMyTeamPerson->emp_id == $people->emp_id ? '#f3faff' : 'white' }}; padding: 5px; margin-bottom: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                <div wire:click="selectMyTeamPerson('{{ $people->emp_id }}')" class="container people-detail-container {{ $selectedMyTeamPerson && $selectedMyTeamPerson->emp_id == $people->emp_id ? 'selected' : '' }}">
                     <div class="row align-items-center">
                         <div class="col-3">
                             @if($people->image=="")
@@ -534,11 +710,11 @@
                             ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                             ->first();
                             @endphp
-                            <div style="display: flex; align-items: center;">
-                                <h6 style="font-size: 12px; color: black; margin-right: 5px;" class="username truncate-text" title="{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                <p class="mb-0" style="font-size: 12px; color: #333;white-space: nowrap;">(#{{ $people->emp_id }})</p>
+                            <div class="d-flex align-items-center">
+                                <h6 class="username truncate-text people-default-container-name" title="{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                <p class="mb-0 people-default-container-empid">(#{{ $people->emp_id }})</p>
                                 @if($starredPerson && $starredPerson->starred_status == 'starred')
-                                <i class="fa fa-star text-yellow" style="cursor: pointer; font-size: 12px;padding-left: 6px;"></i>
+                                <i class="fa fa-star people-default-star-icon"></i>
                                 @endif
                             </div>
                         </div>
@@ -551,7 +727,7 @@
     </div>
 
     <!-- Details of the selected person -->
-    <div class="col-12 col-md-7 bg-white w-100" style="border-radius: 5px; padding: 20px; height: 450px;">
+    <div class="col-12 col-md-7 bg-white w-100 people-selectedperson-container">
         @if ($selectedMyTeamPerson)
         <!-- Code to display details when $selectStarredPeoples is set -->
         <div class="row">
@@ -575,52 +751,52 @@
                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->first();
                 @endphp
-                <div style="background: #f9f9f9; padding: 10px;">
-                    <div style="display: flex; align-items: center;">
-                        <h1 style="font-size: 16px; margin-right: 5px;">{{ ucwords(strtolower(optional($selectedMyTeamPerson)->first_name )) }} {{ ucwords(strtolower(optional($selectedMyTeamPerson)->last_name )) }}</h1>
-                        <a style="text-decoration: none;" wire:click="toggleStar('{{ optional($selectedMyTeamPerson)->emp_id }}')">
+                <div class="people-selectedperson-detail-container">
+                    <div class="d-flex align-items-center">
+                        <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($selectedMyTeamPerson)->first_name )) }} {{ ucwords(strtolower(optional($selectedMyTeamPerson)->last_name )) }}</h1>
+                        <a class="people-selectedperson-anchortag" wire:click="toggleStar('{{ optional($selectedMyTeamPerson)->emp_id }}')">
 
-                            <i class="fa fa-star{{ $starredPerson && $starredPerson->starred_status == 'starred' ? ' text-yellow' : ' text-gray' }}" style="cursor: pointer; margin-bottom: 10px;"></i>
+                            <i class="fa fa-star {{ $starredPerson && $starredPerson->starred_status == 'starred' ? 'people-text-blue' : 'text-white people-text-white' }} people-selected-person-star"></i>
 
 
                         </a>
 
                     </div>
-                    <p class="mb-0" style="color: #778899; font-size: 14px;">(#{{ optional($selectedMyTeamPerson)->emp_id }})</p>
+                    <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($selectedMyTeamPerson)->job_title)) }} (#{{ optional($selectedMyTeamPerson)->emp_id }})</p>
                 </div>
                 <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CONTACT DETAILS</span>
-                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
-                </div>
-                <br>
-                <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Mobile Number</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectedMyTeamPerson)->mobile_number }}</label>
-                </div>
-                <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CATEGORY</span>
-                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid #778899; margin: 0;">
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">CONTACT DETAILS</span>
+                    <hr class="people-horizontal-line">
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Location</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectedMyTeamPerson)->job_location }}</label>
+                    <label class="col-6 people-label">Mobile Number</label>
+                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->mobile_number }}</label>
                 </div>
                 <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">OTHER INFORMATION</span>
-                    <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid #778899; margin: 0;">
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">CATEGORY</span>
+                    <hr class="people-horizontal-line">
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Joining Date</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectedMyTeamPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->hire_date)) : '' }}</label>
+                    <label class="col-6 people-label">Location</label>
+                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->job_location }}</label>
+                </div>
+                <br>
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">OTHER INFORMATION</span>
+                    <hr class="people-horizontal-line">
+                </div>
+                <br>
+                <div class="row">
+                    <label class="col-6 people-label">Joining Date</label>
+                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->hire_date)) : '' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Date Of Birth</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($selectedMyTeamPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-6 people-label">Date Of Birth</label>
+                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->date_of_birth)) : '' }}</label>
                 </div>
 
             </div>
@@ -636,58 +812,58 @@
         ->where('emp_id', auth()->guard('emp')->user()->emp_id)
         ->first();
         @endphp
-        <div class="row" style="font-size: 13px; padding: 10px; height: 450px;">
+        <div class="row people-first-person-container">
 
             <div class="col-3">
                 <img class="people-image" src="{{ Storage::url(optional($firstPerson)->image) }}" alt="">
 
             </div>
             <div class="col-7">
-                <div style="background: #f9f9f9; padding: 10px;">
-                    <div style="display: flex; align-items: center;">
-                        <h1 style="font-size: 16px; margin-right: 5px;">{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
-                        <a style="text-decoration: none;" wire:click="toggleStar('{{ optional($firstPerson)->emp_id }}')">
+                <div class="people-selectedperson-detail-container">
+                    <div class="d-flex align-items-center">
+                        <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
+                        <a class="people-selectedperson-anchortag" wire:click="toggleStar('{{ optional($firstPerson)->emp_id }}')">
 
-                            <i class="fa fa-star{{ $starredPerson && $starredPerson->starred_status == 'starred' ? ' text-yellow' : ' text-gray' }}" style="cursor: pointer; margin-bottom: 10px;"></i>
+                            <i class="fa fa-star {{ $starredPerson && $starredPerson->starred_status == 'starred' ? 'people-text-blue' : 'text-white people-text-white' }} people-selected-person-star"></i>
 
                         </a>
 
                     </div>
-                    <p class="mb-0" style="color: #778899; font-size: 14px;">(#{{ optional($firstPerson)->emp_id }})</p>
+                    <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($firstPerson)->job_title)) }} (#{{ optional($firstPerson)->emp_id }})</p>
                 </div>
                 <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CONTACT DETAILS</span>
-                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid black; margin: 0;">
-                </div>
-                <br>
-                <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Mobile Number</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstPerson)->mobile_number }}</label>
-                </div>
-                <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">CATEGORY</span>
-                    <hr style="flex-grow: 1; width: 50px; color: black; border: 1px solid black; margin: 0;">
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">CONTACT DETAILS</span>
+                    <hr class="people-horizontal-line">
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Location</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstPerson)->job_location }}</label>
+                    <label class="col-6 people-label">Mobile Number</label>
+                    <label class="col-6 people-value">{{ optional($firstPerson)->mobile_number }}</label>
                 </div>
                 <br>
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-weight:500;color: #778899; font-size: 12px;">OTHER INFORMATION</span>
-                    <hr style="flex-grow: 1; width: 50px; color: #333; border: 1px solid black; margin: 0;">
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">CATEGORY</span>
+                    <hr class="people-horizontal-line">
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Joining Date</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '' }}</label>
+                    <label class="col-6 people-label">Location</label>
+                    <label class="col-6 people-value">{{ optional($firstPerson)->job_location }}</label>
+                </div>
+                <br>
+                <div class="d-flex align-items-center">
+                    <span class="people-headings">OTHER INFORMATION</span>
+                    <hr class="people-horizontal-line">
+                </div>
+                <br>
+                <div class="row">
+                    <label class="col-6 people-label">Joining Date</label>
+                    <label class="col-6 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6" style="color: #778899; font-size: 13px;">Date Of Birth</label>
-                    <label class="col-6" style="font-weight: 500; color: #333; font-size: 13px;">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-6 people-label">Date Of Birth</label>
+                    <label class="col-6 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '' }}</label>
                 </div>
 
             </div>
@@ -695,10 +871,10 @@
         </div>
         @else
         <div class="col-12">
-            <div class="d-flex flex-column justify-content-center align-items-center h-100" style="margin-top: 100px">
+            <div class="d-flex flex-column justify-content-center align-items-center h-100 people-nodata-container">
                 <div class="d-flex flex-column align-items-center">
-                    <img src="{{ asset('images/nodata.png') }}" style="height: 200px; width: 200px;" alt="">
-                    <p style="text-align: center; color: #778899;font-size: 12px;">No People Found!</p>
+                    <img class="people-nodata-img" src="{{ asset('images/nodata.png') }}" alt="">
+                    <p class="people-empty-text">No People Found!</p>
                 </div>
             </div>
         </div>

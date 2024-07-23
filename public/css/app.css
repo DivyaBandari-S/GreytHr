@@ -4249,6 +4249,7 @@ option {
 p::first-letter {
     text-transform: uppercase;
 }
+/* notification css styles started */
 .offcanvas {
     font-family: "Montserrat", sans-serif;
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
@@ -4278,6 +4279,72 @@ p::first-letter {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.notification-anchor-tag {
+    color: white;
+    text-decoration: none;
+}
+
+.notification-comment-icon {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 18px;
+    margin-left: 10px;
+    margin-right: 8px;
+    margin-bottom: 5px;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -10px;
+    right: -3px;
+    font-size: 10px;
+}
+
+.notification-icon {
+    margin-right: -10px;
+    margin-top: 5px;
+}
+
+.notification-btn {
+    background: none;
+    border: none;
+}
+
+.notification-bell-icon {
+    color: white;
+    position: relative;
+    margin-bottom: 7px;
+}
+
+.notifiction-badge {
+    position: absolute;
+    top: -9px;
+    right: -1px;
+    font-size: 10px;
+}
+
+.notification-detail-container {
+    width: 320px;
+    background: #f5f8f9;
+}
+
+.notification-close-btn {
+    font-size: 7px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    padding: 2px;
+    border: 1px solid #778899;
+}
+
+.notification-horizontal-line {
+    border-bottom: 1px solid #ccc;
+}
+.leave-request-container{
+    text-decoration:none;
+}
+/* notification css styles ended */
 .my-daterange-timesheet .month {
     display: revert-layer !important;
 }
@@ -4467,5 +4534,7 @@ p::first-letter {
     border-top: 5px solid #778899; /* Change the color as needed */
     pointer-events: none; /* Ensure the arrow doesn't interfere with select clicks */
 }
+
+
 
 
