@@ -41,7 +41,7 @@ class EmployeesReview extends Component
     public $toggleAccordian =false;
 
 
-    public $activeTab = 'attendance';
+    public $activeTab = 'leave';
 
     public function setActiveTab($tab)
     {
