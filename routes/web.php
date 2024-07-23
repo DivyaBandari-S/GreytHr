@@ -338,3 +338,6 @@ Route::get('/attune-reports', function () {
 Route::get('/data-entry', function () {
     return view('data-entry_view');
 });
+Route::get('/ytdpayslip', function () {
+    return view('ytdpayslip');
+});
