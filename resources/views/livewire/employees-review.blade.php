@@ -107,7 +107,6 @@
 
 
     <div class="row m-0 p-0">
-
         <div class="sidenav col-md-3 col-lg-2" style="min-height: 30rem;">
             <div>
                 <ul class="nav flex-column side-page-nav">
@@ -128,7 +127,7 @@
                         </p>
                         @if($count > 0)
                         <span class="leaveCountReview d-flex align-items-center justify-content-center">
-                            {{ $count }}
+                            {{ $e }}
                         </span>
                         @endif
                     </li>

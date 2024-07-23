@@ -316,7 +316,7 @@ class LeaveCancel extends Component
     public function applyingTo($leaveRequestId)
     {
         $this->selectedLeaveRequestId = $leaveRequestId;
-        $this->showApplyingToContainer = true;
+        $this->showApplyingToContainer = false;
         $this->show_reporting = true;
     }
     public function markAsLeaveCancel()
@@ -324,11 +324,10 @@ class LeaveCancel extends Component
         try {
             // Find the leave request by ID
             $leaveRequest = LeaveRequest::findOrFail($this->selectedLeaveRequestId);
-
             // Update the leave request status and category
-            $leaveRequest->category_type = 'leave cancel';
+            $leaveRequest->category_type = 'Leave Cancel';
+            $leaveRequest->cancel_status = 'Pending Leave Cancel';
             $leaveRequest->save();
-
             session()->flash('message', 'Leave request marked as cancel successfully.');
             $this->reset(); // Reset component state
         } catch (\Exception $e) {
@@ -746,8 +745,10 @@ class LeaveCancel extends Component
         $this->cancelLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
         ->where('status', 'approved')
         ->where('from_date', '>=', now()->subMonths(2))
+        ->where('category_type', 'Leave')
         ->with('employee')
         ->get();
+
 
         return view('livewire.leave-cancel',[
             'cancelLeaveRequests' => $this->cancelLeaveRequests

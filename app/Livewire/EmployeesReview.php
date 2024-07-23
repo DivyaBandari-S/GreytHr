@@ -32,10 +32,10 @@ class EmployeesReview extends Component
     public $count;
     public $approvedLeaveApplicationsList;
     public $empLeaveRequests;
-    public $activeContent;
+    public $activeContent, $leaveRequests;
     public $regularisation_count;
     public $countofregularisations;
-    public $leaveApplications;
+    public $leaveApplications ,$approvedLeaveRequests;
     public $searchQuery = '';
     public $selectedYear;
     public $toggleAccordian =false;
@@ -317,7 +317,7 @@ class EmployeesReview extends Component
 
     return view('livewire.employees-review',[
         'leaveApplications' => $this->leaveApplications,
-
+        'matchingLeaveApplications' => $matchingLeaveApplications,
         'count' => $this->count,
         'approvedLeaveApplicationsList' => $this->approvedLeaveApplicationsList,
         'empLeaveRequests' => $this->empLeaveRequests,

@@ -494,7 +494,6 @@ class LeaveApply extends Component
 
         try {
             $this->selectleave();
-            $this->searchCCRecipients();
 
             // Check for overlapping leave
             $overlappingLeave = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
@@ -592,7 +591,6 @@ class LeaveApply extends Component
                 'reason' => $this->reason,
             ]);
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
-
             // Check if emp_id is set on the $createdLeaveRequest object
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
                 // Reset the component

@@ -35,9 +35,13 @@ class ViewPendingDetails extends Component
 
     public function mount()
     {
-        try {
             //for year selection
             $this->selectedYear = Carbon::now()->format('Y');
+            $this->fetchPendingLeaveApplications();
+    }
+
+    public function fetchPendingLeaveApplications(){
+        try {
             //login employee id
             $employeeId = auth()->guard('emp')->user()->emp_id;
             //fetching pending leave requests
@@ -102,7 +106,6 @@ class ViewPendingDetails extends Component
             session()->flash('error', 'Connection error . Please try again.');
         }
     }
-
 
     // Check if there are pending leave requests
     public function hasPendingLeave()
@@ -224,8 +227,45 @@ class ViewPendingDetails extends Component
             }
 
             $this->reset();
+            $this->fetchPendingLeaveApplications();
+        } catch (\Exception $e) {
+            // Handle the exception
+            Log::error('Error approving leave: ' . $e->getMessage());
+            session()->flash('error', 'Failed to approve leave application. Please try again.');
 
-            return redirect()->to('/employees-review');
+            return redirect()->back(); // Redirect back to the previous page
+        }
+    }
+
+    //This method used to approve leave cancel application by manager
+    public function approveLeaveCancel($index)
+    {
+        try {
+            // Find the leave request by ID
+            $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
+
+            // Calculate the difference in days from the created date to now
+            $createdDate = Carbon::parse($leaveRequest->created_at);
+            $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
+
+            // Check if status is already approved
+            if ($leaveRequest->cancel_status === 'approved') {
+                session()->flash('message', 'Leave application is already approved.');
+            } else {
+                // Check if days since creation is more than 3 days or status is not yet approved
+                if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
+                    // Update status to 'approved'
+                    $leaveRequest->cancel_status = 'approved';
+                    $leaveRequest->save();
+                    $leaveRequest->touch();
+                    session()->flash('message', 'Leave cancel application approved successfully.');
+                } else {
+                    session()->flash('error', 'Leave application must be at least 3 days old or manually approved by a manager.');
+                }
+            }
+
+            $this->reset();
+            $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Handle the exception
             Log::error('Error approving leave: ' . $e->getMessage());
