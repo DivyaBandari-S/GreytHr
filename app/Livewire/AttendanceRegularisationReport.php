@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
+use App\Models\RegularisationDates;
 use App\Models\RegularisationNew1;
 use Carbon\Carbon;
 use Google\Service\SecretManager\EnableSecretVersionRequest;
@@ -40,71 +41,71 @@ class AttendanceRegularisationReport extends Component
         $employeeIds = $employees->pluck('emp_id')->toArray();
         if ($this->selectedStatus == 'applied') {
             if ($this->fromDate && $this->toDate) {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', 'pending')
-                    ->where('regularisation_new1s.is_withdraw', 0)
-                    ->whereDate('regularisation_new1s.created_at', '>=', $this->fromDate)
-                    ->whereDate('regularisation_new1s.created_at', '<=', $this->toDate)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', 'pending')
+                    ->where('regularisation_dates.is_withdraw', 0)
+                    ->whereDate('regularisation_dates.created_at', '>=', $this->fromDate)
+                    ->whereDate('regularisation_dates.created_at', '<=', $this->toDate)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             } else {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', 'pending')
-                    ->where('regularisation_new1s.is_withdraw', 0)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', 'pending')
+                    ->where('regularisation_dates.is_withdraw', 0)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             }
         } elseif ($this->selectedStatus == 'withdrawn') {
             if ($this->fromDate && $this->toDate) {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', 'pending')
-                    ->where('regularisation_new1s.is_withdraw', 1)
-                    ->whereDate('regularisation_new1s.withdrawn_date', '>=', $this->fromDate)
-                    ->whereDate('regularisation_new1s.withdrawn_date', '<=', $this->toDate)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', 'pending')
+                    ->where('regularisation_dates.is_withdraw', 1)
+                    ->whereDate('regularisation_dates.withdrawn_date', '>=', $this->fromDate)
+                    ->whereDate('regularisation_dates.withdrawn_date', '<=', $this->toDate)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             } else {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', 'pending')
-                    ->where('regularisation_new1s.is_withdraw', 1)
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', 'pending')
+                    ->where('regularisation_dates.is_withdraw', 1)
 
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             }
         } elseif ($this->selectedStatus == 'approved') {
             if ($this->fromDate && $this->toDate) {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', $this->selectedStatus)
-                    ->whereDate('regularisation_new1s.approved_date', '>=', $this->fromDate)
-                    ->whereDate('regularisation_new1s.approved_date', '<=', $this->toDate)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', $this->selectedStatus)
+                    ->whereDate('regularisation_dates.approved_date', '>=', $this->fromDate)
+                    ->whereDate('regularisation_dates.approved_date', '<=', $this->toDate)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             } else {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', $this->selectedStatus)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', $this->selectedStatus)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             }
         } elseif ($this->selectedStatus == 'rejected') {
             if ($this->fromDate && $this->toDate) {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', $this->selectedStatus)
-                    ->whereDate('regularisation_new1s.rejected_date', '>=', $this->fromDate)
-                    ->whereDate('regularisation_new1s.rejected_date', '<=', $this->toDate)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', $this->selectedStatus)
+                    ->whereDate('regularisation_dates.rejected_date', '>=', $this->fromDate)
+                    ->whereDate('regularisation_dates.rejected_date', '<=', $this->toDate)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             } else {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', $this->selectedStatus)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', $this->selectedStatus)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             }
         }
@@ -140,71 +141,71 @@ class AttendanceRegularisationReport extends Component
         $employeeIds = $employees->pluck('emp_id')->toArray();
         if ($this->selectedStatus == 'applied') {
             if ($this->fromDate && $this->toDate) {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', 'pending')
-                    ->where('regularisation_new1s.is_withdraw', 0)
-                    ->whereDate('regularisation_new1s.created_at', '>=', $this->fromDate)
-                    ->whereDate('regularisation_new1s.created_at', '<=', $this->toDate)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', 'pending')
+                    ->where('regularisation_dates.is_withdraw', 0)
+                    ->whereDate('regularisation_dates.created_at', '>=', $this->fromDate)
+                    ->whereDate('regularisation_dates.created_at', '<=', $this->toDate)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             } else {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', 'pending')
-                    ->where('regularisation_new1s.is_withdraw', 0)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', 'pending')
+                    ->where('regularisation_dates.is_withdraw', 0)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             }
         } elseif ($this->selectedStatus == 'withdrawn') {
             if ($this->fromDate && $this->toDate) {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', 'pending')
-                    ->where('regularisation_new1s.is_withdraw', 1)
-                    ->whereDate('regularisation_new1s.withdraw_date', '>=', $this->fromDate)
-                    ->whereDate('regularisation_new1s.withdraw_date', '<=', $this->toDate)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', 'pending')
+                    ->where('regularisation_dates.is_withdraw', 1)
+                    ->whereDate('regularisation_dates.withdraw_date', '>=', $this->fromDate)
+                    ->whereDate('regularisation_dates.withdraw_date', '<=', $this->toDate)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             } else {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', 'pending')
-                    ->where('regularisation_new1s.is_withdraw', 1)
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', 'pending')
+                    ->where('regularisation_dates.is_withdraw', 1)
 
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             }
         } elseif ($this->selectedStatus == 'approved') {
             if ($this->fromDate && $this->toDate) {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', $this->selectedStatus)
-                    ->whereDate('regularisation_new1s.approved_date', '>=', $this->fromDate)
-                    ->whereDate('regularisation_new1s.approved_date', '<=', $this->toDate)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', $this->selectedStatus)
+                    ->whereDate('regularisation_dates.approved_date', '>=', $this->fromDate)
+                    ->whereDate('regularisation_dates.approved_date', '<=', $this->toDate)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             } else {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', $this->selectedStatus)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', $this->selectedStatus)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             }
         } elseif ($this->selectedStatus == 'rejected') {
             if ($this->fromDate && $this->toDate) {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', $this->selectedStatus)
-                    ->whereDate('regularisation_new1s.rejected_date', '>=', $this->fromDate)
-                    ->whereDate('regularisation_new1s.rejected_date', '<=', $this->toDate)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', $this->selectedStatus)
+                    ->whereDate('regularisation_dates.rejected_date', '>=', $this->fromDate)
+                    ->whereDate('regularisation_dates.rejected_date', '<=', $this->toDate)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             } else {
-                $this->regularisationDetails = RegularisationNew1::whereIn('regularisation_new1s.emp_id', $employeeIds)
-                    ->where('regularisation_new1s.status', $this->selectedStatus)
-                    ->join('employee_details', 'regularisation_new1s.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_new1s.*', 'employee_details.first_name', 'employee_details.last_name')
+                $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
+                    ->where('regularisation_dates.status', $this->selectedStatus)
+                    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
                     ->get();
             }
         }

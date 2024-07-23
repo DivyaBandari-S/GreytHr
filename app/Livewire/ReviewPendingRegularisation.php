@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
+use App\Models\RegularisationDates;
 use App\Models\RegularisationNew1;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +35,7 @@ class ReviewPendingRegularisation extends Component
         
         $this->empid = Auth::guard('emp')->user()->emp_id;
         $this->empName = EmployeeDetails::where('emp_id', $this->empid)->first();
-        $this->regularisationrequest = RegularisationNew1::with('employee')->find($id);
+        $this->regularisationrequest = RegularisationDates::with('employee')->find($id);
         $subordinateEmpId=$this->regularisationrequest->emp_id;
         $this->employeeDetails = Employeedetails::where('emp_id', $subordinateEmpId)->first();
         $this->ManagerId=$this->regularisationrequest->employee->manager_id;
