@@ -1,12 +1,11 @@
 <div class="m-0 px-4" style="position: relative;">
-    <x-loading-indicator />
     <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
     <div class="toggle-container position-relative">
 
         <!-- leave-page.blade.php -->
 
         @if(session()->has('message'))
-        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%; font-size: 14px;" id="success-alert">
+        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%; font-size: 12px;" id="success-alert">
             {{ session('message') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -144,8 +143,8 @@
 
         {{-- pending --}}
         <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}">
-            @if(empty($leavePending))
-            <div class="containerWidth mt-2">
+        @if(empty($leavePending) || $leavePending->isEmpty())
+            <div class="containerWidth mt-2" style="width:85%;">
                 <div class="leave-pending rounded">
 
                     <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
@@ -174,7 +173,7 @@
 
                                 <span class="accordionContentSpan">Category</span>
 
-                                <span class="accordionContentSpanValue">Leave</span>
+                                <span class="accordionContentSpanValue">{{ $leaveRequest->category_type}}</span>
 
                             </div>
 
@@ -259,7 +258,7 @@
 
                             </div>
 
-                            <div class="content d-flex gap-2 align-items-center px-2">
+                            <div class="content d-flex gap-2 align-items-center ">
 
                                 <a href="{{ route('leave-history', ['leaveRequestId' => $leaveRequest->id]) }}">
 
@@ -308,7 +307,7 @@
 
                                 <span style="color: #778899; font-size:12px; font-weight: 500;">Category</span>
 
-                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">Leave</span>
+                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest->category_type}}</span>
 
                             </div>
 

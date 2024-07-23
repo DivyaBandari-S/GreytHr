@@ -264,7 +264,13 @@ class Feeds extends Component
         ->orderByDesc('created_at')
         ->get();
     }
-    
+    public function getInteractedComments($employeeId)
+{
+    return Comment::with('employee', 'hr')
+        ->where('card_id', $employeeId)
+        ->orderBy('updated_at', 'desc') // Sort comments by interaction date in descending order
+        ->get();
+}
     
     public function employee()
     {

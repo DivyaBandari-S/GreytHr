@@ -48,8 +48,8 @@
     </style>
     <livewire:styles />
 
-    @vite(['public/css/app.css', 'public/js/app.js'])
-
+    {{-- @vite(['public/css/app.css', 'public/js/app.js','resources/css/app.css','resources/js/app.js']) --}}
+      @vite(['public/css/app.css', 'public/js/app.js'])
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -209,11 +209,17 @@
                                         Salary
                                         <i class="fas mr-1    fa-caret-down" id="salary-caret" style="color:#6c7e90"></i>
                                     </a>
+                                  
                                     <div id="salary-options" style="display: none;">
                                         <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
+                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
+                                                    Payslips
+                                                </a>
+                                            </li> 
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/formdeclaration" id="itdeclaration" onclick="selectOption(this, 'IT Declaration');setActiveLink(this)">
-                                                    IT Declaration
+                                                <a class="nav-link" href="/ytd" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
+                                                    YTD Reports
                                                 </a>
                                             </li>
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
@@ -221,16 +227,12 @@
                                                     IT Statement
                                                 </a>
                                             </li>
-                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/ytd" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
-                                                    YTD Reports
+                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/formdeclaration" id="itdeclaration" onclick="selectOption(this, 'IT Declaration');setActiveLink(this)">
+                                                    IT Declaration
                                                 </a>
                                             </li>
-                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
-                                                    Payslips
-                                                </a>
-                                            </li>
+                                 
 
 
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
@@ -570,14 +572,9 @@
                                     </a>
                                     <div id="salary-options-2" style="display: none;">
                                         <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                            <li data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/formdeclaration" id="itdeclaration" onclick="selectOption(this, 'IT Declaration');setActiveLink(this, '/formdeclaration')">
-                                                    IT Declaration
-                                                </a>
-                                            </li>
-                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/itstatement" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
-                                                    IT Statement
+                                        <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
+                                                    Payslips
                                                 </a>
                                             </li>
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
@@ -586,11 +583,18 @@
                                                 </a>
                                             </li>
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
-                                                    Payslips
+                                                <a class="nav-link" href="/itstatement" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
+                                                    IT Statement
                                                 </a>
                                             </li>
-
+                                        
+                                            <li data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/formdeclaration" id="itdeclaration" onclick="selectOption(this, 'IT Declaration');setActiveLink(this, '/formdeclaration')">
+                                                    IT Declaration
+                                                </a>
+                                            </li>
+                                     
+                                     
 
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/reimbursement" id="reimbursement" onclick="selectOption(this, 'Reimbursement'); setActiveLink(this)">
@@ -916,14 +920,9 @@
                                     </a>
                                     <div id="salary-options" style="display: none;">
                                         <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                            <li data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/formdeclaration" id="itdeclaration" onclick="selectOption(this, 'IT Declaration');setActiveLink(this, '/formdeclaration')">
-                                                    IT Declaration
-                                                </a>
-                                            </li>
-                                            <li data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/itstatement" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this, '/itstatement')">
-                                                    IT Statement
+                                        <li data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this, '/slip')">
+                                                    Payslips
                                                 </a>
                                             </li>
                                             <li data-bs-target="#navigateLoader" class="nav-item">
@@ -932,10 +931,18 @@
                                                 </a>
                                             </li>
                                             <li data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this, '/slip')">
-                                                    Payslips
+                                                <a class="nav-link" href="/itstatement" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this, '/itstatement')">
+                                                    IT Statement
                                                 </a>
                                             </li>
+                                            <li data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/formdeclaration" id="itdeclaration" onclick="selectOption(this, 'IT Declaration');setActiveLink(this, '/formdeclaration')">
+                                                    IT Declaration
+                                                </a>
+                                            </li>
+                                        
+                                       
+                                       
 
 
                                             <li data-bs-target="#navigateLoader" class="nav-item">
@@ -1204,14 +1211,8 @@
         </div> -->
 
                     <div class="modal-body">
-                        <div class="logo text-center mb-1" style="padding-top: 20px;">
-                            <a href="/">@livewire('company-logo')</a>
-                        </div>
-
                         <div class="d-flex justify-content-center m-4">
-                            <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
+                           @livewire('loader-indicator')
                         </div>
                     </div>
                     <!-- <div class="modal-footer">

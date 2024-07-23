@@ -219,7 +219,7 @@ public function showTable()
 public function showBars()
 {
     try {
-        $this->defaultfaCalendar=1;
+        $this->defaultfaCalendar = 1;
         $this->showMessage = false;
     } catch (\Exception $e) {
         Log::error('Error in showBars method: ' . $e->getMessage());
