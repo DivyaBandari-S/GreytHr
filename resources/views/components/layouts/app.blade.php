@@ -361,6 +361,11 @@
                                                     New Requests
                                                 </a>
                                             </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/users" onclick=" setActiveLink(this)">
+                                                    Help
+                                                </a>
+                                            </li>
 
                                         </ul>
                                     </div>
@@ -721,6 +726,11 @@
                                                     New Requests
                                                 </a>
                                             </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/users" onclick=" setActiveLink(this)">
+                                                    Help
+                                                </a>
+                                            </li>
 
                                         </ul>
                                     </div>
@@ -1047,13 +1057,28 @@
 
                                 <li data-bs-target="#navigateLoader" title="Help Desk" class="nav-item">
 
-                                    <a class="nav-link" href="/HelpDesk" onclick="setActiveLink(this, '/HelpDesk')">
+                                    <a class="nav-link" href="/HelpDesk" onclick="toggleHelpDeskDropdown2()">
 
                                         <img width="25" height="25" src="https://img.icons8.com/3d-fluency/94/headset.png" alt="headset" />
 
                                         <!-- <i class="fas mr-1    fa-headset" style="color:#6c7e90"></i> -->
 
                                     </a>
+                                    <div id="help-options" style="display: none;">
+                                        <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/HelpDesk" onclick=" setActiveLink(this)">
+                                                    New Requests
+                                                </a>
+                                            </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/users" onclick=" setActiveLink(this)">
+                                                    Help
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
 
                                 </li>
 

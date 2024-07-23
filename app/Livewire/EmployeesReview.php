@@ -298,7 +298,7 @@ class EmployeesReview extends Component
          // Check if the from_date year is equal to the current year
          $fromDateYear = Carbon::parse($approvedLeaveRequest->from_date)->format('Y');
 
-         if ($fromDateYear == $selectedYear) {
+          if($fromDateYear == $selectedYear) {
              // Get leave balance for the current year only
              $leaveBalances = LeaveBalances::getLeaveBalances($approvedLeaveRequest->emp_id, $selectedYear);
          } else {

@@ -1,4 +1,21 @@
 <div>
+@if(session()->has('message'))
+        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%; font-size: 12px;" id="success-alert">
+            {{ session('message') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @endif
+
+        @if(session()->has('error'))
+        <div class="alert alert-danger" style="font-size: 12px;" id="error-alert">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @endif
     <style>
     .emp-side-page-nav-item-group {
         font-weight: 600;
@@ -110,13 +127,6 @@
         <div class="sidenav col-md-3 col-lg-2" style="min-height: 30rem;">
             <div>
                 <ul class="nav flex-column side-page-nav">
-                    <label class="emp-side-page-nav-item-group">ATTENDANCE</label>
-                    <li class="nav-item emp-side-page-nav-item" tabindex="0">
-                        <span class="nav-link emp-info {{ $activeTab === 'attendance' ? 'active' : '' }}"
-                            wire:click="setActiveTab('attendance')">
-                            Attendance Regularization
-                        </span>
-                    </li>
                     <label class="emp-side-page-nav-item-group">LEAVE</label>
                     <li class="nav-item emp-side-page-nav-item d-flex gap-1" tabindex="0">
                         <p class="emp-leave-count mb-0 ">
@@ -127,9 +137,15 @@
                         </p>
                         @if($count > 0)
                         <span class="leaveCountReview d-flex align-items-center justify-content-center">
-                            {{ $e }}
+                            {{ $count }}
                         </span>
                         @endif
+                    </li>
+                    <li class="nav-item emp-side-page-nav-item" tabindex="0">
+                        <span class="nav-link emp-info {{ $activeTab === 'attendance' ? 'active' : '' }}"
+                            wire:click="setActiveTab('attendance')">
+                            Attendance Regularization
+                        </span>
                     </li>
                 </ul>
             </div>

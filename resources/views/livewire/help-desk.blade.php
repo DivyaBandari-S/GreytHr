@@ -50,7 +50,7 @@
         <div class="d-flex flex-row justify-content-end gap-10 mt-2">
      
             <div class="mx-2 ">
-                <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> IT Request  </button>
+                <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> It Request  </button>
             </div>
 
             <div class="mx-2 ">
@@ -421,8 +421,8 @@
                         </tr>
                         @if(count($ccToArray) > 2)
                             <tr >
-                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
-                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}
                                     </div>
                                 </td>
@@ -482,8 +482,8 @@
                     </tr>
                     @if(count($ccToArray) > 2)
                             <tr >
-                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
-                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}
                                     </div>
                                 </td>
@@ -543,8 +543,8 @@
                     </tr>
                     @if(count($ccToArray) > 2)
                             <tr >
-                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
-                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}
                                     </div>
                                 </td>
