@@ -14,94 +14,21 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
+use Google\Service\Sheets\ChartData;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
 class TeamOnLeaveChart extends Component
 {
     public $leaveApplications;
+    public $employeesOnLeave;
     public $chartData;
     public $chartOptions;
     public $employeeId;
     public $duration = 'this_month';
-
-    public function render()
-    {
-        try {
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-
-            // Fetch data based on the selected duration
-            if ($this->duration === 'today') {
-                $this->leaveApplications = $this->fetchTodayLeaveApplications();
-            } elseif ($this->duration === 'this_month') {
-                $this->leaveApplications = $this->fetchThisMonthLeaveApplications();
-            }
-
-            $chartData = $this->prepareChartData($this->leaveApplications);
-
-            $this->chartData = [
-                'labels' => $chartData['labels'],
-                'datasets' => $chartData['datasets'],
-            ];
-
-            $this->chartOptions = [
-                'responsive' => true,
-                'scales' => [
-                    'x' => [
-                        'display' => true,
-                        'title' => [
-                            'display' => true,
-
-                        ],
-                        'ticks' => [
-                            'align' => 'center',
-                        ],
-                        'grid' => [
-                            'display' => false,
-                        ],
-                    ],
-                    'y' => [
-                        'display' => true,
-                        'title' => [
-                            'display' => true,
-                            'text' => 'Number Of Days',
-                        ],
-                        'ticks' => [
-                            'beginAtZero' => true,
-                            'stepSize' => 1,
-                            'max' => 6, // Set the max value for the y-axis ticks
-                        ],
-                        'grid' => [
-                            'display' => false,
-                        ],
-                    ],
-                ],
-                'elements' => [
-                    'bar' => [
-                        'barPercentage' => 1, // Adjust the bar width percentage (e.g., 0.8 for 80% width)
-                    ],
-                ],
-            ];
-
-            return view('livewire.team-on-leave-chart', [
-                'leaveApplications' => $this->leaveApplications,
-                'chartData' => $this->chartData,
-                'chartOptions' => $this->chartOptions,
-                'debugInfo' => [
-                    'chartData' => $this->chartData,
-                    'chartOptions' => $this->chartOptions,
-                ]
-            ]);
-        } catch (QueryException $e) {
-            // Log the exception or handle it accordingly
-            Log::error('QueryException occurred: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while fetching data.');
-        } catch (\Exception $e) {
-            // Log other exceptions
-            Log::error('Exception occurred: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while fetching data.');
-        }
-    }
+    public $search = '';
+    public $leaveTypeFilter ="";
+    public $leaveTypes = [];
 
     ///this method ill give data for barchart of leave applications of employees
     private function prepareChartData($leaveApplications)
@@ -110,18 +37,14 @@ class TeamOnLeaveChart extends Component
             $chartData = [
                 'labels' => [],
                 'datasets' => [],
-                'barThickness' => 10,
+                'barThickness' => 1,
             ];
 
-            // Generate labels based on the selected duration
-            if ($this->duration === 'today') {
-                $chartData['labels'][] = Carbon::now()->format('M d');
-            } elseif ($this->duration === 'this_month') {
-                $chartData['labels'] = array_map(function ($day) {
-                    $fromDate = Carbon::now()->startOfMonth()->addDays($day - 1);
-                    return $fromDate->format('M d');
-                }, range(1, Carbon::now()->endOfMonth()->day));
-            }
+            // Generate labels for the entire month
+            $chartData['labels'] = array_map(function ($day) {
+                $fromDate = Carbon::now()->startOfMonth()->addDays($day - 1);
+                return $fromDate->format('M d');
+            }, range(1, Carbon::now()->endOfMonth()->day));
 
             foreach ($leaveApplications as $leaveApplication) {
                 $fromDate = Carbon::parse($leaveApplication->from_date);
@@ -154,6 +77,18 @@ class TeamOnLeaveChart extends Component
                 $leaveTypeData = array_replace(array_fill_keys($chartData['labels'], 0), $leaveTypeData);
             }
 
+            // If duration is 'today', set all dates to 0 except today
+            if ($this->duration === 'today') {
+                $today = Carbon::now()->format('M d');
+                foreach ($chartData['datasets'] as $leaveType => &$leaveTypeData) {
+                    foreach ($leaveTypeData as $date => &$value) {
+                        if ($date !== $today) {
+                            $value = 0;
+                        }
+                    }
+                }
+            }
+
             return $chartData;
         } catch (\Exception $e) {
             Log::error('Error occurred in prepareChartData method: ' . $e->getMessage());
@@ -167,71 +102,48 @@ class TeamOnLeaveChart extends Component
         }
     }
 
+
+
     //this method will fetch only today leave application data
     private function fetchTodayLeaveApplications()
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
-            return LeaveRequest::where('leave_applications.status', 'approved')
+            $query = LeaveRequest::where('leave_applications.status', 'approved')
                 ->where(function ($query) use ($employeeId) {
                     $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
                         ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
                 })
                 ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->whereMonth('from_date', Carbon::now()->month) // Filter for the current month
-                ->orderBy('created_at', 'desc')
-                ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
+                ->orderBy('created_at', 'desc');
+
+            // Apply the date filter based on the duration
+            if ($this->duration ==='today') {
+                $query->whereDate('from_date', '<=', Carbon::now()->today())
+                  ->whereDate('to_date', '>=', Carbon::now()->today());
+            } else if ($this->duration === 'this_month') {
+                $query->whereMonth('from_date', Carbon::now()->month);
+            }
+
+            if (!empty($this->search)) {
+
+                $query->where(function ($query) {
+                    $query->where('employee_details.first_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('employee_details.last_name', 'like', '%' . $this->search . '%');
+                });
+            }
+
+            if (!empty($this->leaveTypeFilter)) {
+                $query->where('leave_type', $this->leaveTypeFilter);
+            }
+
+
+
+            return $query->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
         } catch (\Exception $e) {
             Log::error('Error occurred in fetching details method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while fetching the leaves.');
-        }
-    }
-
-
-    //this method for to fetch details according to dropdown
-    public function updateDuration($value)
-    {
-        $this->duration = $value;
-
-        Log::error("Selected Duration: $value"); // Log selected duration
-
-        try {
-            // Fetch data based on the selected duration
-            if ($this->duration === 'today') {
-                $this->leaveApplications = $this->fetchTodayLeaveApplications();
-            } elseif ($this->duration === 'this_month') {
-                $this->leaveApplications = $this->fetchThisMonthLeaveApplications();
-            }
-        } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in updateDuration(): ' . $e->getMessage());
-            // Flash error message to session
-            session()->flash('error', 'An error occurred while fetching leave applications.');
-            $this->leaveApplications = [];
-        }
-    }
-
-    //this method will fetch monthly based leave applications
-    private function fetchThisMonthLeaveApplications()
-    {
-        try {
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-
-            return LeaveRequest::where('leave_applications.status', 'approved')
-                ->where(function ($query) use ($employeeId) {
-                    $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
-                        ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
-                })
-                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->whereMonth('from_date', Carbon::now()->month) // Filter for the current month
-                ->orderBy('created_at', 'desc')
-                ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
-        } catch (\Exception $e) {
-            // Log the exception or handle it accordingly
-            Log::error('Error fetching leave applications: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while fetching leave applications.');
-            return [];
         }
     }
 
@@ -319,9 +231,243 @@ class TeamOnLeaveChart extends Component
         }
     }
 
-    private function getSessionNumber($session)
+    public function getSessionNumber($session)
     {
         // You might need to customize this based on your actual session values
         return (int) str_replace('Session ', '', $session);
     }
+
+    public function fetchLeaveTypes()
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+            $leaveTypes = LeaveRequest::where('leave_applications.status', 'approved')
+                ->where(function ($query) use ($employeeId) {
+                    $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
+                        ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
+                })
+                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                ->select('leave_type')
+                ->whereNotNull('leave_type')
+                ->where('leave_type', '!=', '')
+                // ->where('leave_applications.leave_type','approved')
+                ->distinct()
+                ->pluck('leave_type')
+                ->toArray();
+                // if ($this->duration === 'today') {
+                //     $leaveTypes->whereDate('from_date', Carbon::now()->today);
+                // } else if ($this->duration === 'this_month') {
+                //     $leaveTypes->whereMonth('from_date', Carbon::now()->month);
+                // }
+
+            return $leaveTypes;
+        } catch (\Exception $e) {
+            Log::error('Error occurred in fetching leave types: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching leave types.');
+        }
+    }
+
+
+    public function updateDuration($value)
+    {
+        $this->duration = $value;
+
+        $this->leaveApplications = $this->fetchTodayLeaveApplications();
+        if ($this->leaveApplications == null) {
+            $this->leaveApplications = [];
+        }
+
+
+
+        $chartData = $this->prepareChartData($this->leaveApplications);
+
+        $this->chartData = [
+            'labels' => $chartData['labels'],
+            'datasets' => $chartData['datasets'],
+        ];
+    }
+    public function updateSearch($value)
+    {
+
+        $this->leaveApplications = $this->fetchTodayLeaveApplications();
+    }
+    public function updateLeaveTypeFilter($value)
+    {
+
+        $this->leaveTypeFilter = $value;
+
+        $this->leaveApplications=$this->fetchTodayLeaveApplications();
+    }
+
+    public function mount()
+    {
+        try {
+
+            $this->leaveApplications = $this->fetchTodayLeaveApplications();
+            // dd( $this->leaveApplications);
+            if ($this->leaveApplications == null) {
+                $this->leaveApplications = [];
+            }
+
+            $chartData = $this->prepareChartData($this->leaveApplications);
+            $this->leaveTypes=$this->fetchLeaveTypes();
+
+            $this->chartData = [
+                'labels' => $chartData['labels'],
+                'datasets' => $chartData['datasets'],
+            ];
+
+
+            $this->chartOptions = [
+                'responsive' => true,
+                'scales' => [
+                    'x' => [
+                        'stacked' => true,
+                        'display' => true,
+                        'title' => [
+                            'display' => true,
+
+                        ],
+                        'ticks' => [
+                            'align' => 'center',
+                        ],
+                        'grid' => [
+                            'display' => false,
+                        ],
+                    ],
+                    'y' => [
+                        'stacked' => true,
+                        'display' => true,
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Number Of Days',
+                        ],
+                        'ticks' => [
+                            'beginAtZero' => true,
+                            'stepSize' => 1,
+                            'max' => 6, // Set the max value for the y-axis ticks
+                        ],
+                        'grid' => [
+                            'display' => false,
+                        ],
+                    ],
+                ],
+                'elements' => [
+                    'bar' => [
+                        'barPercentage' => 1, // Adjust the bar width percentage (e.g., 0.8 for 80% width)
+                    ],
+                ],
+            ];
+        } catch (QueryException $e) {
+            // Log the exception or handle it accordingly
+            Log::error('QueryException occurred: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching data.');
+        } catch (\Exception $e) {
+            // Log other exceptions
+            Log::error('Exception occurred: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching data.');
+        }
+    }
+
+    public function render()
+    {
+        return view(
+            'livewire.team-on-leave-chart',
+            [
+
+                'chartData' => $this->chartData,
+                'chartOptions' => $this->chartOptions,
+                'empsOnLeaves' => $this->employeesOnLeave,
+                'leaveApplications' => $this->leaveApplications,
+                'debugInfo' => [
+                    'chartData' => $this->chartData,
+                    'chartOptions' => $this->chartOptions,
+                ]
+            ]
+        );
+    }
+
+    public function fetchEmployeesOnLeave()
+    {
+        try {
+            // Fetch leave applications based on the duration
+            if ($this->duration === 'today') {
+                $leaveApplications = $this->fetchTodayLeaveApplications();
+            } elseif ($this->duration === 'this_month') {
+                $leaveApplications = $this->fetchThisMonthLeaveApplications();
+            }
+            // Check if there are no leave applications
+
+            // Extract unique employee IDs from the leave applications
+            $employeeIds = $leaveApplications->pluck('emp_id')->unique();
+
+            // Fetch employee details based on unique IDs
+            $employeesOnLeave = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                ->whereIn('leave_applications.emp_id', $employeeIds)
+                ->where('leave_applications.status', 'approved')
+                ->whereMonth('from_date', Carbon::now()->today)
+                ->get(['employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'employee_details.image', 'leave_applications.*'])
+                ->toArray();
+
+
+            return $employeesOnLeave;
+        } catch (\Exception $e) {
+            Log::error('Error occurred while fetching employee details: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching employee details.');
+            return collect([]); // Return an empty collection if an error occurs
+        }
+    }
+
+
+    // public function fetchChartData()
+    // {
+
+    //     $chartData = $this->prepareChartData($this->leaveApplications);
+
+    //     return response()->json([
+    //         'labels' => $chartData['labels'],
+    //         'datasets' => $chartData['datasets'],
+    //         'options' => [
+    //             'responsive' => true,
+    //             'scales' => [
+    //                 'x' => [
+    //                     'stacked' => true,
+    //                     'display' => true,
+    //                     'title' => [
+    //                         'display' => true,
+    //                     ],
+    //                     'ticks' => [
+    //                         'align' => 'center',
+    //                     ],
+    //                     'grid' => [
+    //                         'display' => false,
+    //                     ],
+    //                 ],
+    //                 'y' => [
+    //                     'stacked' => true,
+    //                     'display' => true,
+    //                     'title' => [
+    //                         'display' => true,
+    //                         'text' => 'Number Of Days',
+    //                     ],
+    //                     'ticks' => [
+    //                         'beginAtZero' => true,
+    //                         'stepSize' => 1,
+    //                         'max' => 6,
+    //                     ],
+    //                     'grid' => [
+    //                         'display' => false,
+    //                     ],
+    //                 ],
+    //             ],
+    //             'elements' => [
+    //                 'bar' => [
+    //                     'barPercentage' => 1,
+    //                 ],
+    //             ],
+    //         ],
+    //     ]);
+    // }
+
 }
