@@ -75,13 +75,12 @@ class Delegates extends Component
         $this->peopleFound = count($this->filteredPeoples) > 0;
     }
    
-    public function updatedSelectedPeople()
-    {
-        $this->delegate = implode(', ', array_unique($this->selectedPeopleNames));
-    }
+  
     public function closePeoples()
 {
-    $this->isNames = false;
+ 
+    $this->isRotated = false;
+    
 }
     public function NamesSearch()
     {
@@ -99,8 +98,11 @@ class Delegates extends Component
         $this->selectedPeopleNames = [];
         $this->delegate = '';
     }
+   
     public function selectPerson($personId)
     {
+       
+    
         $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
 
         if ($selectedPerson) {
@@ -114,7 +116,18 @@ class Delegates extends Component
     }
 
 
-    
+    public function updatedSelectedPeople()
+    {
+        $this->selectedPeopleNames = [];
+        foreach ($this->selectedPeople as $personId) {
+            $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
+            if ($selectedPerson) {
+                $this->selectedPeopleNames[] = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
+            }
+        }
+        sort($this->selectedPeopleNames);
+        $this->delegate = implode(', ', array_unique($this->selectedPeopleNames));
+    }
  
     public function submitForm()
 {
