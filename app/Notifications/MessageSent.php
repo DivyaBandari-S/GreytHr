@@ -30,7 +30,6 @@ class MessageSent extends Notification implements ShouldBroadcast
     )
     {
         //
-
         $this->user= $user;
         $this->message= $message;
         $this->conversation= $conversation;
@@ -69,7 +68,7 @@ class MessageSent extends Notification implements ShouldBroadcast
         return new BroadcastMessage([
             'user_id' => $this->user->id,
             'conversation_id' => $this->conversation->id,
-            'message_id' => $this->message->id,   
+            'message_id' => $this->message->id,
             'receiver_id' => $this->receiverId,
         ]);
     }

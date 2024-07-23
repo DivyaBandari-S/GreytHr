@@ -10,12 +10,12 @@
 
 
             <div class="col-md-10 d-flex align-items-center justify-content-between"
-            style="height: 50px; border-radius: 10px; margin-top: 10px;">
-            <div class="input-group" style="width: 100%;">
-                <input type="text" class="form-control" placeholder="Search..." wire:model="searchTerm"
-                    aria-label="Search" aria-describedby="search-addon" wire:input="filter">
+                style="height: 50px; border-radius: 10px; margin-top: 10px;">
+                <div class="input-group" style="width: 100%;">
+                    <input type="text" class="form-control" placeholder="Search..." wire:model="searchTerm"
+                        aria-label="Search" aria-describedby="search-addon" wire:input="filter">
+                </div>
             </div>
-        </div>
 
 
 
@@ -27,6 +27,7 @@
 
 
                             @foreach ($conversations as $key => $conversation)
+                        
                                 <li id="conversation-{{ $conversation->id }}" wire:key="{{ $conversation->id }}"
                                     class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2 {{ $conversation->id == $selectedConversation?->emp_id ? 'bg-gray-100/70' : '' }}"
                                     style="margin-bottom: 10px;height:70px;width:90%; ">
@@ -135,6 +136,22 @@
                                 @php
                                     $previousMessage = $key > 0 ? $loadedMessages[$key - 1] : null;
                                 @endphp
+                                    @php
+                    // Determine the date of the message
+                    $currentDate = $message->created_at->format('Y-m-d');
+                    // Check if the message is on a different day from the previous message
+                    $showDate = $currentDate !== $previousDate;
+                    // Update previousDate for the next iteration
+                    $previousDate = $currentDate;
+                    // Get the formatted date string
+                    $dateString = $message->created_at->format('l, F j, Y');
+                @endphp
+
+                {{-- Show date if it’s a new day or it’s within the past 5 days --}}
+                @if ($showDate || $message->created_at->greaterThan(now()->subDays(5)))
+                    <li class="date-header">{{ $dateString }}</li>
+                @endif
+
                                 <div
                                     class="message-container clearfix @if ($message->sender_id === auth()->id()) sent @else received @endif">
                                     {{-- message body --}}
@@ -722,6 +739,17 @@
         position: absolute;
         top: 0;
     }
+    .date-header {
+    text-align: center;
+    color: #888;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f9f9f9;
+    margin: 10px 0;
+}
+
 
     .attach-btn {
         height: 100%;

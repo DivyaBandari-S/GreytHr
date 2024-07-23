@@ -25,7 +25,7 @@ class Tasks extends Component
     public $emp_id;
     public $task_name;
     public $assignee;
-    public $priority = "low";
+    public $priority = "";
     public $due_date;
     public $tags;
     public $followers;
@@ -153,6 +153,7 @@ class Tasks extends Component
         if ($task) {
             $task->update(['status' => 'Open']);
         }
+        session()->flash('message', 'Task has been Re-Opened.');
         return redirect()->to('/tasks');
     }
 
@@ -164,6 +165,7 @@ class Tasks extends Component
                     'due_date' => 'required',
                     'assignee' => 'required',
                     'task_name' => 'required',
+                    'priority' => 'required|in:High,Medium,Low',
                 ]);
             } else {
                 $this->validate([
@@ -172,6 +174,7 @@ class Tasks extends Component
                     'project_name' => 'required',
                     'assignee' => 'required',
                     'task_name' => 'required',
+                    'priority' => 'required|in:High,Medium,Low',
                 ]);
             }
         }
@@ -303,7 +306,7 @@ class Tasks extends Component
         $this->commentAdded = true; // Set the flag to indicate that a comment has been added
         $this->newComment = '';
         $this->showModal = false;
-       session()->flash('comment_message', 'Comment added successfully.');
+        session()->flash('message', 'Comment added successfully.');
     }
     public function updatedNewComment($value)
     {

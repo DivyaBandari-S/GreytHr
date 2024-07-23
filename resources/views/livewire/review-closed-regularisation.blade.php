@@ -31,7 +31,7 @@
         padding: 5px;
         background-color: none;
           }
- 
+
     .heading {
     flex: 8; /* Adjust the flex value to control the size of the heading container */
     padding: 20px;
@@ -40,7 +40,7 @@
     border: 1px solid #ccc;
     border-radius:5px;
 }
- 
+
 .side-container {
     flex: 4; /* Adjust the flex value to control the size of the side container */
     background-color: #fff;
@@ -50,7 +50,7 @@
     border-radius:5px;
     border:1px solid #dcdcdc;
 }
-   
+
         .view-container{
             border:1px solid #ccc;
             background:#ffffe8;
@@ -67,23 +67,23 @@
             justify-content:space-between;
             margin:0.975rem auto;
         }
- 
+
         .field {
             display: flex;
             justify-content: start;
             flex-direction: column;
         }
- 
+
         .pay-bal  {
          display:flex;
          gap:10px;
         }
- 
+
         .details {
-       
+
             line-height:2;
         }
- 
+
         .details p {
             margin: 0;
         }
@@ -101,9 +101,9 @@
         text-overflow: ellipsis;
         max-width: 2px;
         white-space: nowrap;
-    
+
     }
-   
+
     .tooltip-text:hover::after {
     content: attr(data-tooltip);
     font-weight: bold;
@@ -122,7 +122,7 @@
 
 
 
-    
+
         .group h6{
             font-weight:600;
             font-size:0.875rem;
@@ -148,11 +148,11 @@
         .group {
             margin-left:10px;
         }
-     
+
         .data{
             display:flex;
             flex-direction:column;
-   
+
         }
         .cirlce{
             height:0.75rem; width:0.75rem; background: #778899; border-radius:50%;
@@ -202,26 +202,26 @@
         padding: 10px; /* Modify padding as needed */
         width: 100%;
     }
- 
+
     .side-container {
         flex: 1; /* Change the flex value for the side container */
         padding: 10px; /* Modify padding as needed */
         height: auto;
         width: 100%;/* Allow the height to adjust based on content */
     }
-    
+
 
 }
     </style>
-    
+
     <div class="detail-container ">
-        
+
         <div class="approved-leave d-flex gap-3">
             <div class="heading mb-3">
                 <div class="heading-2" >
                     <div class="d-flex flex-row justify-content-between rounded">
                     <div class="field">
-                               
+
                                     @if($regularisationrequest->status=='approved')
                                         <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                             Approved by
@@ -230,27 +230,27 @@
                                         <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                             Rejected by
                                         </span>
-                                    @endif  
-                           
-                                
-                               
-                                  
-                                        <span style="color: #333; font-weight: 500;font-size:12px;text-transform:uppercase;">
-                                            hii{{$ManagerName->first_name}}&nbsp;{{$ManagerName->last_name}}
+                                    @endif
+
+
+
+
+                                        <span style="color: #333; font-weight: 500;font-size:12px;">
+                                            {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
                                         </span>
-                                   
-                                       
-                                 
+
+
+
                         </div>
- 
+
                      <div>
                         <span style="color: #32CD32; font-size: 12px; font-weight: 500; text-transform:uppercase;">
-                      
+
                                 @if($regularisationrequest->status=='rejected')
                                     <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#f66;text-transform:uppercase;">{{$regularisationrequest->status}}</span>
                                 @elseif($regularisationrequest->status=='approved')
                                     <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;text-transform:uppercase;">{{$regularisationrequest->status}}</span>
-                                @endif    
+                                @endif
                         </span>
                    </div>
                 </div>
@@ -259,12 +259,12 @@
                      <div class="first-col" style="display:flex; gap:40px;">
                             <div class="field p-2">
                                 <span style="color: #778899; font-size:11px; font-weight: 500;">Remarks</span>
-                                
+
                                    <span style="font-size: 12px; font-weight: 600;text-align:center;">-<br></span>
-                                
-                                
+
+
                             </div>
-                           
+
                             <div class="vertical-line"></div>
                          </div>
                          <div class="box" style="display:flex;  margin-left:30px;  text-align:center; padding:5px;">
@@ -276,8 +276,8 @@
                      </div>
                  </div>
               </div>
- 
-        
+
+
         </div>
         <div class="side-container mx-2 ">
             <h6 style="color: #778899; font-size: 12px; font-weight: 500; text-align:start;"> Application Timeline </h6>
@@ -296,60 +296,60 @@
                           @elseif($regularisationrequest->status=='rejected')
                                rccept<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
                           @endif
-                           
+
                            <span style="color: #778899; font-weight: 500;">
-                               {{strtoupper($ManagerName->first_name)}}&nbsp;{{strtoupper($ManagerName->last_name)}}
+                               {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
                            </span><br>
-                        @if($regularisationrequest->status=='approved')   
+                        @if($regularisationrequest->status=='approved')
                            <span style="color: #778899; font-size: 11px; font-weight: 400;text-align:start;">
-                                    
-                                    
+
+
                                     @if(\Carbon\Carbon::parse($regularisationrequest->approved_date)->isToday())
                                                                  Today
                                                     @elseif(\Carbon\Carbon::parse($regularisationrequest->approved_date)->isYesterday())
                                                                 Yesterday
                                                     @else
                                                          {{ \Carbon\Carbon::parse($regularisationrequest->approved_date)->format('jS M, Y') }}
-           
+
                                                     @endif
                                                     &nbsp;&nbsp;&nbsp;
                                                         {{ \Carbon\Carbon::parse($regularisationrequest->approved_date)->format('h:i A') }}
                                     </span>
-                        @elseif($regularisationrequest->status=='rejected')   
+                        @elseif($regularisationrequest->status=='rejected')
                         <span style="color: #778899; font-size: 11px; font-weight: 400;text-align:start;">
-                                    
-                                    
+
+
                                     @if(\Carbon\Carbon::parse($regularisationrequest->rejected_date)->isToday())
                                                                  Today
                                                     @elseif(\Carbon\Carbon::parse($regularisationrequest->rejected_date)->isYesterday())
                                                                 Yesterday
                                                     @else
                                                          {{ \Carbon\Carbon::parse($regularisationrequest->rejected_date)->format('jS M, Y') }}
-           
+
                                                     @endif
                                                     &nbsp;&nbsp;&nbsp;
                                                         {{ \Carbon\Carbon::parse($regularisationrequest->rejected_date)->format('h:i A') }}
                                     </span>
-                        @endif              
+                        @endif
                     <br>
-                    
+
                 </h5>
             </div>
- 
+
            </div>
            <div class="group">
                <div style="margin-top:-15px;">
                   <h5 style="color: #333; font-size: 12px; font-weight: 400; text-align:start;">Submitted<br>
                           <span style="color: #778899; font-size: 11px; font-weight: 400;text-align:start;">
-                                    
-                                    
+
+
                           @if(\Carbon\Carbon::parse($regularisationrequest->created_at)->isToday())
                                                        Today
                                           @elseif(\Carbon\Carbon::parse($regularisationrequest->created_at)->isYesterday())
                                                       Yesterday
                                           @else
                                                {{ \Carbon\Carbon::parse($regularisationrequest->created_at)->format('jS M, Y') }}
- 
+
                                           @endif
                                           &nbsp;&nbsp;&nbsp;
                                               {{ \Carbon\Carbon::parse($regularisationrequest->created_at)->format('h:i A') }}
@@ -358,13 +358,13 @@
                </div>
            </div>
               </div>
-           
+
            </div>
-             
+
         </div>
         </div>
     </div>
-  
+
   <div class="table-container">
   <table style="width: 50%; height: 60%;">
   <thead style="background-color: white;">
@@ -432,13 +432,13 @@
 
                 </td>
                 <td style="width:20%;font-size:12px;padding: 0;">
-                       
+
                        @if(empty($r1['to']))
                             19:00
                        @else
                             {{ $r1['to'] }}
                        @endif
-                       
+
                 </td>
                 <td class="tooltip-container" style="width:30%; border-right: 1px solid #dcdcdc;padding: 8px;">
                             <span class="tooltip-text" style="font-size: 12px;" data-tooltip="{{$r1['reason']}}">{{ ucwords(strtolower($r1['reason'])) }}</span>

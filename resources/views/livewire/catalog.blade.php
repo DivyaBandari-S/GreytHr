@@ -30,7 +30,7 @@
                         <h4 class="mb-4 mt-4" style="font-size: 16px;">Popular Items</h4>
                     </div>
                     <div class="col-6" style="text-align: right; margin: auto; font-size: 13px; padding-right: 15px;">
-                        <i class="fas fa-table catalogCardIcon" id="catCardView" onclick="changeView('catCardView')" style="padding: 5px; border-radius: 50%; background-color: #f0f0f0; cursor: pointer; color: #333;"></i>
+                        <i class="fas fa-table catalogCardIcon" id="catCardView" onclick="changeView('catCardView')" style="padding: 5px; border-radius: 50%; background-color: #f0f0f0; cursor: pointer; color: #333;align-items:center"></i>
                         <span style="border: 1px solid" class="me-3 ms-1"></span>
                         <i class="far fa-list-alt catalogCardIcon" id="catListView" onclick="changeView('catListView')" style="padding: 5px; border-radius: 50%; background-color: #f0f0f0; cursor: pointer; color: #333;"></i>
                     </div>
@@ -92,9 +92,9 @@
                                                             @error('description') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
-                                                        <div class="row m-0" style="margin-left:-10px">
+                                                        <div class="row mt-2" style="margin-left:-10px">
                                                             <div class="row">
-                                                                <div class="mb-3">
+                                                                <div class="form-group ">
 
                                                                     <div class="form-group  m-0 p-0">
                                                                         <label for="cc_to" > Members to be Added :<span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
@@ -102,7 +102,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group  m-0">
-                                                                    <div class="mb-3 p-0">
+                                                                    <div class="form-group  p-0">
                                                                         <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
                                                                             <i class="fa fa-plus me-3"></i>
                                                                             Add
@@ -159,22 +159,19 @@
 @endif
 
                                                         </div>
-                                                        <div class="form-group  m-0">
-                                                            <label for="fileInput" style="cursor: pointer;">
-                                                                <i class="fa fa-paperclip"></i> Attach Image
-                                                            </label>
-                                                            @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
+                                                        <div class="row">
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
+                            </div>
+                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
-                                                        <div class="form-group  m-0">
-                                                            <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                            @if ($image)
-                                                            <div class="row m-0">
-                                                                <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                                                            </div>
-                                                            @endif
-                                                        </div>
+                        <div>
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                         
+                        </div>
 
                                                     </form>
                                                 </div>
@@ -319,30 +316,29 @@
 @endif
 
                                                         </div>
-                                                        <div class="form-group m-0">
-                                                            <label for="fileInput" style="cursor: pointer;">
-                                                                <i class="fa fa-paperclip"></i> Attach Image
-                                                            </label>
-                                                            @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
+                                                        <div class="row">
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
+                            </div>
+                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
-                                                        <div class="row m-0">
-                                                            <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                            @if ($image)
-                                                            <div class="row m-0">
-                                                                <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                                                            </div>
-                                                            @endif
-                                                        </div>
+                        <div>
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                         
+                        </div>
 
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
-
+                                                <button type="button" wire:click="DistributorRequest" class="submit-btn">
+    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+</button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                    <button type="button" wire:click="submit" class="submit-btn">Submit</button>
+                                   
                                                 </div>
                                             </div>
                                         </div>
@@ -406,14 +402,14 @@
                                                             @error('description') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
-                                                        <div class="row ">
-                                                            <div class="form-group m-0">
-                                                                <div class="form-group mb-3">
+                                                       
+                                                            <div class="form-group ">
+                                                                <div class="form-group ">
                                                                     <label for="cc_to" class="form-label" >Add users to be a New Mailbox : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
 
                                                                 </div>
-                                                                <div class="form-group m-0">
-                                                                    <div class="form-group  p-0">
+                                                                <div class="form-group ">
+                                                                    <div class="form-group  ">
                                                                         <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
                                                                             <i class="fa fa-plus me-3"></i>
                                                                             Add
@@ -422,7 +418,7 @@
 
                                                                     @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
                                                                 </div>
-                                                            </div>
+                                                            
                                                             @if($isNames)
     <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
         <div class="input-group" style="margin-bottom: 10px;">
@@ -470,30 +466,29 @@
 @endif
 
                                                         </div>
-                                                        <div class="form-group m-0">
-                                                            <label for="fileInput" style="cursor: pointer;">
-                                                                <i class="fa fa-paperclip"></i> Attach Image
-                                                            </label>
-                                                            @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
+                                                        <div class="row">
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
+                            </div>
+                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
-                                                        <div class="row m-0">
-                                                            <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                            @if ($image)
-                                                            <div class="row m-0">
-                                                                <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                                                            </div>
-                                                            @endif
-                                                        </div>
+                        <div>
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                         
+                        </div>
 
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
-
+                                                <button type="button" wire:click="Request" class="submit-btn">
+    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+</button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                    <button type="button" wire:click="Request" class="submit-btn">Submit</button>
+                                                   
                                                 </div>
                                             </div>
                                         </div>
@@ -630,22 +625,19 @@
 @endif
 
                                                             </div>
-                                                            <div class="form-group m-0">
-                                                                <label for="fileInput" style="cursor: pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
+                                                            <div class="row">
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
+                            </div>
+                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
-                                                            <div class="form-group m-0">
-                                                                <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                                @if ($image)
-                                                                <div class="row m-0">
-                                                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                                                                </div>
-                                                                @endif
-                                                            </div>
+                        <div>
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                         
+                        </div>
 
                                                         </form>
                                                     </div>
@@ -789,30 +781,29 @@
 
                                                             </div>
 
-                                                            <div class="form-group m-0">
-                                                                <label for="fileInput" style="cursor: pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
+                                                            <div class="row">
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
+                            </div>
+                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
-                                                            <div class="row m-0">
-                                                                <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                                @if ($image)
-                                                                <div class="row m-0">
-                                                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                                                                </div>
-                                                                @endif
-                                                            </div>
+                        <div>
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                         
+                        </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
-
+                                                    <button type="button" wire:click="Devops" class="submit-btn">
+    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+</button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -943,30 +934,29 @@
 @endif
 
                                                             </div>
-                                                            <div class="form-group m-0">
-                                                                <label for="fileInput" style="cursor: pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
+                                                            <div class="row">
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
+                            </div>
+                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
-                                                            <div class="form-group m-0">
-                                                                <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                                @if ($image)
-                                                                <div class="row m-0">
-                                                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                                                                </div>
-                                                                @endif
-                                                            </div>
+                        <div>
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                         
+                        </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
-
+                                                    <button type="button" wire:click="DistributorRequest" class="submit-btn">
+    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+</button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -1103,30 +1093,29 @@
 @endif
 
                                                             </div>
-                                                            <div class="form-group m-0">
-                                                                <label for="fileInput" style="cursor: pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
+                                                            <div class="row">
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
+                            </div>
+                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
-                                                            <div class="row m-0">
-                                                                <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                                @if ($image)
-                                                                <div class="row m-0">
-                                                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                                                                </div>
-                                                                @endif
-                                                            </div>
+                        <div>
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                         
+                        </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
-
+                                                    <button type="button" wire:click="Devops" class="submit-btn">
+    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+</button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
+                                                       
                                                     </div>
                                                 </div>
                                             </div>
@@ -1274,30 +1263,30 @@
 @endif
 
                                                             </div>
-                                                            <div class="form-group m-0">
-                                                                <label for="fileInput" style="cursor: pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
+                                                            <div class="row">
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
+                            </div>
+                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
-                                                            <div class="row m-0">
-                                                                <input class="form-control" wire:model="image" type="file" accept="image/*">
-                                                                @if ($image)
-                                                                <div class="row m-0">
-                                                                    <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                                                                </div>
-                                                                @endif
-                                                            </div>
+                        <div>
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                         
+                        </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
-
+                                                    <button type="button" wire:click="Devops" class="submit-btn">
+    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
+</button>
+             
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -1564,11 +1553,16 @@
                         <h4 class="mt-4 mb-2">Standard Changes</h4>
                         <p class="mb-4">Standard Change Template Library</p>
                     </div>
-                    <div class="col-6" style="text-align: right; margin: auto; font-size: 13px;">
-                        <i class="fas fa-table catalogCardIcon activeCatalog" id="standCardView" onclick="changeView('standCardView')"></i>
+                    <div class="col-6" style="text-align: right; margin: auto; font-size: 13px; padding-right: 15px;">
+                        <i class="fas fa-table catalogCardIcon" id="standCardView" onclick="changeView('standCardView')" style="padding: 5px; border-radius: 10%; cursor: pointer; color: #333;"></i>
+                        <span style="border: 1px solid" class="me-3 ms-1"></span>
+                        <i class="far fa-list-alt catalogCardIcon" id="standCardView" onclick="changeView('standListView')" style="padding: 5px; border-radius: 10%;  cursor: pointer; color: #333;"></i>
+                    </div>
+                    <!-- <div class="col-6" style="text-align: right; margin: auto; font-size: 13px;">
+                        <i class="fas fa-table catalogCardIcon " id="standCardView" onclick="changeView('standCardView')"></i>
                         <span style="border: 1px solid" class="me-3 ms-1"></span>
                         <i class="far fa-list-alt catalogCardIcon" id="standListView" onclick="changeView('standListView')"></i>
-                    </div>
+                    </div> -->
                 </div>
 
                 <section id="standardCardView" class="showIt">
@@ -1579,7 +1573,8 @@
                                 <div class="row m-0 mb-5">
                                     <p class="p-0" style="cursor: pointer">Shifting Distribution List to Shared Mailboxt</p>
                                 </div>
-                                <a href="" style="color:blue; cursor: pointer">View Details</a>
+                                <a href="#" id="standCardView" style="color:blue; cursor: pointer">View Details</a>
+
                             </div>
                         </div>
                     </div>

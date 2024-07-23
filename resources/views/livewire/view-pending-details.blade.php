@@ -1,5 +1,22 @@
 <div>
 
+@if(session()->has('message'))
+        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%; font-size: 12px;" id="success-alert">
+            {{ session('message') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @endif
+
+        @if(session()->has('error'))
+        <div class="alert alert-danger" style="font-size: 12px;" id="error-alert">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @endif
 <div class="col"  id="leavePending" style="width: 95%; padding: 0;border-radius: 5px; ">
    @if(!empty($this->leaveApplications))
         @foreach($this->leaveApplications as $leaveRequest)
@@ -30,7 +47,15 @@
                                         </div>
                                  </div>
                             </div>
-                         
+                            <div class="col accordion-content" >
+                                <p style="color: #778899; font-size: 12px; font-weight: 500; margin-bottom:0;">Category <br>
+                                @if(isset($leaveRequest['leaveRequest']->category_type))
+                                    <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest['leaveRequest']->category_type }}</span>
+                                @else
+                                    <span style="color: #778899; font-size: 10px;">Leave Type Not Available</span>
+                                @endif
+                                </p>
+                            </div>
                             <div class="col accordion-content" >
                                 <p style="color: #778899; font-size: 12px; font-weight: 500; margin-bottom:0;">Leave Type <br>
                                 @if(isset($leaveRequest['leaveRequest']->leave_type))
@@ -40,6 +65,7 @@
                                 @endif
                                 </p>
                             </div>
+
 
                             <div class="col accordion-content mb-0" >
                                     @php
@@ -82,10 +108,12 @@
                             </div>
                             <!-- Add other details based on your leave request structure -->
                             <div class="arrow-btn " >
-                               <i class="fa fa-angle-down"></i>
+                               <i class="fa fa-angle-down" ></i>
                             </div>
                         </div>
                     </div>
+
+
                     <div class="accordion-body p-0 m-0">
                       <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
                         <div class="content1 px-2">
@@ -93,7 +121,7 @@
                                 @if(isset($leaveRequest['leaveRequest']->from_date))
                                     <span style="color: #778899; font-size: 11px ;font-weight: 400;">
                                         {{ $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session) }}
-                                    </span>
+                                   </span>
                                 @else
                                     <span style="color: #778899; font-size: 12px; font-weight: 400;">No. of days not available</span>
                                 @endif
@@ -117,7 +145,7 @@
                                 @else
                                     <span style="color: #333; font-size: 12px; font-weight: 400;">No. of days not available</span>
                                 @endif
-                               </span> 
+                               </span>
                             </div>
                             <div class="content2">
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;">Leave Balance:</span>
@@ -170,7 +198,11 @@
                                 <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" style="color:#007BFF;font-size:11px;">View Details</a>
                                 <button class="rejectBtn" wire:click="rejectLeave({{ $loop->index }})">Reject</button>
                                 <button class="rejectBtn" >Forward</button>
+                                @if($leaveRequest['leaveRequest']->cancel_status === 'Leave Cancel Pending')
+                                <button class="approveBtn" wire:click="approveLeaveCancel({{ $loop->index }})">Approve</button>
+                                @else
                                 <button class="approveBtn" wire:click="approveLeave({{ $loop->index }})">Approve</button>
+                                @endif
                             </div>
                         </div>
                     </div>

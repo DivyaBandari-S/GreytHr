@@ -1,3 +1,5 @@
+<div>
+    <x-loading-indicator />
 <div style="overflow-x:hidden">
 
     <body>
@@ -14,7 +16,7 @@
                 <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; margin-top: 5px;"></button>
             </div>
             @endif
-            <div class="d-flex border  align-items-center justify-content-center" style="height: 100px;">
+            <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
     <div class="card border-0 m-0" style="width: 380px; border-radius: 5px;">
         <div class="card-header px-0 py-0 m-0 border-0 " style="border-radius: 5px;">
             <div class="row no-gutters" style="height: 100%; width: 100%;">
@@ -46,9 +48,11 @@
 
         </div>
         <div class="d-flex flex-row justify-content-end gap-10 mt-2">
-            <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 1px 0; font-size: 12px;" onclick="location.href='/catalog'">
-                IT Request
-            </button>
+     
+            <div class="mx-2 ">
+                <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> It Request  </button>
+            </div>
+
             <div class="mx-2 ">
                 <button wire:click="openFinance" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> Finance Request </button>
             </div>
@@ -65,18 +69,18 @@
         <div class="modal" tabindex="-1" role="dialog" style="display: block;overflow-y:auto;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                    <div class="modal-header align-items-center" style="background-color: rgb(2, 17, 79); height: 50px">
                         <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>HR Request</b></h5>
 
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category<span>*</span></label>
-                            <div class="input-group">
-    <select wire:model.lazy="category" id="category" class="custom-select" style="font-size: 12px;">
-        <option style="color: #778899;" value="">Select Category</option>
-        <optgroup label="HR">
+                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category <span style="color:red">*</span></label>
+<div class="input" type="" class="form-control placeholder-small">
+    <div style="position: relative;">
+        <select wire:model.lazy="category" id="category" style="font-size: 12px;" class="form-control placeholder-small">
+            <option style="color: #778899; " value="">Select Category</option>
+            <optgroup label="HR">
             <option value="Employee Information">Employee Information</option>
             <option value="Hardware Maintenance">Hardware Maintenance</option>
             <option value="Incident Report">Incident Report</option>
@@ -85,25 +89,34 @@
             <option value="Technical Support">Technical Support</option>
             <!-- Add more HR-related options as needed -->
         </optgroup>
-    </select>
-    </div>
-    @error('category') 
-        <span class="text-danger">{{ $message }}</span> 
-    @enderror
+        </select>
+        @error('category') <span class="text-danger">{{ $message }}</span> @enderror
+        <div class="dropdown-toggle-icon" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        </div>
+  
+
+
+                                   
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-2">
+    <label for="subject" style="color: #778899; font-weight: 500; font-size: 12px;">Subject <span style="color: red;">*</span></label>
+    <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
+    @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
 </div>
 
+<div class="form-group">
+    <label for="description" style="color: #778899; font-weight: 500; font-size: 12px;">Description <span style="color: red;">*</span></label>
+    <textarea wire:model.lazy="description" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
 
-                        <div class="form-group">
-                            <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject<span style="color:red">*</span></label>
-                            <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject">
-                            @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description<span style="color:red">*</span></label>
-                            <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
-                            @error('description') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <div class="row">
+    @error('description') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
+<div class="row">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -114,34 +127,30 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                            @if ($image)
-                            <div>
-                                <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
-                            </div>
-                            @endif
+                         
                         </div>
-
-                        <div id="filePreview"></div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group">
-                                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
-                                    <div class="input-group">
-                                        <select name="category" id="category" wire:model.lazy="priority" class="custom-select" style="font-size: 12px;">
-                                            <option style="color: gray;" value="">Select Priority</option>
-                                            <option value="High">
-                                                <span></span> High
-                                            </option>
-                                            <option value="Low">
-                                                <span></span> Low
-                                            </option>
-                                            <option value="Medium">
-                                                <span></span> Medium
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                            <div class="form-group mt-2">
+    <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
+    <div class="input" class="form-control placeholder-small">
+        <div style="position: relative;">
+            <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                <option style="color: gray;" value="">Select Priority</option>
+                <option value="High">High</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+            </select>
+            <div class="dropdown-toggle-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
                             </div>
                         </div>
                         <div class="row " style="margin-top: 10px;">
@@ -150,7 +159,7 @@
                                     <div class="row m-0 p-0">
                                         <div style="margin: 0px;padding:0;">
                                             <div>
-                                                <div style="font-size: 12px;color:#778899;margin-bottom:10px;font-weight:500;" wire:model.lazy="cc_to" id="cc_to">Selected CC recipients : {{ implode(', ', array_unique($selectedPeopleNames)) }}</div>
+                                                <div style="font-size: 12px;color:#778899;margin-bottom:10px;font-weight:500;" wire:model="cc_to" id="cc_to">Selected CC recipients : {{ implode(', ', array_unique($selectedPeopleNames)) }}</div>
                                             </div>
                                             <button type="button" style="border-radius: 50%;margin-right:10px;color:#778899;border:1px solid #778899;" class="add-button" wire:click="toggleRotation">
                                                 <i class="fa fa-plus" style="color:#778899;"></i>
@@ -220,84 +229,81 @@
         <div class="modal" tabindex="-1" role="dialog" style="display: block;overflow-y:auto;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                    <div class="modal-header align-items-center" style="background-color: rgb(2, 17, 79); height: 50px">
                         <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Finance Request</b></h5>
 
                         </button>
                     </div>
                     <div class="modal-body" >
-                        <div class="form-group">
-                            <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category <span  style="color:red">*</span></label>
-                            <div class="input-group">
-                                <select wire:model.lazy="category" id="category" class="custom-select" style="font-size: 12px;">
-                                    <option style="color: #778899; " value="">Select Category</option>
+                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;font-family: Arial, sans-serif;" >Category <span style="color:red">*</span></label>
+                    <div class="input" type="" class="form-control placeholder-small">
+    <div style="position: relative;">
+        <select wire:model.lazy="category" id="category" style="font-size: 12px;" class="form-control placeholder-small">
+            <option style="color: #778899; " value="">Select Category</option>
+            <optgroup label="Finance">
+                <option value="Income Tax">Income Tax</option>
+                <option value="Loans">Loans</option>
+                <option value="Payslip">Payslip</option>
+            </optgroup>
+        </select>
+        <div class="dropdown-toggle-icon" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        </div>
+  
 
 
-                                    <optgroup label="Finance">
-                                        <option value="Income Tax">Income Tax</option>
-                                        <option value="Loans">Loans</option>
-                                        <option value="Payslip">Payslip</option>
-                                     
-                                    </optgroup>
-
-
-                                </select>
-                                </div>
-                                <div>
                                     @error('category') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                      
 
-                        <div class="form-group">
+                        <div class="form-group mt-2">
                             <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject<span  style="color:red">*</span></label>
-                            <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject">
+                            <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
                             @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group">
                             <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description<span  style="color:red">*</span></label>
-                            <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
+                            <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4" ></textarea>
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="row">
-    <div class="col">
-        <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
-            <i class="fa fa-paperclip"></i> Attach Image
-        </label>
-    </div>
-    @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
-</div>
-
-<div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                            @if ($image)
-                            <div>
-                                <img height="100" width="100" src="{{ $image->temporaryUrl() }}" alt="Image Preview" style="max-width: 300px;">
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
                             </div>
-                            @endif
+                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
-                        <div id="filePreview"></div>
+                        <div>
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        
+                        </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group">
-                                    <label for="category" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
-                                    <div class="input-group">
-                                        <select name="category" id="category" wire:model.lazy="priority" class="custom-select" style="font-size: 12px;">
-                                            <option style="color: gray;" value="">Select Priority<span  style="color:red">*</span></option>
-                                            <option value="High">
-                                                <span></span> High
-                                            </option>
-                                            <option value="Low">
-                                                <span></span> Low
-                                            </option>
-                                            <option value="Medium">
-                                                <span></span> Medium
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                            <div class="form-group mt-2">
+    <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
+    <div class="input" class="form-control placeholder-small">
+        <div style="position: relative;">
+            <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                <option style="color: gray;" value="">Select Priority</option>
+                <option value="High">High</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+            </select>
+            <div class="dropdown-toggle-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
                             </div>
                         </div>
                         <div class="row " style="margin-top: 10px;">
@@ -365,7 +371,7 @@
                         </div>
                         <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
                             <button wire:click="submit" class="submit-btn" type="button">Submit</button>
-                            <button wire:click="close" class="cancel-btn" type="button" style="border: 1px solid rgb(2, 17, 79);">Cancel</button>
+                            <button wire:click="closeFinance" class="cancel-btn" type="button" style="border: 1px solid rgb(2, 17, 79);">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -375,52 +381,65 @@
         @endif
 
         @if ($activeTab == "active")
-        <div class="card-body " style="margin:0 auto;background-color:white;width:95%;height:400px;margin-top:30px;border-radius:5px;max-height:400px;overflow-y:auto">
-
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background-color: rgb(2, 17, 79); color: white;">
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:20%">Request Raised By</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:10%">Category</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:20%">Subject</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:10%">Description</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:10%">Attach Files</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:20%">CC To</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:10%">Priority</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if($records->where('status', 'Recent')->count() > 0)
+    <div class="card-body" style="margin: 0 auto; background-color: white; width: 95%; height: 400px; margin-top: 30px; border-radius: 5px; max-height: 400px; overflow-y: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: rgb(2, 17, 79); color: white;">
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">Request Raised By</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Category</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">Subject</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Description</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Attach Files</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">CC To</th>
+                    <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Priority</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if($records->where('status', 'Recent')->count() > 0)
                     @foreach ($records->where('status', 'Recent') as $record)
-                    <tr>
-                        <td style="padding: 10px;font-size:12px;text-align:center;width:20%;text-transform: capitalize;">{{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }} <br> <strong style="font-size: 10px;">({{$record->emp_id}})</strong></td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->category }}</td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:20%;">{{ $record->subject }}</td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->description }}</td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center;">
-                        <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
-                        </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
-                            {{ $record->cc_to ?? '-' }}
-                        </td>
-
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;width:10%;">{{ $record->priority }}</td>
-
-                        </td>
-                    </tr>
+                        @php
+                            $ccToArray = explode(',', $record->cc_to);
+                        @endphp
+                        <tr>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                                {{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }} <br> <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
+                            </td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->category }}</td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">{{ $record->subject }}</td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->description }}</td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center;">
+                                @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
+                                    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                                {{ count($ccToArray) <= 2 ? $record->cc_to ?? '-' : '-' }}
+                            </td>
+                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->priority }}</td>
+                        </tr>
+                        @if(count($ccToArray) > 2)
+                            <tr >
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                        CC TO: {{ implode(', ', $ccToArray) }}
+                                    </div>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
-                    @else
+                @else
                     <tr>
-                        <td colspan="7" style="text-align: center;font-size:12px">Active records not found</td>
+                        <td colspan="7" style="text-align: center; font-size: 12px;">Active records not found</td>
                     </tr>
-                    @endif
+                @endif
+            </tbody>
+        </table>
+    </div>
+@endif
 
 
-                </tbody>
-            </table>
-
-        </div>
-        @endif
 
         @if ($activeTab == "closed")
         <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
@@ -446,16 +465,30 @@
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->subject }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->description }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center">
-                            @if ($record->file_path)
-                            <a href="{{ asset('public/help-desk-images/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
-                            @else
-                            N/A
-                            @endif
+
+                        @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
+    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
+@else
+    -
+@endif
+
+
                         </td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->cc_to }}</td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                                {{ count($ccToArray) <= 2 ? $record->cc_to ?? '-' : '-' }}
+                            </td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->priority }}</td>
 
                     </tr>
+                    @if(count($ccToArray) > 2)
+                            <tr >
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                        CC TO: {{ implode(', ', $ccToArray) }}
+                                    </div>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                     @else
                     <tr>
@@ -495,16 +528,28 @@
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->subject }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->description }}</td>
                         <td style="padding: 10px;font-size:12px;text-align:center">
-                            @if ($record->file_path)
-                            <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
-                            @else
-                            N/A
-                            @endif
+                        @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
+    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
+@else
+    -
+@endif
+
                         </td>
-                        <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->cc_to }}</td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                                {{ count($ccToArray) <= 2 ? $record->cc_to ?? '-' : '-' }}
+                            </td>
                         <td style="padding: 10px;font-size:12px;text-align:center;text-transform: capitalize;">{{ $record->priority }}</td>
 
                     </tr>
+                    @if(count($ccToArray) > 2)
+                            <tr >
+                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;">
+                                        CC TO: {{ implode(', ', $ccToArray) }}
+                                    </div>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                     @else
                     <tr>
@@ -517,4 +562,5 @@
 
         </div>
         @endif
+</div>
 </div>

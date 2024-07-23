@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
-use App\Models\RegularisationNew1;
+use App\Models\RegularisationDates;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -20,7 +20,7 @@ class ReviewClosedRegularisation extends Component
 
     public $totalEntries;
 
-   
+
     public $empid;
     public $empName;
 
@@ -30,7 +30,7 @@ class ReviewClosedRegularisation extends Component
     {
         $this->empid = Auth::guard('emp')->user()->emp_id;
         $this->empName = EmployeeDetails::where('emp_id', $this->empid)->first();
-        $this->regularisationrequest = RegularisationNew1::with('employee')->find($id);
+        $this->regularisationrequest = RegularisationDates::with('employee')->find($id);
         $subordinateEmpId=$this->regularisationrequest->emp_id;
         $this->employeeDetails = Employeedetails::where('emp_id', $subordinateEmpId)->first();
         $this->ManagerId=$this->regularisationrequest->employee->manager_id;
@@ -38,7 +38,7 @@ class ReviewClosedRegularisation extends Component
         $this->regularisationEntries = json_decode($this->regularisationrequest->regularisation_entries, true);
         $this->totalEntries = count($this->regularisationEntries);
     }
-   
+
     public function render()
     {
         $today = Carbon::today();

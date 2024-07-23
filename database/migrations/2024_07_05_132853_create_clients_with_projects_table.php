@@ -23,11 +23,6 @@ return new class extends Migration
             ->on('clients')
             ->onDelete('restrict')
             ->onUpdate('cascade');
-            $table->foreign('project_name')
-            ->references('project_name') // Assuming the primary key of the companies table is 'id'
-            ->on('clients')
-            ->onDelete('restrict')
-            ->onUpdate('cascade');
             $table->timestamps();
         });
     }

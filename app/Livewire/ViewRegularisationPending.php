@@ -28,6 +28,26 @@ class ViewRegularisationPending extends Component
     {
         $this->employeeId = auth()->guard('emp')->user()->emp_id;
         $this->user = EmployeeDetails::where('emp_id', $this->employeeId)->first();
+        $employees=EmployeeDetails::where('manager_id',$this->employeeId)->select('emp_id', 'first_name', 'last_name')->get();
+        $empIds = $employees->pluck('emp_id')->toArray();
+        $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
+        ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+        ->where('status','pending')
+        ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
+        ->with('employee')
+        ->get();
+        foreach ($this->regularisations as $regularisation) {
+            $this->regularised_date = Carbon::parse($regularisation->created_at)->toDateString();
+
+            $daysDifference = Carbon::parse($this->regularised_date)->diffInDays(Carbon::now());
+
+            if ($daysDifference >= 3) {
+                $this->approve($regularisation->id);
+            }
+
+
+        }
     }
     public function openRejectModal()
     {
@@ -69,13 +89,13 @@ class ViewRegularisationPending extends Component
                 $swiperecord->emp_id=$employeeId;
                 $date = $regularisationEntries[0]['date'];
                 if (empty($entry['from'])) {
-                    
-                    
+
+
                     $swiperecord->in_or_out='IN';
                     $swiperecord->swipe_time= '10:00';
                     $swiperecord->created_at=$date;
                     $swiperecord->is_regularised=true;
-                    
+
                 } else {
                     $swiperecord->in_or_out='IN';
                     $swiperecord->swipe_time= $entry['from'];
@@ -85,15 +105,15 @@ class ViewRegularisationPending extends Component
                 $swiperecord->save();
                 $swiperecord1=new SwipeRecord();
                 $swiperecord1->emp_id=$employeeId;
-                
+
                 if (empty($entry['to'])) {
-                    
-                    
+
+
                     $swiperecord1->in_or_out='OUT';
                     $swiperecord1->swipe_time= '19:00';
                     $swiperecord1->created_at=$date;
                     $swiperecord1->is_regularised=true;
-                    
+
                 } else {
                     $swiperecord1->in_or_out='OUT';
                     $swiperecord1->swipe_time= $entry['to'];
@@ -110,7 +130,7 @@ class ViewRegularisationPending extends Component
         $this->remarks='';
         $this->closeApproveModal();
     }
-     
+
     public function reject($id)
     {
         $currentDateTime = Carbon::now();
@@ -124,7 +144,7 @@ class ViewRegularisationPending extends Component
             $item->approver_remarks=$this->remarks;
         }
         $item->status='rejected';
-        $item->rejected_date = $currentDateTime; 
+        $item->rejected_date = $currentDateTime;
         $item->rejected_by=$this->user->first_name . ' ' . $this->user->last_name;
         $item->save();
 
@@ -133,25 +153,25 @@ class ViewRegularisationPending extends Component
         $this->remarks='';
         $this->closeRejectModal();
     }
- 
-  
+
+
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $employees=EmployeeDetails::where('manager_id',$employeeId)->select('emp_id', 'first_name', 'last_name')->get();
         $empIds = $employees->pluck('emp_id')->toArray();
-        
+
 // Retrieve records from AttendanceRegularisationNew for the extracted emp_ids
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
         ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
         ->where('status','pending')
         ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
-        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
-        ->with('employee') 
+        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
+        ->with('employee')
         ->get();
-        
-              
-        $this->countofregularisations=$this->regularisations->count();     
+
+
+        $this->countofregularisations=$this->regularisations->count();
         return view('livewire.view-regularisation-pending');
     }
 }

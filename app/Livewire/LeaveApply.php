@@ -84,6 +84,7 @@ class LeaveApply extends Component
     public $loginEmpManagerProfile;
     public $differenceInMonths;
     public $probationDetails;
+    public $managerDetails;
     protected $rules = [
         'leave_type' => 'required',
         'from_date' => 'required|date',
@@ -117,6 +118,7 @@ class LeaveApply extends Component
     {
         try {
             $this->searchTerm = '';
+            $this->filter = '';
             $this->selectedYear = Carbon::now()->format('Y');
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -492,7 +494,6 @@ class LeaveApply extends Component
 
         try {
             $this->selectleave();
-            $this->searchCCRecipients();
 
             // Check for overlapping leave
             $overlappingLeave = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
@@ -590,7 +591,6 @@ class LeaveApply extends Component
                 'reason' => $this->reason,
             ]);
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
-
             // Check if emp_id is set on the $createdLeaveRequest object
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
                 // Reset the component
