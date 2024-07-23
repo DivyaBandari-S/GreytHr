@@ -209,14 +209,14 @@
                                         Salary
                                         <i class="fas mr-1    fa-caret-down" id="salary-caret" style="color:#6c7e90"></i>
                                     </a>
-                                  
+
                                     <div id="salary-options" style="display: none;">
                                         <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
                                         <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
                                                     Payslips
                                                 </a>
-                                            </li> 
+                                            </li>
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/ytd" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
                                                     YTD Reports
@@ -232,8 +232,6 @@
                                                     IT Declaration
                                                 </a>
                                             </li>
-                                 
-
 
                                             <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
                                                 <a class="nav-link" href="/reimbursement" id="reimbursement" onclick="selectOption(this, 'Reimbursement'); setActiveLink(this)">
