@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="col-md-8 mt-3">
-    <div class="bg-white" style="height: 400px; border: 1px solid skyblue; border-radius: 5px; max-height: 400px; overflow-y: auto;">
+    <div class="bg-white" style="height: 460px; border: 1px solid skyblue; border-radius: 5px; max-height: 400px; overflow-y: auto;">
         <table class="delegate-table" style="width: 100%; border-collapse: collapse; margin-top: 5px;justify-content:space-between">
             <thead>
                 <tr class="delegate-header">
@@ -101,7 +101,7 @@
                                             </button><span style="color:#778899;font-size:12px;">Add</span>
 
                                         </div>
-                                        @error('delagate') <span class="text-danger">{{ $message }}</span> @enderror
+                                        @error('delegate') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                                 @if($isRotated)
@@ -122,7 +122,7 @@
                                     </div>
                                     @else
                                     @foreach($peopleData as $people)
-                                    <label wire:click.lazy="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
                                         <div class="row align-items-center">
                                             <div class="col-auto">
                                                 <input type="checkbox" wire:model="selectedPeople" id="delegate" value="{{ $people->emp_id }}">

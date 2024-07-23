@@ -1,10 +1,6 @@
-<div style="width: 800px;">
+<div>
 <style>
-    .row {
-        margin-left: 0; /* Remove extra margin */
-        margin-right: 0; /* Remove extra margin */
-    }
-
+ 
     .bg-white {
         background-color: white;
     }
@@ -136,7 +132,7 @@
         display: block;
     }
 </style>
-
+<div style="width: 100%;"></div>
     <div class="ytd-links">
         <div class="btn-group">
             <button class="btn btn-default {{ $activeTab === 'ytd' ? 'active' : '' }}" wire:click="showContent('ytd')"><span class="text-capitalize">YTD Statement</span></button>
@@ -489,9 +485,9 @@
     <div id="pfytd" class="content @if($activeTab === 'pfytd') active @endif">
         
         <div class="row mt-5">
-        <div class="col-md-8" style="background-color: white; height: 300px; border-radius: 5px; border: 1px solid silver;">
+        <div class="col-md-7" style="background-color: white; height: 300px; border-radius: 5px; border: 1px solid silver; margin-left:40px">
          
-        <div class="row" style="height: 40px; display: flex; justify-content: flex-start; align-items: center; border-bottom: 1px solid #ccc; ">
+        <div class="row" style="height: 40px; display: flex; justify-content: flex-start; align-items: center; border-bottom: 1px solid #ccc;">
     PF YTD SUMMARY
 </div>
 
@@ -628,7 +624,7 @@
             </div>
   
     </div>
-
+    </div>
     <script>
         document.addEventListener('livewire:load', function () {
             Livewire.on('contentChanged', contentId => {
