@@ -80,7 +80,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.11.0/sweetalert2.min.js" integrity="sha512-Wi5Ms24b10EBwWI9JxF03xaAXdwg9nF51qFUDND/Vhibyqbelri3QqLL+cXCgNYGEgokr+GA2zaoYaypaSDHLg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- npm Charts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ asset('js/app.js') }}" defer data-turbolinks-track="reload"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2"></script>
@@ -107,6 +106,7 @@
 
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="{{ asset('livewire/livewire.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         @import url('/public/app.css');
@@ -1001,7 +1001,7 @@
                                     <div id="attendance-options" style="display: none;">
                                         <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
                                             <li data-bs-target="#navigateLoader" class="nav-item">
-                                                <a class="nav-link" href="/Attendance" onclick="setActiveLink(this. '/Attendance')">
+                                                <a class="nav-link" href="/Attendance" onclick="setActiveLink(this, '/Attendance')">
                                                     Attendance Info
                                                 </a>
                                             </li>
@@ -1195,7 +1195,7 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade backdropModal" id="navigateLoader" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="navigateLoaderLabel" aria-hidden="true">
+        <div class="modal  backdropModal" id="navigateLoader" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="navigateLoaderLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content" style="background-color : transparent; border : none">
                     <!-- <div class="modal-header">
@@ -1204,15 +1204,7 @@
         </div> -->
 
                     <div class="modal-body">
-                        <div class="logo text-center mb-1" style="padding-top: 20px;">
-                            <a href="/">@livewire('company-logo')</a>
-                        </div>
-
-                        <div class="d-flex justify-content-center m-4">
-                            <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
+                     <livewire:loader-indicator/>
                     </div>
                     <!-- <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
