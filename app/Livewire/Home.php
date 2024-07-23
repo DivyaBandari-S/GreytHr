@@ -436,7 +436,9 @@ class Home extends Component
                         ->whereDate('from_date', '>=', today())
                         ->whereDate('to_date', '<=', today());
                 })
+                ->where('employee_status','active')
                 ->count();
+              
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->where('leave_applications.status', 'approved')
