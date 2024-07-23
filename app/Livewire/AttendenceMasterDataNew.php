@@ -288,35 +288,7 @@ class AttendenceMasterDataNew extends Component
                 return $dates->pluck('distinct_date')->toArray();
             })
             ->toArray();
-            $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
-            ->whereMonth('swipe_records.created_at', $currentMonth)
-            ->whereYear('swipe_records.created_at', $this->selectedYear)
-            ->whereRaw('DAYOFWEEK(swipe_records.created_at) NOT IN (1, 7)') // Exclude Sunday (1) and Saturday (7)
-            ->whereNotIn(DB::raw('DATE(swipe_records.created_at)'), $holidays) // Exclude holidays
-            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->selectRaw('swipe_records.emp_id, COUNT(DISTINCT DATE(swipe_records.created_at)) as date_count, employee_details.first_name, employee_details.last_name')
-            ->groupBy('swipe_records.emp_id', 'employee_details.first_name', 'employee_details.last_name')
-            ->get()
-            ->keyBy('emp_id')
-            ->toArray();
-        
-                    
-        
-        $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->where('leave_applications.status', 'approved')
-            ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-            ->where('employee_details.manager_id', $managerId) // Add condition for manager's ID
-            ->whereDate('from_date', '>=', '2023-12-01') // Start of the current month
-            ->whereDate('to_date', '<=','2023-12-31') // End of the current month
-            ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
-            ->map(function ($leaveRequest) {
-                
-                $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
-                $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
-                $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
-                return $leaveRequest;
-            });
-        $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->where('leave_applications.status', 'approved')
             ->whereIn('leave_applications.emp_id', $employeeIds)
             ->whereDate('from_date', '>=', $this->selectedYear . '-' . $currentMonth . '-01') // Dynamically set year and month
@@ -337,7 +309,52 @@ class AttendenceMasterDataNew extends Component
                     ],
                 ];
             }); 
-            
+            $leaveDates = [];
+            foreach ($approvedLeaveRequests1 as $emp_id => $leaveRequest) {
+                foreach ($leaveRequest['dates'] as $date) {
+                    $leaveDates[$emp_id][] = $date;
+                }
+            }
+          
+            $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
+            ->whereMonth('swipe_records.created_at', $currentMonth)
+            ->whereYear('swipe_records.created_at', $this->selectedYear)
+            ->whereRaw('DAYOFWEEK(swipe_records.created_at) NOT IN (1, 7)') // Exclude Sunday (1) and Saturday (7)
+            ->whereNotIn(DB::raw('DATE(swipe_records.created_at)'), $holidays) // Exclude holidays
+            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+            ->selectRaw('swipe_records.emp_id, COUNT(DISTINCT DATE(swipe_records.created_at)) as date_count, GROUP_CONCAT(DISTINCT DATE(swipe_records.created_at)) as created_at_dates, employee_details.first_name, employee_details.last_name')
+            ->groupBy('swipe_records.emp_id', 'employee_details.first_name', 'employee_details.last_name')
+            ->get()
+            ->map(function ($record) use ($leaveDates) {
+                $emp_id = $record->emp_id;
+                $created_at_dates = explode(',', $record->created_at_dates); // Convert dates string to array
+                if (isset($leaveDates[$emp_id])) {
+                    $record->date_count -= count(array_intersect($created_at_dates, $leaveDates[$emp_id]));
+                }
+                return $record;
+            })
+            ->keyBy('emp_id')
+            ->toArray();
+       
+                    
+        
+        $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            ->where('leave_applications.status', 'approved')
+            ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+            ->where('employee_details.manager_id', $managerId) // Add condition for manager's ID
+            ->whereDate('from_date', '>=', '2023-12-01') // Start of the current month
+            ->whereDate('to_date', '<=','2023-12-31') // End of the current month
+            ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
+            ->map(function ($leaveRequest) {
+                
+                $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
+                $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
+                $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
+                return $leaveRequest;
+            });
+      
+         
+
            
    
             return view('livewire.attendence-master-data-new',['Employees'=>$filteredEmployees,'EmployeesCount'=>$employeescount,'DistinctDatesMap'=>$distinctDatesMap,'DistinctDatesMapCount'=>$distinctDatesMapCount,'Holiday'=> $this->holiday,'ApprovedLeaveRequests1'=>$approvedLeaveRequests1,'SelectedYear'=>$this->selectedYear ]);

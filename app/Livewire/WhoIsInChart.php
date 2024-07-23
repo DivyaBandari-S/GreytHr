@@ -30,6 +30,13 @@ class WhoIsInChart extends Component
     use WithPagination;
     public $leaveRequests;
     public $swipe_records;
+
+    public $dayShiftEmployeesCount;
+
+    public $afternoonShiftEmployeesCount;
+
+    public $eveningShiftEmployeesCount;
+    
     public $approvedLeaveRequests;
     public $currentDate;
     public $notFound;
@@ -396,7 +403,7 @@ class WhoIsInChart extends Component
 
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
 
-            ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+            ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time','employee_details.shift_type')
             ->get();
 
         $lateSwipesCount = SwipeRecord::whereIn('id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
@@ -408,10 +415,10 @@ class WhoIsInChart extends Component
                 ->groupBy('emp_id');
         })
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+            ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time')
             ->where(function ($query) {
-                $query->whereTime('swipe_records.swipe_time', '>=', '10:01:00'); // Assuming 'swipe_time' is a datetime column
-            })
+                $query->whereRaw("TIME(swipe_records.swipe_time) > TIME(DATE_ADD(employee_details.shift_start_time, INTERVAL 1 MINUTE))");
+           })
             ->count();
 
         $earlySwipesCount = SwipeRecord::whereIn('id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
@@ -425,8 +432,8 @@ class WhoIsInChart extends Component
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
             ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
             ->where(function ($query) {
-                $query->whereTime('swipe_records.swipe_time', '<', '10:01:00'); // Assuming 'swipe_time' is a datetime column
-            })
+                $query->whereRaw("TIME(swipe_records.swipe_time) <= TIME(DATE_ADD(employee_details.shift_start_time, INTERVAL 1 MINUTE))");
+           })
             ->count();
         $swipes2 = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
             $query->selectRaw('MIN(id)')
@@ -438,6 +445,9 @@ class WhoIsInChart extends Component
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
             ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
             ->get();
+        $this->dayShiftEmployeesCount=EmployeeDetails::where('shift_type','GS')->count();
+        $this->afternoonShiftEmployeesCount=EmployeeDetails::where('shift_type','AS')->count();
+        $this->eveningShiftEmployeesCount=EmployeeDetails::where('shift_type','ES')->count();
         $swipes_count = $swipes2->count();
         $calculateAbsent = ($employeesCount / $employees2) * 100;
         $calculateApprovedLeaves = ($approvedLeaveRequests1 / $employees2) * 100;

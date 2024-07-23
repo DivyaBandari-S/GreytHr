@@ -197,11 +197,6 @@
                                     Rejected by
                                     <!-- Add your logic for rejected by -->
                                     @endif
-                                    <br>
-                                    <span style="color: #778899; font-size: 10px; font-weight: 400; text-align: start;">
-                                        <input type="text" placeholder="Write comment" style="outline: none; border: 1px solid #778899; padding: 0.3rem; border-radius: 5px; width: 100%; margin-top: 10px; color: #5e6b7c;">
-                                    </span>
-
                                 </h5>
                             </div>
 

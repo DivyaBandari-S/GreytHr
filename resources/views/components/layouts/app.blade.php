@@ -48,8 +48,8 @@
     </style>
     <livewire:styles />
 
-    @vite(['public/css/app.css', 'public/js/app.js'])
-
+    {{-- @vite(['public/css/app.css', 'public/js/app.js','resources/css/app.css','resources/js/app.js']) --}}
+      @vite(['public/css/app.css', 'public/js/app.js'])
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -1211,14 +1211,8 @@
         </div> -->
 
                     <div class="modal-body">
-                        <div class="logo text-center mb-1" style="padding-top: 20px;">
-                            <a href="/">@livewire('company-logo')</a>
-                        </div>
-
                         <div class="d-flex justify-content-center m-4">
-                            <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
+                           @livewire('loader-indicator')
                         </div>
                     </div>
                     <!-- <div class="modal-footer">

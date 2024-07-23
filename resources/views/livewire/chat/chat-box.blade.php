@@ -10,12 +10,12 @@
 
 
             <div class="col-md-10 d-flex align-items-center justify-content-between"
-            style="height: 50px; border-radius: 10px; margin-top: 10px;">
-            <div class="input-group" style="width: 100%;">
-                <input type="text" class="form-control" placeholder="Search..." wire:model="searchTerm"
-                    aria-label="Search" aria-describedby="search-addon" wire:input="filter">
+                style="height: 50px; border-radius: 10px; margin-top: 10px;">
+                <div class="input-group" style="width: 100%;">
+                    <input type="text" class="form-control" placeholder="Search..." wire:model="searchTerm"
+                        aria-label="Search" aria-describedby="search-addon" wire:input="filter">
+                </div>
             </div>
-        </div>
 
 
 
