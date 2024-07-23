@@ -52,6 +52,12 @@ class Home extends Component
     public $salaryRevision;
     public $pieChartData;
     public $absent_employees;
+
+    public $showAllAbsentEmployees=false;
+
+    public $showAllLateEmployees=false;
+
+    public $showAllEarlyEmployees=false;
     public $grossPay;
     public $deductions;
     public $netPay;
@@ -192,6 +198,14 @@ class Home extends Component
     {
         $this->showMessage = false;
     }
+    public function openLateEmployees()
+    {
+        $this->showAllLateEmployees=true;
+    }
+    public function closeAllAbsentEmployees()
+    {
+        $this->showAllAbsentEmployees=false;
+    }
     public function open()
     {
         $this->showAlertDialog = true;
@@ -250,8 +264,22 @@ class Home extends Component
             session()->flash('error', 'An error occurred while toggling sign state. Please try again later.');
         }
     }
-
-
+    public function showEarlyEmployees()
+    {
+       $this->showAllEarlyEmployees=true;
+    }
+    public function closeAllEarlyEmployees()
+    {
+        $this->showAllEarlyEmployees=false;
+    }
+    public function openAbsentEmployees()
+    {
+       $this->showAllAbsentEmployees=true;
+    }
+    public function closeAllLateEmployees()
+    {
+        $this->showAllLateEmployees=false;
+    }
     public function render()
     {
         try {
@@ -408,7 +436,9 @@ class Home extends Component
                         ->whereDate('from_date', '>=', today())
                         ->whereDate('to_date', '<=', today());
                 })
+                ->where('employee_status','active')
                 ->count();
+              
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->where('leave_applications.status', 'approved')
@@ -457,7 +487,7 @@ class Home extends Component
                     ->whereIn('emp_id', $employees->pluck('emp_id'))
                     ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
                     ->whereDate('created_at', $currentDate)
-                    ->whereRaw("swipe_time < '10:01:00'") // Add this condition to filter swipes before 10:00 AM
+                    ->whereRaw("swipe_time < TIME(DATE_ADD(employee_details.shift_start_time, INTERVAL 1 MINUTE))") // Add this condition to filter swipes before 10:00 AM
                     ->groupBy('emp_id');
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
@@ -474,7 +504,7 @@ class Home extends Component
                     ->whereIn('emp_id', $employees->pluck('emp_id'))
                     ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
                     ->whereDate('created_at', $currentDate)
-                    ->whereRaw("swipe_time > '10:01:00'") // Add this condition to filter swipes before 10:00 AM
+                    ->whereRaw("swipe_time > TIME(DATE_ADD(employee_details.shift_start_time, INTERVAL 1 MINUTE))") // Add this condition to filter swipes before 10:00 AM
                     ->groupBy('emp_id');
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')

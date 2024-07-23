@@ -25,7 +25,7 @@
              <div class="search-input-employee-swipes">
              <div class="search-container"style="position: relative;">
                        <i class="fa fa-search search-icon-employee-swipes" aria-hidden="true"style="cursor:pointer;"wire:click="testMethod"></i>
-                       <input wire:model="empid" type="text" placeholder="Search Employee" class="search-text">
+                       <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
 
               </div>
                    
@@ -139,7 +139,7 @@
                                                <span class="text-muted employee-swipes-emp-id">#{{$swipe->emp_id}}</span>
                               </td>
                               <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date">{{ \Carbon\Carbon::parse($swipe->created_at)->format('d M, Y') }}</span></td>
-                              <td class="employee-swipes-swipe-details-for-signed-employees">10:00 am to 07:00...</td>
+                              <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->shift_start_time}} to {{$swipe->shift_end_time}}</td>
                               <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->in_or_out}}</td>
                               <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->swipe_time}}<br /><span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe->created_at)->format('d M, Y') }}</span></td>
                               <td class="empty-text">-</td>
