@@ -357,16 +357,14 @@ class LeaveCalender extends Component
                 $leaveCount = $leaveTransactions->count();
                 $this->leaveTransactions = $leaveTransactions;
             } elseif ($this->filterCriteria === 'MyTeam') {
-                // Retrieve the manager ID and company ID of the logged-in employee
-                $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
-
+                // Retrieve the manager_id of the logged-in employee
+                $employeeId = auth()->guard('emp')->user()->emp_id;
+                // Retrieve the company_id of the logged-in employee
                 $companyId = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
-
-                // Retrieve the emp_id of employees with the same manager_id and company_id
-                $teamMembersIds = EmployeeDetails::where('manager_id', $managerId)
-                    ->where('company_id', $companyId)
-                    ->pluck('emp_id')
-                    ->toArray();
+                $teamMembersIds = EmployeeDetails::where('manager_id', $employeeId)
+                 ->where('company_id', $companyId)
+                ->pluck('emp_id')
+                ->toArray();
 
                 // Retrieve leave requests for team members for the selected date
                 $leaveTransactionsOfTeam = LeaveRequest::with('employee')
@@ -390,7 +388,6 @@ class LeaveCalender extends Component
             }
 
             return $leaveCount;
-
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
             Log::error('Database Error: ' . $e->getMessage());
