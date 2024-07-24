@@ -1,5 +1,4 @@
 <div>
-    <x-loading-indicator />
 <div class="px-4" style="position: relative;">
 @if ($message)
     <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -9,9 +8,9 @@
 @endif
 
     <div class="container  mt-3" style="height:60px;margin-top:10px">
-    
+
         <div class="row bg-white rounded border" style="height:80px">
-     
+
             <div class="col-md-1 mt-3" style="height:60px">
             @if(auth('emp')->check())
     @php
@@ -54,7 +53,7 @@
 @endif
 
 
-      
+
             </div>
             <div class="col-md-10 mt-2 bg-white d-flex align-items-center justify-content-between">
                 <div>
@@ -84,7 +83,7 @@
 
                     @if($showFeedsDialog)
                     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-        
+
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -122,13 +121,13 @@
                                         </div>
                                         <div class="form-group" >
                                             <label for="attachment" style="display: block; font-weight: 600;text-align:start">Upload Attachment:</label>
-                                           
+
                                             <div  style="text-align:start">
     <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
 
     @if ($image)
     <div class="mt-3">
-        
+
         <div>
             <img src="{{ $image->temporaryUrl() }}" height="50" width="50" alt="Image Preview" style="max-width: 300px;">
         </div>
@@ -138,12 +137,12 @@
 
                                         </div>
                                     </div>
-                                  
+
                                     <div class="modal-footer">
                                     <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
                                     <button wire:click="submit" class="submit-btn" type="button">Submit</button>
                             <button wire:click="closeFeeds" class="cancel-btn" type="button" style="border: 1px solid rgb(2, 17, 79);">Cancel</button>
-                       
+
                                     </div>
                                     </div>
                                 </form>
@@ -171,7 +170,7 @@
         <div class="icon-container" style="margin-left: 10px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-          
+
                 <rect x="7" y="7" width="3" height="9"></rect>
     <rect x="14" y="7" width="3" height="5"></rect>
             </svg>
@@ -183,7 +182,7 @@
 
                 <div class="posts" style="display:flex">
                     <label class="custom-radio-label" style="display:flex; align-items:center;">
-                       
+
                         @if(auth()->guard('emp')->check())
                         <input type="radio" name="radio" value=""   data-url="/everyone"><span>
 @elseif(auth()->guard('hr')->check())
@@ -194,7 +193,7 @@
 
                         <div class="icon-container" style="margin-left: 10px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
-      
+
         <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
         <polyline points="13 2 13 9 20 9"></polyline>
     </svg>
@@ -202,7 +201,7 @@
 
                         </span><span class="custom-radio-button bg-blue" style="margin-left:10px;font-size:10px"></span> <span style="color:#778899;font-size:12px;font-weight:500;">Posts</span></label>
                 </div>
-                
+
                 <hr style="width: 100%;border-bottom: 1px solid grey;">
                 <div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
                     <div class="row">
@@ -230,7 +229,7 @@
                             <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
                                 <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">All Feeds</a>
                                 @if (Auth::guard('hr')->check())
-                          
+
         <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One </a>
     @elseif (Auth::guard('emp')->check())
         <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One </a>
@@ -292,42 +291,42 @@
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hyderabad</a>
- @endif      
+ @endif
  @if (Auth::guard('hr')->check())
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Doddaballapur</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Doddaballapur</a>
- @endif 
+ @endif
  @if (Auth::guard('hr')->check())
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Tirupati</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Tirupati</a>
- @endif      
+ @endif
  @if (Auth::guard('hr')->check())
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Adilabad</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Adilabad</a>
- @endif      
+ @endif
  @if (Auth::guard('hr')->check())
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Trivandrum</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Trivandrum</a>
- @endif      
+ @endif
  @if (Auth::guard('hr')->check())
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</a>
- @endif      
+ @endif
  @if (Auth::guard('hr')->check())
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">California</a>
@@ -341,21 +340,21 @@
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">New York</a>
- @endif      
+ @endif
  @if (Auth::guard('hr')->check())
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Alaska</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Alaska</a>
- @endif      
+ @endif
  @if (Auth::guard('hr')->check())
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hawaii</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hawaii</a>
- @endif                 
+ @endif
 
                             </ul>
                         </div>
@@ -417,28 +416,28 @@
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Testing Team</a>
  @endif
-           
-                         
-                              
+
+
+
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
-         
+
             <div class="col m-0" style="max-height: 80vh; overflow-y: auto;scroll-behavior: smooth;">
             <div class="row">
                 <div class="col-md-3"  style=" justify-content: flex-start">
                 <gt-heading _ngcontent-eff-c648="" size="md" class="ng-tns-c648-2 hydrated"></gt-heading>
                 <div class="medium-header border-cyan-200">All Activities - All Groups</div>
             </div>
-            
+
             <div class="col-md-3 text-right" style="display: flex; justify-content: flex-end;">
     <p style="font-size:14px; margin-right: 5px;align-items:center">Sort:</p>
     <div class="dropdown" style="position: relative; display: inline-block;align-items:center">
         <button id="dropdown-toggle" class="dropdown-toggle" style="background: none; border: none; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center;">
             Newest First
-        
+
         </button>
         <div class="dropdown-menu" style="display: none; position: absolute; background-color: white; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; min-width: 190px; right: 0; border-radius: 4px; border: 1px solid #ddd;">
             <a href="#" class="dropdown-item" data-sort="newest" style="padding: 8px 16px; display: block; font-size: 14px; text-decoration: none; color: black;">Newest First</a>
@@ -692,7 +691,7 @@
                             </form>
                         </div>
                     </div>
-                  
+
 <div class="row m-0">
     @php
     $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
@@ -802,7 +801,7 @@
 
                     </div>
                     @elseif ($data['type'] === 'hire_date' )
-               
+
                     <div class="hire-card  mt-2">
                         <!-- Upcoming Birthdays List -->
                         <div class="F mb-4" style="padding: 15px; background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top: 5px">
@@ -849,7 +848,7 @@
                             </div>
                         </div>
 
-                   
+
                     </div>
 
                     <div class="col-md-2 p-0" style="margin-left: 9px;">
@@ -1062,7 +1061,7 @@
                          @if($currentCardComments && $currentCardComments->count() > 0)
                         <div class="m-0 mt-2 px-2" style="overflow-y:auto; max-height:150px;">
                             @foreach ($currentCardComments as $comment)
-                       
+
                     <div class="mb-3" style="display: flex;gap:10px;align-items:center;">
                         <img style="border-radius: 50%; " height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
                         <div class="comment" style="font-size: 10px;">
@@ -1082,9 +1081,9 @@
                     <div class="col-md-2 p-0">
                     </div>
                         </div>
-                 
+
                     </div>
-               
+
         @endif
         @endforeach
 
@@ -1314,7 +1313,7 @@
         // Reload comments after adding a new comment
         Livewire.emit('refreshComments');
     });
-    
+
 </script>
 @endpush
 <script>
@@ -1354,7 +1353,7 @@
     function sortComments(type) {
         var commentsContainer = document.getElementById('comments-container');
         var comments = Array.from(commentsContainer.getElementsByClassName('comment-item'));
-        
+
         if (type === 'newest') {
             comments.sort(function(a, b) {
                 return new Date(b.dataset.created) - new Date(a.dataset.created);
@@ -1448,7 +1447,7 @@
     font-size: 0.875rem;
     line-height: 1.25rem;
     color: var(--e-color-emoji-text);
-  
+
   margin-left: 20px;
   margin-top:5px
 }
@@ -1632,4 +1631,4 @@
 </script>
 
 </div>
-</div>      
+</div>

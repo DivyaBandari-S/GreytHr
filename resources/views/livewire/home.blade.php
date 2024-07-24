@@ -1,5 +1,4 @@
 <div>
-<x-loading-indicator />
 <body>
     <div class="msg-container">
     @if (session()->has('success'))
@@ -24,7 +23,7 @@
                             </div>
                             <div class="author-text" style="font-size:12px; line-height:1.6; font-weight: 600; color: #02114f;">
                             </div>
-                            
+
                         </div> -->
                     </div>
                 </div>
@@ -171,11 +170,11 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                            <h6 style="color:#778899;font-size:14px;">Leave Requests</h6>   
+                            <h6 style="color:#778899;font-size:14px;">Leave Requests</h6>
                             <div class="d-flex flex-row">
                                 @if($count > 3)
                                     @for ($i = 3; $i <= $count; $i++)
- 
+
                                                 <?php
                                                 $leaveRequest = $this->leaveApplied[$i]['leaveRequest'] ?? null;
                                                 if ($leaveRequest && $leaveRequest->employee) {
@@ -189,17 +188,17 @@
                                                 </div>
                                                 <span style="display: block;font-size:10px;color:#778899;">Leave</span>
                                             </div>
-        
+
                                                 <?php
                                                 }
                                                 ?>
                                     @endfor
                                 @endif
-                            </div>    
-                                <h6 style="color:#778899;font-size:14px;">Attendance Requests</h6> 
+                            </div>
+                                <h6 style="color:#778899;font-size:14px;">Attendance Requests</h6>
                                 <div class="d-flex flex-row">
                                     @for ($i = 0; $i <= $countofregularisations; $i++)
- 
+
                                            <?php
                                                 // Fetch the regularisation at the current index
                                                 $regularisation = $this->regularisations[$i] ?? null;
@@ -208,19 +207,19 @@
                                                     $lastName = $regularisation->employee->last_name;
                                                     $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
                                            ?>
-                                               
+
                                             <div class=" d-flex flex-column mr-3">
                                                 <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
                                                     <span >{{$initials}}</span>
                                                 </div>
                                                 <span style="display: block;font-size:10px;color:#778899;text-align:center;overflow: hidden; text-overflow: ellipsis;max-width:30px;white-space:nowrap;">Attendance Regularisation</span>
                                             </div>
- 
+
                                             <?php
                                                 }
                                             ?>
                                     @endfor
-                                </div> 
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);" data-dismiss="modal">Close</button>
@@ -339,12 +338,12 @@
                                                             return $colors[array_rand($colors)];
                                                         }
                                                 @endphp
-                                    @if($CountAbsentEmployees > 0)            
+                                    @if($CountAbsentEmployees > 0)
                                             @for ($i = 0; $i < min($CountAbsentEmployees, 5); $i++)
                                             @if(isset($AbsentEmployees[$i]))
                                             @php
                                                 $employee = $AbsentEmployees[$i];
- 
+
                                                 $randomColorAbsent = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
                                             @endphp
                                                 <a href="/whoisinchart" style="text-decoration: none;">
@@ -353,10 +352,10 @@
                                                             {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
                                                         </span>
                                                     </div>
-                                                </a>    
+                                                </a>
                                         @endif
                                     @endfor
-                                    @else                      
+                                    @else
                                                 <p style="font-size:12px;color:#778899">No employees are absent today</p>
                                     @endif
                                         @if ($CountAbsentEmployees > 5)
@@ -367,9 +366,9 @@
                                         @endif
                                     </div>
                                 </div>
-                               
+
                             <!-- /second row -->
-                               
+
                                 <div class="who-is-in d-flex flex-column justify-content-start ">
                                             <p  class="section-name mt-1">
                                                     Late Arrival ({{ $CountLateSwipes }})
@@ -386,7 +385,7 @@
                                                 @php
                                                     $employee = $LateSwipes[$i];
                                                 @endphp
-                                           
+
                                                 @if(isset($LateSwipes[$i]))
                                                             <a href="/whoisinchart" style="text-decoration: none;">
                                                                <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
@@ -394,10 +393,10 @@
                                                                         {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
                                                                     </span>
                                                                 </div>
-                                                            </a>    
+                                                            </a>
                                                 @endif
                                             @endfor
-                                            @else                      
+                                            @else
                                                 <p style="font-size:12px;color:#778899">No employees arrived late today</p>
                                             @endif
                                         @if ($CountLateSwipes > 5)
@@ -408,9 +407,9 @@
                                         @endif
                                     </div>
                                 </div>
- 
+
                                 <!-- /third row -->
-                               
+
                                 <div class="who-is-in d-flex flex-column justify-content-start">
                                             <p  class="section-name mt-1">
                                                     On Time ({{ $CountEarlySwipes }})
@@ -427,9 +426,9 @@
                                             @if(isset($EarlySwipes[$i]))
                                             @php
                                                 $employee = $EarlySwipes[$i];
- 
+
                                                 $randomColorEarly = '#' . str_pad(dechex(mt_rand(0xCCCCCC, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
- 
+
                                             @endphp
                                                     <a href="/whoisinchart" style="text-decoration: none;">
                                                         <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
@@ -437,11 +436,11 @@
                                                                 {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
                                                             </span>
                                                         </div>
-                                                    </a>    
+                                                    </a>
                                         @endif
                                     @endfor
                                     @else
-                                          <p style="font-size:12px;color:#778899">No employees arrived early today</p>      
+                                          <p style="font-size:12px;color:#778899">No employees arrived early today</p>
                                     @endif
                                         @if ($CountEarlySwipes > 5)
                                         <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="showEarlyEmployees">
@@ -451,7 +450,7 @@
                                         @endif
                                     </div>
                                 </div>
- 
+
                             </div>
                         </div>
                     </div>
@@ -803,13 +802,13 @@
                                                     Not Yet In ({{ $CountAbsentEmployees }})
                                                 </p>
                                             <div class="team-leave d-flex flex-row gap-3">
-                                           
-                                         
+
+
                                             @for ($i = 0; $i <$CountAbsentEmployees; $i++)
                                             @if(isset($AbsentEmployees[$i]))
                                             @php
                                                 $employee = $AbsentEmployees[$i];
- 
+
                                                 $randomColorAbsent = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
                                             @endphp
                                                 <a href="/whoisinchart" style="text-decoration: none;">
@@ -818,14 +817,14 @@
                                                             {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
                                                         </span>
                                                     </div>
-                                                </a>    
+                                                </a>
                                         @endif
                                     @endfor
-                                   
-                                       
+
+
                                     </div>
                                 </div>
-   
+
                             </div>
                         </div>
                     </div>
@@ -847,13 +846,13 @@
                                                     Late Arrivals ({{ $CountLateSwipes }})
                                                 </p>
                                             <div class="team-leave d-flex flex-row gap-3">
-                                           
-                                         
+
+
                                             @for ($i = 0; $i <$CountLateSwipes; $i++)
                                             @if(isset($LateSwipes[$i]))
                                             @php
                                                 $employee = $LateSwipes[$i];
- 
+
                                                 $randomColorLate = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
                                             @endphp
                                                 <a href="/whoisinchart" style="text-decoration: none;">
@@ -862,14 +861,14 @@
                                                             {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
                                                         </span>
                                                     </div>
-                                                </a>    
+                                                </a>
                                         @endif
                                     @endfor
-                                   
-                                       
+
+
                                     </div>
                                 </div>
-   
+
                             </div>
                         </div>
                     </div>
@@ -891,13 +890,13 @@
                                                     On Time ({{ $CountEarlySwipes }})
                                                 </p>
                                             <div class="team-leave d-flex flex-row gap-3">
-                                           
-                                         
+
+
                                             @for ($i = 0; $i <$CountEarlySwipes; $i++)
                                             @if(isset($EarlySwipes[$i]))
                                             @php
                                                 $employee = $EarlySwipes[$i];
- 
+
                                                 $randomColorEarly = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
                                             @endphp
                                                 <a href="/whoisinchart" style="text-decoration: none;">
@@ -906,14 +905,14 @@
                                                             {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
                                                         </span>
                                                     </div>
-                                                </a>    
+                                                </a>
                                         @endif
                                     @endfor
-                                   
-                                       
+
+
                                     </div>
                                 </div>
-   
+
                             </div>
                         </div>
                     </div>

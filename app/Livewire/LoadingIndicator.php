@@ -4,10 +4,10 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class LoaderIndicator extends Component
+class LoadingIndicator extends Component
 {
     public function render()
     {
-        return view('livewire.loader-indicator');
+        return view('livewire.loading-indicator');
     }
 }
