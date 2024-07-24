@@ -167,20 +167,14 @@
                 </div> -->
 
 
-                <div class="col-3 emp-input-with-icon">
-                    <input autocomplete="off" placeholder="Search Employee" name="searchKey" typeaheadoptionfield="name"
-                        typeaheadwaitms="300"
-                        class="form-control emp-search text-overflow ng-untouched ng-pristine ng-valid " aria-exp
-                        anded="false" aria-autocomplete="list">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
+                
 
             </div>
 
 
 
             <div class="reviewList">
-                @livewire('view-regularisation-pending')
+                @livewire('view-regularisation-pending-new')
             </div>
 
 
@@ -347,7 +341,7 @@
                 @else
                 <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
                     <img src="/images/pending.png" alt="Pending Image" style="width:55%; margin:0 auto;">
-                    <p style="color:#969ea9; font-size:12px; font-weight:400; ">Hey, you have no regularization records
+                    <p style="color:#969ea9; font-size:12px; font-weight:400; "> Hey, you have no closed regularization records
                         to view
                     </p>
                 </div>
