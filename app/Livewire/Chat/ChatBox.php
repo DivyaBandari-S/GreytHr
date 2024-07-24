@@ -184,8 +184,8 @@ class ChatBox extends Component
 
         // Validate the input
         $this->validate([
-            'body' => 'nullable|string|max:255',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240', // max 10MB
+            'body' => 'required|string|max:255',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // max 10MB
         ]);
 
         // Check if there's an attachment

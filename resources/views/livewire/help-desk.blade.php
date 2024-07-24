@@ -49,7 +49,7 @@
         <div class="d-flex flex-row justify-content-end gap-10 mt-2">
 
             <div class="mx-2 ">
-                <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> It Request  </button>
+                <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> IT Request  </button>
             </div>
 
             <div class="mx-2 ">
@@ -176,9 +176,10 @@
                                             <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0;  background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                                                 <i style="text-align: center;" class="fa fa-search"></i>
                                             </button>
-                                            <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                                            </button>
+                                            <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
                                         </div>
                                     </div>
                                     @if ($peopleData->isEmpty())
@@ -329,9 +330,12 @@
                                             <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0;  background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                                                 <i style="text-align: center;" class="fa fa-search"></i>
                                             </button>
-                                            <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                                            </button>
+                                            <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
+                            </div>
+
                                         </div>
                                     </div>
                                     @if ($peopleData->isEmpty())
@@ -368,7 +372,7 @@
 
                             </div>
                         </div>
-                        <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
+                        <div class="ml-0 p-0 mt-3 d-flex gap-3 justify-content-center">
                             <button wire:click="submit" class="submit-btn" type="button">Submit</button>
                             <button wire:click="closeFinance" class="cancel-btn" type="button" style="border: 1px solid rgb(2, 17, 79);">Cancel</button>
                         </div>
@@ -419,7 +423,10 @@
                             <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->priority }}</td>
                         </tr>
                         @if(count($ccToArray) > 2)
-                            <tr >
+
+                            <tr style="border-top:none">
+
+
                                 <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                 <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}
@@ -480,7 +487,10 @@
 
                     </tr>
                     @if(count($ccToArray) > 2)
-                            <tr >
+
+                            <tr style="border-top:none">
+
+ 
                                 <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                 <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}
@@ -541,7 +551,10 @@
 
                     </tr>
                     @if(count($ccToArray) > 2)
-                            <tr >
+
+                            <tr style="border-top:none">
+
+      
                                 <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                 <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}

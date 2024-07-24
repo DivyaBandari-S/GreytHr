@@ -69,16 +69,16 @@ class EmployeesReview extends Component
         $tab = $request->query('tab');
         Log::info('Tab parameter: ' . $tab);
 
-        if ($tab === 'leave') {
-
-            $this->setActiveTab('leave');
-            $this->showleave = true;
-            $this->showattendance = false;
-        } else {
-
+        if ($tab === 'attendance') {
             $this->setActiveTab('attendance'); // Default tab logic if needed
             $this->showleave = false;
             $this->showattendance = true;
+
+        } else {
+            $this->setActiveTab('leave');
+            $this->showleave = true;
+            $this->showattendance = false;
+
         }
     }
 
