@@ -62,6 +62,42 @@ class EmployeesReview extends Component
             $this->showleave = true;
         }
     }
+    public function getEmpLeaveRequests()
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+ 
+            // Query leave requests with search filter
+            $query = LeaveRequest::with('employee')
+                ->where('emp_id', $employeeId)
+                ->whereIn('status', ['approved', 'rejected', 'Withdrawn'])
+                ->orderBy('created_at', 'desc');
+ 
+            // Apply search filter if searchQuery is not empty
+            if (!empty($this->searchQuery)) {
+                $query->where(function ($query) {
+                    $query->whereHas('employee', function ($query) {
+                        $query->where('first_name', 'LIKE', '%' . $this->searchQuery . '%')
+                              ->orWhere('last_name', 'LIKE', '%' . $this->searchQuery . '%');
+                    })
+                    ->orWhere('leave_type', 'LIKE', '%' . $this->searchQuery . '%')
+                    ->orWhere('status', 'LIKE', '%' . $this->searchQuery . '%');
+                });
+            }
+ 
+            // Fetch results
+            $this->empLeaveRequests = $query->get();
+ 
+            // Format the date properties
+            foreach ($this->empLeaveRequests as $leaveRequest) {
+                $leaveRequest->formatted_from_date = Carbon::parse($leaveRequest->from_date)->format('d-m-Y');
+                $leaveRequest->formatted_to_date = Carbon::parse($leaveRequest->to_date)->format('d-m-Y');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error in getEmpLeaveRequests method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while fetching leave requests. Please try again later.');
+        }
+    }
 
     public function mount(Request $request)
     {
@@ -87,6 +123,7 @@ class EmployeesReview extends Component
             $this->showattendance = false;
         }
     }
+    
 
     public function getPendingLeaveRequest()
     {
@@ -245,6 +282,8 @@ public function searchApprovedLeave()
                     ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
             })
             ->get();
+       
+        if($this->searching==1)    {     
         $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
 
                 ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
