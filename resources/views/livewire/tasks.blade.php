@@ -92,7 +92,7 @@
                             {{ $record->followers ?: '-' }}
                             </td>
                             <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%">
-                                {{ ucfirst($record->emp->first_name) }} {{ ucfirst($record->emp->last_name) }}
+                            {{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }}
                             </td>
                             <td style="padding: 10px; border:none;font-size: 0.75rem; text-align: start; width: 10%">
                                 {{ ucfirst($record->task_name) }}
@@ -216,7 +216,7 @@
                                 {{ $record->followers ?: '-' }}
                                 </td>
                                 <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                    {{ ucfirst($record->emp->first_name) }} {{ ucfirst($record->emp->last_name) }}
+                                {{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }}
                                 </td>
                                 <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
                                     {{ ucfirst($record->task_name) }}

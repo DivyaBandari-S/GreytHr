@@ -195,8 +195,7 @@
                                                 ?>
                                     @endfor
                                 @endif
-                            </div> 
-                            <div style="margin-top:20px;"> 
+                            </div>    
                                 <h6 style="color:#778899;font-size:14px;">Attendance Requests</h6> 
                                 <div class="d-flex flex-row">
                                     @for ($i = 0; $i <= $countofregularisations; $i++)
@@ -221,8 +220,7 @@
                                                 }
                                             ?>
                                     @endfor
-                                </div>
-                                </div>  
+                                </div> 
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);" data-dismiss="modal">Close</button>
@@ -346,7 +344,7 @@
                                             @if(isset($AbsentEmployees[$i]))
                                             @php
                                                 $employee = $AbsentEmployees[$i];
-
+ 
                                                 $randomColorAbsent = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
                                             @endphp
                                                 <a href="/whoisinchart" style="text-decoration: none;">
@@ -369,9 +367,9 @@
                                         @endif
                                     </div>
                                 </div>
-                                
+                               
                             <!-- /second row -->
-                                
+                               
                                 <div class="who-is-in d-flex flex-column justify-content-start ">
                                             <p  class="section-name mt-1">
                                                     Late Arrival ({{ $CountLateSwipes }})
@@ -388,7 +386,7 @@
                                                 @php
                                                     $employee = $LateSwipes[$i];
                                                 @endphp
-                                            
+                                           
                                                 @if(isset($LateSwipes[$i]))
                                                             <a href="/whoisinchart" style="text-decoration: none;">
                                                                <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
@@ -410,9 +408,9 @@
                                         @endif
                                     </div>
                                 </div>
-
+ 
                                 <!-- /third row -->
-                                
+                               
                                 <div class="who-is-in d-flex flex-column justify-content-start">
                                             <p  class="section-name mt-1">
                                                     On Time ({{ $CountEarlySwipes }})
@@ -429,9 +427,9 @@
                                             @if(isset($EarlySwipes[$i]))
                                             @php
                                                 $employee = $EarlySwipes[$i];
-
+ 
                                                 $randomColorEarly = '#' . str_pad(dechex(mt_rand(0xCCCCCC, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
-
+ 
                                             @endphp
                                                     <a href="/whoisinchart" style="text-decoration: none;">
                                                         <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
@@ -442,8 +440,8 @@
                                                     </a>    
                                         @endif
                                     @endfor
-                                    @else 
-                                          <p style="font-size:12px;color:#778899">No employees arrived early today</p>       
+                                    @else
+                                          <p style="font-size:12px;color:#778899">No employees arrived early today</p>      
                                     @endif
                                         @if ($CountEarlySwipes > 5)
                                         <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="showEarlyEmployees">
@@ -453,13 +451,12 @@
                                         @endif
                                     </div>
                                 </div>
-
+ 
                             </div>
                         </div>
                     </div>
                 </div>
-                @endif
-
+               @endif
                  <!-- TEAM ON LEAVE -->
                  @if($this->showLeaveApplies)
                 <div class="col-md-3 mb-4 ">
@@ -790,7 +787,8 @@
                 </div>
                 <div class="modal-backdrop fade show blurred-backdrop"></div>
                 @endif
-                @if($showAllAbsentEmployees)
+
+  @if($showAllAbsentEmployees)
                 <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -806,7 +804,7 @@
                                                 </p>
                                             <div class="team-leave d-flex flex-row gap-3">
                                            
-                                          
+                                         
                                             @for ($i = 0; $i <$CountAbsentEmployees; $i++)
                                             @if(isset($AbsentEmployees[$i]))
                                             @php
@@ -823,7 +821,7 @@
                                                 </a>    
                                         @endif
                                     @endfor
-                                    
+                                   
                                        
                                     </div>
                                 </div>
@@ -850,7 +848,7 @@
                                                 </p>
                                             <div class="team-leave d-flex flex-row gap-3">
                                            
-                                          
+                                         
                                             @for ($i = 0; $i <$CountLateSwipes; $i++)
                                             @if(isset($LateSwipes[$i]))
                                             @php
@@ -867,7 +865,7 @@
                                                 </a>    
                                         @endif
                                     @endfor
-                                    
+                                   
                                        
                                     </div>
                                 </div>
@@ -894,7 +892,7 @@
                                                 </p>
                                             <div class="team-leave d-flex flex-row gap-3">
                                            
-                                          
+                                         
                                             @for ($i = 0; $i <$CountEarlySwipes; $i++)
                                             @if(isset($EarlySwipes[$i]))
                                             @php
@@ -911,7 +909,7 @@
                                                 </a>    
                                         @endif
                                     @endfor
-                                    
+                                   
                                        
                                     </div>
                                 </div>
@@ -922,6 +920,7 @@
                 </div>
                 <div class="modal-backdrop fade show blurred-backdrop"></div>
                 @endif
+
             </div>
    </div>
 

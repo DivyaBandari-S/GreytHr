@@ -363,12 +363,19 @@ class Catalog extends Component
 
     public function Devops()
     {
+        $messages = [
+            'subject.required' => 'Business Justification is required',
+            'distributor_name.required' => 'Distributor name required',
+            'description' => 'Specific Information is required',
+            'mail.required' => ' Email  is required.',
+            'mail.email' => ' Email must be a valid email address.',
+        ];
         $this->validate([
             'subject' => 'required|string|max:255',
             'mail' => 'required|email|unique:help_desks',
             'mobile' => 'required|string|max:15',
             'description' => 'required|string',
-        ]);
+        ],$messages);
 
         try {
 
@@ -408,11 +415,18 @@ class Catalog extends Component
     public function Request()
     {
 
+        $messages=[
+            'subject.required' => 'Business Justification is required',
+            'distributor_name.required' => 'Distributor name required',
+            'description' => 'Specific Information is required',
+            'mail.required' => ' Email  is required.',
+            'mail.email' => ' Email must be a valid email address.',
+        ];
         $this->validate([
             'subject' => 'required|string|max:255',
             'mail' => 'required|email|unique:help_desks',
             'description' => 'required|string',
-        ]);
+        ],$messages);
         try {
 
 
@@ -449,12 +463,17 @@ class Catalog extends Component
 
     public function DistributorRequest()
     {
+        $messages = [
+            'subject.required' => 'Business Justification is required',
+            'distributor_name.required' => 'Distributor name required',
+            'description' => 'Specific Information is required',
+        ];
 
         $this->validate([
             'distributor_name' => 'required|string',
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
-        ]);
+        ],$messages);
         try {
 
 
@@ -493,11 +512,16 @@ class Catalog extends Component
     public function submit()
     {
         // Validate the input data
+        $messages=[
+            'subject.required' => 'Business Justification is required',
+            'distributor_name.required' => 'Distributor name required',
+             'selected_equipment'=>'Selected equipment is required'
+        ];
         $this->validate([
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
             'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
-        ]);
+        ],$messages);
 
         try {
             // Handle file upload
