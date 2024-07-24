@@ -26,6 +26,10 @@ class EmployeesReview extends Component
 {
     public $attendenceActiveTab = 'active';
     public $leaveactiveTab = 'active';
+    
+    public $searching=0;
+
+    public $search='';
     public $showattendance = true;
     public $showleave = false;
     public $approvedRegularisationRequestList;
@@ -183,16 +187,10 @@ class EmployeesReview extends Component
 
 
 
-     public function searchApprovedLeave()
+public function searchApprovedLeave()
 {
-    try {
-        // Logic to handle the search for approved leaves
-        $this->render();
-    } catch (\Exception $e) {
-        Log::error('Error in searchApprovedLeave method: ' . $e->getMessage());
-        session()->flash('error', 'An error occurred while processing your request. Please try again later.');
-        return redirect()->back();
-    }
+    $this->searching=1;
+    
 }
 
 
@@ -215,25 +213,46 @@ class EmployeesReview extends Component
             ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
     })
     ->get();
-    $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
+    if($this->searching==1)
+    {
+                $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
 
+                ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
+
+                ->orderByDesc('regularisation_dates.id')
+
+                ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+
+                ->where(function ($query) {
+                    $query->where('regularisation_dates.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('regularisation_dates.status', 'LIKE', '%' . $this->searchQuery . '%');
+                })
+
+                ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+
+                ->orderByDesc('id')
+
+                ->get();
+    }
+    else
+    {
+        $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
+ 
     ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
-
+ 
     ->orderByDesc('regularisation_dates.id')
-
+ 
     ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-
-    ->where(function ($query) {
-        $query->where('regularisation_dates.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
-            ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
-            ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
-    })
-
+ 
+ 
     ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
-
+ 
     ->orderByDesc('id')
-
+ 
     ->get();
+    }
     $this->approvedRegularisationRequestList = $this->approvedRegularisationRequestList->filter(function ($regularisation) {
 
         return $regularisation->regularisation_entries !== "[]";

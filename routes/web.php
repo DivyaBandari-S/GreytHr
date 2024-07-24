@@ -201,7 +201,7 @@ Route::middleware(['auth:hr','handleSession'])->group(function () {
     Route::get('/hrAttendanceOverview', HrAttendanceOverviewNew::class)->name('hrAttendanceOverview');
     Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
     // Route::get('/hremployeedirectory', EmployeeDirectory::class)->name('employee-directory');
-    // Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
+    Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
     Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
