@@ -24,7 +24,7 @@
           
              <div class="search-input-employee-swipes">
              <div class="search-container"style="position: relative;">
-                       <i class="fa fa-search search-icon-employee-swipes" aria-hidden="true"style="cursor:pointer;"wire:click="testMethod"></i>
+                       <i class="fa fa-search search-icon-employee-swipes" aria-hidden="true"style="cursor:pointer;"wire:click="searchEmployee"></i>
                        <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
 
               </div>

@@ -1,21 +1,5 @@
 <div>
-@if(session()->has('message'))
-        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%; font-size: 12px;" id="success-alert">
-            {{ session('message') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-
-        @if(session()->has('error'))
-        <div class="alert alert-danger" style="font-size: 12px;" id="error-alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
+<x-loading-indicator />
     <style>
     .emp-side-page-nav-item-group {
         font-weight: 600;
@@ -183,20 +167,14 @@
                 </div> -->
 
 
-                <div class="col-3 emp-input-with-icon">
-                    <input autocomplete="off" placeholder="Search Employee" name="searchKey" typeaheadoptionfield="name"
-                        typeaheadwaitms="300"
-                        class="form-control emp-search text-overflow ng-untouched ng-pristine ng-valid " aria-exp
-                        anded="false" aria-autocomplete="list">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
+                
 
             </div>
 
 
 
             <div class="reviewList">
-                @livewire('view-regularisation-pending')
+                @livewire('view-regularisation-pending-new')
             </div>
 
 
@@ -363,7 +341,7 @@
                 @else
                 <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
                     <img src="/images/pending.png" alt="Pending Image" style="width:55%; margin:0 auto;">
-                    <p style="color:#969ea9; font-size:12px; font-weight:400; ">Hey, you have no regularization records
+                    <p style="color:#969ea9; font-size:12px; font-weight:400; "> Hey, you have no closed regularization records
                         to view
                     </p>
                 </div>
@@ -395,8 +373,8 @@
             </div>
 
             @if ($leaveactiveTab == "active")
-
-            <div class="row p-0 mt-3" style="display:flex; justify-content: end;">
+<!--
+            <div class="row p-0 mt-3" style="display:flex; justify-content: end;"> -->
 
                 <!-- <div class="col-3 emp-input-with-icon">
                     <input autocomplete="off" placeholder="Select date range" name="searchKey"
@@ -406,25 +384,14 @@
 
                 </div> -->
 
-
-
-                <div class="row m-0 p-0 mt-3">
-                    <div class="search-container d-flex align-items-end justify-content-end p-1">
-                        <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput"
-                            placeholder="Enter employee name" class="border outline-none rounded">
-                        <button wire:click="searchPendingLeave" id="searchButton"
-                            style="border:none;outline:none;background:#fff;border-radius:5px;padding:1px 10px;"><i
-                                class="fas fa-search" style="width:7px;height:7px;"></i></button>
-                    </div>
-                </div>
-            </div>
+            <!-- </div> -->
 
 
             <div class="pending-leaves-container"
                 style="width:100%; max-height:400px; overflow-y:auto; margin-top:10px;">
                 @if($this->leaveApplications && count($this->leaveApplications) > 0)
-                <div class="reviewList">
-                    @livewire('view-pending-details', ['leaveApplications' => $this->leaveApplications])
+                <div class="reviewList" wire:click="getPendingLeaveRequest">
+                @livewire('view-pending-details', ['searchQuery' => $searchQuery, 'leaveApplications' => $leaveApplications])
                 </div>
                 @else
                 <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
@@ -575,7 +542,6 @@
 
                             <span
                                 style="font-size: 12px;">{{ucfirst( $leaveRequest['approvedLeaveRequest']->reason) }}</span>
-
                         </div>
 
                         <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
