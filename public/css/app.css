@@ -4261,7 +4261,6 @@ p::first-letter {
     color: #778899;
     font-size: 14px;
     font-size: 500;
-    margin: 0px;
 }
 .lableCount {
     color: #f2b13f;
@@ -4277,7 +4276,7 @@ p::first-letter {
 .notification-text-para {
     color: #778899;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 11px;
     max-height: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -4329,7 +4328,7 @@ p::first-letter {
 }
 
 .notification-detail-container {
-    width: 290px;
+    width: 320px;
     background: #f5f8f9;
 }
 

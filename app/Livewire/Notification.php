@@ -15,8 +15,6 @@ class Notification extends Component
     public $chatNotificationCount;
     public $matchingLeaveRequests;
     public $senderDetails;
-    public $totalnotifications;
-    public $totalnotificationscount;
 
     public function mount()
     {
@@ -33,21 +31,6 @@ class Notification extends Component
     {
         try {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-        // Fetch tasks notifications  from notifications table
-
-        $this->totalnotifications= DB::table('notifications')
-        ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
-        ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.task_name', 'notifications.emp_id','notifications.leave_type','notifications.notification_type')
-        ->where(function ($query) use ($loggedInEmpId) {
-            $query->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$loggedInEmpId])
-                  ->orWhere(function ($query) use ($loggedInEmpId) {
-                      $query->whereJsonContains('notifications.applying_to', [['manager_id' => $loggedInEmpId]])
-                            ->orWhereJsonContains('notifications.cc_to', [['emp_id' => $loggedInEmpId]]);
-                  });
-        })
-        ->where('notifications.is_read', 0)
-        ->get();
-        $this->totalnotificationscount = $this->totalnotifications->count();
 
         // Fetch matching leave requests
         $this->matchingLeaveRequests = DB::table('leave_applications')
@@ -74,25 +57,6 @@ class Notification extends Component
             ->groupBy('sender_id');
 
         $this->chatNotificationCount = $this->senderDetails->count();
-
-
-        }
-        catch (\Exception $e) {
-            abort(404);
-        }
-    }
-
-    public function reduceTaskCount($requestId)
-    {
-        try {
-       DB::table('notifications')
-            ->where('emp_id', $requestId)
-            ->where('notification_type','task')
-            ->update(['is_read' => 1]);
-
-        $this->fetchNotifications();
-
-        return redirect()->route('tasks');
         }
         catch (\Exception $e) {
             abort(404);
@@ -102,9 +66,8 @@ class Notification extends Component
     public function reduceLeaveRequestCount($requestId)
     {
         try {
-       DB::table('notifications')
+       DB::table('leave_applications')
             ->where('emp_id', $requestId)
-            ->where('notifications_type','leave')
             ->update(['is_read' => 1]);
 
         $this->fetchNotifications();
