@@ -4,6 +4,7 @@ use App\Livewire\Activities;
 use App\Livewire\ApprovedDetails;
 use App\Livewire\AddEmployeeDetails;
 use App\Livewire\AddHolidayList;
+use App\Livewire\ProfileCard;
 use App\Livewire\ReviewClosedRegularisation;
 use App\Livewire\SickLeaveBalance;
 use App\Livewire\UpdateEmployeeDetails;
@@ -201,7 +202,7 @@ Route::middleware(['auth:hr','handleSession'])->group(function () {
     Route::get('/hrAttendanceOverview', HrAttendanceOverviewNew::class)->name('hrAttendanceOverview');
     Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
     // Route::get('/hremployeedirectory', EmployeeDirectory::class)->name('employee-directory');
-    // Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
+    Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
     Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
@@ -244,6 +245,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/attendance-muster-data', AttendenceMasterDataNew::class)->name('attendance-muster-data');
     Route::get('/shift-roaster-data', ShiftRoaster::class)->name('shift-roaster-data');
     Route::get('/ProfileInfo', ProfileInfo::class)->name('profile.info');
+    Route::get('/ProfileCard', ProfileCard::class)->name('profile');
     Route::get('/Settings', Settings::class)->name('settings');
     Route::get('/review-pending-regularation/{id}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
@@ -338,4 +340,7 @@ Route::get('/attune-reports', function () {
 
 Route::get('/data-entry', function () {
     return view('data-entry_view');
+});
+Route::get('/ytdpayslip', function () {
+    return view('ytdpayslip');
 });

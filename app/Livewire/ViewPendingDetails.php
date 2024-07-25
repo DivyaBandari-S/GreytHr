@@ -31,47 +31,64 @@ class ViewPendingDetails extends Component
     public $leaveRequest;
     public $leaveApplications;
     public $selectedYear;
-
+    public $searchQuery = '';
 
     public function mount()
     {
-        try {
             //for year selection
             $this->selectedYear = Carbon::now()->format('Y');
+            $this->fetchPendingLeaveApplications();
+    }
+
+    public function fetchPendingLeaveApplications($searchQuery = null){
+        try {
             //login employee id
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            //fetching pending leave requests
-            $this->leaveRequests = LeaveRequest::where('leave_applications.status', 'pending')
-                ->where(function ($query) use ($employeeId) {
+
+            // Start building the query
+            $query = LeaveRequest::where('leave_applications.status', 'pending')
+                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                ->orderBy('created_at', 'desc');
+
+            // Apply search filter if $searchQuery is provided
+            if ($searchQuery !== null) {
+                $query->where(function ($query) use ($searchQuery) {
+                    $query->where('employee_details.first_name', 'like', '%'.$searchQuery.'%')
+                          ->orWhere('employee_details.last_name', 'like', '%'.$searchQuery.'%')
+                          ->orWhere('leave_applications.category_type', 'like', '%'.$searchQuery.'%')
+                          ->orWhere('leave_applications.leave_type', 'like', '%'.$searchQuery.'%');
+                });
+            }
+
+            // Continue with existing filters based on applying_to and cc_to
+            $this->leaveRequests = $query->where(function ($query) use ($employeeId) {
                     $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
                         ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
                 })
-                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->orderBy('created_at', 'desc')
                 ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
-
+    
             $matchingLeaveApplications = [];
-
+    
             //foreach to get leave balance and leave requests
             foreach ($this->leaveRequests as $leaveRequest) {
                 $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
                 $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
-
+    
                 $applyingToJson = trim($leaveRequest->applying_to);
                 $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
-
+    
                 $ccToJson = trim($leaveRequest->cc_to);
                 $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
-
+    
                 $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
                 $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
-
+    
                 if ($isManagerInApplyingTo || $isEmpInCcTo) {
                     $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
-
+    
                     // Check if the from_date year is equal to the current year
                     $fromDateYear = Carbon::parse($leaveRequest->from_date)->format('Y');
-
+    
                     if ($fromDateYear == $this->selectedYear) {
                         // Get leave balance for the current year only
                         $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
@@ -79,26 +96,23 @@ class ViewPendingDetails extends Component
                         // If from_date year is not equal to the current year, set leave balance to 0
                         $leaveBalances = 0;
                     }
-
+    
                     $matchingLeaveApplications[] = [
                         'leaveRequest' => $leaveRequest,
                         'leaveBalances' => $leaveBalances,
                     ];
                 }
             }
-
+    
             $this->leaveApplications = $matchingLeaveApplications;
-
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle query execution errors
             Log::error('A database query error occurred: ' . $e->getMessage());
             session()->flash('error', 'Error while getting the data. Please try again.');
-
         } catch (PDOException $e) {
             // Handle connection errors
             Log::error('Database connection error occurred: ' . $e->getMessage());
             session()->flash('error', 'Connection error . Please try again.');
-
         } catch (\Exception $e) {
             // Handle any other unexpected errors
             Log::error('An unexpected error occurred: ' . $e->getMessage());
@@ -113,8 +127,7 @@ class ViewPendingDetails extends Component
         try {
             // Check if there are pending leave requests
             return $this->leaveRequests->where('status', 'pending')->isNotEmpty();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('An error occurred win hasPendingLeave: ' . $e->getMessage());
             session()->flash('error', 'Error while getting leave application. Please try again.');
         }
@@ -206,20 +219,60 @@ class ViewPendingDetails extends Component
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
 
-            // Update status to 'approved'
-            $leaveRequest->status = 'approved';
-            $leaveRequest->save();
-            $leaveRequest->touch();
-            $this->reset();
-            session()->flash('message', 'Leave application approved successfully.');
+            // Calculate the difference in days from the created date to now
+            $createdDate = Carbon::parse($leaveRequest->created_at);
+            $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
 
-            return redirect()->to('/employees-review');
+            // Check if status is already approved
+            if ($leaveRequest->status === 'approved') {
+                session()->flash('message', 'Leave application is already approved.');
+            } else {
+                // Check if days since creation is more than 3 days or status is not yet approved
+                if ($daysSinceCreation > 3 || $leaveRequest->status !== 'approved') {
+                    // Update status to 'approved'
+                    $leaveRequest->status = 'approved';
+                    $leaveRequest->save();
+                    $leaveRequest->touch(); // Update timestamps
+                    session()->flash('message', 'Leave application approved successfully.');
+                }
+            }
+            $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Handle the exception
             Log::error('Error approving leave: ' . $e->getMessage());
             session()->flash('error', 'Failed to approve leave application. Please try again.');
+        }
+    }
 
-            return redirect()->back(); // Redirect back to the previous page
+    //This method used to approve leave cancel application by manager
+    public function approveLeaveCancel($index)
+    {
+        try {
+            // Find the leave request by ID
+            $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
+
+            // Calculate the difference in days from the created date to now
+            $createdDate = Carbon::parse($leaveRequest->created_at);
+            $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
+
+            // Check if status is already approved
+            if ($leaveRequest->cancel_status === 'approved') {
+                session()->flash('message', 'Leave application is already approved.');
+            } else {
+                // Check if days since creation is more than 3 days or status is not yet approved
+                if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
+                    // Update status to 'approved'
+                    $leaveRequest->cancel_status = 'approved';
+                    $leaveRequest->save();
+                    $leaveRequest->touch();
+                    session()->flash('message', 'Leave cancel application approved successfully.');
+                }
+            }
+            $this->fetchPendingLeaveApplications();
+        } catch (\Exception $e) {
+            // Handle the exception
+            Log::error('Error approving leave: ' . $e->getMessage());
+            session()->flash('error', 'Failed to approve leave application. Please try again.');
         }
     }
 
@@ -229,23 +282,36 @@ class ViewPendingDetails extends Component
         try {
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
-
             // Update status to 'rejected'
             $leaveRequest->status = 'rejected';
             $leaveRequest->save();
             $leaveRequest->touch();
-            $this->reset();
             session()->flash('message', 'Leave application rejected.');
-            return redirect()->to('/employees-review');
+            $this->fetchPendingLeaveApplications();
+
         } catch (\Exception $e) {
             // Log the error
             Log::error($e);
-
             // Flash a message to the session
             session()->flash('error_message', 'An error occurred while rejecting leave application.');
 
-            // Redirect back or to a specific route
-            return redirect()->back();
         }
+    }
+        // Method to handle search input change
+        public function updatedSearchQuery($value)
+        {
+            $this->searchQuery = $value;
+            // Call fetchPendingLeaveApplications with updated $searchQuery
+            $this->fetchPendingLeaveApplications($this->searchQuery);
+        }
+    public function render()
+    {
+        // Call fetchPendingLeaveApplications with $searchQuery
+        $this->fetchPendingLeaveApplications($this->searchQuery);
+
+        return view('livewire.view-pending-details', [
+            'leaveApplications' => $this->leaveApplications,
+            'searchQuery' => $this->searchQuery,
+        ]);
     }
 }

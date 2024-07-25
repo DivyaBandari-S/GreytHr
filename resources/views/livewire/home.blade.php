@@ -335,16 +335,16 @@
                                             <div class="team-leave d-flex flex-row gap-3">
                                             @php
                                                 function getRandomAbsentColor() {
-                                                            $colors = ['#FFD1DC', '#D2E0FB', '#ADD8E6', '#E6E6FA', '#F1EAFF','#FFC5C5'];
+                                                            $colors = ['#FeFD1DC', '#D2E0FB', '#ADD8E6', '#E6E6FA', '#F1EAFF','#FFC5C5'];
                                                             return $colors[array_rand($colors)];
                                                         }
                                                 @endphp
                                     @if($CountAbsentEmployees > 0)            
-                                            @for ($i = 0; $i < min($CountAbsentEmployees, 4); $i++)
+                                            @for ($i = 0; $i < min($CountAbsentEmployees, 5); $i++)
                                             @if(isset($AbsentEmployees[$i]))
                                             @php
                                                 $employee = $AbsentEmployees[$i];
-
+ 
                                                 $randomColorAbsent = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
                                             @endphp
                                                 <a href="/whoisinchart" style="text-decoration: none;">
@@ -357,18 +357,19 @@
                                         @endif
                                     @endfor
                                     @else                      
-                                                <p style="font-size:12px;color:orange">No employees are absent today</p>
+                                                <p style="font-size:12px;color:#778899">No employees are absent today</p>
                                     @endif
                                         @if ($CountAbsentEmployees > 5)
-                                        <div class="remainContent d-flex flex-column align-items-center mt-2">
-                                            <span>+{{ $CountAbsentEmployees - 9 }}</span>
+                                        <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openAbsentEmployees">
+                                            <span>+{{ $CountAbsentEmployees - 5 }}</span>
                                             <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
                                         @endif
                                     </div>
                                 </div>
+                               
                             <!-- /second row -->
-                                
+                               
                                 <div class="who-is-in d-flex flex-column justify-content-start ">
                                             <p  class="section-name mt-1">
                                                     Late Arrival ({{ $CountLateSwipes }})
@@ -381,11 +382,11 @@
                                                         }
                                             @endphp
                                             @if($CountLateSwipes>0)
-                                            @for ($i = 0; $i < min($CountLateSwipes, 9); $i++)
+                                            @for ($i = 0; $i < min($CountLateSwipes, 5); $i++)
                                                 @php
                                                     $employee = $LateSwipes[$i];
                                                 @endphp
-                                            
+                                           
                                                 @if(isset($LateSwipes[$i]))
                                                             <a href="/whoisinchart" style="text-decoration: none;">
                                                                <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
@@ -397,19 +398,19 @@
                                                 @endif
                                             @endfor
                                             @else                      
-                                                <p style="font-size:12px;color:orange">No employees arrived late today</p>
+                                                <p style="font-size:12px;color:#778899">No employees arrived late today</p>
                                             @endif
-                                        @if ($CountLateSwipes > 9)
-                                        <div class="remainContent d-flex flex-column align-items-center mt-2">
-                                            <span>+{{ $CountLateSwipes - 9 }}</span>
+                                        @if ($CountLateSwipes > 5)
+                                        <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openLateEmployees">
+                                            <span>+{{ $CountLateSwipes - 5 }}</span>
                                             <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
                                         @endif
                                     </div>
                                 </div>
-
+ 
                                 <!-- /third row -->
-                                
+                               
                                 <div class="who-is-in d-flex flex-column justify-content-start">
                                             <p  class="section-name mt-1">
                                                     On Time ({{ $CountEarlySwipes }})
@@ -422,15 +423,15 @@
                                                         }
                                             @endphp
                                             @if($CountEarlySwipes)
-                                            @for ($i = 0; $i < min($CountEarlySwipes, 9); $i++)
+                                            @for ($i = 0; $i < min($CountEarlySwipes, 5); $i++)
                                             @if(isset($EarlySwipes[$i]))
                                             @php
                                                 $employee = $EarlySwipes[$i];
-
+ 
                                                 $randomColorEarly = '#' . str_pad(dechex(mt_rand(0xCCCCCC, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
-
+ 
                                             @endphp
-                                                    <a href="/whoisinchart" style="text-decoration: none;"></a>
+                                                    <a href="/whoisinchart" style="text-decoration: none;">
                                                         <div class="circle" style="border: 2px solid {{getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
                                                             <span class="initials">
                                                                 {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
@@ -439,24 +440,23 @@
                                                     </a>    
                                         @endif
                                     @endfor
-                                    @else 
-                                          <p style="font-size:12px;color:orange">No employees arrived early today</p>       
+                                    @else
+                                          <p style="font-size:12px;color:#778899">No employees arrived early today</p>      
                                     @endif
-                                        @if ($CountEarlySwipes > 9)
-                                        <div class="remainContent d-flex flex-column align-items-center mt-2">
-                                            <span>+{{ $CountEarlySwipes - 9 }}</span>
+                                        @if ($CountEarlySwipes > 5)
+                                        <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="showEarlyEmployees">
+                                            <span>+{{ $CountEarlySwipes - 5 }}</span>
                                             <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
                                         @endif
                                     </div>
                                 </div>
-
+ 
                             </div>
                         </div>
                     </div>
                 </div>
-                @endif
-
+               @endif
                  <!-- TEAM ON LEAVE -->
                  @if($this->showLeaveApplies)
                 <div class="col-md-3 mb-4 ">
@@ -781,6 +781,139 @@
                                     @endif
 
                                 </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>
+                @endif
+
+  @if($showAllAbsentEmployees)
+                <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Not Yet In</b></h5>
+                                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeAllAbsentEmployees" style="background-color: white; height:10px;width:10px;" >
+                                </button>
+                            </div>
+                            <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                            <div class="who-is-in d-flex flex-column justify-content-start ">
+                                            <p class="section-name">
+                                                    Not Yet In ({{ $CountAbsentEmployees }})
+                                                </p>
+                                            <div class="team-leave d-flex flex-row gap-3">
+                                           
+                                         
+                                            @for ($i = 0; $i <$CountAbsentEmployees; $i++)
+                                            @if(isset($AbsentEmployees[$i]))
+                                            @php
+                                                $employee = $AbsentEmployees[$i];
+ 
+                                                $randomColorAbsent = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+                                            @endphp
+                                                <a href="/whoisinchart" style="text-decoration: none;">
+                                                    <div class="thisCircle" style="border: 2px solid {{getRandomAbsentColor() }};" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
+                                                        <span class="initials">
+                                                            {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
+                                                        </span>
+                                                    </div>
+                                                </a>    
+                                        @endif
+                                    @endfor
+                                   
+                                       
+                                    </div>
+                                </div>
+   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>
+                @endif
+                @if($showAllLateEmployees)
+                <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Late Arrivals</b></h5>
+                                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeAllLateEmployees" style="background-color: white; height:10px;width:10px;" >
+                                </button>
+                            </div>
+                            <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                            <div class="who-is-in d-flex flex-column justify-content-start ">
+                                            <p class="section-name">
+                                                    Late Arrivals ({{ $CountLateSwipes }})
+                                                </p>
+                                            <div class="team-leave d-flex flex-row gap-3">
+                                           
+                                         
+                                            @for ($i = 0; $i <$CountLateSwipes; $i++)
+                                            @if(isset($LateSwipes[$i]))
+                                            @php
+                                                $employee = $LateSwipes[$i];
+ 
+                                                $randomColorLate = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+                                            @endphp
+                                                <a href="/whoisinchart" style="text-decoration: none;">
+                                                    <div class="thisCircle" style="border: 2px solid {{getRandomLateColor() }};" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
+                                                        <span class="initials">
+                                                            {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
+                                                        </span>
+                                                    </div>
+                                                </a>    
+                                        @endif
+                                    @endfor
+                                   
+                                       
+                                    </div>
+                                </div>
+   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>
+                @endif
+                @if($showAllEarlyEmployees)
+                <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>On Time</b></h5>
+                                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeAllEarlyEmployees" style="background-color: white; height:10px;width:10px;" >
+                                </button>
+                            </div>
+                            <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                            <div class="who-is-in d-flex flex-column justify-content-start ">
+                                            <p class="section-name">
+                                                    On Time ({{ $CountEarlySwipes }})
+                                                </p>
+                                            <div class="team-leave d-flex flex-row gap-3">
+                                           
+                                         
+                                            @for ($i = 0; $i <$CountEarlySwipes; $i++)
+                                            @if(isset($EarlySwipes[$i]))
+                                            @php
+                                                $employee = $EarlySwipes[$i];
+ 
+                                                $randomColorEarly = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+                                            @endphp
+                                                <a href="/whoisinchart" style="text-decoration: none;">
+                                                    <div class="thisCircle" style="border: 2px solid {{getRandomEarlyColor() }};" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
+                                                        <span class="initials">
+                                                            {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0,1)) }}
+                                                        </span>
+                                                    </div>
+                                                </a>    
+                                        @endif
+                                    @endfor
+                                   
+                                       
+                                    </div>
+                                </div>
+   
                             </div>
                         </div>
                     </div>

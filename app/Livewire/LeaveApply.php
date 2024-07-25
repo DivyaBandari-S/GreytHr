@@ -16,6 +16,7 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\LeaveRequest;
+use App\Models\Notification;
 use App\Models\EmployeeDetails;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -494,7 +495,6 @@ class LeaveApply extends Component
 
         try {
             $this->selectleave();
-            $this->searchCCRecipients();
 
             // Check for overlapping leave
             $overlappingLeave = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
@@ -583,7 +583,7 @@ class LeaveApply extends Component
                 'leave_type' => $this->leave_type,
                 'from_date' => $this->from_date,
                 'from_session' => $this->from_session,
-                'to_session' => $this->to_session,
+                   'to_session' => $this->to_session,
                 'to_date' => $this->to_date,
                 'applying_to' => json_encode($applyingToDetails),
                 'file_paths' => json_encode($filePaths),
@@ -591,8 +591,17 @@ class LeaveApply extends Component
                 'contact_details' => $this->contact_details,
                 'reason' => $this->reason,
             ]);
-            logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
 
+            Notification::create([
+                'emp_id' =>  $employeeId,
+                'notification_type' => 'leave',
+                'leave_type'=>$this->leave_type,
+                'leave_reason'=>$this->reason,
+                'applying_to'=> json_encode($applyingToDetails),
+                'cc_to'=>json_encode($ccToDetails),
+            ]);
+
+            logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
             // Check if emp_id is set on the $createdLeaveRequest object
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
                 // Reset the component

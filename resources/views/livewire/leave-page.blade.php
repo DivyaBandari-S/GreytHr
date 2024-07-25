@@ -5,7 +5,7 @@
         <!-- leave-page.blade.php -->
 
         @if(session()->has('message'))
-        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%; font-size: 14px;" id="success-alert">
+        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%; font-size: 12px;" id="success-alert">
             {{ session('message') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -143,7 +143,7 @@
 
         {{-- pending --}}
         <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}">
-            @if(empty($leavePending))
+        @if(empty($leavePending) || $leavePending->isEmpty())
             <div class="containerWidth mt-2" style="width:85%;">
                 <div class="leave-pending rounded">
 
@@ -173,7 +173,7 @@
 
                                 <span class="accordionContentSpan">Category</span>
 
-                                <span class="accordionContentSpanValue">Leave</span>
+                                <span class="accordionContentSpanValue">{{ $leaveRequest->category_type}}</span>
 
                             </div>
 
@@ -307,7 +307,7 @@
 
                                 <span style="color: #778899; font-size:12px; font-weight: 500;">Category</span>
 
-                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">Leave</span>
+                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest->category_type}}</span>
 
                             </div>
 

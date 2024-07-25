@@ -1613,7 +1613,7 @@ color: #fff;
                                         @endforeach
                                 </tr>
                                 @endforeach
-
+                                
                             </tbody>
 
                         </table>

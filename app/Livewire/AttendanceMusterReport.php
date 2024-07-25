@@ -279,7 +279,7 @@ class AttendanceMusterReport extends Component
 
     public function render()
     {
-        $this->employees = EmployeeDetails::where('manager_id', $this->loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+        $this->employees = EmployeeDetails::where('manager_id', $this->loggedInEmpId)->get();
         return view('livewire.attendance-muster-report');
     }
 }

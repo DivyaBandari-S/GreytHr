@@ -36,7 +36,9 @@ class EmployeeSwipesData extends Component
     public $employeeShiftDetails;
     public $selectedSwipeTime;
 
-    public $search;
+    public $search='';
+
+    public $searching=0;
     public $sw_ipes;
     public $notFound;
     public $selectedEmployee;
@@ -184,6 +186,11 @@ class EmployeeSwipesData extends Component
             return redirect()->back(); // Redirect back to the previous page
         }
     }
+    public function searchEmployee()
+    {
+        $this->searching=1;
+       
+    }
     public function render()
 {
     try {
@@ -231,16 +238,35 @@ class EmployeeSwipesData extends Component
                 ->get();
         }
 
-        $nameFilter = $this->search; // Assuming $this->search contains the name filter
-        $this->swipes = $this->swipes->filter(function ($swipe) use ($nameFilter) {
-            return stripos($swipe->first_name, $nameFilter) !== false || stripos($swipe->last_name, $nameFilter) !== false || stripos($swipe->emp_id, $nameFilter) !== false || stripos($swipe->swipe_time, $nameFilter) !== false;
-        });
-
-        if ($this->swipes->isEmpty()) {
-            $this->notFound = true; // Set a flag indicating that the name was not found
-        } else {
-            $this->notFound = false;
-        }
+       if($this->searching==1)
+       {
+            $this->swipes = SwipeRecord::select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time')
+            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+            ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id')) // Specify swipe_records.emp_id
+            ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id')) // Specify swipe_records.emp_id
+            ->whereDate('swipe_records.created_at', $currentDate)
+            ->orderBy('employee_details.first_name')
+            ->where(function ($query) {
+                $query->where('swipe_records.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
+                    ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
+                    ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%')
+                    ->orWhere('swipe_records.swipe_time', 'LIKE', '%' . $this->searchQuery . '%')
+                    ->orWhere('swipe_records.in_or_out', 'LIKE', '%' . $this->searchQuery . '%')
+                    ->orWhere('swipe_records.created_at', 'LIKE', '%' . $this->searchQuery . '%');
+                    
+            })
+            ->get();
+       }
+       else
+       {
+            $this->swipes = SwipeRecord::select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time')
+            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+            ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id')) // Specify swipe_records.emp_id
+            ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id')) // Specify swipe_records.emp_id
+            ->whereDate('swipe_records.created_at', $currentDate)
+            ->orderBy('employee_details.first_name')
+            ->get();
+       }
 
         $todaySwipeIN = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $currentDate)->first();
 

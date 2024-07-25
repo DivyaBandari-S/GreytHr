@@ -120,9 +120,12 @@
                 <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                     <i style="text-align: center;" class="fa fa-search"></i>
                 </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
+             
+                                <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
+                                </div>
             </div>
         </div>
         @if ($peopleData->isEmpty())
@@ -175,9 +178,11 @@
 
                                                     </form>
                                                 </div>
-                                                <div class="modal-footer">
+                                                <div class="modal-footer justify-content-center">
+                                                    <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
+                                                <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
-                                                    <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
+            </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -277,9 +282,11 @@
                 <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                     <i style="text-align: center;" class="fa fa-search"></i>
                 </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
+                <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
+                                </div>
             </div>
         </div>
         @if ($peopleData->isEmpty())
@@ -332,13 +339,17 @@
 
                                                     </form>
                                                 </div>
-                                                <div class="modal-footer">
-                                                <button type="button" wire:click="DistributorRequest" class="submit-btn">
+                                                <div class="modal-footer justify-content-center" >
+                                                           <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
+                                                           <button type="button" wire:click="DistributorRequest" class="submit-btn">
     <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
 </button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
                                    
+                                                           </div>
+
+                                  
                                                 </div>
                                             </div>
                                         </div>
@@ -482,12 +493,13 @@
 
                                                     </form>
                                                 </div>
-                                                <div class="modal-footer">
+                                                <div class="modal-footer justify-content-center">
+                                                <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
                                                 <button type="button" wire:click="Request" class="submit-btn">
     <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
 </button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
-
+</div>
                                                    
                                                 </div>
                                             </div>
@@ -586,9 +598,11 @@
                 <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                     <i style="text-align: center;" class="fa fa-search"></i>
                 </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
+                <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
+                                </div>
             </div>
         </div>
         @if ($peopleData->isEmpty())
@@ -641,7 +655,7 @@
 
                                                         </form>
                                                     </div>
-                                                    <div class="modal-footer">
+                                                    <div class="modal-footer justify-content-center">
 
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
@@ -741,9 +755,11 @@
                 <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                     <i style="text-align: center;" class="fa fa-search"></i>
                 </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
+                <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
+                                </div>
             </div>
         </div>
         @if ($peopleData->isEmpty())
@@ -797,7 +813,7 @@
 
                                                         </form>
                                                     </div>
-                                                    <div class="modal-footer">
+                                                    <div class="modal-footer justify-content-center">
                                                     <button type="button" wire:click="Devops" class="submit-btn">
     <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
 </button>
@@ -895,9 +911,11 @@
                 <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                     <i style="text-align: center;" class="fa fa-search"></i>
                 </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
+                <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
+                                </div>
             </div>
         </div>
         @if ($peopleData->isEmpty())
@@ -950,12 +968,13 @@
 
                                                         </form>
                                                     </div>
-                                                    <div class="modal-footer">
+                                                    <div class="modal-footer justify-content-center">
+                                                    <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
                                                     <button type="button" wire:click="DistributorRequest" class="submit-btn">
     <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
 </button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
-
+</div>
                                                         
                                                     </div>
                                                 </div>
@@ -1054,9 +1073,11 @@
                 <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                     <i style="text-align: center;" class="fa fa-search"></i>
                 </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
+                <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
+                                </div>
             </div>
         </div>
         @if ($peopleData->isEmpty())
@@ -1109,12 +1130,14 @@
 
                                                         </form>
                                                     </div>
-                                                    <div class="modal-footer">
+                                                    <div class="modal-footer justify-content-center">
+                                                    <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
                                                     <button type="button" wire:click="Devops" class="submit-btn">
     <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
 </button>
-                                                        <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
+                                                        <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
+</div>
                                                        
                                                     </div>
                                                 </div>
@@ -1224,9 +1247,11 @@
                 <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                     <i style="text-align: center;" class="fa fa-search"></i>
                 </button>
-                <button wire:click="closePeoples" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                </button>
+                <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
+                                </div>
             </div>
         </div>
         @if ($peopleData->isEmpty())
@@ -1279,7 +1304,7 @@
 
                                                         </form>
                                                     </div>
-                                                    <div class="modal-footer">
+                                                    <div class="modal-footer justify-content-center">
                                                     <button type="button" wire:click="Devops" class="submit-btn">
     <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
 </button>

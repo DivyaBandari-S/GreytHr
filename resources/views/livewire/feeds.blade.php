@@ -693,59 +693,117 @@
                         </div>
                     </div>
                   
-                    <div class="row m-0">
+<div class="row m-0">
     @php
     $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
+    $interactedComments = $this->getInteractedComments($data['employee']->emp_id)->where('type','date_of_birth');
     @endphp
- <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
-    @if($currentCardComments && $currentCardComments->count() > 0)
-        @foreach ($currentCardComments as $comment)
+
+    <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
+        
+        @if($currentCardComments && $currentCardComments->count() > 0)
+            @foreach ($currentCardComments as $comment)
+           
             <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
-                @if($comment->employee)
-                    @if($comment->employee->image)
-                        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
-                    @else
-                        @if($comment->employee->gender == "Male")
-                            <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="" height="25" width="25">
-                        @elseif($comment->employee->gender == "Female")
-                            <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="" height="25" width="25">
-                        @endif
-                    @endif
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
-                @elseif($comment->hr)
-                    @if($comment->hr->image)
-                        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
-                    @else
-                        @if($comment->hr->gender == "Male")
-                            <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="" height="25" width="25">
-                        @elseif($comment->hr->gender == "Female")
-                            <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="" height="25" width="25">
-                        @endif
-                    @endif
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
-                @else
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
-                @endif
-            </div>
-        @endforeach
+    @if($comment->employee)
+        @if($comment->employee->image)
+            <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
+        @else
+        
+            @if($comment->employee->gender == "Male")
+                <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
+            @elseif($comment->employee->gender == "Female")
+                <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
+     
+            @endif
+        @endif
+        <div class="comment" style="font-size: 10px;">
+            <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
+            <p class="mb-0" style="font-size: 11px;">
+                {{ ucfirst($comment->comment) }}
+            </p>
+        </div>
+    @elseif($comment->hr)
+        @if($comment->hr->image)
+            <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
+        @else
+            @if($comment->hr->gender == "Male")
+                <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
+            @elseif($comment->hr->gender == "Female")
+                <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
+            @else
+                <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
+            @endif
+        @endif
+        <div class="comment" style="font-size: 10px;">
+            <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
+            <p class="mb-0" style="font-size: 11px;">
+                {{ ucfirst($comment->comment) }}
+            </p>
+        </div>
+    @else
+        <div class="comment" style="font-size: 10px;">
+            <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+            <p class="mb-0" style="font-size: 11px;">
+                {{ ucfirst($comment->comment) }}
+            </p>
+        </div>
     @endif
 </div>
 
+            @endforeach
+        @endif
+    </div>
+
+    @if($interactedComments->count() > 1)
+        <div class="m-0 mt-2 px-2" id="interacted-comments-container" style="overflow-y:auto; max-height:150px;">
+            <h5>Interacted Comments</h5>
+            @foreach ($interactedComments as $comment)
+                <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
+                    @if($comment->employee)
+                        @if($comment->employee->image)
+                            <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
+                        @else
+                            @if($comment->employee->gender == "Male")
+                                <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="" height="25" width="25">
+                            @elseif($comment->employee->gender == "Female")
+                                <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="" height="25" width="25">
+                            @endif
+                        @endif
+                        <div class="comment" style="font-size: 10px;">
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
+                            <p class="mb-0" style="font-size: 11px;">
+                                {{ ucfirst($comment->comment) }}
+                            </p>
+                        </div>
+                    @elseif($comment->hr)
+                        @if($comment->hr->image)
+                            <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
+                        @else
+                            @if($comment->hr->gender == "Male")
+                                <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="" height="25" width="25">
+                            @elseif($comment->hr->gender == "Female")
+                                <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="" height="25" width="25">
+                            @endif
+                        @endif
+                        <div class="comment" style="font-size: 10px;">
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
+                            <p class="mb-0" style="font-size: 11px;">
+                                {{ ucfirst($comment->comment) }}
+                            </p>
+                        </div>
+                    @else
+                        <div class="comment" style="font-size: 10px;">
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+                            <p class="mb-0" style="font-size: 11px;">
+                                {{ ucfirst($comment->comment) }}
+                            </p>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    @endif
 </div>
 
 
