@@ -50,7 +50,7 @@
     <livewire:styles />
 
     {{-- @vite(['public/css/app.css', 'public/js/app.js','resources/css/app.css','resources/js/app.js']) --}}
-    @vite(['public/css/app.css', 'public/js/app.js'])
+    <!-- @vite(['public/css/app.css', 'public/js/app.js']) -->
     <!-- date range picker links -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontawesome5-fullcss@1.1.0/css/all.min.css">
