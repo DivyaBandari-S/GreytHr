@@ -46,6 +46,7 @@
             border: none;
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/app.css')}}">
     <livewire:styles />
 
     {{-- @vite(['public/css/app.css', 'public/js/app.js','resources/css/app.css','resources/js/app.js']) --}}
@@ -114,9 +115,6 @@
     <script src="{{ asset('livewire/livewire.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        @import url('/public/app.css');
-    </style>
 
     @livewireScripts
 
