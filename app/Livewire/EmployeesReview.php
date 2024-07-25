@@ -151,7 +151,6 @@ class EmployeesReview extends Component
                         ->orWhere('status', 'LIKE', '%' . $this->searchQuery . '%');
                 });
             }
-
             $this->leaveApplications = $query->get();
             $this->count = $this->leaveApplications->count();
         } catch (\Exception $e) {
