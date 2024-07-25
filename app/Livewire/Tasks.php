@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Session;
+use \Carbon\Carbon;
 
 class Tasks extends Component
 {
@@ -52,7 +53,106 @@ class Tasks extends Component
     public $commentAdded = false;
     public $showAddCommentModal = false;
     public $editCommentId = null;
+    public $search = '';
+    public $closedSearch = '';
+    public $filterData;
+    public function setActiveTab($tab)
+    {
+        if ($tab === 'open') {
+            $this->activeTab = 'open';
+            $this->search = '';
+            $this->start = now()->startOfYear()->format('Y-m-d'); 
+            $this->end = now()->endOfYear()->format('Y-m-d'); 
+        } elseif ($tab === 'completed') {
+            $this->activeTab = 'completed';
+            $this->closedSearch = ''; 
+            $this->start = now()->startOfYear()->format('Y-m-d'); 
+            $this->end = now()->endOfYear()->format('Y-m-d');
+        }
+        $this->loadTasks(); 
+    }
+
+    public function loadTasks()
+    {
+        if ($this->activeTab === 'open') {
+            $this->searchActiveTasks();
+        } elseif ($this->activeTab === 'completed') {
+            $this->searchCompletedTasks();
+        }
+    }
+
+    public function searchActiveTasks()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $query = Task::where('emp_id', $employeeId)
+                     ->where('status', 'Open');
+
+       
+        if ($this->start && $this->end) {
+            $query->whereBetween('created_at', [$this->start, $this->end]);
+        }
+
+     
+        if ($this->search) {
+            $query->where(function ($query) {
+                $query->where('assignee', 'like', '%' . $this->search . '%')
+                      ->orWhere('followers', 'like', '%' . $this->search . '%')
+                      ->orWhereHas('emp', function ($query) {
+                          $query->where('first_name', 'like', '%' . $this->search . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                      })
+                      ->orWhere('task_name', 'like', '%' . $this->search . '%')
+                      ->orWhere('emp_id', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        $this->filterData = $query->orderBy('created_at', 'desc')->get();
+        $this->peopleFound = count($this->filterData) > 0;
+    }
+
+    public function searchCompletedTasks()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $query = Task::where('emp_id', $employeeId)
+                     ->where('status', 'Completed'); 
+
+       
+        if ($this->start && $this->end) {
+            $query->whereBetween('created_at', [$this->start, $this->end]);
+        }
+
+      
+        if ($this->closedSearch) {
+            $query->where(function ($query) {
+                $query->where('assignee', 'like', '%' . $this->closedSearch . '%')
+                      ->orWhere('followers', 'like', '%' . $this->closedSearch . '%')
+                      ->orWhereHas('emp', function ($query) {
+                          $query->where('first_name', 'like', '%' . $this->closedSearch . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->closedSearch . '%');
+                      })
+                      ->orWhere('task_name', 'like', '%' . $this->closedSearch . '%')
+                      ->orWhere('emp_id', 'like', '%' . $this->closedSearch . '%');
+            });
+        }
+
+        $this->filterData = $query->orderBy('created_at', 'desc')->get();
+        $this->peopleFound = count($this->filterData) > 0;
+    }
+
     
+    public function updatedStart($value)
+    {
+        $this->start = $value;
+        $this->loadTasks();
+    }
+
+    public function updatedEnd($value)
+    {
+        $this->end = $value;
+        $this->loadTasks();
+    }
+
+
 
     protected $rules = [
         'newComment' => 'required',
@@ -65,6 +165,28 @@ class Tasks extends Component
     {
 
         $this->validateOnly($field, $this->rules);
+    }
+
+    public string $year = '';
+    public string $start = '';
+    public string $end = '';
+
+    protected $listeners = [
+        'update',
+        'updateStart', 'updateEnd'
+    ];
+
+    public function update($start, $end) 
+    {
+        $this->year = carbon::parse($start)->format('Y');
+        $this->start = $start;
+        $this->end = $end;
+    }
+
+    public function changeYear()
+    {
+        $this->start = Carbon::parse($this->start)->year($this->year)->format('Y-m-d');
+        $this->end = Carbon::parse($this->end)->year($this->year)->format('Y-m-d');
     }
 
     public function forAssignee()
@@ -92,6 +214,9 @@ class Tasks extends Component
     {
         $this->selectedPersonClients = collect();
         $this->selectedPersonClientsWithProjects = collect();
+        $this->year = Carbon::now()->format('Y');
+        $this->start = now()->startOfYear()->format('Y-m-d');
+        $this->end = now()->endOfYear()->format('Y-m-d');
     }
 
     public function selectPerson($personId)
@@ -363,8 +488,15 @@ class Tasks extends Component
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
+            
+            if ($this->activeTab === 'open') {
+                $this->searchActiveTasks();
+            } elseif ($this->activeTab === 'completed') {
+                $this->searchCompletedTasks();
+            }
 
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+        
         $this->record = Task::all();
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
         $this->records = Task::with('emp')
@@ -374,8 +506,10 @@ class Tasks extends Component
             })
             ->orderBy('created_at', 'desc')
             ->get();
+        $searchData = $this->filterData ?: $this->records;
         return view('livewire.tasks', [
             'peopleData' => $peopleData,
+            'searchData' => $searchData,
             'taskComments' => $this->taskComments,
         ]);
     }

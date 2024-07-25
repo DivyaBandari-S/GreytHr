@@ -81,7 +81,6 @@ class Peoples extends Component
             $this->filteredMyTeamPeoples = EmployeeDetails::with('starredPeople')
             ->where('company_id', $companyId)
             ->where('manager_id', $managerId)
-            ->where('employee_status', 'active')
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
                         ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
@@ -187,7 +186,6 @@ class Peoples extends Component
         try {
             $companyId = Auth::user()->company_id;
             $this->peoples = EmployeeDetails::with('starredPeople')->where('company_id', $companyId)
-            ->where('employee_status', 'active')
                 ->orderBy('first_name')
                 ->orderBy('last_name')
                 ->get();
@@ -199,7 +197,6 @@ class Peoples extends Component
             $this->myTeam = EmployeeDetails::with('starredPeople')
                 ->where('company_id', $companyId)
                 ->where('manager_id', $employeeId)
-                ->where('employee_status', 'active')
                 ->orderBy('first_name')
                 ->orderBy('last_name')
                 ->get();
