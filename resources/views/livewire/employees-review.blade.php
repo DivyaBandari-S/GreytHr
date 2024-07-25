@@ -1,5 +1,4 @@
 <div>
-<x-loading-indicator />
     <style>
     .emp-side-page-nav-item-group {
         font-weight: 600;
@@ -108,6 +107,8 @@
 
 
     <div class="row m-0 p-0">
+<x-loading-indicator />
+
         <div class="sidenav col-md-3 col-lg-2" style="min-height: 30rem;">
             <div>
                 <ul class="nav flex-column side-page-nav">
@@ -173,7 +174,7 @@
 
 
 
-            <div class="reviewList">
+            <div class="reviewList" style="margin:30px auto;">
                 @livewire('view-regularisation-pending-new')
             </div>
 
@@ -372,7 +373,7 @@
                 </ul>
             </div>
 
-            @if ($leaveactiveTab == "active")
+            @if ($leaveactiveTab === "active")
 <!--
             <div class="row p-0 mt-3" style="display:flex; justify-content: end;"> -->
 
@@ -388,16 +389,18 @@
 
 
             <div class="pending-leaves-container"
-                style="width:100%; max-height:400px; overflow-y:auto; margin-top:10px;">
-                @if($this->leaveApplications && count($this->leaveApplications) > 0)
-                <div class="reviewList" wire:click="getPendingLeaveRequest">
-                @livewire('view-pending-details', ['searchQuery' => $searchQuery, 'leaveApplications' => $leaveApplications])
+                style="width:100%; max-height:400px; overflow-y:auto; margin-top:50px;">
+                @if($count > 0)
+                <div class="reviewList" >
+                @livewire('view-pending-details')
                 </div>
                 @else
-                <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
-                    <img src="/images/pending.png" alt="Pending Image" style="width:55%; margin:0 auto;">
+                <div class=" bg-white rounded border text-center" style="width:80%;margin:30px auto;">
+                   <div class="d-flex flex-column justify-content-center">
+                   <img src="/images/pending.png" alt="Pending Image" style="width:50%; margin:0 auto;">
                     <p style="color:#969ea9; font-size:12px; font-weight:400;">Hey, you have no leave records to view
                     </p>
+                   </div>
                 </div>
                 @endif
             </div>
@@ -637,6 +640,12 @@
 
                 </div>
                 @endforeach
+            </div>
+            @else
+            <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
+                <img src="/images/pending.png" alt="Pending Image" style="width:55%; margin:0 auto;">
+                <p style="color:#969ea9; font-size:12px; font-weight:400; ">Hey, you have no leave records to view
+                </p>
             </div>
             @endif
             <!-- if loginid is a normal employee they can view their leave history -->
