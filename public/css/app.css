@@ -4284,7 +4284,7 @@ p::first-letter {
     white-space: nowrap;
 }
 .notification-anchor-tag {
-    color: white;
+    color: white !important;
     text-decoration: none;
 }
 
