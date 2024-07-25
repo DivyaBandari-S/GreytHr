@@ -122,7 +122,7 @@ Route::get('/Login&Register', function () {
     return view('login_and_register_view');
 });
 
-Route::middleware(['auth:web','handleSession'])->group(function () {
+Route::middleware(['auth:web', 'handleSession'])->group(function () {
     Route::get('/CreateCV', function () {
         return view('create_cv_view');
     });
@@ -162,7 +162,7 @@ Route::middleware(['auth:web','handleSession'])->group(function () {
 
 
 
-Route::middleware(['auth:com','handleSession'])->group(function () {
+Route::middleware(['auth:com', 'handleSession'])->group(function () {
     Route::get('/PostJobs', function () {
         return view('post_jobs_view');
     });
@@ -188,7 +188,7 @@ Route::middleware(['auth:com','handleSession'])->group(function () {
     })->name('emp-update');
 });
 
-Route::middleware(['auth:hr','handleSession'])->group(function () {
+Route::middleware(['auth:hr', 'handleSession'])->group(function () {
     Route::get('/hrFeeds', Feeds::class)->name('hrfeeds');
     Route::get('/hreveryone', Everyone::class)->name('hreveryone');
     Route::get('/hrevents', Activities::class);
@@ -207,23 +207,22 @@ Route::middleware(['auth:hr','handleSession'])->group(function () {
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
 
-Route::middleware(['auth:finance','handleSession'])->group(function () {
+Route::middleware(['auth:finance', 'handleSession'])->group(function () {
     Route::get('/financePage', AuthChecking::class)->name('financePage');
 });
 
-Route::middleware(['auth:it','handleSession'])->group(function () {
+Route::middleware(['auth:it', 'handleSession'])->group(function () {
     Route::get('/itPage', AuthChecking::class)->name('IT-requests');
     Route::get('/emp-assets-details', EmployeeAssetsDetails::class)->name('employee-asset-details');
     Route::get('/ithomepage', ItDashboardPage::class)->name('ithomepage');
 });
 
-Route::middleware(['auth:admins','handleSession'])->group(function () {
+Route::middleware(['auth:admins', 'handleSession'])->group(function () {
     Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
-
 });
 
 
-Route::middleware(['auth:emp','handleSession'])->group(function () {
+Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/google-redirect', [GoogleDriveController::class, 'auth'])
         ->name('google-redirect');
     Route::get('/google-callback', [GoogleDriveController::class, 'callback'])
@@ -293,9 +292,9 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/leave-apply', LeaveApply::class);
     Route::get('/holiday-calender', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
-    Route::get('/casualleavebalance',CasualLeaveBalance::class)->name('casual-leave-balance');
-    Route::get('/sickleavebalance',SickLeaveBalances::class)->name('sick-leave-balance');
-    Route::get('/casualprobationleavebalance',CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
+    Route::get('/casualleavebalance', CasualLeaveBalance::class)->name('casual-leave-balance');
+    Route::get('/sickleavebalance', SickLeaveBalances::class)->name('sick-leave-balance');
+    Route::get('/casualprobationleavebalance', CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
     Route::get('/leave-cancel', LeaveCancel::class)->name('lseave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
@@ -313,9 +312,9 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     // Route::get('/chat',Index::class)->name('chat.index');
-    Route::get('/chat/{query}',Chat::class)->name('chat');
-    Route::get('/users',EmployeeList::class)->name('employee');
-    Route::get('/image',ImageUpload::class)->name('image');
+    Route::get('/chat/{query}', Chat::class)->name('chat');
+    Route::get('/users', EmployeeList::class)->name('employee');
+    Route::get('/image', ImageUpload::class)->name('image');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 

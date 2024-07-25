@@ -1,5 +1,4 @@
 <div>
-<x-loading-indicator />
 <body>
     <div class="msg-container">
     @if (session()->has('success'))
