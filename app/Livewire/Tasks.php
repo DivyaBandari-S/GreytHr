@@ -7,7 +7,6 @@ use App\Models\ClientsEmployee;
 use App\Models\ClientsWithProjects;
 use App\Models\EmployeeDetails;
 use App\Models\Task;
-use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TaskComment;
 use Illuminate\Support\Facades\DB;
@@ -53,7 +52,7 @@ class Tasks extends Component
     public $commentAdded = false;
     public $showAddCommentModal = false;
     public $editCommentId = null;
-
+    
 
     protected $rules = [
         'newComment' => 'required',
@@ -101,7 +100,7 @@ class Tasks extends Component
         $this->selectedPerson = $this->peoples->where('emp_id', $personId)->first();
         $this->selectedPersonClients = ClientsEmployee::where('emp_id', $this->selectedPerson->emp_id)->get();
         $this->selectedPeopleName = $this->selectedPerson->first_name . ' #(' . $this->selectedPerson->emp_id . ')';
-        $this->assignee = $this->selectedPeopleName;
+        $this->assignee=$this->selectedPeopleName;
 
 
         if ($this->selectedPersonClients->isEmpty()) {
@@ -215,13 +214,6 @@ class Tasks extends Component
             'status' => "Open",
         ]);
 
-        Notification::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-            'notification_type' => 'task',
-            'task_name' => $this->task_name,
-            'assignee' => $this->assignee,
-        ]);
-        
         $this->reset();
         session()->flash('message', 'Task created successfully!');
         return redirect()->to('/tasks');
@@ -234,8 +226,9 @@ class Tasks extends Component
     public function show()
     {
         $this->showDialog = true;
+       
     }
-
+   
 
     public function close()
     {
