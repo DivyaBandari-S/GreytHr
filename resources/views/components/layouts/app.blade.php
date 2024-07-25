@@ -38,14 +38,6 @@
         {{ $employee->company_name }}
     </title>
     @endauth
-    <style>
-        .dropdown-menu.show {
-            display: block;
-            background-color: none !important;
-            margin-left: 20px;
-            border: none;
-        }
-    </style>
     <link rel="stylesheet" href="{{ asset('css/app.css')}}">
     <livewire:styles />
 

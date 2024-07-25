@@ -732,6 +732,12 @@ button.close-button {
 /*End of document center/letter module (Kumar Asapu) */
 
 /* app.blade */
+.dropdown-menu.show {
+    display: block;
+    background-color: none !important;
+    margin-left: 20px;
+    border: none;
+}
 .profile-container {
     display: flex;
     justify-content: space-between;
