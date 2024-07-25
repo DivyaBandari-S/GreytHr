@@ -98,7 +98,11 @@ use App\Livewire\SickLeaveBalances;
 use App\Livewire\Ytdreport;
 use Illuminate\Support\Facades\Route;
 
-
+Route::get('/test',function () {
+            return
+                'Test route is working!';
+        }
+    );
 
 Route::group(['middleware' => 'checkAuth'], function () {
 
