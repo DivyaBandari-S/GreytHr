@@ -19,6 +19,7 @@ class ViewRegularisationPendingNew extends Component
     public $regularised_date;
     public $user;
 
+    public $auto_approve=false;
     public $remarks;
 
     public $openRejectPopupModal=false;
@@ -44,6 +45,7 @@ class ViewRegularisationPendingNew extends Component
             $daysDifference = Carbon::parse($this->regularised_date)->diffInDays(Carbon::now());
            
             if ($daysDifference >= 3) {
+                $this->auto_approve=true;
                 $this->approve($regularisation->id);
             }
             
@@ -70,26 +72,53 @@ class ViewRegularisationPendingNew extends Component
     {
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
+       
         $employeeId=$item->emp_id;
+       
         $item->status='approved';
         if(empty($this->remarks))
         {
+            if($this->auto_approve==true)
+            {
+                $item->approver_remarks='auto_approved';
+            }
 
         }
         else
         {
-            $item->approver_remarks=$this->remarks;
+            
+                $item->approver_remarks=$this->remarks;
+            
+            
         }
         $item->approved_date = $currentDateTime;
-        $item->approved_by=$this->user->first_name . ' ' . $this->user->last_name;
+        if($this->auto_approve==true)
+        {
+            $item->approved_by='auto_approved'; 
+        }
+        else
+        {
+            $item->approved_by=$this->user->first_name . ' ' . $this->user->last_name;
+        }
+        
         $item->save();
         $regularisationEntries = json_decode($item['regularisation_entries'], true);
+        $count_of_regularisations=count($regularisationEntries);
+        
         if (!empty($regularisationEntries) && is_array($regularisationEntries)) {
-            foreach ($regularisationEntries as $entry) {
+            
+            for($i=0;$i<$count_of_regularisations;$i++) {
+               
                 $swiperecord=new SwipeRecord();
                 $swiperecord->emp_id=$employeeId;
-                $date = $regularisationEntries[0]['date'];
-                if (empty($entry['from'])) {
+                $date = $regularisationEntries[$i]['date'];
+                $from=$regularisationEntries[$i]['from'];
+                $to=$regularisationEntries[$i]['to'];
+                $reason=$regularisationEntries[$i]['reason'];
+               
+               
+                
+                if (empty($from)) {
                     
                     
                     $swiperecord->in_or_out='IN';
@@ -99,7 +128,7 @@ class ViewRegularisationPendingNew extends Component
                     
                 } else {
                     $swiperecord->in_or_out='IN';
-                    $swiperecord->swipe_time= $entry['from'];
+                    $swiperecord->swipe_time= $from;
                     $swiperecord->created_at=$date;
                     $swiperecord->is_regularised=true;
                 }
@@ -107,7 +136,7 @@ class ViewRegularisationPendingNew extends Component
                 $swiperecord1=new SwipeRecord();
                 $swiperecord1->emp_id=$employeeId;
                 
-                if (empty($entry['to'])) {
+                if (empty($to) ){
                     
                     
                     $swiperecord1->in_or_out='OUT';
@@ -117,13 +146,13 @@ class ViewRegularisationPendingNew extends Component
                     
                 } else {
                     $swiperecord1->in_or_out='OUT';
-                    $swiperecord1->swipe_time= $entry['to'];
+                    $swiperecord1->swipe_time= $to;
                     $swiperecord1->created_at=$date;
                     $swiperecord1->is_regularised=true;
                 }
                 $swiperecord1->save();
                 // Exit the loop after the first entry since the example has one entry
-                break;
+               
             }
         }
         $this->countofregularisations--;

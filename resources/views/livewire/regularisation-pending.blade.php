@@ -102,7 +102,7 @@
                 <th class="header-style">Shift</th>
                 <th class="header-style">First In Time</th>
                 <th class="header-style">Last Out Time</th>
-                <th class="header-style"></th>
+                <th class="header-style">Reason</th>
             </tr>
         </thead>
         @foreach($regularisationEntries as $entry)
@@ -125,7 +125,7 @@
                             {{ $entry['to'] }}
                        @endif
                 </td>
-                <td style="border-right:1px solid black; overflow: hidden; text-overflow: ellipsis;max-width:5px;padding-right:5px;">
+                <td style="border-right:1px solid black;padding-right:5px;">
                        @if(empty($entry['reason']))
                             -....
                        @else
