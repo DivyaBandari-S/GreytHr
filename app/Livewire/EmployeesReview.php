@@ -101,8 +101,9 @@ class EmployeesReview extends Component
 
     public function mount(Request $request)
     {
-        $this->getPendingLeaveRequest();
+
         $this->getEmpLeaveRequests();
+        $this->getPendingLeaveRequest();
         // if ($request->query('tab') === 'leave') {
         //     $this->setActiveTab('leave');
         //     $this->showleave = true;
@@ -123,38 +124,43 @@ class EmployeesReview extends Component
             $this->showattendance = false;
         }
     }
-    
+
 
     public function getPendingLeaveRequest()
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
-            $empIds = $employees->pluck('emp_id')->toArray();
             $companyId = auth()->guard('emp')->user()->company_id;
 
-            $query = LeaveRequest::where('leave_applications.status', 'Pending')
-                ->where('company_id', $companyId)
-                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id');
+            // Retrieve team members' emp_ids where logged-in user is the manager
+            $teamMembersIds = EmployeeDetails::where('manager_id', $employeeId)
+                                             ->where('company_id', $companyId)
+                                             ->pluck('emp_id')
+                                             ->toArray();
 
+            // Query leave requests for team members
+            $query = LeaveRequest::with('employee')
+                ->whereIn('emp_id', $teamMembersIds)
+                ->where('status', 'Pending');
+
+            // Apply search filter if $this->searchQuery is provided
             if (!empty($this->searchQuery)) {
                 $query->where(function ($query) {
-                    $query->where('leave_applications.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('leave_applications.leave_type', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('leave_applications.status', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
+                    $query->where('emp_id', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('leave_type', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('status', 'LIKE', '%' . $this->searchQuery . '%');
                 });
             }
-
             $this->leaveApplications = $query->get();
             $this->count = $this->leaveApplications->count();
         } catch (\Exception $e) {
-            Log::error('Error in searchApprovedLeave method: ' . $e->getMessage());
+            Log::error('Error in getPendingLeaveRequest method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while processing your request. Please try again later.');
             return redirect()->back();
         }
     }
+
+
 
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
@@ -257,15 +263,13 @@ class EmployeesReview extends Component
 public function searchApprovedLeave()
 {
     $this->searching=1;
-    
+
 }
 
 
 
  public function render(){
-
     //query to fetch the approved leave appplications............
-
     $employeeId = auth()->guard('emp')->user()->emp_id;
     $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
     $empIds = $employees->pluck('emp_id')->toArray();
@@ -341,6 +345,7 @@ public function searchApprovedLeave()
                 $query->where('leave_applications.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
                     ->orWhere('leave_applications.leave_type', 'LIKE', '%' . $this->searchQuery . '%')
                     ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
+                    ->orWhere('leave_applications.status', 'LIKE', '%' . $this->searchQuery . '%')
                     ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
             })
             ->orderBy('created_at', 'desc')

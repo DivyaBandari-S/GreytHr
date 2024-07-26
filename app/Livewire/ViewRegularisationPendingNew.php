@@ -36,20 +36,20 @@ class ViewRegularisationPendingNew extends Component
         ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
         ->where('status','pending')
         ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
-        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
-        ->with('employee') 
+        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
+        ->with('employee')
         ->get();
         foreach ($this->regularisations as $regularisation) {
             $this->regularised_date = Carbon::parse($regularisation->created_at)->toDateString();
-           
+
             $daysDifference = Carbon::parse($this->regularised_date)->diffInDays(Carbon::now());
-           
+
             if ($daysDifference >= 3) {
                 $this->auto_approve=true;
                 $this->approve($regularisation->id);
             }
-            
-            
+
+
         }
     }
     public function openRejectModal()

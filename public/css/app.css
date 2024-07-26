@@ -732,6 +732,12 @@ button.close-button {
 /*End of document center/letter module (Kumar Asapu) */
 
 /* app.blade */
+.dropdown-menu.show {
+    display: block;
+    background-color: none !important;
+    margin-left: 20px;
+    border: none;
+}
 .profile-container {
     display: flex;
     justify-content: space-between;
@@ -4261,6 +4267,7 @@ p::first-letter {
     color: #778899;
     font-size: 14px;
     font-size: 500;
+    margin: 0px;
 }
 .lableCount {
     color: #f2b13f;
@@ -4276,14 +4283,14 @@ p::first-letter {
 .notification-text-para {
     color: #778899;
     font-weight: normal;
-    font-size: 11px;
+    font-size: 14px;
     max-height: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 .notification-anchor-tag {
-    color: white;
+    color: white !important;
     text-decoration: none;
 }
 
@@ -4328,7 +4335,7 @@ p::first-letter {
 }
 
 .notification-detail-container {
-    width: 320px;
+    width: 290px;
     background: #f5f8f9;
 }
 

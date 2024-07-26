@@ -21,7 +21,7 @@ class CheckAuthAndHandleSession
     {
         // Define an array of guards to check
         $guards = ['emp', 'it', 'hr', 'com', 'finance', 'admins'];
- 
+
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 $user = Auth::guard($guard)->user();
