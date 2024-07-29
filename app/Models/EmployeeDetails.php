@@ -19,54 +19,28 @@ class EmployeeDetails extends Authenticatable
     public $incrementing = false;
     protected $fillable = [
         'emp_id',
+        'company_id',
+        'department_id',
+        'sub_department_id',
         'first_name',
         'last_name',
-        'date_of_birth',
-        'gender',
         'email',
-        'company_name',
-        'company_email',
-        'mobile_number',
-        'alternate_mobile_number',
-        'address',
-        'city',
-        'state',
-        'postal_code',
-        'country',
         'hire_date',
         'employee_type',
-        'department',
-        'job_title',
+        'job_role',
         'manager_id',
         'report_to',
         'employee_status',
         'emergency_contact',
         'password',
-        'image',
-        'blood_group',
-        'nationality',
-        'religion',
-        'marital_status',
-        'spouse',
-        'physically_challenge',
         'inter_emp',
         'job_location',
-        'education',
-        'experience',
-        'pan_no',
-        'adhar_no',
-        'pf_no',
-        'nick_name',
-        'time_zone',
-        'biography',
-        'facebook',
-        'twitter',
-        'linked_in',
-        'company_id',
         'is_starred',
         'status',
         'skill_set',
         'job_mode',
+        'resignation_date',
+        'resignation_reason',
         'notice_period',
         'extension'
     ];
@@ -88,9 +62,9 @@ class EmployeeDetails extends Authenticatable
     }
     public function canCreatePost()
     {
-       
+
         return $this->emp_id === 'emp_id'  || $this->hasPermission('create-post');
-        
+
     }
 
     // Inside the EmployeeDetails model

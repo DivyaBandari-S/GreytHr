@@ -3204,7 +3204,7 @@ img {
 }
 
 .no-holidays {
-    padding: 10px 15px;
+    padding: 50px 15px;
     background: #fff;
     overflow: hidden;
     color: #778899;
@@ -3213,7 +3213,7 @@ img {
     flex-direction: column;
     text-align: center;
     justify-content: center;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .alone-cont h6 {

@@ -1,5 +1,4 @@
 <div class="d-flex align-items-center">
-
     <div>
         <a href="/users" class="notification-anchor-tag">
             <i class="fa fa-comment notification-comment-icon">

@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,7 +24,8 @@
         }
 
         .error-image {
-            height: 150px;
+            height: 350px;
+            width: 550px;
             margin-bottom: 20px;
         }
 
@@ -55,12 +57,15 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="error-container">
-        <img src="https://windowslovers.com/wp-content/uploads/2015/09/Err_connection_refused-1024x651.jpg" alt="Connection Refused" class="error-image">
-        <h1>Connection Refused</h1>
-        <p>Sorry, we couldn't establish a connection to the page. Please try again later.</p>
+        <img src=" https://windowslovers.com/wp-content/uploads/2015/09/Err_connection_refused-1024x651.jpg" alt="Connection Refused" class="error-image">
+        <h1>{{ $statusCode }} - Error</h1>
+        <p>Our site is currently undergoing maintenance. Please try again later.</p>
+
+
         <button class="refresh-btn" onclick="refreshPage()">Refresh Page</button>
     </div>
 
@@ -71,4 +76,5 @@
     </script>
 
 </body>
+
 </html>

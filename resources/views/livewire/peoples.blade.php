@@ -186,7 +186,6 @@
             width: 200px;
         }
     </style>
-    <x-loading-indicator />
     <div class="container mt-3">
         @if(session()->has('emp_error'))
         <div class="alert alert-danger">
