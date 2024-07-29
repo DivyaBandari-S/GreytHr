@@ -24,7 +24,6 @@ class Notification extends Component
     public function mount()
     {
         try {
-        try {
             $this->fetchNotifications();
         } catch (\Exception $e) {
             throw $e;
