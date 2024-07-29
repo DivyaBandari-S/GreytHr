@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->string('emp_id');
-            $table->string('task_name');
-            $table->string('assignee');
+            $table->string('task_name')->nullable();
+            $table->string('assignee')->nullable();
             $table->string('leave_reason');
-            $table->string('leave_status');
+            $table->string('leave_status')->default('Pending');
             $table->string('applying_to');
             $table->string('cc_to');
-            $table->string('receiver_id');
-            $table->string('body');
+            $table->string('receiver_id')->nullable();
+            $table->string('notification_type');
+            $table->string('body')->nullable();
+            $table->boolean('is_read')->default(false);
 
             $table->enum('leave_type', ['Casual Leave', 'Sick Leave', 'Loss Of Pay','Maternity Leave','Casual Leave Probation','Marriage Leave','Petarnity Leave', 'Work From Home' ]);
 

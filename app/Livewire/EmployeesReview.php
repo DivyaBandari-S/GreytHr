@@ -27,10 +27,10 @@ class EmployeesReview extends Component
 {
     public $attendenceActiveTab = 'active';
     public $leaveactiveTab = 'active';
-    
-    public $searching=0;
 
-    public $search='';
+    public $searching = 0;
+
+    public $search = '';
     public $showattendance = true;
     public $showleave = false;
     public $approvedRegularisationRequestList;
@@ -62,32 +62,93 @@ class EmployeesReview extends Component
             $this->showleave = true;
         }
     }
+    public function getApprovedLeaveRequests()
+    {
+        try {
+            $selectedYear = $this->selectedYear;
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            //query to fetch the approved leave appplications............
+            $this->approvedLeaveRequests = LeaveRequest::whereIn('leave_applications.status', ['approved', 'rejected'])
+                ->where(function ($query) use ($employeeId) {
+                    $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
+                        ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
+                })
+                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                ->where(function ($query) {
+                    $query->where('leave_applications.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('leave_applications.leave_type', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('leave_applications.status', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
+                })
+                ->orderBy('created_at', 'desc')
+                ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
+
+            $approvedLeaveApplications = [];
+
+            foreach ($this->approvedLeaveRequests as $approvedLeaveRequest) {
+                $applyingToJson = trim($approvedLeaveRequest->applying_to);
+                $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
+
+                $ccToJson = trim($approvedLeaveRequest->cc_to);
+                $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
+
+                $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
+                $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
+                $approvedLeaveRequest->formatted_from_date = Carbon::parse($approvedLeaveRequest->from_date)->format('d-m-Y');
+                $approvedLeaveRequest->formatted_to_date = Carbon::parse($approvedLeaveRequest->to_date)->format('d-m-Y');
+
+                if ($isManagerInApplyingTo || $isEmpInCcTo) {
+                    // Get leave balance for the current year only
+                    $leaveBalances = LeaveBalances::getLeaveBalances($approvedLeaveRequest->emp_id, $selectedYear);
+                    // Check if the from_date year is equal to the current year
+                    $fromDateYear = Carbon::parse($approvedLeaveRequest->from_date)->format('Y');
+
+                    if ($fromDateYear == $selectedYear) {
+                        // Get leave balance for the current year only
+                        $leaveBalances = LeaveBalances::getLeaveBalances($approvedLeaveRequest->emp_id, $selectedYear);
+                    } else {
+                        // If from_date year is not equal to the current year, set leave balance to 0
+                        $leaveBalances = 0;
+                    }
+                    $approvedLeaveApplications[] =  [
+                        'approvedLeaveRequest' => $approvedLeaveRequest,
+                        'leaveBalances' => $leaveBalances,
+                    ];
+                }
+            }
+
+            $this->approvedLeaveApplicationsList = $approvedLeaveApplications;
+        } catch (\Exception $e) {
+            Log::error('Error in getPendingLeaveRequest method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+        }
+    }
     public function getEmpLeaveRequests()
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
- 
             // Query leave requests with search filter
             $query = LeaveRequest::with('employee')
                 ->where('emp_id', $employeeId)
                 ->whereIn('status', ['approved', 'rejected', 'Withdrawn'])
                 ->orderBy('created_at', 'desc');
- 
+
             // Apply search filter if searchQuery is not empty
             if (!empty($this->searchQuery)) {
                 $query->where(function ($query) {
                     $query->whereHas('employee', function ($query) {
                         $query->where('first_name', 'LIKE', '%' . $this->searchQuery . '%')
-                              ->orWhere('last_name', 'LIKE', '%' . $this->searchQuery . '%');
+                            ->orWhere('last_name', 'LIKE', '%' . $this->searchQuery . '%');
                     })
-                    ->orWhere('leave_type', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('status', 'LIKE', '%' . $this->searchQuery . '%');
+                        ->orWhere('leave_type', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('status', 'LIKE', '%' . $this->searchQuery . '%');
                 });
             }
- 
+
             // Fetch results
             $this->empLeaveRequests = $query->get();
- 
+
             // Format the date properties
             foreach ($this->empLeaveRequests as $leaveRequest) {
                 $leaveRequest->formatted_from_date = Carbon::parse($leaveRequest->from_date)->format('d-m-Y');
@@ -99,11 +160,22 @@ class EmployeesReview extends Component
         }
     }
 
+    public $pendingCount;
+
+    protected $listeners = [
+        'pendingLeaveCountUpdated' => 'updatePendingLeaveCount',
+    ];
+
+    public function updatePendingLeaveCount($count)
+    {
+        $this->pendingCount = $count;
+        Log::info('Pending leave count updated to: ' . $this->pendingCount);
+    }
+
     public function mount(Request $request)
     {
 
         $this->getEmpLeaveRequests();
-        $this->getPendingLeaveRequest();
         // if ($request->query('tab') === 'leave') {
         //     $this->setActiveTab('leave');
         //     $this->showleave = true;
@@ -134,9 +206,9 @@ class EmployeesReview extends Component
 
             // Retrieve team members' emp_ids where logged-in user is the manager
             $teamMembersIds = EmployeeDetails::where('manager_id', $employeeId)
-                                             ->where('company_id', $companyId)
-                                             ->pluck('emp_id')
-                                             ->toArray();
+                ->where('company_id', $companyId)
+                ->pluck('emp_id')
+                ->toArray();
 
             // Query leave requests for team members
             $query = LeaveRequest::with('employee')
@@ -156,7 +228,6 @@ class EmployeesReview extends Component
         } catch (\Exception $e) {
             Log::error('Error in getPendingLeaveRequest method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while processing your request. Please try again later.');
-            return redirect()->back();
         }
     }
 
@@ -260,35 +331,23 @@ class EmployeesReview extends Component
     }
 
 
-public function searchApprovedLeave()
-{
-    $this->searching=1;
+    public function searchApprovedLeave()
+    {
+        $this->searching = 1;
+    }
 
-}
+    public function render()
+    {
+        $this->getApprovedLeaveRequests();
+        $this->getPendingLeaveRequest();
+        //query to fetch the approved leave appplications............
+        $employeeId = auth()->guard('emp')->user()->emp_id;
 
+        $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
+        $empIds = $employees->pluck('emp_id')->toArray();
 
-
- public function render(){
-    //query to fetch the approved leave appplications............
-    $employeeId = auth()->guard('emp')->user()->emp_id;
-    $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
-    $empIds = $employees->pluck('emp_id')->toArray();
-
-        $companyId = auth()->guard('emp')->user()->company_id;
-        $this->leaveRequests = LeaveRequest::where('leave_applications.status', 'Pending')
-            ->where('company_id', $companyId)
-            ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->where(function ($query) {
-                $query->where('leave_applications.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('leave_applications.status', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('leave_applications.leave_type', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
-            })
-            ->get();
-       
-        if($this->searching==1)    {     
-        $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
+        if ($this->searching == 1) {
+            $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
 
                 ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
 
@@ -308,90 +367,31 @@ public function searchApprovedLeave()
                 ->orderByDesc('id')
 
                 ->get();
-    }
-    else
-    {
-        $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
- 
-    ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
- 
-    ->orderByDesc('regularisation_dates.id')
- 
-    ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
- 
- 
-    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
- 
-    ->orderByDesc('id')
- 
-    ->get();
-    }
-    $this->approvedRegularisationRequestList = $this->approvedRegularisationRequestList->filter(function ($regularisation) {
+        } else {
+            $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
+
+                ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
+
+                ->orderByDesc('regularisation_dates.id')
+
+                ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+
+
+                ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+
+                ->orderByDesc('id')
+
+                ->get();
+        }
+        $this->approvedRegularisationRequestList = $this->approvedRegularisationRequestList->filter(function ($regularisation) {
 
             return $regularisation->regularisation_entries !== "[]";
         });
 
-        $selectedYear = $this->selectedYear;
-
-        //query to fetch the approved leave appplications............
-
-        $this->approvedLeaveRequests = LeaveRequest::whereIn('leave_applications.status', ['approved', 'rejected'])
-            ->where(function ($query) use ($employeeId) {
-                $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
-                    ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
-            })
-            ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->where(function ($query) {
-                $query->where('leave_applications.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('leave_applications.leave_type', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('leave_applications.status', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
-            })
-            ->orderBy('created_at', 'desc')
-            ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
-
-        $approvedLeaveApplications = [];
-
-        foreach ($this->approvedLeaveRequests as $approvedLeaveRequest) {
-            $applyingToJson = trim($approvedLeaveRequest->applying_to);
-            $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
-
-            $ccToJson = trim($approvedLeaveRequest->cc_to);
-            $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
-
-            $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
-            $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
-            $approvedLeaveRequest->formatted_from_date = Carbon::parse($approvedLeaveRequest->from_date)->format('d-m-Y');
-            $approvedLeaveRequest->formatted_to_date = Carbon::parse($approvedLeaveRequest->to_date)->format('d-m-Y');
-
-            if ($isManagerInApplyingTo || $isEmpInCcTo) {
-                // Get leave balance for the current year only
-                $leaveBalances = LeaveBalances::getLeaveBalances($approvedLeaveRequest->emp_id, $selectedYear);
-                // Check if the from_date year is equal to the current year
-                $fromDateYear = Carbon::parse($approvedLeaveRequest->from_date)->format('Y');
-
-                if ($fromDateYear == $selectedYear) {
-                    // Get leave balance for the current year only
-                    $leaveBalances = LeaveBalances::getLeaveBalances($approvedLeaveRequest->emp_id, $selectedYear);
-                } else {
-                    // If from_date year is not equal to the current year, set leave balance to 0
-                    $leaveBalances = 0;
-                }
-                $approvedLeaveApplications[] =  [
-                    'approvedLeaveRequest' => $approvedLeaveRequest,
-                    'leaveBalances' => $leaveBalances,
-                ];
-            }
-        }
-
-        $this->approvedLeaveApplicationsList = $approvedLeaveApplications;
-
-
         return view('livewire.employees-review', [
             'leaveApplications' => $this->leaveApplications,
             'matchingLeaveApplications' => $this->matchingLeaveApplications,
-            'count' => $this->count,
+            'pendingCount' => $this->pendingCount,
             'searchQuery' => $this->searchQuery,
             'approvedLeaveApplicationsList' => $this->approvedLeaveApplicationsList,
             'empLeaveRequests' => $this->empLeaveRequests,

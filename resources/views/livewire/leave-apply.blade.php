@@ -7,8 +7,6 @@
         </button>
     </div>
     @endif
-
-
     <div class="applyContainer bg-white">
         @if($showinfoMessage)
         <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">

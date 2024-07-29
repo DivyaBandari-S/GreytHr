@@ -2,6 +2,9 @@
 <x-loading-indicator />
 <div class="col"  id="leavePending" style="width: 95%; padding: 0;border-radius: 5px; ">
 <div class="row m-0 p-0 mt-3">
+    <div>
+        <span>Total Leave Requests : {{ $count }}</span>
+    </div>
                     <div class="search-container d-flex align-items-end justify-content-end p-1">
                         <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput"
                             placeholder="Enter employee name" class="border outline-none rounded">
