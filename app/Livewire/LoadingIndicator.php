@@ -8,6 +8,6 @@ class LoadingIndicator extends Component
 {
     public function render()
     {
-        return view('livewire.loading-indicator');
+        return view('laravel-livewire-loader::loading-indicator');
     }
 }
