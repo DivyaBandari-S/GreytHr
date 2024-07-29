@@ -24,6 +24,7 @@ class EmployeeDetails extends Authenticatable
         'sub_department_id',
         'first_name',
         'last_name',
+        'gender',
         'email',
         'gender',
         'hire_date',
@@ -43,7 +44,10 @@ class EmployeeDetails extends Authenticatable
         'resignation_date',
         'resignation_reason',
         'notice_period',
-        'extension'
+        'extension',
+        'shift_type',
+        'shift_start_time',
+        'shift_end_time'
     ];
     public function leaveRequests()
     {
