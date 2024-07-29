@@ -193,10 +193,10 @@
                                 <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" style="color:#007BFF;font-size:11px;">View Details</a>
                                 <button class="rejectBtn" wire:click="rejectLeave({{ $loop->index }})">Reject</button>
                                 <button class="rejectBtn" >Forward</button>
-                                @if($leaveRequest['leaveRequest']->cancel_status === 'Leave Cancel Pending')
-                                <button class="approveBtn" wire:click="approveLeaveCancel({{ $loop->index }})">Approve</button>
+                                @if($leaveRequest['leaveRequest']->category_type === 'Leave')
+                                <button class="approveBtn" wire:click="approveLeave({{ $loop->index }})" >Approve</button>
                                 @else
-                                <button class="approveBtn" wire:click="approveLeave({{ $loop->index }})">Approve</button>
+                                <button class="approveBtn" wire:click="approveLeaveCancel({{ $loop->index }})">Leave Cancel</button>
                                 @endif
                             </div>
                         </div>
