@@ -262,6 +262,7 @@ class ViewPendingDetails extends Component
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
                     // Update status to 'approved'
                     $leaveRequest->cancel_status = 'approved';
+                    $leaveRequest->status = 'rejected';
                     $leaveRequest->save();
                     $leaveRequest->touch();
                     session()->flash('message', 'Leave cancel application approved successfully.');
