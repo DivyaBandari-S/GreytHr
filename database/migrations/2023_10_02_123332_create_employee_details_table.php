@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('emp_id')->primary();
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('gender')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('company_id')->nullable();
             $table->string('dept_id')->nullable();
@@ -40,6 +41,9 @@ return new class extends Migration
             $table->string('resignation_date')->nullable();
             $table->string('resignation_reason')->nullable();
             $table->string('extension')->nullable();
+            $table->string('shift_type')->nullable();
+            $table->string('shift_start_time')->nullable();
+            $table->string('shift_end_time')->nullable();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->foreign('dept_id')->references('dept_id')->on('emp_departments')->onDelete('cascade');
             $table->foreign('sub_dept_id')->references('sub_dept_id')->on('emp_sub_departments')->onDelete('cascade');
