@@ -4284,9 +4284,9 @@ option {
     color: #47515b;
 }
 
-p::first-letter {
+/* p::first-letter {
     text-transform: uppercase;
-}
+} */
 /* notification css styles started */
 .offcanvas {
     font-family: "Montserrat", sans-serif;
