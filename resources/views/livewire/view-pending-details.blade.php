@@ -1,5 +1,18 @@
 <div>
+<x-loading-indicator />
 <div class="col"  id="leavePending" style="width: 95%; padding: 0;border-radius: 5px; ">
+<div class="row m-0 p-0 mt-3">
+    <div>
+        <span>Total Leave Requests : {{ $count }}</span>
+    </div>
+                    <div class="search-container d-flex align-items-end justify-content-end p-1">
+                        <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput"
+                            placeholder="Enter employee name" class="border outline-none rounded">
+                        <button wire:click="fetchPendingLeaveApplications" id="searchButton"
+                            style="border:none;outline:none;background:#fff;border-radius:5px;padding:1px 10px;"><i
+                                class="fas fa-search" style="width:7px;height:7px;"></i></button>
+                    </div>
+                </div>
    @if(!empty($this->leaveApplications))
         @foreach($this->leaveApplications as $leaveRequest)
             <div class="approved-leave-container mt-1 px-1"  style="border-radius: 5px; " >
@@ -7,7 +20,7 @@
                     <div class="accordion-heading rounded m-0 p-0"  onclick="toggleAccordion(this)">
                         <div class="accordion-title rounded m-0 p-1">
                             <!-- Display leave details here based on $leaveRequest -->
-                            <div class="col accordion-content">
+                            <div class="col accordion-content d-flex align-items-center">
                              <div class="accordion-profile" style="display:flex; gap:7px; margin:auto 0;align-items:center;justify-content:center;">
                                     @if(isset($leaveRequest['leaveRequest']->image))
                                         <img src="{{ asset('storage/' . $leaveRequest['leaveRequest']->image) }}" alt="" style="background:#f3f3f3;border:1px solid #ccc;width: 40px; height: 40px; border-radius: 50%;">
@@ -29,7 +42,7 @@
                                         </div>
                                  </div>
                             </div>
-                            <div class="col accordion-content" >
+                            <div class="col accordion-content d-flex align-items-center" >
                                 <p style="color: #778899; font-size: 12px; font-weight: 500; margin-bottom:0;">Category <br>
                                 @if(isset($leaveRequest['leaveRequest']->category_type))
                                     <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest['leaveRequest']->category_type }}</span>
@@ -38,7 +51,7 @@
                                 @endif
                                 </p>
                             </div>
-                            <div class="col accordion-content" >
+                            <div class="col accordion-content d-flex align-items-center" >
                                 <p style="color: #778899; font-size: 12px; font-weight: 500; margin-bottom:0;">Leave Type <br>
                                 @if(isset($leaveRequest['leaveRequest']->leave_type))
                                     <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest['leaveRequest']->leave_type }}</span>
@@ -49,7 +62,7 @@
                             </div>
 
 
-                            <div class="col accordion-content mb-0" >
+                            <div class="col accordion-content d-flex align-items-center mb-0" >
                                     @php
                                         $numberOfDays = $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session);
                                     @endphp

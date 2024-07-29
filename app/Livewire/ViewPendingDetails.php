@@ -25,38 +25,55 @@ class ViewPendingDetails extends Component
     public $employeeDetails = [];
     public $employeeId;
     public $leaveRequests;
-    public $count;
+    public $count = 0;
     public $applying_to = [];
     public $matchingLeaveApplications = [];
     public $leaveRequest;
-    public $leaveApplications;
+    public $leaveApplications = [];
     public $selectedYear;
-
-
+    public $searchQuery = '';
     public function mount()
     {
-            //for year selection
-            $this->selectedYear = Carbon::now()->format('Y');
-            $this->fetchPendingLeaveApplications();
+        //for year selection
+        $this->selectedYear = Carbon::now()->format('Y');
+        $this->fetchPendingLeaveApplications();
     }
 
-    public function fetchPendingLeaveApplications(){
+    public function fetchPendingLeaveApplications($searchQuery = null)
+    {
         try {
-            //login employee id
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            //fetching pending leave requests
-            $this->leaveRequests = LeaveRequest::where('leave_applications.status', 'pending')
-                ->where(function ($query) use ($employeeId) {
-                    $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
-                        ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
-                })
+
+            // Base query for fetching leave applications
+            $query = LeaveRequest::where(function ($query) {
+                $query->where('leave_applications.status', 'pending')
+                    ->orWhere('leave_applications.cancel_status', 'Pending Leave Cancel');
+            })
                 ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->orderBy('created_at', 'desc')
-                ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
+                ->orderBy('leave_applications.created_at', 'desc');
+
+            // Search query conditions
+            if ($searchQuery !== null) {
+                $query->where(function ($query) use ($searchQuery) {
+                    $query->where('employee_details.first_name', 'like', '%' . $searchQuery . '%')
+                        ->orWhere('employee_details.last_name', 'like', '%' . $searchQuery . '%')
+                        ->orWhere('leave_applications.category_type', 'like', '%' . $searchQuery . '%')
+                        ->orWhere('leave_applications.leave_type', 'like', '%' . $searchQuery . '%');
+                });
+            }
+
+            // Applying conditions for employee's role in the leave application
+            $query->where(function ($query) use ($employeeId) {
+                $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
+                    ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
+            });
+
+            // Fetch the leave applications with required fields
+            $this->leaveRequests = $query->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
 
             $matchingLeaveApplications = [];
 
-            //foreach to get leave balance and leave requests
+            // Process each leave request
             foreach ($this->leaveRequests as $leaveRequest) {
                 $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
                 $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
@@ -73,14 +90,11 @@ class ViewPendingDetails extends Component
                 if ($isManagerInApplyingTo || $isEmpInCcTo) {
                     $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
 
-                    // Check if the from_date year is equal to the current year
                     $fromDateYear = Carbon::parse($leaveRequest->from_date)->format('Y');
 
                     if ($fromDateYear == $this->selectedYear) {
-                        // Get leave balance for the current year only
                         $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
                     } else {
-                        // If from_date year is not equal to the current year, set leave balance to 0
                         $leaveBalances = 0;
                     }
 
@@ -92,20 +106,19 @@ class ViewPendingDetails extends Component
             }
 
             $this->leaveApplications = $matchingLeaveApplications;
+            $this->count = count($matchingLeaveApplications);
         } catch (\Illuminate\Database\QueryException $e) {
-            // Handle query execution errors
             Log::error('A database query error occurred: ' . $e->getMessage());
             session()->flash('error', 'Error while getting the data. Please try again.');
         } catch (PDOException $e) {
-            // Handle connection errors
             Log::error('Database connection error occurred: ' . $e->getMessage());
             session()->flash('error', 'Connection error . Please try again.');
         } catch (\Exception $e) {
-            // Handle any other unexpected errors
             Log::error('An unexpected error occurred: ' . $e->getMessage());
             session()->flash('error', 'Connection error . Please try again.');
         }
     }
+
 
     // Check if there are pending leave requests
     public function hasPendingLeave()
@@ -273,12 +286,31 @@ class ViewPendingDetails extends Component
             $leaveRequest->save();
             $leaveRequest->touch();
             session()->flash('message', 'Leave application rejected.');
+            $this->fetchPendingLeaveApplications();
+            return redirect()->route('review', ['tab' => 'leave']);
         } catch (\Exception $e) {
             // Log the error
             Log::error($e);
             // Flash a message to the session
             session()->flash('error_message', 'An error occurred while rejecting leave application.');
-
         }
+    }
+    // Method to handle search input change
+    public function updatedSearchQuery($value)
+    {
+        $this->searchQuery = $value;
+        // Call fetchPendingLeaveApplications with updated $searchQuery
+        $this->fetchPendingLeaveApplications($this->searchQuery);
+    }
+    public function render()
+    {
+        // Call fetchPendingLeaveApplications with $searchQuery
+        $this->fetchPendingLeaveApplications($this->searchQuery);
+
+        return view('livewire.view-pending-details', [
+            'leaveApplications' => $this->leaveApplications,
+            'searchQuery' => $this->searchQuery,
+            'count' => $this->count
+        ]);
     }
 }

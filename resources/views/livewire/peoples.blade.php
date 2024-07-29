@@ -15,7 +15,7 @@
         }
 
         .people-search-input {
-            font-size: 0.75rem;
+            font-size: 0.75rem !important;
             border-radius: 5px 0 0 5px;
             cursor: pointer
         }
@@ -71,10 +71,18 @@
             margin-right: 5px;
         }
 
+        .people-default-container-name.inactive {
+            color: red;
+        }
+
         .people-default-container-empid {
             font-size: 12px;
             color: #333;
             white-space: nowrap;
+        }
+
+        .people-default-container-empid.inactive {
+            color: red;
         }
 
         .people-text-blue {
@@ -95,7 +103,7 @@
         }
 
         .people-selectedperson-detail-container {
-            background: #f9f9f9;
+            background: #e0e0e0;
             padding: 10px;
         }
 
@@ -237,7 +245,7 @@
                 <div class="input-group people-input-group-container">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                     <div class="input-group-append">
-                        <button wire:click="starredFilter" class="btn people-search-btn" type="button">
+                        <button wire:click="starredFilter" class="people-search-btn" type="button">
                             <i class="fa fa-search people-search-icon"></i>
                         </button>
                     </div>
@@ -265,8 +273,17 @@
                             </div>
                             <div class="col-9">
                                 <div class="d-flex align-items-center">
-                                    <h6 class="username truncate-text people-default-container-name" title="{{ ucwords(strtolower($people->name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->name)) }}</h6>
-                                    <p class="mb-0 people-default-container-empid">(#{{ $people->people_id }})</p>
+                                    <h6 class="username truncate-text people-default-container-name   @isset($people->emp)
+                                        @if($people->emp->employee_status != 'active')
+                                            inactive
+                                        @endif
+                                            @endisset" title="{{ ucwords(strtolower($people->name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->name)) }}</h6>
+                                            <p class="mb-0 people-default-container-empid
+                                            @isset($people->emp)
+                                        @if($people->emp->employee_status != 'active')
+                                            inactive
+                                        @endif
+                                            @endisset">(#{{ $people->people_id }})</p>
                                 </div>
 
                             </div>
@@ -306,7 +323,13 @@
                                 </a>
 
                             </div>
-                            <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($selectStarredPeoples->emp)->job_title)) }} (#{{ optional($selectStarredPeoples)->people_id }})</p>
+                            @php
+                            $jobTitle = optional($selectStarredPeoples->emp)->job_title;
+                            $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
+                            $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
+                            $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
+                            @endphp
+                            <p class="mb-0 people-selectedperson-empid">{{ $convertedTitle }} (#{{ optional($selectStarredPeoples)->people_id }})</p>
                         </div>
                         <br>
                         <div class="d-flex align-items-center">
@@ -377,7 +400,13 @@
                             </a>
 
                         </div>
-                        <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($firstStarredPerson->emp)->job_title)) }} (#{{ optional($firstStarredPerson)->people_id }})</p>
+                        @php
+                        $jobTitle = optional($firstStarredPerson->emp)->job_title;
+                        $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
+                        $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
+                        $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
+                        @endphp
+                        <p class="mb-0 people-selectedperson-empid">{{ $convertedTitle }} (#{{ optional($firstStarredPerson)->people_id }})</p>
                     </div>
                     <br>
                     <div class="d-flex align-items-center">
@@ -449,7 +478,7 @@
         <div class="input-group people-input-group-container">
             <input wire:model="searchTerm" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
             <div class="input-group-append">
-                <button wire:click="filter" class="btn people-search-btn" type="button">
+                <button wire:click="filter" class="people-search-btn" type="button">
                     <i class="fa fa-search people-search-icon"></i>
                 </button>
             </div>
@@ -482,8 +511,8 @@
                             ->first();
                             @endphp
                             <div class="d-flex align-items-center">
-                                <h6 class="username truncate-text people-default-container-name" title="{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                <p class="mb-0 people-default-container-empid">(#{{ $people->emp_id }})</p>
+                                <h6 class="username truncate-text people-default-container-name @if($people->employee_status != 'active') inactive @endif" title="{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                <p class="mb-0 people-default-container-empid @if($people->employee_status != 'active') inactive @endif">(#{{ $people->emp_id }})</p>
                                 @if($starredPerson && $starredPerson->starred_status == 'starred')
                                 <i class="fa fa-star  people-default-star-icon"></i>
                                 @endif
@@ -532,7 +561,13 @@
                         </a>
 
                     </div>
-                    <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($selectedPerson)->job_title)) }} (#{{ optional($selectedPerson)->emp_id }})</p>
+                    @php
+                    $jobTitle = optional($selectedPerson)->job_title;
+                    $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
+                    $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
+                    $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
+                    @endphp
+                    <p class="mb-0 people-selectedperson-empid">{{ $convertedTitle }} (#{{ optional($selectedPerson)->emp_id }})</p>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -601,7 +636,13 @@
                         </a>
 
                     </div>
-                    <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($firstPerson)->job_title)) }} (#{{ optional($firstPerson)->emp_id }})</p>
+                    @php
+                    $jobTitle = optional($firstPerson)->job_title;
+                    $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
+                    $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
+                    $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
+                    @endphp
+                    <p class="mb-0 people-selectedperson-empid">{{ $convertedTitle }} (#{{ optional($firstPerson)->emp_id }})</p>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -676,7 +717,7 @@
         <div class="input-group people-input-group-container">
             <input wire:model="searchTerm" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
             <div class="input-group-append">
-                <button wire:click="filterMyTeam" class="btn people-search-btn" type="button">
+                <button wire:click="filterMyTeam" class="people-search-btn" type="button">
                     <i class="fa fa-search people-search-icon"></i>
                 </button>
             </div>
@@ -710,8 +751,8 @@
                             ->first();
                             @endphp
                             <div class="d-flex align-items-center">
-                                <h6 class="username truncate-text people-default-container-name" title="{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                <p class="mb-0 people-default-container-empid">(#{{ $people->emp_id }})</p>
+                                <h6 class="username truncate-text people-default-container-name @if($people->employee_status != 'active') inactive @endif" title="{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                <p class="mb-0 people-default-container-empid @if($people->employee_status != 'active') inactive @endif">(#{{ $people->emp_id }})</p>
                                 @if($starredPerson && $starredPerson->starred_status == 'starred')
                                 <i class="fa fa-star people-default-star-icon"></i>
                                 @endif
@@ -761,7 +802,13 @@
                         </a>
 
                     </div>
-                    <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($selectedMyTeamPerson)->job_title)) }} (#{{ optional($selectedMyTeamPerson)->emp_id }})</p>
+                    @php
+                    $jobTitle = optional($selectedMyTeamPerson)->job_title;
+                    $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
+                    $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
+                    $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
+                    @endphp
+                    <p class="mb-0 people-selectedperson-empid">{{ $convertedTitle }} (#{{ optional($selectedMyTeamPerson)->emp_id }})</p>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -828,7 +875,13 @@
                         </a>
 
                     </div>
-                    <p class="mb-0 people-selectedperson-empid">{{ ucwords(strtolower(optional($firstPerson)->job_title)) }} (#{{ optional($firstPerson)->emp_id }})</p>
+                    @php
+                    $jobTitle = optional($firstPerson)->job_title;
+                    $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
+                    $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
+                    $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
+                    @endphp
+                    <p class="mb-0 people-selectedperson-empid">{{ $convertedTitle }} (#{{ optional($firstPerson)->emp_id }})</p>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">

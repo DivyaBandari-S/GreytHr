@@ -1,5 +1,6 @@
 <div>
-    <style>
+<x-loading-indicator />
+<style>
         #remarks::placeholder {
             color: #a3b2c7;
             font-size: 12px;

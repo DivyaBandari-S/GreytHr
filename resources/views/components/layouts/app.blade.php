@@ -38,18 +38,13 @@
             {{ $employee->company_name }}
         </title>
     @endauth
-    <style>
-        .dropdown-menu.show {
-            display: block;
-            background-color: none !important;
-            margin-left: 20px;
-            border: none;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/app.css')}}">
     <livewire:styles />
 
     {{-- @vite(['public/css/app.css', 'public/js/app.js','resources/css/app.css','resources/js/app.js']) --}}
-    @vite(['public/css/app.css', 'public/js/app.js'])
+    <!-- date range picker links -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontawesome5-fullcss@1.1.0/css/all.min.css">
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -95,8 +90,10 @@
     <!-- Add these links to your HTML -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"
-        referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
 
     <!-- Hierarchy Select Js -->
     <!-- <script src="js/hierarchy-select.min.js"></script> -->
@@ -112,9 +109,6 @@
     <script src="{{ asset('livewire/livewire.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        @import url('/public/app.css');
-    </style>
 
     @livewireScripts
 
@@ -220,36 +214,28 @@
                                                     style="color:#6c7e90"></i>
                                             </a>
 
-                                            <div id="salary-options" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/slip" id="slip"
-                                                            onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
-                                                            Payslips
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/ytd" id="itstatement"
-                                                            onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
-                                                            YTD Reports
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/itstatement" id="itstatement"
-                                                            onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
-                                                            IT Statement
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/formdeclaration" id="itdeclaration"
-                                                            onclick="selectOption(this, 'IT Declaration');setActiveLink(this)">
-                                                            IT Declaration
-                                                        </a>
-                                                    </li>
+                                    <div id="salary-options" style="display: none;">
+                                        <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
+                                                    Payslips
+                                                </a>
+                                            </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/ytd" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
+                                                    YTD Reports
+                                                </a>
+                                            </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/itstatement" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
+                                                    IT Statement
+                                                </a>
+                                            </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/formdeclaration" id="itdeclaration" onclick="selectOption(this, 'IT Declaration');setActiveLink(this)">
+                                                    IT Declaration
+                                                </a>
+                                            </li>
 
 
                                                     <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
@@ -621,37 +607,29 @@
 
 
 
-                                        <li class="nav-item">
-                                            <a class="nav-link" onclick="toggleSalaryDropdown2()">
-                                                <i class="fas mr-1    fa-solid fa-money-bill-transfer" id="salary-icon"
-                                                    style="color:#6c7e90"></i>
-                                                Salary
-                                                <i class="fas mr-1    fa-caret-down" id="salary-caret-2"
-                                                    style="color:#6c7e90"></i>
-                                            </a>
-                                            <div id="salary-options-2" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/slip" id="slip"
-                                                            onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
-                                                            Payslips
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/ytd" id="itstatement"
-                                                            onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
-                                                            YTD Reports
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
-                                                        class="nav-item">
-                                                        <a class="nav-link" href="/itstatement" id="itstatement"
-                                                            onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
-                                                            IT Statement
-                                                        </a>
-                                                    </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="toggleSalaryDropdown2()">
+                                        <i class="fas mr-1    fa-solid fa-money-bill-transfer" id="salary-icon" style="color:#6c7e90"></i>
+                                        Salary
+                                        <i class="fas mr-1    fa-caret-down" id="salary-caret-2" style="color:#6c7e90"></i>
+                                    </a>
+                                    <div id="salary-options-2" style="display: none;">
+                                        <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this)">
+                                                    Payslips
+                                                </a>
+                                            </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/ytd" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
+                                                    YTD Reports
+                                                </a>
+                                            </li>
+                                            <li data-bs-toggle="modal" data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/itstatement" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this)">
+                                                    IT Statement
+                                                </a>
+                                            </li>
 
                                                     <li data-bs-target="#navigateLoader" class="nav-item">
                                                         <a class="nav-link" href="/formdeclaration" id="itdeclaration"
@@ -1024,39 +1002,33 @@
                                             </div>
                                         </li>
 
-                                        <li class="nav-item" data-bs-placement="right" title="Salary">
-                                            <a class="nav-link" onclick="toggleSalaryDropdown()">
-                                                <img width="25" height="25"
-                                                    src="https://img.icons8.com/3d-fluency/94/money-transfer.png"
-                                                    alt="money-transfer" />
-                                                <!-- <i class="fas mr-1    fa-solid fa-money-bill-transfer" id="salary-icon" style="color:#6c7e90"></i> -->
-                                            </a>
-                                            <div id="salary-options" style="display: none;">
-                                                <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/slip" id="slip"
-                                                            onclick="selectOption(this, 'Pay Slip');setActiveLink(this, '/slip')">
-                                                            Payslips
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/ytd" id="itstatement"
-                                                            onclick="selectOption(this, 'IT Statement');setActiveLink(this, '/itstatement')">
-                                                            YTD Reports
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/itstatement" id="itstatement"
-                                                            onclick="selectOption(this, 'IT Statement');setActiveLink(this, '/itstatement')">
-                                                            IT Statement
-                                                        </a>
-                                                    </li>
-                                                    <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/formdeclaration" id="itdeclaration"
-                                                            onclick="selectOption(this, 'IT Declaration');setActiveLink(this, '/formdeclaration')">
-                                                            IT Declaration
-                                                        </a>
-                                                    </li>
+                                <li class="nav-item" data-bs-placement="right" title="Salary">
+                                    <a class="nav-link" onclick="toggleSalaryDropdown()">
+                                        <img width="25" height="25" src="https://img.icons8.com/3d-fluency/94/money-transfer.png" alt="money-transfer" />
+                                        <!-- <i class="fas mr-1    fa-solid fa-money-bill-transfer" id="salary-icon" style="color:#6c7e90"></i> -->
+                                    </a>
+                                    <div id="salary-options" style="display: none;">
+                                        <ul style="list-style: none;  margin-left:10px; cursor:pointer;">
+                                            <li data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/slip" id="slip" onclick="selectOption(this, 'Pay Slip');setActiveLink(this, '/slip')">
+                                                    Payslips
+                                                </a>
+                                            </li>
+                                            <li data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/ytd" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this, '/itstatement')">
+                                                    YTD Reports
+                                                </a>
+                                            </li>
+                                            <li data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/itstatement" id="itstatement" onclick="selectOption(this, 'IT Statement');setActiveLink(this, '/itstatement')">
+                                                    IT Statement
+                                                </a>
+                                            </li>
+                                            <li data-bs-target="#navigateLoader" class="nav-item">
+                                                <a class="nav-link" href="/formdeclaration" id="itdeclaration" onclick="selectOption(this, 'IT Declaration');setActiveLink(this, '/formdeclaration')">
+                                                    IT Declaration
+                                                </a>
+                                            </li>
 
 
 
@@ -1360,8 +1332,27 @@
 
             </div>
 
+        <!-- Modal -->
+        <div class="modal  backdropModal" id="navigateLoader" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="navigateLoaderLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="background-color : transparent; border : none">
+                    <!-- <div class="modal-header">
+            <h1 class="modal-title fs-5" id="navigateLoaderLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div> -->
 
+                    <div class="modal-body">
+                        <livewire:loader-indicator/>
+                    </div>
+                    <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Understood</button>
+        </div> -->
+                </div>
+            </div>
         </div>
+
+    </div>
 
 
 
@@ -1731,10 +1722,13 @@
             }
         </script>
 
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
     </body>
 

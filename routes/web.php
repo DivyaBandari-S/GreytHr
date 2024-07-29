@@ -7,6 +7,7 @@ use App\Livewire\Activities;
 use App\Livewire\ApprovedDetails;
 use App\Livewire\AddEmployeeDetails;
 use App\Livewire\AddHolidayList;
+use App\Livewire\ProfileCard;
 use App\Livewire\ReviewClosedRegularisation;
 use App\Livewire\SickLeaveBalance;
 use App\Livewire\UpdateEmployeeDetails;
@@ -125,7 +126,7 @@ Route::get('/Login&Register', function () {
     return view('login_and_register_view');
 });
 
-Route::middleware(['auth:web','handleSession'])->group(function () {
+Route::middleware(['auth:web', 'handleSession'])->group(function () {
     Route::get('/CreateCV', function () {
         return view('create_cv_view');
     });
@@ -165,7 +166,7 @@ Route::middleware(['auth:web','handleSession'])->group(function () {
 
 
 
-Route::middleware(['auth:com','handleSession'])->group(function () {
+Route::middleware(['auth:com', 'handleSession'])->group(function () {
     Route::get('/PostJobs', function () {
         return view('post_jobs_view');
     });
@@ -191,7 +192,7 @@ Route::middleware(['auth:com','handleSession'])->group(function () {
     })->name('emp-update');
 });
 
-Route::middleware(['auth:hr','handleSession'])->group(function () {
+Route::middleware(['auth:hr', 'handleSession'])->group(function () {
     Route::get('/hrFeeds', Feeds::class)->name('hrfeeds');
     Route::get('/hreveryone', Everyone::class)->name('hreveryone');
     Route::get('/hrevents', Activities::class);
@@ -205,28 +206,27 @@ Route::middleware(['auth:hr','handleSession'])->group(function () {
     Route::get('/hrAttendanceOverview', HrAttendanceOverviewNew::class)->name('hrAttendanceOverview');
     Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
     // Route::get('/hremployeedirectory', EmployeeDirectory::class)->name('employee-directory');
-    // Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
+    Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
     Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
     // Route::get('/linechart', LineChart::class)->name('linechart');
 });
 
-Route::middleware(['auth:finance','handleSession'])->group(function () {
+Route::middleware(['auth:finance', 'handleSession'])->group(function () {
     Route::get('/financePage', AuthChecking::class)->name('financePage');
 });
 
-Route::middleware(['auth:it','handleSession'])->group(function () {
+Route::middleware(['auth:it', 'handleSession'])->group(function () {
     Route::get('/itPage', AuthChecking::class)->name('IT-requests');
     Route::get('/emp-assets-details', EmployeeAssetsDetails::class)->name('employee-asset-details');
     Route::get('/ithomepage', ItDashboardPage::class)->name('ithomepage');
 });
 
-Route::middleware(['auth:admins','handleSession'])->group(function () {
+Route::middleware(['auth:admins', 'handleSession'])->group(function () {
     Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
-
 });
 
 
-Route::middleware(['auth:emp','handleSession'])->group(function () {
+Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/google-redirect', [GoogleDriveController::class, 'auth'])
         ->name('google-redirect');
     Route::get('/google-callback', [GoogleDriveController::class, 'callback'])
@@ -248,6 +248,7 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/attendance-muster-data', AttendenceMasterDataNew::class)->name('attendance-muster-data');
     Route::get('/shift-roaster-data', ShiftRoaster::class)->name('shift-roaster-data');
     Route::get('/ProfileInfo', ProfileInfo::class)->name('profile.info');
+    Route::get('/ProfileCard', ProfileCard::class)->name('profile');
     Route::get('/Settings', Settings::class)->name('settings');
     Route::get('/review-pending-regularation/{id}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
@@ -295,9 +296,9 @@ Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/leave-apply', LeaveApply::class);
     Route::get('/holiday-calender', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
-    Route::get('/casualleavebalance',CasualLeaveBalance::class)->name('casual-leave-balance');
-    Route::get('/sickleavebalance',SickLeaveBalances::class)->name('sick-leave-balance');
-    Route::get('/casualprobationleavebalance',CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
+    Route::get('/casualleavebalance', CasualLeaveBalance::class)->name('casual-leave-balance');
+    Route::get('/sickleavebalance', SickLeaveBalances::class)->name('sick-leave-balance');
+    Route::get('/casualprobationleavebalance', CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
     Route::get('/leave-cancel', LeaveCancel::class)->name('lseave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
