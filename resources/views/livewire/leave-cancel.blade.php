@@ -1,9 +1,29 @@
 <div>
-@if (session()->has('message'))
-    <div>{{ session('message') }}</div>
+    @if (session()->has('message'))
+    <div id="successMessage" class="alert alert-success">
+        {{ session('message') }}
+    </div>
     @elseif (session()->has('error'))
-    <div>{{ session('error') }}</div>
+    <div id="errorMessage" class="alert alert-danger">
+        {{ session('error') }}
+    </div>
     @endif
+
+    <script>
+        // Auto dismiss after 5 seconds
+        setTimeout(function() {
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+            if (errorMessage) {
+                errorMessage.style.display = 'none';
+            }
+        }, 5000); // 5000 milliseconds = 5 seconds
+    </script>
+
     <style>
         .LeaveCancelTable {
             width: 100%;
@@ -79,7 +99,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @if($cancelLeaveRequests && $cancelLeaveRequests->count() > 0)
+                            @if($cancelLeaveRequests && $cancelLeaveRequests->count() > 0)
                             @foreach($cancelLeaveRequests as $leaveRequest)
                             <tr>
                                 <td wire:click="applyingTo({{ $leaveRequest->id }})"><input type="radio" name="leaveType"></td>

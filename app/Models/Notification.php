@@ -22,7 +22,9 @@ class Notification extends Model
         'cc_to',
         'receiver_id',
         'body',
-        'notification_type'
+        'notification_type',
+        'chatting_id',
+        'message_read_at',
     ];
     public function emp()
     {

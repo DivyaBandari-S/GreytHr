@@ -80,7 +80,8 @@
             color: #333;
             white-space: nowrap;
         }
-        .people-default-container-empid.inactive{
+
+        .people-default-container-empid.inactive {
             color: red;
         }
 
@@ -273,8 +274,17 @@
                             </div>
                             <div class="col-9">
                                 <div class="d-flex align-items-center">
-                                    <h6 class="username truncate-text people-default-container-name @if($people->emp->employee_status != 'active') inactive @endif" title="{{ ucwords(strtolower($people->name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->name)) }}</h6>
-                                    <p class="mb-0 people-default-container-empid @if($people->emp->employee_status != 'active') inactive @endif">(#{{ $people->people_id }})</p>
+                                    <h6 class="username truncate-text people-default-container-name   @isset($people->emp)
+                                        @if($people->emp->employee_status != 'active')
+                                            inactive
+                                        @endif
+                                            @endisset" title="{{ ucwords(strtolower($people->name)) }} (#{{ $people->emp_id }})">{{ ucwords(strtolower($people->name)) }}</h6>
+                                            <p class="mb-0 people-default-container-empid
+                                            @isset($people->emp)
+                                        @if($people->emp->employee_status != 'active')
+                                            inactive
+                                        @endif
+                                            @endisset">(#{{ $people->people_id }})</p>
                                 </div>
 
                             </div>

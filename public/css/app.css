@@ -2210,7 +2210,19 @@ input[type="radio"] {
 .custom-item a {
     text-decoration: none !important;
 }
-
+.alert-success{
+    font-size: 12px;
+    padding: 7px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.alert-danger{
+    font-size: 12px;    padding: 7px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 .restrictedHoliday {
     color: #778899;
     font-size: 12px;
@@ -2219,7 +2231,7 @@ input[type="radio"] {
 }
 
 .containerWidth {
-    width: 85%;
+    width: 85% !important;
     margin: 0 auto;
 }
 
@@ -2260,6 +2272,7 @@ input[type="radio"] {
     }
     .containerWidth {
         width: 100% ;
+        margin: 0 auto;
     }
 }
 .applyingFor {
@@ -2781,8 +2794,24 @@ input[type="radio"] {
     font-size: 0.875rem;
 }
 .no-holidays h6{
-    color: rgb(2, 17, 79);
+    color: #778899 !important;
+    font-weight: 500 !important;
 }
+.grid-container {
+    display: grid;
+    grid-template-columns: 50px auto; /* Adjust based on your design preference */
+    gap: 10px; /* Adjust the gap between grid items */
+    align-items: center;
+}
+
+.date-container {
+    text-align: center;
+}
+
+.festivals {
+    font-size: 12px;
+}
+
 .group h5 {
     font-weight: 400;
     font-size: 0.75rem;
@@ -4281,7 +4310,7 @@ p::first-letter {
     font-size: 0.75rem;
 }
 .notification-text-para {
-    color: #778899;
+    color: #535f6b;
     font-weight: normal;
     font-size: 14px;
     max-height: 100px;

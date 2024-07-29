@@ -581,6 +581,7 @@ class LeaveApply extends Component
             $this->createdLeaveRequest = LeaveRequest::create([
                 'emp_id' => $employeeId,
                 'leave_type' => $this->leave_type,
+                'category_type' => 'Leave',
                 'from_date' => $this->from_date,
                 'from_session' => $this->from_session,
                 'to_session' => $this->to_session,
@@ -645,8 +646,6 @@ class LeaveApply extends Component
         // Reset properties
         $this->leave_type = '';
         $this->from_date = '';
-        $this->from_session = '';
-        $this->to_session = '';
         $this->to_date = '';
         $this->selectedManager = [];
         $this->selectedPeople = [];

@@ -104,7 +104,7 @@
                                         <p style="font-size:12px;color:#778899;font-weight:500;">  Review</p>
                                     </div>
                                     <div >
-                                        <a href="/employees-review" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
+                                        <a href="{{ route('review', ['tab' => 'leave']) }}" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
                                     </div>
                                 </div>
                                 @if(($this->count) > 0)
@@ -130,11 +130,14 @@
                                             $lastName = $leaveRequest->employee->last_name;
                                             $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
                                         ?>
+                                        <a href="{{ route('review', ['tab' => 'leave']) }}">
+
                                         <div class="circle-container d-flex flex-column mr-3">
                                         <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
                                             <span >{{ $initials }}</span>
                                         </div>
                                         <span class="leaveText">Leave</span>
+                                        </a>
                                     </div>
 
                                         <?php

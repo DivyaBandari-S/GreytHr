@@ -3,11 +3,13 @@
 namespace App\Livewire\Chat;
 
 use App\Models\Message;
+use App\Models\Notification;
 use App\Notifications\MessageRead;
 use App\Notifications\MessageSent;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
 // use Hashids;
 use Vinkla\Hashids\Facades\Hashids;
@@ -212,6 +214,15 @@ class ChatBox extends Component
             'body' => $this->body,
         ]);
 
+        Notification::create([
+            'emp_id' =>auth()->user()->emp_id ,
+            'chatting_id'=> $this->selectedConversation->id,
+            'notification_type' => 'message',
+            'receiver_id'=> optional($this->selectedConversation->getReceiver())->emp_id,
+            'body'=>$this->body,
+
+        ]);
+
         $this->reset('body');
          #scroll to bottom
          $this->dispatch('scroll-bottom');
@@ -229,6 +240,7 @@ class ChatBox extends Component
          #refresh chatlist
          $this->dispatch('chat.chat-list', 'refresh');
 
+         $this->body = Str::limit($this->body, 10);
          #broadcast
 
          $this->selectedConversation->getReceiver()
