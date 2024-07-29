@@ -1,5 +1,8 @@
 <?php
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Livewire\Activities;
 use App\Livewire\ApprovedDetails;
 use App\Livewire\AddEmployeeDetails;
@@ -90,19 +93,16 @@ use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
 use App\Livewire\ItDashboardPage;
 use App\Livewire\LeaveBalancesChart;
+use App\Livewire\LoadingIndicator;
 use App\Livewire\OrganisationChart;
 use App\Livewire\ReportManagement;
 use App\Livewire\ReviewPendingRegularisation;
 use App\Livewire\ShiftRoaster;
 use App\Livewire\SickLeaveBalances;
 use App\Livewire\Ytdreport;
+use App\Models\SalaryRevision;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/test',function () {
-            return
-                'Test route is working!';
-        }
-    );
+use Vinkla\Hashids\Facades\Hashids;
 
 Route::group(['middleware' => 'checkAuth'], function () {
 
@@ -316,9 +316,10 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     // Route::get('/chat',Index::class)->name('chat.index');
-    Route::get('/chat/{query}', Chat::class)->name('chat');
-    Route::get('/users', EmployeeList::class)->name('employee');
-    Route::get('/image', ImageUpload::class)->name('image');
+    Route::get('/chat/{query}',Chat::class)->name('chat');
+    Route::get('/users',EmployeeList::class)->name('employee');
+    Route::get('/image',ImageUpload::class)->name('image');
+    Route::get('/loader',LoadingIndicator::class)->name('loader');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 
@@ -346,4 +347,70 @@ Route::get('/data-entry', function () {
 });
 Route::get('/ytdpayslip', function () {
     return view('ytdpayslip');
+});
+
+
+
+
+
+
+
+
+
+use App\Models\EmpSalary;
+
+Route::get('/encode/{value}', function ($value) {
+    // Determine the number of decimal places
+    $decimalPlaces = strpos($value, '.') !== false ? strlen(substr(strrchr($value, "."), 1)) : 0;
+
+    // Convert the float to an integer with precision
+    $factor = pow(10, $decimalPlaces);
+    $integerValue = intval($value * $factor);
+
+    // Encode the integer value along with the decimal places
+    $hash = Hashids::encode($integerValue, $decimalPlaces);
+
+    return response()->json([
+        'value' => $value,
+        'hash' => $hash,
+        // 'decimalPlaces' => $decimalPlaces
+    ]);
+});
+
+
+
+Route::get('/decode/{hash}', function ($hash) {
+    // Decode the hash
+    $decoded = Hashids::decode($hash);
+
+    // Check if decoding was successful
+    if (count($decoded) === 0) {
+        return response()->json(['error' => 'Invalid hash'], 400);
+    }
+
+    // Retrieve the integer value and decimal places
+    $integerValue = $decoded[0];
+    $decimalPlaces = $decoded[1] ?? 0; // Fallback to 0 if not present
+
+    // Convert back to float
+    $originalValue = $integerValue / pow(10, $decimalPlaces);
+
+    return response()->json([
+        'hash' => $hash,
+        'value' => $originalValue
+    ]);
+});
+
+
+
+Route::get('/salary/{emp_id}', function ($emp_id) {
+    $empSalary = EmpSalary::findOrFail($emp_id);
+    dd($empSalary);
+    // Return the salary attribute
+    return response()->json([
+        'emp_id' => $empSalary->emp_id,
+        'salary' => $empSalary->salary, // This will automatically call the getSalaryAttribute method
+        'effective_date' => $empSalary->effective_date,
+        'remarks' => $empSalary->remarks,
+    ]);
 });

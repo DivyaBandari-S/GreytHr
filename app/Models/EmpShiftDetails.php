@@ -5,25 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EmpSpouseDetails extends Model
+class EmpShiftDetails extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'emp_id',
-        'name',
-        'gender',
-        'qualification',
-        'profession',
-        'dob',
-        'nationality',
-        'bld_group',
-        'adhar_no',
-        'pan_no',
-        'religion',
-        'email',
-        'address',
-        'children',
-    ];
+        'shift_type',
+        'shift_start_time',
+        'shift_end_time',
+     ];
 
     // Assuming emp_id is not auto-incrementing or not an integer ID
     protected $keyType = 'string';
@@ -36,5 +27,6 @@ class EmpSpouseDetails extends Model
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id');
     }
-    
+
+
 }
