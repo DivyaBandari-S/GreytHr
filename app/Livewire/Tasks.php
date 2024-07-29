@@ -62,15 +62,15 @@ class Tasks extends Component
         if ($tab === 'open') {
             $this->activeTab = 'open';
             $this->search = '';
-            $this->start = now()->startOfYear()->format('Y-m-d'); 
-            $this->end = now()->endOfYear()->format('Y-m-d'); 
+            $this->start = now()->startOfYear()->format('Y-m-d');
+            $this->end = now()->endOfYear()->format('Y-m-d');
         } elseif ($tab === 'completed') {
             $this->activeTab = 'completed';
-            $this->closedSearch = ''; 
-            $this->start = now()->startOfYear()->format('Y-m-d'); 
+            $this->closedSearch = '';
+            $this->start = now()->startOfYear()->format('Y-m-d');
             $this->end = now()->endOfYear()->format('Y-m-d');
         }
-        $this->loadTasks(); 
+        $this->loadTasks();
     }
 
     public function loadTasks()
@@ -85,15 +85,18 @@ class Tasks extends Component
     public function searchActiveTasks()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $query = Task::where('emp_id', $employeeId)
-                     ->where('status', 'Open');
+        $query = Task::where(function($query) use ($employeeId) {
+            $query->where('emp_id', $employeeId)
+                  ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
+        })
+        ->where('status', 'Open');
 
-       
+
         if ($this->start && $this->end) {
             $query->whereBetween('created_at', [$this->start, $this->end]);
         }
 
-     
+
         if ($this->search) {
             $query->where(function ($query) {
                 $query->where('assignee', 'like', '%' . $this->search . '%')
@@ -114,15 +117,19 @@ class Tasks extends Component
     public function searchCompletedTasks()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $query = Task::where('emp_id', $employeeId)
-                     ->where('status', 'Completed'); 
 
-       
+        $query = Task::where(function($query) use ($employeeId) {
+            $query->where('emp_id', $employeeId)
+                  ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
+        })
+         ->where('status', 'Completed');
+
+
         if ($this->start && $this->end) {
             $query->whereBetween('created_at', [$this->start, $this->end]);
         }
 
-      
+
         if ($this->closedSearch) {
             $query->where(function ($query) {
                 $query->where('assignee', 'like', '%' . $this->closedSearch . '%')
@@ -140,7 +147,7 @@ class Tasks extends Component
         $this->peopleFound = count($this->filterData) > 0;
     }
 
-    
+
     public function updatedStart($value)
     {
         $this->start = $value;
@@ -177,7 +184,7 @@ class Tasks extends Component
         'updateStart', 'updateEnd'
     ];
 
-    public function update($start, $end) 
+    public function update($start, $end)
     {
         $this->year = carbon::parse($start)->format('Y');
         $this->start = $start;
@@ -346,7 +353,7 @@ class Tasks extends Component
             'task_name' => $this->task_name,
             'assignee' => $this->assignee,
         ]);
-        
+
         $this->reset();
         session()->flash('message', 'Task created successfully!');
         return redirect()->to('/tasks');
@@ -495,7 +502,7 @@ class Tasks extends Component
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
-            
+
             if ($this->activeTab === 'open') {
                 $this->searchActiveTasks();
             } elseif ($this->activeTab === 'completed') {
@@ -503,7 +510,7 @@ class Tasks extends Component
             }
 
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
-        
+
         $this->record = Task::all();
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
         $this->records = Task::with('emp')
