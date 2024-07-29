@@ -1295,32 +1295,31 @@
                 <div class="col m-0 px-2 "
                     style="height: 60px; width: auto; background: url('images/imageedit_1_3636168378.png') no-repeat center #02114f; background-size: cover;">
 
-                    <div class="col d-flex align-items-center mt-2">
-                        <!-- <i class="fas fa-bars hideHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px; margin: 0px 10px; cursor: pointer;" onclick="myMenu()"></i>
-                                    <i class="fas fa-bars showHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px;  cursor: pointer;" onclick="myMenuSmall()"></i> -->
+                <div class="col  mt-2">
+                    <!-- <i class="fas fa-bars hideHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px; margin: 0px 10px; cursor: pointer;" onclick="myMenu()"></i>
+                        <i class="fas fa-bars showHamburger btn btn-primary" style="padding: 6px;color: #fff; font-size: 12px;  cursor: pointer;" onclick="myMenuSmall()"></i> -->
+                    <div class="col d-flex align-items-center" style="height:50px;">
                         <img src="/images/app-drawer.png" class="app-drawer-img hideHamburger" onclick="myMenu()">
-                        <img src="/images/app-drawer.png" class="app-drawer-img showHamburger"
-                            onclick="myMenuSmall()">
-                        <h6 class="mx-2 my-0" style="color: white; width: -webkit-fill-available; margin-bottom: 10px;">
-                            @livewire('page-title')
+                        <img src="/images/app-drawer.png" class="app-drawer-img showHamburger" onclick="myMenuSmall()">
+                        <h6 class="mx-2 my-0" style="color: white; width: -webkit-fill-available; margin-bottom: 10px;"> @livewire('page-title')
                         </h6>
-
                         @auth('emp')
                             @livewire('notification')
-                            <div class="col dropdown mx-2 p-0">
-                                <button class="dropdown-btn"
-                                    style="font-size: 13px;  white-space: nowrap; margin-bottom: 5px; ">Quick
-                                    Links</button>
-                                <div class="dropdown-content" style="font-size: 12px;font-weight:500;">
-                                    <a href="/tasks">Tasks</a>
-                                    <a href="/HelpDesk">Helpdesk</a>
-                                </div>
+
+                        <div class="col dropdown mx-2 p-0">
+                            <button class="dropdown-btn" style="font-size: 13px;  white-space: nowrap; margin-bottom: 5px; ">Quick
+                                Links</button>
+                            <div class="dropdown-content" style="font-size: 12px;font-weight:500;">
+                                <a href="/tasks">Tasks</a>
+                                <a href="/HelpDesk">Helpdesk</a>
                             </div>
+                        </div>
                         @endauth
 
-                        <div style="text-align:end;cursor:pointer; margin-right:10px;">
+                        <div style="text-align:end;cursor:pointer;">
                             @livewire('log-out')
                         </div>
+                    </div>
 
                     </div>
 
@@ -1342,7 +1341,7 @@
         </div> -->
 
                     <div class="modal-body">
-                        <livewire:loader-indicator/>
+                        <livewire:loader-indicator />
                     </div>
                     <!-- <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

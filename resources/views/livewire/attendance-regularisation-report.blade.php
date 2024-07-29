@@ -31,20 +31,21 @@
 
             @if($rd->regularisation_entries!='[]')
             <tr style="border:1px solid #ccc;">
-                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px;white-space:nowrap;">{{ucwords(strtolower($rd->first_name))}} {{ucwords(strtolower($rd->last_name))}}</td>
-                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px;white-space:nowrap;">{{$rd->emp_id}}</td>
+                
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{ucwords(strtolower($rd->first_name))}} {{ucwords(strtolower($rd->last_name))}}</td>
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{$rd->emp_id}}</td>
                 @if($rd->status=='pending'&&$rd->is_withdraw==0)
-                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px;white-space:nowrap;">Applied</td>
-                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px;white-space:nowrap;"></td>
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">Applied</td>
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;"></td>
                 @elseif($rd->status=='pending'&&$rd->is_withdraw==1)
-                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px;white-space:nowrap;">Withdrawn</td>
-                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px;white-space:nowrap;">{{ date('jS M,Y', strtotime($rd->withdraw_date)) }}</td>
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">Withdrawn</td>
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{ date('jS M,Y', strtotime($rd->withdraw_date)) }}</td>
                 @else
-                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px;white-space:nowrap;">{{ucwords(strtolower($rd->status))}}</td>
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{ucwords(strtolower($rd->status))}}</td>
                 @if($rd->status=='approved')
-                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px;white-space:nowrap;">{{date('jS M,Y',strtotime($rd->approved_date))}}</td>
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{date('jS M,Y',strtotime($rd->approved_date))}}</td>
                 @elseif($rd->status=='rejected')
-                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px;white-space:nowrap;">{{date('jS M,Y',strtotime($rd->rejected_date))}}</td>
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{date('jS M,Y',strtotime($rd->rejected_date))}}</td>
                 @endif
                 @endif
 
