@@ -41,6 +41,59 @@
             <!-- main content -->
 
             <div class="row m-0">
+            <div class="col-md-3 mb-4 ">
+                <div class="home-hover">
+                        <div class="homeCard4">
+                            <div style="color: black; padding:10px 15px;">
+                                <p style="font-size:12px;">{{$currentDate}}</p>
+                                <p style="margin-top: 10px; color: #778899; font-size: 11px;">
+                                   @php
+                                        $EmployeeStartshiftTime=$employeeShiftDetails->shift_start_time;
+                                        $EmployeeEndshiftTime=$employeeShiftDetails->shift_end_time;
+                                        // Create DateTime objects
+                                        $startShiftTime = new DateTime($EmployeeStartshiftTime);
+                                        $endShiftTime = new DateTime($EmployeeEndshiftTime);
+                                        // Format the times
+                                        $formattedStartShiftTime = $startShiftTime->format('h:i a');
+                                        $formattedEndShiftTime = $endShiftTime->format('H:i a');
+                                    @endphp
+                                    {{$currentDay}} | {{$formattedStartShiftTime}} to {{$formattedEndShiftTime}}
+                                </p>
+                                <div style="font-size: 14px; display: flex;margin-top:2em;">
+                                    <img src="/images/stopwatch.png" class="me-4" alt="Image Description" style="width: 2.7em;">
+                                    <p id="current-time" style="margin: auto 0;"></p>
+                                </div>
+                                <script>
+                                    function updateTime() {
+                                        const currentTimeElement = document.getElementById('current-time');
+                                        const now = new Date();
+                                        const hours = String(now.getHours()).padStart(2, '0');
+                                        const minutes = String(now.getMinutes()).padStart(2, '0');
+                                        const seconds = String(now.getSeconds()).padStart(2, '0');
+                                        const currentTime = `${hours} : ${minutes} : ${seconds}`;
+                                        currentTimeElement.textContent = currentTime;
+                                    }
+                                    updateTime();
+                                    setInterval(updateTime, 1000);
+                                </script>
+                                <div class="A" style="display: flex;flex-direction:row;justify-content:space-between; align-items:center;margin-top:2em">
+                                    <a style="width:50%;font-size:11px;cursor: pointer;color:blue" wire:click="open">View Swipes</a>
+                                    <button  id="signButton" style="color: white; width: 80px; height: 26px;font-size:10px; background-color: rgb(2, 17, 79); border: 1px solid #CFCACA; border-radius: 5px; " wire:click="toggleSignState">
+                                        @if($swipes)
+                                        @if ($swipes->in_or_out=="OUT")
+                                        Sign In
+                                        @else
+                                        Sign Out
+                                        @endif
+                                        @else
+                                        Sign In
+                                        @endif
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
                 @if($ismanager)
