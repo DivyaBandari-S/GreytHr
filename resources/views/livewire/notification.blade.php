@@ -87,7 +87,7 @@
                     </a>
                 </p>
 
-                @if($notification->details_count>1 && $notification->details_count<=10 ) <p class="mb-0 notification-text-para"> sent {{$notification->details_count}} messages. </p>
+                @if($notification->detailsw_count>1 && $notification->details_count<=10 ) <p class="mb-0 notification-text-para"> sent {{$notification->details_count}} messages. </p>
                     @elseif($notification->details_count>10)
                     <p class="mb-0 notification-text-para"> sent 10+ messages.</p>
                     @else
