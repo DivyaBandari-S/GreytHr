@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('user_id')->index();
-            // $table->foreignId('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
-            $table->longText('payload')->default('');
+            $table->longText('payload')->nullable();
             $table->string('country')->nullable();
             $table->string('city')->nullable();
             $table->string('iso_code')->nullable();

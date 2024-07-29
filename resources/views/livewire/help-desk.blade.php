@@ -1,5 +1,4 @@
 <div>
-    <x-loading-indicator />
 <div style="overflow-x:hidden">
 
     <body>
@@ -48,7 +47,7 @@
 
         </div>
         <div class="d-flex flex-row justify-content-end gap-10 mt-2">
-     
+
             <div class="mx-2 ">
                 <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> IT Request  </button>
             </div>
@@ -96,10 +95,10 @@
                 <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
             </svg>
         </div>
-  
 
 
-                                   
+
+
                                 </div>
                             </div>
 
@@ -127,7 +126,7 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                         
+
                         </div>
                         <div class="row">
                             <div class="col">
@@ -252,13 +251,13 @@
                 <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
             </svg>
         </div>
-  
+
 
 
                                     @error('category') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
-                     
+
 
                         <div class="form-group mt-2">
                             <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject<span  style="color:red">*</span></label>
@@ -281,7 +280,7 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                        
+
                         </div>
                         <div class="row">
                             <div class="col">

@@ -1,5 +1,4 @@
 <div>
-<x-loading-indicator />
     <div class="detail-container ">
         <div class="row m-0 p-0">
             <div class="col-md-4 p-0 m-0 mb-2 ">

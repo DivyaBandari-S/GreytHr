@@ -213,6 +213,12 @@ class ChatBox extends Component
             'file_path' => $filePath,
             'body' => $this->body,
         ]);
+        // Notification::create([
+        //     'emp_id' => auth()->user()->emp_id,
+        //     'notification_type' => 'message',
+        //     'receiver_id'=>optional($this->selectedConversation->getReceiver())->emp_id,
+        //     'body'=>$this->body,
+        // ]);
 
         Notification::create([
             'emp_id' =>auth()->user()->emp_id ,

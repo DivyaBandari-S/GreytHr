@@ -1,5 +1,4 @@
 <?php
- 
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
@@ -55,16 +54,18 @@ class CheckAuthAndHandleSession
                 //need to add firstname lastname
                 Log::info("$guard ID set: $id");
                 Session::put('user_type', $guard);
+
                 // Get GeoIP data
                 $geoIpData = geoip()->getLocation(geoip()->getClientIP());
                 $userAgent = $request->header('User-Agent');
+
                 // Store data in session table
                 DB::table('sessions')->updateOrInsert(
                     ['id' => session()->getId()],
                     [
                         'user_id' => $id,
                         'ip_address' => $geoIpData['ip'],
-                        'user_agent'=>$userAgent,
+                        'user_agent' => $userAgent,
                         'iso_code' => $geoIpData['iso_code'],
                         'country' => $geoIpData['country'],
                         'city' => $geoIpData['city'],
@@ -82,18 +83,21 @@ class CheckAuthAndHandleSession
                         'updated_at' => now(), // Set the updated_at timestamp
                     ]
                 );
- 
+
                 // If user is authenticated, stop checking other guards
                 break;
             }
         }
- 
+
         if (!Auth::check()) {
             session(['user_type' => 'guest']);
             Log::info('Session has timed out');
         }
- 
-        return $next($request);
+
+        // Debug log before returning next request
+        Log::info('Before next request call', ['request' => $request]);
+
+        return  $next($request);
+
     }
 }
- 
