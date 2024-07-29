@@ -24,7 +24,7 @@ class Notification extends Model
         'body',
         'notification_type',
         'chatting_id',
-        'messsage_read_at',
+        'message_read_at',
     ];
     public function emp()
     {
