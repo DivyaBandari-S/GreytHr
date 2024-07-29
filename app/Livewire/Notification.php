@@ -24,6 +24,7 @@ class Notification extends Component
     public function mount()
     {
         try {
+        try {
             $this->fetchNotifications();
         } catch (\Exception $e) {
             throw $e;
@@ -117,7 +118,12 @@ class Notification extends Component
                 ->where('emp_id', $requestId)
                 ->where('notification_type', 'task')
                 ->update(['is_read' => 1]);
+            DB::table('notifications')
+                ->where('emp_id', $requestId)
+                ->where('notification_type', 'task')
+                ->update(['is_read' => 1]);
 
+            $this->fetchNotifications();
             $this->fetchNotifications();
 
             return redirect()->route('tasks');

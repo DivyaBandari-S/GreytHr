@@ -583,7 +583,7 @@ class LeaveApply extends Component
                 'leave_type' => $this->leave_type,
                 'from_date' => $this->from_date,
                 'from_session' => $this->from_session,
-                   'to_session' => $this->to_session,
+                'to_session' => $this->to_session,
                 'to_date' => $this->to_date,
                 'applying_to' => json_encode($applyingToDetails),
                 'file_paths' => json_encode($filePaths),

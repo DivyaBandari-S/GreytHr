@@ -1,4 +1,33 @@
 <div>
+    <style>
+        .people-input-group-container {
+            margin-left: 20px;
+        }
+
+        .people-search-input {
+            font-size: 0.75rem;
+            border-radius: 5px 0 0 5px;
+            cursor: pointer
+        }
+
+
+        .people-search-btn {
+            height: 32px;
+            width: 40px;
+            position: relative;
+            border-radius: 0 5px 5px 0;
+            background-color: rgb(2, 17, 79);
+            color: #fff;
+            border: none;
+            margin-right: 10px;
+        }
+
+        .people-search-icon {
+            position: absolute;
+            top: 9px;
+            left: 11px;
+        }
+    </style>
     <x-loading-indicator />
 
     <div class="container" style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow: hidden;">
@@ -6,10 +35,10 @@
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeTab === 'open' ? 'active' : '' }}" wire:click.prevent="$set('activeTab', 'open')">Open</a>
+                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeTab === 'open' ? 'active' : '' }}" wire:click.prevent="setActiveTab('open')">Open</a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeTab === 'completed' ? 'active' : '' }}" wire:click.prevent="$set('activeTab', 'completed')">Closed</a>
+                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeTab === 'completed' ? 'active' : '' }}" wire:click.prevent="setActiveTab('completed')">Closed</a>
                 </li>
             </ul>
         </div>
@@ -42,6 +71,30 @@
                     }
                 }, 5000); // 5000 milliseconds = 5 seconds
             });
+
+
+            $(document).ready(function() {
+                $('#date_range').datepicker({
+                    format: 'yyyy-mm-dd',
+                    startDate: '-30d',
+                    endDate: '+0d',
+                    todayHighlight: true,
+                    multidateSeparator: ' to ',
+                    inputs: $('#start_date, #end_date'), // Adding this line to link both inputs
+                    inputs: {
+                        start: $('#start_date'),
+                        end: $('#end_date')
+                    },
+                    clearBtn: true,
+                    autoclose: true,
+                    toggleActive: true
+                }).on('changeDate', function(e) {
+                    var startDate = $('#start_date').val();
+                    var endDate = $('#end_date').val();
+                    @this.set('start_date', startDate);
+                    @this.set('end_date', endDate);
+                });
+            });
         </script>
 
         <div style="display:flex; justify-content:flex-end;">
@@ -51,12 +104,28 @@
 
 
         @if ($activeTab == "open")
-        <div class="card-body" style="background-color:white;width:100%;margin-top:30px;border-radius:5px;overflow-y:auto;max-height:400px;overflow-x:hidden">
-            @if ($records->isEmpty())
-            <div style="text-align: center">
-                <img style="width: 10em" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="">
-            </div>
-            @else
+        <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
+            <form wire:submit.prevent="applyFilters" class="form-inline" style="margin-bottom: -15px;">
+                <!-- Search Box -->
+                <div class="input-group people-input-group-container">
+                    <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search anything.." aria-label="Search" aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                        <button wire:click="searchActiveTasks" class="people-search-btn" type="button">
+                            <i class="fa fa-search people-search-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <!-- <label for="drp" class="form-label">DateRangePicker</label> -->
+                    <livewire:date-component key="{{ 'drp-' . uniqid() }}" :start="$start" :end="$end" />
+                </div>
+
+
+            </form>
+        </div>
+        <div class="card-body" style="background-color:white;width:100%;border-radius:5px;overflow-y:auto;max-height:400px;overflow-x:hidden">
+
             <div class="table-responsive">
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
@@ -76,7 +145,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($records as $index => $record)
+                        @if ($searchData->isEmpty())
+                        <tr>
+                            <td colspan="8" style="text-align: center;">
+                                <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
+                            </td>
+                        </tr>
+                        @else
+                        @foreach ($searchData as $index => $record)
                         @if($record->status=="Open")
                         <tr>
                             <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;">
@@ -86,13 +162,13 @@
                             </td>
 
                             <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%">
-                                {{ $record->assignee }}
+                                {{ ucfirst($record->assignee) }}
                             </td>
                             <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: {{ $record->followers ? 'start' : 'center' }}; width: 13%">
-                            {{ $record->followers ?: '-' }}
+                                {{ ucfirst($record->followers) ?: '-' }}
                             </td>
                             <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%">
-                            {{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }}
+                                {{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }}
                             </td>
                             <td style="padding: 10px; border:none;font-size: 0.75rem; text-align: start; width: 10%">
                                 {{ ucfirst($record->task_name) }}
@@ -168,13 +244,28 @@
             </div>
             @endif
             @if ($activeTab == "completed")
-            <div class="card-body" style="background-color:white;width:100%;margin-top:30px;border-radius:5px;overflow-y:auto;max-height:300px;overflow-x:hidden">
+            <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
+                <form wire:submit.prevent="applyFilters" class="form-inline" style="margin-bottom: -15px;">
+                    <!-- Search Box -->
+                    <div class="input-group people-input-group-container">
+                        <input wire:model="closedSearch" type="text" class="form-control people-search-input" placeholder="Search anything.." aria-label="Search" aria-describedby="basic-addon1">
+                        <div class="input-group-append">
+                            <button wire:click="searchCompletedTasks" class="people-search-btn" type="button">
+                                <i class="fa fa-search people-search-icon"></i>
+                            </button>
+                        </div>
+                    </div>
 
-                @if ($records->isEmpty())
-                <div style="text-align: center">
-                    <img style="width:10em" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="">
-                </div>
-                @else
+                    <div class="form-group">
+
+                        <livewire:date-component key="{{ 'drp-' . uniqid() }}" :start="$start" :end="$end" />
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="card-body" style="background-color:white;width:100%;border-radius:5px;overflow-y:auto;max-height:300px;overflow-x:hidden">
+
                 <div class="table-responsive">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
@@ -201,7 +292,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($records as $record)
+                            @if ($searchData->isEmpty())
+                            <tr>
+                                <td colspan="9" style="text-align: center;">
+                                    <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
+                                </td>
+                            </tr>
+                            @else
+                            @foreach ($searchData as $record)
                             @if($record->status=="Completed")
                             <tr>
                                 <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;">
@@ -210,13 +308,13 @@
                                     </div>
                                 </td>
                                 <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                    {{ $record->assignee }}
+                                    {{ ucfirst($record->assignee) }}
                                 </td>
                                 <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: {{ $record->followers ? 'start' : 'center' }}; width: 10%">
-                                {{ $record->followers ?: '-' }}
+                                    {{ ucfirst($record->followers) ?: '-' }}
                                 </td>
                                 <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                {{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }}
+                                    {{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }}
                                 </td>
                                 <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
                                     {{ ucfirst($record->task_name) }}
