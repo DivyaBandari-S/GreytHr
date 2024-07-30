@@ -34,6 +34,7 @@ class Feeds extends Component
 
     use WithFileUploads;
    public $image;
+   public $card_id;
     public $category;
     public $description;
 
@@ -47,17 +48,20 @@ class Feeds extends Component
     public $employees;
     public $hr;
     public $combinedData;
+    public $dropdownVisible = false;
     public $monthAndDay;
     public $currentCardEmpId;
 
     public $comments = [];
+   
+    public $sortType=['newest','interacted'];
     public $newComment = '';
     public $employeeDetails;
     public $isSubmitting = false;
     public $emp_id;
     public $addcomments;
     public $data;
-
+ 
     public $selectedEmoji = null;
 
     public $selectedEmojiReaction;
@@ -103,6 +107,8 @@ class Feeds extends Component
     }
 
 
+
+
     public function mount()
     {
 
@@ -113,7 +119,8 @@ class Feeds extends Component
         // Combine and sort data
         $this->combinedData = $this->combineAndSortData($this->employees);
 
-      $this->loadComments();       
+      $this->loadComments();   
+       $this->loadaddComments();
        $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
@@ -201,7 +208,21 @@ class Feeds extends Component
         // Optionally, show a flash message
         session()->flash('message', 'Emoji added successfully.');
     }
-
+    public function getComments($sortType)
+    {
+        $query = Comment::query();
+        
+        if ($sortType === 'newest') {
+            $query->orderBy('created_at', 'desc');
+        } elseif ($sortType === 'interacted') {
+            $query->orderBy('updated_at', 'desc');
+        }
+    
+        $currentCardComments = $query->get();
+    
+        return view('feeds', compact('currentCardComments', 'sortType'));
+    }
+    
     public function add_comment($emp_id)
     {
         $this->validate();
@@ -255,22 +276,87 @@ class Feeds extends Component
    
         session()->flash('message', 'Comment added successfully.');
     }
+    protected $listeners = ['updateSortType'];
+    // Toggle dropdown visibility
+    public function toggleDropdown()
+    {
+        $this->dropdownVisible = !$this->dropdownVisible;
+    }
+
+
+    public function updateSortType($sortType)
+    {
+        $this->sortType = $sortType;
+   
+        $this->loadComments();
+       
+       
+    }
     
     public function loadComments()
-    {
-        $this->comments = Comment::with('employee','hr')
-        ->whereIn('emp_id', $this->employees->pluck('emp_id'))
-        ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'))
-        ->orderByDesc('created_at')
-        ->get();
-    }
-    public function getInteractedComments($employeeId)
 {
-    return Comment::with('employee', 'hr')
-        ->where('card_id', $employeeId)
-        ->orderBy('updated_at', 'desc') // Sort comments by interaction date in descending order
-        ->get();
+    // Fetch all comments initially
+    $commentsQuery = Comment::with('employee', 'hr')
+        ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+        ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'));
+
+    // Fetch all comments
+    $allComments = $commentsQuery->get();
+
+    // Group comments by card_id and filter card_ids with more than 2 comments
+    $cardIdsWithMoreThanTwoComments = $allComments->groupBy('card_id')
+        ->filter(function ($comments) {
+            return $comments->count() > 2;
+        })
+        ->keys();
+
+    // Fetch comments only for those card IDs
+    $filteredCommentsQuery = $commentsQuery->whereIn('card_id', $cardIdsWithMoreThanTwoComments);
+
+    // Sort the filtered comments based on the sortType
+    if ($this->sortType === 'interacted') {
+        $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('updated_at');
+    } else {
+        $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('created_at');
+    }
+
+    $this->comments = $filteredCommentsQuery->get();
+
+  
 }
+public function loadaddComments()
+{
+    // Fetch all comments initially
+    $commentsQuery = Comment::with('employee', 'hr')
+        ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+        ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'));
+
+    // Fetch all comments
+    $allComments = $commentsQuery->get();
+
+    // Group comments by card_id and filter card_ids with more than 2 comments
+    $cardIdsWithMoreThanTwoComments = $allComments->groupBy('card_id')
+        ->filter(function ($comments) {
+            return $comments->count() > 2;
+        })
+        ->keys();
+
+    // Fetch comments only for those card IDs
+    $filteredCommentsQuery = $commentsQuery->whereIn('card_id', $cardIdsWithMoreThanTwoComments);
+
+    // Sort the filtered comments based on the sortType
+    if ($this->sortType === 'interacted') {
+        $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('updated_at');
+    } else {
+        $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('created_at');
+    }
+
+    $this->addcomments  = $filteredCommentsQuery->get();
+
+  
+}
+
+
     
     public function employee()
     {
@@ -303,7 +389,7 @@ class Feeds extends Component
         Addcomment::create([
             'emp_id' => $employeeId,
             'card_id' => $emp_id,
-            'hr_emp_id' => $hrId,
+         
             'addcomment' => $this->newComment ?? '',
         ]);
         // Clear the input field after adding the comment
