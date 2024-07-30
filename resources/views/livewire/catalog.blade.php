@@ -1,4 +1,5 @@
 <div>
+<x-loading-indicator />
     <div class="row m-0">
         @if (session()->has('message'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -341,9 +342,7 @@
                                                 </div>
                                                 <div class="modal-footer justify-content-center" >
                                                            <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-                                                           <button type="button" wire:click="DistributorRequest" class="submit-btn">
-    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
-</button>
+                                                           <button type="button" wire:click="submit" class="submit-btn">Submit</button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
                                    
@@ -495,9 +494,8 @@
                                                 </div>
                                                 <div class="modal-footer justify-content-center">
                                                 <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-                                                <button type="button" wire:click="Request" class="submit-btn">
-    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
-</button>
+           
+<button type="button" wire:click="Request" class="submit-btn">Submit</button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 </div>
                                                    
@@ -656,10 +654,10 @@
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
-
+                                                    <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
+                                                       
                                                     </div>
                                                 </div>
                                             </div>
@@ -814,9 +812,8 @@
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
-                                                    <button type="button" wire:click="Devops" class="submit-btn">
-    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
-</button>
+    
+<button type="button" wire:click="Devops" class="submit-btn">Submit</button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
                                                         
@@ -970,9 +967,8 @@
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
                                                     <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-                                                    <button type="button" wire:click="DistributorRequest" class="submit-btn">
-    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
-</button>
+     
+<button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 </div>
                                                         
@@ -1132,9 +1128,8 @@
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
                                                     <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-                                                    <button type="button" wire:click="Devops" class="submit-btn">
-    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
-</button>
+       
+<button type="button" wire:click="Devops" class="submit-btn">Submit</button>
 
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 </div>
@@ -1305,9 +1300,8 @@
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
-                                                    <button type="button" wire:click="Devops" class="submit-btn">
-    <a href="/HelpDesk" style="text-decoration: none; color: inherit;">Submit</a>
-</button>
+                                                    <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
+                       
              
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 

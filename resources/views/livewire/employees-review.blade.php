@@ -107,7 +107,6 @@
 
 
     <div class="row m-0 p-0">
-<x-loading-indicator />
 
         <div class="sidenav col-md-3 col-lg-2" style="min-height: 30rem;">
             <div>
@@ -388,7 +387,7 @@
             <!-- </div> -->
 
 
-            <div class="pending-leaves-container"
+            <div class="pending-leavves-container"
                 style="width:100%; max-height:400px; overflow-y:auto; margin-top:50px;">
                 @if($count > 0)
                 <div class="reviewList" >

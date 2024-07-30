@@ -85,10 +85,13 @@ class Tasks extends Component
     public function searchActiveTasks()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $query = Task::where('emp_id', $employeeId)
-                     ->where('status', 'Open');
+        $query = Task::where(function($query) use ($employeeId) {
+            $query->where('emp_id', $employeeId)
+                  ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
+        })
+        ->where('status', 'Open');
 
-       
+
         if ($this->start && $this->end) {
             $query->whereBetween('created_at', [$this->start, $this->end]);
         }
@@ -114,8 +117,11 @@ class Tasks extends Component
     public function searchCompletedTasks()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $query = Task::where('emp_id', $employeeId)
-                     ->where('status', 'Completed'); 
+        $query = Task::where(function($query) use ($employeeId) {
+            $query->where('emp_id', $employeeId)
+                  ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
+        })
+        ->where('status', 'Completed');
 
        
         if ($this->start && $this->end) {

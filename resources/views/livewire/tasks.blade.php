@@ -28,7 +28,6 @@
             left: 11px;
         }
     </style>
-    <x-loading-indicator />
 
     <div class="container" style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow: hidden;">
 

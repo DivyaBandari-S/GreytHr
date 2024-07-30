@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('emp_id')->primary();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('gender')->nullable();
             $table->string('email')->unique()->nullable();
+            $table->string('gender')->nullable();
             $table->string('company_id')->nullable();
             $table->string('dept_id')->nullable();
             $table->string('sub_dept_id')->nullable();
