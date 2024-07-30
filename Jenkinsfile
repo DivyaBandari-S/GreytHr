@@ -5,68 +5,58 @@ pipeline {
         GIT_PATH = 'C:\\Users\\SivaKumarSaragada\\AppData\\Local\\Programs\\Git\\cmd\\git.exe'
     }
     stages {
-        stage('Check Repository') {
+        stage('Create Directory') {
             steps {
                 script {
-                    def repoExists = bat(script: "if exist \"${DEPLOY_DIR}\\.git\" (echo true) else (echo false)", returnStdout: true).trim()
-                    if (repoExists == 'false') {
-                        echo 'Repository not found. Cloning repository.'
-                        // Proceed to clone repository
-                        currentBuild.result = 'SUCCESS' // Ensure the build is marked as successful if the repo exists or is cloned
-                        currentBuild.description = 'Cloning repository'
-                        currentBuild.displayName = "Cloning ${currentBuild.number}"
-                    } else {
-                        echo 'Repository already cloned.'
-                        // Skip cloning stage
-                        currentBuild.result = 'SUCCESS'
-                        currentBuild.description = 'Skipping repository clone'
-                        currentBuild.displayName = "Skipping clone ${currentBuild.number}"
+                    // Create the deployment directory if it doesn't exist
+                    bat "if not exist \"${DEPLOY_DIR}\" mkdir \"${DEPLOY_DIR}\""
+                }
+            }
+        }
+        stage('Check and Update/Clone Repository') {
+            steps {
+                script {
+                    dir(DEPLOY_DIR) {
+                        def repoExists = bat(script: "if exist .git (echo true) else (echo false)", returnStdout: true).trim()
+                        if (repoExists == 'true') {
+                            echo 'Repository exists. Pulling latest changes.'
+                            bat "\"${GIT_PATH}\" pull origin main"
+                        } else {
+                            echo 'Repository does not exist. Cloning repository.'
+                            bat "\"${GIT_PATH}\" clone -b main https://github.com/sssreddys/GreytHr.git ."
+                        }
                     }
                 }
             }
         }
-        stage('Clone repository') {
-            when {
-                expression {
-                    return bat(script: "if exist \"${DEPLOY_DIR}\\.git\" (echo false) else (echo true)", returnStdout: true).trim() == 'true'
-                }
-            }
-            steps {
-                script {
-                    // Ensure the deployment directory exists
-                    bat "if not exist \"${DEPLOY_DIR}\" mkdir \"${DEPLOY_DIR}\""
-
-                    // Clone the repository directly into the deployment directory
-                    bat "\"${GIT_PATH}\" clone -b main https://github.com/sssreddys/GreytHr.git \"${DEPLOY_DIR}\""
-                }
-            }
-        }
         stage('Prepare .env file') {
-            when {
-                expression {
-                    def envExists = bat(script: "if exist \"${DEPLOY_DIR}\\.env\" (echo true) else (echo false)", returnStdout: true).trim()
-                    return envExists == 'false'
-                }
-            }
             steps {
                 script {
                     dir(DEPLOY_DIR) {
-                        bat 'copy .env.example .env'
-                        def envVars = [
-                            'DB_CONNECTION': 'mysql',
-                            'DB_HOST': 'localhost',
-                            'DB_PORT': '3306',
-                            'DB_DATABASE': 'greythr',
-                            'DB_USERNAME': 'root',
-                            'DB_PASSWORD': ''  // Provide the actual password
-                        ]
-                        envVars.each { key, value ->
-                            def keyExists = bat(script: "findstr /C:\"${key}=\" .env", returnStatus: true) == 0
-                            if (keyExists) {
-                                bat "powershell -Command \"(Get-Content .env) -replace '^${key}=.*', '${key}=${value}' | Set-Content .env\""
-                            } else {
-                                bat "echo ${key}=${value} >> .env"
+                        def envExists = bat(script: "if exist .env (echo true) else (echo false)", returnStdout: true).trim()
+                        if (envExists == 'false') {
+                            echo '.env file does not exist. Creating from .env.example.'
+                            bat 'copy .env.example .env'
+
+                            def envVars = [
+                                'DB_CONNECTION': 'mysql',
+                                'DB_HOST': 'localhost',
+                                'DB_PORT': '3306',
+                                'DB_DATABASE': 'greythr',
+                                'DB_USERNAME': 'root',
+                                'DB_PASSWORD': ''  // Provide the actual password
+                            ]
+
+                            envVars.each { key, value ->
+                                def keyExists = bat(script: "findstr /C:\"${key}=\" .env", returnStatus: true) == 0
+                                if (keyExists) {
+                                    bat "powershell -Command \"(Get-Content .env) -replace '^${key}=.*', '${key}=${value}' | Set-Content .env\""
+                                } else {
+                                    bat "echo ${key}=${value} >> .env"
+                                }
                             }
+                        } else {
+                            echo '.env file already exists.'
                         }
                     }
                 }
