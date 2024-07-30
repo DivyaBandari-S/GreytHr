@@ -1341,7 +1341,7 @@
         </div> -->
 
                     <div class="modal-body">
-                        <livewire:loader-indicator />
+                        {{-- <livewire:loader-indicator /> --}}
                     </div>
                     <!-- <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
