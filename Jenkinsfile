@@ -46,22 +46,14 @@ pipeline {
             steps {
                 script {
                     def envFileExists = fileExists("${DEPLOY_DIR}\\\\.env")
-                    if (!envFileExists) {
+                    if (envFileExists) {
                         bat """
-                        copy ${DEPLOY_DIR}\\\\.env.example ${DEPLOY_DIR}\\\\.env
+                        del /Q ${DEPLOY_DIR}\\\\.env
                         """
-                        def dbConfigExists = bat(script: "findstr /m \"DB_DATABASE\" ${DEPLOY_DIR}\\\\.env", returnStatus: true) == 0
-                        if (!dbConfigExists) {
-                            bat """
-                            echo DB_CONNECTION=mysql >> ${DEPLOY_DIR}\\\\.env
-                            echo DB_HOST=127.0.0.1 >> ${DEPLOY_DIR}\\\\.env
-                            echo DB_PORT=3306 >> ${DEPLOY_DIR}\\\\.env
-                            echo DB_DATABASE=your_database_name >> ${DEPLOY_DIR}\\\\.env
-                            echo DB_USERNAME=your_database_username >> ${DEPLOY_DIR}\\\\.env
-                            echo DB_PASSWORD=your_database_password >> ${DEPLOY_DIR}\\\\.env
-                            """
-                        }
                     }
+                    bat """
+                    copy ${DEPLOY_DIR}\\\\.env.example ${DEPLOY_DIR}\\\\.env
+                    """
                 }
             }
         }
