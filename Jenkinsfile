@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         DEPLOY_DIR = 'C:\\xampp\\htdocs\\deploye_server'
+        GIT_PATH = 'C:\\Users\\SivaKumarSaragada\\AppData\\Local\\Programs\\Git\\cmd\\git.exe'
     }
     stages {
         stage('Clone repository') {
@@ -11,7 +12,7 @@ pipeline {
                     bat "if not exist \"${DEPLOY_DIR}\" mkdir \"${DEPLOY_DIR}\""
 
                     // Clone the repository directly into the deployment directory
-                    bat "git clone -b main https://github.com/sssreddys/GreytHr.git \"${DEPLOY_DIR}\""
+                    bat "\"${GIT_PATH}\" clone -b main https://github.com/sssreddys/GreytHr.git \"${DEPLOY_DIR}\""
                 }
             }
         }
