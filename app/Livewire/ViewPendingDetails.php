@@ -233,9 +233,9 @@ class ViewPendingDetails extends Component
                     $leaveRequest->save();
                     $leaveRequest->touch(); // Update timestamps
                     session()->flash('message', 'Leave application approved successfully.');
+                    $this->fetchPendingLeaveApplications();
                 }
             }
-            $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Handle the exception
             Log::error('Error approving leave: ' . $e->getMessage());
@@ -266,9 +266,9 @@ class ViewPendingDetails extends Component
                     $leaveRequest->save();
                     $leaveRequest->touch();
                     session()->flash('message', 'Leave cancel application approved successfully.');
+                    $this->fetchPendingLeaveApplications();
                 }
             }
-            $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Handle the exception
             Log::error('Error approving leave: ' . $e->getMessage());
