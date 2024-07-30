@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Clone repository') {
             steps {
-                git 'https://github.com/sssreddys/GreytHr.git'
+                git branch: 'main', url: 'https://github.com/sssreddys/GreytHr.git'
             }
         }
         stage('Prepare .env file') {
