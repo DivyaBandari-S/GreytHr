@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\TimeSheet;
 use App\Models\ClientsEmployee;
 use App\Models\Client;
+use App\Models\EmployeeDetails;
 
 class EmpTimeSheet extends Component
 {
@@ -20,7 +21,7 @@ class EmpTimeSheet extends Component
     public $client_names = [];
     public $previous_time_sheet_type;
 
-    public $timeSheet, $timesheets;
+    public $timeSheet, $timesheets, $employeeName;
     public $tab = "timeSheet";
 
     public $defaultTimesheetEntry = "true";
@@ -82,6 +83,7 @@ class EmpTimeSheet extends Component
     public function mount()
     {
         $this->auth_empId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeName = EmployeeDetails::where('emp_id', $this->auth_empId )->first();
         $this->timesheets = Timesheet::where('emp_id', $this->auth_empId)->orderBy('created_at', 'desc')->get();
         $this->defaultTimeSheetaddTask();
     }

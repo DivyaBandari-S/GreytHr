@@ -122,7 +122,7 @@ class AbsentReport extends Component
             });
         if ($this->fromDate && $this->toDate) {
             $query = EmployeeDetails::where('manager_id', $this->loggedInEmpId)
-                ->select('emp_id', 'first_name', 'last_name', 'created_at')
+                ->select('emp_id', 'first_name', 'last_name', 'created_at','employee_status')
                 ->whereNotIn('emp_id', function ($query) {
                     $query->select('emp_id')
                         ->from('swipe_records')
@@ -133,7 +133,7 @@ class AbsentReport extends Component
                 ->whereNotIn('emp_id', $this->approvedLeaveRequests->pluck('emp_id'));
         } else {
             $query = EmployeeDetails::where('manager_id', $this->loggedInEmpId)
-                ->select('emp_id', 'first_name', 'last_name', 'created_at')
+                ->select('emp_id', 'first_name', 'last_name', 'created_at','employee_status')
                 ->whereNotIn('emp_id', function ($query) {
                     $query->select('emp_id')
                         ->from('swipe_records')

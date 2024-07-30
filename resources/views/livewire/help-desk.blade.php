@@ -424,7 +424,10 @@
                             <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->priority }}</td>
                         </tr>
                         @if(count($ccToArray) > 2)
+
                             <tr style="border-top:none">
+
+
                                 <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                 <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}
@@ -485,7 +488,10 @@
 
                     </tr>
                     @if(count($ccToArray) > 2)
+
                             <tr style="border-top:none">
+
+ 
                                 <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                 <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}
@@ -546,7 +552,10 @@
 
                     </tr>
                     @if(count($ccToArray) > 2)
+
                             <tr style="border-top:none">
+
+      
                                 <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                 <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
                                         CC TO: {{ implode(', ', $ccToArray) }}

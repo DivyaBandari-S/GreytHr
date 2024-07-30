@@ -24,7 +24,7 @@ class Notification extends Component
         catch (\Exception $e) {
             abort(404);
         }
-        
+
     }
 
     public function fetchNotifications()
@@ -59,7 +59,7 @@ class Notification extends Component
         $this->chatNotificationCount = $this->senderDetails->count();
         }
         catch (\Exception $e) {
-            abort(404); 
+            abort(404);
         }
     }
 
@@ -69,34 +69,34 @@ class Notification extends Component
        DB::table('leave_applications')
             ->where('emp_id', $requestId)
             ->update(['is_read' => 1]);
-    
+
         $this->fetchNotifications();
 
-        return redirect()->route('review');
+        return redirect()->route('review', ['tab' => 'leave']);
         }
         catch (\Exception $e) {
             abort(404);
         }
     }
-    
+
 
     public function markAsRead($messageId)
     {
-        
+
         try {
       DB::table('messages')
             ->where('id', $messageId)
             ->update(['read_at' => Carbon::now()]);
-          
+
 
         $this->fetchNotifications();
         }
         catch (\Exception $e) {
-            abort(404); 
+            abort(404);
         }
-       
+
     }
-    
+
 
     public function render()
     {

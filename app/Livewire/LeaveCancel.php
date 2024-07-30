@@ -313,14 +313,29 @@ class LeaveCancel extends Component
         }
     }
 
-    public function applyingTo()
+    public function applyingTo($leaveRequestId)
     {
-        $this->showApplyingToContainer = !$this->showApplyingToContainer;
+        $this->selectedLeaveRequestId = $leaveRequestId;
+        $this->showApplyingToContainer = false;
         $this->show_reporting = true;
-        $this->showApplyingTo = false;
     }
-
-
+    public function markAsLeaveCancel()
+    {
+        try {
+            // Find the leave request by ID
+            $leaveRequest = LeaveRequest::findOrFail($this->selectedLeaveRequestId);
+            // Update the leave request status and category
+            $leaveRequest->category_type = 'Leave Cancel';
+            $leaveRequest->cancel_status = 'Pending Leave Cancel';
+            $leaveRequest->save();
+            session()->flash('message', 'Leave request marked as cancel successfully.');
+            $this->reset(); // Reset component state
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to mark leave request as cancel. Please try again.');
+            Log::error('Error marking leave request as cancel: ' . $e->getMessage());
+        }
+    }
+    public $selectedLeaveRequestId;
     //this method used to open the ccto container
     public function openCcRecipientsContainer()
     {
@@ -479,7 +494,7 @@ class LeaveCancel extends Component
     }
 
     //method to apply for a leave
-    public function leaveApply()
+    public function applyForLeaveCancel()
     {
         $this->validate();
 
@@ -723,8 +738,20 @@ class LeaveCancel extends Component
     }
     // Add this method to your Livewire component
 
+    public $cancelLeaveRequests;
     public function render()
     {
-        return view('livewire.leave-cancel');
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->cancelLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
+        ->where('status', 'approved')
+        ->where('from_date', '>=', now()->subMonths(2))
+        ->where('category_type', 'Leave')
+        ->with('employee')
+        ->get();
+
+
+        return view('livewire.leave-cancel',[
+            'cancelLeaveRequests' => $this->cancelLeaveRequests
+        ]);
     }
 }

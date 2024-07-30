@@ -1,5 +1,4 @@
 <div>
-
 <div class="col"  id="leavePending" style="width: 95%; padding: 0;border-radius: 5px; ">
    @if(!empty($this->leaveApplications))
         @foreach($this->leaveApplications as $leaveRequest)
@@ -30,7 +29,15 @@
                                         </div>
                                  </div>
                             </div>
-
+                            <div class="col accordion-content" >
+                                <p style="color: #778899; font-size: 12px; font-weight: 500; margin-bottom:0;">Category <br>
+                                @if(isset($leaveRequest['leaveRequest']->category_type))
+                                    <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest['leaveRequest']->category_type }}</span>
+                                @else
+                                    <span style="color: #778899; font-size: 10px;">Leave Type Not Available</span>
+                                @endif
+                                </p>
+                            </div>
                             <div class="col accordion-content" >
                                 <p style="color: #778899; font-size: 12px; font-weight: 500; margin-bottom:0;">Leave Type <br>
                                 @if(isset($leaveRequest['leaveRequest']->leave_type))
@@ -40,6 +47,7 @@
                                 @endif
                                 </p>
                             </div>
+
 
                             <div class="col accordion-content mb-0" >
                                     @php
@@ -95,7 +103,7 @@
                                 @if(isset($leaveRequest['leaveRequest']->from_date))
                                     <span style="color: #778899; font-size: 11px ;font-weight: 400;">
                                         {{ $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session) }}
-                                 w   </span>
+                                   </span>
                                 @else
                                     <span style="color: #778899; font-size: 12px; font-weight: 400;">No. of days not available</span>
                                 @endif
@@ -172,13 +180,14 @@
                                 <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" style="color:#007BFF;font-size:11px;">View Details</a>
                                 <button class="rejectBtn" wire:click="rejectLeave({{ $loop->index }})">Reject</button>
                                 <button class="rejectBtn" >Forward</button>
+                                @if($leaveRequest['leaveRequest']->cancel_status === 'Leave Cancel Pending')
+                                <button class="approveBtn" wire:click="approveLeaveCancel({{ $loop->index }})">Approve</button>
+                                @else
                                 <button class="approveBtn" wire:click="approveLeave({{ $loop->index }})">Approve</button>
+                                @endif
                             </div>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
         @endforeach
