@@ -732,6 +732,12 @@ button.close-button {
 /*End of document center/letter module (Kumar Asapu) */
 
 /* app.blade */
+.dropdown-menu.show {
+    display: block;
+    background-color: none !important;
+    margin-left: 20px;
+    border: none;
+}
 .profile-container {
     display: flex;
     justify-content: space-between;
@@ -2204,7 +2210,19 @@ input[type="radio"] {
 .custom-item a {
     text-decoration: none !important;
 }
-
+.alert-success{
+    font-size: 12px;
+    padding: 7px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.alert-danger{
+    font-size: 12px;    padding: 7px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 .restrictedHoliday {
     color: #778899;
     font-size: 12px;
@@ -2213,7 +2231,7 @@ input[type="radio"] {
 }
 
 .containerWidth {
-    width: 85%;
+    width: 85% !important;
     margin: 0 auto;
 }
 
@@ -2254,6 +2272,7 @@ input[type="radio"] {
     }
     .containerWidth {
         width: 100% ;
+        margin: 0 auto;
     }
 }
 .applyingFor {
@@ -2496,11 +2515,27 @@ input[type="radio"] {
     overflow: hidden;
     text-overflow: ellipsis;
     color: #36454f;
-    font-size: 0.75rem;
     font-weight: 500;
     white-space: nowrap;
 }
-
+.category-type-hide{
+    display: inline-block;
+    font-size: 0.75rem;
+    max-width: 110px; /* Adjust this value as needed */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #778899;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.totalRequestCount{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: #778899;
+    font-weight: 500;
+}
 .attach-icon {
     display: inline-block;
     cursor: pointer;
@@ -2775,8 +2810,24 @@ input[type="radio"] {
     font-size: 0.875rem;
 }
 .no-holidays h6{
-    color: rgb(2, 17, 79);
+    color: #778899 !important;
+    font-weight: 500 !important;
 }
+.grid-container {
+    display: grid;
+    grid-template-columns: 50px auto; /* Adjust based on your design preference */
+    gap: 10px; /* Adjust the gap between grid items */
+    align-items: center;
+}
+
+.date-container {
+    text-align: center;
+}
+
+.festivals {
+    font-size: 12px;
+}
+
 .group h5 {
     font-weight: 400;
     font-size: 0.75rem;
@@ -3169,7 +3220,7 @@ img {
 }
 
 .no-holidays {
-    padding: 10px 15px;
+    padding: 50px 15px;
     background: #fff;
     overflow: hidden;
     color: #778899;
@@ -3178,7 +3229,7 @@ img {
     flex-direction: column;
     text-align: center;
     justify-content: center;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .alone-cont h6 {
@@ -4249,9 +4300,9 @@ option {
     color: #47515b;
 }
 
-p::first-letter {
+/* p::first-letter {
     text-transform: uppercase;
-}
+} */
 /* notification css styles started */
 .offcanvas {
     font-family: "Montserrat", sans-serif;
@@ -4261,6 +4312,7 @@ p::first-letter {
     color: #778899;
     font-size: 14px;
     font-size: 500;
+    margin: 0px;
 }
 .lableCount {
     color: #f2b13f;
@@ -4274,16 +4326,16 @@ p::first-letter {
     font-size: 0.75rem;
 }
 .notification-text-para {
-    color: #778899;
+    color: #535f6b;
     font-weight: normal;
-    font-size: 11px;
+    font-size: 14px;
     max-height: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 .notification-anchor-tag {
-    color: white;
+    color: white !important;
     text-decoration: none;
 }
 
@@ -4328,7 +4380,7 @@ p::first-letter {
 }
 
 .notification-detail-container {
-    width: 320px;
+    width: 290px;
     background: #f5f8f9;
 }
 

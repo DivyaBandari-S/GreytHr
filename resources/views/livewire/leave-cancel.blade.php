@@ -1,9 +1,29 @@
 <div>
-@if (session()->has('message'))
-    <div>{{ session('message') }}</div>
+    @if (session()->has('message'))
+    <div id="successMessage" class="alert alert-success">
+        {{ session('message') }}
+    </div>
     @elseif (session()->has('error'))
-    <div>{{ session('error') }}</div>
+    <div id="errorMessage" class="alert alert-danger">
+        {{ session('error') }}
+    </div>
     @endif
+
+    <script>
+        // Auto dismiss after 5 seconds
+        setTimeout(function() {
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+            if (errorMessage) {
+                errorMessage.style.display = 'none';
+            }
+        }, 5000); // 5000 milliseconds = 5 seconds
+    </script>
+
     <style>
         .LeaveCancelTable {
             width: 100%;
@@ -79,7 +99,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @if($cancelLeaveRequests && $cancelLeaveRequests->count() > 0)
+                            @if($cancelLeaveRequests && $cancelLeaveRequests->count() > 0)
                             @foreach($cancelLeaveRequests as $leaveRequest)
                             <tr>
                                 <td wire:click="applyingTo({{ $leaveRequest->id }})"><input type="radio" name="leaveType"></td>
@@ -103,7 +123,7 @@
 
                 @if($showApplyingTo)
                 <div class="form-group" style="margin-top: 10px;">
-                    <div style="display:flex; flex-direction:row;" wire:click="applyingTo">
+                    <div style="display:flex; flex-direction:row;">
                         <label for="applyingToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500; cursor: pointer;">
                             <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
                             Applying To
@@ -247,7 +267,7 @@
             </div>
             <div class="form-group">
                 <label for="reason" style="color: #778899; font-size: 12px; font-weight: 500;">Reason for Leave</label>
-                <textarea class="form-control" wire:model="reason" id="reason" name="reason" placeholder="Enter Reason" rows="4"></textarea>
+                <textarea class="form-control placeholder-small" wire:model="reason" id="reason" name="reason" placeholder="Enter Reason" rows="4"></textarea>
                 @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
 

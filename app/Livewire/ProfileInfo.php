@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Services\GoogleDriveService;
-
+use Illuminate\Support\Facades\Log;
 
 class ProfileInfo extends Component
 {
@@ -35,11 +35,11 @@ class ProfileInfo extends Component
         try {
             $empId = Auth::guard('emp')->user()->emp_id;
             $employee = EmployeeDetails::where('emp_id', $empId)->first();
-    
+
             $this->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:1024', // 1024 kilobytes = 1 megabyte
             ]);
-    
+
             if ($this->image) {
                 if ($this->image instanceof \Illuminate\Http\UploadedFile) {
                     $imagePath = $this->image->store('employee_image', 'public');
@@ -49,14 +49,14 @@ class ProfileInfo extends Component
                 $employee->image = $imagePath;
                 $employee->save();
             }
-    
+
             $this->showSuccessMessage = true;
         } catch (\Exception $e) {
-            \Log::error('Error in updateProfile method: ' . $e->getMessage());
+            Log::error('Error in updateProfile method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while updating the profile. Please try again later.');
         }
     }
-    
+
     public function render()
     {
         try {
@@ -66,7 +66,7 @@ class ProfileInfo extends Component
     
             return view('livewire.profile-info');
         } catch (\Exception $e) {
-            \Log::error('Error in render method: ' . $e->getMessage());
+            Log::error('Error in render method: ' . $e->getMessage());
             return view('livewire.profile-info')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
         }
     }

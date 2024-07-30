@@ -16,6 +16,7 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\LeaveRequest;
+use App\Models\Notification;
 use App\Models\EmployeeDetails;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -580,6 +581,7 @@ class LeaveApply extends Component
             $this->createdLeaveRequest = LeaveRequest::create([
                 'emp_id' => $employeeId,
                 'leave_type' => $this->leave_type,
+                'category_type' => 'Leave',
                 'from_date' => $this->from_date,
                 'from_session' => $this->from_session,
                 'to_session' => $this->to_session,
@@ -590,6 +592,16 @@ class LeaveApply extends Component
                 'contact_details' => $this->contact_details,
                 'reason' => $this->reason,
             ]);
+
+            Notification::create([
+                'emp_id' =>  $employeeId,
+                'notification_type' => 'leave',
+                'leave_type'=>$this->leave_type,
+                'leave_reason'=>$this->reason,
+                'applying_to'=> json_encode($applyingToDetails),
+                'cc_to'=>json_encode($ccToDetails),
+            ]);
+
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
             // Check if emp_id is set on the $createdLeaveRequest object
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
@@ -634,8 +646,6 @@ class LeaveApply extends Component
         // Reset properties
         $this->leave_type = '';
         $this->from_date = '';
-        $this->from_session = '';
-        $this->to_session = '';
         $this->to_date = '';
         $this->selectedManager = [];
         $this->selectedPeople = [];

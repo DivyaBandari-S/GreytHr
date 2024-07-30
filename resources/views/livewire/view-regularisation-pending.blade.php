@@ -6,6 +6,17 @@
         }
 
     </style>
+    <div>
+    <div class="row m-0 p-0 mt-3">
+                    <div class="search-container d-flex align-items-end justify-content-end p-1">
+                        <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput"
+                            placeholder="Enter employee name" class="border outline-none rounded">
+                        <button wire:click="searchRegularisation" id="searchButton"
+                            style="border:none;outline:none;background:#fff;border-radius:5px;padding:1px 10px;">
+                            <i class="fas fa-search" style="width:7px;height:7px;"></i>
+                        </button>
+                    </div>
+                </div>
     @if(count($regularisations)>0)
     @foreach($regularisations as $r)
     @php
@@ -39,6 +50,7 @@
 
             </div>
     @endif
+      
 
     <div class="accordion bg-white border mb-3 rounded">
         <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
@@ -194,5 +206,6 @@
                     </p>
         </div>
     @endif
+    </div>
 
 </div>

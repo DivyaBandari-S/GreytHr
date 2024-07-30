@@ -147,14 +147,14 @@ class AttendanceRegularisationReport extends Component
                     ->whereDate('regularisation_dates.created_at', '>=', $this->fromDate)
                     ->whereDate('regularisation_dates.created_at', '<=', $this->toDate)
                     ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.employee_status')
                     ->get();
             } else {
                 $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
                     ->where('regularisation_dates.status', 'pending')
                     ->where('regularisation_dates.is_withdraw', 0)
                     ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.employee_status')
                     ->get();
             }
         } elseif ($this->selectedStatus == 'withdrawn') {
@@ -165,7 +165,7 @@ class AttendanceRegularisationReport extends Component
                     ->whereDate('regularisation_dates.withdraw_date', '>=', $this->fromDate)
                     ->whereDate('regularisation_dates.withdraw_date', '<=', $this->toDate)
                     ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.employee_status')
                     ->get();
             } else {
                 $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
@@ -173,7 +173,7 @@ class AttendanceRegularisationReport extends Component
                     ->where('regularisation_dates.is_withdraw', 1)
 
                     ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.employee_status')
                     ->get();
             }
         } elseif ($this->selectedStatus == 'approved') {
@@ -183,13 +183,13 @@ class AttendanceRegularisationReport extends Component
                     ->whereDate('regularisation_dates.approved_date', '>=', $this->fromDate)
                     ->whereDate('regularisation_dates.approved_date', '<=', $this->toDate)
                     ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.employee_status')
                     ->get();
             } else {
                 $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
                     ->where('regularisation_dates.status', $this->selectedStatus)
                     ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.employee_status')
                     ->get();
             }
         } elseif ($this->selectedStatus == 'rejected') {
@@ -199,13 +199,13 @@ class AttendanceRegularisationReport extends Component
                     ->whereDate('regularisation_dates.rejected_date', '>=', $this->fromDate)
                     ->whereDate('regularisation_dates.rejected_date', '<=', $this->toDate)
                     ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.employee_status')
                     ->get();
             } else {
                 $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
                     ->where('regularisation_dates.status', $this->selectedStatus)
                     ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
+                    ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.employee_status')
                     ->get();
             }
         }
