@@ -2,37 +2,38 @@ pipeline {
     agent any
     environment {
         DEPLOY_DIR = 'C:\\xampp\\htdocs\\deploye_server'
+        GIT_URL = 'https://github.com/sssreddys/GreytHr.git'
+        GIT_BRANCH = 'main'
         GIT_PATH = 'C:\\Users\\SivaKumarSaragada\\AppData\\Local\\Programs\\Git\\cmd\\git.exe'
     }
     stages {
         stage('Create Directory') {
             steps {
-                script {
-                    // Create the deployment directory if it doesn't exist
-                    bat "if not exist \"${DEPLOY_DIR}\" mkdir \"${DEPLOY_DIR}\""
-                }
+                bat """
+                if not exist "${DEPLOY_DIR}" mkdir "${DEPLOY_DIR}"
+                """
             }
         }
         stage('Check and Update/Clone Repository') {
             steps {
                 script {
-                    dir(DEPLOY_DIR) {
-                        def repoExists = bat(script: "if exist .git (echo true) else (echo false)", returnStdout: true).trim()
-                        if (repoExists == 'true') {
-                            echo 'Repository exists. Pulling latest changes.'
-                            bat "\"${GIT_PATH}\" pull origin main"
-                        } else {
-                            def isEmptyDir = bat(script: "dir /a /b", returnStdout: true).trim() == ''
-                            if (isEmptyDir) {
-                                echo 'Directory is empty. Cloning repository.'
-                                bat "\"${GIT_PATH}\" clone -b main https://github.com/sssreddys/GreytHr.git ."
+                    def gitDirExists = fileExists("${DEPLOY_DIR}\\.git")
+                    if (gitDirExists) {
+                        dir("${DEPLOY_DIR}") {
+                            bat """
+                            "${env.GIT_PATH}" fetch --all
+                            "${env.GIT_PATH}" reset --hard origin/${GIT_BRANCH}
+                            """
+                        }
+                    } else {
+                        dir("${DEPLOY_DIR}") {
+                            def dirNotEmpty = bat(script: "if exist * (echo 1)", returnStatus: true) == 0
+                            if (dirNotEmpty) {
+                                error "Non-empty directory without repository found. Aborting."
                             } else {
-                                echo 'Directory is not empty. Cleaning up before cloning repository.'
-                                bat "del /Q *.*"
-                                bat "rmdir /Q /S ."
-                                bat "mkdir ."
-                                echo 'Cloning repository.'
-                                bat "\"${GIT_PATH}\" clone -b main https://github.com/sssreddys/GreytHr.git ."
+                                bat """
+                                "${env.GIT_PATH}" clone -b ${GIT_BRANCH} ${GIT_URL} .
+                                """
                             }
                         }
                     }
@@ -42,28 +43,22 @@ pipeline {
         stage('Prepare .env file') {
             steps {
                 script {
-                    dir(DEPLOY_DIR) {
-                        def envExists = bat(script: "if exist .env (echo true) else (echo false)", returnStdout: true).trim()
-                        if (envExists == 'false') {
-                            echo '.env file does not exist. Creating from .env.example.'
-                            bat 'copy .env.example .env'
-                        } else {
-                            echo '.env file already exists. Ensuring database configurations are present.'
-                            def envVars = [
-                                'DB_CONNECTION': 'mysql',
-                                'DB_HOST': 'localhost',
-                                'DB_PORT': '3306',
-                                'DB_DATABASE': 'greythr',
-                                'DB_USERNAME': 'root',
-                                'DB_PASSWORD': ''  // Provide the actual password
-                            ]
-
-                            envVars.each { key, value ->
-                                def keyExists = bat(script: "findstr /C:\"${key}=\" .env", returnStatus: true) == 0
-                                if (!keyExists) {
-                                    bat "echo ${key}=${value} >> .env"
-                                }
-                            }
+                    def envFileExists = fileExists("${DEPLOY_DIR}\\.env")
+                    if (!envFileExists) {
+                        bat """
+                        copy ${DEPLOY_DIR}\\.env.example ${DEPLOY_DIR}\\.env
+                        """
+                        def dbConfigExists = bat(script: "findstr /m \"DB_DATABASE\" ${DEPLOY_DIR}\\.env", returnStatus: true) == 0
+                        if (!dbConfigExists) {
+                            // Add your database configuration details here
+                            bat """
+                            echo DB_CONNECTION=mysql >> ${DEPLOY_DIR}\\.env
+                            echo DB_HOST=127.0.0.1 >> ${DEPLOY_DIR}\\.env
+                            echo DB_PORT=3306 >> ${DEPLOY_DIR}\\.env
+                            echo DB_DATABASE=your_database_name >> ${DEPLOY_DIR}\\.env
+                            echo DB_USERNAME=your_database_username >> ${DEPLOY_DIR}\\.env
+                            echo DB_PASSWORD=your_database_password >> ${DEPLOY_DIR}\\.env
+                            """
                         }
                     }
                 }
@@ -71,33 +66,31 @@ pipeline {
         }
         stage('Install dependencies and generate APP_KEY') {
             steps {
-                script {
-                    dir(DEPLOY_DIR) {
-                        bat 'composer install'
-                        bat 'php artisan key:generate'
-                    }
+                dir("${DEPLOY_DIR}") {
+                    bat """
+                    composer install
+                    php artisan key:generate
+                    """
                 }
             }
         }
         stage('Clear caches and run tests') {
             steps {
-                script {
-                    dir(DEPLOY_DIR) {
-                        bat 'php artisan optimize:clear'
-                        bat 'php artisan route:cache'
-                        bat 'php artisan view:cache'
-                        // Uncomment the following line to run tests
-                        // bat 'php artisan test'
-                    }
+                dir("${DEPLOY_DIR}") {
+                    bat """
+                    php artisan config:clear
+                    php artisan cache:clear
+                    php artisan route:clear
+                    php artisan view:clear
+                    php artisan test
+                    """
                 }
             }
         }
         stage('Run server') {
             steps {
-                script {
-                    dir(DEPLOY_DIR) {
-                        bat 'php artisan serve'
-                    }
+                dir("${DEPLOY_DIR}") {
+                    bat "php artisan serve"
                 }
             }
         }
