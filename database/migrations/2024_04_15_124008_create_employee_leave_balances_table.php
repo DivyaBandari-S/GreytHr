@@ -17,7 +17,7 @@ return new class extends Migration
             $table->json('leave_type')->nullable(); // Change to JSON
             $table->json('leave_balance')->default(json_encode([]));
             $table->string('status')->default('Granted');
-            $table->json('from_date')->default(json_encode([])); // JSON column for from dates
+            $table->json('from_date')->default(json_encode([]));
             $table->json('to_date')->default(json_encode([]));
             $table->timestamps();
             $table->foreign('emp_id')
@@ -25,7 +25,7 @@ return new class extends Migration
             ->on('employee_details')
             ->onDelete('cascade')
             ->onUpdate('cascade');
-            $table->unique(['emp_id', 'from_date', 'to_date']);
+            $table->unique(['emp_id']);
         });
     }
 
