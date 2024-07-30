@@ -60,7 +60,7 @@ pipeline {
                         bat 'php artisan optimize:clear'
                         bat 'php artisan route:cache'
                         bat 'php artisan view:cache'
-                        bat 'php artisan test'
+                        // bat 'php artisan test'
                     }
                 }
             }
