@@ -22,4 +22,14 @@ class Comment extends Model
     {
         return $this->belongsTo(EmployeeDetails::class, 'hr_emp_id', 'emp_id');
     }
+    public function interacted()
+    {
+        return $this->belongsTo(Comment::class);
+    }
+
+    // Accessor to calculate interacted_count
+    public function getInteractedCountAttribute()
+    {
+        return $this->interacted->count();
+    }
 }
