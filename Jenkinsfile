@@ -17,7 +17,7 @@ pipeline {
         stage('Check and Update/Clone Repository') {
             steps {
                 script {
-                    def gitDirExists = fileExists("${DEPLOY_DIR}\\.git")
+                    def gitDirExists = fileExists("${DEPLOY_DIR}\\\\.git")
                     if (gitDirExists) {
                         dir("${DEPLOY_DIR}") {
                             bat """
@@ -26,17 +26,18 @@ pipeline {
                             """
                         }
                     } else {
-                        dir("${DEPLOY_DIR}") {
-                            def dirNotEmpty = bat(script: "if exist * (echo 1)", returnStatus: true) == 0
-                            if (dirNotEmpty) {
-                                bat "del /Q ${DEPLOY_DIR}\\*.*"
-                                bat "rmdir /S /Q ${DEPLOY_DIR}"
-                                bat "mkdir ${DEPLOY_DIR}"
-                            }
+                        def dirNotEmpty = bat(script: "if exist ${DEPLOY_DIR}\\* (echo 1)", returnStatus: true) == 0
+                        if (dirNotEmpty) {
                             bat """
-                            "${env.GIT_PATH}" clone -b ${GIT_BRANCH} ${GIT_URL} .
+                            timeout /t 10
+                            del /Q ${DEPLOY_DIR}\\*.*
+                            rmdir /S /Q ${DEPLOY_DIR}
                             """
                         }
+                        bat """
+                        mkdir ${DEPLOY_DIR}
+                        "${env.GIT_PATH}" clone -b ${GIT_BRANCH} ${GIT_URL} ${DEPLOY_DIR}
+                        """
                     }
                 }
             }
@@ -44,21 +45,20 @@ pipeline {
         stage('Prepare .env file') {
             steps {
                 script {
-                    def envFileExists = fileExists("${DEPLOY_DIR}\\.env")
+                    def envFileExists = fileExists("${DEPLOY_DIR}\\\\.env")
                     if (!envFileExists) {
                         bat """
-                        copy ${DEPLOY_DIR}\\.env.example ${DEPLOY_DIR}\\.env
+                        copy ${DEPLOY_DIR}\\\\.env.example ${DEPLOY_DIR}\\\\.env
                         """
-                        def dbConfigExists = bat(script: "findstr /m \"DB_DATABASE\" ${DEPLOY_DIR}\\.env", returnStatus: true) == 0
+                        def dbConfigExists = bat(script: "findstr /m \"DB_DATABASE\" ${DEPLOY_DIR}\\\\.env", returnStatus: true) == 0
                         if (!dbConfigExists) {
-                            // Add your database configuration details here
                             bat """
-                            echo DB_CONNECTION=mysql >> ${DEPLOY_DIR}\\.env
-                            echo DB_HOST=127.0.0.1 >> ${DEPLOY_DIR}\\.env
-                            echo DB_PORT=3306 >> ${DEPLOY_DIR}\\.env
-                            echo DB_DATABASE=your_database_name >> ${DEPLOY_DIR}\\.env
-                            echo DB_USERNAME=your_database_username >> ${DEPLOY_DIR}\\.env
-                            echo DB_PASSWORD=your_database_password >> ${DEPLOY_DIR}\\.env
+                            echo DB_CONNECTION=mysql >> ${DEPLOY_DIR}\\\\.env
+                            echo DB_HOST=127.0.0.1 >> ${DEPLOY_DIR}\\\\.env
+                            echo DB_PORT=3306 >> ${DEPLOY_DIR}\\\\.env
+                            echo DB_DATABASE=your_database_name >> ${DEPLOY_DIR}\\\\.env
+                            echo DB_USERNAME=your_database_username >> ${DEPLOY_DIR}\\\\.env
+                            echo DB_PASSWORD=your_database_password >> ${DEPLOY_DIR}\\\\.env
                             """
                         }
                     }
@@ -91,7 +91,7 @@ pipeline {
         stage('Run server') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    bat "php artisan serve"
+                    bat 'php artisan serve'
                 }
             }
         }
