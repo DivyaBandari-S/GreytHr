@@ -295,7 +295,7 @@
                                                     </li>
                                                     <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
                                                         class="nav-item">
-                                                        <a class="nav-link" href="/holiday-calendar"
+                                                        <a class="nav-link" href="/holiday-calender"
                                                             onclick="setActiveLink(this)">
                                                             Holiday Calendar
                                                         </a>
@@ -697,7 +697,7 @@
                                                     </li>
                                                     <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
                                                         class="nav-item">
-                                                        <a class="nav-link" href="/holiday-calendar"
+                                                        <a class="nav-link" href="/holiday-calender"
                                                             onclick="setActiveLink(this)">
                                                             Holiday Calendar
                                                         </a>
@@ -1083,8 +1083,8 @@
                                                         </a>
                                                     </li>
                                                     <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/holiday-calendar"
-                                                            onclick="setActiveLink(this, '/holiday-calendar')">
+                                                        <a class="nav-link" href="/holiday-calender"
+                                                            onclick="setActiveLink(this, '/holiday-calender')">
                                                             Holiday Calendar
                                                         </a>
                                                     </li>
