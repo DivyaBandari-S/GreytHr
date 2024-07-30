@@ -29,12 +29,13 @@ pipeline {
                         dir("${DEPLOY_DIR}") {
                             def dirNotEmpty = bat(script: "if exist * (echo 1)", returnStatus: true) == 0
                             if (dirNotEmpty) {
-                                error "Non-empty directory without repository found. Aborting."
-                            } else {
-                                bat """
-                                "${env.GIT_PATH}" clone -b ${GIT_BRANCH} ${GIT_URL} .
-                                """
+                                bat "del /Q ${DEPLOY_DIR}\\*.*"
+                                bat "rmdir /S /Q ${DEPLOY_DIR}"
+                                bat "mkdir ${DEPLOY_DIR}"
                             }
+                            bat """
+                            "${env.GIT_PATH}" clone -b ${GIT_BRANCH} ${GIT_URL} .
+                            """
                         }
                     }
                 }
