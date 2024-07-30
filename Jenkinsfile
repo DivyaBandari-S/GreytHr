@@ -1,12 +1,12 @@
 pipeline {
     agent any
     environment {
-        DEPLOY_DIR = 'C:\\xampp\\htdocs\\your_project_directory'
+        DEPLOY_DIR = 'C:\\xampp\\htdocs\\deploye_server'
     }
     stages {
         stage('Clone repository') {
             steps {
-                git 'https://your-repo-url.git'
+                git 'https://github.com/sssreddys/GreytHr.git'
             }
         }
         stage('Prepare .env file') {
