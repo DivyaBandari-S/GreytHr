@@ -62,7 +62,6 @@ class SalaryRevision extends Model
 
     public function calculateHRA()
     {
-
         return ($this->basic * 0.4); // 40% of basic as HRA
     }
 

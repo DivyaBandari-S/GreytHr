@@ -123,7 +123,7 @@
 
                 @if($showApplyingTo)
                 <div class="form-group" style="margin-top: 10px;">
-                    <div style="display:flex; flex-direction:row;" wire:click="applyingTo">
+                    <div style="display:flex; flex-direction:row;">
                         <label for="applyingToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500; cursor: pointer;">
                             <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
                             Applying To
@@ -267,7 +267,7 @@
             </div>
             <div class="form-group">
                 <label for="reason" style="color: #778899; font-size: 12px; font-weight: 500;">Reason for Leave</label>
-                <textarea class="form-control" wire:model="reason" id="reason" name="reason" placeholder="Enter Reason" rows="4"></textarea>
+                <textarea class="form-control placeholder-small" wire:model="reason" id="reason" name="reason" placeholder="Enter Reason" rows="4"></textarea>
                 @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
 

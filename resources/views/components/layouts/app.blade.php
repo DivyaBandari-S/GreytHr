@@ -120,7 +120,6 @@
 @else
 
     <body>
-        <livewire:loading-indicator />
         <div>
             <div class="row m-0 p-0 " style="height: 100vh;background:#f5f5f5;">
 
@@ -295,7 +294,7 @@
                                                     </li>
                                                     <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
                                                         class="nav-item">
-                                                        <a class="nav-link" href="/holiday-calender"
+                                                        <a class="nav-link" href="/holiday-calendar"
                                                             onclick="setActiveLink(this)">
                                                             Holiday Calendar
                                                         </a>
@@ -697,7 +696,7 @@
                                                     </li>
                                                     <li data-bs-toggle="modal" data-bs-target="#navigateLoader"
                                                         class="nav-item">
-                                                        <a class="nav-link" href="/holiday-calender"
+                                                        <a class="nav-link" href="/holiday-calendar"
                                                             onclick="setActiveLink(this)">
                                                             Holiday Calendar
                                                         </a>
@@ -1083,8 +1082,8 @@
                                                         </a>
                                                     </li>
                                                     <li data-bs-target="#navigateLoader" class="nav-item">
-                                                        <a class="nav-link" href="/holiday-calender"
-                                                            onclick="setActiveLink(this, '/holiday-calender')">
+                                                        <a class="nav-link" href="/holiday-calendar"
+                                                            onclick="setActiveLink(this, '/holiday-calendar')">
                                                             Holiday Calendar
                                                         </a>
                                                     </li>
@@ -1331,24 +1330,6 @@
 
             </div>
 
-        <!-- Modal -->
-        <div class="modal  backdropModal" id="navigateLoader" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="navigateLoaderLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content" style="background-color : transparent; border : none">
-                    <!-- <div class="modal-header">
-            <h1 class="modal-title fs-5" id="navigateLoaderLabel">Modal title</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div> -->
-
-                    <!-- <div class="modal-body">
-                    </div> -->
-                    <!-- <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Understood</button>
-        </div> -->
-                </div>
-            </div>
-        </div>
 
     </div>
 

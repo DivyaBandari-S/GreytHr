@@ -2515,11 +2515,27 @@ input[type="radio"] {
     overflow: hidden;
     text-overflow: ellipsis;
     color: #36454f;
-    font-size: 0.75rem;
     font-weight: 500;
     white-space: nowrap;
 }
-
+.category-type-hide{
+    display: inline-block;
+    font-size: 0.75rem;
+    max-width: 110px; /* Adjust this value as needed */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #778899;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.totalRequestCount{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: #778899;
+    font-weight: 500;
+}
 .attach-icon {
     display: inline-block;
     cursor: pointer;
