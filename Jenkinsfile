@@ -70,7 +70,7 @@ pipeline {
                 script {
                     // Run server command from the repo directory
                     dir(DEPLOY_DIR) {
-                        bat 'php artisan serve --host=0.0.0.0 --port=8000'
+                        bat 'php artisan serve'
                     }
                 }
             }
