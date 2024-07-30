@@ -8,10 +8,15 @@
                             <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                  Pending With
                             </span>
-                                    <span style="color: #333; font-weight: 500;font-size:12px; text-transform:uppercase;">
-                                       {{$ManagerName->first_name}}&nbsp;{{$ManagerName->last_name}}
+                                @if($ManagerName)
+                                    <span style="color: #333; font-weight: 500;font-size:12px;">
+                                       {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
                                     </span>
-                                
+                                @else
+                                    <span style="color: #333; font-weight: 500;font-size:12px; ">
+                                         Manager Details Not Available
+                                    </span>
+                                @endif
                         </div>
  
                      <div>
@@ -59,10 +64,15 @@
                 <h5 style="color: #333; font-size: 12px; font-weight: 400; text-align:start;">
                     
                         Pending <br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">with</span>
-                        <span style="color: #778899; font-weight: 500; text-transform: uppercase;">
-                           {{$ManagerName->first_name}}&nbsp;{{$ManagerName->last_name}}
-                        </span>
-                    
+                        @if($ManagerName)
+                            <span style="color: #778899; font-weight: 500; ">
+                            {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
+                            </span>
+                        @else
+                           <span style="color: #778899; font-weight: 500;">
+                             Manager Details Not Available
+                            </span>
+                        @endif
                     <br>
                     
                 </h5>
