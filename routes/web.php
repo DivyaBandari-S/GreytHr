@@ -319,7 +319,6 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/chat/{query}',Chat::class)->name('chat');
     Route::get('/users',EmployeeList::class)->name('employee');
     Route::get('/image',ImageUpload::class)->name('image');
-    Route::get('/loader',LoadingIndicator::class)->name('loader');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 
