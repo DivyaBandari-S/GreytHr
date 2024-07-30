@@ -22,8 +22,14 @@ pipeline {
                             echo 'Repository exists. Pulling latest changes.'
                             bat "\"${GIT_PATH}\" pull origin main"
                         } else {
-                            echo 'Repository does not exist. Cloning repository.'
-                            bat "\"${GIT_PATH}\" clone -b main https://github.com/sssreddys/GreytHr.git ."
+                            def isEmptyDir = bat(script: "dir /b", returnStdout: true).trim() == ''
+                            if (isEmptyDir) {
+                                echo 'Directory is empty. Cloning repository.'
+                                bat "\"${GIT_PATH}\" clone -b main https://github.com/sssreddys/GreytHr.git ."
+                            } else {
+                                echo 'Directory is not empty and repository is missing. Aborting.'
+                                error('Non-empty directory without repository found.')
+                            }
                         }
                     }
                 }
