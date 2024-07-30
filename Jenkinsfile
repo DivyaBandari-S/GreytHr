@@ -37,7 +37,8 @@ pipeline {
                         if (envExists == 'false') {
                             echo '.env file does not exist. Creating from .env.example.'
                             bat 'copy .env.example .env'
-
+                        } else {
+                            echo '.env file already exists. Ensuring database configurations are present.'
                             def envVars = [
                                 'DB_CONNECTION': 'mysql',
                                 'DB_HOST': 'localhost',
@@ -49,14 +50,10 @@ pipeline {
 
                             envVars.each { key, value ->
                                 def keyExists = bat(script: "findstr /C:\"${key}=\" .env", returnStatus: true) == 0
-                                if (keyExists) {
-                                    bat "powershell -Command \"(Get-Content .env) -replace '^${key}=.*', '${key}=${value}' | Set-Content .env\""
-                                } else {
+                                if (!keyExists) {
                                     bat "echo ${key}=${value} >> .env"
                                 }
                             }
-                        } else {
-                            echo '.env file already exists.'
                         }
                     }
                 }
