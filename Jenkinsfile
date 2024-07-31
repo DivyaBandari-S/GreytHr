@@ -6,30 +6,25 @@ pipeline {
         GIT_BRANCH = 'main'
         GIT_PATH = 'C:\\Program Files\\Git\\cmd\\git.exe'
         // GIT_PATH = 'C:\\Users\\SivaKumarSaragada\\AppData\\Local\\Programs\\Git\\cmd\\git.exe'
-        PATH = "${GIT_PATH};C:\\xampp\\php;C:\\path\\to\\composer\\bin;%PATH%"
     }
     stages {
         stage('Create Directory') {
             steps {
-                script {
-                    if (!fileExists("${DEPLOY_DIR}")) {
-                        bat "mkdir ${DEPLOY_DIR}"
-                    }
-                }
+                bat """
+                if not exist "${DEPLOY_DIR}" mkdir "${DEPLOY_DIR}"
+                """
             }
         }
         stage('Check and Update/Clone Repository') {
             steps {
                 script {
-                    def gitDirExists = fileExists("${DEPLOY_DIR}\\.git")
+                    def gitDirExists = fileExists("${DEPLOY_DIR}\\\\.git")
                     if (gitDirExists) {
                         dir("${DEPLOY_DIR}") {
-                            timeout(time: 10, unit: 'MINUTES') {
-                                bat """
-                                ${GIT_PATH} fetch --all
-                                ${GIT_PATH} reset --hard origin/${GIT_BRANCH}
-                                """
-                            }
+                            bat """
+                            "${env.GIT_PATH}" fetch --all
+                            "${env.GIT_PATH}" reset --hard origin/${GIT_BRANCH}
+                            """
                         }
                     } else {
                         def dirNotEmpty = bat(script: "if exist ${DEPLOY_DIR}\\* (echo 1)", returnStatus: true) == 0
@@ -40,12 +35,10 @@ pipeline {
                             rmdir /S /Q ${DEPLOY_DIR}
                             """
                         }
-                        timeout(time: 10, unit: 'MINUTES') {
-                            bat """
-                            mkdir ${DEPLOY_DIR}
-                            ${GIT_PATH} clone -b ${GIT_BRANCH} ${GIT_URL} ${DEPLOY_DIR}
-                            """
-                        }
+                        bat """
+                        mkdir ${DEPLOY_DIR}
+                        "${env.GIT_PATH}" clone -b ${GIT_BRANCH} ${GIT_URL} ${DEPLOY_DIR}
+                        """
                     }
                 }
             }
@@ -53,11 +46,15 @@ pipeline {
         stage('Prepare .env file') {
             steps {
                 script {
-                    def envFileExists = fileExists("${DEPLOY_DIR}\\.env")
+                    def envFileExists = fileExists("${DEPLOY_DIR}\\\\.env")
                     if (envFileExists) {
-                        bat "del /Q ${DEPLOY_DIR}\\.env"
+                        bat """
+                        del /Q ${DEPLOY_DIR}\\\\.env
+                        """
                     }
-                    bat "copy ${DEPLOY_DIR}\\.env.example ${DEPLOY_DIR}\\.env"
+                    bat """
+                    copy ${DEPLOY_DIR}\\\\.env.example ${DEPLOY_DIR}\\\\.env
+                    """
                 }
             }
         }
