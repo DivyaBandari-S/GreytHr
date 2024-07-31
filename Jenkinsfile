@@ -20,11 +20,13 @@ pipeline {
                 script {
                     def gitDirExists = fileExists("${DEPLOY_DIR}\\\\.git")
                     if (gitDirExists) {
-                        dir("${DEPLOY_DIR}") {
-                            bat """
-                            "${env.GIT_PATH}" fetch --all
-                            "${env.GIT_PATH}" reset --hard origin/${GIT_BRANCH}
-                            """
+                         dir("${DEPLOY_DIR}") {
+                            timeout(time: 10, unit: 'MINUTES') {
+                                bat """
+                                git fetch --all
+                                git reset --hard origin/${GIT_BRANCH}
+                                """
+                            }
                         }
                     } else {
                         def dirNotEmpty = bat(script: "if exist ${DEPLOY_DIR}\\* (echo 1)", returnStatus: true) == 0
@@ -35,10 +37,12 @@ pipeline {
                             rmdir /S /Q ${DEPLOY_DIR}
                             """
                         }
-                        bat """
-                        mkdir ${DEPLOY_DIR}
-                        "${env.GIT_PATH}" clone -b ${GIT_BRANCH} ${GIT_URL} ${DEPLOY_DIR}
-                        """
+                       timeout(time: 10, unit: 'MINUTES') {
+                            bat """
+                            mkdir ${DEPLOY_DIR}
+                            git clone -b ${GIT_BRANCH} ${GIT_URL} ${DEPLOY_DIR}
+                            """
+                        }
                     }
                 }
             }
