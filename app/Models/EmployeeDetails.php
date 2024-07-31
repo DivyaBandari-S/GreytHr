@@ -27,6 +27,7 @@ class EmployeeDetails extends Authenticatable
         'image',
         'gender',
         'email',
+        'image',
         'hire_date',
         'employee_type',
         'job_role',

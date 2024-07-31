@@ -37,6 +37,7 @@ return new class extends Migration
             $table->string('company_name')->nullable();
             $table->string('designation')->nullable();
             $table->string('experience')->nullable();
+            $table->string('skill_set')->nullable();
             $table->text('present_address')->nullable();
             $table->text('permenant_address')->nullable();
             $table->string('passport_no')->unique()->nullable();

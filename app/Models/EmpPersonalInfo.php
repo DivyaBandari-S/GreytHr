@@ -43,7 +43,8 @@
             'facebook',
             'twitter',
             'linked_in',
-            'status'
+            'status',
+            'skill_set',
 
         ];
     }
