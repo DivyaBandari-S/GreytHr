@@ -1,5 +1,4 @@
 <div>
-<x-loading-indicator />
     <div class="row m-0">
         @if (session()->has('message'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">

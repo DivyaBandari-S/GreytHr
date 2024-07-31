@@ -1,5 +1,5 @@
 <?php
-// File Name                       : ApprovedDetails.php
+// File Name                       : vdDetails.php
 // Description                     : This file contains the implementation of the Approved leave applications details in detail.....,
 // Creator                         : Bandari Divya
 // Email                           : bandaridivya1@gmail.com

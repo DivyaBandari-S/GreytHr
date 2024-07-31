@@ -22,9 +22,18 @@ class GrantLeaveBalance extends Component
 
     public function mount()
     {
-        // Fetch the employee IDs from the database
-        $loggedInCompanyId = auth()->guard('hr')->user()->company_id;
-        $this->employeeIds = EmployeeDetails::where('company_id', $loggedInCompanyId)->pluck('emp_id')->toArray();
+        // Step 1: Retrieve the logged-in user's emp_id
+        $loggedInEmpID = auth()->guard('hr')->user()->emp_id;
+
+        // Step 2: Retrieve the company_id associated with the logged-in emp_id
+        $companyID = EmployeeDetails::where('emp_id', $loggedInEmpID)
+            ->pluck('company_id')
+            ->first(); // Assuming company_id is unique for emp_id
+
+        // Step 3: Fetch all emp_id values where company_id matches the logged-in user's company_id
+        $this->employeeIds = EmployeeDetails::where('company_id', $companyID)
+            ->pluck('emp_id')
+            ->toArray();
     }
 
     public function openEmployeeIds()
@@ -53,8 +62,8 @@ class GrantLeaveBalance extends Component
         $this->validate([
             'selectedEmpIds' => 'required|array|min:1',
             'selectedEmpIds.*' => 'exists:employee_details,emp_id',
-            'leave_type' => 'required',
-            'leave_balance' => 'required|integer',
+            'leave_type' => 'required|string',
+            'leave_balance' => 'required|integer|min:0',
             'from_date' => 'required|date',
             'to_date' => 'required|date|after_or_equal:from_date',
         ]);
@@ -64,11 +73,16 @@ class GrantLeaveBalance extends Component
                 $leaveBalance = EmployeeLeaveBalances::where('emp_id', $emp_id)->first();
 
                 if ($leaveBalance) {
-                    // Update existing record
-                    $leaveTypes = json_decode($leaveBalance->leave_type, true) ?? [];
-                    $leaveBalances = json_decode($leaveBalance->leave_balance, true) ?? [];
-                    $fromDates = json_decode($leaveBalance->from_date, true) ?? [];
-                    $toDates = json_decode($leaveBalance->to_date, true) ?? [];
+                    // Decode JSON data to ensure it's an array
+                    $leaveTypes = $leaveBalance->leave_type ?? [];
+                    $leaveBalances = $leaveBalance->leave_balance ?? [];
+                    $fromDates = $leaveBalance->from_date ?? [];
+                    $toDates = $leaveBalance->to_date ?? [];
+
+                    // Ensure leaveTypes is an array
+                    if (!is_array($leaveTypes)) {
+                        $leaveTypes = [];
+                    }
 
                     // Update leave types and balances
                     if (!in_array($this->leave_type, $leaveTypes)) {
@@ -79,34 +93,34 @@ class GrantLeaveBalance extends Component
                     $toDates[] = $this->to_date;
 
                     $leaveBalance->update([
-                        'leave_type' => json_encode($leaveTypes),
-                        'leave_balance' => json_encode($leaveBalances),
-                        'from_date' => json_encode($fromDates),
-                        'to_date' => json_encode($toDates),
+                        'leave_type' => $leaveTypes, // No need to encode manually
+                        'leave_balance' => $leaveBalances, // No need to encode manually
+                        'from_date' => $fromDates, // No need to encode manually
+                        'to_date' => $toDates, // No need to encode manually
                     ]);
-
                 } else {
                     // Create new record
                     EmployeeLeaveBalances::create([
                         'emp_id' => $emp_id,
-                        'leave_type' => json_encode([$this->leave_type]),
-                        'leave_balance' => json_encode([$this->leave_type => $this->leave_balance]),
-                        'from_date' => json_encode([$this->from_date]),
-                        'to_date' => json_encode([$this->to_date]),
+                        'leave_type' => [$this->leave_type], // Laravel will encode this as JSON
+                        'leave_balance' => [$this->leave_type => $this->leave_balance], // Laravel will encode this as JSON
+                        'from_date' => [$this->from_date], // Laravel will encode this as JSON
+                        'to_date' => [$this->to_date], // Laravel will encode this as JSON
                     ]);
                 }
 
                 // Flash success message
-                session()->flash('success', 'Leave balances updated successfully.');
+                session()->flash('success', 'Leave balances added successfully.');
             } catch (QueryException $e) {
                 if ($e->errorInfo[1] == 1062) {
-                    // Handle the duplicate entry error here
+                    session()->flash('error', 'Leaves have already been added for the selected employee(s).');
+                } else {
                     session()->flash('error', 'An error occurred while updating leave balances.');
                 }
+                return; // Exit on error
             }
         }
 
-        // Redirect after processing
         return redirect()->to('/addLeaves');
     }
 
