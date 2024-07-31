@@ -1,11 +1,13 @@
 @charset "UTF-8";
-
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+
+ /* bootstarp v5 downolad */
 :root {
     --heading-color: #3b4452;
     --requiredAlert: red;
@@ -419,16 +421,11 @@ body {
 }
 
 /* Icons */
-.icon {
-    font-size: 1.25rem;
-    color: #333;
-    cursor: pointer;
-    margin-left: 10px;
-}
 
+/*
 .icon:hover {
     color: #007bff;
-}
+} */
 
 .priority-container {
     display: flex;
@@ -778,7 +775,7 @@ button.close-button {
     border-radius: 50%;
     margin-left: 13px;
 }
-.people-detail-container:hover{
+.people-detail-container:hover {
     background-color: #f3faff !important;
 }
 
@@ -856,12 +853,8 @@ button.close-button {
     color: black !important;
 }
 
-.nav-link:hover {
-    background-color: #e9ebf1;
-    border-radius: 5px;
-    color: black !important;
-    /* padding: 0 auto; */
-    margin: 2px auto;
+.nav-link {
+    padding: 0px;
 }
 .nav-link i:hover {
     color: black !important;
@@ -936,7 +929,6 @@ button.close-button {
     position: relative;
     display: inline-block;
     color: #778899;
-    width: 10%;
     /* border:1px solid #ccc; */
     background: transparent;
     outline: none;
@@ -1497,7 +1489,7 @@ input[type="date"]::before {
 .employee-swipes-table th,
 td {
     padding: 10px;
-    width: 100%;
+    /* width: 100%; */
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
@@ -1759,9 +1751,9 @@ td {
 td {
     font-size: 0.795rem;
 }
-.table tbody td {
-    border-right: 1px solid #d5d5d5; /* Vertical border color and width */
-}
+/* .table tbody td {
+    border-right: 1px solid #d5d5d5;
+} */
 
 /* Remove right border for the last cell in each row to avoid extra border */
 .summary-attendance-muster.table tbody tr td:last-child {
@@ -1819,29 +1811,29 @@ td {
     color: #778899; /* Placeholder text color */
     font-size: 12px;
     font-family: "Montserrat", sans-serif;
-    font-weight:normal;
+    font-weight: normal;
 }
 #category::placeholder {
     color: #778899; /* Placeholder text color */
     font-size: 12px; /* Placeholder font size */
     font-family: "Montserrat", sans-serif;
-    font-weight:normal;
+    font-weight: normal;
 }
 #subject::placeholder {
     color: #778899; /* Placeholder text color */
     font-size: 12px; /* Placeholder font size */
     font-family: "Montserrat", sans-serif;
-    font-weight:normal;
+    font-weight: normal;
 }
 #description::placeholder {
-    font-weight:normal;
+    font-weight: normal;
     color: #778899; /* Placeholder text color */
     font-size: 12px; /* Placeholder font size */
     font-family: "Montserrat", sans-serif;
 }
 
 .search-button {
-    background-color:rgb(2, 17, 79);
+    background-color: rgb(2, 17, 79);
     color: #fff;
     border: none;
     padding: 10px 15px;
@@ -2165,6 +2157,9 @@ input[type="radio"] {
     font-size: 14px;
     transition: color 0.3s;
 }
+.leaveDropDown{
+    width: 50%; font-weight: 400; color: #778899; font-size: 12px;border:1px solid #ccc;
+}
 /* Define custom tabs for CSS classes */
 .custom-nav-tabs {
     margin-top: 10px;
@@ -2210,15 +2205,16 @@ input[type="radio"] {
 .custom-item a {
     text-decoration: none !important;
 }
-.alert-success{
+.alert-success {
     font-size: 12px;
     padding: 7px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-.alert-danger{
-    font-size: 12px;    padding: 7px 10px;
+.alert-danger {
+    font-size: 12px;
+    padding: 7px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -2231,7 +2227,6 @@ input[type="radio"] {
 }
 
 .containerWidth {
-    width: 85% !important;
     margin: 0 auto;
 }
 
@@ -2271,8 +2266,11 @@ input[type="radio"] {
         margin-top: 20px !important;
     }
     .containerWidth {
-        width: 100% ;
+        width: 100% !important;
         margin: 0 auto;
+    }
+    .leaveDropDown{
+        width: 100%;
     }
 }
 .applyingFor {
@@ -2339,6 +2337,7 @@ input[type="radio"] {
     background-color: rgb(2, 17, 79);
     border-radius: 0 5px 5px 0;
     color: #fff;
+    width: 40px;
     border: none;
     align-items: center;
     display: flex;
@@ -2518,7 +2517,7 @@ input[type="radio"] {
     font-weight: 500;
     white-space: nowrap;
 }
-.category-type-hide{
+.category-type-hide {
     display: inline-block;
     font-size: 0.75rem;
     max-width: 110px; /* Adjust this value as needed */
@@ -2528,7 +2527,7 @@ input[type="radio"] {
     font-weight: 500;
     white-space: nowrap;
 }
-.totalRequestCount{
+.totalRequestCount {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -2809,7 +2808,7 @@ input[type="radio"] {
     font-weight: 600;
     font-size: 0.875rem;
 }
-.no-holidays h6{
+.no-holidays h6 {
     color: #778899 !important;
     font-weight: 500 !important;
 }
@@ -2892,6 +2891,9 @@ input[type="radio"] {
     border-bottom: 1px solid #ccc;
     padding-bottom: 10px;
 }
+.leavePageContent{
+    padding: 10px;
+}
 @media screen and (max-width: 1060px) {
     .detail-container {
         width: 100%;
@@ -2925,11 +2927,16 @@ input[type="radio"] {
         display: flex;
         flex-direction: column;
     }
+
 }
-@media screen and (max-width: 4a60px) {
+@media screen and (max-width: 460px) {
     .leave {
         display: flex;
         flex-direction: column;
+    }
+    .leavePageContent{
+        padding: 0;
+        margin: 0;
     }
 }
 /* //end of leave-history styles */
@@ -3121,7 +3128,7 @@ input[type="radio"] {
     margin-top: 20px;
     overflow-y: auto;
 }
-.headerMonth{
+.headerMonth {
     text-align: center;
     display: flex;
     align-items: center;
@@ -3129,7 +3136,7 @@ input[type="radio"] {
     background-color: rgb(2, 17, 79);
     padding: 8px 10px;
 }
-.headerMonth h6{
+.headerMonth h6 {
     color: #fff;
 }
 
@@ -3762,7 +3769,7 @@ select .yearSelect {
 }
 @media (max-width: 760px) {
     .accordion {
-        width: 65%;
+        width: 100%;
         top: auto;
         right: auto;
         margin-top: 20px;
@@ -4396,8 +4403,8 @@ option {
 .notification-horizontal-line {
     border-bottom: 1px solid #ccc;
 }
-.leave-request-container{
-    text-decoration:none;
+.leave-request-container {
+    text-decoration: none;
 }
 /* notification css styles ended */
 .my-daterange-timesheet .month {
@@ -4427,7 +4434,7 @@ option {
 
 /* Style the logout icon */
 .logout-icon-container i {
-    color: #fff;
+    color: #000;
     font-size: 15px;
     transition: color 0.3s ease;
 }
@@ -4590,9 +4597,6 @@ option {
     pointer-events: none; /* Ensure the arrow doesn't interfere with select clicks */
 }
 
-
-
-
 .delegate-table {
     width: 100%;
     border-collapse: collapse;
@@ -4607,7 +4611,7 @@ option {
 }
 
 .delegate-cell {
-    border: 1px solid #8D939D;
+    border: 1px solid #8d939d;
     font-size: 8px;
     text-align: center;
     padding: 5px;
@@ -4618,15 +4622,17 @@ option {
 }
 .ytd-table {
     width: 100%;
-    font-size:10px;
+    font-size: 10px;
     border-collapse: collapse;
     border: 1px solid #ccc; /* Table border */
 }
 
-.ytd-header, .ytd-name, .ytd-value {
+.ytd-header,
+.ytd-name,
+.ytd-value {
     text-align: center;
     padding: 10px;
-    font-size:10px;
+    font-size: 10px;
     border: 1px solid #ccc; /* Cell border */
 }
 .d-flex {
