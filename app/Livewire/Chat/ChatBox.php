@@ -67,7 +67,7 @@ class ChatBox extends Component
     public function broadcastedNotifications($event)
     {
 
-               dd('hello.........');
+             
 
         if ($event['type'] == MessageSent::class) {
 
@@ -177,33 +177,19 @@ class ChatBox extends Component
 
     public function sendMessage()
     {
-        if (!$this->selectedConversation) {
-            // Handle error when selectedConversation is null
-            return;
-        }
-
-        // Validate the input
         $this->validate([
             'body' => 'required|string|max:255',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // max 10MB
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960',
         ]);
-
-        // Check if there's an attachment
+    
         if ($this->attachment) {
-            // Generate a unique file name
             $fileName = uniqid() . '_' . $this->attachment->getClientOriginalName();
-
-            // Store the attachment
-            $this->attachment->storeAs('public/chating-files', $fileName);
-
-            // Save the file path
-            $filePath = 'storage/chating-files/' . $fileName;
+            $this->attachment->storeAs('public/uploads/chating-files', $fileName);
+            $filePath = 'chating-files' . $fileName;
         } else {
-            // No attachment provided
             $filePath = null;
         }
-
-        // Create a new message
+    
         $createdMessage = Message::create([
             'chating_id' => $this->selectedConversation->id,
             'sender_id' => auth()->user()->emp_id,
@@ -211,37 +197,24 @@ class ChatBox extends Component
             'file_path' => $filePath,
             'body' => $this->body,
         ]);
-
-        $this->reset('body');
-         #scroll to bottom
-         $this->dispatch('scroll-bottom');
-
-
-         #push the message
-         $this->loadedMessages->push($createdMessage);
-
-
-         #update conversation model
-         $this->selectedConversation->updated_at = now();
-         $this->selectedConversation->save();
-
-
-         #refresh chatlist
-         $this->dispatch('chat.chat-list', 'refresh');
-
-         #broadcast
-
-         $this->selectedConversation->getReceiver()
-             ->notify(new MessageSent(
-                 Auth()->User(),
-                 $createdMessage,
-                 $this->selectedConversation,
-                 $this->selectedConversation->getReceiver()->id
-
-             ));
+  
+        $this->resetInputFields();  // Reset input fields after sending a message
+    
+        $this->dispatch('scroll-bottom');
+        $this->loadedMessages->push($createdMessage);
+        $this->selectedConversation->updated_at = now();
+        $this->selectedConversation->save();
+        $this->dispatch('chat.chat-list', 'refresh');
+    
+        $this->selectedConversation->getReceiver()
+            ->notify(new MessageSent(
+                auth()->user(),
+                $createdMessage,
+                $this->selectedConversation,
+                $this->selectedConversation->getReceiver()->id
+            ));
     }
-
-    public function mount()
+        public function mount()
     {
 
 

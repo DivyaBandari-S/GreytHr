@@ -228,39 +228,39 @@
                         </div>
                         <div id="dropdownContent1" style="display: none;">
                             <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
-                                <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">All Feeds</a>
+                                <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">All Feeds</a>
                                 @if (Auth::guard('hr')->check())
                           
-        <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One </a>
+        <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Every One </a>
     @elseif (Auth::guard('emp')->check())
-        <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One </a>
+        <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Every One </a>
     @endif
 
 
 
     @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Events</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Events</a>
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Events</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Events</a>
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Company News</a>
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Company News</a>
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Company News</a>
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Company News</a>
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Appreciation</a>
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Appreciation</a>
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Appreciation</a>
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Buy/Sell/Rent</a>
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Buy/Sell/Rent</a>
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Buy/Sell/Rent</a>
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Buy/Sell/Rent</a>
 @endif
                             </ul>
                         </div>
@@ -277,84 +277,84 @@
                         </div>
                         <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
                             <ul style="font-size: 12px; margin: 0; padding: 0;">
-                                <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">India</b>
+                                <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none;font-weight:600">India</b>
                                 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Guntur</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none;">Guntur</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Guntur</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Guntur</a>
 
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hyderabad</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Hyderabad</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hyderabad</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Hyderabad</a>
  @endif      
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Doddaballapur</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Doddaballapur</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Doddaballapur</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Doddaballapur</a>
  @endif 
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Tirupati</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Tirupati</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Tirupati</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Tirupati</a>
  @endif      
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Adilabad</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Adilabad</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Adilabad</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Adilabad</a>
  @endif      
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Trivandrum</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Trivandrum</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Trivandrum</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Trivandrum</a>
  @endif      
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none;font-weight:600">USA</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none;font-weight:600">USA</a>
  @endif      
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">California</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">California</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">California</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">California</a>
  @endif
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">New York</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">New York</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">New York</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">New York</a>
  @endif      
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Alaska</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Alaska</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Alaska</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Alaska</a>
  @endif      
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hawaii</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Hawaii</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hawaii</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Hawaii</a>
  @endif                 
 
                             </ul>
@@ -374,48 +374,48 @@
                             <ul style="font-size: 12px; margin: 0; padding: 0;">
                             @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">HR</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">HR</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">HR</a>
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations Team</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">HR</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Operations Team</a>
 
 
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Operations</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Operations</a>
  @endif
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">QA</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">QA</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">QA</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">QA</a>
  @endif
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Production Team</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Production Team</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Production Team</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Production Team</a>
  @endif
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Sales Team</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Sales Team</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Sales Team</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Sales Team</a>
  @endif
  @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Testing Team</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Testing Team</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Testing Team</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;text-decoration:none">Testing Team</a>
  @endif
            
                          
@@ -514,7 +514,7 @@
                                     @foreach($lastTwoEmojis as $index => $emoji_reaction)
                                     <span style="font-size: 16px;">{{ $emoji_reaction->emoji_reaction }}</span>
                                     @if (!$loop->last)
-                                    <span>,</span>
+                                    <span></span>
                                     @endif
                                     @endforeach
 
@@ -845,7 +845,7 @@
                                     @foreach($lastTwoEmojis as $index => $emoji_reaction)
                                     <span style="font-size: 16px;">{{ $emoji_reaction->emoji_reaction }}</span>
                                     @if (!$loop->last)
-                                    <span>,</span>
+                                    <span></span>
                                     @endif
                                     @endforeach
 
@@ -1401,7 +1401,7 @@
   <div class="comment" style="font-size: 10px;">
       <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
       <p class="mb-0" style="font-size: 11px;">
-          {{ ucfirst($comment->comment) }}
+          {{ ucfirst($comment->addcomment) }}
       </p>
   </div>
 @elseif($comment->hr)
@@ -1419,14 +1419,14 @@
   <div class="comment" style="font-size: 10px;">
       <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
       <p class="mb-0" style="font-size: 11px;">
-          {{ ucfirst($comment->comment) }}
+          {{ ucfirst($comment->addcomment) }}
       </p>
   </div>
 @else
   <div class="comment" style="font-size: 10px;">
       <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
       <p class="mb-0" style="font-size: 11px;">
-          {{ ucfirst($comment->comment) }}
+          {{ ucfirst($comment->addcomment) }}
       </p>
   </div>
 @endif
@@ -1760,7 +1760,7 @@
                     <div class="comment" style="font-size: 10px;">
                         <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
                         <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
+                            {{ ucfirst($comment->addcomment) }}
                         </p>
                     </div>
                 @elseif ($comment->hr)
@@ -1778,14 +1778,14 @@
                     <div class="comment" style="font-size: 10px;">
                         <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
                         <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
+                            {{ ucfirst($comment->addcomment) }}
                         </p>
                     </div>
                 @else
                     <div class="comment" style="font-size: 10px;">
                         <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
                         <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
+                            {{ ucfirst($comment->addcomment) }}
                         </p>
                     </div>
                     @endif
@@ -1868,17 +1868,20 @@
     }
 
     .activities:hover {
-        background-color: #e1e7f0;
-        height: 30px;
+        background-color: #EDF3FF;
+        height: 40px;
         width: 100%;
-
+        align-items: center;
+        margin-top: -10px;
+         border-radius: 5px;
         cursor:pointer,
     }
 
     .posts:hover {
-        background-color: #e1e7f0;
-        height: 30px;
+        background-color: #EDF3FF;
+        height: 40px;
         width: 100%;
+        border-radius: 5px;
         cursor:pointer,
     }
 </style>
@@ -2178,9 +2181,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* Define CSS for the menu items on hover */
     .menu-item:hover {
-        background-color: #e1e7f0;
+        background-color:#EDF3FF;
         height: 30px;
         width: 130%;
+        border-radius:5px;
     }
 
     /* CSS for radio-wrapper */

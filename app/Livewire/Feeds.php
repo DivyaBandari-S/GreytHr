@@ -54,7 +54,7 @@ class Feeds extends Component
 
     public $comments = [];
    
-    public $sortType=['newest','interacted'];
+    public $sortType='newest';
     public $newComment = '';
     public $employeeDetails;
     public $isSubmitting = false;
