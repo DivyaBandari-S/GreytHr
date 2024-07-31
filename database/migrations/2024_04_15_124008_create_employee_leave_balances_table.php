@@ -17,8 +17,8 @@ return new class extends Migration
             $table->json('leave_type')->nullable(); // Change to JSON
             $table->json('leave_balance')->default(json_encode([]));
             $table->string('status')->default('Granted');
-            $table->json('from_date')->default(json_encode([])); // JSON column for from dates
-            $table->json('to_date')->default(json_encode([]));
+            $table->date('from_date')->nullable(); // Use DATE type instead of JSON
+            $table->date('to_date')->nullable(); 
             $table->timestamps();
             $table->foreign('emp_id')
             ->references('emp_id')
