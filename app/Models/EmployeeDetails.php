@@ -24,7 +24,6 @@ class EmployeeDetails extends Authenticatable
         'sub_department_id',
         'first_name',
         'last_name',
-        'image',
         'gender',
         'email',
         'image',
