@@ -35,7 +35,7 @@
                     <li><a href="/formdeclaration">IT Declaration</a></li>
                     <li><a href="/reimbursement">Reimbursement</a></li>
                     <li><a href="/investment">Proof of Investment</a></li>
-                    <li><a href="//salary-revision">Salary Revision</a></li>
+                    <li><a href="/salary-revision">Salary Revision</a></li>
                 </ul>
             </li>
             <li>
