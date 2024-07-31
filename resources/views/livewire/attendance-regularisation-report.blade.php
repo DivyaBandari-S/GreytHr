@@ -56,11 +56,18 @@
 
         </table>
         @endif
-        <div class="modal-footer" style="background-color: rgb(2, 17, 79); height: 50px">
-            <button type="button" style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;">Options</button>
-            <button type="button" style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;" wire:click="downloadAttendanceRegularisationReportInExcel">Run</button>
-            <button type="button" data-dismiss="modal" wire:click="closeAttendanceRegularisationReport" style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;">Close</button>
-        </div>
+        <div class="modal-footer mt-2"
+                            style="background-color: rgb(2, 17, 79); display: flex;justify-content: space-around;;">
+                            <button type="button"
+                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;">Options</button>
+                            <button type="button"
+                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
+                                wire:click="downloadAttendanceRegularisationReportInExcel">Run</button>
+                            <button type="button" data-dismiss="modal"
+                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
+                                wire:click='resetFields'>Clear</button>
+
+                        </div>
     </div>
     @endif
 </div>
