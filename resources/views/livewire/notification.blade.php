@@ -1,26 +1,24 @@
-<div class="d-flex align-items-center">
+<div class="d-flex align-items-center gap-3">
+
+    <div  id="notificationButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+        <a href="#" class="nav-link">
+            <i class='bx bxs-bell icon'></i>
+            @if ($totalnotificationscount > 0)
+            <span class="badge">{{$totalnotificationscount}}</span>
+            @endif
+        </a>
+    </div>
     <div>
-        <a href="/users" class="notification-anchor-tag">
-            <i class="fa fa-comment notification-comment-icon">
-                @if ($chatNotificationCount > 0)
-                <span class="badge bg-danger notification-badge">
-                    {{ $chatNotificationCount }}
-                </span>
-                @endif
+        <a href="/users" class="nav-link">
+            <i class='bx bxs-message-square-dots icon'></i>
+            @if ($chatNotificationCount > 0)
+            <span class="badge">
+                {{ $chatNotificationCount }}
+            </span>
+            @endif
 
             </i>
         </a>
-    </div>
-    <div class="notification-icon">
-        <button id="notificationButton" class="notification-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-            <i class="fas mr-1 fa-bell notification-bell-icon">
-                @if ($totalnotificationscount > 0)
-                <span id="notificationCount" class="badge bg-danger notification-badge">
-                    {{$totalnotificationscount}}
-                </span>
-                @endif
-            </i>
-        </button>
     </div>
     <div class="offcanvas offcanvas-end notification-detail-container " style="width: 300px;" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header d-flex justify-content-between align-items-center">
@@ -44,8 +42,7 @@
                             {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
                             (#{{ $notification->emp_id }})
                         </a></p>
-                        @if($notification->details_count>1 && $notification->details_count<=10 )
-                        <p class="mb-0 notification-text-para"> Has assigned {{$notification->details_count}} tasks to you.
+                    @if($notification->details_count>1 && $notification->details_count<=10 ) <p class="mb-0 notification-text-para"> Has assigned {{$notification->details_count}} tasks to you.
                         @elseif($notification->details_count>10)
                         <p class="mb-0 notification-text-para"> Has assigned 10+ tasks to you.</p>
                         @else

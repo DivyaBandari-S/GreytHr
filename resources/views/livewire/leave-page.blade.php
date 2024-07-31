@@ -1,4 +1,4 @@
-<div class="mx-2 px-4">
+<div class="leavePageContent">
     <div class="d-flex mt-2 mb-3 gap-4 align-items-center position-relative">
         <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
         <!-- leave-page.blade.php -->
@@ -214,7 +214,7 @@
                             </div>
 
                             <div class="arrow-btn">
-                                <i class="fa fa-angle-down"></i>
+                                <i class="bx bx-chevron-down"></i>
                             </div>
 
                         </div>
@@ -363,7 +363,7 @@
                             </div>
 
                             <div class="arrow-btn">
-                                <i class="fa fa-angle-down"></i>
+                                <i class="bx bx-chevron-down"></i>
                             </div>
 
                         </div>
