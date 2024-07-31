@@ -8,8 +8,6 @@
     {
         use HasFactory;
         protected $fillable = [
-
-
             'emp_id',
             'title',
             'first_name',
