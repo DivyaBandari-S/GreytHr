@@ -24,8 +24,10 @@ class EmployeeDetails extends Authenticatable
         'sub_department_id',
         'first_name',
         'last_name',
+        'image',
         'gender',
         'email',
+        'image',
         'hire_date',
         'employee_type',
         'job_role',
@@ -38,7 +40,6 @@ class EmployeeDetails extends Authenticatable
         'job_location',
         'is_starred',
         'status',
-        'skill_set',
         'job_mode',
         'resignation_date',
         'resignation_reason',
@@ -46,7 +47,8 @@ class EmployeeDetails extends Authenticatable
         'extension',
         'shift_type',
         'shift_start_time',
-        'shift_end_time'
+        'shift_end_time',
+        'emp_domain'
     ];
     public function empBankDetails()
     {

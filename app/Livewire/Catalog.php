@@ -365,10 +365,11 @@ class Catalog extends Component
     {
         $messages = [
             'subject.required' => 'Business Justification is required',
-            'distributor_name.required' => 'Distributor name required',
+            'distributor_name.required' => 'Distributor name is required',
             'description' => 'Specific Information is required',
             'mail.required' => ' Email  is required.',
             'mail.email' => ' Email must be a valid email address.',
+            'mobile' =>'Mobile number is required'
         ];
         $this->validate([
             'subject' => 'required|string|max:255',
@@ -418,15 +419,17 @@ class Catalog extends Component
 
         $messages=[
             'subject.required' => 'Business Justification is required',
-            'distributor_name.required' => 'Distributor name required',
+            'distributor_name.required' => 'Distributor name is required',
             'description' => 'Specific Information is required',
             'mail.required' => ' Email  is required.',
             'mail.email' => ' Email must be a valid email address.',
+            'mobile' =>'Mobile number is required'
         ];
         $this->validate([
             'subject' => 'required|string|max:255',
             'mail' => 'required|email|unique:help_desks',
             'description' => 'required|string',
+            'mobile' => 'required|string|max:15',
         ],$messages);
       
         try {
@@ -470,12 +473,14 @@ class Catalog extends Component
             'subject.required' => 'Business Justification is required',
             'distributor_name.required' => 'Distributor name required',
             'description' => 'Specific Information is required',
+            'mobile' =>'Mobile number is required'
         ];
 
         $this->validate([
             'distributor_name' => 'required|string',
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
+            'mobile' => 'required|string|max:15',
         ],$messages);
         try {
 

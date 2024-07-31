@@ -1870,10 +1870,19 @@ color: #fff;
                                 <tbody>
                                     <tr>
                                         <td>
-                                            @php
-                                            $swipeRecordExists = $swiperecord->contains(function ($record) use ($CurrentDate) {
-                                            return \Carbon\Carbon::parse($record->created_at)->toDateString() === $CurrentDate;
-                                            });
+                                        @php
+                                             
+
+                                               $CurrentDate = \Carbon\Carbon::now()->toDateString();
+                                               $swiperecord = App\Models\SwipeRecord::where('emp_id', $employeeId)->get(); // Example query
+
+                                                if ($swiperecord && is_iterable($swiperecord)) {
+                                                    $swipeRecordExists = $swiperecord->contains(function ($record) use ($CurrentDate) {
+                                                        return \Carbon\Carbon::parse($record->created_at)->toDateString() === $CurrentDate;
+                                                    });
+                                                } else {
+                                                    $swipeRecordExists = false;
+                                                }
                                             @endphp
                                             @if($swipeRecordExists==true)
                                             Regularisation
@@ -1993,7 +2002,7 @@ color: #fff;
 
                                 <table>
                                     <thead>
-                                        @if ($Swiperecords->count() > 0)
+                                        @if ($swipe_records_count > 0)
                                         <tr>
                                             <th style="font-weight:normal;font-size:12px;">In/Out</th>
                                             <th style="font-weight:normal;font-size:12px;">Swipe&nbsp;Time</th>
@@ -2027,7 +2036,8 @@ color: #fff;
                                             <td colspan="4" style="height:1px; background-color: #f0f0f0; text-align: left;font-size:10px;">
                                                 Actual Hrs:{{ $actualHours[($index + 1) / 2 - 1] }}</td>
                                         </tr>
-                                        @endif
+                                       
+                                        @endif  
                                         @endforeach
 
 

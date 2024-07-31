@@ -3,7 +3,7 @@
     <img  height="50" width="200" src="{{$employee->company_logo}}" alt="">
     @endauth
     @auth('hr')
-    <img height="50" width="200" src="{{ optional($hr)->com->company_logo }}" alt="">
+    <img height="50" width="200" src="{{ optional($hr)->company_logo }}" alt="">
     @endauth
 
     @auth('it')

@@ -1,8 +1,4 @@
 <div>
-    <style>
- 
-   
-    </style>
     @php
         $present=0;
         $count=0;

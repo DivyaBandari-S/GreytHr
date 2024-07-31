@@ -104,7 +104,7 @@
 
         @if ($activeTab == "open")
         <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
-            <form wire:submit.prevent="applyFilters" class="form-inline" style="margin-bottom: -15px;">
+            <form class="form-inline" style="margin-bottom: -15px;">
                 <!-- Search Box -->
                 <div class="input-group people-input-group-container">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search anything.." aria-label="Search" aria-describedby="basic-addon1">
@@ -119,8 +119,6 @@
                     <!-- <label for="drp" class="form-label">DateRangePicker</label> -->
                     <livewire:date-component key="{{ 'drp-' . uniqid() }}" :start="$start" :end="$end" />
                 </div>
-
-
             </form>
         </div>
         <div class="card-body" style="background-color:white;width:100%;border-radius:5px;overflow-y:auto;max-height:400px;overflow-x:hidden">

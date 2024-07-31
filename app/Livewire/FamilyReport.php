@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
+use App\Models\EmpParentDetails;
+use App\Models\EmpSpouseDetails;
 use App\Models\ParentDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,36 +37,42 @@ class FamilyReport extends Component
 
     public function downloadInExcel()
     {
+      if(empty($this->EmployeeId))
+      {
+        return redirect()->back()->with('error', 'Select at least one employee detail');
+      }
+      else
+      {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-      
+     
         $employees1 = EmployeeDetails::where('manager_id', $loggedInEmpId)
-    ->join('parent_details', 'employee_details.emp_id', '=', 'parent_details.emp_id')
+    ->join('emp_parent_details', 'employee_details.emp_id', '=', 'emp_parent_details.emp_id')
     ->whereIn('employee_details.emp_id', $this->EmployeeId)
-    ->select('employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 
-             'parent_details.father_first_name', 'parent_details.father_last_name',
-             'parent_details.mother_first_name', 'parent_details.mother_last_name',
-             'parent_details.father_dob', 'parent_details.mother_dob',
-             'parent_details.father_address', 'parent_details.mother_address',
-             'parent_details.father_email', 'parent_details.mother_email',
-             'parent_details.father_phone', 'parent_details.mother_phone',
-             'parent_details.father_occupation', 'parent_details.mother_occupation')
+    ->select('employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name',
+             'emp_parent_details.father_first_name', 'emp_parent_details.father_last_name',
+             'emp_parent_details.mother_first_name', 'emp_parent_details.mother_last_name',
+             'emp_parent_details.father_dob', 'emp_parent_details.mother_dob',
+             'emp_parent_details.father_address', 'emp_parent_details.mother_address',
+             'emp_parent_details.father_email', 'emp_parent_details.mother_email',
+             'emp_parent_details.father_phone', 'emp_parent_details.mother_phone',
+             'emp_parent_details.father_occupation', 'emp_parent_details.mother_occupation')
     ->get();
-
+ 
     $employees3= EmployeeDetails::where('manager_id', $loggedInEmpId)
     ->join('emp_spouse_details', 'employee_details.emp_id', '=', 'emp_spouse_details.emp_id')
     ->whereIn('employee_details.emp_id', $this->EmployeeId)
-    ->select('employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 
+    ->select('employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name',
              'emp_spouse_details.*')
     ->get();
         $employees2=EmployeeDetails::whereIn('emp_id', $this->EmployeeId)->get();
-        
        
-        
+       
+       
         $rows = [];
         $data = [
             ['List of Family Details of Employees'],
             ['Employee Number', 'Employee Name', 'Joined On',    'Company',    'Designation',    'Member Name',    'Relation', 'Date of Birth',    'Gender', 'Blood Group', 'Nationality', 'Profession'],
-
+ 
         ];
         $rows=$data;
 foreach ($employees2 as $employee) {
@@ -83,19 +91,19 @@ foreach ($employees2 as $employee) {
         $employee['nationality'],
         ' '
     ];
-
+ 
     // Add the employee's own data row to the rows array
     $rows[] = $selfData;
-
+ 
     // Check if employee exists in employees1
     $emp_id_exists_in_employees1 = $employees1->contains('emp_id', $employee['emp_id']);
-    $employee_is_married=EmployeeDetails::where('emp_id', $employee['emp_id'])->where('marital_status','married')->exists();
+    $employee_is_married=EmpSpouseDetails::where('emp_id', $employee['emp_id'])->exists();
     $employee_has_children = DB::table('emp_spouse_details')->where('emp_id', $employee['emp_id'])
     ->whereNotNull('children')
     ->where('children', '!=', '[]')
     ->exists();
     if ($emp_id_exists_in_employees1) {
-        $parentdetails = ParentDetail::where('emp_id', $employee['emp_id'])->first(); // Use first() instead of get() to get a single record
+        $parentdetails = EmpParentDetails::where('emp_id', $employee['emp_id'])->first(); // Use first() instead of get() to get a single record
         if ($parentdetails) {
             // Data row for the parent's details
             $motherData = [
@@ -126,7 +134,7 @@ foreach ($employees2 as $employee) {
                 $parentdetails->father_nationality,
                 $parentdetails->father_occupation
             ];
-
+ 
             // Add the parent's details row to the rows array
             $rows[] = $motherData;
             $rows[]= $fatherData;
@@ -170,24 +178,24 @@ foreach ($employees2 as $employee) {
                         $spouseDetails->profession
                     ];
                 }
-                
-                
-                
+               
+               
+               
             // Add the parent's details row to the rows array
             $rows[] = $spouseData;
-            
-            
+           
+           
         }
     }
     if ($employee_has_children) {
         $childrenDetails = DB::table('emp_spouse_details')->where('emp_id', $employee['emp_id'])->select('children')->first();
-        
+       
         $children = json_decode($childrenDetails->children, true);
-        
+       
         if (is_array($children)) {
          
             foreach ($children as $child) {
-            
+           
                if($child['gender']=='female')
                {
                 $childrenData = [
@@ -200,11 +208,11 @@ foreach ($employees2 as $employee) {
                     'daughter',
                    \Carbon\Carbon::parse( $child['dob'])->format('jS F Y'),
                     $child['gender'],
-                    $child['blood-group'], // Assuming blood group is not available for children
-                    $child['nationality'], // Assuming nationality is not available for children
+                    $child['blood-group'] ?? 'NA', // Assuming blood group is not available for children
+                    $child['nationality'] ?? 'NA', // Assuming nationality is not available for children
                     ''  // Assuming occupation is not applicable for children
                 ];
-               } 
+               }
                else
                {
                         $childrenData = [
@@ -217,8 +225,8 @@ foreach ($employees2 as $employee) {
                             'son',
                             \Carbon\Carbon::parse( $child['dob'] )->format('jS F Y'),
                             $child['gender'],
-                            $child['blood-group'], // Assuming blood group is not available for children
-                            $child['nationality'], // Assuming nationality is not available for children
+                            $child['blood-group'] ?? 'NA', // Assuming blood group is not available for children
+                            $child['nationality'] ?? 'NA', // Assuming nationality is not available for children
                             ''  // Assuming occupation is not applicable for children
                         ];
             }
@@ -226,13 +234,15 @@ foreach ($employees2 as $employee) {
                 $rows[] = $childrenData;
             }
         }
-        
+       
         }
-    
+   
     }    
        $filePath = storage_path('app/family_reports.xlsx');
         SimpleExcelWriter::create($filePath)->addRows($rows);
         return response()->download($filePath, 'family_reports.xlsx');
+
+      }
     }
     public function searchfilter()
     {

@@ -4,10 +4,10 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class Highlight extends Component
+class MainLayout extends Component
 {
     public function render()
     {
-        return view('livewire.highlight');
+        return view('livewire.main-layout');
     }
 }
