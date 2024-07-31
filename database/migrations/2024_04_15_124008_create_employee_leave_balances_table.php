@@ -14,18 +14,18 @@ return new class extends Migration
         Schema::create('employee_leave_balances', function (Blueprint $table) {
             $table->id();
             $table->string('emp_id');
-        $table->enum('leave_type', ['Casual Leave Probation', 'Maternity Leave', 'Loss Of Pay', 'Sick Leave', 'Marriage Leave', 'Casual Leave','Petarnity Leave','Work From Home'])->nullable();
-            $table->unsignedInteger('leave_balance')->default(0);
+            $table->json('leave_type')->nullable(); // Change to JSON
+            $table->json('leave_balance');
             $table->string('status')->default('Granted');
-            $table->date('to_date');
-            $table->date('from_date');
+            $table->json('from_date');
+            $table->json('to_date');
             $table->timestamps();
             $table->foreign('emp_id')
             ->references('emp_id')
             ->on('employee_details')
             ->onDelete('cascade')
             ->onUpdate('cascade');
-            $table->unique(['emp_id', 'leave_type']);
+            $table->unique(['emp_id']);
         });
     }
 

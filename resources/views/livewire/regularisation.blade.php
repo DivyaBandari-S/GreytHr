@@ -1025,9 +1025,11 @@ $lastItem = end($regularisationEntries); // Get the last item
         <div class="col accordion-content">
 
             <span style="color: #778899; font-size: 12px; font-weight: 500;">Pending&nbsp;With</span>
-
+            @if(!empty($EmployeeDetails))
             <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ucwords(strtolower($EmployeeDetails->first_name))}}&nbsp;{{ucwords(strtolower($EmployeeDetails->last_name))}}</span>
-
+            @else
+            <span style="color: #36454F; font-size: 12px; font-weight: 500;">Manager Details not Available</span>
+            @endif
         </div>
 
 

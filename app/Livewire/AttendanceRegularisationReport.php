@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
 use App\Models\RegularisationDates;
-use App\Models\RegularisationNew1;
 use Carbon\Carbon;
 use Google\Service\SecretManager\EnableSecretVersionRequest;
 use Illuminate\Support\Facades\Auth;

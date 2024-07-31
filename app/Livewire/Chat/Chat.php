@@ -24,8 +24,8 @@ class Chat extends Component
             $decodedIds = Hashids::decode($query);
 
             if (empty($decodedIds)) {
+                session()->flash('connection error');
                 // Handle case where the decoding returns an empty array
-                abort(404);
             }
 
             // Fetch the conversation using the decoded ID
@@ -33,7 +33,7 @@ class Chat extends Component
 
             if (!$this->selectedConversation) {
                 // Handle case where the conversation is not found
-               
+                session()->flash('connection error');
             }
 
             // Mark messages belonging to receiver as read

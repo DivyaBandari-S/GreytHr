@@ -134,6 +134,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="modal-backdrop fade show blurred-backdrop"></div>
         @elseif($currentSection=='Attendance Muster Report')
         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
@@ -200,7 +201,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                        <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;" class="modal-title">
                             <b>{{$currentSection}}</b>
                         </h5>
                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
@@ -327,7 +328,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                        <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;" class="modal-title">
                             <b>{{$currentSection}}</b>
                         </h5>
                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
@@ -441,7 +442,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                        <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;" class="modal-title">
                             <b>{{$currentSection}}</b>
                         </h5>
                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
@@ -563,7 +564,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                        <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;" class="modal-title">
                             <b>{{$currentSection}}</b>
                         </h5>
                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
@@ -611,14 +612,18 @@
                             </tr>
                             @endforeach
                         </table>
-                        <div class="modal-footer" style="background-color: rgb(2, 17, 79); height: 50px">
+                            
+        <div class="modal-footer mt-2"
+                            style="background-color: rgb(2, 17, 79); display: flex;justify-content: space-around;;">
                             <button type="button"
-                                style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;">Options</button>
+                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;">Options</button>
                             <button type="button"
-                                style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;"
-                                wire:click="downloadShiftSummaryReportInExcel">Run</button>
-                            <button type="button" dsata-dismiss="modal" wire:click="close"
-                                style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;">Close</button>
+                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
+                                >Run</button>
+                            <button type="button" data-dismiss="modal"
+                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
+                                wire:click='resetFields'>Clear</button>
+
                         </div>
                     </div>
 
@@ -631,7 +636,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                        <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;" class="modal-title">
                             <b>{{$currentSection}}</b>
                         </h5>
                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"

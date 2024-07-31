@@ -24,6 +24,10 @@ class ReportManagement extends Component
     public $fromDate;
     public $sortBy;
     public $toDate;
+
+    public $notFound;
+
+    public $peoples;
     public $transactionType='all';
 
     public $employees;
@@ -347,20 +351,22 @@ public  function updateTransactionType($event){
         $search = '';
         if ($this->searching == 1) {
             $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
-                ->join('parent_details', 'employee_details.emp_id', '=', 'parent_details.emp_id')
-                ->select('employee_details.*', 'parent_details.*')
-                ->where(function ($query) use ($search) {
-                    $query->where('employee_details.first_name', 'like', '%' . $search . '%')
-                        ->orWhere('employee_details.last_name', 'like', '%' . $search . '%')
-                        ->orWhere('parent_details.mother_occupation', 'like', '%' . $search . '%')
-                        ->orWhere('parent_details.father_occupation', 'like', '%' . $search . '%');
-                })
-                ->get();
-        } else {
+            ->join('emp_parent_details', 'employee_details.emp_id', '=', 'emp_parent_details.emp_id')
+            ->select('employee_details.*', 'emp_parent_details.*')
+            ->where(function($query) use ($search) {
+                $query->where('employee_details.first_name', 'like', '%' . $search . '%')
+                      ->orWhere('employee_details.last_name', 'like', '%' . $search . '%')
+                      ->orWhere('emp_parent_details.mother_occupation', 'like', '%' . $search . '%')
+                      ->orWhere('emp_parent_details.father_occupation', 'like', '%' . $search . '%');
+            })
+            ->get();
+        }
+        else
+        {
             $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
-                ->join('parent_details', 'employee_details.emp_id', '=', 'parent_details.emp_id')
-                ->select('employee_details.*', 'parent_details.*')
-                ->get();
+        ->join('emp_parent_details', 'employee_details.emp_id', '=', 'emp_parent_details.emp_id')
+        ->select('employee_details.*', 'emp_parent_details.*')
+        ->get();
         }
 
         // For Leave Balance On Day

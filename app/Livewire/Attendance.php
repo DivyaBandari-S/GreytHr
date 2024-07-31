@@ -30,6 +30,14 @@ class Attendance extends Component
     public $last_out_time;
     public $currentDate;
     public $date1;
+
+    public $avgSignInTime;
+
+    public $ChangeDate;
+    public $CurrentDate;
+    public $avgSignOutTime;
+
+    public $swipe_records_count;
     public $clickedDate;
     public $currentWeekday;
     public $calendar;
@@ -86,6 +94,9 @@ class Attendance extends Component
 
     public $dateToCheck;
 
+    public $Swiperecords;
+    public $employeeId;
+    public $errorMessage;
     public $showRegularisationDialog=false;
     public $distinctDates;
     public $isPresent;
@@ -111,7 +122,18 @@ class Attendance extends Component
 
 public function closeRegularisationModal()
 {
-    $this->showRegularisationDialog=false;
+    try {
+        // Attempt to perform the action
+        $this->showRegularisationDialog = false;
+    } catch (\Exception $e) {
+        // Handle the exception
+        // You can log the error, show a user-friendly message, or handle it as needed
+        // For example, you might log the exception message:
+        error_log('Error closing regularisation modal: ' . $e->getMessage());
+
+        // Optionally, you can display a user-friendly message or perform other actions
+        // $this->showErrorMessage('An error occurred while closing the modal.');
+    }
 }
     public function toggleSession1Fields()
 {
@@ -213,7 +235,16 @@ public function mount()
 
 public function showTable()
 {
-    $this->defaultfaCalendar=0;
+    try {
+        // Your code that might throw an exception
+        $this->defaultfaCalendar = 0;
+    } catch (\Exception $e) {
+        // Handle the exception
+        // You can log the error or set an error message
+        Log::error('Error in showTable method: ' . $e->getMessage());
+        // Optionally, you can set a user-friendly message to be displayed
+        $errorMessage = 'An error occurred while updating the calendar. Please try again later.';
+    }
 }
 
 public function showBars()
@@ -757,38 +788,56 @@ public function closeViewStudentModal()
     }
     public function checkDateInRegularisationEntries($d)
     {
-        $this->showRegularisationDialog=true;
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $regularisationRecords = RegularisationDates::where('emp_id', $employeeId)
-            ->where('status', 'approved')
-            ->get();
-        $dateFound = false;
-        
-        foreach ($regularisationRecords as $record) {
-            $entries = json_decode($record->regularisation_entries, true);
-
-            foreach ($entries as $entry) {
-                if (isset($entry['date']) && $entry['date'] === $d) {
-                    $dateFound = true;
-                    $result = [
-                        'date' => $entry['date'],
-                        'reason' => $entry['reason'],
-                        'approved_date' => $record['approved_date'],
-                        'approved_by' => $record['approved_by']
-                    ];
-                    break 2; // Exit both loops
+        try {
+            $this->showRegularisationDialog = true;
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $regularisationRecords = RegularisationDates::where('emp_id', $employeeId)
+                ->where('status', 'approved')
+                ->get();
+            $dateFound = false;
+            $result = null;
+    
+            foreach ($regularisationRecords as $record) {
+                $entries = json_decode($record->regularisation_entries, true);
+    
+                foreach ($entries as $entry) {
+                    if (isset($entry['date']) && $entry['date'] === $d) {
+                        $dateFound = true;
+                        $result = [
+                            'date' => $entry['date'],
+                            'reason' => $entry['reason'],
+                            'approved_date' => $record['approved_date'],
+                            'approved_by' => $record['approved_by']
+                        ];
+                        break 2; // Exit both loops
+                    }
                 }
             }
+    
+            if ($result) {
+                $this->regularised_date_to_check = $result['date'];
+                $this->regularised_by = $result['approved_by'];
+                $this->regularised_date = $result['approved_date'];
+                $this->regularised_reason = $result['reason'];
+            } else {
+                $this->regularised_date_to_check = null;
+                $this->regularised_by = null;
+                $this->regularised_date = null;
+                $this->regularised_reason = null;
+            }
+        } catch (\Exception $e) {
+            // Handle the exception
+            Log::error('Error in checkDateInRegularisationEntries method: ' . $e->getMessage());
+            // Optionally, you can set a user-friendly message to be displayed
+            $this->errorMessage = 'An error occurred while checking the regularisation entries. Please try again later.';
+            
+            // Reset the fields in case of an error
+            $this->regularised_date_to_check = null;
+            $this->regularised_by = null;
+            $this->regularised_date = null;
+            $this->regularised_reason = null;
         }
-        if (empty($result)) {
-            $result=null;
-        }
-        $this->regularised_date_to_check=$entry['date'];
-        $this->regularised_by=$record['approved_by'];
-        $this->regularised_date=$record['approved_date'];
-        $this->regularised_reason=$entry['reason'];
     }
-
     public function render()
     {
         try {
@@ -850,10 +899,11 @@ public function closeViewStudentModal()
             }
     
             $swipe_records = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $currentDate)->get();
+            $swipe_records_count= SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $currentDate)->count();
             $swipe_records1 = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->orderBy('created_at', 'desc')->get();
     
             $this->calculateActualHours($swipe_records);
-            return view('livewire.attendance', ['Holiday' => $this->holiday, 'Swiperecords' => $swipe_records, 'Swiperecords1' => $swipe_records1, 'data' => $data, 'CurrentDate' => $currentDate2, 'CurrentDateTwoRecord' => $this->currentDate2record, 'ChangeDate' => $this->changeDate, 'CurrentDate2recordexists' => $this->currentDate2recordexists,
+            return view('livewire.attendance', ['Holiday' => $this->holiday, 'Swiperecords' => $swipe_records,'SwiperecordsCount'=>$swipe_records_count, 'Swiperecords1' => $swipe_records1, 'data' => $data, 'CurrentDate' => $currentDate2, 'CurrentDateTwoRecord' => $this->currentDate2record, 'ChangeDate' => $this->changeDate, 'CurrentDate2recordexists' => $this->currentDate2recordexists,
                 'avgLateIn' => $this->avgLateIn,'avgEarlyOut' => $this->avgEarlyOut,
                 'avgSignInTime'=>$this->avgSwipeInTime,'avgSignOutTime'=>$this->avgSwipeOutTime,
                 'modalTitle'=>$this->modalTitle,'totalDays'=>$this->totalDays

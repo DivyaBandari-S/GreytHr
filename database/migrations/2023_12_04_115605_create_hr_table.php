@@ -15,37 +15,17 @@ return new class extends Migration
         Schema::create('hr', function (Blueprint $table) {
             $table->id();
             $table->string('hr_emp_id')->nullable()->default(null)->unique();
-            $table->string('company_id');
             $table->string('emp_id');
-            $table->string('employee_name');
-            $table->string('image');
-            $table->string('position');
-            $table->string('department');
-            $table->string('email')->unique();
-            $table->string('company_email');
-            $table->string('phone_number');
-            $table->string('emergency_contact_number');
-            $table->date('date_of_birth');
-            $table->string('address');
-            $table->string('nationality');
-            $table->string('marital_status');
-            $table->string('gender');
-            $table->string('tax_id');
+            $table->string('sub_dept_id')->nullable();
+            $table->string('email')->unique()->nullable();
             $table->string('password');
-            $table->decimal('salary', 10, 2);
-            $table->date('joining_date');
-            $table->boolean('is_active')->default(true);
-            $table->foreign('company_id')
-                ->references('company_id') // Assuming the primary key of the companies table is 'id'
-                ->on('companies')
-                ->onDelete('restrict')
-                ->onUpdate('cascade');
+            $table->foreign('sub_dept_id')->references('sub_dept_id')->on('emp_sub_departments')->onDelete('cascade');
                 $table->foreign('emp_id')
                 ->references('emp_id')
                 ->on('employee_details')
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
-            
+
             $table->timestamps();
         });
 

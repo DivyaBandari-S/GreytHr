@@ -150,8 +150,8 @@
             </div>
 
 
-            <button class="submit-btn">
-                <i class="fa fa-download" aria-hidden="true" wire:click="downloadexcelforLeave"></i>
+            <button class="submit-btn px-4">
+                <i class="bx bx-download" aria-hidden="true" wire:click="downloadexcelforLeave" style="font-size:16px;"></i>
             </button>
         </div>
         <div class="row" style="margin:0;padding:0;">
@@ -187,7 +187,7 @@
                                 $isWeekend = in_array($carbonDate->dayOfWeek, [0, 6]); // 0 for Sunday, 6 for Saturday
                                 $isActiveDate = ($selectedDate === $carbonDate->toDateString());
                                 @endphp
-                                <td wire:click="dateClicked($event.target.textContent)" class="calendar-date{{ $selectedDate === $day['day'] ? ' active-date' : '' }}" data-date="{{ $day['day'] }}" style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};" >
+                                <td wire:click="dateClicked($event.target.textContent)" class="calendar-date{{ $selectedDate === $day['day'] ? ' active-date' : '' }}" data-date="{{ $day['day'] }}" style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};">
 
                                     @if ($day)
                                     <div>
@@ -269,7 +269,7 @@
                                 <div class="search-cont ">
                                     <input wire:model.debounce.500ms="searchTerm" type="text" placeholder="Search Employee">
                                     <!-- Search button -->
-                                    <button class="btn-3" wire:click="searchData"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                    <button class="btn-3" wire:click="searchData"><i class="bx bx-search"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -277,21 +277,21 @@
                     <div class="filter-container1">
                         <div id="main" style="margin-left: {{ $showDialog ? '250px' : '0' }}">
                             <button class="openbtn" wire:click="open">
-                                <i class="fa-icon fas fa-filter"></i>
+                                <i class="bx bx-filter-alt" style="color:#778899;"></i>
                             </button>
                         </div>
 
                     </div>
                 </div>
 
-                <div class="accordion rounded ">
+                <div class="accordion rounded mt-3">
                     <div class="accordion-heading active rounded">
                         <div class="accordion-title p-2">
                             <div class="accordion-content ">
-                                <span style="font-size: 16px; font-weight: 500;color:#778899;">Leave transactions({{ count($this->leaveTransactions) }})</span>
+                                <span style="font-size: 14px; font-weight: 500;color:#778899;">Leave transactions({{ count($this->leaveTransactions) }})</span>
                             </div>
                             <div class="arrow-btn" onclick="toggleAccordion(this)">
-                                <i class="fa fa-angle-down"></i>
+                                <i class="bx bx-chevron-down"></i>
                             </div>
                         </div>
                     </div>
@@ -379,18 +379,18 @@
                 const accordionBody = element.closest('.accordion').querySelector('.accordion-body');
                 const arrowIcon = element.querySelector('i');
                 const isOpen = accordionBody.style.display === 'block';
-
                 if (isOpen) {
                     accordionBody.style.display = 'none';
-                    arrowIcon.classList.remove('fa-angle-up');
-                    arrowIcon.classList.add('fa-angle-down');
+                    arrowIcon.classList.remove('bx-chevron-up');
+                    arrowIcon.classList.add('bx-chevron-down');
                     localStorage.setItem('accordionState', 'closed');
                 } else {
                     accordionBody.style.display = 'block';
-                    arrowIcon.classList.remove('fa-angle-down');
-                    arrowIcon.classList.add('fa-angle-up');
+                    arrowIcon.classList.remove('bx-chevron-down');
+                    arrowIcon.classList.add('bx-chevron-up');
                     localStorage.setItem('accordionState', 'open');
                 }
+
             }
 
             // Check the accordion state on page load and set it accordingly
@@ -402,15 +402,15 @@
                     accordionBodies.forEach(body => {
                         body.style.display = 'none';
                         const arrowIcon = body.previousElementSibling.querySelector('i');
-                        arrowIcon.classList.remove('fa-angle-up');
-                        arrowIcon.classList.add('fa-angle-down');
+                        arrowIcon.classList.remove('bx-chevron-up');
+                        arrowIcon.classList.add('bx-chevron-down');
                     });
                 } else {
                     accordionBodies.forEach(body => {
                         body.style.display = 'block';
                         const arrowIcon = body.previousElementSibling.querySelector('i');
-                        arrowIcon.classList.remove('fa-angle-down');
-                        arrowIcon.classList.add('fa-angle-up');
+                        arrowIcon.classList.remove('bx-chevron-down');
+                        arrowIcon.classList.add('bx-chevron-up');
                     });
                 }
             });

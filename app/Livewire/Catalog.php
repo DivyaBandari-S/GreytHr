@@ -365,10 +365,11 @@ class Catalog extends Component
     {
         $messages = [
             'subject.required' => 'Business Justification is required',
-            'distributor_name.required' => 'Distributor name required',
+            'distributor_name.required' => 'Distributor name is required',
             'description' => 'Specific Information is required',
             'mail.required' => ' Email  is required.',
             'mail.email' => ' Email must be a valid email address.',
+            'mobile' =>'Mobile number is required'
         ];
         $this->validate([
             'subject' => 'required|string|max:255',
@@ -404,6 +405,7 @@ class Catalog extends Component
 
             session()->flash('message', 'Request created successfully.');
             $this->reset();
+            return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
@@ -417,16 +419,19 @@ class Catalog extends Component
 
         $messages=[
             'subject.required' => 'Business Justification is required',
-            'distributor_name.required' => 'Distributor name required',
+            'distributor_name.required' => 'Distributor name is required',
             'description' => 'Specific Information is required',
             'mail.required' => ' Email  is required.',
             'mail.email' => ' Email must be a valid email address.',
+            'mobile' =>'Mobile number is required'
         ];
         $this->validate([
             'subject' => 'required|string|max:255',
             'mail' => 'required|email|unique:help_desks',
             'description' => 'required|string',
+            'mobile' => 'required|string|max:15',
         ],$messages);
+      
         try {
 
 
@@ -455,6 +460,7 @@ class Catalog extends Component
 
             session()->flash('message', 'Request created successfully.');
             $this->reset();
+            return redirect()->to('/HelpDesk');
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
@@ -467,12 +473,14 @@ class Catalog extends Component
             'subject.required' => 'Business Justification is required',
             'distributor_name.required' => 'Distributor name required',
             'description' => 'Specific Information is required',
+            'mobile' =>'Mobile number is required'
         ];
 
         $this->validate([
             'distributor_name' => 'required|string',
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
+            'mobile' => 'required|string|max:15',
         ],$messages);
         try {
 
@@ -502,6 +510,7 @@ class Catalog extends Component
 
             session()->flash('message', 'Request created successfully.');
             $this->reset();
+            return redirect()->to('/HelpDesk');
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
@@ -513,8 +522,7 @@ class Catalog extends Component
     {
         // Validate the input data
         $messages=[
-            'subject.required' => 'Business Justification is required',
-            'distributor_name.required' => 'Distributor name required',
+           
              'selected_equipment'=>'Selected equipment is required'
         ];
         $this->validate([
@@ -524,6 +532,7 @@ class Catalog extends Component
         ],$messages);
 
         try {
+        
             // Handle file upload
             if ($this->image) {
                 $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
@@ -545,7 +554,7 @@ class Catalog extends Component
                 'file_path' => $filePath,
                 'cc_to' => $this->cc_to ?? '-',
                 'selected_equipment' => $this->selected_equipment,
-                'category' => $this->category ?? '-',
+                'category' => $this->category ,
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
@@ -553,9 +562,10 @@ class Catalog extends Component
 
             // Flash success message
             session()->flash('message', 'Request for IT Accessories created successfully.');
-
+         
             // Reset the form fields
             $this->reset();
+            return redirect()->to('/HelpDesk');
         } catch (\Exception $e) {
             // Log the exception
             Log::error('Error creating IT Accessories request: ' . $e->getMessage());
