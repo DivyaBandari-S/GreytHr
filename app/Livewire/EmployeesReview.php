@@ -65,6 +65,7 @@ class EmployeesReview extends Component
     public function getApprovedLeaveRequests()
     {
         try {
+            $this->selectedYear = Carbon::now()->format('Y');
             $selectedYear = $this->selectedYear;
             $employeeId = auth()->guard('emp')->user()->emp_id;
             //query to fetch the approved leave appplications............
@@ -101,6 +102,7 @@ class EmployeesReview extends Component
                 if ($isManagerInApplyingTo || $isEmpInCcTo) {
                     // Get leave balance for the current year only
                     $leaveBalances = LeaveBalances::getLeaveBalances($approvedLeaveRequest->emp_id, $selectedYear);
+
                     // Check if the from_date year is equal to the current year
                     $fromDateYear = Carbon::parse($approvedLeaveRequest->from_date)->format('Y');
 
@@ -160,17 +162,7 @@ class EmployeesReview extends Component
         }
     }
 
-    public $pendingCount;
 
-    protected $listeners = [
-        'pendingLeaveCountUpdated' => 'updatePendingLeaveCount',
-    ];
-
-    public function updatePendingLeaveCount($count)
-    {
-        $this->pendingCount = $count;
-        Log::info('Pending leave count updated to: ' . $this->pendingCount);
-    }
 
     public function mount(Request $request)
     {
@@ -210,10 +202,16 @@ class EmployeesReview extends Component
                 ->pluck('emp_id')
                 ->toArray();
 
-            // Query leave requests for team members
-            $query = LeaveRequest::with('employee')
-                ->whereIn('emp_id', $teamMembersIds)
-                ->where('status', 'Pending');
+            // Query leave requests for team members with specified conditions
+            $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
+                ->where(function ($query) {
+                    $query->where('status', 'pending')
+                        ->orWhere(function ($query) {
+                            $query->where('status', 'approved')
+                                ->where('cancel_status', 'Pending Leave Cancel');
+                        });
+                })
+                ->orderBy('created_at', 'desc');
 
             // Apply search filter if $this->searchQuery is provided
             if (!empty($this->searchQuery)) {
@@ -223,6 +221,8 @@ class EmployeesReview extends Component
                         ->orWhere('status', 'LIKE', '%' . $this->searchQuery . '%');
                 });
             }
+
+            // Execute the query
             $this->leaveApplications = $query->get();
             $this->count = $this->leaveApplications->count();
         } catch (\Exception $e) {
@@ -230,6 +230,7 @@ class EmployeesReview extends Component
             session()->flash('error', 'An error occurred while processing your request. Please try again later.');
         }
     }
+
 
 
 
@@ -391,7 +392,7 @@ class EmployeesReview extends Component
         return view('livewire.employees-review', [
             'leaveApplications' => $this->leaveApplications,
             'matchingLeaveApplications' => $this->matchingLeaveApplications,
-            'pendingCount' => $this->pendingCount,
+            'count' => $this->count,
             'searchQuery' => $this->searchQuery,
             'approvedLeaveApplicationsList' => $this->approvedLeaveApplicationsList,
             'empLeaveRequests' => $this->empLeaveRequests,

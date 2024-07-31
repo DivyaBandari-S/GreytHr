@@ -1,6 +1,4 @@
 <div>
-   
-
 
     <div class="buttons-container d-flex justify-content-end mt-2 px-3 ">
         <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>

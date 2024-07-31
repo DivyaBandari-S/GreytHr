@@ -232,10 +232,10 @@ class ViewPendingDetails extends Component
                     $leaveRequest->status = 'approved';
                     $leaveRequest->save();
                     $leaveRequest->touch(); // Update timestamps
-                    session()->flash('message', 'Leave application approved successfully.');
+               e     session()->flash('message', 'Leave application approved successfully.');
+                    $this->fetchPendingLeaveApplications();
                 }
             }
-            $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Handle the exception
             Log::error('Error approving leave: ' . $e->getMessage());
@@ -262,12 +262,13 @@ class ViewPendingDetails extends Component
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
                     // Update status to 'approved'
                     $leaveRequest->cancel_status = 'approved';
+                    $leaveRequest->status = 'rejected';
                     $leaveRequest->save();
                     $leaveRequest->touch();
                     session()->flash('message', 'Leave cancel application approved successfully.');
+                    $this->fetchPendingLeaveApplications();
                 }
             }
-            $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Handle the exception
             Log::error('Error approving leave: ' . $e->getMessage());

@@ -1,5 +1,4 @@
 <div>
-<x-loading-indicator />
 <style>
         #remarks::placeholder {
             color: #a3b2c7;

@@ -1,5 +1,4 @@
 <div>
-<x-loading-indicator />
     <div class="container">
         <div class="row m-0 p-0">
             <div class="col-md-12 text-right d-flex justify-content-end">

@@ -318,6 +318,7 @@ class LeaveCancel extends Component
         $this->selectedLeaveRequestId = $leaveRequestId;
         $this->showApplyingToContainer = false;
         $this->show_reporting = true;
+        $this->showApplyingTo = false;
     }
     public function markAsLeaveCancel()
     {
@@ -328,7 +329,7 @@ class LeaveCancel extends Component
             $leaveRequest->category_type = 'Leave Cancel';
             $leaveRequest->cancel_status = 'Pending Leave Cancel';
             $leaveRequest->save();
-            session()->flash('message', 'Leave request marked as cancel successfully.');
+            session()->flash('message', 'Applied request for leave cancel successfully.');
             $this->reset(); // Reset component state
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to mark leave request as cancel. Please try again.');
