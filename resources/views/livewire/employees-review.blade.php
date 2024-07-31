@@ -107,7 +107,7 @@
 
 
     <div class="row m-0 p-0">
-<x-loading-indicator />
+<!-- <x-loading-indicator /> -->
 
         <div class="sidenav col-md-3 col-lg-2" style="min-height: 30rem;">
             <div>
@@ -168,7 +168,7 @@
                 </div> -->
 
 
-                
+
 
             </div>
 

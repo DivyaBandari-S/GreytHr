@@ -1,5 +1,5 @@
 <div>
-<x-loading-indicator />
+<!-- <x-loading-indicator /> -->
 <style>
         #remarks::placeholder {
             color: #a3b2c7;
@@ -51,7 +51,7 @@
 
             </div>
     @endif
-      
+
 
     <div class="accordion bg-white border mb-3 rounded">
         <div class="accordion-heading rounded" onclick="toggleAccordion(this)">

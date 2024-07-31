@@ -487,10 +487,10 @@
                                 </div>
                                 <div class="col-8" style="display: flex;flex-direction: column;">
                                     <select id="transactionType" wire:model="transactionType"
-                                        wire:change="updateTransactionType" wire:model.lazy="transactionType"
+                                        wire:change="updateTransactionType($event.target.value)" wire:model.lazy="transactionType"
                                         style="font-size: 0.785rem; color: #778899;width: 59%;height: 70%;">
                                         <option value="all">All </option>
-                                        <option value="Loss Of Pay">Availed</option>
+                                        <option value="approved">Availed</option>
                                         <!-- Add other leave types as needed -->
                                     </select>
                                     @error('transactionType') <span class="error"
@@ -526,8 +526,9 @@
                                     <select name="sortBy" wire:model="sortBy" wire:change="updateSortBy"
                                         id="sortBySelect"
                                         style="font-size: 0.785rem; color: #778899;width: 59%;height: 70%;">
-
                                         <option value="newest_first" selected>Employee Number (Newest First)</option>
+                                        <option value="oldest_first" selected>Employee Number (oldest First)</option>
+
                                     </select>
                                 </div>
                             </div>
@@ -542,7 +543,7 @@
                                 style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;">Options</button>
                             <button type="button"
                                 style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
-                                wire:click="downloadLeaveAvailedReportInExcel">Run</button>
+                                wire:click="dayWiseLeaveTransactionReport">Run</button>
                             <button type="button" data-dismiss="modal"
                                 style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
                                 wire:click='resetFields'>Clear</button>

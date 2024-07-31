@@ -33,7 +33,7 @@ class Chat extends Component
 
             if (!$this->selectedConversation) {
                 // Handle case where the conversation is not found
-                abort(404);
+               
             }
 
             // Mark messages belonging to receiver as read
@@ -42,13 +42,14 @@ class Chat extends Component
                 ->whereNull('read_at')
                 ->update(['read_at' => now()]);
 
-            Notification::where('chating_id', $this->selectedConversation->id)
+            Notification::where('chatting_id', $this->selectedConversation->id)
                 ->where('receiver_id', auth()->user()->emp_id)
                 ->whereNull('message_read_at')
                 ->update(['message_read_at' => now()]);
+
         } catch (\Exception $e) {
             // Handle other potential errors
-            abort(404);
+           throw $e;
         }
     }
     public function render()

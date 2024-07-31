@@ -120,7 +120,7 @@
 @else
 
     <body>
-        <livewire:loading-indicator />
+        <!-- <livewire:loading-indicator /> -->
         <div>
             <div class="row m-0 p-0 " style="height: 100vh;background:#f5f5f5;">
 
@@ -1341,7 +1341,7 @@
         </div> -->
 
                     <div class="modal-body">
-                        <livewire:loader-indicator />
+                        <livewire:loading-indicator />
                     </div>
                     <!-- <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
