@@ -120,7 +120,7 @@
                 <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
                     <i style="text-align: center;" class="fa fa-search"></i>
                 </button>
-             
+
                                 <div class="col-md-2 ml-4 p-0">
                                 <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
                                     <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
@@ -173,7 +173,7 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                         
+
                         </div>
 
                                                     </form>
@@ -211,7 +211,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h1 class="modal-title fs-5" id="exampleModalLabel">Request for IT Accessories</h1>
-                                                   
+
                                                 </div>
 
                                                 <div class="modal-body">
@@ -334,7 +334,7 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                         
+
                         </div>
 
                                                     </form>
@@ -344,10 +344,10 @@
                                                            <button type="button" wire:click="submit" class="submit-btn">Submit</button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                   
+
                                                            </div>
 
-                                  
+
                                                 </div>
                                             </div>
                                         </div>
@@ -375,7 +375,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h1 class="modal-title fs-5" id="exampleModalLabel">Add Members to Mailbox</h1>
-                                                   
+
                                                 </div>
 
                                                 <div class="modal-body">
@@ -411,7 +411,7 @@
                                                             @error('description') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
-                                                       
+
                                                             <div class="form-group ">
                                                                 <div class="form-group ">
                                                                     <label for="cc_to" class="form-label" >Add users to be a New Mailbox : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
@@ -427,7 +427,7 @@
 
                                                                     @error('cc_to') <span class="text-danger" style="margin-left:20px">{{ $message }}</span> @enderror
                                                                 </div>
-                                                            
+
                                                             @if($isNames)
     <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
         <div class="input-group" style="margin-bottom: 10px;">
@@ -486,18 +486,18 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                         
+
                         </div>
 
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer justify-content-center">
                                                 <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-           
+
 <button type="button" wire:click="Request" class="submit-btn">Submit</button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 </div>
-                                                   
+
                                                 </div>
                                             </div>
                                         </div>
@@ -527,7 +527,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">ID Card Request</h1>
-                                                       
+
                                                     </div>
 
                                                     <div class="modal-body">
@@ -647,7 +647,7 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                         
+
                         </div>
 
                                                         </form>
@@ -656,7 +656,7 @@
                                                     <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                       
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -683,7 +683,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">MMS Account Request</h1>
-                                                       
+
                                                     </div>
 
                                                     <div class="modal-body">
@@ -729,9 +729,9 @@
                                                                 <div class="row">
                                                                     <div class="form-group mb-3">
                                                                         <label for="cc_to" class="form-label"> Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
-                                                                       
-                                                                       
-                                                                    
+
+
+
                                                                     </div>
                                                                     <div class="row m-0">
                                                                         <div class="form-group mb-3 p-0">
@@ -805,17 +805,17 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                         
+
                         </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
-    
+
 <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -842,7 +842,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">New Distribution List</h1>
-                                                       
+
                                                     </div>
 
                                                     <div class="modal-body">
@@ -959,18 +959,18 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                         
+
                         </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
                                                     <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-     
+
 <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 </div>
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -1000,7 +1000,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">New Laptop</h1>
-                                                       
+
                                                     </div>
 
                                                     <div class="modal-body">
@@ -1014,7 +1014,7 @@
                                                         </div>
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                         <form wire:submit.prevent="Devops">
-                                                          
+
 
 
                                                             <div style="display:flex">
@@ -1120,19 +1120,19 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                         
+
                         </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
                                                     <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-       
+
 <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
 
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 </div>
-                                                       
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -1173,7 +1173,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Devops Access Request</h1>
-                                                       
+
                                                     </div>
 
                                                     <div class="modal-body">
@@ -1187,7 +1187,7 @@
                                                         </div>
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                         <form wire:submit.prevent="Devops">
-                                                         
+
 
 
                                                             <div style="display:flex">
@@ -1293,18 +1293,18 @@
 
                         <div>
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-                         
+
                         </div>
 
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
                                                     <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
-                       
-             
+
+
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
