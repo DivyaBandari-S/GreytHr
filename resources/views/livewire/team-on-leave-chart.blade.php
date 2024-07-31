@@ -10,7 +10,7 @@
     </div>
 
 
-    <div style="width:90%;display:flex; flex-direction:column;margin:0 auto;border:1px solid #ccc;">
+    <div style="width:97%;display:flex; flex-direction:column;margin:0 auto;border:1px solid #ccc;">
         <!-- Other HTML content -->
         <div style="display:flex; flex-direction:row; background:white;padding:10px 15px; border-bottom:1px solid #ccc; gap:10px;">
             <p style="color:#778899; font-weight:500;">Duration Selected:</p>
@@ -18,7 +18,7 @@
         </div>
 
 
-        <canvas id="barChart" width="420" height="130" style="background: white;padding:10px 15px;"></canvas>
+        <canvas id="barChart" height="250" style="background: white;padding:10px 15px;"></canvas>
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
@@ -72,7 +72,7 @@
     </div>
 
     <div class="mt-3">
-        <h3>Leave Applications</h3>
+        <h5 style="color:#778899">Leave Applications</h5>
 
 
         @if(empty($leaveApplications))

@@ -3,11 +3,13 @@
 namespace App\Livewire\Chat;
 
 use App\Models\Message;
+use App\Models\Notification;
 use App\Notifications\MessageRead;
 use App\Notifications\MessageSent;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
 // use Hashids;
 use Vinkla\Hashids\Facades\Hashids;
@@ -197,22 +199,34 @@ class ChatBox extends Component
             'file_path' => $filePath,
             'body' => $this->body,
         ]);
-  
-        $this->resetInputFields();  // Reset input fields after sending a message
-    
-        $this->dispatch('scroll-bottom');
-        $this->loadedMessages->push($createdMessage);
-        $this->selectedConversation->updated_at = now();
-        $this->selectedConversation->save();
-        $this->dispatch('chat.chat-list', 'refresh');
-    
-        $this->selectedConversation->getReceiver()
-            ->notify(new MessageSent(
-                auth()->user(),
-                $createdMessage,
-                $this->selectedConversation,
-                $this->selectedConversation->getReceiver()->id
-            ));
+
+        $this->reset('body');
+         #scroll to bottom
+         $this->dispatch('scroll-bottom');
+
+
+         #push the message
+         $this->loadedMessages->push($createdMessage);
+
+
+         #update conversation model
+         $this->selectedConversation->updated_at = now();
+         $this->selectedConversation->save();
+
+
+         #refresh chatlist
+         $this->dispatch('chat.chat-list', 'refresh');
+
+         #broadcast
+
+         $this->selectedConversation->getReceiver()
+             ->notify(new MessageSent(
+                 Auth()->User(),
+                 $createdMessage,
+                 $this->selectedConversation,
+                 $this->selectedConversation->getReceiver()->id
+
+             ));
     }
         public function mount()
     {

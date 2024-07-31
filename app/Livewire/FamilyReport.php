@@ -15,10 +15,21 @@ class FamilyReport extends Component
 
     public $searching = 0;
 
+    public $selectAllEmployees=0;
+    public $notFound;
+
+    public $search;
+
     public $EmployeeId=[];
+
     public function updateEmployeeId()
     {
-        $this->EmployeeId=$this->EmployeeId;
+       
+          
+       
+            $this->EmployeeId=$this->EmployeeId;
+        
+        
     }
 
 
@@ -227,13 +238,37 @@ foreach ($employees2 as $employee) {
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
         $this->searching = 1;
-        
+     
             
     }
+   
     public function render()
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
         $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->get();
-        return view('livewire.family-report');
+        if($this->searching==1)
+        {
+            $nameFilter = $this->search; // Assuming $this->search contains the name filter
+            $filteredEmployees = $this->employees->filter(function ($employee) use ($nameFilter) {
+                return stripos($employee->first_name, $nameFilter) !== false ||
+                    stripos($employee->last_name, $nameFilter) !== false ||
+                    stripos($employee->emp_id, $nameFilter) !== false||
+                    stripos($employee->job_title, $nameFilter) !== false||
+                    stripos($employee->city, $nameFilter) !== false||
+                    stripos($employee->state, $nameFilter) !== false;
+            });
+
+            if ($filteredEmployees->isEmpty()) {
+                $this->notFound = true; // Set a flag indicating that the name was not found
+            } else {
+                $this->notFound = false;
+            }
+        }
+        else
+        {
+            $filteredEmployees=$this->employees;
+        }
+
+        return view('livewire.family-report',['Employees'=>$filteredEmployees]);
     }
 }

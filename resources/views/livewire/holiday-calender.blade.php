@@ -30,13 +30,17 @@
                     @else
                     <div class="group py-3 px-3">
                         @foreach($entries as $entry)
-                        <div class="fest d-flex flex-row align-items-center" style="gap:10px;">
-                            <h5 class="p-0 m-0">{{ date('d', strtotime($entry->date)) }}<span>
-                                    <p class="mb-0" style="font-size: 10px;">{{ substr($entry->day, 0, 3) }}</p>
-                                </span></h5>
-                            <p class="mb-0 festivals" style="font-size: 12px;">{{ $entry->festivals }}</p>
+                        <div class="fest grid-container">
+                            <div class="grid-item date-container">
+                                <h5 class="p-0 m-0">{{ date('d', strtotime($entry->date)) }}</h5>
+                                <p class="mb-0" style="font-size: 10px;">{{ substr($entry->day, 0, 3) }}</p>
+                            </div>
+                            <div class="grid-item festivals">
+                                <p class="mb-0" style="font-size: 12px;">{{ $entry->festivals }}</p>
+                            </div>
                         </div>
                         @endforeach
+
                     </div>
                     @endif
                 </div>
@@ -48,7 +52,7 @@
         @if($selectedYear == $nextYear && $calendarData->where('year', $nextYear)->isEmpty())
         <div class="bg-white rounded border p-3" style="margin: 50px auto; width:80%;">
             <p style="font-size: 16px; color: #721c24; font-weight: bold;">It’s lonely here!</p>
-            <p style="font-size: 12px; color:#778899;">Your HR department is yet to publish the holiday list for the year {{ $nextYear }}, check again later.</p>
+            <p style="font-size: 12px; color:#778899;">HR department is yet to publish the holiday list for the year {{ $nextYear }}, check again later.</p>
         </div>
         @endif
     </div>

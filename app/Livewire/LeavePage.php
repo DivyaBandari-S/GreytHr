@@ -26,7 +26,7 @@ class LeavePage extends Component
     public $leaveRequest;
 
     public $leavePendingRequest;
-    public $leavePending;
+    public $leavePending, $combinedRequests;
     public $activeSection = 'applyButton';
     public $showRestricted = false;
     public $showLeave = false;
@@ -137,6 +137,8 @@ class LeavePage extends Component
 
     public function mount()
     {
+        $this->activeSection = request()->query('tab', 'applyButton');
+        $this->toggleSection($this->activeSection);
         // Get the logged-in user's ID and company ID
         $employeeId = auth()->guard('emp')->user()->emp_id;
         // Fetch all leave requests (pending, approved, rejected) for the logged-in user and company
@@ -149,16 +151,6 @@ class LeavePage extends Component
             $leaveRequest->formatted_from_date = Carbon::parse($leaveRequest->from_date)->format('d-m-Y');
             $leaveRequest->formatted_to_date = Carbon::parse($leaveRequest->to_date)->format('d-m-Y');
         }
-
-        $this->leavePending = LeaveRequest::where('emp_id', $employeeId)
-            ->where('status', 'pending')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        foreach ($this->leavePending as $leaveRequest) {
-            $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
-            $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
-        }
     }
 
 
@@ -168,12 +160,18 @@ class LeavePage extends Component
             // Check if there are pending leave requests
             // Fetch pending leave requests for the logged-in user and company
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->leavePending = LeaveRequest::where('emp_id', $employeeId)
-                ->where('status', 'pending')
+            $this->combinedRequests = LeaveRequest::where('emp_id', $employeeId)
+                ->where(function ($query) {
+                    $query->where('status', 'pending')
+                        ->orWhere(function ($query) {
+                            $query->where('status', 'approved')
+                                ->where('cancel_status', 'Pending Leave Cancel');
+                        });
+                })
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            foreach ($this->leavePending as $leaveRequest) {
+            foreach ($this->combinedRequests as $leaveRequest) {
                 $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
                 $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
             }
@@ -184,6 +182,7 @@ class LeavePage extends Component
             return false; // or any other appropriate action
         }
     }
+
 
     //used to calculate number of days
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
@@ -281,8 +280,8 @@ class LeavePage extends Component
             $leaveRequest->save();
             $leaveRequest->touch();
             $this->hasPendingLeave();
-            // Flash success message
             session()->flash('message', 'Leave application Withdrawn.');
+            // Flash success message
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message
             Log::error('Error canceling leave: ' . $e->getMessage());
@@ -293,8 +292,9 @@ class LeavePage extends Component
 
     public function render()
     {
+        $this->hasPendingLeave();
         return view('livewire.leave-page', [
-            'leavePending' => $this->leavePending,
+            'combinedRequests' => $this->combinedRequests,
         ]);
     }
 }

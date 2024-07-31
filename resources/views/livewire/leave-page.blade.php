@@ -1,39 +1,39 @@
-<div class="m-0 px-4" style="position: relative;">
-    <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
-    <div class="toggle-container position-relative">
-
+<div class="mx-2 px-4">
+    <div class="d-flex mt-2 mb-3 gap-4 align-items-center position-relative">
+        <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
         <!-- leave-page.blade.php -->
-
         @if(session()->has('message'))
-        <div class="alert alert-success w-50 position-absolute m-auto" style="right:25%; font-size: 12px;" id="success-alert">
+        <div class="alert alert-success w-50 position-absolute m-auto p-1" style=" font-size: 12px;right:25%;" id="success-alert">
             {{ session('message') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        @endif
-
-        @if(session()->has('error'))
-        <div class="alert alert-danger" style="font-size: 12px;" id="error-alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
 
         <script>
             // Auto-dismiss alert messages after 3 seconds
             setTimeout(function() {
                 $('#success-alert').fadeOut('slow');
-            }, 3000); // 3 seconds
+            }, 3000); // 3 seconds 3000); // 3 seconds
+        </script>
+        @endif
 
+        @if(session()->has('error'))
+        <div class="alert alert-danger position-absolute p-1" style="font-size: 12px;right:25%;" id="error-alert">
+            {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <script>
             setTimeout(function() {
                 $('#error-alert').fadeOut('slow');
             }, 3000); // 3 seconds
         </script>
-
-
+        @endif
+    </div>
+    <div class="toggle-container">
         <!-- Navigation Buttons -->
         <div class="nav-buttons d-flex justify-content-center">
             <ul class="nav custom-nav-tabs border">
@@ -142,10 +142,10 @@
         </div>
 
         {{-- pending --}}
-        <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}">
-        @if(empty($leavePending) || $leavePending->isEmpty())
-            <div class="containerWidth mt-2" style="width:85%;">
-                <div class="leave-pending rounded">
+        <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}; max-height: 370px;overflow-y: auto;">
+            @if(empty($combinedRequests) || $combinedRequests->isEmpty())
+            <div class="mt-2">
+                <div class="leave-pending rounded" style="width:80%;margin:0 auto;">
 
                     <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
 
@@ -155,11 +155,11 @@
                 </div>
             </div>
             @endif
-            @if(!empty($leavePending))
+            @if(!empty($combinedRequests))
 
-            @foreach($leavePending as $leaveRequest)
+            @foreach($combinedRequests as $leaveRequest)
 
-            <div class="container-pending mt-4 containerWidth">
+            <div class="mt-4 containerWidth">
 
                 <div class="accordion rounded">
 
@@ -182,6 +182,13 @@
                                 <span class="accordionContentSpan">Leave Type</span>
 
                                 <span class="accordionContentSpanValue">{{ $leaveRequest->leave_type}}</span>
+
+                            </div>
+                            <div class="col accordion-content">
+
+                                <span class="accordionContentSpan">Pending with</span>
+
+                                <span class="accordionContentSpanValue">N/A</span>
 
                             </div>
 
@@ -288,7 +295,7 @@
 
         {{-- history --}}
 
-        <div id="historyButton" class="row historyContent rounded mt-4" style="{{ $activeSection === 'historyButton' ? '' : 'display:none;' }}">
+        <div id="historyButton" class="row historyContent rounded mt-4" style="{{ $activeSection === 'historyButton' ? '' : 'display:none;' }}; max-height:370px;overflow-y:auto;">
             @if($this->leaveRequests->isNotEmpty())
 
             @foreach($this->leaveRequests->whereIn('status', ['approved', 'rejected','Withdrawn']) as $leaveRequest)
@@ -373,11 +380,11 @@
 
                             <span style="font-size: 11px;">
 
-                                <span style="font-size: 11px; font-weight: 500;">   {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }}</span>
+                                <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }}</span>
 
                                 ({{ $leaveRequest->from_session }} ) to
 
-                                <span style="font-size: 11px; font-weight: 500;">   {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
+                                <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
 
                                 ( {{ $leaveRequest->to_session }} )
 

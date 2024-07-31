@@ -9,9 +9,9 @@
 
 
 
-            <div class="col-md-12 d-flex align-items-center justify-content-between;"
-                style="height: 80px; background-image: url('https://th.bing.com/th/id/OIP.D5JnKq5hq9D54giN_liHTQHaHa?w=163&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7');width:100%">
-                <div class="input-group" style="width: 100%; align-items:center">
+            <div class="col-md-10 d-flex align-items-center justify-content-between"
+                style="height: 50px; border-radius: 10px; margin-top: 10px;">
+                <div class="input-group" style="width: 100%;">
                     <input type="text" class="form-control" placeholder="Search..." wire:model="searchTerm"
                         aria-label="Search" aria-describedby="search-addon" wire:input="filter">
                 </div>
@@ -27,7 +27,6 @@
 
 
                             @foreach ($conversations as $key => $conversation)
-                        
                                 <li id="conversation-{{ $conversation->id }}" wire:key="{{ $conversation->id }}"
                                     class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2 {{ $conversation->id == $selectedConversation?->emp_id ? 'bg-gray-100/70' : '' }}"
                                     style="margin-bottom: 10px;height:70px;width:90%; ">
@@ -130,62 +129,88 @@
                     <li class="message clearfix" id="conversation">
                         <!-- end chat-header -->
                         @if ($loadedMessages)
-    @foreach ($loadedMessages as $key => $message)
-        <div class="message-container clearfix @if ($message->sender_id === auth()->id()) sent @else received @endif">
-            <div class="message-body">
-                <div style="display: flex; flex-direction: column;">
-                    <p class="message-content" style="font-size:10px">{{ $message->body }}</p>
-                    @if ($message->file_path)
-                        {{-- Display the image if the file path is for an image --}}
-                        @if (Str::startsWith($message->file_path, 'chating-files') &&
-                                Str::endsWith($message->file_path, ['.jpg', '.jpeg', '.png', '.gif']))
-                            <img src="{{ asset($message->file_path) }}" alt="Attached Image" style="max-width: 100px;">
-                        @else
-                            <button class="message-content" style="font-size: 10px;background:white;border:1px solid silver;border-radius:4px;display:flex">
-                                <a href="{{ asset($message->file_path) }}" target="_blank">
-                                    <span style="font-size: 30px;margin-top:10px;color:black">&#8595;</span>
-                                    {{ basename($message->file_path) }}
-                                </a>
-                            </button>
+                            @foreach ($loadedMessages as $key => $message)
+                                {{-- keep track of the previous message --}}
+                                @php
+                                    $previousMessage = $key > 0 ? $loadedMessages[$key - 1] : null;
+                                @endphp
+                                    @php
+                    // Determine the date of the message
+                    $currentDate = $message->created_at->format('Y-m-d');
+                    // Check if the message is on a different day from the previous message
+                    $showDate = $currentDate !== $previousDate;
+                    // Update previousDate for the next iteration
+                    $previousDate = $currentDate;
+                    // Get the formatted date string
+                    $dateString = $message->created_at->format('l, F j, Y');
+                @endphp
+
+                {{-- Show date if it’s a new day or it’s within the past 5 days --}}
+                @if ($showDate || $message->created_at->greaterThan(now()->subDays(5)))
+                    <li class="date-header">{{ $dateString }}</li>
+                @endif
+
+                                <div
+                                    class="message-container clearfix @if ($message->sender_id === auth()->id()) sent @else received @endif">
+                                    {{-- message body --}}
+                                    <div class="message-body" style="display:flex">
+                                        <div style="display: flex; flex-direction: column;">
+                                            <p class="message-content" style="font-size:10px">{{ $message->body }}
+                                            </p>
+                                            @if ($message->file_path)
+                                                {{-- Display the image if the file path is for an image --}}
+                                                @if (Str::startsWith($message->file_path, 'chating-files') &&
+                                                        Str::endsWith($message->file_path, ['.jpg', '.jpeg', '.png', '.gif']))
+                                                    <img src="{{ asset('uploads/' . $message->file_path) }}"
+                                                        alt="Attached Image" style="max-width: 100px;">
+                                                    {{-- Display a link to download PDF or a generic download link for other file types --}}
+                                                @else
+                                                    <button class="message-content"
+                                                        style="font-size: 10px;background:white;border:1px solid silver;border-radius:4px;display:flex">
+                                                        <a href="{{ asset('uploads/' . $message->file_path) }}"
+                                                            target="_blank">
+                                                            <span
+                                                                style="font-size: 30px;margin-top:10px;color:black">&#8595;</span>
+                                                            {{ basename($message->file_path) }}
+                                                        </a>
+                                                    </button>
+                                                @endif
+                                            @endif
+                                        </div>
+                                        {{-- Display message time and status --}}
+                                        <div style="display: flex; ">
+                                            <span class="message-time"
+                                                style="font-size:10px;margin-left:20px">{{ $message->created_at->format('g:i a') }}</span>
+                                            {{-- message status, only show if message belongs to auth --}}
+                                            @if ($message->sender_id === auth()->id())
+                                                <div x-data="{ markAsRead: @json($message->isRead()) }">
+                                                    {{-- double ticks --}}
+                                                    <span x-cloak x-show="markAsRead" @class('text-gray-200')>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" fill="currentColor" class="bi bi-check2-all"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l7-7zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0z" />
+                                                            <path
+                                                                d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z" />
+                                                        </svg>
+                                                    </span>
+                                                    {{-- single ticks --}}
+                                                    <span x-show="!markAsRead" @class('text-gray-200')>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" fill="currentColor" class="bi bi-check2"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         @endif
-                    @endif
-                </div>
-                <div style="display: flex;">
-                    <span class="message-time" style="font-size:10px;margin-left:20px;margin-top:-8px">
-                        {{ $message->created_at->format('g:i a') }}
-                    </span>
-                    @if ($message->sender_id === auth()->id())
-                        <div x-data="{ markAsRead: @json($message->isRead()) }">
-                            <span x-cloak x-show="markAsRead" class="text-gray-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-check2-all" style="margin-top:-12px" viewBox="0 0 16 16">
-                                    <path
-                                        d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l7-7zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0z" />
-                                    <path
-                                        d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z" />
-                                </svg>
-                            </span>
-                            <span x-show="!markAsRead" class="text-gray-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-check2" style="margin-top:-12px" viewBox="0 0 16 16">
-                                    <path
-                                        d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
-                                </svg>
-                            </span>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-    @endforeach
-@endif
-
-
-
-
-
-
-
 
                     </li>
                 </ul>
@@ -713,17 +738,6 @@
         position: absolute;
         top: 0;
     }
-    .date-header {
-    text-align: center;
-    color: #888;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    background-color: #f9f9f9;
-    margin: 10px 0;
-}
-
 
     .attach-btn {
         height: 100%;
