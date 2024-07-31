@@ -46,9 +46,10 @@ class Chat extends Component
                 ->where('receiver_id', auth()->user()->emp_id)
                 ->whereNull('message_read_at')
                 ->update(['message_read_at' => now()]);
+
         } catch (\Exception $e) {
             // Handle other potential errors
-            throw $e;
+           throw $e;
         }
     }
     public function render()

@@ -232,7 +232,7 @@ class ViewPendingDetails extends Component
                     $leaveRequest->status = 'approved';
                     $leaveRequest->save();
                     $leaveRequest->touch(); // Update timestamps
-               e     session()->flash('message', 'Leave application approved successfully.');
+                    session()->flash('message', 'Leave application approved successfully.');
                     $this->fetchPendingLeaveApplications();
                 }
             }

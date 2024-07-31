@@ -13,6 +13,7 @@
 
     <div class="hol-container" id="calendar{{ $selectedYear }}">
         <div class="row m-0">
+            @if($calendarData && $calendarData->isNotEmpty())
             @foreach($calendarData->sortBy('date')->groupBy(function($entry) {
             return date('F Y', strtotime($entry->date));
             }) as $month => $entries)
@@ -46,6 +47,12 @@
                 </div>
             </div>
             @endforeach
+            @else
+            <div class="bg-white rounded border p-3 d-flex flex-column align-items-center" style="margin: 50px auto; width:80%;">
+                <p style="font-size: 14px; color: #721c24; font-weight: bold;">No Data Available</p>
+                <p style="font-size: 12px; color:#778899;">There is no data available for the selected year. Please check again later.</p>
+            </div>
+            @endif
         </div>
     </div>
     <div style="text-align: center; margin: 30px auto;">

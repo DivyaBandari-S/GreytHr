@@ -98,6 +98,7 @@ use App\Livewire\ReportManagement;
 use App\Livewire\ReviewPendingRegularisation;
 use App\Livewire\ShiftRoaster;
 use App\Livewire\SickLeaveBalances;
+use App\Livewire\Test;
 use App\Livewire\Ytdreport;
 use App\Models\SalaryRevision;
 use Illuminate\Support\Facades\Route;
@@ -304,6 +305,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/leave-pending/{leaveRequestId}', LeavePending::class)->name('leave-pending');
     Route::get('/team-on-leave', TeamOnLeave::class);
     Route::get('/team-on-leave-chart', TeamOnLeaveChart::class)->name('team-on-leave');
+    Route::get('/testing', Test::class);
     // Route::get('/leaveBalChart', LeaveBalancesChart::class)->name('leave-details');
     // Route::get('/navigate-to-helpdesk', [EmployeesReview::class, 'navigateToHelpdesk'])->name('navigate.to.helpdesk');
 

@@ -78,6 +78,7 @@ class Notification extends Component
                     $detailsArray = $items->pluck('detail')->toArray();
                     $detailsCount = count($detailsArray);
                     $latestCreatedAt = $items->max('created_at');
+                    $humanReadableCreatedAt = Carbon::parse($latestCreatedAt)->diffForHumans();
 
                     return (object)[
                         'first_name' => $firstItem->first_name,
@@ -88,13 +89,13 @@ class Notification extends Component
                         'notification_type' => $firstItem->notification_type,
                         'created_at' => $latestCreatedAt,
                         'details_count' => $detailsCount,
-                        'details' => $detailsArray
+                        'details' => $detailsArray,
+                        'notify_time'=> $humanReadableCreatedAt,
                     ];
                 })->sortByDesc('created_at')->values();
 
-
+                // dd(  $this->totalnotifications);
             $this->totalnotificationscount = $this->totalnotifications->count();
-
 
 
             $this->chatNotificationCount = DB::table('notifications')

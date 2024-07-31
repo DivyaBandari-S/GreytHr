@@ -1,4 +1,9 @@
 <div>
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
     <div class="modal-body" style="max-height:300px;overflow-y:auto">
         <div class="search-bar">
             <input type="text" wire:model="search" placeholder="Search..." wire:change="searchfilter">
@@ -21,7 +26,7 @@
                 <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" wire:model="EmployeeId" wire:change="updateEmployeeId" value="{{ $emp->emp_id }}">
                        {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}
                 </td>
-                <td style="width:50%;font-size: 10px; color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px">{{$emp->emp_id}}</td>
+                <td style="width:50%;font-size: 10px;color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 32px">{{$emp->emp_id}}</td>
               
             </tr>
             @endforeach
@@ -29,12 +34,16 @@
 
         </table>
     </div>
-    <div class="modal-footer" style="background-color: rgb(2, 17, 79); height: 50px">
-        <button type="button" style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;">Options
-        </button>
-        <button type="button" style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;" wire:click="downloadInExcel">Run
-        </button>
-        <button type="button" data-dismiss="modal" wire:click="close" style="background-color: white; height:30px;width:100px;border-radius:5px;border:none;">Close
-        </button>
-    </div>
+    <div class="modal-footer mt-2"
+                            style="background-color: rgb(2, 17, 79); display: flex;justify-content: space-around;;">
+                            <button type="button"
+                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;">Options</button>
+                            <button type="button"
+                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
+                                wire:click="downloadInExcel">Run</button>
+                            <button type="button" data-dismiss="modal"
+                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
+                                wire:click='resetFields'>Clear</button>
+
+                        </div>
 </div>

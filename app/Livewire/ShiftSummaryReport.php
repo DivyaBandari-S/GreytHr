@@ -42,6 +42,7 @@ class ShiftSummaryReport extends Component
             session()->flash('error', 'An error occurred while updating the selected year. Please try again.');
         }     
     }
+  
     public function updatefromDate()
     {
         try{
@@ -130,6 +131,12 @@ class ShiftSummaryReport extends Component
     {
         try
         {
+          if(empty($this->shiftSummary))
+          {
+            return redirect()->back()->with('error', 'Select at least one employee detail');
+          }
+          else
+          {
             $employees1 = EmployeeDetails::whereIn('emp_id', $this->shiftSummary)->select('emp_id', 'first_name', 'last_name')->get();
             $datesAndWeeknames = $this->getDatesAndWeeknames();
             foreach ($datesAndWeeknames as $daw) {
@@ -152,6 +159,7 @@ class ShiftSummaryReport extends Component
              $filePath = storage_path('app/shift_summary_report.xlsx');
              SimpleExcelWriter::create($filePath)->addRows($data);
              return response()->download($filePath, 'shift_summary_report.xlsx');
+          }
         }
         catch (\Exception $e) {
             Log::error('Error updating selected year: ' . $e->getMessage());
