@@ -93,7 +93,6 @@ use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
 use App\Livewire\ItDashboardPage;
 use App\Livewire\LeaveBalancesChart;
-use App\Livewire\LoadingIndicator;
 use App\Livewire\OrganisationChart;
 use App\Livewire\ReportManagement;
 use App\Livewire\ReviewPendingRegularisation;
