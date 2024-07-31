@@ -210,10 +210,8 @@
                                 @enderror
                             </div>
                             <div class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary">Verify</button>
+                                <button type="submit" class="submit-btn">Verify</button>
                             </div>
-
-
 
                             <!-- Success or error message for email and DOB verification -->
                             @if (session()->has('emailDobMessage'))
