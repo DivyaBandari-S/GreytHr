@@ -1763,9 +1763,9 @@ color: #fff;
                         <!-- Content goes here -->
                         <div class="row m-0">
                             <div class="col-2 pb-1 pt-1 p-0" style="border-right: 1px solid #ccc; text-align: center;">
-                                <p class="mb-1" style="font-weight:bold;font-size:14px;color:#778899;">{{ \Carbon\Carbon::parse($CurrentDate)->format('d') }}</p>
+                                <p class="mb-1" style="font-weight:bold;font-size:14px;color:#778899;">{{ \Carbon\Carbon::parse($currentDate2)->format('d') }}</p>
                                 <p class="m-0" style="font-weight:600;font-size:12px;color:#778899;">
-                                    {{ \Carbon\Carbon::parse($CurrentDate)->format('D') }}
+                                    {{ \Carbon\Carbon::parse($currentDate2)->format('D') }}
                                 </p>
                             </div>
                             <div class="col-5 pb-1 pt-1">
@@ -1786,7 +1786,7 @@ color: #fff;
 
 
                         <div class="horizontal-line-attendance-info"></div>
-                        @if($ChangeDate==1)
+                        @if($changeDate==1)
                         @php
                         $nextDayDate = \Carbon\Carbon::parse($CurrentDate)->addDay()->setTime(0, 0, 0);
                         @endphp
@@ -1816,14 +1816,14 @@ color: #fff;
                                     <tr>
 
                                         <td style="font-size:12px;">
-                                            @if($ChangeDate==1)
+                                            @if($changeDate==1)
                                             {{$this->first_in_time}}
                                             @else
                                             -
                                             @endif
                                         </td>
                                         <td style="font-size:12px;">
-                                            @if($ChangeDate==1)
+                                            @if($changeDate==1)
                                             {{$this->last_out_time}}
                                             @else
                                             -
@@ -1873,8 +1873,8 @@ color: #fff;
                                         @php
                                              
 
-                                               $CurrentDate = \Carbon\Carbon::now()->toDateString();
-                                               $swiperecord = App\Models\SwipeRecord::where('emp_id', $employeeId)->get(); // Example query
+                                               $CurrentDate = $currentDate2;
+                                               $swiperecord = App\Models\SwipeRecord::where('emp_id', $employeeIdForRegularisation)->where('is_regularised',1)->get(); // Example query
 
                                                 if ($swiperecord && is_iterable($swiperecord)) {
                                                     $swipeRecordExists = $swiperecord->contains(function ($record) use ($CurrentDate) {
@@ -1884,6 +1884,7 @@ color: #fff;
                                                     $swipeRecordExists = false;
                                                 }
                                             @endphp
+                                            
                                             @if($swipeRecordExists==true)
                                             Regularisation
                                             @else
@@ -1960,7 +1961,7 @@ color: #fff;
                                         <td style="font-weight:normal;font-size:12px;">Session&nbsp;1</td>
                                         <td style="font-weight:normal;font-size:12px;">10:00 - 14:00</td>
                                         <td style="font-weight:normal;font-size:12px;">
-                                            @if($ChangeDate==1)
+                                            @if($changeDate==1)
                                             {{$this->first_in_time}}
                                             @else
                                             -
@@ -1974,7 +1975,7 @@ color: #fff;
                                         <td style="font-weight:normal;font-size:12px;">14:01 - 19:00</td>
                                         <td style="font-weight:normal;font-size:12px;">-</td>
                                         <td style="font-weight:normal;font-size:12px;">
-                                            @if($ChangeDate==1)
+                                            @if($changeDate==1)
                                             {{$this->last_out_time}}
                                             @else
                                             -

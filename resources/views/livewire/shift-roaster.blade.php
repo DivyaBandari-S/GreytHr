@@ -411,7 +411,7 @@
                 @if(($Employees))
                 <tr>
                     <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}<span class="text-muted">(#{{$emp->emp_id}})</span><br /><span class="text-muted" style="font-size:11px;">{{ucwords(strtolower($emp->job_title))}},{{ucwords(strtolower($emp->city))}},{{ucwords(strtolower($emp->state))}}</span>
+                        {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}<span class="text-muted">(#{{$emp->emp_id}})</span><br /><span class="text-muted" style="font-size:11px;">{{ucwords(strtolower($emp->job_role))}},{{ucwords(strtolower($emp->job_location))}}</span>
                     </td>
 
 

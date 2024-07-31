@@ -296,10 +296,16 @@
                           @elseif($regularisationrequest->status=='rejected')
                                rccept<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
                           @endif
-
+                          @if($regularisationrequest->status=='approved')  
                            <span style="color: #778899; font-weight: 500;">
                                {{ucwords(strtolower($regularisationrequest->approved_by))}}
-                           </span><br>
+                           </span>
+                          @elseif($regularisationrequest->status=='rejected')
+                          <span style="color: #778899; font-weight: 500;">
+                               {{ucwords(strtolower($regularisationrequest->rejected_by))}}
+                           </span>
+                          @endif     
+                           <br>
                         @if($regularisationrequest->status=='approved')
                            <span style="color: #778899; font-size: 11px; font-weight: 400;text-align:start;">
 

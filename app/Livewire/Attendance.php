@@ -33,7 +33,7 @@ class Attendance extends Component
 
     public $avgSignInTime;
 
-    public $ChangeDate;
+   
     public $CurrentDate;
     public $avgSignOutTime;
 
@@ -96,6 +96,8 @@ class Attendance extends Component
 
     public $Swiperecords;
     public $employeeId;
+
+    public $employeeIdForRegularisation;
     public $errorMessage;
     public $showRegularisationDialog=false;
     public $distinctDates;
@@ -490,8 +492,11 @@ public function updateDate($date1)
 public function dateClicked($date1)
 {
     try {
+      
         $date1 = trim($date1);
+        
         $this->selectedDate = $this->year . '-' . $this->month . '-' . str_pad($date1, 2, '0', STR_PAD_LEFT);
+       
         $isSwipedIn = SwipeRecord::whereDate('created_at', $date1)->where('in_or_out', 'In')->exists();
         $isSwipedOut = SwipeRecord::whereDate('created_at', $date1)->where('in_or_out', 'Out')->exists();
 
@@ -506,6 +511,7 @@ public function dateClicked($date1)
         }
         $this->updateDate($date1);
         $this->dateclicked = $date1;
+        
     } catch (\Exception $e) {
         Log::error('Error in dateClicked method: ' . $e->getMessage());
         session()->flash('error', 'An error occurred while processing the date click. Please try again later.');
@@ -843,7 +849,7 @@ public function closeViewStudentModal()
         try {
             $this->dynamicDate = now()->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            
+            $this->employeeIdForRegularisation = auth()->guard('emp')->user()->emp_id;
             $this->swiperecord=SwipeRecord::where('emp_id',$employeeId)->where('is_regularised',1)->get();
             $currentDate = Carbon::now()->format('Y-m-d');
             $holiday = HolidayCalendar::all();
@@ -857,9 +863,9 @@ public function closeViewStudentModal()
             $this->leaveApplies = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
     
             if ($this->changeDate == 1) {
-                $currentDate2 = $this->dateclicked;
-    
-                $this->currentDate2record = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $currentDate2)->get();
+                $this->currentDate2 = $this->dateclicked;
+                
+                $this->currentDate2record = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->get();
     
                 if (!empty($this->currentDate2record) && isset($this->currentDate2record[0]) && isset($this->currentDate2record[1])) {
                     $this->first_in_time = substr($this->currentDate2record[0]['swipe_time'], 0, 5);
@@ -895,7 +901,7 @@ public function closeViewStudentModal()
                 }
                 $this->currentDate2recordexists = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $currentDate2)->exists();
             } else {
-                $currentDate2 = Carbon::now()->format('Y-m-d');
+                $this->currentDate2 = Carbon::now()->format('Y-m-d');
             }
     
             $swipe_records = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $currentDate)->get();
@@ -903,7 +909,7 @@ public function closeViewStudentModal()
             $swipe_records1 = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->orderBy('created_at', 'desc')->get();
     
             $this->calculateActualHours($swipe_records);
-            return view('livewire.attendance', ['Holiday' => $this->holiday, 'Swiperecords' => $swipe_records,'SwiperecordsCount'=>$swipe_records_count, 'Swiperecords1' => $swipe_records1, 'data' => $data, 'CurrentDate' => $currentDate2, 'CurrentDateTwoRecord' => $this->currentDate2record, 'ChangeDate' => $this->changeDate, 'CurrentDate2recordexists' => $this->currentDate2recordexists,
+            return view('livewire.attendance', ['Holiday' => $this->holiday, 'Swiperecords' => $swipe_records,'SwiperecordsCount'=>$swipe_records_count, 'Swiperecords1' => $swipe_records1, 'data' => $data ,'CurrentDateTwoRecord' => $this->currentDate2record, 'ChangeDate' => $this->changeDate, 'CurrentDate2recordexists' => $this->currentDate2recordexists,
                 'avgLateIn' => $this->avgLateIn,'avgEarlyOut' => $this->avgEarlyOut,
                 'avgSignInTime'=>$this->avgSwipeInTime,'avgSignOutTime'=>$this->avgSwipeOutTime,
                 'modalTitle'=>$this->modalTitle,'totalDays'=>$this->totalDays
