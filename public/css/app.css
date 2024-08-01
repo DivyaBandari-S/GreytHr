@@ -111,7 +111,13 @@
     font-weight: 500;
 }
 .normalText {
-    color: #333;
+    color: var(--main-heading-color);
+    font-weight: 500;
+    font-size: var( --normal-font-size);
+}
+.normalTextValue{
+    color: var(--label-color);
+    font-weight: 500;
     font-size: var( --normal-font-size);
 }
 .homeText {
@@ -2276,7 +2282,7 @@ input[type="radio"] {
     }
 }
 .applyingFor {
-    color: var(--heading-color);
+    color: var( --main-heading-color);
     font-size: 14px;
     font-weight: 500;
     text-align: start;
@@ -2310,7 +2316,7 @@ input[type="radio"] {
 }
 .hide-leave-info {
     background-color: #ffffe8;
-    color: var(--heading-color);
+    color: var( --main-heading-color);
 }
 /* CSS Stylesheet */
 .addText {
@@ -2321,7 +2327,7 @@ input[type="radio"] {
 }
 
 .empCcName {
-    color: var(--heading-color);
+    color: var( --main-heading-color);
     font-size: var( --normal-font-size);
     font-weight: 500;
     text-transform: capitalize;
@@ -2736,6 +2742,13 @@ input[type="radio"] {
     justify-content: center;
     align-items: center;
 }
+.sickLeaveBalance{
+    font-size: var(--normal-font-size); font-weight: 500; color: var(--main-heading-color); margin-left: 5px;
+}
+.Insufficient{
+    color: var(--requiredAlert); font-weight: normal;font-size:var(--normal-font-size);
+}
+
 /* end of leave apply */
 
 /* //leave-history styles */
