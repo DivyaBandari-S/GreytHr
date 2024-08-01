@@ -38,6 +38,7 @@ class EmployeeDetails extends Authenticatable
         'job_location',
         'is_starred',
         'status',
+        'dept_head',
         'job_mode',
         'resignation_date',
         'resignation_reason',
