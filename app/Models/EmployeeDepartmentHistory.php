@@ -16,6 +16,7 @@ class EmployeeDepartmentHistory extends Model
         'end_date',
         'manager',
         'dept_head',
+        'projects',
     ];
 
 }

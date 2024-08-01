@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->string('manager')->nullable();
+            $table->json('projects')->nullable();
             $table->string('dept_head')->nullable();
             $table->timestamps();
 
