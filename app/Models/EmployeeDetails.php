@@ -60,6 +60,24 @@ class EmployeeDetails extends Authenticatable
 
 
     ];
+    public function empBankDetails()
+    {
+        return $this->hasOne(EmpBankDetail::class, 'emp_id', 'emp_id');
+    }
+
+    public function empParentDetails()
+    {
+        return $this->hasOne(EmpParentDetails::class, 'emp_id', 'emp_id');
+    }
+
+    public function empPersonalInfo()
+    {
+        return $this->hasOne(EmpPersonalInfo::class, 'emp_id', 'emp_id');
+    }
+    public function empSpouseDetails()
+    {
+        return $this->hasOne(EmpSpouseDetails::class, 'emp_id', 'emp_id');
+    }
     public function leaveRequests()
     {
         return $this->hasMany(LeaveRequest::class, 'emp_id');
