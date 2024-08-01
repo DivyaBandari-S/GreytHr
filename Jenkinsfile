@@ -6,8 +6,11 @@ pipeline {
         DEPLOY_DIR = 'C:\\xampp\\htdocs\\deploye_server'
         GIT_URL = 'https://github.com/sssreddys/GreytHr.git'
         GIT_BRANCH = 'main'
-        // GIT_PATH = 'C:\\Program Files\\Git\\cmd\\git.exe'
-        GIT_PATH = 'C:\\Users\\SivaKumarSaragada\\AppData\\Local\\Programs\\Git\\cmd\\git.exe'
+         GIT_PATH = 'C:\\Program Files\\Git\\cmd\\git.exe'
+       // GIT_PATH = 'C:\\Users\\SivaKumarSaragada\\AppData\\Local\\Programs\\Git\\cmd\\git.exe'
+    }
+    triggers {
+        pollSCM('H/1 * * * *') // This will check for changes in the SCM every minute
     }
     stages {
         stage('Create Directory') {
