@@ -5,7 +5,9 @@ namespace App\Livewire;
 use Illuminate\Support\Facades\Request;
 use App\Models\EmpBankDetail;
 use App\Models\EmployeeDetails;
-use App\Models\ParentDetail;
+use App\Models\EmpParentDetails;
+use App\Models\EmpPersonalInfo;
+use App\Models\EmpSpouseDetails;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +21,7 @@ class ProfileInfo extends Component
     use WithFileUploads;
 
     public $parentDetails;
+    public $personalDetails;
     public $father_last_name;
     public $empBankDetails;
     public $employeeDetails;
@@ -35,7 +38,7 @@ class ProfileInfo extends Component
         try {
             $empId = Auth::guard('emp')->user()->emp_id;
             $employee = EmployeeDetails::where('emp_id', $empId)->first();
-
+         
             $this->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:1024', // 1024 kilobytes = 1 megabyte
             ]);
@@ -55,16 +58,28 @@ class ProfileInfo extends Component
             Log::error('Error in updateProfile method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while updating the profile. Please try again later.');
         }
+
+        
     }
 
     public function render()
     {
         try {
-            $this->employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
-            $this->empBankDetails = EmpBankDetail::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
-            $this->parentDetails = ParentDetail::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
+            $empId = auth()->guard('emp')->user()->emp_id;
+
+            // Retrieve employee details and related information
+            $this->employeeDetails = EmployeeDetails::with(['empBankDetails', 'empParentDetails', 'empPersonalInfo','empSpouseDetails'])
+                ->where('emp_id', $empId)
+                ->first();
+              
+
+              
+                return view('livewire.profile-info');
+              
+              
     
-            return view('livewire.profile-info');
+    
+           
         } catch (\Exception $e) {
             Log::error('Error in render method: ' . $e->getMessage());
             return view('livewire.profile-info')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
