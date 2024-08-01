@@ -30,6 +30,7 @@ class EmployeeDetails extends Authenticatable
         'employee_type',
         'job_role',
         'manager_id',
+        'date_of_birth',
         'report_to',
         'employee_status',
         'emergency_contact',
@@ -82,5 +83,9 @@ class EmployeeDetails extends Authenticatable
 
         return $this->hasMany(Chating::class,'sender_id')->orWhere('receiver_id',$this->emp_id)->whereNotDeleted();
 
+    }
+    public function personalInfo()
+    {
+        return $this->hasOne(EmpPersonalInfo::class, 'emp_id', 'emp_id');
     }
 }
