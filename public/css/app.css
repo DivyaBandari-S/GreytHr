@@ -2236,6 +2236,7 @@ input[type="radio"] {
 
 .containerWidth {
     margin: 0 auto;
+    width: 85% !important;
 }
 
 .imgContainer {
