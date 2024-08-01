@@ -37,8 +37,8 @@ class ProfileInfo extends Component
     {
         try {
             $empId = Auth::guard('emp')->user()->emp_id;
-            $employee = EmpPersonalInfo::where('emp_id', $empId)->first();
-
+            $employee = EmployeeDetails::where('emp_id', $empId)->first();
+         
             $this->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:1024', // 1024 kilobytes = 1 megabyte
             ]);
@@ -58,17 +58,13 @@ class ProfileInfo extends Component
             Log::error('Error in updateProfile method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while updating the profile. Please try again later.');
         }
+
+        
     }
 
     public function render()
     {
         try {
-            // $this->employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
-            // $this->empBankDetails = EmpBankDetail::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
-            // $this->parentDetails = EmpParentDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
-            // $this->personalDetails = EmpPersonalInfo::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
-            // return view('livewire.profile-info');
-
             $empId = auth()->guard('emp')->user()->emp_id;
 
             // Retrieve employee details and related information

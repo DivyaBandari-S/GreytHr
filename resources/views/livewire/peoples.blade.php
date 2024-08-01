@@ -241,7 +241,7 @@
         <!-- Starred tab content -->
         <div class="row mt-3 people-all-tabs-container">
 
-            <div class="col-12 col-md-4 bg-white w-100 people-left-side-container">
+            <div class="col-12 col-md-4 bg-white people-left-side-container">
                 <div class="input-group people-input-group-container">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                     <div class="input-group-append">
@@ -295,7 +295,7 @@
                 </div>
             </div>
             <!-- Details of the selected person -->
-            <div class="col-12 col-md-7 bg-white w-100 people-selectedperson-container">
+            <div class="col-12 col-md-7 bg-white people-selectedperson-container">
 
                 @if ($selectStarredPeoples)
                 <!-- Code to display details when $selectStarredPeoples is set -->
@@ -474,7 +474,7 @@
 <!-- Everyone tab content -->
 <div class="row mt-3 people-all-tabs-container">
 
-    <div class="col-12 col-md-4 bg-white w-100 people-left-side-container">
+    <div class="col-12 col-md-4 bg-white people-left-side-container">
         <div class="input-group people-input-group-container">
             <input wire:model="searchTerm" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
             <div class="input-group-append">
@@ -525,7 +525,7 @@
             @endif
         </div>
     </div>
-    <div class="col-12 col-md-7 bg-white w-100 people-selectedperson-container">
+    <div class="col-12 col-md-7 bg-white people-selectedperson-container">
         @if ($selectedPerson)
         <!-- Code to display details when $selectStarredPeoples is set -->
         <div class="row">
@@ -712,7 +712,7 @@
 <!-- MyTeam tab content -->
 <div class="row mt-3 people-all-tabs-container">
     <!-- Search input and filter button -->
-    <div class="col-12 col-md-4 bg-white w-100 people-left-side-container">
+    <div class="col-12 col-md-4 bg-white people-left-side-container">
 
         <div class="input-group people-input-group-container">
             <input wire:model="searchTerm" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
@@ -767,7 +767,7 @@
     </div>
 
     <!-- Details of the selected person -->
-    <div class="col-12 col-md-7 bg-white w-100 people-selectedperson-container">
+    <div class="col-12 col-md-7 bg-white people-selectedperson-container">
         @if ($selectedMyTeamPerson)
         <!-- Code to display details when $selectStarredPeoples is set -->
         <div class="row">
