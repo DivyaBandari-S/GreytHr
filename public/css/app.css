@@ -2350,6 +2350,9 @@ input[type="radio"] {
     align-items: center;
     display: flex;
 }
+.search-btn i {
+    color: white; /* Ensures the icon color is white */
+}
 .searchBtnBg {
     background-color: rgb(2, 17, 79);
     border-radius: 0 5px 5px 0;

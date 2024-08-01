@@ -69,7 +69,7 @@ class ChatBox extends Component
     public function broadcastedNotifications($event)
     {
 
-               dd('hello.........');
+             
 
         if ($event['type'] == MessageSent::class) {
 
@@ -179,54 +179,25 @@ class ChatBox extends Component
 
     public function sendMessage()
     {
-        if (!$this->selectedConversation) {
-            // Handle error when selectedConversation is null
-            return;
-        }
-
-        // Validate the input
         $this->validate([
             'body' => 'required|string|max:255',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // max 10MB
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960',
         ]);
-
-        // Check if there's an attachment
+    
         if ($this->attachment) {
-            // Generate a unique file name
             $fileName = uniqid() . '_' . $this->attachment->getClientOriginalName();
-
-            // Store the attachment
-            $this->attachment->storeAs('public/chating-files', $fileName);
-
-            // Save the file path
-            $filePath = 'storage/chating-files/' . $fileName;
+            $this->attachment->storeAs('public/uploads/chating-files', $fileName);
+            $filePath = 'chating-files' . $fileName;
         } else {
-            // No attachment provided
             $filePath = null;
         }
-
-        // Create a new message
+    
         $createdMessage = Message::create([
             'chating_id' => $this->selectedConversation->id,
             'sender_id' => auth()->user()->emp_id,
             'receiver_id' => optional($this->selectedConversation->getReceiver())->emp_id,
             'file_path' => $filePath,
             'body' => $this->body,
-        ]);
-        // Notification::create([
-        //     'emp_id' => auth()->user()->emp_id,
-        //     'notification_type' => 'message',
-        //     'receiver_id'=>optional($this->selectedConversation->getReceiver())->emp_id,
-        //     'body'=>$this->body,
-        // ]);
-
-        Notification::create([
-            'emp_id' =>auth()->user()->emp_id ,
-            'chatting_id'=> $this->selectedConversation->id,
-            'notification_type' => 'message',
-            'receiver_id'=> optional($this->selectedConversation->getReceiver())->emp_id,
-            'body'=>$this->body,
-
         ]);
 
         $this->reset('body');
@@ -246,7 +217,6 @@ class ChatBox extends Component
          #refresh chatlist
          $this->dispatch('chat.chat-list', 'refresh');
 
-         $this->body = Str::limit($this->body, 10);
          #broadcast
 
          $this->selectedConversation->getReceiver()
@@ -258,8 +228,7 @@ class ChatBox extends Component
 
              ));
     }
-
-    public function mount()
+        public function mount()
     {
 
 
