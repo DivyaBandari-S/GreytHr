@@ -89,7 +89,7 @@ pipeline {
         stage('Run server') {
             steps {
                 // dir("${DEPLOY_DIR}") {
-                //     bat 'php artisan serve --host=0.0.0.0 --port=8000'
+                //    bat 'php artisan serve --host=0.0.0.0 --port=8000'
                 // }
                 echo "Deployment steps completed successfully."
             }
