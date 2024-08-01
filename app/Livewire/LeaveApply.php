@@ -494,7 +494,6 @@ class LeaveApply extends Component
 
         try {
             $this->selectleave();
-
             // Check for overlapping leave
             $overlappingLeave = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where(function ($query) {
@@ -524,7 +523,7 @@ class LeaveApply extends Component
             }
 
             // Check for holidays in the selected date range
-            $holidays = HolidayCalender::whereBetween('date', [$this->from_date, $this->to_date])
+            $holidays = HolidayCalender::where('date', [$this->from_date, $this->to_date])
                 ->get();
 
             if ($holidays->isNotEmpty()) {

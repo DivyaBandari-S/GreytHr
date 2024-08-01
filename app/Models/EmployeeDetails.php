@@ -31,7 +31,7 @@ class EmployeeDetails extends Authenticatable
         'employee_type',
         'job_role',
         'manager_id',
-        'dapt_head',
+        'dept_head',
         'employee_status',
         'emergency_contact',
         'password',
