@@ -31,7 +31,7 @@ class EmployeeDetails extends Authenticatable
         'employee_type',
         'job_role',
         'manager_id',
-        'report_to',
+        'dapt_head',
         'employee_status',
         'emergency_contact',
         'password',
@@ -44,10 +44,21 @@ class EmployeeDetails extends Authenticatable
         'resignation_reason',
         'notice_period',
         'extension',
+        'experience',
         'shift_type',
         'shift_start_time',
         'shift_end_time',
-        'emp_domain'
+        'emp_domain',
+        'referral',
+        'probation_Period',
+        'service_age',
+        'probation_Period',
+        'confirmation_date',
+        
+
+
+
+
     ];
     public function empBankDetails()
     {
