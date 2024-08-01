@@ -180,7 +180,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
         Vinkla\Hashids\HashidsServiceProvider::class,
-        App\Providers\LaravelLivewireLoaderProvider::class,
+        // App\Providers\LaravelLivewireLoaderProvider::class,
 
     ])->toArray(),
 

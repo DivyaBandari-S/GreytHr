@@ -47,7 +47,10 @@
                         <p class="mb-0 notification-text-para"> Has assigned 10+ tasks to you.</p>
                         @else
                         <p class="mb-0 notification-text-para">Has assigned task to you. </p>
-                        @endif
+                        <div style="display: flex; justify-content:end">
+                           <p style="margin-bottom: 0px;font-size:xx-small;color: #535f6b;">{{$notification->notify_time}}</p>
+                        </div>
+                    @endif
 
 
                 </div>
@@ -61,13 +64,17 @@
                         (#{{ $notification->emp_id }})
                     </a>
 
-                    @if($notification->details_count>1 && $notification->details_count<=10 ) <p class="mb-0 notification-text-para"> Sent {{$notification->details_count}} leave requests.
+                    @if($notification->details_count>1 && $notification->details_count<=10 )
+                        <p class="mb-0 notification-text-para"> Sent {{$notification->details_count}} leave requests.</p>
                         @elseif($notification->details_count>10)
                         <p class="mb-0 notification-text-para"> Sent 10+ leave requests.</p>
                         @else
                         <p class="mb-0 notification-text-para"> Sent a leave request.</p>
-                        @endif
-                        </p>
+                        <div style="display: flex; justify-content:end">
+                           <p style="margin-bottom: 0px;font-size:xx-small;color: #535f6b;">{{$notification->notify_time}}</p>
+                        </div>
+                     @endif
+
                 </div>
             </div>
             @elseif($notification->notification_type=='message')
@@ -88,8 +95,13 @@
                     <p class="mb-0 notification-text-para"> sent a message.</p>
                     @endif
 
+                    <div style="display: flex; justify-content:end">
+                        <p style="margin-bottom: 0px;font-size:xx-small;color: #535f6b;">{{$notification->notify_time}}</p>
+                    </div>
             </div>
+
             @endif
+
             @endforeach
             @endif
         </div>

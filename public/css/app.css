@@ -9,9 +9,13 @@
 
  /* bootstarp v5 downolad */
 :root {
-    --heading-color: #3b4452;
+    --main-heading-color: #3b4452 /* use main heading along with font-weight-500 */;
     --requiredAlert: red;
-    --label-color: #7f8fa4;
+    --label-color: #778899;
+    --sub-heading-color: #778899/* use sub heading along with font-weight-500 */;
+    --normal-font-size: 0.75rem;
+    --sub-headings-font-size: 0.8rem;
+    --main-headings-font-size: 1rem;
 }
 
 /* Staring of auth checking module (Kumar Asapu)*/
@@ -108,12 +112,12 @@
 }
 .normalText {
     color: #333;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 .homeText {
     color: #778899;
     text-align: center;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 .leaveCustom-btn {
     width: 100px;
@@ -280,7 +284,7 @@
     box-shadow: 0 0 1px 1px rgba(184, 183, 183, 0.18);
 }
 .earning-details {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #000;
 }
 
@@ -326,7 +330,7 @@
 }
 .emp-details-p {
     color: #778899;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 .emp-details-span {
     color: #000;
@@ -356,7 +360,7 @@ body {
     font-weight: 500;
     border-radius: 5px;
     padding: 6px 12px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     border: none;
 }
 .submit-btn:hover {
@@ -369,7 +373,7 @@ body {
     font-weight: 500;
     border-radius: 5px;
     padding: 6px 12px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     border: none;
 }
 .cancel-btn1 {
@@ -378,7 +382,7 @@ body {
     font-weight: 500;
     border-radius: 5px;
     padding: 6px 12px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     border: 1px solid rgb(2, 17, 79) !important;
 }
 .comment-btn {
@@ -392,7 +396,7 @@ body {
     border: none;
     outline: none;
     color: white;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     margin-top: 10px;
     border-radius: 3px;
 }
@@ -464,7 +468,7 @@ body {
 }
 
 .text-danger {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 
 /* Style the "View File" link */
@@ -486,7 +490,7 @@ button.close-button {
     color: rgb(2, 17, 79);
     cursor: pointer;
     margin-right: 15px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-decoration: none;
 }
 
@@ -517,7 +521,7 @@ button.close-button {
 
 .text-gray {
     color: #778899;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 
 .col-6 {
@@ -535,7 +539,7 @@ button.close-button {
 }
 
 .text-danger {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 
 .rotate {
@@ -590,7 +594,7 @@ button.close-button {
 }
 
 .tab {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     cursor: pointer;
     transition: color 0.3s ease-in-out;
 }
@@ -601,7 +605,7 @@ button.close-button {
 
 .jump-to {
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     margin-top: 5px;
     transition: color 0.3s ease-in-out;
     border: none;
@@ -622,7 +626,7 @@ button.close-button {
 .button-dl {
     width: 100%;
     max-width: 120px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     padding: 10px;
     background-color: white;
     border: none;
@@ -751,7 +755,7 @@ button.close-button {
 }
 .sidebar-heading {
     color: #4d5256;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-transform: uppercase;
     font-weight: 600;
 }
@@ -803,7 +807,7 @@ button.close-button {
 .nav-item .nav-link {
     color: #6c7e90;
     text-decoration: none;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     cursor: pointer;
     font-weight: 500;
     /* padding: 0 auto; */
@@ -1150,7 +1154,7 @@ button.close-button {
 }
 
 .employee-count-who-is-in {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 
     padding-top: 5px;
 }
@@ -1210,7 +1214,7 @@ button.close-button {
 .search-text::placeholder {
     font-weight: 60;
     /* Change the font weight */
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     /* Change the font size */
     color: #6c757d;
 }
@@ -1244,7 +1248,7 @@ input::placeholder {
     text-align: left;
     width: 100%;
     font-weight: normal;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #6c757d;
 }
 
@@ -1302,7 +1306,7 @@ input[type="date"]::before {
     margin-right: 10px;
 }
 .form-group label {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: var(--label-color);
     font-weight: 500;
 }
@@ -1368,7 +1372,7 @@ input[type="date"]::before {
 }
 
 .shift-selector-who-is-in::placeholder {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     /* Adjust font size as needed */
     font-weight: 500;
     /* Adjust font weight as needed */
@@ -1496,7 +1500,7 @@ td {
 
 .employee-swipes-table th {
     font-weight: bold;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 
 .dropdown-container1-employee-swipes input[type="text"] {
@@ -1504,10 +1508,10 @@ td {
     border: 1px solid #ccc;
     border-radius: 4px;
     width: 200px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 .employee-swipes-table td {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 .green-section-employee-swipes {
     height: 150px;
@@ -1524,7 +1528,7 @@ td {
 }
 .record-not-found-who-is-in {
     text-align: center;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 .dropdown-container1-employee-swipes:hover .dropdown-content1-employee-swipes {
     display: block;
@@ -1538,7 +1542,7 @@ td {
     border: 1px solid #ccc;
     border-radius: 4px;
     height: 30px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 .button2 {
     margin-top: 30px;
@@ -1550,7 +1554,7 @@ td {
 
 .dropdown-btn1::after {
     content: "\25BE"; /* Unicode character for a down-pointing triangle */
-    font-size: 0.75rem; /* Adjust the size of the arrow */
+    font-size: var( --normal-font-size); /* Adjust the size of the arrow */
     margin-left: 5px; /* Add some spacing between the text and arrow */
 }
 
@@ -1601,7 +1605,7 @@ td {
 }
 .green-section-employee-swipes h6 {
     margin-top: 10px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #000;
 }
 
@@ -1619,7 +1623,7 @@ td {
 }
 .employee-swipes-name-and-id {
     white-space: nowrap;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     padding-left: 10px;
 }
 .employee-swipes-checkbox {
@@ -1651,12 +1655,12 @@ td {
     margin-top: -5px;
 }
 .swipe-deatils-title {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #778899;
     margin-bottom: 0;
 }
 .swipe-details-description {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
 }
 
@@ -1887,7 +1891,7 @@ td {
 
 .text-xs {
     /* Font size */
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: black;
 }
 
@@ -2157,9 +2161,7 @@ input[type="radio"] {
     font-size: 14px;
     transition: color 0.3s;
 }
-.leaveDropDown{
-    width: 50%; font-weight: 400; color: #778899; font-size: 12px;border:1px solid #ccc;
-}
+
 /* Define custom tabs for CSS classes */
 .custom-nav-tabs {
     margin-top: 10px;
@@ -2171,7 +2173,7 @@ input[type="radio"] {
     color: #778899;
     padding: 0;
     margin: 0;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 
 .custom-nav-tabs .custom-item {
@@ -2269,7 +2271,7 @@ input[type="radio"] {
         width: 100% !important;
         margin: 0 auto;
     }
-    .leaveDropDown{
+    .form-control{
         width: 100%;
     }
 }
@@ -2287,7 +2289,7 @@ input[type="radio"] {
 }
 .requiredMark {
     color: var(--requiredAlert);
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 
 .accordion:hover {
@@ -2295,7 +2297,7 @@ input[type="radio"] {
 }
 
 .info-paragraph {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
     color: #3a9efd;
     cursor: pointer;
@@ -2303,7 +2305,7 @@ input[type="radio"] {
 .hideInfo {
     font-weight: 500;
     color: #3a9efd;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     cursor: pointer;
 }
 .hide-leave-info {
@@ -2315,12 +2317,12 @@ input[type="radio"] {
     cursor: pointer; /* Ensure cursor is pointer on hover */
     background: none;
     color: var(--label-color);
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 
 .empCcName {
     color: var(--heading-color);
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
     text-transform: capitalize;
     max-width: 110px;
@@ -2464,12 +2466,12 @@ input[type="radio"] {
 }
 .accordionContentSpan {
     color: #778899;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
 }
 .accordionContentSpanValue {
     color: #36454f;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
 }
 .hide-info {
@@ -2478,7 +2480,7 @@ input[type="radio"] {
     background: #fffff2;
     gap: 50px;
     padding: 5px 10px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     align-items: center;
 }
@@ -2503,7 +2505,7 @@ input[type="radio"] {
     text-overflow: ellipsis;
     display: block;
     max-width: 80px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
     margin-bottom: 0;
     color: #000;
@@ -2512,7 +2514,7 @@ input[type="radio"] {
 /* //leave apply styles */
 .leave-type-hide {
     display: inline-block;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     max-width: 110px; /* Adjust this value as needed */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2522,7 +2524,7 @@ input[type="radio"] {
 }
 .category-type-hide {
     display: inline-block;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     max-width: 110px; /* Adjust this value as needed */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2534,7 +2536,7 @@ input[type="radio"] {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #778899;
     font-weight: 500;
 }
@@ -2679,7 +2681,7 @@ input[type="radio"] {
     margin-top: 15px;
 }
 .ellipsis {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
@@ -2832,7 +2834,7 @@ input[type="radio"] {
 
 .group h5 {
     font-weight: 400;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2858,7 +2860,7 @@ input[type="radio"] {
     color: #778899;
     font-weight: 500;
     background-color: #fff;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 .remainContent {
     color: #0000ff;
@@ -2965,7 +2967,7 @@ input[type="radio"] {
     border: 1px solid rgb(2, 17, 79);
     padding: 3px 5px;
     color: #fff;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
     border-radius: 5px;
 }
@@ -2974,7 +2976,7 @@ input[type="radio"] {
     border: 1px solid rgb(2, 17, 79);
     padding: 3px 5px;
     color: rgb(2, 17, 79);
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
     border-radius: 5px;
 }
@@ -3038,7 +3040,7 @@ input[type="radio"] {
 .header-style {
     background-color: #ecf5ff;
     font-weight: normal;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #778899;
     text-align: start;
 }
@@ -3049,7 +3051,7 @@ input[type="radio"] {
 }
 .leaveApply-balance-buttons {
     background-color: rgb(2, 17, 79);
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
     color: white;
     border: none;
@@ -3081,11 +3083,11 @@ input[type="radio"] {
     transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 .balance {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #778899;
 }
 .field {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
 }
 .bal-container .row.my-3 .col-md-4 > .leave-bal {
@@ -3105,7 +3107,7 @@ input[type="radio"] {
     flex-direction: column;
 }
 .label-style {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #778899;
     font-weight: 500;
 }
@@ -3179,7 +3181,7 @@ input[type="radio"] {
 .inner-container h6 {
     font-weight: 600;
     margin-bottom: 0px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 
 .inner-container .fest h5 {
@@ -3758,7 +3760,7 @@ select .yearSelect {
     border-radius: 5px;
 }
 ::placeholder {
-    font-size: 0.75rem; /* Adjust the font size as needed */
+    font-size: var( --normal-font-size); /* Adjust the font size as needed */
     color: #778899;
 }
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
@@ -3784,7 +3786,7 @@ select .yearSelect {
 /* attendace muster styles by pranitha and uttej */
 .legend-text {
     color: #778899;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 /* end of attendace muster styles by pranitha and uttej */
 
@@ -3872,7 +3874,7 @@ select .yearSelect {
     margin: 0px 4px 8px 0px;
     display: inline-block;
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #778899;
 }
 .helpChip:hover {
@@ -4248,7 +4250,7 @@ option {
 .employee-timesheet span {
     margin-bottom: 0;
     color: #778899;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     max-width: 100%;
     overflow-x: auto;
     font-weight: normal;
@@ -4256,12 +4258,12 @@ option {
 .employee-timesheet .week-details-heading {
     margin-bottom: 0;
     color: #778899;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
 }
 .timesheet-table {
     border-collapse: collapse;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 
 .timesheet-table th,
@@ -4284,7 +4286,7 @@ option {
     border-bottom: 2px solid #dee2e6; /* Make header border thicker */
 }
 .timesheet-table td {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #778899;
     font-weight: normal;
     border-bottom: 1px solid #dee2e6;
@@ -4299,13 +4301,13 @@ option {
 }
 .placeholder-timesheet {
     color: #000;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 .basic-container {
     border-radius: 10px;
     display: flex;
     border: 1px solid #bbc3cc;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 500;
     color: #47515b;
 }
@@ -4333,7 +4335,7 @@ option {
     font-size: 11px;
 }
 .notification-head {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
 }
 .notification-text-para {
     color: #535f6b;
@@ -4495,7 +4497,7 @@ option {
 }
 .chat-employee-name {
     color: #333;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     font-weight: 600;
 }
 .chat-emp-details {
@@ -4516,7 +4518,7 @@ option {
 .employee-asset-details th,
 .employee-asset-details td {
     width: 150px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     color: #fff;
     font-weight: 500;
     border-bottom: 1px solid #ccc; /* Add horizontal borders */
@@ -4646,4 +4648,43 @@ option {
     color: white;
     font-weight: normal;
     height: 40px;
+}
+
+
+/* ////dropdown styles */
+.custom-select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.custom-select-wrapper select {
+    appearance: none;
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 12px;
+    width: 100%;
+    cursor: pointer;
+    padding-right: 2rem; /* Space for the arrow */
+}
+
+.custom-select-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: .5rem;
+    width: 0;
+    height: 0;
+    border-left: 0.4rem solid transparent; /* Width of the arrow */
+    border-right: 0.4rem solid transparent; /* Width of the arrow */
+    border-top: 0.4rem solid #778899; /* Arrow color */
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.custom-select-wrapper select:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
 }

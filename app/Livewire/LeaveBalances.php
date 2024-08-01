@@ -80,7 +80,7 @@ class LeaveBalances extends Component
             $this->dateErrorMessage = null;
         }
     }
-   
+
 
 
     //in this method will get leave balance for each type
@@ -97,7 +97,7 @@ class LeaveBalances extends Component
             if ($hireDate) {
                 $hireDate = Carbon::parse($hireDate);
                 $currentDate = Carbon::now();
-                
+
                 $this->differenceInMonths = $hireDate->diffInMonths($currentDate);
 
             } else {
@@ -297,7 +297,7 @@ class LeaveBalances extends Component
             return null;
         }
     }
-    
+
 
     //calcalate number of days for leave
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
@@ -463,7 +463,7 @@ class LeaveBalances extends Component
                 $leaveRequest->to_session);
                 return $leaveRequest;
             });
-      
+
 
 
         // Generate PDF using the fetched data
