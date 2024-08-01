@@ -10,7 +10,7 @@ pipeline {
         //GIT_PATH = 'C:\\Users\\SivaKumarSaragada\\AppData\\Local\\Programs\\Git\\cmd\\git.exe'
     }
     triggers {
-        pollSCM('H/1 * * * *') // This will check for changes in the SCM every minute
+        pollSCM('* * * * *') // This will check for changes in the SCM every minute
     }
     stages {
         stage('Create Directory') {
