@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('sub_dept_id')->nullable();
             $table->date('hire_date')->nullable();
             $table->string('employee_type')->nullable();
-            $table->json('job_role')->nullable();
+            $table->string('job_role')->nullable();
             $table->string('manager_id')->nullable();
             $table->string('dept_head')->nullable();
             $table->enum('employee_status', ['active', 'on-leave', 'terminated','resigned'])->default('active');
@@ -48,7 +48,7 @@ return new class extends Migration
             $table->string('probation_Period')->nullable();
             $table->json('confirmation_date')->nullable();
             $table->string('referral')->nullable();
-            $table->json('service_age')->nullable();
+            $table->string('service_age')->nullable();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->foreign('dept_id')->references('dept_id')->on('emp_departments')->onDelete('cascade');
             $table->foreign('sub_dept_id')->references('sub_dept_id')->on('emp_sub_departments')->onDelete('cascade');
