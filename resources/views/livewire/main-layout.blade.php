@@ -143,7 +143,7 @@
                 <ul class="profile-link">
                     <li><a href="/ProfileInfo"><i class='bx bxs-user-circle icon'></i> Profile</a></li>
                     <li><a href="/Settings"><i class='bx bxs-cog'></i> Settings</a></li>
-                    <li><a href="logout"><i class='bx bxs-log-out-circle'></i> @livewire('log-out')</a></li>
+                    <li><i class='bx bxs-log-out-circle'></i> @livewire('log-out')e</li>
                 </ul>
             </div>
         </nav>
