@@ -23,10 +23,10 @@ return new class extends Migration
             $table->string('dept_id')->nullable();
             $table->string('sub_dept_id')->nullable();
             $table->date('hire_date')->nullable();
-            $table->enum('employee_type', ['full-time', 'part-time', 'contract']);
-            $table->string('job_role')->nullable();
+            $table->string('employee_type')->nullable();
+            $table->json('job_role')->nullable();
             $table->string('manager_id')->nullable();
-            $table->string('report_to')->nullable();
+            $table->string('dept_head')->nullable();
             $table->enum('employee_status', ['active', 'on-leave', 'terminated','resigned'])->default('active');
             $table->string('emergency_contact')->unique()->nullable();
             $table->string('password')->nullable();
@@ -45,6 +45,10 @@ return new class extends Migration
             $table->string('shift_type')->nullable();
             $table->string('shift_start_time')->nullable();
             $table->string('shift_end_time')->nullable();
+            $table->string('probation_Period')->nullable();
+            $table->json('confirmation_date')->nullable();
+            $table->string('referral')->nullable();
+            $table->json('service_age')->nullable();
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->foreign('dept_id')->references('dept_id')->on('emp_departments')->onDelete('cascade');
             $table->foreign('sub_dept_id')->references('sub_dept_id')->on('emp_sub_departments')->onDelete('cascade');
