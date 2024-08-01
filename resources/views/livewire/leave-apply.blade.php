@@ -26,7 +26,7 @@
             <div class="row d-flex align-items-center">
                 <div class="col-md-7">
                     <div class="form-group ">
-                        <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave Type <span class="requiredMark">*</span> </label> <br>
+                        <label for="leaveType">Leave Type <span class="requiredMark">*</span> </label> <br>
                         <div class="custom-select-wrapper" style="width: 50%;">
                             <select id="leaveType" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType">
                                 <option value="default">Select Type</option>
@@ -50,60 +50,39 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <div class="pay-bal">
-                            <span style=" font-size: 12px; font-weight: 500;color:#778899;">Balance :</span>
+                            <label >Balance :</label>
                             @if(!empty($leaveBalances))
-                            <div style="flex-direction:row; display: flex; align-items: center;justify-content:center;cursor:pointer;">
+                            <div class="d-flex align-items-center justify-content-center" style="cursor:pointer;">
                                 @if($leave_type == 'Sick Leave')
                                 <!-- Sick Leave -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e6e6fa; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #50327c;font-weight:500;">SL</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #50327c; margin-left: 5px;" title="Sick Leave">{{ $leaveBalances['sickLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance" title="Sick Leave">{{ $leaveBalances['sickLeaveBalance'] }}</span>
                                 @elseif($leave_type == 'Casual Leave')
                                 <!-- Casual Leave -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e7fae7; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #1d421e;font-weight:500;">CL</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;" title="Casual Leave">{{ $leaveBalances['casualLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance" title="Casual Leave">{{ $leaveBalances['casualLeaveBalance'] }}</span>
                                 @elseif($leave_type == 'Casual Leave Probation')
                                 <!-- Casual Leave Probation -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #fff6e5; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 9px; color: #e59400;font-weight:500;" title="Casual Leave Probation">CLP</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;">{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance" >{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
                                 @elseif($leave_type == 'Loss of Pay')
                                 <!-- Loss of Pay -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #890000;font-weight:500;" title="Loss of Pay">LP</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                                <span class="sickLeaveBalance">{{ $leaveBalances['lossOfPayBalance'] }}</span>
                                 @elseif($leave_type == 'Maternity Leave')
                                 <!-- Loss of Pay -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #890000;font-weight:500;" title="Maternity Leave">ML</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $leaveBalances['maternityLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance">{{ $leaveBalances['maternityLeaveBalance'] }}</span>
                                 @elseif($leave_type == 'Paternity Leave')
                                 <!-- Loss of Pay -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #890000;font-weight:500;" title="Paternity Leave">PL</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $leaveBalances['paternityLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance">{{ $leaveBalances['paternityLeaveBalance'] }}</span>
                                 @elseif($leave_type == 'Marriage Leave')
                                 <!-- Loss of Pay -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #890000;font-weight:500;" title="Marriage Leave">MRL</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
                                 @endif
                             </div>
                             @endif
 
                         </div>
                         <div class="form-group mb-0">
-                            <label for="numberOfDays" style="color: #778899; font-size: 12px; font-weight: 500;">Number of Days :</label>
+                            <label for="numberOfDays">Number of Days :</label>
                             @if($showNumberOfDays)
-                            <span id="numberOfDays" style="font-size: 12px;color:#778899;">
+                            <span id="numberOfDays" class="sickLeaveBalance">
                                 <!-- Display the calculated number of days -->
                                 {{ $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session) }}
                             </span>
@@ -117,8 +96,8 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['casualProbationLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
                             $insufficientBalance = true; @endphp
@@ -130,8 +109,8 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['casualLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
                             $insufficientBalance = true; @endphp
@@ -142,8 +121,8 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['sickLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
                             $insufficientBalance = true; @endphp
@@ -154,8 +133,8 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['maternityLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
                             $insufficientBalance = true; @endphp
@@ -166,8 +145,8 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['paternityLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
                             $insufficientBalance = true; @endphp
@@ -178,8 +157,8 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['marriageLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
                             $insufficientBalance = true; @endphp
@@ -197,19 +176,19 @@
                     </div>
                 </div>
             </div>
-            <div class="row d-flex mt-1">
+            <div class="row d-flex mt-2">
                 <div class="col-md-6">
-                    <div class="form-group ">
-                        <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From Date <span class="requiredMark">*</span> </label>
-                        <input type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('from_date')">
+                    <div class="form-group">
+                        <label for="fromDate" >From Date <span class="requiredMark">*</span> </label>
+                        <input type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate"  wire:change="handleFieldUpdate('from_date')">
                         @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group ">
-                        <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Session</label> <br>
+                        <label for="session" >Session</label> <br>
                         <div class="custom-select-wrapper">
-                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('from_session')">
+                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="session"  wire:change="handleFieldUpdate('from_session')">
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
@@ -221,16 +200,16 @@
             <div class=" row d-flex mt-3">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To Date <span class="requiredMark">*</span> </label>
-                        <input type="date" wire:model.lazy="to_date" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('to_date')" name="toDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('to_date')">
+                        <label for="toDate" >To Date <span class="requiredMark">*</span> </label>
+                        <input type="date" wire:model.lazy="to_date" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('to_date')" name="toDate" wire:change="handleFieldUpdate('to_date')">
                         @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group ">
-                        <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Session</label> <br>
+                        <label for="session" >Session</label> <br>
                         <div class="custom-select-wrapper">
-                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('to_session')">
+                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="session" wire:change="handleFieldUpdate('to_session')">
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
@@ -242,9 +221,9 @@
 
             <div>
                 @if($showApplyingTo)
-                <div class="form-group mt-3" style="margin-top: 10px;">
-                    <div style="display:flex; flex-direction:row;" wire:click="applyingTo">
-                        <label for="applyingToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500; cursor: pointer;">
+                <div class="form-group mt-3" >
+                    <div class="d-flex " wire:click="applyingTo">
+                        <label for="applyingToText" id="applyingToText" name="applyingTo" style="cursor: pointer;" >
                             <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
                             Applying To
                         </label>
@@ -272,15 +251,15 @@
                     @endif
                     <div class="center p-0 m-0">
                         @if(!$loginEmpManager)
-                        <p class="mb-0" style="font-size:10px;margin-bottom:0;">N/A</p>
+                        <p class="mb-0" style="font-size:10px;">N/A</p>
                         @else
                         <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($loginEmpManager)) }}</p>
                         @endif
 
                         @if(!$loginEmpManagerId)
-                        <p class="mb-0" style="font-size:10px;margin-bottom:0;">#(N/A)</p>
+                        <p class="mb-0 normalTextValue" >#(N/A)</p>
                         @else
-                        <p class="mb-0" style="color:#778899; font-size:10px;margin-bottom:0;" id="managerIdText"><span class="remaining">#{{$loginEmpManagerId}}</span></p>
+                        <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#{{$loginEmpManagerId}}</span></p>
                         @endif
                     </div>
                     <div class="downArrow" wire:click="applyingTo">
@@ -293,9 +272,9 @@
                 @if($showApplyingToContainer)
                 <div class="searchContainer">
                     <!-- Content for the search container -->
-                    <div class="row" style="padding: 0 15px; margin-bottom: 10px;">
-                        <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
-                            <div class="col-md-10" style="margin: 0px; padding: 0px">
+                    <div class="row mb-2 py-0 " >
+                        <div class="row m-0 p-0 d-flex align-items-center justify-content-between" >
+                            <div class="col-md-10" >
                                 <div class="input-group">
                                     <input wire:model="filter" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
@@ -331,12 +310,12 @@
                             @endif
                             <div class="center d-flex flex-column mt-2 mb-2">
                                 <span class="ellipsis mb-0" value="{{ $employee['full_name'] }}">{{ $employee['full_name'] }}</span>
-                                <span class="mb-0" style="color:#778899; font-size:10px;margin-bottom:0;" value="{{ $employee['full_name'] }}"> #{{ $employee['emp_id'] }} </span>
+                                <span class="mb-0 normalTextValue" style="font-size:10px;" value="{{ $employee['full_name'] }}"> #{{ $employee['emp_id'] }} </span>
                             </div>
                         </div>
                         @endforeach
                         @else
-                        <p>No managers found.</p>
+                        <p class="mb-0 normalTextValue m-auto ">No managers found.</p>
                         @endif
                     </div>
                 </div>
@@ -344,10 +323,10 @@
                 @error('applying_to') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group mt-3">
-                <label for="ccToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500;">
+                <label for="ccToText" id="applyingToText" name="applyingTo" >
                     CC To
                 </label>
-                <div class="control-wrapper d-flex align-items-center" style="flex-direction: row; gap: 10px;cursor:pointer;">
+                <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
                     <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
                         <div class="icon-container">
                             <i class="bx bx-plus" style="color: #778899;"></i>
@@ -360,7 +339,7 @@
                     <ul class=" d-flex align-items-center mb-0" style="list-style-type: none;gap:10px;">
                         @foreach($selectedCCEmployees as $recipient)
                         <li>
-                            <div class="px-2 py-1 " style=" border-radius: 25px; border: 2px solid #adb7c1; display: flex; justify-content: space-between; align-items: center;" title="{{ ucwords(strtolower( $recipient['first_name'])) }} {{ ucwords(strtolower( $recipient['last_name'])) }}">
+                            <div class="px-2 py-1 d-flex justify-content-between align-items-center" style=" border-radius: 25px; border: 2px solid #adb7c1;" title="{{ ucwords(strtolower( $recipient['first_name'])) }} {{ ucwords(strtolower( $recipient['last_name'])) }}">
                                 <span style="text-transform: uppercase; color: #adb7c1;font-size:12px;">{{ $recipient['initials'] }}</span>
                                 <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer;color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
                             </div>
@@ -391,9 +370,10 @@
                         </div>
                     </div>
                     <div class="scrollApplyingTO mb-2 mt-2">
+                    @if(!empty($ccRecipients))
                         @foreach($ccRecipients as $employee)
                         <div wire:key="{{ $employee['emp_id'] }}">
-                            <div style="margin-top: 10px; display: flex; gap: 10px; text-transform: capitalize; align-items: center; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
+                            <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
                                 <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
 
                                 @if($employee['image'])
@@ -413,7 +393,12 @@
                             </div>
                         </div>
                         @endforeach
-                        </divclass>
+                        @else
+                        <div class="mb-0 normalTextValue">
+                            No data found
+                        </div>
+                        @endif
+                        </div>
                     </div>
                     @endif
                     @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
@@ -421,17 +406,17 @@
 
 
                 <div class="form-group mt-3">
-                    <label for="contactDetails" style="color: #778899; font-size: 12px; font-weight: 500;">Contact Details <span class="requiredMark">*</span> </label>
-                    <input type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="color: #778899;width:50%;font-size:13px;">
+                    <label for="contactDetails" >Contact Details <span class="requiredMark">*</span> </label>
+                    <input type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="width:50%;">
                     @error('contact_details') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group mt-3">
-                    <label for="reason" style="color: #778899; font-size: 12px; font-weight: 500;">Reason <span class="requiredMark">*</span> </label>
-                    <textarea class="form-control placeholder-small" wire:model.lazy="reason" wire:keydown.debounce.500ms="validateField('reason')" name="reason" placeholder="Enter a reason" rows="4" style="color: #778899;font-size:13px;"></textarea>
+                    <label for="reason" >Reason <span class="requiredMark">*</span> </label>
+                    <textarea class="form-control placeholder-small" wire:model.lazy="reason" wire:keydown.debounce.500ms="validateField('reason')" name="reason" placeholder="Enter a reason" rows="4" ></textarea>
                     @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group mt-3">
-                    <input type="file" wire:model="files" wire:loading.attr="disabled" style="font-size: 12px;color:#778899;" multiple />
+                    <input type="file" wire:model="files" wire:loading.attr="disabled" style="font-size: 12px;"  multiple />
                     @error('file_paths') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
 
