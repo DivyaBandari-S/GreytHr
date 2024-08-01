@@ -164,7 +164,7 @@ class LeaveApply extends Component
             // Fetch employees based on the search term
             $this->employeeDetails = EmployeeDetails::where('company_id', $this->applying_to->company_id)
                 ->where(function ($query) {
-                    $query->where('company_name', 'like', '%' . $this->searchTerm . '%')
+                    $query
                         ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
                         ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
                         ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
@@ -221,8 +221,7 @@ class LeaveApply extends Component
             $this->ccRecipients = EmployeeDetails::where('company_id', $this->applying_to->company_id)
                 ->where('emp_id', '!=', $employeeId) // Exclude the current user
                 ->where(function ($query) {
-                    $query->where('company_name', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
+                    $query
                         ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
                         ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
                 })

@@ -2157,9 +2157,7 @@ input[type="radio"] {
     font-size: 14px;
     transition: color 0.3s;
 }
-.leaveDropDown{
-    width: 50%; font-weight: 400; color: #778899; font-size: 12px;border:1px solid #ccc;
-}
+
 /* Define custom tabs for CSS classes */
 .custom-nav-tabs {
     margin-top: 10px;
@@ -2269,7 +2267,7 @@ input[type="radio"] {
         width: 100% !important;
         margin: 0 auto;
     }
-    .leaveDropDown{
+    .form-control{
         width: 100%;
     }
 }
@@ -4643,4 +4641,43 @@ option {
     color: white;
     font-weight: normal;
     height: 40px;
+}
+
+
+/* ////dropdown styles */
+.custom-select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.custom-select-wrapper select {
+    appearance: none;
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .375rem .75rem;
+    font-size: 12px;
+    width: 100%;
+    cursor: pointer;
+    padding-right: 2rem; /* Space for the arrow */
+}
+
+.custom-select-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: .5rem;
+    width: 0;
+    height: 0;
+    border-left: 0.4rem solid transparent; /* Width of the arrow */
+    border-right: 0.4rem solid transparent; /* Width of the arrow */
+    border-top: 0.4rem solid #778899; /* Arrow color */
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.custom-select-wrapper select:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
 }

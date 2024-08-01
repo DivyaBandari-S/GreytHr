@@ -27,28 +27,22 @@
                 <div class="col-md-7">
                     <div class="form-group ">
                         <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave Type <span class="requiredMark">*</span> </label> <br>
-                        <select id="leaveType" class="leaveDropdown p-2 outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType" >
-                            <option value="default">Select Type</option>
-                            @php
-                            $managerInfo = DB::table('employee_details')
-                            ->join('companies', 'employee_details.company_id', '=', 'companies.company_id')
-                            ->where('employee_details.manager_id', $employeeId)
-                            ->select('companies.company_logo', 'companies.company_name')
-                            ->first();
-                            @endphp
-                            <option value="Casual Leave">Casual Leave</option>
-                            @if (($differenceInMonths < 6) && ($employeeId !==$managerInfo->manager_id))
-                                <option value="Casual Leave Probation">Casual Leave Probation</option>
-                                @endif
-                                <option value="Loss of Pay">Loss of Pay</option>
-                                <option value="Marriage Leave">Marriage Leave</option>
-                                @if($employeeGender && $employeeGender->gender === 'Female')
-                                <option value="Maternity Leave">Maternity Leave</option>
-                                @else
-                                <option value="Paternity Leave">Paternity Leave</option>
-                                @endif
-                                <option value="Sick Leave">Sick Leave</option>
-                        </select>
+                        <div class="custom-select-wrapper" style="width: 50%;">
+                            <select id="leaveType" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType">
+                                <option value="default">Select Type</option>
+                                <option value="Casual Leave">Casual Leave</option>
+                                @if (($differenceInMonths < 6)) <option value="Casual Leave Probation">Casual Leave Probation</option>
+                                    @endif
+                                    <option value="Loss of Pay">Loss of Pay</option>
+                                    <option value="Marriage Leave">Marriage Leave</option>
+                                    @if($employeeGender && $employeeGender->gender === 'Female')
+                                    <option value="Maternity Leave">Maternity Leave</option>
+                                    @else
+                                    <option value="Paternity Leave">Paternity Leave</option>
+                                    @endif
+                                    <option value="Sick Leave">Sick Leave</option>
+                            </select>
+                        </div>
                         <br>
                         @error('leave_type') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
@@ -57,56 +51,56 @@
                     <div class="form-group">
                         <div class="pay-bal">
                             <span style=" font-size: 12px; font-weight: 500;color:#778899;">Balance :</span>
-                            @if(!empty($this->leaveBalances))
+                            @if(!empty($leaveBalances))
                             <div style="flex-direction:row; display: flex; align-items: center;justify-content:center;cursor:pointer;">
-                                @if($this->leave_type == 'Sick Leave')
+                                @if($leave_type == 'Sick Leave')
                                 <!-- Sick Leave -->
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e6e6fa; display: flex; align-items: center; justify-content: center; ">
                                     <span style="font-size: 10px; color: #50327c;font-weight:500;">SL</span>
                                 </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #50327c; margin-left: 5px;" title="Sick Leave">{{ $this->leaveBalances['sickLeaveBalance'] }}</span>
-                                @elseif($this->leave_type == 'Casual Leave')
+                                <span style="font-size: 11px; font-weight: 500; color: #50327c; margin-left: 5px;" title="Sick Leave">{{ $leaveBalances['sickLeaveBalance'] }}</span>
+                                @elseif($leave_type == 'Casual Leave')
                                 <!-- Casual Leave -->
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e7fae7; display: flex; align-items: center; justify-content: center; ">
                                     <span style="font-size: 10px; color: #1d421e;font-weight:500;">CL</span>
                                 </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;" title="Casual Leave">{{ $this->leaveBalances['casualLeaveBalance'] }}</span>
-                                @elseif($this->leave_type == 'Casual Leave Probation')
+                                <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;" title="Casual Leave">{{ $leaveBalances['casualLeaveBalance'] }}</span>
+                                @elseif($leave_type == 'Casual Leave Probation')
                                 <!-- Casual Leave Probation -->
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #fff6e5; display: flex; align-items: center; justify-content: center; ">
                                     <span style="font-size: 9px; color: #e59400;font-weight:500;" title="Casual Leave Probation">CLP</span>
                                 </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;">{{ $this->leaveBalances['casualProbationLeaveBalance'] }}</span>
-                                @elseif($this->leave_type == 'Loss of Pay')
+                                <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;">{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
+                                @elseif($leave_type == 'Loss of Pay')
                                 <!-- Loss of Pay -->
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
                                     <span style="font-size: 10px; color: #890000;font-weight:500;" title="Loss of Pay">LP</span>
                                 </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $this->leaveBalances['lossOfPayBalance'] }}</span>
-                                @elseif($this->leave_type == 'Maternity Leave')
+                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                                @elseif($leave_type == 'Maternity Leave')
                                 <!-- Loss of Pay -->
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
                                     <span style="font-size: 10px; color: #890000;font-weight:500;" title="Maternity Leave">ML</span>
                                 </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $this->leaveBalances['maternityLeaveBalance'] }}</span>
-                                @elseif($this->leave_type == 'Paternity Leave')
+                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $leaveBalances['maternityLeaveBalance'] }}</span>
+                                @elseif($leave_type == 'Paternity Leave')
                                 <!-- Loss of Pay -->
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
                                     <span style="font-size: 10px; color: #890000;font-weight:500;" title="Paternity Leave">PL</span>
                                 </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $this->leaveBalances['paternityLeaveBalance'] }}</span>
-                                @elseif($this->leave_type == 'Marriage Leave')
+                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $leaveBalances['paternityLeaveBalance'] }}</span>
+                                @elseif($leave_type == 'Marriage Leave')
                                 <!-- Loss of Pay -->
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
                                     <span style="font-size: 10px; color: #890000;font-weight:500;" title="Marriage Leave">MRL</span>
                                 </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $this->leaveBalances['marriageLeaveBalance'] }}</span>
+                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
                                 @endif
                             </div>
                             @endif
 
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-0">
                             <label for="numberOfDays" style="color: #778899; font-size: 12px; font-weight: 500;">Number of Days :</label>
                             @if($showNumberOfDays)
                             <span id="numberOfDays" style="font-size: 12px;color:#778899;">
@@ -114,14 +108,14 @@
                                 {{ $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session) }}
                             </span>
                             <!-- Add a condition to check if the number of days exceeds the leave balance -->
-                            @if(!empty($this->leaveBalances))
+                            @if(!empty($leaveBalances))
                             <!-- Directly access the leave balance for the selected leave type -->
                             @php
                             $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session);
                             @endphp
-                            @if($this->leave_type == 'Casual Leave Probation')
+                            @if($leave_type == 'Casual Leave Probation')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $this->leaveBalances['casualProbationLeaveBalance'])
+                            @if($calculatedNumberOfDays > $leaveBalances['casualProbationLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message" style="position: absolute;  left: 0;">
                                 <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
@@ -132,9 +126,9 @@
                             <span></span>
                             @endif
 
-                            @elseif($this->leave_type == 'Casual Leave')
+                            @elseif($leave_type == 'Casual Leave')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $this->leaveBalances['casualLeaveBalance'])
+                            @if($calculatedNumberOfDays > $leaveBalances['casualLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message" style="position: absolute;  left: 0;">
                                 <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
@@ -144,9 +138,9 @@
                             @else
                             <span></span>
                             @endif
-                            @elseif($this->leave_type == 'Sick Leave')
+                            @elseif($leave_type == 'Sick Leave')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $this->leaveBalances['sickLeaveBalance'])
+                            @if($calculatedNumberOfDays > $leaveBalances['sickLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message" style="position: absolute;  left: 0;">
                                 <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
@@ -156,9 +150,9 @@
                             @else
                             <span></span>
                             @endif
-                            @elseif($this->leave_type == 'Maternity Leave')
+                            @elseif($leave_type == 'Maternity Leave')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $this->leaveBalances['maternityLeaveBalance'])
+                            @if($calculatedNumberOfDays > $leaveBalances['maternityLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message" style="position: absolute;  left: 0;">
                                 <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
@@ -168,9 +162,9 @@
                             @else
                             <span></span>
                             @endif
-                            @elseif($this->leave_type == 'Paternity Leave')
+                            @elseif($leave_type == 'Paternity Leave')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $this->leaveBalances['paternityLeaveBalance'])
+                            @if($calculatedNumberOfDays > $leaveBalances['paternityLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message" style="position: absolute;  left: 0;">
                                 <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
@@ -180,9 +174,9 @@
                             @else
                             <span></span>
                             @endif
-                            @elseif($this->leave_type == 'Marriage Leave')
+                            @elseif($leave_type == 'Marriage Leave')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $this->leaveBalances['marriageLeaveBalance'])
+                            @if($calculatedNumberOfDays > $leaveBalances['marriageLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message" style="position: absolute;  left: 0;">
                                 <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
@@ -203,7 +197,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row d-flex mt-3">
+            <div class="row d-flex mt-1">
                 <div class="col-md-6">
                     <div class="form-group ">
                         <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From Date <span class="requiredMark">*</span> </label>
@@ -214,11 +208,13 @@
                 <div class="col-md-6">
                     <div class="form-group ">
                         <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Session</label> <br>
-                        <select class="dropdown p-2 outline-none rounded placeholder-small w-100" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="session" style="font-size:12px;border:1px solid #ccc;" wire:change="handleFieldUpdate('from_session')">
-                            <option value="Session 1">Session 1</option>
-                            <option value="Session 2">Session 2</option>
-                        </select>
-                        @error('from_session') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="custom-select-wrapper">
+                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('from_session')">
+                                <option value="Session 1">Session 1</option>
+                                <option value="Session 2">Session 2</option>
+                            </select>
+                            @error('from_session') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
                     </div>
                 </div>
             </div>
@@ -233,11 +229,13 @@
                 <div class="col-md-6">
                     <div class="form-group ">
                         <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Session</label> <br>
-                        <select class="dropdown p-2 outline-none rounded placeholder-small w-100" wire:model.lazy="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="session" style="font-size:12px;border:1px solid #ccc;" wire:change="handleFieldUpdate('to_session')">
-                            <option value="Session 1">Session 1</option>
-                            <option value="Session 2">Session 2</option>
-                        </select>
-                        @error('to_session') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="custom-select-wrapper">
+                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('to_session')">
+                                <option value="Session 1">Session 1</option>
+                                <option value="Session 2">Session 2</option>
+                            </select>
+                            @error('to_session') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
                     </div>
                 </div>
             </div>
