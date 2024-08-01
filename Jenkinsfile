@@ -1,8 +1,10 @@
+/* groovylint-disable BlockEndsWithBlankLine, UnnecessaryGString */
+/* groovylint-disable-next-line CompileStatic */
 pipeline {
     agent any
     environment {
         DEPLOY_DIR = 'C:\\xampp\\htdocs\\deploye_server'
-        GIT_URL = 'https://github.com/Nikhithanadiminti/GreytHr.git'
+        GIT_URL = 'https://github.com/sssreddys/GreytHr.git'
         GIT_BRANCH = 'main'
          GIT_PATH = 'C:\\Program Files\\Git\\cmd\\git.exe'
         //GIT_PATH = 'C:\\Users\\SivaKumarSaragada\\AppData\\Local\\Programs\\Git\\cmd\\git.exe'
@@ -86,9 +88,10 @@ pipeline {
         }
         stage('Run server') {
             steps {
-                dir("${DEPLOY_DIR}") {
-                    bat 'php artisan serve --host=0.0.0.0 --port=8000'
-                }
+                // dir("${DEPLOY_DIR}") {
+                //     bat 'php artisan serve --host=0.0.0.0 --port=8000'
+                // }
+                echo "Deployment steps completed successfully."
             }
         }
     }
