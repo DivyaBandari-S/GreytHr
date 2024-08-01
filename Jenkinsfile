@@ -1,5 +1,3 @@
-/* groovylint-disable BlockEndsWithBlankLine, UnnecessaryGString */
-/* groovylint-disable-next-line CompileStatic */
 pipeline {
     agent any
     environment {
@@ -7,10 +5,7 @@ pipeline {
         GIT_URL = 'https://github.com/sssreddys/GreytHr.git'
         GIT_BRANCH = 'main'
         GIT_PATH = 'C:\\Program Files\\Git\\cmd\\git.exe'
-    //GIT_PATH = 'C:\\Users\\SivaKumarSaragada\\AppData\\Local\\Programs\\Git\\cmd\\git.exe'
-    }
-    triggers {
-        pollSCM('* * * * *') // This will check for changes in the SCM every minute
+    // GIT_PATH = 'C:\\Users\\SivaKumarSaragada\\AppData\\Local\\Programs\\Git\\cmd\\git.exe'
     }
     stages {
         stage('Create Directory') {
@@ -23,7 +18,7 @@ pipeline {
         stage('Check and Update/Clone Repository') {
             steps {
                 script {
-                    def gitDirExists = fileExists("${DEPLOY_DIR}\\\\.git")
+                    def gitDirExists = fileExists("${DEPLOY_DIR}\\.git")
                     if (gitDirExists) {
                         dir("${DEPLOY_DIR}") {
                             bat """
@@ -51,14 +46,14 @@ pipeline {
         stage('Prepare .env file') {
             steps {
                 script {
-                    def envFileExists = fileExists("${DEPLOY_DIR}\\\\.env")
+                    def envFileExists = fileExists("${DEPLOY_DIR}\\.env")
                     if (envFileExists) {
                         bat """
-                        del /Q ${DEPLOY_DIR}\\\\.env
+                        del /Q ${DEPLOY_DIR}\\.env
                         """
                     }
                     bat """
-                    copy ${DEPLOY_DIR}\\\\.env.example ${DEPLOY_DIR}\\\\.env
+                    copy ${DEPLOY_DIR}\\.env.example ${DEPLOY_DIR}\\.env
                     """
                 }
             }
@@ -66,32 +61,29 @@ pipeline {
         stage('Install dependencies and generate APP_KEY') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    bat """
+                    bat '''
                     composer install
                     php artisan key:generate
-                    """
+                    '''
                 }
             }
         }
         stage('Clear caches and run tests') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    bat """
+                    bat '''
                     php artisan config:clear
                     php artisan cache:clear
                     php artisan route:clear
                     php artisan view:clear
                     php artisan optimize:clear
-                    """
+                    '''
                 }
             }
         }
         stage('Run server') {
             steps {
-                // dir("${DEPLOY_DIR}") {
-                //    bat 'php artisan serve --host=0.0.0.0 --port=8000'
-                // }
-                echo "Deployment steps completed successfully."
+                echo 'Deployment steps completed successfully.'
             }
         }
     }
