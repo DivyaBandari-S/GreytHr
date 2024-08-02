@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -6,10 +7,7 @@ use Throwable;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Illuminate\Validation\ValidationException;
-use Psr\Log\LoggerInterface;
-use Illuminate\Http\Request;
-
+use Symfony\Component\HttpFoundation\Response;
 class Handler extends ExceptionHandler
 {
     /**
@@ -33,7 +31,7 @@ class Handler extends ExceptionHandler
         });
     }
 
-    /**
+  /**
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -42,15 +40,6 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
-        // Log the exception details
-        $this->logException($e, $request);
-
-        if ($e instanceof ValidationException) {
-            return response()->json([
-                'errors' => $e->errors()
-            ], 422);
-        }
-
         if ($e instanceof NotFoundHttpException) {
             return response()->view('errors.404', [], 404);
         }
@@ -84,32 +73,6 @@ class Handler extends ExceptionHandler
             return response()->view('errors.db_error', [], 500);
         }
 
-        // For other exceptions, log and show a generic error message
-        return response()->view('errors.default', ['message' => 'Something went wrong. Please try again later.'], 500);
-    }
-
-    /**
-     * Log the exception with request context.
-     *
-     * @param  \Throwable  $e
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
-     */
-    protected function logException(Throwable $e, Request $request): void
-    {
-        $logger = app(LoggerInterface::class);
-
-        // Log detailed exception information
-        $logger->error($e->getMessage(), [
-            'exception' => $e,
-            'stack_trace' => $e->getTraceAsString(),
-            'request' => [
-                'url' => $request->fullUrl(),
-                'method' => $request->method(),
-                'headers' => $request->headers->all(),
-                'body' => $request->all(),
-            ],
-            'user' => optional($request->user())->toArray(),
-        ]);
+        return parent::render($request, $e);
     }
 }
