@@ -124,7 +124,7 @@
     <section id="content">
         <!-- NAVBAR -->
         <nav>
-            <i class='fa fa-menu toggle-sidebar'></i>
+            <i class='fas fa-bars toggle-sidebar'></i>
             <form action="#">
                 <div class="form-group">
                     <input type="text" placeholder="Search...">
