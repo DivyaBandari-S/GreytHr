@@ -106,7 +106,7 @@ class Home extends Component
         // // Get data from MySQL
         // $dataMySql = DB::connection('mysql')
         //     ->table('employee_details')
-        //     ->pluck('emp_id');
+        //     ->pluck('emp_id');2
         // $mysqlEmployeeIds = $dataMySql->toArray();
 
         // // Process and match the data from both databases

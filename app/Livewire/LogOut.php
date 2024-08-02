@@ -87,7 +87,7 @@ class LogOut extends Component
         } catch (\Exception $exception) {
             // Handle exceptions
             session()->flash('error', "An error occurred while logging out.");
-            return redirect()->back(); // Redirect back with an error message
+            return redirect()->route('emplogin'); // Redirect back with an error message
         }
     }
     public function cancelLogout()

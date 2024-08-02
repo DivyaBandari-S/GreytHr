@@ -3,13 +3,13 @@
         <div class="row m-0 p-0 mt-3">
             <div class="d-flex align-items-center justify-content-between p-0">
             <div class="d-flex align-items-center gap-2">
+            @if($count > 0)
                 <span class="totalRequestCount">Total Leave Requests
-                             @if($count > 0)
                         <span class="leaveCountReview d-flex align-items-center justify-content-center">
                             {{ $count }}
                         </span>
-                        @endif
                 </span>
+            @endif
             </div>
             <div class="search-container d-flex align-items-end justify-content-end p-1">
                 <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Enter employee name" class="border outline-none rounded">

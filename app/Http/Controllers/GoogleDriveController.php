@@ -35,7 +35,7 @@ class GoogleDriveController extends Controller
         try {
             $this->driveService->handleGoogleOAuthCallback();
             // Redirect to a dashboard or another page with a success message
-            return redirect('/ProfileInfo')->with('success', 'Successfully authenticated with Google Drive.');
+            return redirect('/emplogin')->with('success', 'Successfully authenticated with Google Drive.');
         } catch (\Exception $e) {
             // Redirect to a failure page or back to the auth page with an error message
             return redirect('/google-drive/auth')->with('error', 'Authentication failed: ' . $e->getMessage());
