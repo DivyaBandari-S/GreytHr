@@ -491,7 +491,7 @@
             </div>
             @else
             <div style="display:flex;justify-content:center;flex-direction:column;align-items:center;">
-                <img src="https://i.pinimg.com/originals/52/4c/6c/524c6c3d7bd258cd165729ba9b28a9a2.png" alt="Image Description" style="width: 120px; height:100px;">
+                <img src="{{asset('images/no data.png')}}" alt="Image Description" style="width: 120px; height:100px;">
                 <p class="homeText">
                     Wow! No leaves planned today.
                 </p>
