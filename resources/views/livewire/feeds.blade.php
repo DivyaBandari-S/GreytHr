@@ -2188,7 +2188,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .menu-item:hover {
          background-color: #EDF3FF;
          border-radius: 5px;
-        height: 30px;
+        height:auto;
         width: 130%;
     }
 

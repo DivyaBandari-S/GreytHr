@@ -2,12 +2,13 @@
 
  <div style="text-align: center;display:flex;align-items:center;justify-content:end;">
 
-<button type="button" class="dowload mx-2 px-2 rounded" style="background-color: rgb(2, 17, 79)">
-<a href="/your-download-route" id="pdfLink2023_4" class="pdf-download btn-primary px-3 rounded d-flex align-items-center" download style="color: white; text-decoration: none;">
-<i class="bx bx-download" style="color: white;"></i>
+ <button type="button" class="dowload mx-2 px-2 rounded" style="background-color: rgb(2, 17, 79)">
+    <a href="#" wire:click.prevent="downloadPdf" class="pdf-download btn-primary px-3 rounded d-flex align-items-center" style="color: white; text-decoration: none;">
+        <i class="bx bx-download" style="color: white;"></i>
+       
     </a>
-            
-        </button>
+</button>
+
 
    
         <div class="mx-2">
@@ -23,11 +24,12 @@
     <div class="col">
     @if ($salaryRevision->isEmpty())
 
-<div class="message-container" style= "background-color: #f7f7f7;border: 1px solid #ccc;border-radius: 5px;padding: 20px;margin-bottom: 20px;width:600px;height:400px;background-color:white;font-family:Montserrat;text-align:center">
-    <img src="https://static.vecteezy.com/system/resources/previews/005/950/625/original/modern-design-icon-of-pay-slip-vector.jpg" style="height:250px;width:250px;justify-content:center;margin-top:0px">
+    <div class="message-container" style="background-color: white; border: 1px solid #ccc; border-radius: 5px; padding: 20px; margin-bottom: 20px; width: 600px; height: 400px; font-family: Montserrat; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <img src="https://static.vecteezy.com/system/resources/previews/005/950/625/original/modern-design-icon-of-pay-slip-vector.jpg" style="height: 250px; width: 250px; justify-content: center; margin-top: 0px;">
     <br>
-    <p class="message" style=" font-size: 18px;color:  #3b4452;text-align: center;margin-top:20px;font-weight:600">Currently working on Payslip.</p>
+    <p class="message" style="font-size: 18px; color: #3b4452; text-align: center; margin-top: 20px; font-weight: 600;">Currently working on Payslip.</p>
 </div>
+
 </div>
 @else
     </div>

@@ -16,27 +16,20 @@
             </div>
             @endif
             <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
-    <div class="card border-0 m-0" style="width: 380px; border-radius: 5px;">
-        <div class="card-header px-0 py-0 m-0 border-0 " style="border-radius: 5px;">
-            <div class="row no-gutters" style="height: 100%; width: 100%;">
-                <div class="col">
-                    <button wire:click="$set('activeTab', 'active')" class="btn btn-block @if($activeTab === 'active') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 5px 0 0 5px; background-color: @if($activeTab === 'active') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'active') #fff @else #778899 @endif; height: 100%;">
-                        Active
-                    </button>
-                </div>
-                <div class="col">
-                    <button wire:click="$set('activeTab', 'pending')" class="btn btn-block @if($activeTab === 'pending') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 0; background-color: @if($activeTab === 'pending') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'pending') #fff @else #778899 @endif; height: 100%;">
-                        Pending
-                    </button>
-                </div>
-                <div class="col">
-                    <button wire:click="$set('activeTab', 'closed')" class="btn btn-block @if($activeTab === 'closed') active @else btn-light @endif" style="font-size: 13px; font-weight: 500; border-radius: 0 5px 5px 0; background-color: @if($activeTab === 'closed') rgb(2, 17, 79) @else none @endif; color: @if($activeTab === 'closed') #fff @else #778899 @endif; height: 100%;">
-                        Closed
-                    </button>
-                </div>
-            </div>
+            <div class="nav-buttons d-flex justify-content-center">
+            <ul class="nav custom-nav-tabs border">
+                <li class="custom-item m-0 p-0 flex-grow-1">
+                    <a href="#" wire:click="$set('activeTab', 'active')" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link @if($activeTab === 'active') active @else btn-light @endif" >Active</a>
+                </li>
+                <li class="custom-item m-0 p-0 flex-grow-1" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
+                    <a href="#" style="border-radius:none;"  wire:click="$set('activeTab', 'pending')" class="custom-nav-link @if($activeTab === 'pending') active @else btn-light @endif">Pending</a>
+                </li>
+                <li class="custom-item m-0 p-0 flex-grow-1">
+                    <a href="#" wire:click="$set('activeTab', 'closed')" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link  @if($activeTab === 'closed') active @else btn-light @endif" >Closed</a>
+                </li>
+            </ul>
         </div>
-    </div>
+
 </div>
 
 
