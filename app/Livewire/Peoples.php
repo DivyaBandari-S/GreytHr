@@ -22,7 +22,7 @@ class Peoples extends Component
     public $activeTab = 'starred';
     public $peopleFound = true;
     public $employeeDetails;
-    
+
     public function selectPerson($empId)
     {
         try {
@@ -39,9 +39,9 @@ class Peoples extends Component
             Log::error('Error in selectPerson method: ' . $e->getMessage());
         }
     }
-    
+
     public $selectStarredPeoples;
-    
+
     public function starredPersonById($id)
     {
         try {
@@ -50,13 +50,13 @@ class Peoples extends Component
             Log::error('Error in starredPersonById method: ' . $e->getMessage());
         }
     }
-    
+
     public function filter()
     {
         try {
             $companyId = Auth::user()->company_id;
             $trimmedSearchTerm = trim($this->searchTerm);
-    
+
             $this->filteredPeoples = EmployeeDetails::where('company_id', $companyId)
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
@@ -64,7 +64,7 @@ class Peoples extends Component
                 })
                 ->orderByRaw("CONCAT(first_name, ' ', last_name)")
                 ->get();
-    
+
             $this->peopleFound = count($this->filteredPeoples) > 0;
         } catch (\Exception $e) {
             Log::error('Error in filter method: ' . $e->getMessage());
@@ -77,78 +77,81 @@ class Peoples extends Component
             $trimmedSearchTerm = trim($this->searchTerm);
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
-    
+
             $this->filteredMyTeamPeoples = EmployeeDetails::with('starredPeople')
-            ->where('company_id', $companyId)
-            ->where('manager_id', $managerId)
+                ->where('company_id', $companyId)
+                ->where('manager_id', $managerId)
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
                         ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
                 })
                 ->orderByRaw("CONCAT(first_name, ' ', last_name)")
                 ->get();
-    
+
             $this->peopleFound = count($this->filteredMyTeamPeoples) > 0;
         } catch (\Exception $e) {
             Log::error('Error in filter method: ' . $e->getMessage());
         }
     }
-    
+
     public $search;
     public $filteredStarredPeoples;
-    
+
     public function starredFilter()
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $companyId = Auth::user()->company_id;
             $trimmedSearchTerm = trim($this->search);
-    
+
             $this->filteredStarredPeoples = StarredPeople::where('company_id', $companyId)
-            ->where('emp_id', $employeeId)
+                ->where('emp_id', $employeeId)
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->where('name', 'LIKE', '%' . $trimmedSearchTerm . '%')
                         ->orWhere('people_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
                 })
                 ->get();
-    
+
             $this->peopleFound = count($this->filteredStarredPeoples) > 0;
         } catch (\Exception $e) {
             Log::error('Error in starredFilter method: ' . $e->getMessage());
         }
     }
-    
+
     public $employee;
-    
+
     public function toggleStar($employeeId)
     {
         try {
-            $this->employee = EmployeeDetails::find($employeeId);
+            $this->employee = EmployeeDetails::with('empPersonalInfo')->find($employeeId);
             if ($this->employee) {
                 $this->starredPerson = StarredPeople::where('people_id', $employeeId)
                     ->where('starred_status', 'starred')
                     ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                     ->first();
+
                 if ($this->starredPerson) {
                     $this->starredPerson->delete();
                 } else {
                     $employeeId = auth()->guard('emp')->user()->emp_id;
                     $this->employeeDetails = EmployeeDetails::find($employeeId);
                     try {
-                        StarredPeople::create([
+                        $category = $this->employee->job_role ?? '';
+                        $this->starredPerson = StarredPeople::create([
                             'people_id' => $this->employee->emp_id,
                             'emp_id' => $this->employeeDetails->emp_id,
-                            'company_id' => $this->employeeDetails->company_id,
-                            'name' => $this->employee->first_name . ' ' . $this->employee->last_name,
-                            'profile' => $this->employee->image,
-                            'contact_details' => $this->employee->mobile_number,
-                            'category' => $this->employee->job_title,
-                            'location' => $this->employee->job_location,
-                            'joining_date' => $this->employee->hire_date,
-                            'date_of_birth' => $this->employee->date_of_birth,
+                            'company_id' => $this->employee->company_id,
+                            'name' => $this->employee->first_name . ' ' . $this->employee->last_name ?? '', 
+                            'profile' => $this->employee->image ?? 'https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain',
+                            'contact_details' => $this->employee->emergency_contact ?? '',
+                            'category' => $category,
+                            'location' => $this->employee->job_location ?? '',
+                           'joining_date' => $this->employee->hire_date ?? '', 
+                            'date_of_birth' => $this->employee->empPersonalInfo ? $this->employee->empPersonalInfo->date_of_birth : '',
                             'starred_status' => 'starred'
                         ]);
                     } catch (\Exception $e) {
+                        Log::error('Exception occurred: ' . $e->getMessage());
                         $this->addError('duplicate', 'You have already starred this people.');
                     }
                 }
@@ -158,24 +161,24 @@ class Peoples extends Component
             Log::error('Error in toggleStar method: ' . $e->getMessage());
         }
     }
-    
+
     public function removeToggleStar($personId)
     {
         try {
             $starredPerson = StarredPeople::where('people_id', $personId)
                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->first();
-    
+
             if ($starredPerson) {
                 $starredPerson->delete();
             }
-    
+
             return redirect('/PeoplesList');
         } catch (\Exception $e) {
             Log::error('Error in removeToggleStar method: ' . $e->getMessage());
         }
     }
-    
+
     public $starredPeoples;
     public $starredList;
     public $starredfirst;
@@ -200,13 +203,13 @@ class Peoples extends Component
                 ->orderBy('first_name')
                 ->orderBy('last_name')
                 ->get();
-    
+
             $this->starredList = StarredPeople::with('emp')->where('emp_id', $employeeId)->orderBy('created_at', 'desc')->get();
-    
+
             $peopleData = $this->filteredPeoples ?: $this->peoples;
             $myTeamData = $this->filteredMyTeamPeoples ?: $this->myTeam;
             $this->starredPeoples = $this->filteredStarredPeoples ?: $this->starredList;
-    
+
             return view('livewire.peoples', [
                 'peopleData' => $peopleData,
                 'myTeamData' => $myTeamData,

@@ -231,7 +231,7 @@ class Tasks extends Component
     {
         $this->showRecipients = true;
         $this->selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-        $this->selectedPersonClients = ClientsEmployee::where('emp_id', $this->selectedPerson->emp_id)->get();
+        $this->selectedPersonClients = ClientsEmployee::whereNotNull('emp_id')->where('emp_id', $this->selectedPerson->emp_id)->get();
         $this->selectedPeopleName = $this->selectedPerson->first_name . ' #(' . $this->selectedPerson->emp_id . ')';
         $this->assignee = $this->selectedPeopleName;
 
@@ -312,6 +312,7 @@ class Tasks extends Component
             }
         }
     }
+    
 
     public function submit()
     {
@@ -335,7 +336,7 @@ class Tasks extends Component
             'emp_id' => $this->employeeDetails->emp_id,
             'task_name' => $this->task_name,
             'assignee' => $this->assignee,
-            'client_id' => $this->client_id,
+            'client_id' => $this->client_id ?? "",
             'project_name' => $this->project_name,
             'priority' => $this->priority,
             'due_date' => $this->due_date,
@@ -346,6 +347,7 @@ class Tasks extends Component
             'file_path' => $this->image_path,
             'status' => "Open",
         ]);
+      
 
         Notification::create([
             'emp_id' => $this->employeeDetails->emp_id,

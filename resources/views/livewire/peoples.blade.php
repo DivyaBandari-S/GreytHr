@@ -11,13 +11,14 @@
         }
 
         .people-input-group-container {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .people-search-input {
             font-size: 0.75rem !important;
             border-radius: 5px 0 0 5px;
-            cursor: pointer
+            cursor: pointer;
+            height: 32px;
         }
 
 
@@ -271,7 +272,7 @@
                                 @endif
 
                             </div>
-                            <div class="col-9">
+                            <div class="col-md-9 col-12">
                                 <div class="d-flex align-items-center">
                                     <h6 class="username truncate-text people-default-container-name   @isset($people->emp)
                                         @if($people->emp->employee_status != 'active')
@@ -312,7 +313,7 @@
                         @endif
 
                     </div>
-                    <div class="col-7">
+                    <div class="col-md-7 col-12">
                         <div class="people-selectedperson-detail-container">
                             <div class="d-flex align-items-center">
                                 <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($selectStarredPeoples)->name)) }}</h1>
@@ -324,7 +325,7 @@
 
                             </div>
                             @php
-                            $jobTitle = optional($selectStarredPeoples->emp)->job_title;
+                            $jobTitle = optional($selectStarredPeoples->emp)->job_role;
                             $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                             $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                             $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -338,8 +339,11 @@
                         </div>
                         <br>
                         <div class="row">
-                            <label class="col-6 people-label">Mobile Number</label>
-                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->contact_details }}</label>
+                            <label class="col-7 people-label">Mobile Number</label>
+                            <label class="col-5 people-value">{{ optional($selectStarredPeoples)->contact_details && strtolower(optional($selectStarredPeoples)->contact_details) !== 'n/a'
+                                ? optional($selectStarredPeoples)->contact_details
+                                : '-' 
+                            }}</label>
                         </div>
                         <br>
                         <div class="d-flex align-items-center">
@@ -348,8 +352,11 @@
                         </div>
                         <br>
                         <div class="row">
-                            <label class="col-6 people-label">Location</label>
-                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->location }}</label>
+                            <label class="col-7 people-label">Location</label>
+                            <label class="col-5 people-value">{{ optional($selectStarredPeoples)->location && strtolower(optional($selectStarredPeoples)->location) !== 'unknown'
+                                ? optional($selectStarredPeoples)->location
+                                : '-' 
+                            }}</label>
                         </div>
                         <br>
                         <div class="d-flex align-items-center">
@@ -358,12 +365,18 @@
                         </div>
                         <br>
                         <div class="row">
-                            <label class="col-6 people-label">Joining Date</label>
-                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->joining_date ? date('d M, Y', strtotime(optional($selectedPerson)->joining_date)) : '' }}</label>
+                            <label class="col-7 people-label">Joining Date</label>
+                            <label class="col-5 people-value">{{ optional($selectStarredPeoples)->joining_date && strtolower(optional($selectStarredPeoples)->joining_date) !== 'unknown' 
+                                ? date('d M, Y', strtotime(optional($selectStarredPeoples)->joining_date)) 
+                                : '-' 
+                            }}</label>
                         </div>
                         <div class="row">
-                            <label class="col-6 people-label">Date Of Birth</label>
-                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->date_of_birth ? date('d M, Y', strtotime(optional($selectStarredPeoples)->date_of_birth)) : '' }}</label>
+                            <label class="col-7 people-label">Date Of Birth</label>
+                            <label class="col-5 people-value">{{ optional($selectStarredPeoples)->date_of_birth && strtolower(optional($selectStarredPeoples)->date_of_birth) !== 'unknown' 
+                                ? date('d M, Y', strtotime(optional($selectStarredPeoples)->date_of_birth)) 
+                                : '-' 
+                            }}</label>
                         </div>
 
                     </div>
@@ -389,7 +402,7 @@
                     <img class="people-image" src="{{ Storage::url($firstStarredPerson->profile) }}" alt="">
                     @endif
                 </div>
-                <div class="col-7">
+                <div class="col-md-7 col-12">
                     <div class="people-selectedperson-detail-container">
                         <div class="d-flex align-items-center">
                             <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($firstStarredPerson)->name)) }}</h1>
@@ -401,7 +414,7 @@
 
                         </div>
                         @php
-                        $jobTitle = optional($firstStarredPerson->emp)->job_title;
+                        $jobTitle = optional($firstStarredPerson->emp)->job_role;
                         $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                         $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                         $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -415,8 +428,11 @@
                     </div>
                     <br>
                     <div class="row">
-                        <label class="col-6 people-label">Mobile Number</label>
-                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->contact_details }}</label>
+                        <label class="col-7 people-label">Mobile Number</label>
+                        <label class="col-5 people-value">{{ optional($firstStarredPerson)->contact_details && strtolower(optional($firstStarredPerson)->contact_details) !== 'n/a'
+                            ? optional($firstStarredPerson)->contact_details
+                            : '-' 
+                        }}</label>
                     </div>
                     <br>
                     <div class="d-flex align-items-center">
@@ -425,8 +441,11 @@
                     </div>
                     <br>
                     <div class="row">
-                        <label class="col-6 people-label">Location</label>
-                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->location }}</label>
+                        <label class="col-7 people-label">Location</label>
+                        <label class="col-5 people-value"> {{ optional($firstStarredPerson)->location && strtolower(optional($firstStarredPerson)->location) !== 'unknown'
+                            ? optional($firstStarredPerson)->location
+                            : '-' 
+                        }}</label>
                     </div>
                     <br>
                     <div class="d-flex align-items-center">
@@ -435,12 +454,18 @@
                     </div>
                     <br>
                     <div class="row">
-                        <label class="col-6 people-label">Joining Date</label>
-                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->joining_date ? date('d M, Y', strtotime(optional($firstStarredPerson)->joining_date)) : '' }}</label>
+                        <label class="col-7 people-label">Joining Date</label>
+                        <label class="col-5 people-value"> {{ optional($firstStarredPerson)->joining_date && strtolower(optional($firstStarredPerson)->joining_date) !== 'unknown' 
+                            ? date('d M, Y', strtotime(optional($firstStarredPerson)->joining_date)) 
+                            : '-' 
+                        }}</label>
                     </div>
                     <div class="row">
-                        <label class="col-6 people-label">Date Of Birth</label>
-                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstStarredPerson)->date_of_birth)) : '' }}</label>
+                        <label class="col-7 people-label">Date Of Birth</label>
+                        <label class="col-5 people-value">{{ optional($firstStarredPerson)->date_of_birth && strtolower(optional($firstStarredPerson)->date_of_birth) !== 'unknown' 
+                            ? date('d M, Y', strtotime(optional($firstStarredPerson)->date_of_birth)) 
+                            : '-' 
+                        }}</label>
                     </div>
 
                 </div>
@@ -502,7 +527,7 @@
                             <img class="people-profile-image" src="{{ Storage::url($people->image) }}" alt="">
                             @endif
                         </div>
-                        <div class="col-9">
+                        <div class="col-md-9 col-12">
                             @php
                             $starredPerson = DB::table('starred_peoples')
                             ->where('people_id', $people->emp_id)
@@ -541,7 +566,7 @@
                 @endif
 
             </div>
-            <div class="col-7">
+            <div class="col-md-7 col-12">
                 @php
                 $starredPerson = DB::table('starred_peoples')
                 ->where('people_id', $selectedPerson->emp_id)
@@ -562,7 +587,7 @@
 
                     </div>
                     @php
-                    $jobTitle = optional($selectedPerson)->job_title;
+                    $jobTitle = optional($selectedPerson)->job_role;
                     $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                     $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                     $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -576,8 +601,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Mobile Number</label>
-                    <label class="col-6 people-value">{{ optional($selectedPerson)->mobile_number }}</label>
+                    <label class="col-7 people-label">Mobile Number</label>
+                    <label class="col-5 people-value">{{ optional($selectedPerson)->emergency_contact ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -586,8 +611,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Location</label>
-                    <label class="col-6 people-value">{{ optional($selectedPerson)->job_location }}</label>
+                    <label class="col-7 people-label">Location</label>
+                    <label class="col-5 people-value">{{ optional($selectedPerson)->job_location ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -596,12 +621,12 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Joining Date</label>
-                    <label class="col-6 people-value">{{ optional($selectedPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedPerson)->hire_date)) : '' }}</label>
+                    <label class="col-7 people-label">Joining Date</label>
+                    <label class="col-5 people-value">{{ optional($selectedPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedPerson)->hire_date)) : '-' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6 people-label">Date Of Birth</label>
-                    <label class="col-6 people-value">{{ optional($selectedPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-7 people-label">Date Of Birth</label>
+                    <label class="col-5 people-value">{{ optional($selectedPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedPerson)->date_of_birth)) : '-' }}</label>
                 </div>
 
             </div>
@@ -624,7 +649,7 @@
                 <img class="people-image" src="{{ Storage::url(optional($firstPerson)->image) }}" alt="">
 
             </div>
-            <div class="col-7">
+            <div class="col-md-7 col-12">
                 <div class="people-selectedperson-detail-container">
                     <div class="d-flex align-items-center">
                         <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
@@ -637,7 +662,7 @@
 
                     </div>
                     @php
-                    $jobTitle = optional($firstPerson)->job_title;
+                    $jobTitle = optional($firstPerson)->job_role;
                     $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                     $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                     $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -651,8 +676,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Mobile Number</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->mobile_number }}</label>
+                    <label class="col-7 people-label">Mobile Number</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->emergency_contact ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -661,8 +686,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Location</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->job_location }}</label>
+                    <label class="col-7 people-label">Location</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->job_location ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -671,12 +696,12 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Joining Date</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '' }}</label>
+                    <label class="col-7 people-label">Joining Date</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '-' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6 people-label">Date Of Birth</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-7 people-label">Date Of Birth</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '-' }}</label>
                 </div>
 
             </div>
@@ -742,7 +767,7 @@
                             <img class="people-profile-image" src="{{ Storage::url($people->image) }}" alt="">
                             @endif
                         </div>
-                        <div class="col-9">
+                        <div class="col-md-9 col-12">
                             @php
                             $starredPerson = DB::table('starred_peoples')
                             ->where('people_id', $people->emp_id)
@@ -783,7 +808,7 @@
                 @endif
 
             </div>
-            <div class="col-7">
+            <div class="col-md-7 col-12">
                 @php
                 $starredPerson = DB::table('starred_peoples')
                 ->where('people_id', $selectedMyTeamPerson->emp_id)
@@ -803,7 +828,7 @@
 
                     </div>
                     @php
-                    $jobTitle = optional($selectedMyTeamPerson)->job_title;
+                    $jobTitle = optional($selectedMyTeamPerson)->job_role;
                     $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                     $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                     $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -817,8 +842,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Mobile Number</label>
-                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->mobile_number }}</label>
+                    <label class="col-7 people-label">Mobile Number</label>
+                    <label class="col-5 people-value">{{ optional($selectedMyTeamPerson)->emergency_contact ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -827,8 +852,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Location</label>
-                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->job_location }}</label>
+                    <label class="col-7 people-label">Location</label>
+                    <label class="col-5 people-value">{{ optional($selectedMyTeamPerson)->job_location ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -837,12 +862,12 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Joining Date</label>
-                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->hire_date)) : '' }}</label>
+                    <label class="col-7 people-label">Joining Date</label>
+                    <label class="col-5 people-value">{{ optional($selectedMyTeamPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->hire_date)) : '-' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6 people-label">Date Of Birth</label>
-                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-7 people-label">Date Of Birth</label>
+                    <label class="col-5 people-value">{{ optional($selectedMyTeamPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->date_of_birth)) : '-' }}</label>
                 </div>
 
             </div>
@@ -864,7 +889,7 @@
                 <img class="people-image" src="{{ Storage::url(optional($firstPerson)->image) }}" alt="">
 
             </div>
-            <div class="col-7">
+            <div class="col-md-7 col-12">
                 <div class="people-selectedperson-detail-container">
                     <div class="d-flex align-items-center">
                         <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
@@ -876,7 +901,7 @@
 
                     </div>
                     @php
-                    $jobTitle = optional($firstPerson)->job_title;
+                    $jobTitle = optional($firstPerson)->job_role;
                     $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                     $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                     $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -890,8 +915,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Mobile Number</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->mobile_number }}</label>
+                    <label class="col-7 people-label">Mobile Number</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->emergency_contact ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -900,8 +925,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Location</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->job_location }}</label>
+                    <label class="col-7 people-label">Location</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->job_location ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -910,12 +935,12 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Joining Date</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '' }}</label>
+                    <label class="col-7 people-label">Joining Date</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '-' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6 people-label">Date Of Birth</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-7 people-label">Date Of Birth</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '-' }}</label>
                 </div>
 
             </div>
