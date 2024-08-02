@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('emp_id');
             $table->string('name')->nullable();
             $table->string('gender')->nullable();
+            $table->binary('image')->nullable();
             $table->string('profession')->nullable();
             $table->string('qualification')->nullable();
             $table->date('dob')->nullable();

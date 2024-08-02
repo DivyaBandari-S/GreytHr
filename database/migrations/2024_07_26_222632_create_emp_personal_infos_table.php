@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->string('gender');
             $table->string('blood_group')->nullable();
-            $table->string('image')->nullable();
+            $table->binary('image')->nullable();
             $table->string('signature')->nullable();
             $table->string('nationality')->nullable();
             $table->string('religion')->nullable();

@@ -14,13 +14,16 @@ return new class extends Migration
     {
         Schema::create('hr', function (Blueprint $table) {
             $table->id();
-            $table->string('hr_emp_id')->nullable()->default(null)->unique();
+            $table->string('hr_emp_id')->unique()->nullable();
             $table->string('emp_id');
-            $table->string('sub_dept_id')->nullable();
+            $table->string('employee_name')->nullable();
+            $table->binary('image')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('emergency_contact_number')->unique()->nullable();
+            $table->string('password')->nullable();
+            $table->string('phone_number')->unique()->nullable();
             $table->string('email')->unique()->nullable();
-            $table->string('password');
-            $table->foreign('sub_dept_id')->references('sub_dept_id')->on('emp_sub_departments')->onDelete('cascade');
-                $table->foreign('emp_id')
+            $table->foreign('emp_id')
                 ->references('emp_id')
                 ->on('employee_details')
                 ->onDelete('restrict')
