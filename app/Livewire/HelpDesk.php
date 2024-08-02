@@ -78,6 +78,15 @@ class HelpDesk extends Component
     {
         $this->showDialogFinance = true;
     }
+    public function updatedCategory()
+    {
+        $this->filter();
+        logger($this->category); // Log selected category
+        logger($this->records); // Log filtered records
+    }
+
+    
+
 
     public function close()
     {
@@ -220,22 +229,28 @@ class HelpDesk extends Component
     {
         $companyId = Auth::user()->company_id;
         $trimmedSearchTerm = trim($this->searchTerm);
-
+    
         $this->filteredPeoples = EmployeeDetails::where('company_id', $companyId)
             ->where(function ($query) use ($trimmedSearchTerm) {
                 $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
                     ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
             })
             ->get();
-
+    
         $this->peopleFound = count($this->filteredPeoples) > 0;
+    
+    
+     
+    
+       
     }
+    
 
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = Auth::user()->company_id;
-
+        $this->records = HelpDesks::all();
         $this->peoples = EmployeeDetails::where('company_id', $companyId)
             ->orderBy('first_name')
             ->orderBy('last_name')

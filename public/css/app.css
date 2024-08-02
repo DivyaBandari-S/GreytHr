@@ -2493,10 +2493,12 @@ input[type="radio"] {
 }
 .select.form-control option {
     font-size: 10px;
+    margin-top:5px;
 }
 .placeholder-small {
     font-size: 12px !important;
     color: #778899 !important;
+    margin-top:5px;
 }
 .input-placeholder-small {
     font-size: 13px !important;

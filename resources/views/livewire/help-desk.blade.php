@@ -16,6 +16,7 @@
             </div>
             @endif
             <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
+                
             <div class="nav-buttons d-flex justify-content-center">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
@@ -39,7 +40,17 @@
 
 
         </div>
-        <div class="d-flex flex-row justify-content-end gap-10 mt-2">
+        <div class="d-flex flex-row justify-content-end mt-2">
+
+<div class="col-md-3 input-group align-items-center" style="width: 30%; justify-content: flex-start;">
+    <select wire:model="selectedCategory" class="form-control" style="height: 37px; margin-right: 5px;">
+        <option value="">Select Category</option>
+        <option value="it">IT Request</option>
+        <option value="hr">HR Request</option>
+        <option value="finance">Finance Request</option>
+    </select>
+
+</div>
 
             <div class="mx-2 ">
                 <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> IT Request  </button>
@@ -101,14 +112,14 @@
     @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
 </div>
 
-<div class="form-group">
+<div class="form-group mt-2">
     <label for="description" style="color: #778899; font-weight: 500; font-size: 12px;">Description <span style="color: red;">*</span></label>
     <textarea wire:model.lazy="description" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
 
     @error('description') <span class="text-danger">{{ $message }}</span> @enderror
 </div>
 
-<div class="row">
+<div class="row mt-2">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -121,40 +132,18 @@
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
 
                         </div>
-                        <div class="row">
-                            <div class="col">
-                            <div class="form-group mt-2">
-    <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
-    <div class="input" class="form-control placeholder-small">
-        <div style="position: relative;">
-            <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
-                <option style="color: gray;" value="">Select Priority</option>
-                <option value="High">High</option>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-            </select>
-            <div class="dropdown-toggle-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
-                    <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
-                </svg>
-            </div>
-        </div>
-    </div>
-    @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
-</div>
-
-                            </div>
-                        </div>
                         <div class="row " style="margin-top: 10px;">
                             <div class="col">
                                 <div class="row m-0 p-0">
                                     <div class="row m-0 p-0">
                                         <div style="margin: 0px;padding:0;">
                                             <div>
-                                                <div style="font-size: 12px;color:#778899;margin-bottom:10px;font-weight:500;" wire:model="cc_to" id="cc_to">Selected CC recipients : {{ implode(', ', array_unique($selectedPeopleNames)) }}</div>
+                                                <div style="font-size: 12px;color:#778899;margin-bottom:10px;font-weight:500;">Selected CC recipients : {{ implode(', ', array_unique($selectedPeopleNames)) }}</div>
                                             </div>
-                                            <button type="button" style="border-radius: 50%;margin-right:10px;color:#778899;border:1px solid #778899;" class="add-button" wire:click="toggleRotation">
-                                                <i class="fa fa-plus" style="color:#778899;"></i>
+                                            <button type="button" style="border-radius: 50%;color:#778899;border:1px solid #778899;" class="add-button" wire:click="toggleRotation">
+                                                                                        <div class="icon-container">
+                            <i class="bx bx-plus" style="color: #778899;"></i>
+                        </div>
                                             </button><span style="color:#778899;font-size:12px;">Add</span>
 
                                         </div>
@@ -163,7 +152,7 @@
                                 </div>
                                 @if($isRotated)
                                 <div style="border-radius:5px;background-color:grey;padding:8px;width:330px;margin-top:10px;height:200px;overflow-y:auto;">
-                                    <div class="input-group" style="margin-bottom: 10px;">
+                                    <div class="input-group" style="margin-bottom: 10px;display:flex">
                                         <input wire:model="searchTerm" style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                                         <div class="input-group-append">
                                             <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0;  background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
@@ -173,6 +162,8 @@
                                 <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
                                     <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
                                 </button>
+                            </div>
+
                                         </div>
                                     </div>
                                     @if ($peopleData->isEmpty())
@@ -183,7 +174,7 @@
                                     <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
                                         <div class="row align-items-center">
                                             <div class="col-auto">
-                                                <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
                                             </div>
                                             <div class="col-auto">
                                                 @if($people->image=="")
@@ -206,9 +197,10 @@
                                     @endif
                                 </div>
                                 @endif
+
                             </div>
                         </div>
-                        <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
+                        <div class="ml-0 p-0 mt-3 d-flex gap-3 justify-content-center">
                             <button wire:click="submit" class="submit-btn" type="button">Submit</button>
                             <button wire:click="close" class="cancel-btn" type="button" style="border: 1px solid rgb(2, 17, 79);">Cancel</button>
                         </div>
@@ -257,12 +249,12 @@
                             <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
                             @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mt-2">
                             <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description<span  style="color:red">*</span></label>
                             <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4" ></textarea>
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
-                        <div class="row">
+                        <div class="row mt-2">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -307,8 +299,10 @@
                                             <div>
                                                 <div style="font-size: 12px;color:#778899;margin-bottom:10px;font-weight:500;">Selected CC recipients : {{ implode(', ', array_unique($selectedPeopleNames)) }}</div>
                                             </div>
-                                            <button type="button" style="border-radius: 50%;margin-right:10px;color:#778899;border:1px solid #778899;" class="add-button" wire:click="toggleRotation">
-                                                <i class="fa fa-plus" style="color:#778899;"></i>
+                                            <button type="button" style="border-radius: 50%;color:#778899;border:1px solid #778899;" class="add-button" wire:click="toggleRotation">
+                                            <div class="icon-container">
+                            <i class="bx bx-plus" style="color: #778899;"></i>
+                        </div>
                                             </button><span style="color:#778899;font-size:12px;">Add</span>
 
                                         </div>
@@ -377,8 +371,24 @@
         @endif
 
         @if ($activeTab == "active")
+        <div class="col-md-3 input-group align-items-center" style="width: 30%; justify-content: flex-start;">
+    <input type="text" class="form-control" placeholder="Search..." 
+           wire:model="searchTerm" aria-label="Search" aria-describedby="search-addon" 
+           wire:input="filter" style="flex: 1; height: 37px;">
+    <button class="submit-btn" wire:click="filter" id="search-addon" 
+            style="height: 37px; line-height: 2; margin-left: 5px;">Search</button>
+</div>
     <div class="card-body" style="margin: 0 auto; background-color: white; width: 95%; height: 400px; margin-top: 30px; border-radius: 5px; max-height: 400px; overflow-y: auto;">
-        <table style="width: 100%; border-collapse: collapse;">
+  
+    <div class="input-group mb-3" style="width: 90%;">
+            <select wire:model="selectedCategory" class="form-control" style="width: 30%;">
+                <option value="">Select Category</option>
+                <option value="IT">IT Request</option>
+                <option value="HR">HR Request</option>
+                <option value="Finance">Finance Request</option>
+            </select>
+        </div> 
+    <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="background-color: rgb(2, 17, 79); color: white;">
                     <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">Request Raised By</th>

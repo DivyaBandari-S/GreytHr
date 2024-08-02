@@ -23,12 +23,24 @@
 <div class ="row mt-4 mx-0 salary-slip-h6" style="display: flex;" >
     <div class="col">
     @if ($salaryRevision->isEmpty())
+    <div class="homeCard5">
+                            <div class="py-2 px-3" style="height:400px">
+                                <div class="d-flex justify-content-center">
+                                    <p style="font-size:20px;color:#778899;font-weight:500;align-items:center">Payslip</p>
+                                    
+                                </div>
 
-    <div class="message-container" style="background-color: white; border: 1px solid #ccc; border-radius: 5px; padding: 20px; margin-bottom: 20px; width: 600px; height: 400px; font-family: Montserrat; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                <div style="display:flex;align-items:center;flex-direction:column;">
+                                        <img src="https://cdn3.iconfinder.com/data/icons/human-resources-70/133/9-512.png" alt="" style="height:300px;width:300px;">
+                                    <p style="color: #677A8E;  margin-bottom: 20px; font-size:12px;"> We are working on your payslip!</p>
+                                </div>
+                            </div>
+                        </div>
+    <!-- <div class="message-container" style="background-color: white; border: 1px solid #ccc; border-radius: 5px; padding: 20px; margin-bottom: 20px; width: 600px; height: 400px; font-family: Montserrat; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
     <img src="https://static.vecteezy.com/system/resources/previews/005/950/625/original/modern-design-icon-of-pay-slip-vector.jpg" style="height: 250px; width: 250px; justify-content: center; margin-top: 0px;">
     <br>
     <p class="message" style="font-size: 18px; color: #3b4452; text-align: center; margin-top: 20px; font-weight: 600;">Currently working on Payslip.</p>
-</div>
+</div> -->
 
 </div>
 @else

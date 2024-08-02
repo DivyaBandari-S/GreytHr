@@ -131,25 +131,7 @@
                         @if ($loadedMessages)
                             @foreach ($loadedMessages as $key => $message)
                                 {{-- keep track of the previous message --}}
-                                @php
-                                    $previousMessage = $key > 0 ? $loadedMessages[$key - 1] : null;
-                                @endphp
-                                    @php
-                    // Determine the date of the message
-                    $currentDate = $message->created_at->format('Y-m-d');
-                    // Check if the message is on a different day from the previous message
-                    $showDate = $currentDate !== $previousDate;
-                    // Update previousDate for the next iteration
-                    $previousDate = $currentDate;
-                    // Get the formatted date string
-                    $dateString = $message->created_at->format('l, F j, Y');
-                @endphp
-
-                {{-- Show date if it’s a new day or it’s within the past 5 days --}}
-                @if ($showDate || $message->created_at->greaterThan(now()->subDays(5)))
-                    <li class="date-header">{{ $dateString }}</li>
-                @endif
-
+        
                                 <div
                                     class="message-container clearfix @if ($message->sender_id === auth()->id()) sent @else received @endif">
                                     {{-- message body --}}
