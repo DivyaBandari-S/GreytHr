@@ -125,6 +125,12 @@ Route::group(['middleware' => 'checkAuth'], function () {
 Route::get('/Login&Register', function () {
     return view('login_and_register_view');
 });
+Route::get('/Privacy&Policy', function () {
+    return view('privacy_policy_view');
+});
+Route::get('/Terms&Services', function () {
+    return view('terms_services_view');
+});
 
 Route::middleware(['auth:web', 'handleSession'])->group(function () {
     Route::get('/CreateCV', function () {
