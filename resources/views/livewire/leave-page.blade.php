@@ -187,8 +187,12 @@
                             <div class="col accordion-content">
 
                                 <span class="accordionContentSpan">Pending with</span>
-
-                                <span class="accordionContentSpanValue">N/A</span>
+                                @php
+                                $applyingToArray = json_decode($leaveRequest->applying_to, true);
+                                @endphp
+                                <span class="accordionContentSpanValue">
+                                    {{ ucwords(strtolower($applyingToArray[0]['report_to'])) ?? 'No report_to available' }}
+                                </span>
 
                             </div>
 
@@ -206,12 +210,11 @@
 
 
                             <!-- Add other details based on your leave request structure -->
-
+                            @if(($leaveRequest->category_type === 'Leave') )
                             <div class="col accordion-content">
-
                                 <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($leaveRequest->status) }}</span>
-
                             </div>
+                            @endif
 
                             <div class="arrow-btn">
                                 <i class="bx bx-chevron-down"></i>
