@@ -1370,106 +1370,46 @@ color: #fff;
                     </div>
                 </div>
                 <div class="col-md-2 mt-5" style="text-align: center">
-                    <a href="#" data-toggle="modal" data-target="#exampleModalCenter" style="text-transform:uppercase;margin-top:40px;color:rgb(2, 17, 79);">
+                    <a href="#" wire:click="öpenattendanceperiodModal" style="text-transform:uppercase;margin-top:40px;color:rgb(2, 17, 79);">
                         +3 Insights
                     </a>
                 </div>
             </div>
-            <div wire:ignore.self class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-
-
-
-
-                <div class="modal-dialog custom-modal-lg centered-modal custom-modal" role="document">
-                    <div class="modal-content">
-
-                        <div class="modal-header" style="background-color: #eceff3;">
-
-                            <h6 class="modal-title" id="exampleModalLabel">
-                                {{$modalTitle}}
-                            </h6>
-
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true close-btn">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-row" style="display: flex; justify-content: flex-end;">
-                                <div class="form-group col-md-3 col-sm-6">
-                                    <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
-                                        date</label>
-                                    <input type="date" class="form-control" id="fromDate" wire:model="from_date" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
-                                </div>
-                                <div class="form-group col-md-3 col-sm-6">
-                                    <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To
-                                        date</label>
-                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
-                                </div>
-                            </div>
-                            <p style="font-size:12px;">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalDays}}</span></p>
-
-                            <div class="table-responsive">
-                                <!-- <div class="chart-value"><span style="font-weight:bold;">0</span></div>
-                                <div class="chart-column">AVG.&nbsp;WORK&nbsp;HRS</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">AVG.&nbsp;ACTUAL&nbsp;WORK&nbsp;HRS</div>
-                                <div class="chart-value"><span style="font-weight:bold;">0</span></div>
-                                <div class="chart-column">PENALTY&nbsp;DAYS</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">LATE&nbsp;IN</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">EARLY&nbsp;OUT</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">LEAVE&nbsp;TAKEN</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">ABSENT&nbsp;DAYS</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">EXCEPTION&nbsp;DAYS</div> -->
-
-                                <table class="table" style="width: 100%;">
-                                    <thead style="font-size: 12px;">
-                                        <tr>
-                                            <th scope="col">AVG. WORK HRS</th>
-                                            <th scope="col">AVG. ACTUAL WORK HRS</th>
-                                            <th scope="col">PENALTY DAYS</th>
-                                            <th scope="col">LATE IN</th>
-                                            <th scope="col">EARLY OUT</th>
-                                            <th scope="col">LEAVE TAKEN</th>
-                                            <th scope="col">ABSENT DAYS</th>
-                                            <th scope="col">EXCEPTION DAYS</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody style="font-size:12px;color:black;font-weight:500;">
-                                        <tr>
-                                            <td style="text-align: center;">0</td>
-                                            <td style="text-align: center;">-</td>
-                                            <td style="text-align: center;">0</td>
-                                            <td style="text-align: center;">{{$avgLateIn}}</td>
-                                            <td style="text-align: center;">{{$avgEarlyOut}}</td>
-                                            <td style="text-align: center;">-</td>
-                                            <td style="text-align: center;">-</td>
-                                            <td style="text-align: center;">-</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-
-                            <div class="row m-0 mt-3">
-                                <div class="col-md-3 col-sm-6 p-0">
-                                    <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$avgSignInTime}}</span></p>
-                                </div>
-                                <div class="col-md-3 col-sm-6 p-0">
-                                    <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$avgSignOutTime}}</span></p>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
+            @if ($öpenattendanceperiodModal)
+<div class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Swipes</b></h5>
+                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
+                </button>
             </div>
+            <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                <div class="row">
+                    <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Date : <span style="color: #333;">$currentDate</span></div>
+                    <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Shift Time : <span style="color: #333;">10:00 to 19:00</span></div>
+                </div>
+                <table class="swipes-table mt-2 border" style="width: 100%;">
+                    <tr style="background-color: #f6fbfc;">
+                        <th style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Swipe Time</th>
+                        <th style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Sign-In / Sign-Out</th>
+                    </tr>
+
+                 
+                    <tr style="border:1px solid #ccc;">
+                        <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">$swipe->swipe_time </td>
+                        <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">$swipe->in_or_out </td>
+                    </tr>
+                  
+                 
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show blurred-backdrop"></div>
+@endif
 
 
             <div class="row m-0 mt-3">

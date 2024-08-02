@@ -98,6 +98,8 @@ class Attendance extends Component
     public $employeeId;
 
     public $employeeIdForRegularisation;
+
+    public $öpenattendanceperiodModal=false;
     public $errorMessage;
     public $showRegularisationDialog=false;
     public $distinctDates;
@@ -791,6 +793,11 @@ public function closeViewStudentModal()
             Log::error('Error in nextMonth method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while navigating to the next month. Please try again later.');
         }
+    }
+    public function öpenattendanceperiodModal()
+    {
+        dd('hii');
+        $this->öpenattendanceperiodModal=true;
     }
     public function checkDateInRegularisationEntries($d)
     {

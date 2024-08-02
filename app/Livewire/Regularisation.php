@@ -55,6 +55,7 @@ class Regularisation extends Component
     public $regularisationEntries=[];
     public $manager1;
    
+    public $withdrawModal=false;
     public $storedArray;
 
     public $storedArray1;
@@ -369,7 +370,14 @@ public function historyButton()
             session()->flash('error', 'An error occurred while updating count.');
         }
     }
-    
+    public function openWithdrawModal()
+    {
+        $this->withdrawModal=true;
+    }
+    public function closewithdrawModal()
+    {
+        $this->withdrawModal=false;   
+    }
        
     public function render()
     {
@@ -405,7 +413,7 @@ public function historyButton()
             $this->historyRegularisations = $historyRegularisations->filter(function ($regularisation) {
                 return $regularisation->regularisation_entries !== "[]";
             });
-           
+          
             $manager = EmployeeDetails::select('manager_id', 'report_to')->distinct()->get();   
             $this->data10 = RegularisationDates::where('status', 'pending')->get();
             $this->manager1 = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();

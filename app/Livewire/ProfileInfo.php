@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Illuminate\Support\Facades\Request;
 use App\Models\EmpBankDetail;
 use App\Models\EmployeeDetails;
+use App\Models\EmpParentDetails;
 use App\Models\ParentDetail;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -62,7 +63,7 @@ class ProfileInfo extends Component
         try {
             $this->employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
             $this->empBankDetails = EmpBankDetail::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
-            $this->parentDetails = ParentDetail::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
+            $this->parentDetails = EmpParentDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get() ?? [];
     
             return view('livewire.profile-info');
         } catch (\Exception $e) {

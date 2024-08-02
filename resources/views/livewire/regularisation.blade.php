@@ -1118,19 +1118,20 @@ $lastItem = end($regularisationEntries); // Get the last item
                 <span style="color: #3a9efd; font-size: 12px; font-weight: 500;">View Details</span>
 
             </a>
-            <button class="withdraw mb-2" data-toggle="modal" data-target="#withdrawModal">Withdraw</button>
+            <button class="withdraw mb-2"wire:click="openWithdrawModal">Withdraw</button>
 
         </div>
 
     </div>
 
 </div>
-<div class="modal fade" id="withdrawModal" tabindex="-1" role="dialog" aria-labelledby="withdrawModalTitle" aria-hidden="true">
+@if($withdrawModal==true)
+<div class="modal" tabindex="-1" role="dialog"style="display: block;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="withdrawModalTitle">Withdraw Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title">Withdraw Confirmation</h5>
+                <button type="button" class="close"aria-label="Close"wire:click="closewithdrawModal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -1138,13 +1139,14 @@ $lastItem = end($regularisationEntries); // Get the last item
                 <p style="font-size:14px;">Are you sure you want to withdraw this application?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="approveBtn btn-primary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="rejectBtn" data-dismiss="modal" wire:click="withdraw({{$pr->id}})">Confirm</button>
+                <button type="button" class="approveBtn btn-primary"wire:click="closewithdrawModal">Cancel</button>
+                <button type="button" class="rejectBtn" wire:click="withdraw({{$pr->id}})">Confirm</button>
             </div>
         </div>
     </div>
 </div>
-
+<div class="modal-backdrop fade show blurred-backdrop"></div>
+@endif
 @endif
 @endforeach
 

@@ -135,6 +135,18 @@ class ShiftSummaryReport extends Component
           {
             return redirect()->back()->with('error', 'Select at least one employee detail');
           }
+          elseif(empty($this->fromDate) && empty($this->toDate))
+           {
+              return redirect()->back()->with('error', 'Please select FromDate and ToDate');
+           }
+           elseif(empty($this->fromDate))
+           {
+              return redirect()->back()->with('error', 'Please select FromDate');
+           }
+           elseif(empty($this->toDate))
+           {
+              return redirect()->back()->with('error', 'Please select toDate');
+           }
           else
           {
             $employees1 = EmployeeDetails::whereIn('emp_id', $this->shiftSummary)->select('emp_id', 'first_name', 'last_name')->get();

@@ -166,7 +166,7 @@
             border: 1px solid #6c757d;
         }
 
-        .down-arrow-gra {
+        .down-arrow-gra-attendance-muster {
             width: 0;
             height: 0;
             /* border-left: 20px solid transparent; */
@@ -369,15 +369,7 @@
             margin-right: 5px;
         }
 
-        .down-arrow-ign-attendance-info {
-            width: 0;
-            height: 0;
-            /* border-left: 20px solid transparent; */
-            border-right: 17px solid transparent;
-            border-bottom: 17px solid #677a8e;
-            margin-right: 5px;
-        }
-
+       
         .emptyday {
             color: #aeadad;
             pointer-events: none;
@@ -501,7 +493,7 @@
                 </div>
                 <div class="col-md-3 mb-2 pe-0" style="display: flex">
                     <p class="me-2 mb-0">
-                    <div class="down-arrow-ign-attendance-info"></div>
+                    <div class="down-arrow-ign-attendance-info-attendance-muster"></div>
                     </p>
                     <p class="m-0 legend-text">Ignored</p>
                 </div>
