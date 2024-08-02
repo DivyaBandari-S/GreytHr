@@ -115,6 +115,16 @@
     font-weight: 500;
     font-size: var( --normal-font-size);
 }
+.approvedColor{
+    font-size: 12px; font-weight: 500; color:#32CD32;
+}
+.rejectColor{
+    font-size: 12px; font-weight: 500; color:#FF0000;
+}
+.otherStatus{
+    font-size: 12px; font-weight: 500; color:#cf9b17;
+
+}
 .normalTextValue{
     color: var(--label-color);
     font-weight: 500;
@@ -794,22 +804,6 @@ button.close-button {
 
     margin: 0;
 }
-.left-card-body {
-    height: 100%;
-    font-family: "Montserrat", sans-serif;
-}
-.layout-side-menu {
-    font-family: "Montserrat", sans-serif;
-}
-.nav-item {
-    font-size: 11px;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.nav-item-1 {
-    font-size: 11px;
-}
 .nav-item .nav-link {
     color: #6c7e90;
     text-decoration: none;
@@ -826,10 +820,6 @@ button.close-button {
 
 .nav-text {
     margin-left: 15px;
-}
-.fas {
-    height: 25px;
-    width: 25px;
 }
 
 .custom-background {
@@ -862,40 +852,6 @@ button.close-button {
     border-radius: 5px;
     color: black !important;
 }
-
-.nav-link {
-    padding: 0px;
-}
-.nav-link i:hover {
-    color: black !important;
-}
-.nav-link .active-link {
-    background-color: #b3c3f1 !important;
-    border-radius: 5px;
-    /* padding: 0 2px; */
-    margin-bottom: 5px;
-    color: black !important;
-}
-/* Style for the icon */
-
-.nav-link .fa-caret-down {
-    float: right;
-    margin-left: 15px;
-}
-.nav-link .fa-caret-up {
-    float: right;
-    margin-left: 15px;
-}
-
-.active-link i {
-    color: black !important;
-}
-
-.custom-heading {
-    color: white;
-    width: -webkit-fill-available;
-    /* Add any other styles you need */
-}
 .emp-name {
     display: flex;
     flex-direction: column;
@@ -903,36 +859,6 @@ button.close-button {
 
 .profile-image {
     margin-right: 15px;
-}
-#todo-options a,
-#todo-options-2 a {
-    text-decoration: none;
-    color: #778899;
-    font-weight: normal;
-    cursor: pointer;
-}
-#attendance-options a,
-#attendance-options-2 a {
-    text-decoration: none;
-    color: #778899;
-    cursor: pointer;
-    font-weight: normal;
-}
-
-#leave-options a,
-#leave-options-2 a {
-    text-decoration: none;
-    color: #778899;
-    font-weight: normal;
-    cursor: pointer;
-}
-
-#salary-options a,
-#salary-options-2 a {
-    text-decoration: none;
-    color: #778899;
-    cursor: pointer;
-    font-weight: normal;
 }
 
 .dropdown {
@@ -994,133 +920,15 @@ button.close-button {
 .dropdown:hover .dropdown-content {
     display: block;
 }
-/* content slot scrolling */
-.slot {
-    max-height: 88vh;
-    overflow-y: auto;
-    margin: 0;
-    background: #f5f5f5;
-    height: 88vh;
-    overflow-y: auto;
-    font-family: "Montserrat", sans-serif;
-}
 
-.slot::-webkit-scrollbar {
-    width: 7px; /* Set the width of the scrollbar */
-}
-
-.slot::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* Set the color of the thumb */
-    border-radius: 6px; /* Set the border radius of the thumb */
-}
-
-.slot::-webkit-scrollbar-track {
-    background-color: #f5f5f5; /* Set the color of the track */
-}
-
-.slot::-webkit-scrollbar-thumb:hover {
-    background-color: #555; /* Set the color of the thumb on hover */
-}
-.hideMinBar {
-    display: none !important;
-}
-
-.showMinBar {
-    display: block !important;
-}
-.miniBarLogo img {
-    height: auto !important;
-    width: 3em !important;
-}
-.grey-icon {
-    color: grey;
-}
 
 @media only screen and (max-width: 768px) {
     .displayNone {
         display: none !important;
     }
-    .hideMinBar {
-        display: none !important;
-    }
+
     .displayBlock {
         display: block !important;
-    }
-
-    #menu-popup {
-        position: absolute;
-        background: #fff;
-        border: 1px solid #e0dddd;
-        border-radius: 0px;
-        height: auto;
-        width: fit-content;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        top: 3.8em;
-        z-index: 1000;
-    }
-    /* left side menu scroll */
-    #menu-popup {
-        max-height: 400px;
-        overflow-y: auto;
-        scrollbar-width: thin; /* For Firefox */
-        scrollbar-color: #f0f0f0; /* thumb and track color */
-    }
-
-    #menu-popup::-webkit-scrollbar {
-        width: 3px; /* Set the width of the scrollbar */
-    }
-
-    #menu-popup::-webkit-scrollbar-thumb {
-        background-color: #55535333; /* Set the color of the thumb */
-        border-radius: 6px; /* Set the border radius of the thumb */
-    }
-
-    #menu-popup::-webkit-scrollbar-track {
-        background-color: #55535333; /* Set the color of the track */
-    }
-
-    #menu-popup::-webkit-scrollbar-thumb:hover {
-        background-color: #555; /* Set the color of the thumb on hover */
-    }
-}
-
-@media only screen and (min-width: 769px) {
-    .hideHamburger {
-        display: none !important;
-    }
-    .scrollable-container {
-        height: 70%;
-        max-height: 90%;
-        overflow-y: auto;
-    }
-    .scrollable-container::-webkit-scrollbar {
-        width: 2px; /* Set the width of the scrollbar */
-    }
-
-    .scrollable-container::-webkit-scrollbar-thumb {
-        background-color: transparent; /* Set the color of the scrollbar thumb */
-        border-radius: 5px; /* Set the border radius of the thumb */
-    }
-
-    .scrollable-container::-webkit-scrollbar-track {
-        background-color: transparent; /* Set the color of the scrollbar track */
-        border-radius: 5px; /* Set the border radius of the track */
-    }
-}
-
-@media only screen and (min-width: 1440px) {
-    .slot {
-        max-height: 88vh;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-    .left-card-body {
-        width: 230px;
-        padding: 0 5px;
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        max-height: 100vh;
     }
 }
 /* end of app.blade */
@@ -2281,6 +2089,10 @@ input[type="radio"] {
     .form-control{
         width: 100%;
     }
+    .accordion{
+        overflow-x: auto;
+        max-width: 90%;
+    }
 }
 .applyingFor {
     color: var( --main-heading-color);
@@ -2474,6 +2286,11 @@ input[type="radio"] {
 .accordionContentSpan {
     color: #778899;
     font-size: var( --normal-font-size);
+    font-weight: 500;
+}
+.headers-details{
+    font-size: var(--main-headings-font-size);
+    color: var(--main-heading-color);
     font-weight: 500;
 }
 .accordionContentSpanValue {
@@ -2811,10 +2628,14 @@ input[type="radio"] {
     justify-content: start;
     flex-direction: column;
 }
+.leave-type{
+    color: #605448; font-size: 12px; font-weight: 600;
+}
 
 .pay-bal {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 .vertical-line {
     width: 1px;
@@ -2858,6 +2679,34 @@ input[type="radio"] {
     display: flex;
     flex-direction: column;
 }
+.custom-grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates two equal columns */
+  }
+
+  .custom-grid-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between rows within the same column */
+  }
+
+  .custom-label {
+    font-weight: normal;
+    font-size: var(--normal-font-size);
+    color: var(--label-color);
+  }
+  
+  .custom-value {
+    font-weight: normal;
+    color: var(--main-heading-color);
+    font-size: var(--normal-font-size);
+  }
+  
+  .custom-cc-item {
+    font-weight: normal;
+    color: var(--main-heading-color);
+    font-size: var(--normal-font-size);
+  }
 .cirlce {
     height: 0.75rem;
     width: 0.75rem;
@@ -2891,7 +2740,7 @@ input[type="radio"] {
     color: #778899;
 }
 .v-line {
-    height: 120px;
+    height: 100px;
     width: 0.5px;
     background: #778899;
     border-right: 1px solid #778899;
@@ -2905,10 +2754,11 @@ input[type="radio"] {
 .leave {
     display: flex;
     flex-direction: row;
-    gap: 50px;
     background: #fff;
     border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
+    padding: 10px;
+    align-items: center;
+    line-height: 1.6;
 }
 .leavePageContent{
     padding: 10px;
@@ -2938,10 +2788,6 @@ input[type="radio"] {
         width: 100%;
         flex-direction: column;
     }
-    .leave {
-        display: flex;
-        flex-direction: column;
-    }
     .approved-leave {
         display: flex;
         flex-direction: column;
@@ -2949,13 +2795,12 @@ input[type="radio"] {
 
 }
 @media screen and (max-width: 460px) {
-    .leave {
-        display: flex;
-        flex-direction: column;
-    }
     .leavePageContent{
         padding: 0;
         margin: 0;
+    }
+    .view-container{
+        width: 100%;
     }
 }
 /* //end of leave-history styles */
@@ -3761,9 +3606,10 @@ select .yearSelect {
     color: rgb(2, 17, 79);
     text-decoration: none;
 }
-.breadcrumb-item a {
+.breadcrumb {
     text-decoration: none;
-    color: #333;
+    font-size: var(--sub-headings-font-size);
+    color: var(--main-heading-color) !important;
 }
 .btn-1 {
     color: rgb(2, 17, 79);
@@ -4453,7 +4299,7 @@ option {
 
 /* Style the logout icon */
 .logout-icon-container i {
-    color: #000;
+    color: var(--main-heading-color);
     font-size: 15px;
     transition: color 0.3s ease;
 }
