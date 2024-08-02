@@ -17,7 +17,8 @@ class Hr extends Authenticatable
 
     protected $fillable = [
         'hr_emp_id','emp_id',
-        'password','email','sub_dept_id'
+        'password','email','image','employee_name','date_of_birth','emergency_contact_number',
+        'phone_number'
     ];
 
     public function employeeDetails()
