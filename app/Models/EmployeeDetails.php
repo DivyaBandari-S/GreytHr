@@ -26,11 +26,11 @@ class EmployeeDetails extends Authenticatable
         'last_name',
         'gender',
         'email',
+        'image',
         'hire_date',
         'employee_type',
         'job_role',
         'manager_id',
-        'report_to',
         'employee_status',
         'emergency_contact',
         'password',
@@ -38,16 +38,45 @@ class EmployeeDetails extends Authenticatable
         'job_location',
         'is_starred',
         'status',
-        'skill_set',
+        'dept_head',
         'job_mode',
         'resignation_date',
         'resignation_reason',
         'notice_period',
         'extension',
+        'experience',
         'shift_type',
         'shift_start_time',
-        'shift_end_time'
+        'shift_end_time',
+        'emp_domain',
+        'referral',
+        'probation_Period',
+        'service_age',
+        'confirmation_date',
+
+
+
+
+
     ];
+    public function empBankDetails()
+    {
+        return $this->hasOne(EmpBankDetail::class, 'emp_id', 'emp_id');
+    }
+
+    public function empParentDetails()
+    {
+        return $this->hasOne(EmpParentDetails::class, 'emp_id', 'emp_id');
+    }
+
+    public function empPersonalInfo()
+    {
+        return $this->hasOne(EmpPersonalInfo::class, 'emp_id', 'emp_id');
+    }
+    public function empSpouseDetails()
+    {
+        return $this->hasOne(EmpSpouseDetails::class, 'emp_id', 'emp_id');
+    }
     public function leaveRequests()
     {
         return $this->hasMany(LeaveRequest::class, 'emp_id');
@@ -82,5 +111,9 @@ class EmployeeDetails extends Authenticatable
 
         return $this->hasMany(Chating::class,'sender_id')->orWhere('receiver_id',$this->emp_id)->whereNotDeleted();
 
+    }
+    public function personalInfo()
+    {
+        return $this->hasOne(EmpPersonalInfo::class, 'emp_id', 'emp_id');
     }
 }

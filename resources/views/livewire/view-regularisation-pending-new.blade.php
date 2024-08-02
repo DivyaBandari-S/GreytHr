@@ -50,7 +50,7 @@
 
             </div>
     @endif
-      
+
 
     <div class="accordion bg-white border mb-3 rounded">
         <div class="accordion-heading rounded" onclick="toggleAccordion(this)">

@@ -2,9 +2,14 @@
 
  <div style="text-align: center;display:flex;align-items:center;justify-content:end;">
 
-        <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download btn-primary px-3  rounded" download style="margin-left: -40px; display: inline-block;">
-            <i class="fas fa-download"></i>
-        </a>
+<button type="button" class="dowload mx-2 px-2 rounded" style="background-color: rgb(2, 17, 79)">
+<a href="/your-download-route" id="pdfLink2023_4" class="pdf-download btn-primary px-3 rounded d-flex align-items-center" download style="color: white; text-decoration: none;">
+<i class="bx bx-download" style="color: white;"></i>
+    </a>
+            
+        </button>
+
+   
         <div class="mx-2">
             <select class="dropdown-salary bg-white px-3 py-1" wire:model="selectedMonth">
                 @foreach($options as $value => $label)
@@ -14,17 +19,21 @@
         </div>
 
 </div>
-@if ($salaryRevision->isEmpty())
-<div style="display:flex">
-    <div class="message-container" style= "background-color: #f7f7f7;border: 1px solid #ccc;border-radius: 5px;padding: 20px;margin-bottom: 20px;width:300px;height:300px;background-color:#fefaf6;font-family:Montserrat;text-align:center">
-        <img src="https://static.vecteezy.com/system/resources/previews/005/950/625/original/modern-design-icon-of-pay-slip-vector.jpg" style="height:150px;width:130px;justify-content:center;">
-        <br>
-        <b class="message" style=" font-size: 18px;color: #555;text-align: center;margin-top:20px;">Currently working on Payslip.</b>
-    </div>
+<div class ="row mt-4 mx-0 salary-slip-h6" style="display: flex;" >
+    <div class="col">
+    @if ($salaryRevision->isEmpty())
+
+<div class="message-container" style= "background-color: #f7f7f7;border: 1px solid #ccc;border-radius: 5px;padding: 20px;margin-bottom: 20px;width:600px;height:400px;background-color:white;font-family:Montserrat;text-align:center">
+    <img src="https://static.vecteezy.com/system/resources/previews/005/950/625/original/modern-design-icon-of-pay-slip-vector.jpg" style="height:250px;width:250px;justify-content:center;margin-top:0px">
+    <br>
+    <p class="message" style=" font-size: 18px;color:  #3b4452;text-align: center;margin-top:20px;font-weight:600">Currently working on Payslip.</p>
+</div>
 </div>
 @else
+    </div>
+
 @foreach($salaryRevision as $employee)
-<div class ="row mt-4 mx-0 salary-slip-h6" >
+
 <div class="col-md-4 mb-2">
    <div class="bg-white earnings-tab rounded">
         <h6 class="px-3 mt-3 font-weight-500" style="color: #778899;">Earnings</h6>
@@ -107,7 +116,7 @@
     </p>
     </div>
     @if ($showDetails)
-  <div class="d-flex justify-content-between py-2">
+  <div class="row d-flex justify-content-between py-2">
     <div class="details-column">
   @foreach($employees as $employee)
         <div class="detail">

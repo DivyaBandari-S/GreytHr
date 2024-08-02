@@ -21,6 +21,7 @@ use App\Models\EmployeeDetails;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Mail\LeaveApplicationNotification;
+use App\Models\HolidayCalendar;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -164,7 +165,7 @@ class LeaveApply extends Component
             // Fetch employees based on the search term
             $this->employeeDetails = EmployeeDetails::where('company_id', $this->applying_to->company_id)
                 ->where(function ($query) {
-                    $query->where('company_name', 'like', '%' . $this->searchTerm . '%')
+                    $query
                         ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
                         ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
                         ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
@@ -221,8 +222,7 @@ class LeaveApply extends Component
             $this->ccRecipients = EmployeeDetails::where('company_id', $this->applying_to->company_id)
                 ->where('emp_id', '!=', $employeeId) // Exclude the current user
                 ->where(function ($query) {
-                    $query->where('company_name', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
+                    $query
                         ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
                         ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
                 })
@@ -495,7 +495,6 @@ class LeaveApply extends Component
 
         try {
             $this->selectleave();
-
             // Check for overlapping leave
             $overlappingLeave = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where(function ($query) {
@@ -524,16 +523,48 @@ class LeaveApply extends Component
                 return redirect()->back()->withInput();
             }
 
+                // Check for holidays in the selected date range
+                $holidays = HolidayCalendar::where(function ($query) {
+                    $query->whereBetween('date', [$this->from_date, $this->to_date])
+                          ->orWhere(function ($q) {
+                              $q->where('date', '>=', $this->from_date)
+                                ->where('date', '<=', $this->to_date);
+                          });
+                })->get();
+        
+                if ($holidays->isNotEmpty()) {
+                    $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
+                    return redirect()->back()->withInput();
+                }
             $filePaths = [];
-
-            if (isset($this->files)) {
+            // Check if files are set and is an array
+            if (isset($this->files) && is_array($this->files)) {
                 foreach ($this->files as $file) {
-                    $fileName = uniqid() . '_' . $file->getClientOriginalName();
-                    $file->storeAs('public/help-desk-files', $fileName);
-                    $filePaths[] = 'help-desk-files/' . $fileName;
+                    // Check if file is a valid uploaded file
+                    if ($file->isValid()) {
+                        try {
+                            // Generate a unique file name
+                            $fileName = uniqid() . '_' . $file->getClientOriginalName();
+
+                            // Store the file
+                            $file->storeAs('public/help-desk-files', $fileName);
+
+                            // Add file path to array
+                            $filePaths[] = 'help-desk-files/' . $fileName;
+                        } catch (\Exception $e) {
+                            // Log the error
+                            Log::error("Error storing file: " . $e->getMessage());
+                            // Optionally, handle the error as needed
+                            $this->errorMessage = 'Error uploading files. Please try again.';
+                            return redirect()->back()->withInput();
+                        }
+                    } else {
+                        // Handle invalid file error
+                        $this->errorMessage = 'One or more files are not valid.';
+                        return redirect()->back()->withInput();
+                    }
                 }
             }
-
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $ccToDetails = [];
@@ -596,10 +627,10 @@ class LeaveApply extends Component
             Notification::create([
                 'emp_id' =>  $employeeId,
                 'notification_type' => 'leave',
-                'leave_type'=>$this->leave_type,
-                'leave_reason'=>$this->reason,
-                'applying_to'=> json_encode($applyingToDetails),
-                'cc_to'=>json_encode($ccToDetails),
+                'leave_type' => $this->leave_type,
+                'leave_reason' => $this->reason,
+                'applying_to' => json_encode($applyingToDetails),
+                'cc_to' => json_encode($ccToDetails),
             ]);
 
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);

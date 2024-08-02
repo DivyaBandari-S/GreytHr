@@ -93,7 +93,6 @@ use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
 use App\Livewire\ItDashboardPage;
 use App\Livewire\LeaveBalancesChart;
-use App\Livewire\LoadingIndicator;
 use App\Livewire\OrganisationChart;
 use App\Livewire\ReportManagement;
 use App\Livewire\ReviewPendingRegularisation;
@@ -257,7 +256,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
 
     //Feeds Module
-    Route::get('/Feeds', Feeds::class)->name('feeds');
+    Route::get('/Feeds', Feeds::class);
     Route::get('/events', Activities::class);
     Route::get('/everyone', Everyone::class);
 
@@ -321,7 +320,6 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/chat/{query}',Chat::class)->name('chat');
     Route::get('/users',EmployeeList::class)->name('employee');
     Route::get('/image',ImageUpload::class)->name('image');
-    Route::get('/loader',LoadingIndicator::class)->name('loader');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 

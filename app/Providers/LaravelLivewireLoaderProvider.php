@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Livewire\LoadingIndicator;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -35,6 +34,6 @@ class LaravelLivewireLoaderProvider extends ServiceProvider
         // ],'laravel-livewire-loader-views');
 
         // Register the Livewire component
-        Livewire::component('loading-indicator', LoadingIndicator::class);
+        // Livewire::component('loading-indicator', LoadingIndicator::class);
     }
 }

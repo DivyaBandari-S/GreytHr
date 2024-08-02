@@ -256,7 +256,7 @@
                 </div>
             @endforeach
             <div class="row m-0" style="text-align: center">
-                <p>This is a system generated payslip and does not require signature.</p>
+                <p>Currently we are working on payslip .</p>
             </div>
         </div>
        

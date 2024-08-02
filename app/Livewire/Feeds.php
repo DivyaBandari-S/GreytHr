@@ -54,7 +54,7 @@ class Feeds extends Component
 
     public $comments = [];
    
-    public $sortType=['newest','interacted'];
+    public $sortType='newest';
     public $newComment = '';
     public $employeeDetails;
     public $isSubmitting = false;
@@ -518,7 +518,9 @@ public function loadaddComments()
 
     // Check if 'emp' guard is authenticated
     if (auth()->guard('emp')->check()) {
-        $this->employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
+        $this->employeeDetails = EmployeeDetails::with('personalInfo') // Eager load personal info
+        ->where('emp_id', auth()->guard('emp')->user()->emp_id)
+        ->get();
         $storedEmojis = Emoji::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
         $emojis = EmojiReaction::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
     } 
@@ -563,27 +565,30 @@ public function showEmployee($id)
 
     private function combineAndSortData($employees)
     {
-
         $combinedData = [];
         $currentDate = Carbon::now();
-
+    
         foreach ($employees as $employee) {
-            if ($employee->date_of_birth) {
-                $dateOfBirth = Carbon::parse($employee->date_of_birth);
+            if ($employee->personalInfo && !empty($employee->personalInfo->date_of_birth)) {
+                $dateOfBirth = Carbon::parse($employee->personalInfo->date_of_birth);
+    
                 // Check if the date of birth is within the current month and up to the current date
-                if ($dateOfBirth->month <= $currentDate->month && $dateOfBirth->day <= $currentDate->day) {
+                if ($dateOfBirth->month < $currentDate->month || 
+                    ($dateOfBirth->month === $currentDate->month && $dateOfBirth->day <= $currentDate->day)) {
                     $combinedData[] = [
-                        'date' => $dateOfBirth->format('m-d'),
+                        'date' => $dateOfBirth->format('m-d'), // Format date as needed
                         'type' => 'date_of_birth',
                         'employee' => $employee,
                     ];
                 }
             }
-
+    
             if ($employee->hire_date) {
                 $hireDate = Carbon::parse($employee->hire_date);
+    
                 // Check if the hire date is within the current month and up to the current date
-                if ($hireDate->month <= $currentDate->month && $hireDate->day <= $currentDate->day) {
+                if ($hireDate->month < $currentDate->month || 
+                    ($hireDate->month === $currentDate->month && $hireDate->day <= $currentDate->day)) {
                     $combinedData[] = [
                         'date' => $hireDate->format('m-d'),
                         'type' => 'hire_date',
@@ -592,13 +597,14 @@ public function showEmployee($id)
                 }
             }
         }
-
-
+    
         // Sort the combined data by date in descending order
         usort($combinedData, function ($a, $b) {
             return $b['date'] <=> $a['date']; // Sort in descending order
         });
-
+    
+      
         return $combinedData;
     }
+    
 }
