@@ -104,7 +104,7 @@
                                         {{$count}} <br>
                                         <span style="color: #778899; font-size:11px; font-weight: 500;">Things to review</span>
                                     </p>
-                                    <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg" alt="" style="height: 40px; width: 40px;">
+                                    <img src="{{ asset('/images/review-pending.jpg') }}" alt="" style="height: 40px; width: 40px;">
                                 </div>
                                 <div class="leave-display d-flex align-items-center border-top p-3 gap-1">
                                     @php

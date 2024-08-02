@@ -143,8 +143,11 @@
                 <ul class="profile-link">
                     <li><a href="/ProfileInfo"><i class='fas fa-user-circle icon'></i> Profile</a></li>
                     <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
-                    <li><a wire:click="confirmLogout" style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
+                    <li><a href="#"  style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
                 </ul>
+            </div>
+            <div style="cursor: pointer;">
+              @livewire('log-out')
             </div>
         </nav>
         <!-- NAVBAR -->
