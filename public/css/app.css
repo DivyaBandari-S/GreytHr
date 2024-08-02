@@ -4548,3 +4548,36 @@ option {
     outline: none;
     box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
 }
+
+.privacy{
+    color: #39363f;
+    font-size: 38.5px;
+    margin:0px;
+    font-weight: 600;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin-bottom: 20px;
+}
+.privacyContent{
+    margin: 10px 0px ;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: #333;
+}
+.privacycontentlinks{
+    color: #3a9efd;
+    text-decoration: none;
+}
+
+.privacyheadings{
+    margin: 25px 0px ;
+    color: #4d4d4d;
+    font-size: 24.5px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+
+}
+.privacyLabelContent{
+    font-size: 14px;
+    font-weight: 600;
+}
