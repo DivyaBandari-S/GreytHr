@@ -40,73 +40,68 @@
                         </div>
                     </button>
                     @if($showFeedsDialog)
-                    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-        
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                          <h5 class="modal-title">Creating a Post</h5>
+                    <div class="modal" tabindex="-1" role="dialog" style="display: block; color: #3b4452; font-family: Montserrat, sans-serif;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="color: #3b4452;">
+        <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <div class="modal-header" style="border-bottom: 1px solid #ccc; padding: 15px;">
+                <h5 class="modal-title" style="font-weight: 500; font-size: 1.25rem;color:#3b4452">Creating a Post</h5>
+               
+            </div>
 
-                                    <button wire:click="closeFeeds" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
+            @if(Session::has('error'))
+                <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert" 
+                    style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius: 4px; background-color: #f8d7da; color: #721c24;">
+                    {{ Session::get('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;"></button>
+                </div>
+            @endif
+
+            <form wire:submit.prevent="submit">
+                <div class="modal-body" style="padding: 20px;">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="category" style="font-weight: 600; color: #3b4452;">Select Category:</label>
+                        <select wire:model="category" class="form-select" id="category" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem;color:#3b4452">
+                            <option value="Appreciations">Appreciations</option>
+                            <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
+                            <option value="Companynews">Company News</option>
+                            <option value="Events">Events</option>
+                            <option value="Everyone">Everyone</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="US">US</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
+                        <textarea wire:model="description" class="form-control" id="content" rows="2" 
+                            style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-260px"
+                            placeholder="Enter your description here..."></textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="attachment" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
+                        <div style="text-align: start;">
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px; margin-bottom: 10px;">
+                            @if ($image)
+                                <div class="mt-2">
+                                    <img src="{{ $image->temporaryUrl() }}" height="50" width="50" alt="Image Preview" style="max-width: 100px; border-radius: 4px; border: 1px solid #ccc;">
                                 </div>
-                                @if(Session::has('error'))
-    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert" style="font-size: 12px; width: 90%; margin: 10px auto 0;">
-        {{ Session::get('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
-
-
-
-                                <form wire:submit.prevent="submit">
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                        <select wire:model="category" class="form-select" id="category">
-                                        <option value="Appreciations">Appreciations</option>
-                                        <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
-                                        <option value="Companynews">Companynews</option>
-                                        <option value="Events">Events</option>
-                                        <option value="Everyone">Everyone</option>
-                                        <option value="Hyderabad">Hyderabad</option>
-                                        <option value="US">US</option>
-                                    </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="content" style="display: block; font-weight: 600;text-align:start">Write something here:</label>
-                                            <textarea wire:model="description" class="form-control" id="content" rows="2"></textarea>
-                                        </div>
-                                        <div class="form-group" >
-                                            <label for="attachment" style="display: block; font-weight: 600;text-align:start">Upload Attachment:</label>
-                                           
-                                            <div  style="text-align:start">
-    <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-
-    @if ($image)
-    <div class="mt-3">
-        
-        <div>
-            <img src="{{ $image->temporaryUrl() }}" height="50" width="50" alt="Image Preview" style="max-width: 300px;">
-        </div>
-    </div>
-    @endif
-</div>
-
-                                        </div>
-                                    </div>
-                                  
-                                    <div class="modal-footer">
-                                    <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-                                    <button wire:click="submit" class="submit-btn" type="button">Submit</button>
-                            <button wire:click="closeFeeds" class="cancel-btn" type="button" style="border: 1px solid rgb(2, 17, 79);">Cancel</button>
-                       
-                                    </div>
-                                    </div>
-                                </form>
-                            </div>
+                            @endif
                         </div>
                     </div>
+                </div>
+
+                <div class="modal-footer" style="border-top: 1px solid #ccc; ">
+                    <div class="d-flex justify-content-center" style="width: 100%;">
+                    <button type="button" wire:click="submit" class="submit-btn">Submit</button>
+                    <button wire:click="closeFeeds" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);margin-left:10px">Cancel</button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
                     <div class="modal-backdrop fade show"></div>
                     @endif
                 </div>
