@@ -4,7 +4,7 @@
             <div class="col-md-4 p-0 m-0 mb-2 ">
                 <div aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center ">
-                        <li class="breadcrumb-item"><a type="button" style="color:#fff !important;" class="submit-btn" href="{{ route('w') }}">Back</a></li>
+                        <li class="breadcrumb-item"><a type="button" style="color:#fff !important;" class="submit-btn" href="{{ route('leave-page') }}">Back</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Leave - View Details</li>
                     </ol>
                 </div>
