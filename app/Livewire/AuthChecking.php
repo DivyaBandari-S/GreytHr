@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use App\Models\HelpDesks;
 use Livewire\Component;
-
+use Carbon\Carbon;
 class AuthChecking extends Component
 {
     public $activeTab = 'active';
@@ -59,6 +59,7 @@ class AuthChecking extends Component
     {
         if (auth()->guard('it')->check()) {
             $companyId = auth()->guard('it')->user()->company_id;
+        
             $this->forIT = HelpDesks::with('emp')
                 ->whereHas('emp', function ($query) use ($companyId) {
                     $query->where('company_id', $companyId);
@@ -88,13 +89,17 @@ class AuthChecking extends Component
                 ->get();
         } elseif (auth()->guard('admins')->check()) {
             $companyId = auth()->guard('admins')->user()->company_id;
-
+            $thresholdDate = Carbon::now()->subDays(7);
+            HelpDesks::where('status', 'Recent')
+                ->where('created_at', '<=', $thresholdDate)
+                ->update(['status' => 'Open']);
             $this->forAdmin = HelpDesks::with('emp')
                 ->whereHas('emp', function ($query) use ($companyId) {
                     $query->where('company_id', $companyId);
                 })
                 ->orderBy('created_at', 'desc') // Order by created_at in descending order to get the most recent records first
                 ->get();
+            
         }
         if ($this->selectedNew == 'active') {
             $this->forAdmin = HelpDesks::with('emp')
@@ -102,6 +107,7 @@ class AuthChecking extends Component
                 ->orderBy('created_at', 'desc')
 
                 ->get();
+         
         }
         if ($this->activeTab == 'active') {
             $this->forIT = HelpDesks::with('emp')

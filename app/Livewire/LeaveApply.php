@@ -21,6 +21,7 @@ use App\Models\EmployeeDetails;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Mail\LeaveApplicationNotification;
+use App\Models\HolidayCalendar;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -522,14 +523,19 @@ class LeaveApply extends Component
                 return redirect()->back()->withInput();
             }
 
-            // Check for holidays in the selected date range
-            $holidays = HolidayCalender::where('date', [$this->from_date, $this->to_date])
-                ->get();
-
-            if ($holidays->isNotEmpty()) {
-                $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
-                return redirect()->back()->withInput();
-            }
+                // Check for holidays in the selected date range
+                $holidays = HolidayCalendar::where(function ($query) {
+                    $query->whereBetween('date', [$this->from_date, $this->to_date])
+                          ->orWhere(function ($q) {
+                              $q->where('date', '>=', $this->from_date)
+                                ->where('date', '<=', $this->to_date);
+                          });
+                })->get();
+        
+                if ($holidays->isNotEmpty()) {
+                    $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
+                    return redirect()->back()->withInput();
+                }
             $filePaths = [];
             // Check if files are set and is an array
             if (isset($this->files) && is_array($this->files)) {

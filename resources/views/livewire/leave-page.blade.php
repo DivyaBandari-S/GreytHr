@@ -80,7 +80,7 @@
 
             </div>
 
-            <div id="restricted" class="row mt-2 w-85 align-items-center" style="{{ $showRestricted ? '' : 'display:none;' }}">
+            <div id="restricted" class="row mt-2 align-items-center" style="{{ $showRestricted ? '' : 'display:none;' }}">
                 <div class="containerWidth">
                     <div class="leave-pending rounded">
                         @if($resShowinfoMessage)
@@ -105,11 +105,11 @@
                 </div>
             </div>
 
-            <div id="leaveCancel" class="row w-85 mt-2 align-items-center" style="{{ $showLeaveCancel ? '' : 'display:none;' }}">
+            <div id="leaveCancel" class="row  mt-2 align-items-center" style="{{ $showLeaveCancel ? '' : 'display:none;' }}">
                 <div class="containerWidth"> @livewire('leave-cancel') </div>
             </div>
 
-            <div id="compOff" class="row w-85 mt-2 align-items-center" style="{{ $showCompOff ? '' : 'display:none;' }}">
+            <div id="compOff" class="row  mt-2 align-items-center" style="{{ $showCompOff ? '' : 'display:none;' }}">
                 <div class="containerWidth">
                     <div>
                         <div class="leave-pending rounded">
@@ -165,7 +165,7 @@
 
                     <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
-                        <div class="accordion-title px-2 py-3 rounded">
+                        <div class="accordion-title px-4 py-3 rounded">
 
                             <!-- Display leave details here based on $leaveRequest -->
 
@@ -306,7 +306,7 @@
 
                     <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
-                        <div class="accordion-title px-2 py-3">
+                        <div class="accordion-title px-4 py-3">
 
                             <!-- Display leave details here based on $leaveRequest -->
 
