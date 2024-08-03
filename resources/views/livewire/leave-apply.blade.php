@@ -279,7 +279,7 @@
                                     <input wire:model="filter" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button type="button" wire:click="searchEmployees" class="search-btn">
-                                            <i style="color:#fff;" class="bx bx-search"></i>
+                                            <i style="color:#fff;margin-left:10px;" class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -287,7 +287,7 @@
 
                             <div class="col-md-2 m-0 p-0">
                                 <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
-                                    <span aria-hidden="true" style="color: white; font-size: 24px;"><i class="bx bx-x"></i>
+                                    <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i>
                                     </span>
                                 </button>
                             </div>
@@ -329,7 +329,7 @@
                 <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
                     <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
                         <div class="icon-container">
-                            <i class="bx bx-plus" style="color: #778899;"></i>
+                            <i class="fa fa-plus" style="color: #778899;"></i>
                         </div>
                     </a>
                     <!-- Blade Template: your-component.blade.php -->
@@ -357,7 +357,7 @@
                                 <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
                                     <button type="button" wire:click="searchCCRecipients" class="search-btn">
-                                        <i style="margin-right: 5px;" class="bx bx-search"></i>
+                                        <i style="margin-right: 10px;" class="fas fa-search"></i>
                                     </button>
                                 </div>
                             </div>
@@ -365,7 +365,7 @@
 
                         <div class="col-md-2 m-0 p-0">
                             <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
-                                <span aria-hidden="true" style="color: white; font-size: 24px;"><i class="bx bx-x"></i></span>
+                                <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i></span>
                             </button>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 <div>
     <div class="logout-icon-container">
-        <span wire:click="handleLogout">Logout</span>
+        <span wire:click="handleLogout"> <i class='fas fa-sign-out-alt'></i></span>
     </div>
     <!-- Logout Modal -->
     @if ($showLogoutModal)

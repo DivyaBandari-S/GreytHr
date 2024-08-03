@@ -217,7 +217,7 @@
                             @endif
 
                             <div class="arrow-btn">
-                                <i class="bx bx-chevron-down"></i>
+                                <i class="fa fa-chevron-down"></i>
                             </div>
 
                         </div>
@@ -366,7 +366,7 @@
                             </div>
 
                             <div class="arrow-btn">
-                                <i class="bx bx-chevron-down"></i>
+                                <i class="fa fa-chevron-down"></i>
                             </div>
 
                         </div>
@@ -416,7 +416,6 @@
                             </div>
 
                             <div class="content px-2 ">
-
                                 <a href="{{ route('leave-pending', ['leaveRequestId' => $leaveRequest->id]) }}">
                                     <span class="viewDetails">View
                                         Details</span>
