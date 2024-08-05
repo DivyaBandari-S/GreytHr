@@ -3,7 +3,7 @@
         <span wire:click="handleLogout"> <i class='fas fa-sign-out-alt'></i></span>
     </div>
     <!-- Logout Modal -->
-    @if ($showLogoutModal)
+    <!--[if BLOCK]><![endif]--><?php if($showLogoutModal): ?>
     <div class="modal" id="logoutModal" tabindex="-1" style="display: block;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="modal-backdrop fade show"></div>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
-</div>
+</div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/log-out.blade.php ENDPATH**/ ?>

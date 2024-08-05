@@ -34,8 +34,8 @@ return new class extends Migration
             $table->string('mother_phone')->unique()->nullable();
             $table->string('father_occupation')->nullable();
             $table->string('mother_occupation')->nullable();
-            $table->string('father_image')->nullable();
-            $table->string('mother_image')->nullable();
+            $table->binary('father_image')->nullable();
+            $table->binary('mother_image')->nullable();
             $table->string('father_blood_group')->nullable();
             $table->string('mother_blood_group')->nullable();
             $table->string('father_nationality')->nullable();

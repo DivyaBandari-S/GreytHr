@@ -23,6 +23,7 @@ class EmpSpouseDetails extends Model
         'email',
         'address',
         'children',
+        'image',
     ];
 
     // Assuming emp_id is not auto-incrementing or not an integer ID
@@ -36,5 +37,5 @@ class EmpSpouseDetails extends Model
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id');
     }
-    
+
 }

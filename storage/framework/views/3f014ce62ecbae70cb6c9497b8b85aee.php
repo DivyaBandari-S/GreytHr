@@ -11,12 +11,13 @@
         <!-- Left Side (Login Form) -->
         <div class="col-md-6 p-3">
 
-            @if (Session::has('success'))
+            <!--[if BLOCK]><![endif]--><?php if(Session::has('success')): ?>
             <div>
 
                 <div class="alert alert-success alert-dismissible fade show" role="alert" style="font-size: 12px; max-width: 400px; margin-left: 21%;">
 
-                    {{ Session::get('success') }}
+                    <?php echo e(Session::get('success')); ?>
+
 
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 
@@ -27,16 +28,17 @@
                 </div>
 
             </div>
-            @endif
-            @if (session('sessionExpired'))
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if(session('sessionExpired')): ?>
             <div class="alert alert-danger">
-                {{ session('sessionExpired') }}
+                <?php echo e(session('sessionExpired')); ?>
+
             </div>
-            @endif
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
             <form wire:submit.prevent="empLogin" class="login-form-with-shadow" style="margin-top: 0px; background-color: #f2f2f6; backdrop-filter: blur(36px);">
                 <div class="text-center mb-1" style="padding-top: 20px;">
-                    <img src="{{ asset('images/hr_new_blue.png') }}" alt="Company Logo" style="width: 14em !important; height: auto !important; margin-bottom: 10px;">
+                    <img src="<?php echo e(asset('images/hr_new_blue.png')); ?>" alt="Company Logo" style="width: 14em !important; height: auto !important; margin-bottom: 10px;">
                 </div>
 
                 <hr class="bg-white" />
@@ -47,27 +49,41 @@
 
                     </div>
                 </header><br>
-                @if ($error)
+                <!--[if BLOCK]><![endif]--><?php if($error): ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong style="font-size: 12px;">{{ $error }}</strong>
+                    <strong style="font-size: 12px;"><?php echo e($error); ?></strong>
                     <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
                 </div>
-                @endif
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 <div class="form-group">
                     <label for="emp_id" style="font-size: 14px;">ID / Mail</label>
                     <input type="text" class="form-control" id="emp_id" placeholder="Enter ID / Mail" wire:model.lazy="form.emp_id" wire:input="login" wire:keydown.debounce.500ms="validateField('form.emp_id')" oninput="this.value = this.value.toUpperCase()"/>
 
-                    @error('form.emp_id')
-                    <p class="pt-2 px-1 text-danger">{{ str_replace('form.emp id', 'Employee ID', $message) }}</p>
-                    @enderror
+                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['form.emp_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="pt-2 px-1 text-danger"><?php echo e(str_replace('form.emp id', 'Employee ID', $message)); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
                     <label for="password" style="font-size: 14px;">Password</label>
                     <input type="password" class="form-control" id="password" placeholder="Enter Password" wire:model.lazy="form.password" wire:input="login" wire:keydown.debounce.500ms="validateField('form.password')" />
 
-                    @error('form.password')
-                    <p class="pt-2 px-1 text-danger">{{ str_replace('form.password', 'Password', $message) }}</p>
-                    @enderror
+                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['form.password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <p class="pt-2 px-1 text-danger"><?php echo e(str_replace('form.password', 'Password', $message)); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
                 <div style="margin-left: 60%; text-align: center;" wire:click="show">
                     <span><a href="#" wire:click="show" style="color: rgb(2, 17, 79);font-size:12px;">Forgot
@@ -96,19 +112,19 @@
                 <!-- The slideshow/carousel -->
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="{{ asset('images/communication.svg') }}" style="width: 85%;" alt="Los Angeles" class="d-block">
+                        <img src="<?php echo e(asset('images/communication.svg')); ?>" style="width: 85%;" alt="Los Angeles" class="d-block">
                         <div class="carousel-caption" style="bottom: 0px; padding-bottom: 0px; color: #007bff;">
 
                         </div>
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('images/task.svg') }}" style="width: 85%;" alt="Chicago" class="d-block">
+                        <img src="<?php echo e(asset('images/task.svg')); ?>" style="width: 85%;" alt="Chicago" class="d-block">
                         <div class="carousel-caption" style="bottom: 0px; padding-bottom: 0px; color: #007bff;">
 
                         </div>
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ asset('images/working.svg') }}" style="width: 85%;" alt="New York" class="d-block">
+                        <img src="<?php echo e(asset('images/working.svg')); ?>" style="width: 85%;" alt="New York" class="d-block">
                         <div class="carousel-caption" style="bottom: 0px; padding-bottom: 0px; color: #007bff;">
 
                         </div>
@@ -131,42 +147,56 @@
                 <a href="/Terms&Services" target="_blank" style="color: rgb(2, 17, 79);">Terms of Service</a>
             </small>
         </div>
-        @if ($showDialog)
+        <!--[if BLOCK]><![endif]--><?php if($showDialog): ?>
         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79);">
                         <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
-                            <b>{{ $verified ? 'Reset Password' : 'Forgot Password' }}</b>
+                            <b><?php echo e($verified ? 'Reset Password' : 'Forgot Password'); ?></b>
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="remove">
                             <span aria-hidden="true" style="color: white;">x</span>
                         </button>
                     </div>
                     <div class="modal-body" style="background-color: #f0f0f0; padding: 20px;">
-                        @if ($verified)
+                        <!--[if BLOCK]><![endif]--><?php if($verified): ?>
                         <!-- Form for creating a new password -->
                         <form wire:submit.prevent="createNewPassword">
                             <!-- Add input fields for new password and confirmation -->
-                            @if ($pass_change_error)
+                            <!--[if BLOCK]><![endif]--><?php if($pass_change_error): ?>
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong style="font-size: 10px;">{{ $pass_change_error }}</strong>
+                                <strong style="font-size: 10px;"><?php echo e($pass_change_error); ?></strong>
                                 <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             <div class="form-group">
                                 <label for="newPassword">New Password</label>
                                 <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Enter your new password" wire:model.lazy="newPassword" wire:keydown.debounce.500ms="validateField('newPassword')">
-                                @error('newPassword')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['newPassword'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span class="text-danger"><?php echo e($message); ?></span>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                             <div class="form-group">
                                 <label for="newPassword_confirmation">Confirm New Password</label>
                                 <input type="password" id="newPassword_confirmation" name="newPassword_confirmation" class="form-control" placeholder="Enter your new password" wire:model.lazy="newPassword_confirmation" wire:keydown.debounce.500ms="validateField('newPassword_confirmation')">
-                                @error('newPassword_confirmation')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['newPassword_confirmation'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span class="text-danger"><?php echo e($message); ?></span>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="btn btn-success">Reset Password</button>
@@ -175,60 +205,76 @@
 
 
                             <!-- Success or error message for password update -->
-                            @if (session()->has('passwordMessage'))
+                            <!--[if BLOCK]><![endif]--><?php if(session()->has('passwordMessage')): ?>
                             <div class="alert alert-success mt-3">
-                                {{ session('passwordMessage') }}
+                                <?php echo e(session('passwordMessage')); ?>
+
                             </div>
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </form>
-                        @else
+                        <?php else: ?>
                         <!-- Form for verifying email and DOB -->
                         <form wire:submit.prevent="verifyEmailAndDOB">
                             <!-- Add input fields for email and DOB verification -->
-                            @if ($verify_error)
+                            <!--[if BLOCK]><![endif]--><?php if($verify_error): ?>
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong style="font-size: 10px;">{{ $verify_error }}</strong>
+                                <strong style="font-size: 10px;"><?php echo e($verify_error); ?></strong>
                                 <!-- <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button> -->
                             </div>
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" wire:model.lazy="email" wire:keydown.debounce.500ms="validateField('email')" wire:input="forgotPassword">
-                                @error('email')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span class="text-danger"><?php echo e($message); ?></span>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                             <div class="form-group">
                                 <label for="dob">Date Of Birth</label>
                                 <div class="input-group">
-                                    <input type="date" id="dob" name="dob" class="form-control" max="{{ date('Y-m-d') }}" wire:model.lazy="dob" wire:keydown.debounce.500ms="validateField('dob')" wire:input="forgotPassword">
+                                    <input type="date" id="dob" name="dob" class="form-control" max="<?php echo e(date('Y-m-d')); ?>" wire:model.lazy="dob" wire:keydown.debounce.500ms="validateField('dob')" wire:input="forgotPassword">
                                 </div>
-                                @error('dob')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['dob'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span class="text-danger"><?php echo e($message); ?></span>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="submit-btn">Verify</button>
                             </div>
 
                             <!-- Success or error message for email and DOB verification -->
-                            @if (session()->has('emailDobMessage'))
-                            <div class="alert alert-{{ session('emailDobMessageType') }} mt-3">
-                                {{ session('emailDobMessage') }}
+                            <?php if(session()->has('emailDobMessage')): ?>
+                            <div class="alert alert-<?php echo e(session('emailDobMessageType')); ?> mt-3">
+                                <?php echo e(session('emailDobMessage')); ?>
+
                             </div>
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </form>
-                        @endif
+                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal-backdrop fade show blurred-backdrop"></div>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-        @if ($showSuccessModal)
+        <!--[if BLOCK]><![endif]--><?php if($showSuccessModal): ?>
         <!-- Success Message and Password Change Modal -->
         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -253,11 +299,11 @@
             </div>
         </div>
         <div class="modal-backdrop fade show blurred-backdrop"></div>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
 
-        @if ($passwordChangedModal)
+        <!--[if BLOCK]><![endif]--><?php if($passwordChangedModal): ?>
         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -276,13 +322,13 @@
                 </div>
             </div>
         </div>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
         <!-- Button trigger modal -->
         <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginLoader">
         Launch static backdrop modal
         </button> -->
-        @if ($showLoader)
+        <!--[if BLOCK]><![endif]--><?php if($showLoader): ?>
         <!-- Modal -->
         <div class="modal fade backdropModal" id="loginLoader" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loginLoaderLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -308,6 +354,7 @@
                 </div>
             </div>
         </div>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
     </div>
 </div>
+<?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/emp-login.blade.php ENDPATH**/ ?>

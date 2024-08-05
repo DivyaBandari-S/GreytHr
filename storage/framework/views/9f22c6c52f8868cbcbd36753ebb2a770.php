@@ -1,17 +1,17 @@
 <div>
-    @php
+    <?php
     $employeeId = auth()->guard('emp')->user()->emp_id;
     $managerId = DB::table('employee_details')
     ->join('companies', 'employee_details.company_id', '=', 'companies.company_id')
     ->where('employee_details.manager_id', $employeeId)
     ->select('companies.company_logo', 'companies.company_name')
     ->first();
-    @endphp
+    ?>
     <!-- SIDEBAR -->
     <section id="sidebar">
         <a href="#" class="brand">
             <!-- <i class='fa fas-smile icon'></i> -->
-            <img class="m-auto" src="{{ asset('images/hr_new_blue.png') }}" alt="Company Logo" style="width: 6em !important;">
+            <img class="m-auto" src="<?php echo e(asset('images/hr_new_blue.png')); ?>" alt="Company Logo" style="width: 6em !important;">
         </a>
         <ul class="side-menu">
             <li><a href="/" class="active"><i class='fas fa-home icon'></i> Dashboard</a></li>
@@ -45,41 +45,116 @@
                     <li><a href="/leave-balances">Leave Balances</a></li>
                     <li><a href="/leave-calender">Leave Calendar</a></li>
                     <li><a href="/holiday-calendar">Holiday Calendar</a></li>
-                    @if($managerId)
+                    <!--[if BLOCK]><![endif]--><?php if($managerId): ?>
                     <li>
                         <a href="/team-on-leave-chart">
-                            @livewire('team-on-leave')
+                            <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('team-on-leave');
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-2523274130-0', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
                         </a>
                     </li>
-                    @endif
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 </ul>
             </li>
             <li>
                 <a href="#"><i class='fas fa-clock icon'></i> Attendance <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
                     <li><a href="/Attendance">Attendance Info</a></li>
-                    @if ($managerId)
+                    <!--[if BLOCK]><![endif]--><?php if($managerId): ?>
                     <li>
                         <a href="/whoisinchart">
-                            @livewire('whoisin')
+                            <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('whoisin');
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-2523274130-1', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
                         </a>
                     </li>
                     <li>
                         <a href="/employee-swipes-data">
-                            @livewire('employee-swipes')
+                            <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('employee-swipes');
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-2523274130-2', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
                         </a>
                     </li>
                     <li>
                         <a href="/attendance-muster-data">
-                            @livewire('attendance-muster')
+                            <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('attendance-muster');
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-2523274130-3', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
                         </a>
                     </li>
                     <li>
                         <a href="/shift-roaster-data">
-                            @livewire('shift-roaster-submodule')
+                            <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('shift-roaster-submodule');
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-2523274130-4', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
                         </a>
                     </li>
-                    @endif
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 </ul>
             </li>
             <li><a href="/document"><i class='fas fa-folder icon'></i>Document Center</a></li>
@@ -91,14 +166,14 @@
                 </ul>
             </li>
             <li><a href="/delegates"><i class='fas fa-user-friends icon'></i> Workflow Delegates</a></li>
-            @if ($managerId)
+            <!--[if BLOCK]><![endif]--><?php if($managerId): ?>
             <li>
                 <a href="/reports">
 
                     <i class="fas fa-file-alt icon"></i> Reports
                 </a>
             </li>
-            @endif
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             <!-- <li class="divider" data-text="table and forms">Table and forms</li>
 			<li><a href="#"><i class='fa fa-table icon' ></i> Tables</a></li>
 			<li>
@@ -132,12 +207,42 @@
                 </div>
             </form>
             <div>
-                @livewire('notification')
+                <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('notification');
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-2523274130-5', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
             </div>
             <span class="divider"></span>
             <div class="profile">
                 <div class="d-flex brandLogoDiv">
-                    @livewire('company-logo')
+                    <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('company-logo');
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-2523274130-6', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
                     <img class="navProfileImg" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="">
                 </div>
                 <ul class="profile-link">
@@ -147,7 +252,22 @@
                 </ul>
             </div>
             <div style="cursor: pointer;">
-              @livewire('log-out')
+              <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('log-out');
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-2523274130-7', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
             </div>
         </nav>
         <!-- NAVBAR -->
@@ -158,4 +278,4 @@
     </section>
 
     <!-- NAVBAR -->
-</div>
+</div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/main-layout.blade.php ENDPATH**/ ?>
