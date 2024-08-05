@@ -1,6 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap");
 * {
-    font-family: 'Montserrat', sans-serif;
+	font-family: "Montserrat", sans-serif;
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
@@ -10,16 +10,14 @@
 	--grey: #F1F0F6;
 	--dark-grey: #8D8D8D;
 	--light: #fff;
-    --tw-text-opacity : 1;
-	--dark: rgba(57,70,87,var(--tw-text-opacity));
+	--dark: #3b4452;
 	--green: #81D43A;
 	--light-green: #E3FFCB;
 	--blue: rgb(2,17,79);
 	--light-blue: #D0E4FF;
-	--dark-blue: #0C5FCD;
+	--dark-blue: rgb(2,17,79);
 	--red: #FC3B56;
 }
-
 html {
 	overflow-x: hidden;
 }
@@ -43,7 +41,7 @@ li {
 /* SIDEBAR */
 #sidebar {
 	position: fixed;
-	max-width: 260px;
+	max-width: 220px;
 	width: 100%;
 	background: var(--light);
 	top: 0;
@@ -52,18 +50,13 @@ li {
 	overflow-y: auto;
 	scrollbar-width: none;
 	transition: all .3s ease;
-	z-index: 200;
-}
-.icon {
-    font-size: 1.25rem;
-    color: var(--dark);
-    cursor: pointer;
+	z-index: 100;
 }
 #sidebar.hide {
 	max-width: 60px;
 }
 #sidebar.hide:hover {
-	max-width: 260px;
+	max-width: 220px;
 }
 #sidebar::-webkit-scrollbar {
 	display: none;
@@ -92,6 +85,7 @@ li {
 }
 #sidebar .icon-right {
 	margin-left: auto;
+	font-size: 0.625rem;
 	transition: all .3s ease;
 }
 #sidebar .side-menu {
@@ -108,9 +102,9 @@ li {
 #sidebar .side-menu a {
 	display: flex;
 	align-items: center;
-	font-size: 14px;
+	font-size: 0.8rem;
+	font-weight: 400;
 	color: var(--dark);
-    font-weight: 500;
 	padding: 12px 16px 12px 0;
 	transition: all .3s ease;
 	border-radius: 10px;
@@ -126,12 +120,7 @@ li {
 #sidebar .side-menu > li > a.active,
 #sidebar .side-menu > li > a.active:hover {
 	background: var(--blue);
-	color: var(--light) !important;
-}
-/* Icon color when link is active */
-#sidebar .side-menu > li > a.active .icon,
-#sidebar .side-menu > li > a.active:hover .icon {
-    color: var(--light) !important;
+	color: var(--light);
 }
 #sidebar .divider {
 	margin-top: 24px;
@@ -160,10 +149,6 @@ li {
 #sidebar .side-dropdown a:hover {
 	color: var(--blue);
 }
-#sidebar .side-dropdown a {
-    font-size: 12px;
-    padding: 7px 0;
-}
 #sidebar .ads {
 	width: 100%;
 	padding: 20px;
@@ -180,7 +165,7 @@ li {
 	border-radius: 10px;
 }
 #sidebar .btn-upgrade {
-	font-size: 14px;
+	font-size: 0.8rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -212,14 +197,14 @@ li {
 /* CONTENT */
 #content {
 	position: relative;
-	width: calc(100% - 260px);
-	left: 260px;
+	width: calc(100% - 220px);
+	left: 220px;
 	transition: all .3s ease;
 }
 #maincontent {
 	position: relative;
-	width: calc(100% - 260px);
-	left: 260px;
+	width: calc(100% - 220px);
+	left: 220px;
 	transition: all .3s ease;
 }
 #sidebar.hide + #content,
@@ -254,7 +239,7 @@ nav form {
 	width: 100%;
 	margin-right: auto;
 }
-/* nav .form-group {
+nav .form-group {
 	position: relative;
 }
 nav .form-group input {
@@ -275,7 +260,7 @@ nav .form-group .icon {
 	transform: translateY(-50%);
 	right: 16px;
 	color: var(--dark-grey);
-} */
+}
 nav .nav-link {
 	position: relative;
 }
@@ -285,8 +270,8 @@ nav .nav-link .icon {
 }
 nav .nav-link .badge {
 	position: absolute;
-	top: -12px;
-	right: -12px;
+	top: -10px;
+	right: -6px;
 	width: 20px;
 	height: 20px;
 	border-radius: 50%;
@@ -352,8 +337,7 @@ nav .profile .profile-link a {
 	padding: 10px 16px;
 	display: flex;
 	grid-gap: 10px;
-	font-size:14px;
-    font-weight: 500;
+	font-size: 0.8rem;
 	color: var(--dark);
 	align-items: center;
 	transition: all .3s ease;
@@ -381,7 +365,7 @@ main .breadcrumbs {
 }
 main .breadcrumbs li,
 main .breadcrumbs li a {
-	font-size: 14px;
+	font-size: 0.8rem;
 }
 main .breadcrumbs li a {
 	color: var(--blue);
@@ -413,7 +397,7 @@ main .card .head h2 {
 	font-weight: 600;
 }
 main .card .head p {
-	font-size: 14px;
+	font-size: 0.8rem;
 }
 main .card .head .icon {
 	font-size: 20px;
@@ -443,7 +427,7 @@ main .card .progress::before {
 	width: var(--value);
 }
 main .card .label {
-	font-size: 14px;
+	font-size: 0.8rem;
 	font-weight: 700;
 }
 main .data {
@@ -501,7 +485,7 @@ main .content-data .head .menu-link.show {
 main .content-data .head .menu-link a {
 	display: block;
 	padding: 6px 16px;
-	font-size: 14px;
+	font-size: 0.8rem;
 	color: var(--dark);
 	transition: all .3s ease;
 }
@@ -552,7 +536,7 @@ main .chat-box .msg {
 	align-items: flex-start;
 }
 main .chat-box .profile .username {
-	font-size: 14px;
+	font-size: 0.8rem;
 	font-weight: 600;
 	display: inline-block;
 	margin-right: 6px;
@@ -562,7 +546,7 @@ main .chat-box .profile .time {
 	color: var(--dark-grey);
 }
 main .chat-box .chat p {
-	font-size: 14px;
+	font-size: 0.8rem;
 	padding: 6px 10px;
 	display: inline-block;
 	max-width: 400px;
@@ -590,8 +574,8 @@ main form {
 	width: 100%;
 	display: flex;
 	grid-gap: 10px;
-}
-main .form-group input {
+} */
+/* main .form-group input {
 	flex-grow: 1;
 	padding: 10px 16px;
 	border-radius: 5px;
@@ -619,6 +603,11 @@ main .btn-send:hover {
 /* MAIN */
 /* CONTENT */
 
+
+
+
+
+
 @media screen and (max-width: 768px) {
 	#content {
 		position: relative;
@@ -630,8 +619,23 @@ main .btn-send:hover {
 		width: calc(100% - 60px);
 		transition: all .3s ease;
 	}
-	nav .nav-link,
+	/* nav .nav-link,
+	nav .divider {
+		display: block;
+	} */
+	nav form,
 	nav .divider {
 		display: none;
+	}
+	#maincontent.active {
+		width: calc(100% - 0px);
+		left: 0px;
+	}
+	#sidebar.hide + #content, #sidebar.hide + #maincontent {
+		width: calc(100% - 0px);
+		left: 0px;
+	}
+	#sidebar.hide {
+		max-width: 0px;
 	}
 }
