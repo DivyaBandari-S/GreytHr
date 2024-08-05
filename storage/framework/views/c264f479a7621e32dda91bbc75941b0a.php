@@ -13,6 +13,7 @@
 
     <div class="hol-container" id="calendar<?php echo e($selectedYear); ?>">
         <div class="row m-0">
+            <!--[if BLOCK]><![endif]--><?php if($calendarData && $calendarData->isNotEmpty()): ?>
             <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $calendarData->sortBy('date')->groupBy(function($entry) {
             return date('F Y', strtotime($entry->date));
             }); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $month => $entries): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -30,25 +31,35 @@
                     <?php else: ?>
                     <div class="group py-3 px-3">
                         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $entries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $entry): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="fest d-flex flex-row align-items-center" style="gap:10px;">
-                            <h5 class="p-0 m-0"><?php echo e(date('d', strtotime($entry->date))); ?><span>
-                                    <p class="mb-0" style="font-size: 10px;"><?php echo e(substr($entry->day, 0, 3)); ?></p>
-                                </span></h5>
-                            <p class="mb-0 festivals" style="font-size: 12px;"><?php echo e($entry->festivals); ?></p>
+                        <div class="fest grid-container">
+                            <div class="grid-item date-container">
+                                <h5 class="p-0 m-0"><?php echo e(date('d', strtotime($entry->date))); ?></h5>
+                                <p class="mb-0" style="font-size: 10px;"><?php echo e(substr($entry->day, 0, 3)); ?></p>
+                            </div>
+                            <div class="grid-item festivals">
+                                <p class="mb-0" style="font-size: 12px;"><?php echo e($entry->festivals); ?></p>
+                            </div>
                         </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+
                     </div>
                     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
             </div>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+            <?php else: ?>
+            <div class="bg-white rounded border p-3 d-flex flex-column align-items-center" style="margin: 50px auto; width:80%;">
+                <p style="font-size: 14px; color: #721c24; font-weight: bold;">No Data Available</p>
+                <p style="font-size: 12px; color:#778899;">There is no data available for the selected year. Please check again later.</p>
+            </div>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
         </div>
     </div>
     <div style="text-align: center; margin: 30px auto;">
         <!--[if BLOCK]><![endif]--><?php if($selectedYear == $nextYear && $calendarData->where('year', $nextYear)->isEmpty()): ?>
         <div class="bg-white rounded border p-3" style="margin: 50px auto; width:80%;">
             <p style="font-size: 16px; color: #721c24; font-weight: bold;">It’s lonely here!</p>
-            <p style="font-size: 12px; color:#778899;">Your HR department is yet to publish the holiday list for the year <?php echo e($nextYear); ?>, check again later.</p>
+            <p style="font-size: 12px; color:#778899;">HR department is yet to publish the holiday list for the year <?php echo e($nextYear); ?>, check again later.</p>
         </div>
         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
     </div>
@@ -69,4 +80,5 @@
             });
         });
     </script>
-</div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/holiday-calender.blade.php ENDPATH**/ ?>
+</div>
+<?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/holiday-calender.blade.php ENDPATH**/ ?>

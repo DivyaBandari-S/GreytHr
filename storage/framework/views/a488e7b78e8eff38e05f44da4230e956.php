@@ -1001,10 +1001,6 @@ width: 170px; */
 } */
 
         /* CSS for the icons */
-        .icon {
-            font-size: 24px;
-            margin-right: 10px;
-        }
 
         /* Style for the row container */
 
@@ -1208,11 +1204,6 @@ color: #fff;
             color: #fff;
             float: right;
             margin-left: 5px;
-        }
-
-        .active:after {
-            content: "\2796";
-            /* Unicode character for "minus" sign (-) */
         }
 
         .legendsIcon {

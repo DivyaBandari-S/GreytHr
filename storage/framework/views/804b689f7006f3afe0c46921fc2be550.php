@@ -1,14 +1,12 @@
 <div>
-   
-
 
     <div class="buttons-container d-flex justify-content-end mt-2 px-3 ">
         <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
         <button type="button" class="leave-balance-dowload mx-2 px-2 rounded " wire:click="showPopupModal">
-            <i class="fa-solid fa-download" style="color: white;"></i>
+            <i class="fas fa-download" style="color: white;"></i>
         </button>
 
-        <select class="dropdown bg-white rounded" wire:model="selectedYear" wire:change="yearDropDown">
+        <select class="dropdown w-20 bg-white rounded" wire:model="selectedYear" wire:change="yearDropDown">
             <?php
             // Get the current year
             $currentYear = date('Y');
@@ -118,10 +116,10 @@
         <div class="bal-container" >
          <div class="row my-3 mx-auto">
             <div class="col-md-4 mb-2">
-                <div class="leave-bal mb-2 bg-white rounded  p-3 " >
+                <div class="leave-bal mb-2 bg-white rounded   " >
                     <div class="balance d-flex flex-row justify-content-between mb-4" >
                         <div class="field">
-                            <span class="leave-type font-weight-500" >Loss Of Pay</span>
+                            <span class="leaveTypeTitle font-weight-500" >Loss Of Pay</span>
                         </div>
                         <div>
                             <span class="leave-gran font-weight-500">Granted:0</span>
@@ -135,10 +133,10 @@
             </div>
          <!-- ... (previous code) ... -->
             <div class="col-md-4 mb-2">
-               <div  class="leave-bal mb-2 bg-white rounded  p-3"  >
+               <div  class="leave-bal mb-2 bg-white rounded  "  >
                 <div class="balance d-flex flex-row justify-content-between mb-4" >
                     <div class="field">
-                        <span class="leave-type font-weight-500">
+                        <span class="leaveTypeTitle font-weight-500">
                             <!--[if BLOCK]><![endif]--><?php if($gender === 'Female'): ?>
                             Maternity Leave
                             <?php elseif($gender === 'Male'): ?>
@@ -160,10 +158,10 @@
             </div>
               </div>
                 <div class="col-md-4 mb-2">
-                    <div class="leave-bal mb-2 bg-white rounded  p-3"  >
+                    <div class="leave-bal mb-2 bg-white rounded  "  >
                         <div class="balance d-flex flex-row justify-content-between mb-4" >
                                 <div class="field">
-                                    <span class="leave-type font-weight-500">Casual Leave 
+                                    <span class="leaveTypeTitle font-weight-500">Casual Leave 
                                 </div>
                                 <div>
                                     <span class="leave-gran font-weight-500">Granted:0</span>
@@ -177,10 +175,10 @@
                         </div>
                     </div>
                     <div class="col-md-4 mb-2">
-                    <div   class="leave-bal mb-2 bg-white rounded  p-3"  >
+                    <div   class="leave-bal mb-2 bg-white rounded  "  >
                         <div class="balance d-flex flex-row justify-content-between mb-4 " >
                                 <div class="field">
-                                    <span class="leave-type font-weight-500">Sick Leave
+                                    <span class="leaveTypeTitle font-weight-500">Sick Leave
                                 </div>
                                 <div>
                                     <span class="leave-gran font-weight-500">Granted:0</span>
@@ -203,10 +201,10 @@
     <div class="bal-container" >
         <div class="row my-3 mx-auto" >
             <div class="col-md-4 mb-2">
-                <div   class="leave-bal mb-2 bg-white rounded  p-3" >
+                <div   class="leave-bal mb-2 bg-white rounded  " >
                     <div class="balance d-flex flex-row justify-content-between " >
                         <div class="field">
-                            <span class="leave-type font-weight-500" >Loss Of Pay</span>
+                            <span class="leaveTypeTitle font-weight-500" >Loss Of Pay</span>
                         </div>
                         <div>
                             <span class="leave-gran font-weight-500">Granted:0</span>
@@ -220,10 +218,10 @@
             </div>
          <!-- ... (previous code) ... -->
             <div class="col-md-4 mb-2">
-               <div  class="leave-bal mb-2 bg-white rounded  p-3"  >
+               <div  class="leave-bal mb-2 bg-white rounded  "  >
                 <div class="balance d-flex flex-row justify-content-between " >
                     <div class="field">
-                        <span class="leave-type font-weight-500">
+                        <span class="leaveTypeTitle font-weight-500">
                             <!--[if BLOCK]><![endif]--><?php if($gender === 'Female'): ?>
                             Maternity Leave
                             <?php elseif($gender === 'Male'): ?>
@@ -245,10 +243,10 @@
             </div>
               </div>
                 <div class="col-md-4 mb-2">
-                    <div  class="leave-bal mb-2 bg-white rounded  p-3">
+                    <div  class="leave-bal mb-2 bg-white rounded  ">
                         <div class="balance d-flex flex-row justify-content-between " >
                                 <div class="field">
-                                    <span class="leave-type font-weight-500">Casual Leave 
+                                    <span class="leaveTypeTitle font-weight-500">Casual Leave 
                                 </div>
                                 <div>
                                     <span class="leave-gran font-weight-500">Granted:<?php echo e($casualLeavePerYear); ?> </span>
@@ -262,10 +260,10 @@
                     </div>
                     </div>
                     <div class="col-md-4 mb-2">
-                    <div     class="leave-bal mb-2 bg-white rounded  p-3">
+                    <div     class="leave-bal mb-2 bg-white rounded  ">
                         <div class="balance d-flex flex-row justify-content-between ">
                                 <div class="field">
-                                    <span class="leave-type font-weight-500">Sick Leave
+                                    <span class="leaveTypeTitle font-weight-500">Sick Leave
                                 </div>
                                 <div>
                                     <span class="leave-gran font-weight-500">Granted:<?php echo e($sickLeavePerYear); ?></span>
@@ -290,10 +288,10 @@
     <div class="bal-container">
         <div class="row my-3 mx-auto">
             <div class="col-md-4 mb-2">
-                <div class="leave-bal mb-2 bg-white rounded  p-3">
+                <div class="leave-bal mb-2 bg-white rounded  ">
                     <div class="balance d-flex flex-row justify-content-between ">
                         <div class="field">
-                            <span class="leave-type font-weight-500">Loss Of Pay</span>
+                            <span class="leaveTypeTitle font-weight-500">Loss Of Pay</span>
                         </div>
                         <div>
                             <span class="leave-grane font-weight-500">Granted:<?php echo e($lossOfPayPerYear); ?></span>
@@ -309,10 +307,10 @@
                 </div>
             </div>
             <div class="col-md-4 mb-2">
-               <div  class="leave-bal mb-2 bg-white rounded  p-3"   >
+               <div  class="leave-bal mb-2 bg-white rounded "   >
                 <div class="balance d-flex flex-row justify-content-between " >
                     <div class="field">
-                        <span class="leave-type font-weight-500">
+                        <span class="leaveTypeTitle font-weight-500">
                             <!--[if BLOCK]><![endif]--><?php if($gender === 'Female'): ?>
                             Maternity Leave
                             <?php elseif($gender === 'Male'): ?>
@@ -331,7 +329,7 @@
                             <?php echo e($paternityLeaves); ?>
 
                             <?php else: ?>
-                            no
+                            0
                             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </span>
                     </div>
@@ -344,7 +342,7 @@
                             <?php echo e($paternityLeaves); ?>
 
                             <?php else: ?>
-                            no
+                            0
                             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </h5>
                     <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
@@ -357,10 +355,10 @@
             </div>
               </div>
                 <div class="col-md-4 mb-2">
-                    <div class="leave-bal mb-2 bg-white rounded  p-3 " >
-                        <div class="balance d-flex flex-row justify-content-between " >
+                    <div class="leave-bal mb-2 bg-white rounded" >
+                        <div class="balance mb-2 d-flex flex-row justify-content-between " >
                                 <div class="field">
-                                    <span class="leave-type font-weight-500">Casual Leave
+                                    <span class="leaveTypeTitle font-weight-500">Casual Leave
                                 </div>
                                 <div>
                                     <span class="leave-gran font-weight-500">Granted:<?php echo e($casualLeavePerYear); ?></span>
@@ -386,10 +384,10 @@
                         </div>
                     </div>
                     <div class="col-md-4 mb-2">
-                        <div class="leave-bal mb-2 bg-white rounded  p-3">
+                        <div class="leave-bal mb-2 bg-white rounded  ">
                             <div class="balance d-flex flex-row justify-content-between">
                                 <div class="field">
-                                    <span class="leave-type font-weight-500">Sick Leave</span>
+                                    <span class="leaveTypeTitle font-weight-500">Sick Leave</span>
                                 </div>
                                 <div>
                                     <span class="leave-gran font-weight-500">Granted:<?php echo e($sickLeavePerYear); ?></span>
@@ -416,10 +414,10 @@
                     </div>
                     <!--[if BLOCK]><![endif]--><?php if($differenceInMonths !== null && $differenceInMonths < 6): ?>
                     <div class="col-md-4 mb-2">
-                        <div class="leave-bal mb-2 bg-white rounded  p-3">
+                        <div class="leave-bal mb-2 bg-white rounded  ">
                             <div class="balance d-flex flex-row justify-content-between">
                                 <div class="field">
-                                    <span class="leave-type font-weight-500">Casual Leave Probation</span>
+                                    <span class="leaveTypeTitle font-weight-500">Casual Leave Probation</span>
                                 </div>
                                 <div>
                                     <span class="leave-gran font-weight-500">Granted:<?php echo e($casualProbationLeavePerYear); ?></span>
@@ -446,10 +444,10 @@
                     </div>
                     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                     <div class="col-md-4 mb-2">
-                        <div class="leave-bal mb-2 bg-white rounded  p-3">
+                        <div class="leave-bal mb-2 bg-white rounded  ">
                             <div class="balance d-flex flex-row justify-content-between">
                                 <div class="field">
-                                    <span class="leave-type font-weight-500">Marriage Leave</span>
+                                    <span class="leaveTypeTitle font-weight-500">Marriage Leave</span>
                                 </div>
                                 <div>
                                     <span class="leave-gran font-weight-500">Granted:<?php echo e($marriageLeaves); ?></span>
@@ -475,10 +473,10 @@
     <div class="bal-container" >
         <div class="row my-3 mx-auto" >
             <div class="col-md-4 mb-2">
-                <div   class="leave-bal mb-2 bg-white rounded  p-3"  >
+                <div   class="leave-bal mb-2 bg-white rounded  "  >
                     <div class="balance d-flex flex-row justify-content-between mb-4" >
                         <div class="field">
-                            <span class="leave-type font-weight-500" >Loss Of Pay</span>
+                            <span class="leaveTypeTitle font-weight-500" >Loss Of Pay</span>
                         </div>
                         <div>
                             <span class="leave-gran font-weight-500">Granted:0</span>
@@ -492,10 +490,10 @@
             </div>
          <!-- ... (previous code) ... -->
             <div class="col-md-4 mb-2">
-               <div     class="leave-bal mb-2 bg-white rounded  p-3"  >
+               <div     class="leave-bal mb-2 bg-white rounded  "  >
                 <div class="balance d-flex flex-row justify-content-between mb-4" >
                     <div class="field">
-                        <span class="leave-type font-weight-500">
+                        <span class="leaveTypeTitle font-weight-500">
                             <!--[if BLOCK]><![endif]--><?php if($gender === 'Female'): ?>
                             Maternity Leave
                             <?php elseif($gender === 'Male'): ?>
@@ -517,10 +515,10 @@
             </div>
               </div>
                 <div class="col-md-4 mb-2">
-                    <div  class="leave-bal mb-2 bg-white rounded  p-3">
+                    <div  class="leave-bal mb-2 bg-white rounded  ">
                         <div class="balance d-flex flex-row justify-content-between mb-4" >
                                 <div class="field">
-                                    <span class="leave-type font-weight-500">Casual Leave 
+                                    <span class="leaveTypeTitle font-weight-500">Casual Leave 
                                 </div>
                                 <div>
                                     <span class="leave-gran font-weight-500">Granted:0</span>
@@ -534,10 +532,10 @@
                         </div>
                     </div>
                     <div class="col-md-4 mb-2">
-                    <div  class="leave-bal mb-2 bg-white rounded  p-3"   >
+                    <div  class="leave-bal mb-2 bg-white rounded  "   >
                         <div class="balance d-flex flex-row justify-content-between mb-4" >
                                 <div class="field">
-                                    <span class="leave-type font-weight-500">Sick Leave
+                                    <span class="leaveTypeTitle font-weight-500">Sick Leave
                                 </div>
                                 <div>
                                     <span class="leave-gran font-weight-500">Granted:<?php echo e($sickLeavePerYear); ?></span>
