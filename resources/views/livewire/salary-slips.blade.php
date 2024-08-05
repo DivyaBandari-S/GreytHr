@@ -31,7 +31,7 @@
                                 </div>
 
                                 <div style="display:flex;align-items:center;flex-direction:column;">
-                                        <img src="https://cdn3.iconfinder.com/data/icons/human-resources-70/133/9-512.png" alt="" style="height:300px;width:300px;">
+                                        <img src="https://th.bing.com/th/id/OIP.mahJODIeDJLFSbIYARY4WwAAAA?pid=ImgDet&w=178&h=178&c=7&dpr=1.5" alt="" style="height:300px;width:300px;">
                                     <p style="color: #677A8E;  margin-bottom: 20px; font-size:12px;"> We are working on your payslip!</p>
                                 </div>
                             </div>

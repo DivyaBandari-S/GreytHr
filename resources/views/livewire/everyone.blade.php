@@ -1,22 +1,66 @@
 <div class="px-4">
-    <div class="container mt-3" style="height:60px;">
+<div class="px-4" style="position: relative;">
+@if ($message)
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        {{ $message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
-
-        <div class="row bg-white" style="height:80px">
+    <div class="container  mt-3" style="height:60px;margin-top:10px">
+    
+        <div class="row bg-white rounded border" style="height:80px">
+     
             <div class="col-md-1 mt-3" style="height:60px">
-            @if(auth()->guard('emp')->check() || auth()->guard('hr')->check())
-    @if($employeeDetails)
-        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $employeeDetails->image) }}">
+            @if(auth('emp')->check())
+    @php
+        $empEmployeeId = auth('emp')->user()->emp_id;
+        $employeeDetails = \App\Models\EmployeeDetails::with('personalInfo') // Eager load personal info
+            ->where('emp_id', $empEmployeeId)
+            ->get();
+    @endphp
+
+    @if($employeeDetails && $employeeDetails->count() > 0)
+        @foreach($employeeDetails as $employee)
+            @if($employee->personalInfo && $employee->personalInfo->image)
+                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $employee->personalInfo->image) }}">
+            @else
+                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+            @endif
+        @endforeach
     @else
         <p>No employee details found.</p>
     @endif
+
+
+
+@elseif(auth('hr')->check())
+    @php
+        $hrEmployeeId = auth('hr')->user()->hr_emp_id;
+        $hrEmployeeDetails = \App\Models\Hr::where('hr_emp_id', $hrEmployeeId)->get();
+    @endphp
+
+    @if($hrEmployeeDetails && $hrEmployeeDetails->count() > 0)
+        @foreach($hrEmployeeDetails as $hr)
+            @if($hr->image)
+                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $hr->image) }}">
+            @else
+                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+            @endif
+        @endforeach
+    @else
+        <p>No HR employee details found.</p>
+    @endif
+
 @else
-    <p>No employee details available.</p>
+    <p>User is not authenticated.</p>
 @endif
 
+
+      
             </div>
             <div class="col-md-10 mt-2 bg-white d-flex align-items-center justify-content-between">
-                <div>
+                <div style="color:#3b4452;">
                 @if(auth()->guard('emp')->check())
     <span class="text-base">Hey {{ ucwords(strtolower(auth()->guard('emp')->user()->first_name)) }} {{ ucwords(strtolower(auth()->guard('emp')->user()->last_name)) }}</span>
 @elseif(auth()->guard('hr')->check())
@@ -24,7 +68,8 @@
 @else
     <p>No employee details available.</p>
 @endif
-                    <div class="text-xs">Ready to dive in?</div>
+
+                    <div class="text-xs" style="color:#3b4452;">Ready to dive in?</div>
                 </div>
                 <div>
                     <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20 h-20 p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;">
@@ -39,13 +84,16 @@
                             <div class="text-left text-xs">Posts</div>
                         </div>
                     </button>
+
                     @if($showFeedsDialog)
                     <div class="modal" tabindex="-1" role="dialog" style="display: block; color: #3b4452; font-family: Montserrat, sans-serif;">
     <div class="modal-dialog modal-dialog-centered" role="document" style="color: #3b4452;">
         <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
             <div class="modal-header" style="border-bottom: 1px solid #ccc; padding: 15px;">
-                <h5 class="modal-title" style="font-weight: 500; font-size: 1.25rem;color:#3b4452">Creating a Post</h5>
-               
+                <!-- <h5 class="modal-title" style="font-weight: 500; font-size: 1.25rem;color:#3b4452">Creating a Post</h5> -->
+               <span style="justify-content-end">
+                <image src="https://www3.nhk.or.jp/nhkworld/en/tv/bento/season5/images/top_info_20190412_5_pc.png" >
+               </span>
             </div>
 
             @if(Session::has('error'))
@@ -60,7 +108,7 @@
                 <div class="modal-body" style="padding: 20px;">
                     <div class="form-group" style="margin-bottom: 15px;">
                         <label for="category" style="font-weight: 600; color: #3b4452;">Select Category:</label>
-                        <select wire:model="category" class="form-select" id="category" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem;color:#3b4452">
+                        <select wire:model="category" class="form-select" id="category" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem;color:#3b4452;margin-top:5px">
                             <option value="Appreciations">Appreciations</option>
                             <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
                             <option value="Companynews">Company News</option>
@@ -71,17 +119,17 @@
                         </select>
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 15px;">
+                    <div class="form-group" >
                         <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
                         <textarea wire:model="description" class="form-control" id="content" rows="2" 
-                            style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-260px"
+                            style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-260px;;margin-top:5px"
                             placeholder="Enter your description here..."></textarea>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 15px;">
                         <label for="attachment" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
                         <div style="text-align: start;">
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px; margin-bottom: 10px;">
+                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px ;margin-top:5px">
                             @if ($image)
                                 <div class="mt-2">
                                     <img src="{{ $image->temporaryUrl() }}" height="50" width="50" alt="Image Preview" style="max-width: 100px; border-radius: 4px; border: 1px solid #ccc;">
@@ -102,317 +150,304 @@
         </div>
     </div>
 </div>
+
+
+
+
                     <div class="modal-backdrop fade show"></div>
                     @endif
                 </div>
             </div>
         </div>
         <!-- Additional row -->
-        <div class="row mt-5 d-flex" style="overflow-x: hidden;">
-        <div class="col-md-3 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:400;overflow-x: hidden;">
+        <div class="row mt-3 d-flex" style="overflow-x: hidden;">
 
-<p style="font-weight: 500;font-size:13px;color:#47515b;">Filters</p>
-<hr style="width: 100%;border-bottom: 1px solid grey;">
+            <div class="col-md-4 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:auto;overflow-x: hidden;">
+
+                <p style="font-weight: 500;font-size:13px;color:#47515b;">Filters</p>
+                <hr style="width: 100%;border-bottom: 1px solid grey;">
 
 
-<p style="font-weight: 500;font-size:13px;color:#47515b;cursor:pointer">Activities</p>
-<div class="activities">
-<label class="custom-radio-label" style="display: flex; align-items: center;">
-<input type="radio" name="radio" value="activities" checked data-url="/Feeds">
-<div class="icon-container" style="margin-left: 10px;">
-<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
-<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-
-<rect x="7" y="7" width="3" height="9"></rect>
-<rect x="14" y="7" width="3" height="5"></rect>
-</svg>
+                <p style="font-weight: 500;font-size:13px;color:#47515b;cursor:pointer">Activities</p>
+                <div class="activities" style="width: 100%; height: 30px;">
+    <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
+        <input type="radio" name="radio" value="activities" checked data-url="/Feeds" onclick="handleRadioChange(this)">
+        <div class="feed-icon-container" style="margin-left: 10px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <rect x="7" y="7" width="3" height="9"></rect>
+                <rect x="14" y="7" width="3" height="5"></rect>
+            </svg>
+        </div>
+        <span class="custom-radio-button bg-blue" style="margin-left: 10px; font-size: 8px;"></span>
+        <span style="color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;">All Activities</span>
+    </label>
 </div>
-<span class="custom-radio-button bg-blue" style="margin-left: 10px; font-size: 8px;"></span>
-<span style="color: #778899; font-size: 12px; font-weight: 500;">All Activities</span>
-</label>
-</div>
 
-<div class="posts" style="display:flex">
-    <label class="custom-radio-label" style="display:flex; align-items:center;">
-       
+
+<div class="posts" style="width: 100%; height: 30px;">
+    <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
         @if(auth()->guard('emp')->check())
-        <input type="radio" name="radio" value=""   data-url="/everyone"><span>
-@elseif(auth()->guard('hr')->check())
-<input type="radio" name="radio" value=""   data-url="/hreveryone"><span>
-@else
-<p>No employee details available.</p>
-@endif
-
-        <div class="icon-container" style="margin-left: 10px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
-
-<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-<polyline points="13 2 13 9 20 9"></polyline>
-</svg>
+            <input type="radio" id="radio-emp" name="radio" value="" data-url="/everyone" onclick="handleRadioChange(this)">
+        @elseif(auth()->guard('hr')->check())
+            <input type="radio" id="radio-hr" name="radio" value="" data-url="/hreveryone" onclick="handleRadioChange(this)">
+        @else
+            <p>No employee details available.</p>
+        @endif
+        <div class="feed-icon-container" style="margin-left: 10px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
+                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                <polyline points="13 2 13 9 20 9"></polyline>
+            </svg>
+        </div>
+        <span class="custom-radio-button bg-blue" style="margin-left: 10px; font-size: 10px;"></span>
+        <span style="color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;">Posts</span>
+    </label>
 </div>
 
-        </span><span class="custom-radio-button bg-blue" style="margin-left:10px;font-size:10px"></span> <span style="color:#778899;font-size:12px;font-weight:500;">Posts</span></label>
-</div>
 
-<hr style="width: 100%;border-bottom: 1px solid grey;">
-<div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
-    <div class="row">
-        <div class="col " style="margin: 0px;">
-            <div class="input-group">
-                <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; " type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
-                <button style=" border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="search-btn" type="button">
-                    <i style="text-align: center;" class="fa fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </div>
+                <hr style="width: 100%;border-bottom: 1px solid grey;">
+                <div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
+                    <div class="row">
+                        <div class="col " style="margin: 0px;">
+                            <div class="input-group">
+                                <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;  " type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
+                                <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="search-btn" type="button">
+                                    <i style="text-align: center;color:white" class="fa fa-search" ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-    <div class="w-full visible mt-1" style="margin-top:20px">
-        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;" onclick="toggleDropdown('dropdownContent1', 'arrowSvg1')">
-            <span class="text-xs leading-4" style="font-weight:bold; color: grey;">Groups</span>
+                    <div class="w-full visible mt-1" style="margin-top:20px">
+                        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;" onclick="toggleDropdown('dropdownContent1', 'arrowSvg1')">
+                            <span class="text-xs leading-4" style="font-weight:bold; color: grey;">Groups</span>
 
-            <span class="arrow-icon" id="arrowIcon1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:black">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </span>
-        </div>
-        <div id="dropdownContent1" style="display: none;">
-            <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
-                <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">All Feeds</a>
-                @if (Auth::guard('hr')->check())
-          
-<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One </a>
+                            <span class="arrow-icon" id="arrowIcon1" style="margin-top:-5px">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:#3b4452;margin-top:-5px">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                        <div id="dropdownContent1" style="display: none;">
+                            <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
+                                <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">All Feeds</a>
+                                @if (Auth::guard('hr')->check())
+                          
+        <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One </a>
+    @elseif (Auth::guard('emp')->check())
+        <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One </a>
+    @endif
+
+
+
+    @if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Every One </a>
-@endif
-
-
-
-@if (Auth::guard('hr')->check())
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Events</a>
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Events</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Company News</a>
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Company News</a>
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Appreciation</a>
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Appreciation</a>
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Appreciation</a>
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Buy/Sell/Rent</a>
+<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Buy/Sell/Rent</a>
+<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
 @endif
-            </ul>
-        </div>
-    </div>
+                            </ul>
+                        </div>
+                    </div>
 
-    <div class="w-full visible mt-1" style="margin-top: 20px;">
-        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
-            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Location</span>
-            <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg2" style="color: black;">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </span>
-        </div>
-        <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
-            <ul style="font-size: 12px; margin: 0; padding: 0;">
-                <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">India</b>
-                @if (Auth::guard('hr')->check())
+                    <div class="w-full visible mt-1" style="margin-top: 20px;">
+                        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
+                            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Location</span>
+                            <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')" style="margin-top:-5px;color:#3b4452;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg2" style="color:#3b4452;margin-top:-5px">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                        <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color:#3b4452; text-align: left; padding-left: 0; display: none;">
+                            <ul style="font-size: 12px; margin: 0; padding: 0;">
+                                <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">India</b>
+                               
+                                @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Guntur</a>
-
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Guntur</a>
-
-@endif
-@if (Auth::guard('hr')->check())
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hyderabad</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hyderabad</a>
-@endif      
-@if (Auth::guard('hr')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
+ @endif 
+                                @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Doddaballapur</a>
-
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Doddaballapur</a>
-@endif 
-@if (Auth::guard('hr')->check())
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Tirupati</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">California</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Tirupati</a>
-@endif      
-@if (Auth::guard('hr')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">California</a>
+ @endif
+ @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Adilabad</a>
-
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Adilabad</a>
-@endif      
-@if (Auth::guard('hr')->check())
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Trivandrum</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Doddaballapur</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Trivandrum</a>
-@endif      
-@if (Auth::guard('hr')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Doddaballapur</a>
+ @endif 
+                                @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</a>
-
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">USA</a>
-@endif      
-@if (Auth::guard('hr')->check())
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">California</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">California</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
+
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">New York</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hyderabad</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">New York</a>
-@endif      
-@if (Auth::guard('hr')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Hyderabad</a>
+ @endif      
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Alaska</a>
+ @if (Auth::guard('hr')->check())
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Alaska</a>
-@endif      
-@if (Auth::guard('hr')->check())
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hawaii</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Hawaii</a>
-@endif                 
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
+ @endif      
+     
+ @if (Auth::guard('hr')->check())
 
-            </ul>
-        </div>
-    </div>
-
-    <div class="w-full visible mt-1" style="margin-top: 20px;">
-        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
-            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Department</span>
-            <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color: black;">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </span>
-        </div>
-        <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
-            <ul style="font-size: 12px; margin: 0; padding: 0;">
-            @if (Auth::guard('hr')->check())
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">HR</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:black;">HR</a>
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations Team</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
+ @endif      
+ @if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight:700">USA</a>
+ @endif      
+
+ @if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">New York</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">New York</a>
+ @endif      
+     
+ @if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
+ @endif                 
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="w-full visible mt-1" style="margin-top: 20px;">
+                        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
+                            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Department</span>
+                            <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')" style="margin-top:-5px">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color:#3b4452;">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                        <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
+                            <ul style="font-size: 12px; margin: 0; padding: 0;">
+                            @if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">HR</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">HR</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Operations Team</a>
 
 
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Operations</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Operations</a>
-@endif
-@if (Auth::guard('hr')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Operations</a>
+ @endif
+ @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">QA</a>
-
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">QA</a>
-@endif
-@if (Auth::guard('hr')->check())
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Production Team</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Production Team</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Production Team</a>
-@endif
-@if (Auth::guard('hr')->check())
+ @endif
+ @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Sales Team</a>
-
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Sales Team</a>
-@endif
-@if (Auth::guard('hr')->check())
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Testing Team</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">QA</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Testing Team</a>
-@endif
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">QA</a>
+ @endif
 
-         
-              
-            </ul>
-        </div>
-    </div>
-</div>
-</div>
+ @if (Auth::guard('hr')->check())
 
-<div class="col" style="max-height: 80vh; overflow-y: auto;scroll-behavior: smooth;">
-                <div id="eventsSection" style="margin-top: 20px">
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Sales Team</a>
 
-                    @if($posts->isEmpty())
-                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png" alt="Empty Image" style="width: 300px; height: auto; display: block;">
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Sales Team</a>
+ @endif
+ @if (Auth::guard('hr')->check())
 
-                    <p style="font-size:20px;font-weight:600">It feels empty here!</p>
-                    <p style="font-size:12px;color:#778899;">Your feed is still in making as there's no
-                        post to show.</p>
-                    <button style="background-color:rgb(2, 17, 79);width:110px;height:30px;border:1px solid grey;border-radius:5px;color:white;" wire:click="addFeeds">Create Post</button>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Testing Team</a>
 
-
-
-
-                    <!-- Begin the form outside the .form-group div -->
-                    @if($showFeedsDialog)
-                  
-                    @endif
-                </div>
-                @else
-                <div class="col-md-7 text-right" style="display:flex; justify-content: flex-end;">
-
-           <div style="margin-top:-10px;display:flex">
-           <p style="font-size:12px">Sort:</p>
-
-
-<p style="font-size:14px;font-weight:500;">Newest first</p>
-         
-
-                   
-
-                    <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="2 0 24 24" stroke="currentColor" style="height:12px;width:14px;margin-top:4px">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Testing Team</a>
+ @endif
+           
+                         
+                              
+                            </ul>
+                        </div>
                     </div>
+                </div>
+            </div>
+            
+<div class="col" >
+    
+<div id="eventsSection" style=" display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;margin-top:-130px">
+@if($posts->isEmpty())
+        <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png" alt="Empty Image" style="width: 300px; height: auto; display: block;">
+        <p style="font-size:20px;font-weight:500; text-align: center;color:#3b4452">It feels empty here!</p>
+        <p style="font-size:12px;color:#778899; text-align: center;">Your feed is still in making as there's no post to show.</p>
+        <button style="background-color:rgb(2, 17, 79); width:110px; height:30px; border:1px solid grey; border-radius:5px; color:white;" wire:click="addFeeds">Create Post</button>
+
+        <!-- Begin the form outside the .form-group div -->
+        @if($showFeedsDialog)
+            <!-- Form content here -->
+        @endif
+
+</div>
+
+                @else
+                <div class="col-md-7 text-right" style="display:flex; justify-content: flex-end; overflow-y: auto;scroll-behavior: smooth;">
+
+       
                 </div>
                 @foreach($posts as $post)
                 <div class="col-md-8">
@@ -494,58 +529,7 @@
 
 
 
-            <style>
-                /* Define the blue background color for the checked state */
-                .input[type="radio"]:checked+.custom-radio-button {
-                    background-color: blue;
-                }
-
-                .feather {
-                    display: inline-block;
-                    vertical-align: middle;
-                }
-
-                .text-salmon-400 {
-                    fill: salmon;
-                    /* Change the color as needed */
-                }
-
-                .stroke-1 {
-                    stroke-width: 1px;
-                    /* Adjust the stroke width as needed */
-                }
-
-                .icon-container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-left: 2px;
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 50%;
-                    background-color: #D8D8D8;
-                    /* You can change this to any desired background color */
-                }
-
-                .feather {
-                    width: 1rem;
-                    height: 1rem;
-                    color: #6B46C1;
-                    /* You can change this to any desired icon color */
-                }
-
-                .activities:hover {
-                    background-color: #e1e7f0;
-                    height: 30px;
-                    width: 100%;
-                }
-
-                .posts:hover {
-                    background-color: #e1e7f0;
-                    height: 30px;
-                    width: 100%;
-                }
-            </style>
+     
             <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> -->
             <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
@@ -770,69 +754,6 @@
             </script>
 
 
-            <style>
-                /* Define CSS for the menu items */
-                .menu-item {
-                    transition: background-color 0.3s ease;
-                }
-
-                /* Define CSS for the menu items on hover */
-                .menu-item:hover {
-                    background-color: #e1e7f0;
-                    height: 30px;
-                    width: 130%;
-                }
-
-                /* CSS for radio-wrapper */
-                .radio-wrapper {
-                    display: inline-block;
-                    margin-right: 10px;
-                    /* Adjust margin as needed */
-                    cursor: pointer;
-                }
-
-                /* CSS for labels */
-                .radio-label {
-                    display: inline-block;
-                    padding: 8px 12px;
-                    /* Adjust padding as needed */
-                    border-radius: 4px;
-                    /* Rounded corners */
-                    transition: background-color 0.3s ease;
-                    /* Smooth transition */
-                }
-
-                /* CSS for label hover effect */
-                .radio-label:hover {
-                    background-color: #e1e7f0;
-                    /* Change background color on hover */
-                }
-
-                /* CSS for when radio button is checked */
-                .input[type="radio"]:checked+.radio-label {
-                    background-color: #e1e7f0;
-                    /* Change background color when checked */
-                }
-
-                /* Ensure radio button and text remain on the same line */
-                input[type="radio"] {
-                    vertical-align: middle;
-                }
-
-                /* Add this CSS to your main CSS file or in your Livewire component's style tag */
-                :root {
-                    --e-color-border: #e1e1e1;
-                    --e-color-emoji-text: #666;
-                    --e-color-border-emoji-hover: #e1e1e1;
-                    --e-color-bg: #fff;
-                    --e-bg-emoji-hover: #f8f8f8;
-                    --e-size-emoji-text: 16px;
-                    --e-width-emoji-img: 20px;
-                    --e-height-emoji-img: 20px;
-                    --e-max-width: 288px;
-                }
-            </style>
-
 
 
             <script>
@@ -959,6 +880,12 @@
             }
         </script>
 
+<script>
+    function handleRadioChange(element) {
+        const url = element.getAttribute('data-url');
+        window.location.href = url;
+    }
+</script>
 
     </div>
     </div>

@@ -25,9 +25,9 @@ use Livewire\WithFileUploads;
 class HelpDesk extends Component
 {
     use WithFileUploads;
-
+    public $selectedCategory = '';
     public $searchTerm = '';
-  
+    public $search = '';
     public $isRotated = false;
     public $selectedPerson = null;
     public $peoples;
@@ -84,8 +84,77 @@ class HelpDesk extends Component
         logger($this->category); // Log selected category
         logger($this->records); // Log filtered records
     }
-
+    public function searchActive()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $companyId = Auth::user()->company_id;
     
+        // Start a query to filter HelpDesks records for the logged-in employee
+        $query = HelpDesks::with('emp')->where('status', 'Recent')->where('emp_id', $employeeId);
+    
+        // Add search term filters
+        if ($this->search) {
+            $query->where(function ($query) {
+                $query->whereHas('emp', function ($query) {
+                    $query->where('first_name', 'like', '%' . $this->search . '%')
+                          ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                          ->orWhere('emp_id', 'like', '%' . $this->search . '%');
+                });
+            });
+        }
+    
+        // Execute the query and get the results
+        $this->records = $query->orderBy('created_at', 'desc')->get();
+ 
+        // Fetch peoples for filtering
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+            ->where(function ($query) {
+                $query->where('first_name', 'like', '%' . $this->search . '%')
+                      ->orWhere('last_name', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+    
+        // Set filtered peoples based on search term
+        $this->filteredPeoples = $this->search ? $this->peoples : collect(); // Use collect() for an empty collection
+        
+        // Debugging output to check filtered peoples
+     
+    
+        // Check if there are any filtered peoples
+        $this->peopleFound = $this->filteredPeoples->isNotEmpty(); // Use isNotEmpty() for a collection
+    }
+    
+    
+
+    public function searchCompleted()
+    {
+               // Filter people based on search term
+               $employeeId = auth()->guard('emp')->user()->emp_id;
+               $companyId = Auth::user()->company_id;
+               $this->records = HelpDesks::all();
+               $this->peoples = EmployeeDetails::where('company_id', $companyId)
+               ->where(function($query) {
+                   $query->where('first_name', 'like', '%'.$this->searchTerm.'%')
+                         ->orWhere('last_name', 'like', '%'.$this->searchTerm.'%');
+               })
+               ->orderBy('first_name')
+               ->orderBy('last_name')
+               ->get();
+   
+           $this->filteredPeoples = $this->searchTerm ? $this->peoples : null;
+   
+           // Filter records based on category and search term
+           $this->records = HelpDesks::with('emp')
+           ->whereHas('emp', function($query) {
+               $query->where('first_name', 'like', '%'.$this->searchTerm.'%')
+                     ->orWhere('last_name', 'like', '%'.$this->searchTerm.'%');
+           })
+        
+           ->orderBy('created_at', 'desc')
+           ->get();
+    }
 
 
     public function close()
@@ -227,24 +296,33 @@ class HelpDesk extends Component
 
     public function filter()
     {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = Auth::user()->company_id;
-        $trimmedSearchTerm = trim($this->searchTerm);
-    
-        $this->filteredPeoples = EmployeeDetails::where('company_id', $companyId)
-            ->where(function ($query) use ($trimmedSearchTerm) {
-                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
-                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+
+        // Filter people based on search term
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+            ->where(function($query) {
+                $query->where('first_name', 'like', '%'.$this->searchTerm.'%')
+                      ->orWhere('last_name', 'like', '%'.$this->searchTerm.'%');
             })
+            ->orderBy('first_name')
+            ->orderBy('last_name')
             ->get();
-    
-        $this->peopleFound = count($this->filteredPeoples) > 0;
-    
-    
+
+        $this->filteredPeoples = $this->searchTerm ? $this->peoples : null;
+
+        // Filter records based on category and search term
+        $this->records = HelpDesks::with('emp')
+        ->whereHas('emp', function($query) {
+            $query->where('first_name', 'like', '%'.$this->searchTerm.'%')
+                  ->orWhere('last_name', 'like', '%'.$this->searchTerm.'%');
+        })
      
-    
-       
+        ->orderBy('created_at', 'desc')
+        ->get();
+
     }
-    
+
 
     public function render()
     {
@@ -270,9 +348,10 @@ class HelpDesk extends Component
             })
             ->orderBy('created_at', 'desc')
             ->get();
+            $peopleData = $this->filteredPeoples ?: $this->records;
 
         return view('livewire.help-desk', [
-            'peopleData' => $peopleData,
+        'peopleData' => $this->filteredPeoples ?: $this->peoples, 'records' => $this->records
         ]);
     }
 }

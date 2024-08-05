@@ -45,9 +45,9 @@
 <div class="col-md-3 input-group align-items-center" style="width: 30%; justify-content: flex-start;">
     <select wire:model="selectedCategory" class="form-control" style="height: 37px; margin-right: 5px;">
         <option value="">Select Category</option>
-        <option value="it">IT Request</option>
-        <option value="hr">HR Request</option>
-        <option value="finance">Finance Request</option>
+        <option value="IT">IT Request</option>
+        <option value="HR">HR Request</option>
+        <option value="Finance">Finance Request</option>
     </select>
 
 </div>
@@ -132,6 +132,26 @@
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
 
                         </div>
+                        <div class="form-group mt-2">
+    <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
+    <div class="input" class="form-control placeholder-small">
+        <div style="position: relative;">
+            <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                <option style="color: gray;" value="">Select Priority</option>
+                <option value="High">High</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+            </select>
+            <div class="dropdown-toggle-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+                    <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
                         <div class="row " style="margin-top: 10px;">
                             <div class="col">
                                 <div class="row m-0 p-0">
@@ -167,34 +187,35 @@
                                         </div>
                                     </div>
                                     @if ($peopleData->isEmpty())
-                                    <div class="container" style="text-align: center; color: white;font-size:12px"> No People Found
-                                    </div>
-                                    @else
-                                    @foreach($peopleData as $people)
-                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
-                                            </div>
-                                            <div class="col-auto">
-                                                @if($people->image=="")
-                                                @if($people->gender=="Male")
-                                                <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                                @elseif($people->gender=="Female")
-                                                <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                                @endif
-                                                @else
-                                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                                                @endif
-                                            </div>
-                                            <div class="col">
-                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                            </div>
-                                        </div>
-                                    </label>
-                                    @endforeach
-                                    @endif
+    <div class="container" style="text-align: center; color: white; font-size: 12px"> No People Found
+    </div>
+@else
+    @foreach($peopleData as $people)
+        <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}">
+                </div>
+                <div class="col-auto">
+                    @if($people->image == "")
+                        @if($people->gender == "Male")
+                            <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
+                        @elseif($people->gender == "Female")
+                            <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
+                        @endif
+                    @else
+                        <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
+                    @endif
+                </div>
+                <div class="col">
+                    <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                    <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                </div>
+            </div>
+        </label>
+    @endforeach
+@endif
+
                                 </div>
                                 @endif
 
@@ -371,24 +392,23 @@
         @endif
 
         @if ($activeTab == "active")
-        <div class="col-md-3 input-group align-items-center" style="width: 30%; justify-content: flex-start;">
-    <input type="text" class="form-control" placeholder="Search..." 
-           wire:model="searchTerm" aria-label="Search" aria-describedby="search-addon" 
-           wire:input="filter" style="flex: 1; height: 37px;">
-    <button class="submit-btn" wire:click="filter" id="search-addon" 
-            style="height: 37px; line-height: 2; margin-left: 5px;">Search</button>
+<div class="col-md-4">
+    <div class="input-group people-input-group-container">
+        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1">
+        <div class="input-group-append">
+            <button wire:click="searchActive" class="people-search-btn" type="button">
+                <i class="fa fa-search people-search-icon"></i>
+            </button>
+        </div>
+    </div>
 </div>
-    <div class="card-body" style="margin: 0 auto; background-color: white; width: 95%; height: 400px; margin-top: 30px; border-radius: 5px; max-height: 400px; overflow-y: auto;">
-  
-    <div class="input-group mb-3" style="width: 90%;">
-            <select wire:model="selectedCategory" class="form-control" style="width: 30%;">
-                <option value="">Select Category</option>
-                <option value="IT">IT Request</option>
-                <option value="HR">HR Request</option>
-                <option value="Finance">Finance Request</option>
-            </select>
-        </div> 
-    <table style="width: 100%; border-collapse: collapse;">
+
+@if ($records->isEmpty() && ($search !== ''))
+    <div class="container" style="text-align: center; color: white; font-size: 12px;">No Data Found</div>
+@else
+
+
+        <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="background-color: rgb(2, 17, 79); color: white;">
                     <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">Request Raised By</th>
@@ -401,52 +421,41 @@
                 </tr>
             </thead>
             <tbody>
-                @if($records->where('status', 'Recent')->count() > 0)
-                    @foreach ($records->where('status', 'Recent') as $record)
-                        @php
-                            $ccToArray = explode(',', $record->cc_to);
-                        @endphp
-                        <tr>
-                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
-                                {{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }} <br> <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
-                            </td>
-                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->category }}</td>
-                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">{{ $record->subject }}</td>
-                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->description }}</td>
-                            <td style="padding: 10px; font-size: 12px; text-align: center;">
-                                @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
-                                    <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
-                                {{ count($ccToArray) <= 2 ? $record->cc_to ?? '-' : '-' }}
-                            </td>
-                            <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->priority }}</td>
-                        </tr>
-                        @if(count($ccToArray) > 2)
-
-                            <tr style="border-top:none">
-
-
-                                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
-                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize; width: 100%;border-top:none">
-                                        CC TO: {{ implode(', ', $ccToArray) }}
-                                    </div>
-                                </td>
-                            </tr>
-                        @endif
-                    @endforeach
-                @else
+                @forelse ($records as $record)
+                    <tr>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                            {{ ucwords(strtolower($record->emp->first_name)) }} {{ ucwords(strtolower($record->emp->last_name)) }} <br> <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
+                        </td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->category }}</td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">{{ $record->subject }}</td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->description }}</td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center;">
+                            @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
+                                <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 20%;">
+                            {{ $record->cc_to }}
+                        </td>
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; width: 10%;">{{ $record->priority }}</td>
+                    </tr>
+                @empty
                     <tr>
                         <td colspan="7" style="text-align: center; font-size: 12px;">Active records not found</td>
                     </tr>
-                @endif
+                @endforelse
             </tbody>
         </table>
     </div>
 @endif
+@endif
+
+
+
+
+
 
 
 

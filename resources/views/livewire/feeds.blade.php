@@ -1,4 +1,8 @@
 <div>
+@if( $employeeDetails->isEmpty()) 
+<p>No employee details found.</p>
+
+@else
 <div class="px-4" style="position: relative;">
 @if ($message)
     <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -171,8 +175,8 @@
                 <p style="font-weight: 500;font-size:13px;color:#47515b;cursor:pointer">Activities</p>
                 <div class="activities" style="width: 100%; height: 30px;">
     <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
-        <input type="radio" name="radio" value="activities" checked data-url="/Feeds">
-        <div class="icon-container" style="margin-left: 10px;">
+        <input type="radio" name="radio" value="activities" checked data-url="/Feeds" onclick="handleRadioChange(this)">
+        <div class="feed-icon-container" style="margin-left: 10px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                 <rect x="7" y="7" width="3" height="9"></rect>
@@ -184,16 +188,17 @@
     </label>
 </div>
 
+
 <div class="posts" style="width: 100%; height: 30px;">
     <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
         @if(auth()->guard('emp')->check())
-            <input type="radio" name="radio" value="" data-url="/everyone">
+            <input type="radio" id="radio-emp" name="radio" value="" data-url="/everyone" onclick="handleRadioChange(this)">
         @elseif(auth()->guard('hr')->check())
-            <input type="radio" name="radio" value="" data-url="/hreveryone">
+            <input type="radio" id="radio-hr" name="radio" value="" data-url="/hreveryone" onclick="handleRadioChange(this)">
         @else
             <p>No employee details available.</p>
         @endif
-        <div class="icon-container" style="margin-left: 10px;">
+        <div class="feed-icon-container" style="margin-left: 10px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
                 <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                 <polyline points="13 2 13 9 20 9"></polyline>
@@ -203,6 +208,7 @@
         <span style="color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;">Posts</span>
     </label>
 </div>
+
 
                 <hr style="width: 100%;border-bottom: 1px solid grey;">
                 <div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
@@ -1826,73 +1832,7 @@ $currentCardComments = $addcomments->where('card_id', $data['employee']->emp_id)
 
 
 
-<style>
-    /* Define the blue background color for the checked state */
-    .input[type="radio"]:checked+.custom-radio-button {
-        background-color: blue;
-    }
 
-    .feather {
-        display: inline-block;
-        vertical-align: middle;
-    }
-
-    .text-salmon-400 {
-        fill: salmon;
-        /* Change the color as needed */
-    }
-
-    .stroke-1 {
-        stroke-width: 1px;
-        /* Adjust the stroke width as needed */
-    }
-
-    .icon-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: 2px;
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        background-color: #D8D8D8;
-        /* You can change this to any desired background color */
-    }
-    .sort {
-            border: none;
-            background: none;
-            font-size: 1rem;
-            margin-left: 2px;
-            padding: 2px ;
-            align-items: end;
-        }
-        .sort:focus {
-            outline: none;
-        }
-    .feather {
-        width: 1rem;
-        height: 1rem;
-        color: #6B46C1;
-        /* You can change this to any desired icon color */
-    }
-
-    .activities,
-.posts {
-    height: 60px; /* Fixed height */
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    width: 100%;
-    border-radius: 5px;
-}
-
-.activities:hover,
-.posts:hover {
-    background-color: #EDF3FF;
-}
-
-
-</style>
 <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> -->
 <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
@@ -1905,6 +1845,13 @@ $currentCardComments = $addcomments->where('card_id', $data['employee']->emp_id)
     });
 </script>
 @endpush
+<script>
+    function handleRadioChange(element) {
+        const url = element.getAttribute('data-url');
+        window.location.href = url;
+    }
+</script>
+
 
 <script>
     document.addEventListener('livewire:load', function() {
@@ -2178,79 +2125,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
-<style>
-    /* Define CSS for the menu items */
-    .menu-item {
-        transition: background-color 0.3s ease;
-    }
 
-    /* Define CSS for the menu items on hover */
-    .menu-item:hover {
-         background-color: #EDF3FF;
-         border-radius: 5px;
-        height:auto;
-        width: 130%;
-    }
-
-    /* CSS for radio-wrapper */
-    .radio-wrapper {
-        display: inline-block;
-        margin-right: 10px;
-        /* Adjust margin as needed */
-        cursor: pointer;
-    }
-    .medium-header {
-    border-left-width: 0.125rem;
-    font-weight: 600;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    color: var(--e-color-emoji-text);
-  
-  margin-left: 20px;
-  margin-top:5px
-}
-
-    /* CSS for labels */
-    .radio-label {
-        display: inline-block;
-        padding: 8px 12px;
-        /* Adjust padding as needed */
-        border-radius: 4px;
-        /* Rounded corners */
-        transition: background-color 0.3s ease;
-        /* Smooth transition */
-    }
-
-    /* CSS for label hover effect */
-    .radio-label:hover {
-        background-color: #e1e7f0;
-        /* Change background color on hover */
-    }
-
-    /* CSS for when radio button is checked */
-    .input[type="radio"]:checked+.radio-label {
-        background-color: #e1e7f0;
-        /* Change background color when checked */
-    }
-
-    /* Ensure radio button and text remain on the same line */
-    input[type="radio"] {
-        vertical-align: middle;
-    }
-
-    /* Add this CSS to your main CSS file or in your Livewire component's style tag */
-    :root {
-        --e-color-border: #e1e1e1;
-        --e-color-emoji-text: #666;
-        --e-color-border-emoji-hover: #e1e1e1;
-        --e-color-bg: #fff;
-        --e-bg-emoji-hover: #f8f8f8;
-        --e-size-emoji-text: 16px;
-        --e-width-emoji-img: 20px;
-        --e-height-emoji-img: 20px;
-        --e-max-width: 288px;
-    }
-</style>
 
 
 
@@ -2389,4 +2264,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </div>
+@endif
 </div>      

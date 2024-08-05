@@ -2090,18 +2090,104 @@ td {
 .emoji-selector li {
     margin: 5px;
 }
-/* Define CSS for the menu items */
-.menu-item {
-    transition: background-color 0.3s ease;
-}
+    /* Define CSS for the menu items */
+    .menu-item {
+        transition: background-color 0.3s ease;
+    }
 
-/* Define CSS for the menu items on hover */
-.menu-item:hover {
+    /* Define CSS for the menu items on hover */
+    .menu-item:hover {
+         background-color: #EDF3FF;
+         border-radius: 5px;
+        height:auto;
+        width: 130%;
+    }
+
+ /* CSS for when radio button is checked */
+ .input[type="radio"]:checked+.radio-label {
     background-color: #e1e7f0;
-    height: 30px;
-    width: 130%;
+    /* Change background color when checked */
 }
 
+/* Ensure radio button and text remain on the same line */
+input[type="radio"] {
+    vertical-align: middle;
+}
+.feed-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 2px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #D8D8D8;
+    /* You can change this to any desired background color */
+}
+   /* Define the blue background color for the checked state */
+   .input[type="radio"]:checked+.custom-radio-button {
+    background-color: blue;
+}
+
+.feather {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.text-salmon-400 {
+    fill: salmon;
+    /* Change the color as needed */
+}
+
+.stroke-1 {
+    stroke-width: 1px;
+    /* Adjust the stroke width as needed */
+}
+
+
+.sort {
+        border: none;
+        background: none;
+        font-size: 1rem;
+        margin-left: 2px;
+        padding: 2px ;
+        align-items: end;
+    }
+    .sort:focus {
+        outline: none;
+    }
+.feather {
+    width: 1rem;
+    height: 1rem;
+    color: #6B46C1;
+    /* You can change this to any desired icon color */
+}
+
+.activities,
+.posts {
+height: 60px; /* Fixed height */
+display: flex;
+align-items: center;
+padding: 5px;
+width: 100%;
+border-radius: 5px;
+}
+
+.activities:hover,
+.posts:hover {
+background-color: #EDF3FF;
+}
+
+.medium-header {
+    border-left-width: 0.125rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--e-color-emoji-text);
+  
+  margin-left: 20px;
+  margin-top:5px
+}
 /* CSS for radio-wrapper */
 .radio-wrapper {
     display: inline-block;
@@ -2493,12 +2579,10 @@ input[type="radio"] {
 }
 .select.form-control option {
     font-size: 10px;
-    margin-top:5px;
 }
 .placeholder-small {
     font-size: 12px !important;
     color: #778899 !important;
-    margin-top:5px;
 }
 .input-placeholder-small {
     font-size: 13px !important;
