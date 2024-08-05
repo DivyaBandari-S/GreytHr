@@ -13,15 +13,15 @@
             // Generate options for current year, previous year, and next year
             $options = [$currentYear - 2, $currentYear - 1, $currentYear, $currentYear + 1];
             ?>
-            @foreach($options as $year)
-            <option value="{{ $year }}">{{ $year }}</option>
-            @endforeach
+            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $options; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $year): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <option value="<?php echo e($year); ?>"><?php echo e($year); ?></option>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
         </select>
     </div>
 
 
     <!-- modal -->
-    @if($showModal)
+    <!--[if BLOCK]><![endif]--><?php if($showModal): ?>
     <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -31,13 +31,14 @@
                     </button>
                 </div>
                 <form novalidate class="ng-valid ng-touched ng-dirty" wire:submit.prevent="generatePdf">
-                    @csrf
+                    <?php echo csrf_field(); ?>
                     <div class="modal-body">
-                        @if($dateErrorMessage)
+                        <!--[if BLOCK]><![endif]--><?php if($dateErrorMessage): ?>
                         <div class="alert alert-danger">
-                            {{ $dateErrorMessage }}
+                            <?php echo e($dateErrorMessage); ?>
+
                         </div>
-                        @endif
+                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         <div class="row mb-2">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -106,11 +107,11 @@
         </div>
     </div>
     <div class="modal-backdrop fade show"></div>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
  <!-- 2022 year -->
- @if($selectedYear == (date('Y') - 2))
+ <!--[if BLOCK]><![endif]--><?php if($selectedYear == (date('Y') - 2)): ?>
         <div>
         <div class="bal-container" >
          <div class="row my-3 mx-auto">
@@ -136,13 +137,13 @@
                 <div class="balance d-flex flex-row justify-content-between mb-4" >
                     <div class="field">
                         <span class="leaveTypeTitle font-weight-500">
-                            @if($gender === 'Female')
+                            <!--[if BLOCK]><![endif]--><?php if($gender === 'Female'): ?>
                             Maternity Leave
-                            @elseif($gender === 'Male')
+                            <?php elseif($gender === 'Male'): ?>
                             Paternity Leave
-                            @else
+                            <?php else: ?>
                             Leave Type
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </span>
                     </div>
                     <div>
@@ -194,9 +195,9 @@
                 </div>
             </div>
         </div>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 <!-- leave  -->
- @if($selectedYear == (date('Y') - 1))
+ <?php if($selectedYear == (date('Y') - 1)): ?>
     <div class="bal-container" >
         <div class="row my-3 mx-auto" >
             <div class="col-md-4 mb-2">
@@ -221,17 +222,17 @@
                 <div class="balance d-flex flex-row justify-content-between " >
                     <div class="field">
                         <span class="leaveTypeTitle font-weight-500">
-                            @if($gender === 'Female')
+                            <!--[if BLOCK]><![endif]--><?php if($gender === 'Female'): ?>
                             Maternity Leave
-                            @elseif($gender === 'Male')
+                            <?php elseif($gender === 'Male'): ?>
                             Paternity Leave
-                            @else
+                            <?php else: ?>
                             Leave Type
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </span>
                     </div>
                     <div>
-                        <span class="leave-gran font-weight-500">Granted:{{ $grantedLeave }}</span>
+                        <span class="leave-gran font-weight-500">Granted:<?php echo e($grantedLeave); ?></span>
                     </div>
                 </div>
                 <div class="center text-center" style="margin-top:30px;">
@@ -248,11 +249,11 @@
                                     <span class="leaveTypeTitle font-weight-500">Casual Leave 
                                 </div>
                                 <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $casualLeavePerYear }} </span>
+                                    <span class="leave-gran font-weight-500">Granted:<?php echo e($casualLeavePerYear); ?> </span>
                                 </div>
                          </div>
                          <div class="center text-center" style="margin-top:30px;" >
-                             <h5 style="font-size:16px;">{{ $casualLeavePerYear }} </h5>
+                             <h5 style="font-size:16px;"><?php echo e($casualLeavePerYear); ?> </h5>
                              <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                         </div>
 
@@ -265,11 +266,11 @@
                                     <span class="leaveTypeTitle font-weight-500">Sick Leave
                                 </div>
                                 <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
+                                    <span class="leave-gran font-weight-500">Granted:<?php echo e($sickLeavePerYear); ?></span>
                                 </div>
                          </div>
                             <div class="center text-center" style="margin-top:30px;" >
-                                <h5 style="font-size:16px;">{{ $sickLeavePerYear }}</h5>
+                                <h5 style="font-size:16px;"><?php echo e($sickLeavePerYear); ?></h5>
                                 <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                             </div>
 
@@ -279,10 +280,10 @@
             </div>
 
 </div>
-@endif
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 <!-- 2024 -->
-@if($selectedYear == date('Y'))
+<!--[if BLOCK]><![endif]--><?php if($selectedYear == date('Y')): ?>
 <div>
     <div class="bal-container">
         <div class="row my-3 mx-auto">
@@ -293,12 +294,13 @@
                             <span class="leaveTypeTitle font-weight-500">Loss Of Pay</span>
                         </div>
                         <div>
-                            <span class="leave-grane font-weight-500">Granted:{{$lossOfPayPerYear}}</span>
+                            <span class="leave-grane font-weight-500">Granted:<?php echo e($lossOfPayPerYear); ?></span>
                         </div>
                     </div>
                     <div class="center text-center" style="margin-top:30px;" >
                         <h5 style="font-size:16px;">
-                            {{$lossOfPayBalance}}
+                            <?php echo e($lossOfPayBalance); ?>
+
                         </h5>
                         <p  class="mb-0" style="margin-top:-14px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
                     </div>
@@ -309,42 +311,46 @@
                 <div class="balance d-flex flex-row justify-content-between " >
                     <div class="field">
                         <span class="leaveTypeTitle font-weight-500">
-                            @if($gender === 'Female')
+                            <!--[if BLOCK]><![endif]--><?php if($gender === 'Female'): ?>
                             Maternity Leave
-                            @elseif($gender === 'Male')
+                            <?php elseif($gender === 'Male'): ?>
                             Paternity Leave
-                            @else
+                            <?php else: ?>
                             Leave Type
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </span>
                     </div>
                     <div>
                         <span class="leave-gran font-weight-500">Granted:
-                            @if($gender === 'Female')
-                            {{$maternityLeaves}}
-                            @elseif($gender === 'Male')
-                            {{$paternityLeaves}}
-                            @else
+                            <!--[if BLOCK]><![endif]--><?php if($gender === 'Female'): ?>
+                            <?php echo e($maternityLeaves); ?>
+
+                            <?php elseif($gender === 'Male'): ?>
+                            <?php echo e($paternityLeaves); ?>
+
+                            <?php else: ?>
                             0
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </span>
                     </div>
                 </div>
                 <div class="center text-center" style="margin-top:30px;">
-                    <h5 style="font-size:16px;">  @if($gender === 'Female')
-                            {{$maternityLeaves}}
-                            @elseif($gender === 'Male')
-                            {{$paternityLeaves}}
-                            @else
+                    <h5 style="font-size:16px;">  <!--[if BLOCK]><![endif]--><?php if($gender === 'Female'): ?>
+                            <?php echo e($maternityLeaves); ?>
+
+                            <?php elseif($gender === 'Male'): ?>
+                            <?php echo e($paternityLeaves); ?>
+
+                            <?php else: ?>
                             0
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </h5>
                     <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                    @if($gender === 'Female' && $maternityLeaves > 0)
+                    <!--[if BLOCK]><![endif]--><?php if($gender === 'Female' && $maternityLeaves > 0): ?>
                     <a href="#" style="font-size:12px;">View Details</a>
-                    @elseif($gender === 'Male' && $paternityLeaves > 0)
+                    <?php elseif($gender === 'Male' && $paternityLeaves > 0): ?>
                     <a href="#" style="font-size:12px;">View Details</a>
-                    @endif
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
             </div>
               </div>
@@ -355,25 +361,25 @@
                                     <span class="leaveTypeTitle font-weight-500">Casual Leave
                                 </div>
                                 <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{$casualLeavePerYear}}</span>
+                                    <span class="leave-gran font-weight-500">Granted:<?php echo e($casualLeavePerYear); ?></span>
                                 </div>
                          </div>
                          <div class="center text-center" style="margin-top:30px;" >
-                             <h5 style="font-size:16px;" >{{$casualLeaveBalance}}</h5>
+                             <h5 style="font-size:16px;" ><?php echo e($casualLeaveBalance); ?></h5>
                              <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                             @if($casualLeavePerYear)
+                             <!--[if BLOCK]><![endif]--><?php if($casualLeavePerYear): ?>
                              <a href="/casualleavebalance" style="font-size:12px;">View Details</a>
-                             @endif
+                             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                         <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;">
-                                @if($consumedCasualLeaves > 0)
-                                        {{ $consumedCasualLeaves }} of {{ $casualLeavePerYear }} Consumed
-                                    @else
-                                        0 of {{ $casualLeavePerYear }} Consumed
-                                    @endif
+                                <!--[if BLOCK]><![endif]--><?php if($consumedCasualLeaves > 0): ?>
+                                        <?php echo e($consumedCasualLeaves); ?> of <?php echo e($casualLeavePerYear); ?> Consumed
+                                    <?php else: ?>
+                                        0 of <?php echo e($casualLeavePerYear); ?> Consumed
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </p>
-                            <div class="tube" style="width: {{ $percentageCasual }}%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave Probation') }};"></div>
+                            <div class="tube" style="width: <?php echo e($percentageCasual); ?>%; background-color: <?php echo e($this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave Probation')); ?>;"></div>
                             </div>
                         </div>
                     </div>
@@ -384,29 +390,29 @@
                                     <span class="leaveTypeTitle font-weight-500">Sick Leave</span>
                                 </div>
                                 <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
+                                    <span class="leave-gran font-weight-500">Granted:<?php echo e($sickLeavePerYear); ?></span>
                                 </div>
                             </div>
                             <div class="center text-center" style="margin-top:30px;">
-                                <h5 style="font-size:16px;">{{ $sickLeaveBalance }}</h5>
+                                <h5 style="font-size:16px;"><?php echo e($sickLeaveBalance); ?></h5>
                                 <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                                @if($sickLeavePerYear > 0)
+                                <!--[if BLOCK]><![endif]--><?php if($sickLeavePerYear > 0): ?>
                                 <a href="/sickleavebalance" style="font-size:12px;">View Details</a>
-                                @endif
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                             <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
-                                    @if($consumedSickLeaves > 0)
-                                        {{ $consumedSickLeaves }} of {{ $sickLeavePerYear }} Consumed
-                                    @else
-                                        0 of {{ $sickLeavePerYear }} Consumed
-                                    @endif
+                                    <!--[if BLOCK]><![endif]--><?php if($consumedSickLeaves > 0): ?>
+                                        <?php echo e($consumedSickLeaves); ?> of <?php echo e($sickLeavePerYear); ?> Consumed
+                                    <?php else: ?>
+                                        0 of <?php echo e($sickLeavePerYear); ?> Consumed
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 </p>
-                                <div class="tube" style="width: {{ $percentageSick }}%; background-color: {{ $this->getTubeColor($consumedSickLeaves, $sickLeavePerYear, 'Sick Leave') }};"></div>
+                                <div class="tube" style="width: <?php echo e($percentageSick); ?>%; background-color: <?php echo e($this->getTubeColor($consumedSickLeaves, $sickLeavePerYear, 'Sick Leave')); ?>;"></div>
                             </div>
                         </div>
                     </div>
-                    @if($differenceInMonths !== null && $differenceInMonths < 6)
+                    <!--[if BLOCK]><![endif]--><?php if($differenceInMonths !== null && $differenceInMonths < 6): ?>
                     <div class="col-md-4 mb-2">
                         <div class="leave-bal mb-2 bg-white rounded  ">
                             <div class="balance d-flex flex-row justify-content-between">
@@ -414,29 +420,29 @@
                                     <span class="leaveTypeTitle font-weight-500">Casual Leave Probation</span>
                                 </div>
                                 <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $casualProbationLeavePerYear }}</span>
+                                    <span class="leave-gran font-weight-500">Granted:<?php echo e($casualProbationLeavePerYear); ?></span>
                                 </div>
                             </div>
                             <div class="center text-center" style="margin-top:30px;">
-                                <h5 style="font-size:16px;">{{ $casualProbationLeaveBalance }}</h5>
+                                <h5 style="font-size:16px;"><?php echo e($casualProbationLeaveBalance); ?></h5>
                                 <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                                @if($casualProbationLeavePerYear > 0)
+                                <!--[if BLOCK]><![endif]--><?php if($casualProbationLeavePerYear > 0): ?>
                                 <a href="/casualprobationleavebalance" style="font-size:12px;">View Details</a>
-                                @endif
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                             <div class="tube-container">
                                 <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
-                                    @if($consumedProbationLeaveBalance > 0)
-                                        {{ $consumedProbationLeaveBalance }} of {{ $casualProbationLeavePerYear }} Consumed
-                                    @else
-                                        0 of {{ $casualProbationLeaveBalance }} Consumed
-                                    @endif
+                                    <!--[if BLOCK]><![endif]--><?php if($consumedProbationLeaveBalance > 0): ?>
+                                        <?php echo e($consumedProbationLeaveBalance); ?> of <?php echo e($casualProbationLeavePerYear); ?> Consumed
+                                    <?php else: ?>
+                                        0 of <?php echo e($casualProbationLeaveBalance); ?> Consumed
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 </p>
-                                <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
+                                <div class="tube" style="width: <?php echo e($percentageCasualProbation); ?>%; background-color: <?php echo e($this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation')); ?>;"></div>
                             </div>
                         </div>
                     </div>
-                    @endif
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                     <div class="col-md-4 mb-2">
                         <div class="leave-bal mb-2 bg-white rounded  ">
                             <div class="balance d-flex flex-row justify-content-between">
@@ -444,15 +450,15 @@
                                     <span class="leaveTypeTitle font-weight-500">Marriage Leave</span>
                                 </div>
                                 <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $marriageLeaves }}</span>
+                                    <span class="leave-gran font-weight-500">Granted:<?php echo e($marriageLeaves); ?></span>
                                 </div>
                             </div>
                             <div class="center text-center" style="margin-top:30px;">
-                                <h5 style="font-size:16px;">{{ $marriageLeaves }}</h5>
+                                <h5 style="font-size:16px;"><?php echo e($marriageLeaves); ?></h5>
                                 <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                                @if($marriageLeaves > 0)
+                                <!--[if BLOCK]><![endif]--><?php if($marriageLeaves > 0): ?>
                                 <a href="#" style="font-size:12px;">View Details</a>
-                                @endif
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
 
                 </div>
@@ -461,9 +467,9 @@
     </div>
 </div>
 </div>
-@endif
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-    @if($selectedYear == (date('Y') + 1))
+    <?php if($selectedYear == (date('Y') + 1)): ?>
     <div class="bal-container" >
         <div class="row my-3 mx-auto" >
             <div class="col-md-4 mb-2">
@@ -488,17 +494,17 @@
                 <div class="balance d-flex flex-row justify-content-between mb-4" >
                     <div class="field">
                         <span class="leaveTypeTitle font-weight-500">
-                            @if($gender === 'Female')
+                            <!--[if BLOCK]><![endif]--><?php if($gender === 'Female'): ?>
                             Maternity Leave
-                            @elseif($gender === 'Male')
+                            <?php elseif($gender === 'Male'): ?>
                             Paternity Leave
-                            @else
+                            <?php else: ?>
                             Leave Type
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </span>
                     </div>
                     <div>
-                        <span class="leave-gran font-weight-500">Granted:{{ $grantedLeave }}</span>
+                        <span class="leave-gran font-weight-500">Granted:<?php echo e($grantedLeave); ?></span>
                     </div>
                 </div>
                 <div class="center text-center" style="margin-top:30px;">
@@ -532,7 +538,7 @@
                                     <span class="leaveTypeTitle font-weight-500">Sick Leave
                                 </div>
                                 <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
+                                    <span class="leave-gran font-weight-500">Granted:<?php echo e($sickLeavePerYear); ?></span>
                                 </div>
                          </div>
                             <div class="center text-center" style="margin-top:30px;" >
@@ -546,9 +552,9 @@
             </div>
 
 </div>
-@endif
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
 </body>
 
-</div>
+</div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/leave-balances.blade.php ENDPATH**/ ?>

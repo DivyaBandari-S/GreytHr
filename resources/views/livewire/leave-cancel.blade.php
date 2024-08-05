@@ -151,7 +151,7 @@
                     </div>
                     @endif
                     <div class="center p-0 m-0">
-                        @if(!$loginEmpManager)v
+                        @if(!$loginEmpManager)
                         <p class="mb-0" style="font-size:10px;margin-bottom:0;">N/A</p>
                         @else
                         <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($loginEmpManager)) }}</p>
@@ -229,7 +229,7 @@
                 <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
                     <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
                         <div class="icon-container">
-                            <i class="bx bx-plus" style="color: #778899;"></i>
+                            <i class="fas fa-plus" style="color: #778899;"></i>
                         </div>
                     </a>
                     <!-- Blade Template: your-component.blade.php -->
@@ -257,7 +257,7 @@
                                 <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
                                     <button type="button" wire:click="searchCCRecipients" class="search-btn">
-                                        <i style="margin-right: 5px;" class="bx bx-search"></i>
+                                        <i style="margin-right: 5px;" class="fas fa-search"></i>
                                     </button>
                                 </div>
                             </div>

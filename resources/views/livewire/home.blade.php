@@ -218,7 +218,7 @@
         <div class="homeCard6" style="padding:10px 15px;">
             <div style="display:flex; justify-content:space-between;">
                 <p style="font-size:12px;color:#778899;font-weight:500;">Upcoming Holidays</p>
-                <a href="/holiday-calender" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
+                <a href="/holiday-calendar" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
             </div>
 
             @if($calendarData->isEmpty())
