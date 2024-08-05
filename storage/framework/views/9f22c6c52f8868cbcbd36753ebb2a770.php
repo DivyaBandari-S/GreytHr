@@ -10,7 +10,7 @@
     <!-- SIDEBAR -->
     <section id="sidebar">
         <a href="#" class="brand">
-            <!-- <i class='fa fas-smile icon'></i> -->
+            <!-- <i class='fa fas-smilea icon'></i> -->
             <img class="m-auto" src="<?php echo e(asset('images/hr_new_blue.png')); ?>" alt="Company Logo" style="width: 6em !important;">
         </a>
         <ul class="side-menu">

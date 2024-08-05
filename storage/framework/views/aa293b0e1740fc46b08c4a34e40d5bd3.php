@@ -8,10 +8,18 @@
         </button>
     </div>
     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <!-- Assuming you are using Blade templates in Laravel -->
+    <!--[if BLOCK]><![endif]--><?php if(session('popupMessage') || $showPopupMessage): ?>
+        <div class="error-message">
+            <?php echo e(session('popupMessage')); ?>
+
+        </div>
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+
     <div class="applyContainer bg-white">
         <!--[if BLOCK]><![endif]--><?php if($showinfoMessage): ?>
-        <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
-            <p class="mb-0" style="font-size:10px;">Leave is earned by an employee and granted by the employer to take time off work. The employee is free to<br>
+        <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex gap-2 align-items-center">
+            <p class="mb-0" style="font-size:10px;">Leave is earned by an employee and granted by the employer to take time off work. The employee is free to
                 avail this leave in accordance with the company policy.</p>
             <p class="mb-0 hideInfo" wire:click="toggleInfo">Hide</p>
         </div>
@@ -27,7 +35,7 @@
             <div class="row d-flex align-items-center">
                 <div class="col-md-7">
                     <div class="form-group ">
-                        <label for="leaveType" style="color: #778899; font-size: 12px; font-weight: 500;">Leave Type <span class="requiredMark">*</span> </label> <br>
+                        <label for="leaveType">Leave Type <span class="requiredMark">*</span> </label> <br>
                         <div class="custom-select-wrapper" style="width: 50%;">
                             <select id="leaveType" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType">
                                 <option value="default">Select Type</option>
@@ -58,60 +66,39 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 <div class="col-md-4">
                     <div class="form-group">
                         <div class="pay-bal">
-                            <span style=" font-size: 12px; font-weight: 500;color:#778899;">Balance :</span>
+                            <label>Balance :</label>
                             <!--[if BLOCK]><![endif]--><?php if(!empty($leaveBalances)): ?>
-                            <div style="flex-direction:row; display: flex; align-items: center;justify-content:center;cursor:pointer;">
+                            <div class="d-flex align-items-center justify-content-center" style="cursor:pointer;">
                                 <!--[if BLOCK]><![endif]--><?php if($leave_type == 'Sick Leave'): ?>
                                 <!-- Sick Leave -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e6e6fa; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #50327c;font-weight:500;">SL</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #50327c; margin-left: 5px;" title="Sick Leave"><?php echo e($leaveBalances['sickLeaveBalance']); ?></span>
+                                <span class="sickLeaveBalance" title="Sick Leave"><?php echo e($leaveBalances['sickLeaveBalance']); ?></span>
                                 <?php elseif($leave_type == 'Casual Leave'): ?>
                                 <!-- Casual Leave -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e7fae7; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #1d421e;font-weight:500;">CL</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;" title="Casual Leave"><?php echo e($leaveBalances['casualLeaveBalance']); ?></span>
+                                <span class="sickLeaveBalance" title="Casual Leave"><?php echo e($leaveBalances['casualLeaveBalance']); ?></span>
                                 <?php elseif($leave_type == 'Casual Leave Probation'): ?>
                                 <!-- Casual Leave Probation -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #fff6e5; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 9px; color: #e59400;font-weight:500;" title="Casual Leave Probation">CLP</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;"><?php echo e($leaveBalances['casualProbationLeaveBalance']); ?></span>
+                                <span class="sickLeaveBalance"><?php echo e($leaveBalances['casualProbationLeaveBalance']); ?></span>
                                 <?php elseif($leave_type == 'Loss of Pay'): ?>
                                 <!-- Loss of Pay -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #890000;font-weight:500;" title="Loss of Pay">LP</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;"><?php echo e($leaveBalances['lossOfPayBalance']); ?></span>
+                                <span class="sickLeaveBalance"><?php echo e($leaveBalances['lossOfPayBalance']); ?></span>
                                 <?php elseif($leave_type == 'Maternity Leave'): ?>
                                 <!-- Loss of Pay -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #890000;font-weight:500;" title="Maternity Leave">ML</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;"><?php echo e($leaveBalances['maternityLeaveBalance']); ?></span>
+                                <span class="sickLeaveBalance"><?php echo e($leaveBalances['maternityLeaveBalance']); ?></span>
                                 <?php elseif($leave_type == 'Paternity Leave'): ?>
                                 <!-- Loss of Pay -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #890000;font-weight:500;" title="Paternity Leave">PL</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;"><?php echo e($leaveBalances['paternityLeaveBalance']); ?></span>
+                                <span class="sickLeaveBalance"><?php echo e($leaveBalances['paternityLeaveBalance']); ?></span>
                                 <?php elseif($leave_type == 'Marriage Leave'): ?>
                                 <!-- Loss of Pay -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; ">
-                                    <span style="font-size: 10px; color: #890000;font-weight:500;" title="Marriage Leave">MRL</span>
-                                </div>
-                                <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;"><?php echo e($leaveBalances['marriageLeaveBalance']); ?></span>
+                                <span class="sickLeaveBalance"><?php echo e($leaveBalances['marriageLeaveBalance']); ?></span>
                                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                         </div>
                         <div class="form-group mb-0">
-                            <label for="numberOfDays" style="color: #778899; font-size: 12px; font-weight: 500;">Number of Days :</label>
+                            <label for="numberOfDays">Number of Days :</label>
                             <!--[if BLOCK]><![endif]--><?php if($showNumberOfDays): ?>
-                            <span id="numberOfDays" style="font-size: 12px;color:#778899;">
+                            <span id="numberOfDays" class="sickLeaveBalance">
                                 <!-- Display the calculated number of days -->
                                 <?php echo e($this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session)); ?>
 
@@ -126,8 +113,8 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <!-- Casual Leave Probation -->
                             <!--[if BLOCK]><![endif]--><?php if($calculatedNumberOfDays > $leaveBalances['casualProbationLeaveBalance']): ?>
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             <?php
                             $insufficientBalance = true; ?>
@@ -139,8 +126,8 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <!-- Casual Leave Probation -->
                             <!--[if BLOCK]><![endif]--><?php if($calculatedNumberOfDays > $leaveBalances['casualLeaveBalance']): ?>
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             <?php
                             $insufficientBalance = true; ?>
@@ -151,8 +138,8 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <!-- Casual Leave Probation -->
                             <!--[if BLOCK]><![endif]--><?php if($calculatedNumberOfDays > $leaveBalances['sickLeaveBalance']): ?>
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             <?php
                             $insufficientBalance = true; ?>
@@ -163,8 +150,8 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <!-- Casual Leave Probation -->
                             <!--[if BLOCK]><![endif]--><?php if($calculatedNumberOfDays > $leaveBalances['maternityLeaveBalance']): ?>
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             <?php
                             $insufficientBalance = true; ?>
@@ -175,8 +162,8 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <!-- Casual Leave Probation -->
                             <!--[if BLOCK]><![endif]--><?php if($calculatedNumberOfDays > $leaveBalances['paternityLeaveBalance']): ?>
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             <?php
                             $insufficientBalance = true; ?>
@@ -187,8 +174,8 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <!-- Casual Leave Probation -->
                             <!--[if BLOCK]><![endif]--><?php if($calculatedNumberOfDays > $leaveBalances['marriageLeaveBalance']): ?>
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 0;">
-                                <span style="color: red; font-weight: normal;font-size:12px;">Insufficient leave balance</span>
+                            <div class="error-message" style="position: absolute;  left: 10;">
+                                <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             <?php
                             $insufficientBalance = true; ?>
@@ -206,11 +193,11 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
                 </div>
             </div>
-            <div class="row d-flex mt-1">
+            <div class="row d-flex mt-2">
                 <div class="col-md-6">
-                    <div class="form-group ">
-                        <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From Date <span class="requiredMark">*</span> </label>
-                        <input type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('from_date')">
+                    <div class="form-group">
+                        <label for="fromDate">From Date <span class="requiredMark">*</span> </label>
+                        <input type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate" wire:change="handleFieldUpdate('from_date')">
                         <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['from_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -223,9 +210,9 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
                 <div class="col-md-6">
                     <div class="form-group ">
-                        <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Session</label> <br>
+                        <label for="session">Session</label> <br>
                         <div class="custom-select-wrapper">
-                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('from_session')">
+                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="session" wire:change="handleFieldUpdate('from_session')">
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
@@ -244,8 +231,8 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
             <div class=" row d-flex mt-3">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To Date <span class="requiredMark">*</span> </label>
-                        <input type="date" wire:model.lazy="to_date" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('to_date')" name="toDate" style="color: #778899;font-size:12px;" wire:change="handleFieldUpdate('to_date')">
+                        <label for="toDate">To Date <span class="requiredMark">*</span> </label>
+                        <input type="date" wire:model.lazy="to_date" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('to_date')" name="toDate" wire:change="handleFieldUpdate('to_date')">
                         <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['to_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -258,9 +245,9 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
                 <div class="col-md-6">
                     <div class="form-group ">
-                        <label for="session" style="color: #778899; font-size: 12px; font-weight: 500;">Session</label> <br>
+                        <label for="session">Session</label> <br>
                         <div class="custom-select-wrapper">
-                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="session" style="font-size:12px;" wire:change="handleFieldUpdate('to_session')">
+                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="session" wire:change="handleFieldUpdate('to_session')">
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
@@ -279,9 +266,9 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
             <div>
                 <!--[if BLOCK]><![endif]--><?php if($showApplyingTo): ?>
-                <div class="form-group mt-3" style="margin-top: 10px;">
-                    <div style="display:flex; flex-direction:row;" wire:click="applyingTo">
-                        <label for="applyingToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500; cursor: pointer;">
+                <div class="form-group mt-3">
+                    <div class="d-flex " wire:click="applyingTo">
+                        <label for="applyingToText" id="applyingToText" name="applyingTo" style="cursor: pointer;">
                             <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
                             Applying To
                         </label>
@@ -309,15 +296,15 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                     <div class="center p-0 m-0">
                         <!--[if BLOCK]><![endif]--><?php if(!$loginEmpManager): ?>
-                        <p class="mb-0" style="font-size:10px;margin-bottom:0;">N/A</p>
+                        <p class="mb-0" style="font-size:10px;">N/A</p>
                         <?php else: ?>
                         <p id="reportToText" class="ellipsis mb-0"><?php echo e(ucwords(strtolower($loginEmpManager))); ?></p>
                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                         <!--[if BLOCK]><![endif]--><?php if(!$loginEmpManagerId): ?>
-                        <p class="mb-0" style="font-size:10px;margin-bottom:0;">#(N/A)</p>
+                        <p class="mb-0 normalTextValue">#(N/A)</p>
                         <?php else: ?>
-                        <p class="mb-0" style="color:#778899; font-size:10px;margin-bottom:0;" id="managerIdText"><span class="remaining">#<?php echo e($loginEmpManagerId); ?></span></p>
+                        <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#<?php echo e($loginEmpManagerId); ?></span></p>
                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
                     <div class="downArrow" wire:click="applyingTo">
@@ -330,14 +317,14 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 <!--[if BLOCK]><![endif]--><?php if($showApplyingToContainer): ?>
                 <div class="searchContainer">
                     <!-- Content for the search container -->
-                    <div class="row" style="padding: 0 15px; margin-bottom: 10px;">
-                        <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
-                            <div class="col-md-10" style="margin: 0px; padding: 0px">
+                    <div class="row mb-2 py-0 ">
+                        <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
+                            <div class="col-md-10">
                                 <div class="input-group">
                                     <input wire:model="filter" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button type="button" wire:click="searchEmployees" class="search-btn">
-                                            <i style="color:#fff;" class="bx bx-search"></i>
+                                            <i style="color:#fff;margin-left:10px;" class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -345,7 +332,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
                             <div class="col-md-2 m-0 p-0">
                                 <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
-                                    <span aria-hidden="true" style="color: white; font-size: 24px;"><i class="bx bx-x"></i>
+                                    <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i>
                                     </span>
                                 </button>
                             </div>
@@ -368,12 +355,12 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             <div class="center d-flex flex-column mt-2 mb-2">
                                 <span class="ellipsis mb-0" value="<?php echo e($employee['full_name']); ?>"><?php echo e($employee['full_name']); ?></span>
-                                <span class="mb-0" style="color:#778899; font-size:10px;margin-bottom:0;" value="<?php echo e($employee['full_name']); ?>"> #<?php echo e($employee['emp_id']); ?> </span>
+                                <span class="mb-0 normalTextValue" style="font-size:10px;" value="<?php echo e($employee['full_name']); ?>"> #<?php echo e($employee['emp_id']); ?> </span>
                             </div>
                         </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                         <?php else: ?>
-                        <p>No managers found.</p>
+                        <p class="mb-0 normalTextValue m-auto ">No managers found.</p>
                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
                 </div>
@@ -388,13 +375,13 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
             </div>
             <div class="form-group mt-3">
-                <label for="ccToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500;">
+                <label for="ccToText" id="applyingToText" name="applyingTo">
                     CC To
                 </label>
-                <div class="control-wrapper d-flex align-items-center" style="flex-direction: row; gap: 10px;cursor:pointer;">
+                <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
                     <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
                         <div class="icon-container">
-                            <i class="bx bx-plus" style="color: #778899;"></i>
+                            <i class="fa fa-plus" style="color: #778899;"></i>
                         </div>
                     </a>
                     <!-- Blade Template: your-component.blade.php -->
@@ -404,7 +391,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                     <ul class=" d-flex align-items-center mb-0" style="list-style-type: none;gap:10px;">
                         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $selectedCCEmployees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $recipient): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <li>
-                            <div class="px-2 py-1 " style=" border-radius: 25px; border: 2px solid #adb7c1; display: flex; justify-content: space-between; align-items: center;" title="<?php echo e(ucwords(strtolower( $recipient['first_name']))); ?> <?php echo e(ucwords(strtolower( $recipient['last_name']))); ?>">
+                            <div class="px-2 py-1 d-flex justify-content-between align-items-center" style=" border-radius: 25px; border: 2px solid #adb7c1;" title="<?php echo e(ucwords(strtolower( $recipient['first_name']))); ?> <?php echo e(ucwords(strtolower( $recipient['last_name']))); ?>">
                                 <span style="text-transform: uppercase; color: #adb7c1;font-size:12px;"><?php echo e($recipient['initials']); ?></span>
                                 <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer;color:#adb7c1;" wire:click="removeFromCcTo('<?php echo e($recipient['emp_id']); ?>')"></i>
                             </div>
@@ -422,7 +409,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
                                     <button type="button" wire:click="searchCCRecipients" class="search-btn">
-                                        <i style="margin-right: 5px;" class="bx bx-search"></i>
+                                        <i style="margin-right: 10px;" class="fas fa-search"></i>
                                     </button>
                                 </div>
                             </div>
@@ -430,14 +417,15 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
                         <div class="col-md-2 m-0 p-0">
                             <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
-                                <span aria-hidden="true" style="color: white; font-size: 24px;"><i class="bx bx-x"></i></span>
+                                <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i></span>
                             </button>
                         </div>
                     </div>
                     <div class="scrollApplyingTO mb-2 mt-2">
+                        <!--[if BLOCK]><![endif]--><?php if(!empty($ccRecipients)): ?>
                         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $ccRecipients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div wire:key="<?php echo e($employee['emp_id']); ?>">
-                            <div style="margin-top: 10px; display: flex; gap: 10px; text-transform: capitalize; align-items: center; cursor: pointer;" wire:click="toggleSelection('<?php echo e($employee['emp_id']); ?>')">
+                            <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('<?php echo e($employee['emp_id']); ?>')">
                                 <input type="checkbox" wire:model="selectedPeople.<?php echo e($employee['emp_id']); ?>" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('<?php echo e($employee['emp_id']); ?>')">
 
                                 <!--[if BLOCK]><![endif]--><?php if($employee['image']): ?>
@@ -457,10 +445,15 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                         </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
-                        </divclass>
+                        <?php else: ?>
+                        <div class="mb-0 normalTextValue">
+                            No data found
+                        </div>
+                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
-                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['cc_to'];
+                </div>
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['cc_to'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -468,13 +461,13 @@ $message = $__bag->first($__errorArgs[0]); ?> <span class="text-danger"><?php ec
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
-                </div>
+            </div>
 
 
-                <div class="form-group mt-3">
-                    <label for="contactDetails" style="color: #778899; font-size: 12px; font-weight: 500;">Contact Details <span class="requiredMark">*</span> </label>
-                    <input type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="color: #778899;width:50%;font-size:13px;">
-                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['contact_details'];
+            <div class="form-group mt-3">
+                <label for="contactDetails">Contact Details <span class="requiredMark">*</span> </label>
+                <input type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="width:50%;">
+                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['contact_details'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -482,11 +475,11 @@ $message = $__bag->first($__errorArgs[0]); ?> <span class="text-danger"><?php ec
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
-                </div>
-                <div class="form-group mt-3">
-                    <label for="reason" style="color: #778899; font-size: 12px; font-weight: 500;">Reason <span class="requiredMark">*</span> </label>
-                    <textarea class="form-control placeholder-small" wire:model.lazy="reason" wire:keydown.debounce.500ms="validateField('reason')" name="reason" placeholder="Enter a reason" rows="4" style="color: #778899;font-size:13px;"></textarea>
-                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['reason'];
+            </div>
+            <div class="form-group mt-3">
+                <label for="reason">Reason <span class="requiredMark">*</span> </label>
+                <textarea class="form-control placeholder-small" wire:model.lazy="reason" wire:keydown.debounce.500ms="validateField('reason')" name="reason" placeholder="Enter a reason" rows="4"></textarea>
+                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['reason'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -494,10 +487,10 @@ $message = $__bag->first($__errorArgs[0]); ?> <span class="text-danger"><?php ec
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
-                </div>
-                <div class="form-group mt-3">
-                    <input type="file" wire:model="files" wire:loading.attr="disabled" style="font-size: 12px;color:#778899;" multiple />
-                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['file_paths'];
+            </div>
+            <div class="form-group mt-3">
+                <input type="file" wire:model="files" wire:loading.attr="disabled" style="font-size: 12px;" multiple />
+                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['file_paths'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -505,12 +498,12 @@ $message = $__bag->first($__errorArgs[0]); ?> <span class="text-danger"><?php ec
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
-                </div>
+            </div>
 
-                <div class="buttons-leave">
-                    <button type="submit" class=" submit-btn" <?php if(isset($insufficientBalance)): ?> disabled <?php endif; ?>>Submit</button>
-                    <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
-                </div>
+            <div class="buttons-leave">
+                <button type="submit" class=" submit-btn" <?php if(isset($insufficientBalance)): ?> disabled <?php endif; ?>>Submit</button>
+                <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
+            </div>
         </form>
     </div>
 </div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/leave-apply.blade.php ENDPATH**/ ?>

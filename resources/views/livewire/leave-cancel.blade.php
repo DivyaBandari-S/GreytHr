@@ -265,7 +265,7 @@
 
                         <div class="col-md-2 m-0 p-0">
                             <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
-                                <span aria-hidden="true" style="color: white; font-size: 24px;"><i class="bx bx-x"></i></span>
+                                <span aria-hidden="true" style="color: white; font-size: 24px;"><i class="fas fa-times"></i></span>
                             </button>
                         </div>
                     </div>

@@ -126,7 +126,7 @@
                 <!--[if BLOCK]><![endif]--><?php if($showApplyingTo): ?>
                 <div class="form-group mt-3" style="margin-top: 10px;">
                     <div style="display:flex; flex-direction:row;">
-                        <label for="applyingToText" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500; cursor: pointer;">
+                        <label for="applyingToText" id="applyingToText" name="applyingTo" style="cursor: pointer;">
                             <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
                             Applying To
                         </label>
@@ -232,46 +232,84 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
             </div>
             <div class="form-group mt-3">
-                <label for="ccToText" wire:model="from_date" id="applyingToText" name="applyingTo" style="color: #778899; font-size: 12px; font-weight: 500;">
-                    CC to
+                <label for="ccToText" id="applyingToText" name="applyingTo">
+                    CC To
                 </label>
-                <div class="control-wrapper" style="display: flex; flex-direction: row; gap: 10px;">
-                    <a href="javascript:void(0);" class="text-3 text-secondary control" aria-haspopup="true" style="text-decoration: none;">
-                        <div class="icon-container" style="display: flex; justify-content: center; align-items: center;">
-                            <i class="fa-solid fa-plus" style="color: #778899;"></i>
+                <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
+                    <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
+                        <div class="icon-container">
+                            <i class="fas fa-plus" style="color: #778899;"></i>
                         </div>
                     </a>
-                    <span class="text-2 text-secondary placeholder" id="ccPlaceholder" style="margin-top: 5px; background: transparent; color: #ccc; pointer-events: none;">Add</span>
-                    <div id="addedEmails" style="display: flex; gap: 10px; "></div>
+                    <!-- Blade Template: your-component.blade.php -->
+                    <span class="addText" wire:click="openCcRecipientsContainer">Add</span>
 
+                    <!--[if BLOCK]><![endif]--><?php if(count($selectedCCEmployees) > 0): ?>
+                    <ul class=" d-flex align-items-center mb-0" style="list-style-type: none;gap:10px;">
+                        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $selectedCCEmployees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $recipient): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li>
+                            <div class="px-2 py-1 d-flex justify-content-between align-items-center" style=" border-radius: 25px; border: 2px solid #adb7c1;" title="<?php echo e(ucwords(strtolower( $recipient['first_name']))); ?> <?php echo e(ucwords(strtolower( $recipient['last_name']))); ?>">
+                                <span style="text-transform: uppercase; color: #adb7c1;font-size:12px;"><?php echo e($recipient['initials']); ?></span>
+                                <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer;color:#adb7c1;" wire:click="removeFromCcTo('<?php echo e($recipient['emp_id']); ?>')"></i>
+                            </div>
+                        </li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                    </ul>
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
-                <div class="ccContainer" style="display:none;">
-                    <!-- Content for the search container -->
-                    <div class="row" style="padding: 0 15px; margin-bottom: 10px;">
-                        <div class="col" style="margin: 0px; padding: 0px">
+
+                <!--[if BLOCK]><![endif]--><?php if($showCcRecipents): ?>
+                <div class="ccContainer" x-data="{ open: <?php if ((object) ('showCcRecipents') instanceof \Livewire\WireDirective) : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showCcRecipents'->value()); ?>')<?php echo e('showCcRecipents'->hasModifier('live') ? '.live' : ''); ?><?php else : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showCcRecipents'); ?>')<?php endif; ?> }" x-cloak @click.away="open = false">
+                    <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
+                        <div class="col-md-10" style="margin: 0px; padding: 0px">
                             <div class="input-group">
-                                <input wire:model="searchTerm" style="font-size: 10px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                <div class="input-group-append">
-                                    <button style="height: 29px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none; align-items: center; display: flex;" class="btn" type="button" wire:click="searchOnClick">
-                                        <i style="margin-right: 5px;" class="fa fa-search"></i> <!-- Adjust margin-right as needed -->
+                                <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                <div class="input-group-append searchBtnBg d-flex align-items-center">
+                                    <button type="button" wire:click="searchCCRecipients" class="search-btn">
+                                        <i style="margin-right: 5px;" class="fas fa-search"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $ccRecipients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <div style="display:flex; gap:10px;" onclick="addEmail('<?php echo e($employee['full_name']); ?>')">
-                        <input type="checkbox" wire:model="selectedPeople" value="<?php echo e($employee['emp_id']); ?>">
-                        <img src="<?php echo e($employee['image'] ? $employee['image'] : 'https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars.png'); ?>" alt="User Image" style="width: 40px; height: 40px; border-radius: 50%;">
-                        <div class="center">
-                            <p style="font-size: 0.875rem; font-weight: 500;"><?php echo e($employee['full_name']); ?></p>
-                            <p style="margin-top: -15px; color: #778899; font-size: 0.69rem;">#<?php echo e($employee['emp_id']); ?></p>
+                        <div class="col-md-2 m-0 p-0">
+                            <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
+                                <span aria-hidden="true" style="color: white; font-size: 24px;"><i class="fas fa-times"></i></span>
+                            </button>
                         </div>
-
                     </div>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                    <div class="scrollApplyingTO mb-2 mt-2">
+                        <!--[if BLOCK]><![endif]--><?php if(!empty($ccRecipients)): ?>
+                        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $ccRecipients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div wire:key="<?php echo e($employee['emp_id']); ?>">
+                            <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('<?php echo e($employee['emp_id']); ?>')">
+                                <input type="checkbox" wire:model="selectedPeople.<?php echo e($employee['emp_id']); ?>" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('<?php echo e($employee['emp_id']); ?>')">
+
+                                <!--[if BLOCK]><![endif]--><?php if($employee['image']): ?>
+                                <div class="employee-profile-image-container">
+                                    <img height="35px" width="35px" src="<?php echo e(asset('storage/' . $employee['image'])); ?>" style="border-radius: 50%;">
+                                </div>
+                                <?php else: ?>
+                                <div class="employee-profile-image-container">
+                                    <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
+                                </div>
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+
+                                <div class="center mb-2 mt-2">
+                                    <p class="mb-0 empCcName"><?php echo e(ucwords(strtolower($employee['full_name']))); ?></p>
+                                    <p class="mb-0 empIdStyle">#<?php echo e($employee['emp_id']); ?></p>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                        <?php else: ?>
+                        <div class="mb-0 normalTextValue">
+                            No data found
+                        </div>
+                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                    </div>
                 </div>
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['cc_to'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -282,7 +320,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
             </div>
             <div class="form-group mt-3">
-                <label for="reason" style="color: #778899; font-size: 12px; font-weight: 500;">Reason for Leave</label>
+                <label for="reason">Reason for Leave</label>
                 <textarea class="form-control placeholder-small" wire:model="reason" id="reason" name="reason" placeholder="Enter Reason" rows="4"></textarea>
                 <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['reason'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -294,7 +332,7 @@ endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
             </div>
 
-            <div class="cancelButtons d-flex align-items-center gap-2 justify-content-center">
+            <div class="cancelButtons d-flex align-items-center gap-2 justify-content-center mt-4">
                 <button type="submit" class="submit-btn">Submit</button>
                 <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
             </div>

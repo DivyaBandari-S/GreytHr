@@ -1,9 +1,10 @@
 <div>
-    @if(session()->has('error'))
+    <!--[if BLOCK]><![endif]--><?php if(session()->has('error')): ?>
     <div class="alert alert-danger">
-        {{ session('error') }}
+        <?php echo e(session('error')); ?>
+
     </div>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
     <style>
         .table thead {
@@ -40,7 +41,7 @@
     </style>
 
     <div class="container-leave">
-        <div class="sidebar-cal" style="width: {{ $showDialog ? '250px' : '0' }};display: flex; flex-direction: column; height: 100vh;">
+        <div class="sidebar-cal" style="width: <?php echo e($showDialog ? '250px' : '0'); ?>;display: flex; flex-direction: column; height: 100vh;">
             <div class="header">
                 <a href="javascript:void(0)" class="closebtn" wire:click="close" style="margin-right: 10px;">×</a>
                 <h6>Apply Filter</h6>
@@ -51,11 +52,12 @@
                     <div style="position: relative;">
                         <div style="display: flex;justify-content:space-between; align-items: center;">
                             <p>
-                                @if($this->isSelectedAll())
+                                <!--[if BLOCK]><![endif]--><?php if($this->isSelectedAll()): ?>
                                 All
-                                @else
-                                {{ implode(', ', $selectedLocations) }}
-                                @endif
+                                <?php else: ?>
+                                <?php echo e(implode(', ', $selectedLocations)); ?>
+
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </p>
                             <!-- Solid down arrow -->
                             <svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                @if($showLocations)
+                <!--[if BLOCK]><![endif]--><?php if($showLocations): ?>
                 <div class="locations">
                     <div style="display: flex;justify-content:space-between; text-align:center;align-items: center;padding:0;height:40px;position:relative;">
                         <p style="font-size:0.725rem; padding:0;color:#148aff;font-weight:500;">Select Location</p>
@@ -85,7 +87,7 @@
                         </label>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                 <!-- Department -->
                 <label for="departments" style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Department</label>
@@ -93,11 +95,12 @@
                     <div style="position: relative;">
                         <div style="display: flex;justify-content:space-between; align-items: center;">
                             <p>
-                                @if($this->isSelectedAllDept())
+                                <!--[if BLOCK]><![endif]--><?php if($this->isSelectedAllDept()): ?>
                                 All
-                                @else
-                                {{ implode(', ', $selectedDepartments) }}
-                                @endif
+                                <?php else: ?>
+                                <?php echo e(implode(', ', $selectedDepartments)); ?>
+
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </p>
                             <!-- Solid down arrow -->
                             <svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -106,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                @if($showDepartment)
+                <!--[if BLOCK]><![endif]--><?php if($showDepartment): ?>
                 <div class="departments">
                     <div style="display: flex;justify-content:space-between; text-align:center;align-items: center;padding:0;height:40px;position:relative">
                         <p style="font-size:0.725rem;padding:0;color:#148aff;font-weight:500;">Select Department</p>
@@ -127,7 +130,7 @@
                         </label>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
                 <!-- Buttons -->
@@ -143,8 +146,8 @@
             <div class="filter-container">
                 <label for="filterType" style="color: #778899; font-size: 0.825rem;font-weight:500;">Filter Type:</label>
                 <select style="font-size:0.855rem;padding:2px 10px;cursor:pointer;outline:none;" wire:model.lazy="filterCriteria" id="filterType" class="filter-dropdown" wire:change="filterBy($event.target.value)">
-                    <option style="font-size:0.825rem;padding:10px 15px;" value="Me" @if($filterCriteria==='Me' ) selected @endif>Me</option>
-                    <option style="font-size:0.825rem;padding:10px 15px;" value="MyTeam" @if($filterCriteria==='MyTeam' ) selected @endif>My Team</option>
+                    <option style="font-size:0.825rem;padding:10px 15px;" value="Me" <?php if($filterCriteria==='Me' ): ?> selected <?php endif; ?>>Me</option>
+                    <option style="font-size:0.825rem;padding:10px 15px;" value="MyTeam" <?php if($filterCriteria==='MyTeam' ): ?> selected <?php endif; ?>>My Team</option>
                     <!-- Add more options as needed -->
                 </select>
             </div>
@@ -159,7 +162,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="calendar-heading-container">
                         <button wire:click="previousMonth" class="nav-btn">&lt; Prev</button>
-                        <h5>{{ date('F Y', strtotime("$year-$month-1")) }}</h5>
+                        <h5><?php echo e(date('F Y', strtotime("$year-$month-1"))); ?></h5>
                         <button wire:click="nextMonth" class="nav-btn">Next &gt;</button>
                     </div>
                 </div>
@@ -178,46 +181,49 @@
                             </tr>
                         </thead>
                         <tbody id="calendar-body">
-                            @foreach ($calendar as $week)
+                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $calendar; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $week): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                @foreach ($week as $day)
-                                @php
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $week; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $day): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php
                                 $carbonDate = \Carbon\Carbon::createFromDate($year, $month, $day['day']);
                                 $isCurrentMonth = $day['isCurrentMonth'];
                                 $isWeekend = in_array($carbonDate->dayOfWeek, [0, 6]); // 0 for Sunday, 6 for Saturday
                                 $isActiveDate = ($selectedDate === $carbonDate->toDateString());
-                                @endphp
-                                <td wire:click="dateClicked($event.target.textContent)" class="calendar-date{{ $selectedDate === $day['day'] ? ' active-date' : '' }}" data-date="{{ $day['day'] }}" style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};">
+                                ?>
+                                <td wire:click="dateClicked($event.target.textContent)" class="calendar-date<?php echo e($selectedDate === $day['day'] ? ' active-date' : ''); ?>" data-date="<?php echo e($day['day']); ?>" style="color: <?php echo e($isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9'); ?>;">
 
-                                    @if ($day)
+                                    <!--[if BLOCK]><![endif]--><?php if($day): ?>
                                     <div>
-                                        @if ($day['isToday'])
+                                        <!--[if BLOCK]><![endif]--><?php if($day['isToday']): ?>
                                         <div style="background-color: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px; ">
-                                            {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
+                                            <?php echo e(str_pad($day['day'], 2, '0', STR_PAD_LEFT)); ?>
+
                                         </div>
-                                        @else
-                                        {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
-                                        @endif
-                                        <div class="circle-holiday{{ $day['isPublicHoliday'] ? ' IRIS' : '' }}">
+                                        <?php else: ?>
+                                        <?php echo e(str_pad($day['day'], 2, '0', STR_PAD_LEFT)); ?>
+
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                        <div class="circle-holiday<?php echo e($day['isPublicHoliday'] ? ' IRIS' : ''); ?>">
                                             <!-- Render your content -->
                                         </div>
-                                        @php
+                                        <?php
                                         $leaveCount = $filterCriteria === 'Me' ? $day['leaveCountMe'] : $day['leaveCountMyTeam'];
-                                        @endphp
-                                        @if ($leaveCount > 0)
+                                        ?>
+                                        <!--[if BLOCK]><![endif]--><?php if($leaveCount > 0): ?>
                                         <div class="circle-greys">
                                             <!-- Render your grey circle -->
                                             <span style="display: flex; justify-content: center; align-items: center;width:20px;height:20px;border-radius:50%;">
-                                                {{ $leaveCount }}
+                                                <?php echo e($leaveCount); ?>
+
                                             </span>
                                         </div>
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
-                                    @endif
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 </td>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                             </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                         </tbody>
 
                     </table>
@@ -244,22 +250,22 @@
             <div class="col-md-5">
                 <!-- Inside the event-container div -->
                 <div class="event-details">
-                    @if($holidays->count() > 0)
+                    <!--[if BLOCK]><![endif]--><?php if($holidays->count() > 0): ?>
                     <div class="date-day">
-                        <span style="font-weight:500;">{{ \Carbon\Carbon::parse($selectedDate)->format('D') }} <br>
-                            <span style="font-weight:normal;font-size:0.825rem;margin-top:-5px;">{{ \Carbon\Carbon::parse($selectedDate)->format('d') }}</span>
+                        <span style="font-weight:500;"><?php echo e(\Carbon\Carbon::parse($selectedDate)->format('D')); ?> <br>
+                            <span style="font-weight:normal;font-size:0.825rem;margin-top:-5px;"><?php echo e(\Carbon\Carbon::parse($selectedDate)->format('d')); ?></span>
                         </span>
 
                     </div>
                     <div class="holiday-con">
-                        @foreach($holidays as $holiday)
+                        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $holidays; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $holiday): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <span style="font-weight:normal;font-size:0.825rem; color:#778899;">General Holiday <br>
-                            <span style="font-weight:500;font-size:0.895rem;color:#333;">{{ $holiday->festivals }}</span>
+                            <span style="font-weight:500;font-size:0.895rem;color:#333;"><?php echo e($holiday->festivals); ?></span>
                         </span>
 
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
-                    @endif
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
                 <!-- end -->
                 <div class="cont d-flex justify-content-end  mt-4 ">
@@ -275,7 +281,7 @@
                         </div>
                     </div>
                     <div class="filter-container1">
-                        <div id="main" style="margin-left: {{ $showDialog ? '250px' : '0' }}">
+                        <div id="main" style="margin-left: <?php echo e($showDialog ? '250px' : '0'); ?>">
                             <button class="openbtn" wire:click="open">
                                 <i class="fas fa-filter" style="color:#778899;"></i>
                             </button>
@@ -288,7 +294,7 @@
                     <div class="accordion-heading active rounded">
                         <div class="accordion-title p-2">
                             <div class="accordion-content ">
-                                <span style="font-size: 14px; font-weight: 500;color:#778899;">Leave transactions({{ count($this->leaveTransactions) }})</span>
+                                <span style="font-size: 14px; font-weight: 500;color:#778899;">Leave transactions(<?php echo e(count($this->leaveTransactions)); ?>)</span>
                             </div>
                             <div class="arrow-btn" onclick="toggleAccordion(this)">
                                 <i class="fas fa-chevron-down"></i>
@@ -306,43 +312,46 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (empty($this->leaveTransactions))
+                                    <!--[if BLOCK]><![endif]--><?php if(empty($this->leaveTransactions)): ?>
                                     <tr>
                                         <td colspan="3">
                                             <p>No data found</p>
                                         </td>
                                     </tr>`
-                                    @else
-                                    @if (!empty($selectedDate))
-                                    @forelse($this->leaveTransactions as $transaction)
+                                    <?php else: ?>
+                                    <!--[if BLOCK]><![endif]--><?php if(!empty($selectedDate)): ?>
+                                    <!--[if BLOCK]><![endif]--><?php $__empty_1 = true; $__currentLoopData = $this->leaveTransactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $transaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <tr style="border-bottom: 1px solid #ccc; font-size:12px;text-align:start;">
                                         <td style="padding: 20px 5px; border-top: 1px solid #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;width: 40%;">
-                                            <span style="color: black; font-size: 12px; font-weight: 500;cursor:pointer;" title="{{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }}: {{ $transaction->emp_id }}">
-                                                {{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }} <span style="font-size: 11px; color: #778899;">(#{{ $transaction->emp_id }})</span>
+                                            <span style="color: black; font-size: 12px; font-weight: 500;cursor:pointer;" title="<?php echo e(ucwords(strtolower($transaction->employee->first_name))); ?> <?php echo e(ucwords(strtolower($transaction->employee->last_name))); ?>: <?php echo e($transaction->emp_id); ?>">
+                                                <?php echo e(ucwords(strtolower($transaction->employee->first_name))); ?> <?php echo e(ucwords(strtolower($transaction->employee->last_name))); ?> <span style="font-size: 11px; color: #778899;">(#<?php echo e($transaction->emp_id); ?>)</span>
                                             </span> <br>
-                                            <span style="font-size: 11px; color: #778899;white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;cursor:pointer;" title="{{ $transaction->employee->job_location }}, {{ $transaction->employee->job_title }}">
-                                                {{ $transaction->employee->job_location }}, {{ $transaction->employee->job_title }}
+                                            <span style="font-size: 11px; color: #778899;white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;cursor:pointer;" title="<?php echo e($transaction->employee->job_location); ?>, <?php echo e($transaction->employee->job_title); ?>">
+                                                <?php echo e($transaction->employee->job_location); ?>, <?php echo e($transaction->employee->job_title); ?>
+
                                             </span>
                                         </td>
 
-                                        <td style=" padding:20px 5px;border-top: 1px solid #ccc;font-weight:500;width: 20%;">{{ $this->calculateNumberOfDays($transaction->from_date, $transaction->from_session, $transaction->to_date, $transaction->to_session) }}</td>
+                                        <td style=" padding:20px 5px;border-top: 1px solid #ccc;font-weight:500;width: 20%;"><?php echo e($this->calculateNumberOfDays($transaction->from_date, $transaction->from_session, $transaction->to_date, $transaction->to_session)); ?></td>
                                         <td style=" padding:20px 5px;border-top: 1px solid #ccc;width: 40%;">
 
-                                            @if($transaction->from_date === $transaction->to_date)
-                                            <span style="color:black;font-size:12px;font-weight:500;">{{ \Carbon\Carbon::parse($transaction->from_date)->format('d M') }}</span>
-                                            @else
+                                            <!--[if BLOCK]><![endif]--><?php if($transaction->from_date === $transaction->to_date): ?>
+                                            <span style="color:black;font-size:12px;font-weight:500;"><?php echo e(\Carbon\Carbon::parse($transaction->from_date)->format('d M')); ?></span>
+                                            <?php else: ?>
                                             <span style="color:black;font-size:12px;font-weight:500;">
-                                                {{ \Carbon\Carbon::parse($transaction->from_date)->format('d M') }} - {{ \Carbon\Carbon::parse($transaction->to_date)->format('d M') }}
+                                                <?php echo e(\Carbon\Carbon::parse($transaction->from_date)->format('d M')); ?> - <?php echo e(\Carbon\Carbon::parse($transaction->to_date)->format('d M')); ?>
+
                                             </span><br>
                                             <span style="font-size:10px;color:#778899;">
-                                                {{$transaction->from_session}}&nbsp;&nbsp;&nbsp;&nbsp;{{$transaction->to_session}}
+                                                <?php echo e($transaction->from_session); ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo e($transaction->to_session); ?>
+
                                             </span>
-                                            @endif
+                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                                         </td>
                                     </tr>
 
-                                    @empty
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr>
                                         <td colspan="3">
                                             <div class="leave-trans" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
@@ -352,9 +361,9 @@
                                         </td>
                                     </tr>
 
-                                    @endforelse
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-                                    @else
+                                    <?php else: ?>
                                     <tr>
                                         <td colspan="3">
                                             <div class="leave-trans" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
@@ -363,8 +372,8 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    @endif
-                                    @endif
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 </tbody>
                             </table>
                         </div>
@@ -418,4 +427,4 @@
 
 
 
-    </div>
+    </div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/leave-calender.blade.php ENDPATH**/ ?>

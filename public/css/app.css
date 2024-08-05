@@ -2319,6 +2319,9 @@ input[type="radio"] {
     font-size: 13px !important;
     color: black !important;
 }
+.form-control{
+    font-size: var(--sub-headings-font-size);
+}
 #category::placeholder {
     color: #778899; /* Placeholder text color */
     font-size: 10px; /* Placeholder font size */

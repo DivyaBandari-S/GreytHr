@@ -8,7 +8,7 @@
             overflow-y: scroll;
             overflow-x: hidden;
             padding-right: 10px;
-            max-height: 600px;
+            max-height: 100vh;
         }
 
         .custom-scrollbar::-webkit-scrollbar {
@@ -859,16 +859,6 @@ width: 170px; */
             text-align: left;
         }
 
-        .toggle-box-attendance-info {
-
-            /* background-color: #f0f0f0; */
-
-
-            /* margin-left: 850px; */
-            /* margin-top: -40px; */
-            /* padding: 5.5px 6px; */
-            /* Adjust padding as needed */
-        }
 
 
         .toggle-box-attendance-info i {
@@ -1367,10 +1357,6 @@ color: #fff;
                 </div>
             </div>
             <div wire:ignore.self class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-
-
-
-
                 <div class="modal-dialog custom-modal-lg centered-modal custom-modal" role="document">
                     <div class="modal-content">
 

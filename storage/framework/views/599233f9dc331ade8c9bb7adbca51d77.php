@@ -97,7 +97,7 @@ if (isset($__slots)) unset($__slots);
 
             </div>
 
-            <div id="restricted" class="row mt-2 w-85 align-items-center" style="<?php echo e($showRestricted ? '' : 'display:none;'); ?>">
+            <div id="restricted" class="row mt-2 align-items-center" style="<?php echo e($showRestricted ? '' : 'display:none;'); ?>">
                 <div class="containerWidth">
                     <div class="leave-pending rounded">
                         <!--[if BLOCK]><![endif]--><?php if($resShowinfoMessage): ?>
@@ -122,7 +122,7 @@ if (isset($__slots)) unset($__slots);
                 </div>
             </div>
 
-            <div id="leaveCancel" class="row w-85 mt-2 align-items-center" style="<?php echo e($showLeaveCancel ? '' : 'display:none;'); ?>">
+            <div id="leaveCancel" class="row  mt-2 align-items-center" style="<?php echo e($showLeaveCancel ? '' : 'display:none;'); ?>">
                 <div class="containerWidth"> <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
@@ -141,7 +141,7 @@ if (isset($__slots)) unset($__slots);
 ?> </div>
             </div>
 
-            <div id="compOff" class="row w-85 mt-2 align-items-center" style="<?php echo e($showCompOff ? '' : 'display:none;'); ?>">
+            <div id="compOff" class="row  mt-2 align-items-center" style="<?php echo e($showCompOff ? '' : 'display:none;'); ?>">
                 <div class="containerWidth">
                     <div>
                         <div class="leave-pending rounded">
@@ -212,7 +212,7 @@ if (isset($__slots)) unset($__slots);
 
                     <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
-                        <div class="accordion-title px-2 py-3 rounded">
+                        <div class="accordion-title px-4 py-3 rounded">
 
                             <!-- Display leave details here based on $leaveRequest -->
 
@@ -234,8 +234,13 @@ if (isset($__slots)) unset($__slots);
                             <div class="col accordion-content">
 
                                 <span class="accordionContentSpan">Pending with</span>
+                                <?php
+                                $applyingToArray = json_decode($leaveRequest->applying_to, true);
+                                ?>
+                                <span class="accordionContentSpanValue">
+                                    <?php echo e(ucwords(strtolower($applyingToArray[0]['report_to'])) ?? 'No report_to available'); ?>
 
-                                <span class="accordionContentSpanValue">N/A</span>
+                                </span>
 
                             </div>
 
@@ -254,15 +259,14 @@ if (isset($__slots)) unset($__slots);
 
 
                             <!-- Add other details based on your leave request structure -->
-
+                            <!--[if BLOCK]><![endif]--><?php if(($leaveRequest->category_type === 'Leave') ): ?>
                             <div class="col accordion-content">
-
                                 <span class="accordionContentSpanValue" style="color:#cf9b17 !important;"><?php echo e(strtoupper($leaveRequest->status)); ?></span>
-
                             </div>
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                             <div class="arrow-btn">
-                                <i class="bx bx-chevron-down"></i>
+                                <i class="fa fa-chevron-down"></i>
                             </div>
 
                         </div>
@@ -354,7 +358,7 @@ if (isset($__slots)) unset($__slots);
 
                     <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
-                        <div class="accordion-title px-2 py-3">
+                        <div class="accordion-title px-4 py-3">
 
                             <!-- Display leave details here based on $leaveRequest -->
 
@@ -412,7 +416,7 @@ if (isset($__slots)) unset($__slots);
                             </div>
 
                             <div class="arrow-btn">
-                                <i class="bx bx-chevron-down"></i>
+                                <i class="fa fa-chevron-down"></i>
                             </div>
 
                         </div>
@@ -462,7 +466,6 @@ if (isset($__slots)) unset($__slots);
                             </div>
 
                             <div class="content px-2 ">
-
                                 <a href="<?php echo e(route('leave-pending', ['leaveRequestId' => $leaveRequest->id])); ?>">
                                     <span class="viewDetails">View
                                         Details</span>

@@ -355,30 +355,55 @@ class LeaveApply extends Component
             session()->flash('error', 'An error occurred while closing CC recipients container. Please try again later.');
         }
     }
-
+    public $showPopupMessage = false;
+public $numberOfDays;
     //it will update the number of days in leave apply page
     public function handleFieldUpdate($field)
     {
         try {
             $this->showNumberOfDays = true;
+            $this->showPopupMessage = false; // Ensure popup is not shown by default
+    
             if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session') {
-                $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
+                list($result, $errorMessage) = $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
+    
+                if ($errorMessage) {
+                    // If there's an error, set the popup message
+                    session()->flash('popupMessage', $errorMessage);
+                    $this->showPopupMessage = true;
+                } else {
+                    $this->numberOfDays = $result;
+    
+                    // Check if number of days is 0 and set the popup flag
+                    if ($this->numberOfDays === 0) {
+                        dd('ghj');
+                        session()->flash('popupMessage', 'Selected dates are valid, but no working days are calculated.');
+                        $this->showPopupMessage = true;
+                    }
+                }
             }
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in handleFieldUpdate method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while handling field update. Please try again later.');
+            session()->flash('popupMessage', 'An error occurred while handling field update. Please try again later.');
+            $this->showPopupMessage = true;
         }
     }
 
+
     //it will calculate number of days for leave application
-    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
-            // Check if the start and end sessions are different on the same day
 
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+            }
+
+            // Check if the start and end sessions are different on the same day
             if (
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
@@ -391,6 +416,7 @@ class LeaveApply extends Component
                     return 0;
                 }
             }
+
             if (
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
@@ -403,7 +429,6 @@ class LeaveApply extends Component
                     return 0;
                 }
             }
-
 
             $totalDays = 0;
 
@@ -444,10 +469,12 @@ class LeaveApply extends Component
             return 'Error: ' . $e->getMessage();
         }
     }
+
     private function getSessionNumber($session)
     {
         return (int) str_replace('Session ', '', $session);
     }
+
 
     //selected applying to manager details
     public function toggleManager($empId)
@@ -487,6 +514,13 @@ class LeaveApply extends Component
         $this->loginEmpManager = null;
         $this->loginEmpManagerId = null;
     }
+    private function isWeekend($date)
+    {
+        // Convert date string to a Carbon instance
+        $carbonDate = Carbon::parse($date);
+        // Check if the day of the week is Saturday or Sunday
+        return $carbonDate->isWeekend();
+    }
 
     //method to apply for a leave
     public function leaveApply()
@@ -495,6 +529,11 @@ class LeaveApply extends Component
 
         try {
             $this->selectleave();
+            // Check for weekend
+            if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
+                $this->errorMessage = 'Looks like its already your non working day. Please pick different date(s) to apply.';
+                return redirect()->back()->withInput();
+            }
             // Check for overlapping leave
             $overlappingLeave = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where(function ($query) {
@@ -523,19 +562,19 @@ class LeaveApply extends Component
                 return redirect()->back()->withInput();
             }
 
-                // Check for holidays in the selected date range
-                $holidays = HolidayCalendar::where(function ($query) {
-                    $query->whereBetween('date', [$this->from_date, $this->to_date])
-                          ->orWhere(function ($q) {
-                              $q->where('date', '>=', $this->from_date)
-                                ->where('date', '<=', $this->to_date);
-                          });
-                })->get();
-        
-                if ($holidays->isNotEmpty()) {
-                    $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
-                    return redirect()->back()->withInput();
-                }
+            // Check for holidays in the selected date range
+            $holidays = HolidayCalendar::where(function ($query) {
+                $query->whereBetween('date', [$this->from_date, $this->to_date])
+                    ->orWhere(function ($q) {
+                        $q->where('date', '>=', $this->from_date)
+                            ->where('date', '<=', $this->to_date);
+                    });
+            })->get();
+
+            if ($holidays->isNotEmpty()) {
+                $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
+                return redirect()->back()->withInput();
+            }
             $filePaths = [];
             // Check if files are set and is an array
             if (isset($this->files) && is_array($this->files)) {
