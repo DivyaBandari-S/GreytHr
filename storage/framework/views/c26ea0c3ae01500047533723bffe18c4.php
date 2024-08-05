@@ -49,12 +49,12 @@
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
                     <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;"
-                        class="custom-nav-link {{ $activeTab === 'open' ? 'active' : '' }}"
+                        class="custom-nav-link <?php echo e($activeTab === 'open' ? 'active' : ''); ?>"
                         wire:click.prevent="setActiveTab('open')">Open</a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">
                     <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;"
-                        class="custom-nav-link {{ $activeTab === 'completed' ? 'active' : '' }}"
+                        class="custom-nav-link <?php echo e($activeTab === 'completed' ? 'active' : ''); ?>"
                         wire:click.prevent="setActiveTab('completed')">Closed</a>
                 </li>
             </ul>
@@ -67,13 +67,14 @@
 
 
         <div style="display: flex; justify-content: center; align-items: center;margin-top:5px">
-            @if (session()->has('message'))
+            <!--[if BLOCK]><![endif]--><?php if(session()->has('message')): ?>
                 <div id="flash-message"
                     style="width: 90%; margin: 0.2rem; padding: 0.25rem; background-color: #f0fff4; border: 1px solid #68d391; color: #38a169; border-radius: 0.25rem; text-align: center;"
                     class="success-message">
-                    {{ session('message') }}
+                    <?php echo e(session('message')); ?>
+
                 </div>
-            @endif
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
         </div>
 
         <script>
@@ -110,8 +111,8 @@
                 }).on('changeDate', function(e) {
                     var startDate = $('#start_date').val();
                     var endDate = $('#end_date').val();
-                    @this.set('start_date', startDate);
-                    @this.set('end_date', endDate);
+                    window.Livewire.find('<?php echo e($_instance->getId()); ?>').set('start_date', startDate);
+                    window.Livewire.find('<?php echo e($_instance->getId()); ?>').set('end_date', endDate);
                 });
             });
         </script>
@@ -123,7 +124,7 @@
         </div>
 
 
-        @if ($activeTab == 'open')
+        <!--[if BLOCK]><![endif]--><?php if($activeTab == 'open'): ?>
             <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
                 <form class="form-inline row" style="margin-bottom: -15px;">
                     <!-- Search Box -->
@@ -139,7 +140,22 @@
 
                     <div class="form-group task-date-range-picker">
                         <!-- <label for="drp" class="form-label">DateRangePicker</label> -->
-                        <livewire:date-component key="{{ 'drp-' . uniqid() }}" :start="$start" :end="$end" />
+                        <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('date-component', ['start' => $start,'end' => $end]);
+
+$__html = app('livewire')->mount($__name, $__params, ''.e('drp-' . uniqid()).'', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
                     </div>
                 </form>
             </div>
@@ -171,7 +187,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($searchData->isEmpty())
+                            <!--[if BLOCK]><![endif]--><?php if($searchData->isEmpty()): ?>
                                 <tr>
                                     <td colspan="8" style="text-align: center;">
                                         <img style="width: 10em; margin: 20px;"
@@ -179,9 +195,9 @@
                                             alt="No items found">
                                     </td>
                                 </tr>
-                            @else
-                                @foreach ($searchData as $index => $record)
-                                    @if ($record->status == 'Open')
+                            <?php else: ?>
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $searchData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <!--[if BLOCK]><![endif]--><?php if($record->status == 'Open'): ?>
                                         <tr>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;">
@@ -192,40 +208,48 @@
 
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%">
-                                                {{ ucfirst($record->assignee) }}
+                                                <?php echo e(ucfirst($record->assignee)); ?>
+
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: {{ $record->followers ? 'start' : 'center' }}; width: 13%">
-                                                {{ ucfirst($record->followers) ?: '-' }}
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: <?php echo e($record->followers ? 'start' : 'center'); ?>; width: 13%">
+                                                <?php echo e(ucfirst($record->followers) ?: '-'); ?>
+
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%">
-                                                {{ ucwords(strtolower($record->emp->first_name)) }}
-                                                {{ ucwords(strtolower($record->emp->last_name)) }}
+                                                <?php echo e(ucwords(strtolower($record->emp->first_name))); ?>
+
+                                                <?php echo e(ucwords(strtolower($record->emp->last_name))); ?>
+
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none;font-size: 0.75rem; text-align: start; width: 10%">
-                                                {{ ucfirst($record->task_name) }}
+                                                <?php echo e(ucfirst($record->task_name)); ?>
+
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%;">
-                                                {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
+                                                <?php echo e(\Carbon\Carbon::parse($record->due_date)->format('d M, Y')); ?>
+
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%">
-                                                {{ \Carbon\Carbon::parse($record->created_at)->format('d M, Y') }}
+                                                <?php echo e(\Carbon\Carbon::parse($record->created_at)->format('d M, Y')); ?>
+
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 22%">
-                                                @foreach ($record->comments ?? [] as $comment)
-                                                    {{ $comment->comment }}
-                                                @endforeach
+                                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $record->comments ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $comment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php echo e($comment->comment); ?>
+
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                                                 <!-- Add Comment link to trigger modal -->
                                                 <button type="button"
-                                                    wire:click.prevent="openAddCommentModal('{{ $record->id }}')"
+                                                    wire:click.prevent="openAddCommentModal('<?php echo e($record->id); ?>')"
                                                     class="submit-btn" data-toggle="modal"
                                                     data-target="#exampleModalCenter">Comment</button>
-                                                <button wire:click="openForTasks('{{ $record->id }}')"
+                                                <button wire:click="openForTasks('<?php echo e($record->id); ?>')"
                                                     style="border:1px solid rgb(2, 17, 79);width:80px; padding: 5px 0.75rem;"
                                                     class="cancel-btn">Close</button>
                                             </td>
@@ -262,30 +286,34 @@
                                                             <tr>
                                                                 <td
                                                                     style="border: none; width: 22%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    {{ $record->priority }}
+                                                                    <?php echo e($record->priority); ?>
+
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 18%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
+                                                                    <?php echo e(\Carbon\Carbon::parse($record->due_date)->format('d M, Y')); ?>
+
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 18%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    {{ ucfirst($record->subject ?? '-') }}
+                                                                    <?php echo e(ucfirst($record->subject ?? '-')); ?>
+
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    {{ ucfirst($record->description ?? '-') }}
+                                                                    <?php echo e(ucfirst($record->description ?? '-')); ?>
+
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 38%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    @if ($record->file_path)
-                                                                        <a href="{{ asset('storage/' . $record->file_path) }}"
+                                                                    <!--[if BLOCK]><![endif]--><?php if($record->file_path): ?>
+                                                                        <a href="<?php echo e(asset('storage/' . $record->file_path)); ?>"
                                                                             target="_blank"
                                                                             style="text-decoration: none; color: #007BFF;">View
                                                                             File</a>
-                                                                    @else
+                                                                    <?php else: ?>
                                                                         N/A
-                                                                    @endif
+                                                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -293,15 +321,15 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                    @endif
-                                @endforeach
-                            @endif
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </tbody>
                     </table>
                 </div>
             </div>
-        @endif
-        @if ($activeTab == 'completed')
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if($activeTab == 'completed'): ?>
             <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
                 <form wire:submit.prevent="applyFilters" class="form-inline row" style="margin-bottom: -15px;">
                     <!-- Search Box -->
@@ -317,7 +345,22 @@
 
                     <div class="form-group task-date-range-picker">
 
-                        <livewire:date-component key="{{ 'drp-' . uniqid() }}" :start="$start" :end="$end" />
+                        <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('date-component', ['start' => $start,'end' => $end]);
+
+$__html = app('livewire')->mount($__name, $__params, ''.e('drp-' . uniqid()).'', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
                     </div>
 
 
@@ -352,7 +395,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($searchData->isEmpty())
+                            <!--[if BLOCK]><![endif]--><?php if($searchData->isEmpty()): ?>
                                 <tr>
                                     <td colspan="9" style="text-align: center;">
                                         <img style="width: 10em; margin: 20px;"
@@ -360,9 +403,9 @@
                                             alt="No items found">
                                     </td>
                                 </tr>
-                            @else
-                                @foreach ($searchData as $record)
-                                    @if ($record->status == 'Completed')
+                            <?php else: ?>
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $searchData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <!--[if BLOCK]><![endif]--><?php if($record->status == 'Completed'): ?>
                                         <tr>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;">
@@ -372,44 +415,53 @@
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                                {{ ucfirst($record->assignee) }}
+                                                <?php echo e(ucfirst($record->assignee)); ?>
+
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: {{ $record->followers ? 'start' : 'center' }}; width: 10%">
-                                                {{ ucfirst($record->followers) ?: '-' }}
-                                            </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                                {{ ucwords(strtolower($record->emp->first_name)) }}
-                                                {{ ucwords(strtolower($record->emp->last_name)) }}
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: <?php echo e($record->followers ? 'start' : 'center'); ?>; width: 10%">
+                                                <?php echo e(ucfirst($record->followers) ?: '-'); ?>
+
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                                {{ ucfirst($record->task_name) }}
-                                            </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%; color: {{ \Carbon\Carbon::parse($record->updated_at)->startOfDay()->gt(\Carbon\Carbon::parse($record->due_date)->startOfDay())? 'red': 'inherit' }};">
-                                                {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
-                                            </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                                {{ \Carbon\Carbon::parse($record->created_at)->format('d M, Y') }}
+                                                <?php echo e(ucwords(strtolower($record->emp->first_name))); ?>
+
+                                                <?php echo e(ucwords(strtolower($record->emp->last_name))); ?>
+
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                                {{ \Carbon\Carbon::parse($record->updated_at)->format('d M, Y') }}
+                                                <?php echo e(ucfirst($record->task_name)); ?>
+
+                                            </td>
+                                            <td
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%; color: <?php echo e(\Carbon\Carbon::parse($record->updated_at)->startOfDay()->gt(\Carbon\Carbon::parse($record->due_date)->startOfDay())? 'red': 'inherit'); ?>;">
+                                                <?php echo e(\Carbon\Carbon::parse($record->due_date)->format('d M, Y')); ?>
+
+                                            </td>
+                                            <td
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
+                                                <?php echo e(\Carbon\Carbon::parse($record->created_at)->format('d M, Y')); ?>
+
+                                            </td>
+                                            <td
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
+                                                <?php echo e(\Carbon\Carbon::parse($record->updated_at)->format('d M, Y')); ?>
+
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 23%">
-                                                @foreach ($record->comments ?? [] as $comment)
-                                                    {{ $comment->comment }}
-                                                @endforeach
+                                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $record->comments ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $comment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php echo e($comment->comment); ?>
+
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                                                 <!-- Add Comment link to trigger modal -->
                                                 <button type="button"
-                                                    wire:click.prevent="openAddCommentModal('{{ $record->id }}')"
+                                                    wire:click.prevent="openAddCommentModal('<?php echo e($record->id); ?>')"
                                                     class="submit-btn" data-toggle="modal"
                                                     data-target="#exampleModalCenter">Comment</button>
-                                                <button wire:click="closeForTasks('{{ $record->id }}')"
+                                                <button wire:click="closeForTasks('<?php echo e($record->id); ?>')"
                                                     style="border:1px solid rgb(2,17,79); width: 80px;  padding: 5px 0.75rem;"
                                                     class="cancel-btn1">Reopen</button>
                                             </td>
@@ -446,30 +498,34 @@
                                                             <tr>
                                                                 <td
                                                                     style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    {{ $record->priority }}
+                                                                    <?php echo e($record->priority); ?>
+
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
+                                                                    <?php echo e(\Carbon\Carbon::parse($record->due_date)->format('d M, Y')); ?>
+
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    {{ ucfirst($record->subject ?? '-') }}
+                                                                    <?php echo e(ucfirst($record->subject ?? '-')); ?>
+
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    {{ ucfirst($record->description ?? '-') }}
+                                                                    <?php echo e(ucfirst($record->description ?? '-')); ?>
+
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    @if ($record->file_path)
-                                                                        <a href="{{ asset('storage/' . $record->file_path) }}"
+                                                                    <!--[if BLOCK]><![endif]--><?php if($record->file_path): ?>
+                                                                        <a href="<?php echo e(asset('storage/' . $record->file_path)); ?>"
                                                                             target="_blank"
                                                                             style="text-decoration: none; color: #007BFF;">View
                                                                             File</a>
-                                                                    @else
+                                                                    <?php else: ?>
                                                                         N/A
-                                                                    @endif
+                                                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -477,16 +533,16 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                    @endif
-                                @endforeach
-                            @endif
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </tbody>
                     </table>
                 </div>
 
             </div>
-        @endif
-        @if ($showDialog)
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if($showDialog): ?>
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                     <div class="modal-content">
@@ -509,9 +565,16 @@
                                         wire:input="autoValidate" class="placeholder-small"
                                         placeholder="Enter task name"
                                         style="width: 100%; font-size: 0.75rem; padding: 5px; outline: none; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;">
-                                    @error('task_name')
+                                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['task_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                         <span class="text-danger">Task name is required</span>
-                                    @enderror
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
 
 
@@ -522,17 +585,25 @@
                                         style="font-size: 13px;color:#778899; margin-bottom: 10px;">Assignee*</label>
                                     <br>
                                     <i wire:change="autoValidate" class="fa fa-user icon" id="profile-icon"></i>
-                                    @if ($showRecipients)
+                                    <!--[if BLOCK]><![endif]--><?php if($showRecipients): ?>
                                         <strong style="font-size: 12;">Selected assignee:
-                                        </strong>{{ $selectedPeopleName }}
-                                    @else
+                                        </strong><?php echo e($selectedPeopleName); ?>
+
+                                    <?php else: ?>
                                         <a class="hover-link" style="color:black;cursor:pointer"> Add Assignee</a>
-                                    @endif <br>
-                                    @error('assignee')
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]--> <br>
+                                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['assignee'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                         <span class="text-danger">Assignee is required</span>
-                                    @enderror
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
-                                @if ($assigneeList)
+                                <!--[if BLOCK]><![endif]--><?php if($assigneeList): ?>
                                     <div
                                         style="border-radius:5px;background-color:grey;padding:8px;width:350px;max-height:250px;overflow-y:auto; ">
                                         <div class="input-group d-flex" style="margin-bottom: 10px;">
@@ -549,6 +620,7 @@
                                                     </button>
                                                 </div>
                                             </div>
+                                            
                                             <div wire:change="autoValidate" wire:click="closeAssignee"
                                                 aria-label="Close">
                                                 <i class="fa fa-times"
@@ -556,58 +628,60 @@
                                                     aria-hidden="true"></i>
                                             </div>
                                         </div>
-                                        @if ($peopleData->isEmpty())
+                                        <!--[if BLOCK]><![endif]--><?php if($peopleData->isEmpty()): ?>
                                             <div class="container"
                                                 style="text-align: center; color: white; font-size: 0.75rem;">No People
                                                 Found
                                             </div>
-                                        @else
-                                            @foreach ($peopleData as $people)
-                                                <div wire:click="selectPerson('{{ $people->emp_id }}')"
+                                        <?php else: ?>
+                                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $peopleData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $people): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <div wire:click="selectPerson('<?php echo e($people->emp_id); ?>')"
                                                     class="container"
                                                     style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
                                                     <div class="row align-items-center">
-                                                        <label for="person-{{ $people->emp_id }}"
+                                                        <label for="person-<?php echo e($people->emp_id); ?>"
                                                             style="width: 100%; display: flex; align-items: center; margin: 0;">
                                                             <div class="col-auto">
                                                                 <input type="radio"
-                                                                    id="person-{{ $people->emp_id }}"
+                                                                    id="person-<?php echo e($people->emp_id); ?>"
                                                                     wire:change="autoValidate" wire:model="assignee"
-                                                                    value="{{ $people->emp_id }}">
+                                                                    value="<?php echo e($people->emp_id); ?>">
                                                             </div>
                                                             <div class="col-auto">
                                                                 <img class="profile-image" style="margin-left: 10px;"
-                                                                    src="{{ !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL)
+                                                                    src="<?php echo e(!is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL)
                                                                         ? $people->image
                                                                         : (!empty($people->image)
                                                                             ? Storage::url($people->image)
                                                                             : ($people->gender == 'Male'
                                                                                 ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
-                                                                                : 'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0')) }}"
+                                                                                : 'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0'))); ?>"
                                                                     alt="">
                                                             </div>
                                                             <div class="col">
                                                                 <h6 class="username"
                                                                     style="font-size: 0.75rem; color: white;">
-                                                                    {{ ucwords(strtolower($people->first_name)) }}
-                                                                    {{ ucwords(strtolower($people->last_name)) }}
+                                                                    <?php echo e(ucwords(strtolower($people->first_name))); ?>
+
+                                                                    <?php echo e(ucwords(strtolower($people->last_name))); ?>
+
                                                                 </h6>
                                                                 <p class="mb-0"
                                                                     style="font-size: 0.75rem; color: white;">
-                                                                    (#{{ $people->emp_id }})
+                                                                    (#<?php echo e($people->emp_id); ?>)
                                                                 </p>
                                                             </div>
                                                         </label>
                                                     </div>
                                                 </div>
-                                            @endforeach
-                                        @endif
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
-                                @endif
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 <div class="row">
                                     <div class="col-md-6">
-                                        @if ($selectedPersonClients->isEmpty())
-                                        @else
+                                        <!--[if BLOCK]><![endif]--><?php if($selectedPersonClients->isEmpty()): ?>
+                                        <?php else: ?>
                                             <div style="margin-bottom: 10px;">
                                                 <label style="font-size: 13px;color:#778899" for="clientSelect">Select
                                                     Client*</label>
@@ -615,23 +689,31 @@
                                                     style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"
                                                     id="clientSelect" wire:model="client_id">
                                                     <option value="">Select client</option>
-                                                    @foreach ($selectedPersonClients as $client)
+                                                    <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $selectedPersonClients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <option style="color:#778899;"
-                                                            value="{{ $client->client->client_id }}">
-                                                            {{ $client->client->client_name }}
+                                                            value="<?php echo e($client->client->client_id); ?>">
+                                                            <?php echo e($client->client->client_name); ?>
+
                                                         </option>
-                                                    @endforeach
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                                                 </select>
-                                                @error('client_id')
+                                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['client_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                                     <span class="text-danger">Client ID is required</span>
-                                                @enderror
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                             </div>
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                                     </div>
                                     <div class="col-md-6">
-                                        @if ($selectedPersonClientsWithProjects->isEmpty())
-                                        @else
+                                        <!--[if BLOCK]><![endif]--><?php if($selectedPersonClientsWithProjects->isEmpty()): ?>
+                                        <?php else: ?>
                                             <div style="margin-bottom: 10px;">
                                                 <label style="font-size: 13px;color:#778899" for="clientSelect">Select
                                                     Project*</label>
@@ -639,20 +721,28 @@
                                                     style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"
                                                     id="clientSelect" wire:model="project_name">
                                                     <option value="">Select project</option>
-                                                    @foreach ($selectedPersonClientsWithProjects as $project)
+                                                    <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $selectedPersonClientsWithProjects; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $project): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <option style="color:#778899;"
-                                                            value="{{ $project->project_name }}">
-                                                            {{ $project->project_name }}
+                                                            value="<?php echo e($project->project_name); ?>">
+                                                            <?php echo e($project->project_name); ?>
+
                                                         </option>
-                                                    @endforeach
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                                                 </select>
-                                                @error('project_name')
+                                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['project_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                                     <span class="text-danger">Project name is
                                                         required</span>
-                                                @enderror
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
                                             </div>
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
                                 </div>
 
@@ -694,10 +784,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                @error('priority')
+                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['priority'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                     <span class="text-danger">Priority is
                                         required</span>
-                                @enderror
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 <!-- Due Date -->
                                 <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
                                     <div class="col">
@@ -710,9 +807,16 @@
                                                 class="placeholder-small"
                                                 style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"
                                                 min="<?= date('Y-m-d') ?>" value="<?= date('Y-m-d') ?>">
-                                            @error('due_date')
+                                            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['due_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                                 <span class="text-danger">Due date is required</span>
-                                            @enderror
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
                                         </div>
                                     </div>
@@ -736,14 +840,15 @@
                                     <br>
                                     <i wire:change="autoValidate" style="margin-top: 10px; cursor: pointer" class="fas fa-user icon"
                                         id="profile-icon"></i>
-                                    @if ($showFollowers)
+                                    <!--[if BLOCK]><![endif]--><?php if($showFollowers): ?>
                                         <strong style="font-size: 12;">Selected Followers:
-                                        </strong>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}
-                                    @else
+                                        </strong><?php echo e(implode(', ', array_unique($selectedPeopleNamesForFollowers))); ?>
+
+                                    <?php else: ?>
                                         <a class="hover-link" style="color:black;cursor:pointer"> Add Followers</a>
-                                    @endif
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
-                                @if ($followersList)
+                                <!--[if BLOCK]><![endif]--><?php if($followersList): ?>
                                     <div
                                         style="border-radius:5px;background-color:grey;padding:8px;width:350px;max-height:250px;overflow-y:auto; ">
                                         <div class="input-group d-flex" style="margin-bottom: 10px;">
@@ -760,6 +865,7 @@
                                                     </button>
                                                 </div>
                                             </div>
+                                            
                                             <div wire:change="autoValidate" wire:click="closeFollowers"
                                                 aria-label="Close">
                                                 <i class="fa fa-times"
@@ -767,52 +873,54 @@
                                                     aria-hidden="true"></i>
                                             </div>
                                         </div>
-                                        @if ($peopleData->isEmpty())
+                                        <!--[if BLOCK]><![endif]--><?php if($peopleData->isEmpty()): ?>
                                             <div class="container"
                                                 style="text-align: center; color: white; font-size: 0.75rem;">No People
                                                 Found
                                             </div>
-                                        @else
-                                            @foreach ($peopleData as $people)
+                                        <?php else: ?>
+                                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $peopleData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $people): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <div wire:model="cc_to"
-                                                    wire:click="selectPersonForFollowers('{{ $people->emp_id }}')"
+                                                    wire:click="selectPersonForFollowers('<?php echo e($people->emp_id); ?>')"
                                                     class="container"
                                                     style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
                                                     <div class="row align-items-center">
                                                         <div class="col-auto">
                                                             <input type="checkbox"
                                                                 wire:model="selectedPeopleForFollowers"
-                                                                value="{{ $people->emp_id }}">
+                                                                value="<?php echo e($people->emp_id); ?>">
                                                         </div>
                                                         <div class="col-auto">
                                                             <img class="profile-image"
-                                                                src="{{ !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL)
+                                                                src="<?php echo e(!is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL)
                                                                     ? $people->image
                                                                     : (!empty($people->image)
                                                                         ? Storage::url($people->image)
                                                                         : ($people->gender == 'Male'
                                                                             ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
-                                                                            : 'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0')) }}"
+                                                                            : 'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0'))); ?>"
                                                                 alt="">
                                                         </div>
                                                         <div class="col">
                                                             <h6 class="username"
                                                                 style="font-size: 0.75rem; color: white;">
-                                                                {{ ucwords(strtolower($people->first_name)) }}
-                                                                {{ ucwords(strtolower($people->last_name)) }}
+                                                                <?php echo e(ucwords(strtolower($people->first_name))); ?>
+
+                                                                <?php echo e(ucwords(strtolower($people->last_name))); ?>
+
                                                             </h6>
                                                             <p class="mb-0"
                                                                 style="font-size: 0.75rem; color: white;">
-                                                                (#{{ $people->emp_id }})
+                                                                (#<?php echo e($people->emp_id); ?>)
                                                             </p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
 
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
-                                @endif
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
                                 <div class="form-group">
@@ -861,9 +969,9 @@
             </div>
     </div>
     <div class="modal-backdrop fade show blurred-backdrop"></div>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
     <!-- Add Comment Modal -->
-    @if ($showModal)
+    <!--[if BLOCK]><![endif]--><?php if($showModal): ?>
         <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -875,12 +983,13 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    @if (session()->has('comment_message'))
+                    <?php if(session()->has('comment_message')): ?>
                         <div id="flash-comment-message"
                             style="margin: 0.2rem; padding: 0.25rem; background-color: #f0fff4; border: 1px solid #68d391; color: #38a169; border-radius: 0.25rem; text-align: center;">
-                            {{ session('comment_message') }}
+                            <?php echo e(session('comment_message')); ?>
+
                         </div>
-                    @endif
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                     <div class="modal-body">
                         <form wire:submit.prevent="addComment">
                             <div class="form-group">
@@ -890,72 +999,81 @@
                                     <textarea class="form-control" id="comment" wire:model.lazy="newComment"
                                         wire:keydown.debounce.500ms="validateField('newComment')"></textarea>
                                 </p>
-                                @error('newComment')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['newComment'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <span class="text-danger"><?php echo e($message); ?></span>
+                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="submit-btn" style="font-size:0.75rem;">Submit</button>
                             </div>
                         </form>
                         <div style="max-height: 300px;overflow-y:auto;">
-                            @if ($taskComments->count() > 0)
-                                @foreach ($taskComments as $comment)
+                            <!--[if BLOCK]><![endif]--><?php if($taskComments->count() > 0): ?>
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $taskComments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $comment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <div class="comment mb-4 mt-2">
                                         <div class="d-flex align-items-center gap-5">
                                             <div class="col-md-4 p-0 comment-details">
                                                 <p style="color: #000;font-size:0.75rem;font-weight:500;margin-bottom:0;"
                                                     class="truncate-text"
-                                                    title="{{ $comment->employee->full_name }}">
-                                                    {{ $comment->employee->full_name }}
+                                                    title="<?php echo e($comment->employee->full_name); ?>">
+                                                    <?php echo e($comment->employee->full_name); ?>
+
                                                 </p>
                                             </div>
                                             <div class=" col-md-3 p-0 comment-time">
                                                 <span
-                                                    style="color: #778899;font-size:10px;font-weight:normal;margin-left:15px;">{{ $comment->created_at->diffForHumans() }}</span>
+                                                    style="color: #778899;font-size:10px;font-weight:normal;margin-left:15px;"><?php echo e($comment->created_at->diffForHumans()); ?></span>
                                             </div>
-                                            @if (Auth::guard('emp')->user()->emp_id == $comment->emp_id)
+                                            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('emp')->user()->emp_id == $comment->emp_id): ?>
                                                 <div class="col-md-2 p-0 comment-actions">
                                                     <button class="comment-btn"
-                                                        wire:click="openEditCommentModal({{ $comment->id }})">
+                                                        wire:click="openEditCommentModal(<?php echo e($comment->id); ?>)">
                                                         <i class="fas fa-edit"
                                                             style="color: #778899;height:7px;width:7px;"></i>
                                                     </button>
                                                     <button class="comment-btn"
-                                                        wire:click="deleteComment({{ $comment->id }})">
+                                                        wire:click="deleteComment(<?php echo e($comment->id); ?>)">
                                                         <i class="fas fa-trash"
                                                             style="color: #778899;height:7px;width:7px;"></i>
                                                     </button>
                                                 </div>
-                                            @endif
+                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                         </div>
                                         <div class="col p-0 comment-content">
-                                            @if ($editCommentId == $comment->id)
+                                            <!--[if BLOCK]><![endif]--><?php if($editCommentId == $comment->id): ?>
                                                 <!-- Input field for editing -->
                                                 <input class="form-control" wire:model.defer="newComment"
                                                     type="text">
                                                 <!-- Button to update comment -->
                                                 <button class="update-btn p-1"
-                                                    wire:click="updateComment({{ $comment->id }})">Update</button>
+                                                    wire:click="updateComment(<?php echo e($comment->id); ?>)">Update</button>
                                                 <button class="btn btn-secondary p-1 m-0" wire:click="cancelEdit"
                                                     style="font-size: 0.75rem;">Cancel</button>
-                                            @else
+                                            <?php else: ?>
                                                 <!-- Display comment content -->
                                                 <p style="margin-bottom: 0;font-size:0.75rem;color:#515963;">
-                                                    {{ ucfirst($comment->comment) }}
+                                                    <?php echo e(ucfirst($comment->comment)); ?>
+
                                                 </p>
-                                            @endif
+                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                         </div>
                                     </div>
-                                @endforeach
-                            @endif
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal-backdrop fade show"></div>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 </div>
 
 
@@ -997,3 +1115,4 @@
     }
 </script>
 </div>
+<?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/tasks.blade.php ENDPATH**/ ?>
