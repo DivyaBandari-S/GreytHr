@@ -109,116 +109,116 @@
     @endif
 
 
- <!-- 2022 year -->
- @if($selectedYear == (date('Y') - 2))
-        <div>
-        <div class="bal-container" >
-         <div class="row my-3 mx-auto">
-            <div class="col-md-4 mb-2">
-                <div class="leave-bal mb-2 bg-white rounded   " >
-                    <div class="balance d-flex flex-row justify-content-between mb-4" >
-                        <div class="field">
-                            <span class="leaveTypeTitle font-weight-500" >Loss Of Pay</span>
+    <!-- 2022 year -->
+    @if($selectedYear == (date('Y') - 2))
+    <div>
+        <div class="bal-container">
+            <div class="row my-3 mx-auto">
+                <div class="col-md-4 mb-2">
+                    <div class="leave-bal mb-2 bg-white rounded   ">
+                        <div class="balance d-flex flex-row justify-content-between mb-4">
+                            <div class="field">
+                                <span class="leaveTypeTitle font-weight-500">Loss Of Pay</span>
+                            </div>
+                            <div>
+                                <span class="leave-gran font-weight-500">Granted:0</span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="leave-gran font-weight-500">Granted:0</span>
+                        <div class="center text-center" style="margin-top:30px;">
+                            <h5 style="font-size:16px;">0</h5>
+                            <p class=" mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                         </div>
                     </div>
-                    <div class="center text-center" style="margin-top:30px;" >
-                        <h5 style="font-size:16px;">0</h5>
-                        <p class=" mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                </div>
+                <!-- ... (previous code) ... -->
+                <div class="col-md-4 mb-2">
+                    <div class="leave-bal mb-2 bg-white rounded  ">
+                        <div class="balance d-flex flex-row justify-content-between mb-4">
+                            <div class="field">
+                                <span class="leaveTypeTitle font-weight-500">
+                                    @if($gender === 'Female')
+                                    Maternity Leave
+                                    @elseif($gender === 'Male')
+                                    Paternity Leave
+                                    @else
+                                    Leave Type
+                                    @endif
+                                </span>
+                            </div>
+                            <div>
+                                <span class="leave-gran font-weight-500">Granted:0</span>
+                            </div>
+                        </div>
+                        <div class="center text-center" style="margin-top:30px;">
+                            <h5 style="font-size:16px;">0</h5>
+                            <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <div class="leave-bal mb-2 bg-white rounded  ">
+                        <div class="balance d-flex flex-row justify-content-between mb-4">
+                            <div class="field">
+                                <span class="leaveTypeTitle font-weight-500">Casual Leave
+                            </div>
+                            <div>
+                                <span class="leave-gran font-weight-500">Granted:0</span>
+                            </div>
+                        </div>
+                        <div class="center text-center" style="margin-top:30px;">
+                            <h5 style="font-size:16px;">0</h5>
+                            <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <div class="leave-bal mb-2 bg-white rounded  ">
+                        <div class="balance d-flex flex-row justify-content-between mb-4 ">
+                            <div class="field">
+                                <span class="leaveTypeTitle font-weight-500">Sick Leave
+                            </div>
+                            <div>
+                                <span class="leave-gran font-weight-500">Granted:0</span>
+                            </div>
+                        </div>
+                        <div class="center text-center" style="margin-top:30px;">
+                            <h5 style="font-size:16px;">0</h5>
+                            <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                        </div>
+
                     </div>
                 </div>
             </div>
-         <!-- ... (previous code) ... -->
-            <div class="col-md-4 mb-2">
-               <div  class="leave-bal mb-2 bg-white rounded  "  >
-                <div class="balance d-flex flex-row justify-content-between mb-4" >
+        </div>
+    </div>
+</div>
+@endif
+<!-- leave  -->
+@if($selectedYear == (date('Y') - 1))
+<div class="bal-container">
+    <div class="row my-3 mx-auto">
+        <div class="col-md-4 mb-2">
+            <div class="leave-bal mb-2 bg-white rounded  ">
+                <div class="balance d-flex flex-row justify-content-between ">
                     <div class="field">
-                        <span class="leaveTypeTitle font-weight-500">
-                            @if($gender === 'Female')
-                            Maternity Leave
-                            @elseif($gender === 'Male')
-                            Paternity Leave
-                            @else
-                            Leave Type
-                            @endif
-                        </span>
+                        <span class="leaveTypeTitle font-weight-500">Loss Of Pay</span>
                     </div>
                     <div>
                         <span class="leave-gran font-weight-500">Granted:0</span>
                     </div>
                 </div>
                 <div class="center text-center" style="margin-top:30px;">
-                    <h5 style="font-size:16px;">0</h5>
+                    <h5 style="font-size:16px;">0 </h5>
                     <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                </div>
-
-            </div>
-              </div>
-                <div class="col-md-4 mb-2">
-                    <div class="leave-bal mb-2 bg-white rounded  "  >
-                        <div class="balance d-flex flex-row justify-content-between mb-4" >
-                                <div class="field">
-                                    <span class="leaveTypeTitle font-weight-500">Casual Leave 
-                                </div>
-                                <div>
-                                    <span class="leave-gran font-weight-500">Granted:0</span>
-                                </div>
-                         </div>
-                         <div class="center text-center" style="margin-top:30px;" >
-                             <h5 style="font-size:16px;">0</h5>
-                             <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                        </div>
-                        
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                    <div   class="leave-bal mb-2 bg-white rounded  "  >
-                        <div class="balance d-flex flex-row justify-content-between mb-4 " >
-                                <div class="field">
-                                    <span class="leaveTypeTitle font-weight-500">Sick Leave
-                                </div>
-                                <div>
-                                    <span class="leave-gran font-weight-500">Granted:0</span>
-                                </div>
-                         </div>
-                            <div class="center text-center" style="margin-top:30px;" >
-                                <h5 style="font-size:16px;">0</h5>
-                                <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
                 </div>
             </div>
         </div>
-        @endif
-<!-- leave  -->
- @if($selectedYear == (date('Y') - 1))
-    <div class="bal-container" >
-        <div class="row my-3 mx-auto" >
-            <div class="col-md-4 mb-2">
-                <div   class="leave-bal mb-2 bg-white rounded  " >
-                    <div class="balance d-flex flex-row justify-content-between " >
-                        <div class="field">
-                            <span class="leaveTypeTitle font-weight-500" >Loss Of Pay</span>
-                        </div>
-                        <div>
-                            <span class="leave-gran font-weight-500">Granted:0</span>
-                        </div>
-                    </div>
-                    <div class="center text-center" style="margin-top:30px;" >
-                        <h5 style="font-size:16px;">0 </h5>
-                        <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                    </div>
-                </div>
-            </div>
-         <!-- ... (previous code) ... -->
-            <div class="col-md-4 mb-2">
-               <div  class="leave-bal mb-2 bg-white rounded  "  >
-                <div class="balance d-flex flex-row justify-content-between " >
+        <!-- ... (previous code) ... -->
+        <div class="col-md-4 mb-2">
+            <div class="leave-bal mb-2 bg-white rounded  ">
+                <div class="balance d-flex flex-row justify-content-between ">
                     <div class="field">
                         <span class="leaveTypeTitle font-weight-500">
                             @if($gender === 'Female')
@@ -240,43 +240,43 @@
                 </div>
 
             </div>
-              </div>
-                <div class="col-md-4 mb-2">
-                    <div  class="leave-bal mb-2 bg-white rounded  ">
-                        <div class="balance d-flex flex-row justify-content-between " >
-                                <div class="field">
-                                    <span class="leaveTypeTitle font-weight-500">Casual Leave 
-                                </div>
-                                <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $casualLeavePerYear }} </span>
-                                </div>
-                         </div>
-                         <div class="center text-center" style="margin-top:30px;" >
-                             <h5 style="font-size:16px;">{{ $casualLeavePerYear }} </h5>
-                             <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                        </div>
-
+        </div>
+        <div class="col-md-4 mb-2">
+            <div class="leave-bal mb-2 bg-white rounded  ">
+                <div class="balance d-flex flex-row justify-content-between ">
+                    <div class="field">
+                        <span class="leaveTypeTitle font-weight-500">Casual Leave
                     </div>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                    <div     class="leave-bal mb-2 bg-white rounded  ">
-                        <div class="balance d-flex flex-row justify-content-between ">
-                                <div class="field">
-                                    <span class="leaveTypeTitle font-weight-500">Sick Leave
-                                </div>
-                                <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
-                                </div>
-                         </div>
-                            <div class="center text-center" style="margin-top:30px;" >
-                                <h5 style="font-size:16px;">{{ $sickLeavePerYear }}</h5>
-                                <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                            </div>
-
-                        </div>
+                    <div>
+                        <span class="leave-gran font-weight-500">Granted:{{ $casualLeavePerYear }} </span>
                     </div>
                 </div>
+                <div class="center text-center" style="margin-top:30px;">
+                    <h5 style="font-size:16px;">{{ $casualLeavePerYear }} </h5>
+                    <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                </div>
+
             </div>
+        </div>
+        <div class="col-md-4 mb-2">
+            <div class="leave-bal mb-2 bg-white rounded  ">
+                <div class="balance d-flex flex-row justify-content-between ">
+                    <div class="field">
+                        <span class="leaveTypeTitle font-weight-500">Sick Leave
+                    </div>
+                    <div>
+                        <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
+                    </div>
+                </div>
+                <div class="center text-center" style="margin-top:30px;">
+                    <h5 style="font-size:16px;">{{ $sickLeavePerYear }}</h5>
+                    <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
 @endif
@@ -296,42 +296,42 @@
                             <span class="leave-grane font-weight-500">Granted:{{$lossOfPayPerYear}}</span>
                         </div>
                     </div>
-                    <div class="center text-center" style="margin-top:30px;" >
+                    <div class="center text-center" style="margin-top:30px;">
                         <h5 style="font-size:16px;">
                             {{$lossOfPayBalance}}
                         </h5>
-                        <p  class="mb-0" style="margin-top:-14px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                        <p class="mb-0" style="margin-top:-14px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-2">
-               <div  class="leave-bal mb-2 bg-white rounded "   >
-                <div class="balance d-flex flex-row justify-content-between " >
-                    <div class="field">
-                        <span class="leaveTypeTitle font-weight-500">
-                            @if($gender === 'Female')
-                            Maternity Leave
-                            @elseif($gender === 'Male')
-                            Paternity Leave
-                            @else
-                            Leave Type
-                            @endif
-                        </span>
+                <div class="leave-bal mb-2 bg-white rounded ">
+                    <div class="balance d-flex flex-row justify-content-between ">
+                        <div class="field">
+                            <span class="leaveTypeTitle font-weight-500">
+                                @if($gender === 'Female')
+                                Maternity Leave
+                                @elseif($gender === 'Male')
+                                Paternity Leave
+                                @else
+                                Leave Type
+                                @endif
+                            </span>
+                        </div>
+                        <div>
+                            <span class="leave-gran font-weight-500">Granted:
+                                @if($gender === 'Female')
+                                {{$maternityLeaves}}
+                                @elseif($gender === 'Male')
+                                {{$paternityLeaves}}
+                                @else
+                                0
+                                @endif
+                            </span>
+                        </div>
                     </div>
-                    <div>
-                        <span class="leave-gran font-weight-500">Granted:
-                            @if($gender === 'Female')
-                            {{$maternityLeaves}}
-                            @elseif($gender === 'Male')
-                            {{$paternityLeaves}}
-                            @else
-                            0
-                            @endif
-                        </span>
-                    </div>
-                </div>
-                <div class="center text-center" style="margin-top:30px;">
-                    <h5 style="font-size:16px;">  @if($gender === 'Female')
+                    <div class="center text-center" style="margin-top:30px;">
+                        <h5 style="font-size:16px;"> @if($gender === 'Female')
                             {{$maternityLeaves}}
                             @elseif($gender === 'Male')
                             {{$paternityLeaves}}
@@ -339,153 +339,158 @@
                             0
                             @endif
                         </h5>
-                    <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                    @if($gender === 'Female' && $maternityLeaves > 0)
-                    <a href="#" style="font-size:12px;">View Details</a>
-                    @elseif($gender === 'Male' && $paternityLeaves > 0)
-                    <a href="#" style="font-size:12px;">View Details</a>
-                    @endif
+                        <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                        @if($gender === 'Female' && $maternityLeaves > 0)
+                        <a href="#" style="font-size:12px;">View Details</a>
+                        @elseif($gender === 'Male' && $paternityLeaves > 0)
+                        <a href="#" style="font-size:12px;">View Details</a>
+                        @endif
+                    </div>
                 </div>
             </div>
-              </div>
-                <div class="col-md-4 mb-2">
-                    <div class="leave-bal mb-2 bg-white rounded" >
-                        <div class="balance mb-2 d-flex flex-row justify-content-between " >
-                                <div class="field">
-                                    <span class="leaveTypeTitle font-weight-500">Casual Leave
-                                </div>
-                                <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{$casualLeavePerYear}}</span>
-                                </div>
-                         </div>
-                         <div class="center text-center" style="margin-top:30px;" >
-                             <h5 style="font-size:16px;" >{{$casualLeaveBalance}}</h5>
-                             <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                             @if($casualLeavePerYear)
-                             <a href="/casualleavebalance" style="font-size:12px;">View Details</a>
-                             @endif
+            <div class="col-md-4 mb-2">
+                <div class="leave-bal mb-2 bg-white rounded">
+                    <div class="balance mb-2 d-flex flex-row justify-content-between ">
+                        <div class="field">
+                            <span class="leaveTypeTitle font-weight-500">Casual Leave
                         </div>
+                        <div>
+                            <span class="leave-gran font-weight-500">Granted:{{$casualLeavePerYear}}</span>
+                        </div>
+                    </div>
+                    <div class="center text-center" style="margin-top:30px;">
+                        <h5 style="font-size:16px;">{{$casualLeaveBalance}}</h5>
+                        <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                        @if($casualLeavePerYear)
+                        <a href="/casualleavebalance" style="font-size:12px;">View Details</a>
+                        @endif
+                    </div>
+                    <div class="px-3 py-2">
                         <div class="tube-container">
-                                <p style="color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;">
+                            <p style="color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;">
                                 @if($consumedCasualLeaves > 0)
-                                        {{ $consumedCasualLeaves }} of {{ $casualLeavePerYear }} Consumed
-                                    @else
-                                        0 of {{ $casualLeavePerYear }} Consumed
-                                    @endif
+                                {{ $consumedCasualLeaves }} of {{ $casualLeavePerYear }} Consumed
+                                @else
+                                0 of {{ $casualLeavePerYear }} Consumed
+                                @endif
                             </p>
                             <div class="tube" style="width: {{ $percentageCasual }}%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave Probation') }};"></div>
-                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-2">
-                        <div class="leave-bal mb-2 bg-white rounded  ">
-                            <div class="balance d-flex flex-row justify-content-between">
-                                <div class="field">
-                                    <span class="leaveTypeTitle font-weight-500">Sick Leave</span>
-                                </div>
-                                <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
-                                </div>
-                            </div>
-                            <div class="center text-center" style="margin-top:30px;">
-                                <h5 style="font-size:16px;">{{ $sickLeaveBalance }}</h5>
-                                <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                                @if($sickLeavePerYear > 0)
-                                <a href="/sickleavebalance" style="font-size:12px;">View Details</a>
-                                @endif
-                            </div>
-                            <div class="tube-container">
-                                <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
-                                    @if($consumedSickLeaves > 0)
-                                        {{ $consumedSickLeaves }} of {{ $sickLeavePerYear }} Consumed
-                                    @else
-                                        0 of {{ $sickLeavePerYear }} Consumed
-                                    @endif
-                                </p>
-                                <div class="tube" style="width: {{ $percentageSick }}%; background-color: {{ $this->getTubeColor($consumedSickLeaves, $sickLeavePerYear, 'Sick Leave') }};"></div>
-                            </div>
-                        </div>
-                    </div>
-                    @if($differenceInMonths !== null && $differenceInMonths < 6)
-                    <div class="col-md-4 mb-2">
-                        <div class="leave-bal mb-2 bg-white rounded  ">
-                            <div class="balance d-flex flex-row justify-content-between">
-                                <div class="field">
-                                    <span class="leaveTypeTitle font-weight-500">Casual Leave Probation</span>
-                                </div>
-                                <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $casualProbationLeavePerYear }}</span>
-                                </div>
-                            </div>
-                            <div class="center text-center" style="margin-top:30px;">
-                                <h5 style="font-size:16px;">{{ $casualProbationLeaveBalance }}</h5>
-                                <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                                @if($casualProbationLeavePerYear > 0)
-                                <a href="/casualprobationleavebalance" style="font-size:12px;">View Details</a>
-                                @endif
-                            </div>
-                            <div class="tube-container">
-                                <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
-                                    @if($consumedProbationLeaveBalance > 0)
-                                        {{ $consumedProbationLeaveBalance }} of {{ $casualProbationLeavePerYear }} Consumed
-                                    @else
-                                        0 of {{ $casualProbationLeaveBalance }} Consumed
-                                    @endif
-                                </p>
-                                <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                    <div class="col-md-4 mb-2">
-                        <div class="leave-bal mb-2 bg-white rounded  ">
-                            <div class="balance d-flex flex-row justify-content-between">
-                                <div class="field">
-                                    <span class="leaveTypeTitle font-weight-500">Marriage Leave</span>
-                                </div>
-                                <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $marriageLeaves }}</span>
-                                </div>
-                            </div>
-                            <div class="center text-center" style="margin-top:30px;">
-                                <h5 style="font-size:16px;">{{ $marriageLeaves }}</h5>
-                                <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
-                                @if($marriageLeaves > 0)
-                                <a href="#" style="font-size:12px;">View Details</a>
-                                @endif
-                            </div>
-
                 </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <div class="leave-bal mb-2 bg-white rounded  ">
+                    <div class="balance d-flex flex-row justify-content-between">
+                        <div class="field">
+                            <span class="leaveTypeTitle font-weight-500">Sick Leave</span>
+                        </div>
+                        <div>
+                            <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
+                        </div>
+                    </div>
+                    <div class="center text-center" style="margin-top:30px;">
+                        <h5 style="font-size:16px;">{{ $sickLeaveBalance }}</h5>
+                        <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                        @if($sickLeavePerYear > 0)
+                        <a href="/sickleavebalance" style="font-size:12px;">View Details</a>
+                        @endif
+                    </div>
+                    <div class="px-3 py-2">
+                    <div class="tube-container">
+                        <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
+                            @if($consumedSickLeaves > 0)
+                            {{ $consumedSickLeaves }} of {{ $sickLeavePerYear }} Consumed
+                            @else
+                            0 of {{ $sickLeavePerYear }} Consumed
+                            @endif
+                        </p>
+                        <div class="tube" style="width: {{ $percentageSick }}%; background-color: {{ $this->getTubeColor($consumedSickLeaves, $sickLeavePerYear, 'Sick Leave') }};"></div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            @if($differenceInMonths !== null && $differenceInMonths < 6) <div class="col-md-4 mb-2">
+                <div class="leave-bal mb-2 bg-white rounded  ">
+                    <div class="balance d-flex flex-row justify-content-between">
+                        <div class="field">
+                            <span class="leaveTypeTitle font-weight-500">Casual Leave Probation</span>
+                        </div>
+                        <div>
+                            <span class="leave-gran font-weight-500">Granted:{{ $casualProbationLeavePerYear }}</span>
+                        </div>
+                    </div>
+                    <div class="center text-center" style="margin-top:30px;">
+                        <h5 style="font-size:16px;">{{ $casualProbationLeaveBalance }}</h5>
+                        <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                        @if($casualProbationLeavePerYear > 0)
+                        <a href="/casualprobationleavebalance" style="font-size:12px;">View Details</a>
+                        @endif
+                    </div>
+                    <div class="px-3 py-2">
+                    <div class="tube-container">
+                        <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
+                            @if($consumedProbationLeaveBalance > 0)
+                            {{ $consumedProbationLeaveBalance }} of {{ $casualProbationLeavePerYear }} Consumed
+                            @else
+                            0 of {{ $casualProbationLeaveBalance }} Consumed
+                            @endif
+                        </p>
+                        <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
+                    </div>
+                    </div>
+                </div>
+        </div>
+        @endif
+        <div class="col-md-4 mb-2">
+            <div class="leave-bal mb-2 bg-white rounded  ">
+                <div class="balance d-flex flex-row justify-content-between">
+                    <div class="field">
+                        <span class="leaveTypeTitle font-weight-500">Marriage Leave</span>
+                    </div>
+                    <div>
+                        <span class="leave-gran font-weight-500">Granted:{{ $marriageLeaves }}</span>
+                    </div>
+                </div>
+                <div class="center text-center" style="margin-top:30px;">
+                    <h5 style="font-size:16px;">{{ $marriageLeaves }}</h5>
+                    <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                    @if($marriageLeaves > 0)
+                    <a href="#" style="font-size:12px;">View Details</a>
+                    @endif
+                </div>
+
             </div>
         </div>
     </div>
 </div>
 </div>
+</div>
 @endif
 
-    @if($selectedYear == (date('Y') + 1))
-    <div class="bal-container" >
-        <div class="row my-3 mx-auto" >
-            <div class="col-md-4 mb-2">
-                <div   class="leave-bal mb-2 bg-white rounded  "  >
-                    <div class="balance d-flex flex-row justify-content-between mb-4" >
-                        <div class="field">
-                            <span class="leaveTypeTitle font-weight-500" >Loss Of Pay</span>
-                        </div>
-                        <div>
-                            <span class="leave-gran font-weight-500">Granted:0</span>
-                        </div>
+@if($selectedYear == (date('Y') + 1))
+<div class="bal-container">
+    <div class="row my-3 mx-auto">
+        <div class="col-md-4 mb-2">
+            <div class="leave-bal mb-2 bg-white rounded  ">
+                <div class="balance d-flex flex-row justify-content-between mb-4">
+                    <div class="field">
+                        <span class="leaveTypeTitle font-weight-500">Loss Of Pay</span>
                     </div>
-                    <div class="center text-center" style="margin-top:30px;" >
-                        <h5 style="font-size:16px;">0 </h5>
-                        <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
+                    <div>
+                        <span class="leave-gran font-weight-500">Granted:0</span>
                     </div>
                 </div>
+                <div class="center text-center" style="margin-top:30px;">
+                    <h5 style="font-size:16px;">0 </h5>
+                    <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                </div>
             </div>
-         <!-- ... (previous code) ... -->
-            <div class="col-md-4 mb-2">
-               <div     class="leave-bal mb-2 bg-white rounded  "  >
-                <div class="balance d-flex flex-row justify-content-between mb-4" >
+        </div>
+        <!-- ... (previous code) ... -->
+        <div class="col-md-4 mb-2">
+            <div class="leave-bal mb-2 bg-white rounded  ">
+                <div class="balance d-flex flex-row justify-content-between mb-4">
                     <div class="field">
                         <span class="leaveTypeTitle font-weight-500">
                             @if($gender === 'Female')
@@ -503,47 +508,47 @@
                 </div>
                 <div class="center text-center" style="margin-top:30px;">
                     <h5 style="font-size:16px;">0</h5>
-                    <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                    <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                 </div>
 
             </div>
-              </div>
-                <div class="col-md-4 mb-2">
-                    <div  class="leave-bal mb-2 bg-white rounded  ">
-                        <div class="balance d-flex flex-row justify-content-between mb-4" >
-                                <div class="field">
-                                    <span class="leaveTypeTitle font-weight-500">Casual Leave 
-                                </div>
-                                <div>
-                                    <span class="leave-gran font-weight-500">Granted:0</span>
-                                </div>
-                         </div>
-                         <div class="center text-center" style="margin-top:30px;" >
-                             <h5 style="font-size:16px;">0</h5>
-                             <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                        </div>
-                           
-                        </div>
+        </div>
+        <div class="col-md-4 mb-2">
+            <div class="leave-bal mb-2 bg-white rounded  ">
+                <div class="balance d-flex flex-row justify-content-between mb-4">
+                    <div class="field">
+                        <span class="leaveTypeTitle font-weight-500">Casual Leave
                     </div>
-                    <div class="col-md-4 mb-2">
-                    <div  class="leave-bal mb-2 bg-white rounded  "   >
-                        <div class="balance d-flex flex-row justify-content-between mb-4" >
-                                <div class="field">
-                                    <span class="leaveTypeTitle font-weight-500">Sick Leave
-                                </div>
-                                <div>
-                                    <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
-                                </div>
-                         </div>
-                            <div class="center text-center" style="margin-top:30px;" >
-                                <h5 style="font-size:16px;">0</h5>
-                                <p  class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining" >Balance</span></p>
-                            </div>
-                            
-                        </div>
+                    <div>
+                        <span class="leave-gran font-weight-500">Granted:0</span>
                     </div>
                 </div>
+                <div class="center text-center" style="margin-top:30px;">
+                    <h5 style="font-size:16px;">0</h5>
+                    <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                </div>
+
             </div>
+        </div>
+        <div class="col-md-4 mb-2">
+            <div class="leave-bal mb-2 bg-white rounded  ">
+                <div class="balance d-flex flex-row justify-content-between mb-4">
+                    <div class="field">
+                        <span class="leaveTypeTitle font-weight-500">Sick Leave
+                    </div>
+                    <div>
+                        <span class="leave-gran font-weight-500">Granted:{{ $sickLeavePerYear }}</span>
+                    </div>
+                </div>
+                <div class="center text-center" style="margin-top:30px;">
+                    <h5 style="font-size:16px;">0</h5>
+                    <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
 @endif
