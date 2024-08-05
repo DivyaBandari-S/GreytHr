@@ -340,6 +340,7 @@ nav .profile .profile-link a {
 	grid-gap: 10px;
 	font-size: 0.8rem;
 	color: var(--dark);
+	text-decoration: none;
 	align-items: center;
 	transition: all .3s ease;
 }

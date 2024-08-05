@@ -201,7 +201,7 @@ if (isset($__slots)) unset($__slots);
         <nav>
             <i class='fas fa-bars toggle-sidebar'></i>
             <form action="#">
-                <div class="form-group">
+                <div class="form-group mb-0">
                     <input type="text" placeholder="Search...">
                     <i class='fa fa-search icon'></i>
                 </div>
