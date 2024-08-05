@@ -248,26 +248,8 @@ if (isset($__slots)) unset($__slots);
                 <ul class="profile-link">
                     <li><a href="/ProfileInfo"><i class='fas fa-user-circle icon'></i> Profile</a></li>
                     <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
-                    <li><a href="#"  style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
+                    <li><a href="#" wire:click='handleLogout' style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
                 </ul>
-            </div>
-            <div style="cursor: pointer;">
-              <?php
-$__split = function ($name, $params = []) {
-    return [$name, $params];
-};
-[$__name, $__params] = $__split('log-out');
-
-$__html = app('livewire')->mount($__name, $__params, 'lw-2523274130-7', $__slots ?? [], get_defined_vars());
-
-echo $__html;
-
-unset($__html);
-unset($__name);
-unset($__params);
-unset($__split);
-if (isset($__slots)) unset($__slots);
-?>
             </div>
         </nav>
         <!-- NAVBAR -->
@@ -277,5 +259,33 @@ if (isset($__slots)) unset($__slots);
         <!-- MAIN -->
     </section>
 
+    <div>
+    <!-- Logout Modal -->
+    <!--[if BLOCK]><![endif]--><?php if( $showLogoutModal == true): ?>
+    <div class="modal" id="logoutModal" tabindex="-1" style="display: block;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-white" style=" background-color: rgb(2, 17, 79);">
+                    <h6 class="modal-title " id="logoutModalLabel" style="align-items: center;">Confirm Logout</h6>
+                </div>
+                <div class="modal-body text-center" style="font-size: 16px;">
+                    Are you sure you want to logout?
+                </div>
+                <div class="d-flex justify-content-center p-3" style="gap: 10px;">
+                    <button type="button" class="submit-btn mr-3" wire:click="confirmLogout">Logout</button>
+                    <button type="button" class="cancel-btn1" wire:click="cancelLogout">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+
+
+
+
+</div>
+
     <!-- NAVBAR -->
-</div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/main-layout.blade.php ENDPATH**/ ?>
+</div>
+<?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/main-layout.blade.php ENDPATH**/ ?>
