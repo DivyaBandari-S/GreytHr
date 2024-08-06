@@ -222,6 +222,7 @@ class Catalog extends Component
     {
         $this->DistributionRequestaceessDialog = true;
     }
+
     public function closeItRequestaccess()
     {
         $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
@@ -419,17 +420,17 @@ class Catalog extends Component
 
         $messages=[
             'subject.required' => 'Business Justification is required',
-            'distributor_name.required' => 'Distributor name is required',
+        
             'description' => 'Specific Information is required',
             'mail.required' => ' Email  is required.',
             'mail.email' => ' Email must be a valid email address.',
-            'mobile' =>'Mobile number is required'
+           
         ];
         $this->validate([
             'subject' => 'required|string|max:255',
             'mail' => 'required|email|unique:help_desks',
             'description' => 'required|string',
-            'mobile' => 'required|string|max:15',
+          
         ],$messages);
       
         try {
@@ -457,6 +458,7 @@ class Catalog extends Component
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
             ]);
+     
 
             session()->flash('message', 'Request created successfully.');
             $this->reset();
@@ -471,16 +473,16 @@ class Catalog extends Component
     {
         $messages = [
             'subject.required' => 'Business Justification is required',
-            'distributor_name.required' => 'Distributor name required',
+            'distributor_name' => 'Distributor name is required',
             'description' => 'Specific Information is required',
-            'mobile' =>'Mobile number is required'
+           
         ];
 
         $this->validate([
             'distributor_name' => 'required|string',
             'subject' => 'required|string|max:255',
             'description' => 'required|string',
-            'mobile' => 'required|string|max:15',
+          
         ],$messages);
         try {
 
@@ -522,17 +524,18 @@ class Catalog extends Component
     {
         // Validate the input data
         $messages=[
-           
+           'subject' =>'Business Justification is required',
+           'description'=>'Specific Information is required',
              'selected_equipment'=>'Selected equipment is required'
         ];
         $this->validate([
-            'subject' => 'required|string|max:255',
+            'subject' => 'required|string',
             'description' => 'required|string',
             'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
         ],$messages);
 
         try {
-        
+     
             // Handle file upload
             if ($this->image) {
                 $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
@@ -547,21 +550,28 @@ class Catalog extends Component
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
             // Create the HelpDesk request
+
+         
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'subject' => $this->subject,
                 'description' => $this->description,
                 'file_path' => $filePath,
                 'cc_to' => $this->cc_to ?? '-',
-                'selected_equipment' => $this->selected_equipment,
-                'category' => $this->category ,
+               
+                'category' => $this->category ?? '-',
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
             ]);
 
-            // Flash success message
+            // Log after successful creation
+            Log::info('HelpDesk request created successfully.');
+
             session()->flash('message', 'Request for IT Accessories created successfully.');
+
+          
+          
          
             // Reset the form fields
             $this->reset();
@@ -591,7 +601,7 @@ class Catalog extends Component
         $this->resetValidation(); // Reset validation state
         $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeopleNames','image','selectedPeople', 
         'selectedPeople' ,]);
-        $this->DistributionRequestaceessDialog = false;
+      
         $this->showModal = false;
 
  

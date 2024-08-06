@@ -15,5 +15,10 @@ class HelpDesks extends Model
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
     }
+    public function request()
+    {
+        return $this->belongsTo(Request::class, 'emp_id');// Update the foreign key as necessary
+    }
+
 }
     
