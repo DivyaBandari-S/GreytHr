@@ -51,7 +51,7 @@
                                             <div class="row">
                                                 @foreach ($images as $image)
                                                     <div class="col-md-2 mb-4">
-                                                        <img src="data:image;base64,{{ base64_encode($image->image) }}" width="100" height="100">
+                                                        <img src="data:image;base64,{{ base64_encode($image->image) }}" width="100" height="50">
                                                         {{-- <img src="{{ asset('uploads/image_uploads') }}/{{ $image->image }}" class="img-fluid" alt="Image Path is Missing..."> --}}
                                                         {{-- <img src="{{ asset('/public/uploads/image_uploads/' . $image->image) }}" class="img-fluid" alt="Image Path is Missing...">  --}}
 
