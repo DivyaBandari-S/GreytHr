@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
@@ -317,9 +318,9 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     // Route::get('/chat',Index::class)->name('chat.index');
-    Route::get('/chat/{query}',Chat::class)->name('chat');
-    Route::get('/users',EmployeeList::class)->name('employee');
-    Route::get('/image',ImageUpload::class)->name('image');
+    Route::get('/chat/{query}', Chat::class)->name('chat');
+    Route::get('/users', EmployeeList::class)->name('employee');
+    Route::get('/image', ImageUpload::class)->name('image');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 

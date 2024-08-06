@@ -22,50 +22,31 @@ class ImageUpload extends Component
     }
 
 
-    public function updated($fields)
-    {
-        $this->validateOnly($fields,[
-            'image' => 'required',
-        ]);
-    }
-
     public function uploadImage()
     {
         $this->validate([
-            'image' => 'required',
+            'image' => 'required|image|max:512', // maximum size in kilobytes
         ]);
 
+        $imageData = file_get_contents($this->image->getRealPath());
+        $mimeType = $this->image->getMimeType();
 
-        $image = new Image();
-
-
-        $imageName = Carbon::now()->timestamp. '.' .$this->image->extension();
-        $this->image->storeAs('image_uploads', $imageName);
-
-        $image->image = $imageName;
-
-
-        $image->save();
-
+        Image::create([
+            'image' => $imageData,
+            'mime_type' => $mimeType,
+        ]);
 
         session()->flash('message', 'Image has been uploaded successfully');
 
-
-        $this->image = '';
-
-
+        $this->image = ''; // Reset the image input
     }
-
-
 
     public function render()
     {
-        //Get Uploaded Images
+        // Get Uploaded Images
+        $images = Image::orderBy('id', 'DESC')->get();
 
-
-        $images = Image::orderBy('id','DESC')->get();
-
-
-        return view('livewire.image-upload',['images'=>$images]);
+        return view('livewire.image-upload', ['images' => $images]);
     }
+
 }

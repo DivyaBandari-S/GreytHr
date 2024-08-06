@@ -7,10 +7,17 @@
         </button>
     </div>
     @endif
+    <!-- Assuming you are using Blade templates in Laravel -->
+    @if (session('popupMessage') || $showPopupMessage)
+        <div class="error-message">
+            {{ session('popupMessage') }}
+        </div>
+    @endif
+
     <div class="applyContainer bg-white">
         @if($showinfoMessage)
-        <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
-            <p class="mb-0" style="font-size:10px;">Leave is earned by an employee and granted by the employer to take time off work. The employee is free to<br>
+        <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex gap-2 align-items-center">
+            <p class="mb-0" style="font-size:10px;">Leave is earned by an employee and granted by the employer to take time off work. The employee is free to
                 avail this leave in accordance with the company policy.</p>
             <p class="mb-0 hideInfo" wire:click="toggleInfo">Hide</p>
         </div>
@@ -50,7 +57,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <div class="pay-bal">
-                            <label >Balance :</label>
+                            <label>Balance :</label>
                             @if(!empty($leaveBalances))
                             <div class="d-flex align-items-center justify-content-center" style="cursor:pointer;">
                                 @if($leave_type == 'Sick Leave')
@@ -61,7 +68,7 @@
                                 <span class="sickLeaveBalance" title="Casual Leave">{{ $leaveBalances['casualLeaveBalance'] }}</span>
                                 @elseif($leave_type == 'Casual Leave Probation')
                                 <!-- Casual Leave Probation -->
-                                <span class="sickLeaveBalance" >{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance">{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
                                 @elseif($leave_type == 'Loss of Pay')
                                 <!-- Loss of Pay -->
                                 <span class="sickLeaveBalance">{{ $leaveBalances['lossOfPayBalance'] }}</span>
@@ -179,16 +186,16 @@
             <div class="row d-flex mt-2">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="fromDate" >From Date <span class="requiredMark">*</span> </label>
-                        <input type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate"  wire:change="handleFieldUpdate('from_date')">
+                        <label for="fromDate">From Date <span class="requiredMark">*</span> </label>
+                        <input type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate" wire:change="handleFieldUpdate('from_date')">
                         @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group ">
-                        <label for="session" >Session</label> <br>
+                        <label for="session">Session</label> <br>
                         <div class="custom-select-wrapper">
-                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="session"  wire:change="handleFieldUpdate('from_session')">
+                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="session" wire:change="handleFieldUpdate('from_session')">
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
@@ -200,14 +207,14 @@
             <div class=" row d-flex mt-3">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="toDate" >To Date <span class="requiredMark">*</span> </label>
+                        <label for="toDate">To Date <span class="requiredMark">*</span> </label>
                         <input type="date" wire:model.lazy="to_date" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('to_date')" name="toDate" wire:change="handleFieldUpdate('to_date')">
                         @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group ">
-                        <label for="session" >Session</label> <br>
+                        <label for="session">Session</label> <br>
                         <div class="custom-select-wrapper">
                             <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="session" wire:change="handleFieldUpdate('to_session')">
                                 <option value="Session 1">Session 1</option>
@@ -221,9 +228,9 @@
 
             <div>
                 @if($showApplyingTo)
-                <div class="form-group mt-3" >
+                <div class="form-group mt-3">
                     <div class="d-flex " wire:click="applyingTo">
-                        <label for="applyingToText" id="applyingToText" name="applyingTo" style="cursor: pointer;" >
+                        <label for="applyingToText" id="applyingToText" name="applyingTo" style="cursor: pointer;">
                             <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
                             Applying To
                         </label>
@@ -257,7 +264,7 @@
                         @endif
 
                         @if(!$loginEmpManagerId)
-                        <p class="mb-0 normalTextValue" >#(N/A)</p>
+                        <p class="mb-0 normalTextValue">#(N/A)</p>
                         @else
                         <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#{{$loginEmpManagerId}}</span></p>
                         @endif
@@ -272,9 +279,9 @@
                 @if($showApplyingToContainer)
                 <div class="searchContainer">
                     <!-- Content for the search container -->
-                    <div class="row mb-2 py-0 " >
-                        <div class="row m-0 p-0 d-flex align-items-center justify-content-between" >
-                            <div class="col-md-10" >
+                    <div class="row mb-2 py-0 ">
+                        <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
+                            <div class="col-md-10">
                                 <div class="input-group">
                                     <input wire:model="filter" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
@@ -323,7 +330,7 @@
                 @error('applying_to') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group mt-3">
-                <label for="ccToText" id="applyingToText" name="applyingTo" >
+                <label for="ccToText" id="applyingToText" name="applyingTo">
                     CC To
                 </label>
                 <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
@@ -370,7 +377,7 @@
                         </div>
                     </div>
                     <div class="scrollApplyingTO mb-2 mt-2">
-                    @if(!empty($ccRecipients))
+                        @if(!empty($ccRecipients))
                         @foreach($ccRecipients as $employee)
                         <div wire:key="{{ $employee['emp_id'] }}">
                             <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
@@ -398,32 +405,32 @@
                             No data found
                         </div>
                         @endif
-                        </div>
                     </div>
-                    @endif
-                    @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
+                @endif
+                @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
+            </div>
 
 
-                <div class="form-group mt-3">
-                    <label for="contactDetails" >Contact Details <span class="requiredMark">*</span> </label>
-                    <input type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="width:50%;">
-                    @error('contact_details') <span class="text-danger">{{ $message }}</span> @enderror
-                </div>
-                <div class="form-group mt-3">
-                    <label for="reason" >Reason <span class="requiredMark">*</span> </label>
-                    <textarea class="form-control placeholder-small" wire:model.lazy="reason" wire:keydown.debounce.500ms="validateField('reason')" name="reason" placeholder="Enter a reason" rows="4" ></textarea>
-                    @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
-                </div>
-                <div class="form-group mt-3">
-                    <input type="file" wire:model="files" wire:loading.attr="disabled" style="font-size: 12px;"  multiple />
-                    @error('file_paths') <span class="text-danger">{{ $message }}</span> @enderror
-                </div>
+            <div class="form-group mt-3">
+                <label for="contactDetails">Contact Details <span class="requiredMark">*</span> </label>
+                <input type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="width:50%;">
+                @error('contact_details') <span class="text-danger">{{ $message }}</span> @enderror
+            </div>
+            <div class="form-group mt-3">
+                <label for="reason">Reason <span class="requiredMark">*</span> </label>
+                <textarea class="form-control placeholder-small" wire:model.lazy="reason" wire:keydown.debounce.500ms="validateField('reason')" name="reason" placeholder="Enter a reason" rows="4"></textarea>
+                @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
+            </div>
+            <div class="form-group mt-3">
+                <input type="file" wire:model="files" wire:loading.attr="disabled" style="font-size: 12px;" multiple />
+                @error('file_paths') <span class="text-danger">{{ $message }}</span> @enderror
+            </div>
 
-                <div class="buttons-leave">
-                    <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
-                    <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
-                </div>
+            <div class="buttons-leave">
+                <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
+                <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
+            </div>
         </form>
     </div>
 </div>

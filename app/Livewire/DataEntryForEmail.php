@@ -7,6 +7,7 @@ use App\Models\SentEmail;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class DataEntryForEmail extends Component
@@ -66,13 +67,12 @@ class DataEntryForEmail extends Component
         ]);
 
         // Store data in SentEmail table with the scheduled time
-        SentEmail::create([
+  SentEmail::create([
             'to_email' => $this->to_email,
             'cc_email' => $this->cc_email,
             'subject' => $this->subject,
             'scheduled_time' => $this->scheduled_time,
         ]);
-
         // Clear form fields after storing
         $this->to_email = '';
         $this->cc_email = '';
@@ -81,7 +81,6 @@ class DataEntryForEmail extends Component
 
         // Emit a message or perform any other action upon success
         session()->flash('message', 'Email scheduled successfully.');
-
         return redirect()->to(url()->previous());
     }
 
