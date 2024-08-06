@@ -9,9 +9,9 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4 pl-4 pr-4 text-center">
-                                @if (session()->has('message'))
-                                    <div class="alert alert-success text-center">{{ session('message') }}</div>
-                                @endif
+                                <!--[if BLOCK]><![endif]--><?php if(session()->has('message')): ?>
+                                    <div class="alert alert-success text-center"><?php echo e(session('message')); ?></div>
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 <form wire:submit.prevent="uploadImage">
                                     <div class="form-group">
                                         <label for="image" class="font-weight-bold">Select Image</label>
@@ -21,20 +21,27 @@
                                             </div>
                                         </div>
 
-                                        @error('image')
-                                            <span class="text-danger" style="font-size: 11.5px;">{{ $message }}</span>
-                                        @enderror
+                                        <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['image'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <span class="text-danger" style="font-size: 11.5px;"><?php echo e($message); ?></span>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
 
                                         <div wire:loading wire:target="image" wire:key="image"><i class="fa fa-spinner fa-spin mt-2 ml-2"></i> Uploading</div>
 
 
-                                        {{-- ImagePreview --}}
+                                        
 
 
-                                        @if ($image)
-                                            <img src="{{ $image->temporaryUrl() }}" width="100" alt="" class="mt-2">
-                                        @endif
+                                        <!--[if BLOCK]><![endif]--><?php if($image): ?>
+                                            <img src="<?php echo e($image->temporaryUrl()); ?>" width="100" alt="" class="mt-2">
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
 
 
@@ -47,24 +54,24 @@
                                 <div class="card" style="height: 58vh;">
                                     <div class="card-header">All Images</div>
                                     <div class="card-body">
-                                        @if ($images->count() > 0)
+                                        <!--[if BLOCK]><![endif]--><?php if($images->count() > 0): ?>
                                             <div class="row">
-                                                @foreach ($images as $image)
+                                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <div class="col-md-2 mb-4">
-                                                        <img src="data:image;base64,{{ base64_encode($image->image) }}" width="100" height="100">
-                                                        {{-- <img src="{{ asset('uploads/image_uploads') }}/{{ $image->image }}" class="img-fluid" alt="Image Path is Missing..."> --}}
-                                                        {{-- <img src="{{ asset('/public/uploads/image_uploads/' . $image->image) }}" class="img-fluid" alt="Image Path is Missing...">  --}}
+                                                        <img src="data:image;base64,<?php echo e(base64_encode($image->image)); ?>" width="100" height="100">
+                                                        
+                                                        
 
                                                     </div>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                                             </div>
-                                        @else
+                                        <?php else: ?>
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
                                                     No Image Found
                                                 </div>
                                             </div>
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
                                 </div>
                             </div>
@@ -75,3 +82,4 @@
         </div>
     </div>
 </div>
+<?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/image-upload.blade.php ENDPATH**/ ?>
