@@ -31,7 +31,7 @@
         }
 
         .task-date-range-picker {
-            width: 230px;
+            width: 240px;
             margin-left: -20px;
         }
 
@@ -43,7 +43,7 @@
     </style>
 
     <div class="container"
-        style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow-x: hidden;">
+        style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow-x: hidden;padding-bottom: 15px;">
 
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
             <ul class="nav custom-nav-tabs border">
@@ -143,7 +143,8 @@
                     </div>
                 </form>
             </div>
-            <div class="card-body" style="background-color:white;width:100%;border-radius:5px;max-height:400px;">
+            <div class="card-body"
+                style="background-color:white;width:100%;border-radius:5px;max-height:400px;overflow-y:auto;overflow-x:hidden;margin-top: 10px;">
 
                 <div class="table-responsive">
                     <table style="width: 100%; border-collapse: collapse;">
@@ -169,7 +170,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody style="overflow-y:auto;overflow-x:hidden;">
+                        <tbody>
                             @if ($searchData->isEmpty())
                                 <tr>
                                     <td colspan="8" style="text-align: center;">
@@ -322,7 +323,8 @@
 
                 </form>
             </div>
-            <div class="card-body" style="background-color:white;width:100%;border-radius:5px;max-height:300px;">
+            <div class="card-body"
+                style="background-color:white;width:100%;border-radius:5px;max-height:300px;overflow-y:auto;overflow-x:hidden;margin-top: 10px;">
 
                 <div class="table-responsive">
                     <table style="width: 100%; border-collapse: collapse;">
@@ -349,7 +351,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody style="overflow-y:auto;overflow-x:hidden;">
+                        <tbody>
                             @if ($searchData->isEmpty())
                                 <tr>
                                     <td colspan="9" style="text-align: center;">
@@ -488,12 +490,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                     <div class="modal-content">
-                        <div class="modal-header"
+                        <div class="modal-header d-flex justify-content-between"
                             style="background-color: rgb(2, 17, 79); color: white; height: 40px; padding: 8px;">
                             <h5 class="modal-title" style="font-size: 15px; margin: 0;"><b>Add Task</b></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                                 wire:click="close"
-                                style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">
+                                style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -501,22 +503,23 @@
                         <div class="modal-body">
                             <div class="task-container">
                                 <!-- Task Name -->
-                                <div class="form-group">
-                                    <label for="task_name" style="font-size: 13px;color:#778899;">Task Name*</label>
-                                    <br>
+                                <div class="form-group" style="margin-bottom: 10px;">
+                                    <label for="task_name" style="font-size: 13px; color: #778899;">Task Name*</label>
                                     <input type="text" wire:model.debounce.0ms="task_name"
                                         wire:input="autoValidate" class="placeholder-small"
                                         placeholder="Enter task name"
-                                        style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;">
+                                        style="width: 100%; font-size: 0.75rem; padding: 5px; outline: none; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;">
                                     @error('task_name')
                                         <span class="text-danger">Task name is required</span>
                                     @enderror
                                 </div>
 
+
                                 <!-- Assignee -->
                                 <div wire:click="forAssignee" class="form-group"
-                                    style="color:grey;font-size:0.75rem;cursor:pointer">
-                                    <label for="assignee" style="font-size: 13px;color:#778899">Assignee*</label>
+                                    style="color:grey;font-size:0.75rem;cursor:pointer; margin-bottom: 10px;">
+                                    <label for="assignee"
+                                        style="font-size: 13px;color:#778899; margin-bottom: 10px;">Assignee*</label>
                                     <br>
                                     <i wire:change="autoValidate" class="fa fa-user icon" id="profile-icon"></i>
                                     @if ($showRecipients)
@@ -532,25 +535,25 @@
                                 @if ($assigneeList)
                                     <div
                                         style="border-radius:5px;background-color:grey;padding:8px;width:350px;max-height:250px;overflow-y:auto; ">
-                                        <div class="input-group" style="margin-bottom: 10px;">
-                                            <input wire:input="filter" wire:model.debounce.0ms="searchTerm"
-                                                style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;"
-                                                type="text" class="form-control"
-                                                placeholder="Search employee name / Id" aria-label="Search"
-                                                aria-describedby="basic-addon1">
-                                            <div class="input-group-append">
-                                                <button wire:change="autoValidate" wire:click="filter"
-                                                    style="height: 30px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;"
-                                                    class="btn" type="button">
-                                                    <i style="text-align: center;" class="fa fa-search"></i>
-                                                </button>
-                                                <button wire:change="autoValidate" wire:click="closeAssignee"
-                                                    type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true"
-                                                        style="color: white; font-size: 24px;margin-left:2px">×</span>
-                                                </button>
-
+                                        <div class="input-group d-flex" style="margin-bottom: 10px;">
+                                            <div class="input-group people-input-group-container"
+                                                style="width: 300px;padding-left: 10px;">
+                                                <input wire:input="filter" wire:model.debounce.0ms="searchTerm"
+                                                    type="text" class="form-control people-search-input"
+                                                    placeholder="Search employee name / Id" aria-label="Search"
+                                                    aria-describedby="basic-addon1">
+                                                <div class="input-group-append">
+                                                    <button wire:change="autoValidate" wire:click="filter"
+                                                        class="people-search-btn" type="button">
+                                                        <i class="fa fa-search people-search-icon"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div wire:change="autoValidate" wire:click="closeAssignee"
+                                                aria-label="Close">
+                                                <i class="fa fa-times"
+                                                    style="font-size: 20px;margin-top: 5px;color: #fff; cursor: pointer;"
+                                                    aria-hidden="true"></i>
                                             </div>
                                         </div>
                                         @if ($peopleData->isEmpty())
@@ -573,7 +576,7 @@
                                                                     value="{{ $people->emp_id }}">
                                                             </div>
                                                             <div class="col-auto">
-                                                                <img class="profile-image"
+                                                                <img class="profile-image" style="margin-left: 10px;"
                                                                     src="{{ !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL)
                                                                         ? $people->image
                                                                         : (!empty($people->image)
@@ -696,7 +699,7 @@
                                         required</span>
                                 @enderror
                                 <!-- Due Date -->
-                                <div class="row" style="margin-top: 10px;">
+                                <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
                                     <div class="col">
                                         <div class="form-group">
                                             <label class="form-label"
@@ -718,10 +721,10 @@
                                         <div class="form-group">
                                             <label for="tags"
                                                 style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Tags</label>
-                                            <br>
+
                                             <input wire:change="autoValidate" type="text" wire:model="tags"
                                                 placeholder="Enter tags" class="placeholder-small"
-                                                style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;">
+                                                style="width: 100%;font-size:0.75rem;padding:6px;outline:none;border:1px solid #ccc;border-radius:5px;margin-top: 5px;">
                                         </div>
                                     </div>
                                 </div>
@@ -731,7 +734,8 @@
                                     <label for="assignee"
                                         style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Followers</label>
                                     <br>
-                                    <i wire:change="autoValidate" class="fas fa-user icon" id="profile-icon"></i>
+                                    <i wire:change="autoValidate" style="margin-top: 10px; cursor: pointer" class="fas fa-user icon"
+                                        id="profile-icon"></i>
                                     @if ($showFollowers)
                                         <strong style="font-size: 12;">Selected Followers:
                                         </strong>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}
@@ -739,36 +743,34 @@
                                         <a class="hover-link" style="color:black;cursor:pointer"> Add Followers</a>
                                     @endif
                                 </div>
-
-
                                 @if ($followersList)
                                     <div
-                                        style="border-radius:5px;background-color:grey;padding:8px;width:350px;max-height:250px;overflow-y:auto;">
-                                        <div class="input-group" style="margin-bottom: 10px;">
-                                            <input wire:input="filter" wire:model.debounce.0ms="searchTerm"
-                                                style="font-size: 10px;cursor: pointer; border-radius: 5px 0 0 5px;"
-                                                type="text" class="form-control"
-                                                placeholder="Search employee name / Id" aria-label="Search"
-                                                aria-describedby="basic-addon1">
-                                            <div class="input-group-append">
-                                                <button wire:change="autoValidate" wire:click="filter"
-                                                    style="height: 30px; border-radius: 0 5px 5px 0; background-color: #007BFF; color: #fff; border: none;"
-                                                    class="btn" type="button">
-                                                    <i style="text-align: center;" class="fa fa-search"></i>
-                                                </button>
-                                                <button wire:change="autoValidate" wire:click="closeFollowers"
-                                                    type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true"
-                                                        style="color: white; font-size: 24px;margin-left:2px">×</span>
-                                                </button>
+                                        style="border-radius:5px;background-color:grey;padding:8px;width:350px;max-height:250px;overflow-y:auto; ">
+                                        <div class="input-group d-flex" style="margin-bottom: 10px;">
+                                            <div class="input-group people-input-group-container"
+                                                style="width: 300px;padding-left: 10px;">
+                                                <input wire:input="filter" wire:model.debounce.0ms="searchTerm"
+                                                    type="text" class="form-control people-search-input"
+                                                    placeholder="Search employee name / Id" aria-label="Search"
+                                                    aria-describedby="basic-addon1">
+                                                <div class="input-group-append">
+                                                    <button wire:change="autoValidate" wire:click="filter"
+                                                        class="people-search-btn" type="button">
+                                                        <i class="fa fa-search people-search-icon"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div wire:change="autoValidate" wire:click="closeFollowers"
+                                                aria-label="Close">
+                                                <i class="fa fa-times"
+                                                    style="font-size: 20px;margin-top: 5px;color: #fff; cursor: pointer;"
+                                                    aria-hidden="true"></i>
                                             </div>
                                         </div>
                                         @if ($peopleData->isEmpty())
                                             <div class="container"
-                                                style="text-align: center; color: white;font-size:0.75rem">
-                                                No
-                                                People Found
+                                                style="text-align: center; color: white; font-size: 0.75rem;">No People
+                                                Found
                                             </div>
                                         @else
                                             @foreach ($peopleData as $people)
@@ -807,25 +809,28 @@
                                                     </div>
                                                 </div>
                                             @endforeach
+
                                         @endif
                                     </div>
                                 @endif
+
+
                                 <div class="form-group">
                                     <label for="Subject"
-                                        style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Subject</label>
+                                        style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 10px; padding: 0 10px 0 0;">Subject</label>
                                     <br>
                                     <input wire:change="autoValidate" wire:model="subject" class="placeholder-small"
                                         placeholder="Enter subject" rows="4"
-                                        style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"></input>
+                                        style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;margin-top: 5px;"></input>
                                 </div>
                                 <!-- Description -->
                                 <div class="form-group">
                                     <label for="description"
-                                        style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Description</label>
+                                        style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 10px; padding: 0 10px 0 0;">Description</label>
                                     <br>
                                     <textarea wire:change="autoValidate" wire:model="description" class="placeholder-small"
                                         placeholder="Add description" rows="4"
-                                        style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"></textarea>
+                                        style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;margin-top: 5px;"></textarea>
                                 </div>
 
                                 <!-- File Input -->
