@@ -122,7 +122,7 @@
                     <div class="form-group" >
                         <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
                         <textarea wire:model="description" class="form-control" id="content" rows="2" 
-                            style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-260px;;margin-top:5px"
+                            style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-230px;;margin-top:5px"
                             placeholder="Enter your description here..."></textarea>
                     </div>
 
@@ -213,7 +213,7 @@
                             <div class="input-group">
                                 <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;  " type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
                                 <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="search-btn" type="button">
-                                    <i style="text-align: center;color:white" class="fa fa-search" ></i>
+                                    <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search" ></i>
                                 </button>
                             </div>
                         </div>

@@ -1901,6 +1901,7 @@ td {
     /* Define CSS for the menu items */
     .menu-item {
         transition: background-color 0.3s ease;
+        text-decoration:none;
     }
 
     /* Define CSS for the menu items on hover */
@@ -1909,6 +1910,7 @@ td {
          border-radius: 5px;
         height:auto;
         width: 130%;
+        text-decoration:none;
     }
 
  /* CSS for when radio button is checked */

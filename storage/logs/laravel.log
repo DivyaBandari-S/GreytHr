@@ -939,3 +939,2131 @@ Cookie: jenkins-timestamper-offset=; iconSize=; JSESSIONID_9c19dad7=; remember-m
 
 
 "}} 
+[2024-08-06 16:22:53] production.ERROR: No application encryption key has been specified. {"exception":"[object] (Illuminate\\Encryption\\MissingAppKeyException(code: 0): No application encryption key has been specified. at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php:79)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\helpers.php(307): Illuminate\\Encryption\\EncryptionServiceProvider->Illuminate\\Encryption\\{closure}(NULL)
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(77): tap(NULL, Object(Closure))
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(60): Illuminate\\Encryption\\EncryptionServiceProvider->key(Array)
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(32): Illuminate\\Encryption\\EncryptionServiceProvider->parseKey(Array)
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(908): Illuminate\\Encryption\\EncryptionServiceProvider->Illuminate\\Encryption\\{closure}(Object(Illuminate\\Foundation\\Application), Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build(Object(Closure))
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(961): Illuminate\\Container\\Container->resolve('encrypter', Array, true)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('encrypter', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(946): Illuminate\\Container\\Container->make('encrypter', Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1066): Illuminate\\Foundation\\Application->make('encrypter')
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(982): Illuminate\\Container\\Container->resolveClass(Object(ReflectionParameter))
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(943): Illuminate\\Container\\Container->resolveDependencies(Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('App\\\\Http\\\\Middle...')
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(961): Illuminate\\Container\\Container->resolve('App\\\\Http\\\\Middle...', Array, true)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('App\\\\Http\\\\Middle...', Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(946): Illuminate\\Container\\Container->make('App\\\\Http\\\\Middle...', Array)
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(172): Illuminate\\Foundation\\Application->make('App\\\\Http\\\\Middle...')
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#43 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#45 {main}
+"} 
+[2024-08-06 16:22:53] production.ERROR: No application encryption key has been specified. {"exception":"[object] (Illuminate\\Encryption\\MissingAppKeyException(code: 0): No application encryption key has been specified. at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php:79)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\helpers.php(307): Illuminate\\Encryption\\EncryptionServiceProvider->Illuminate\\Encryption\\{closure}(NULL)
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(77): tap(NULL, Object(Closure))
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(60): Illuminate\\Encryption\\EncryptionServiceProvider->key(Array)
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Encryption\\EncryptionServiceProvider.php(32): Illuminate\\Encryption\\EncryptionServiceProvider->parseKey(Array)
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(908): Illuminate\\Encryption\\EncryptionServiceProvider->Illuminate\\Encryption\\{closure}(Object(Illuminate\\Foundation\\Application), Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build(Object(Closure))
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(961): Illuminate\\Container\\Container->resolve('encrypter', Array, true)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('encrypter', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(946): Illuminate\\Container\\Container->make('encrypter', Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(1066): Illuminate\\Foundation\\Application->make('encrypter')
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(982): Illuminate\\Container\\Container->resolveClass(Object(ReflectionParameter))
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(943): Illuminate\\Container\\Container->resolveDependencies(Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(795): Illuminate\\Container\\Container->build('App\\\\Http\\\\Middle...')
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(961): Illuminate\\Container\\Container->resolve('App\\\\Http\\\\Middle...', Array, true)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(731): Illuminate\\Foundation\\Application->resolve('App\\\\Http\\\\Middle...', Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(946): Illuminate\\Container\\Container->make('App\\\\Http\\\\Middle...', Array)
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(255): Illuminate\\Foundation\\Application->make('App\\\\Http\\\\Middle...')
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(213): Illuminate\\Foundation\\Http\\Kernel->terminateMiddleware(Object(Illuminate\\Http\\Request), Object(Illuminate\\Http\\Response))
+#18 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(55): Illuminate\\Foundation\\Http\\Kernel->terminate(Object(Illuminate\\Http\\Request), Object(Illuminate\\Http\\Response))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#20 {main}
+"} 
+[2024-08-06 16:23:26] local.INFO: Session has timed out  
+[2024-08-06 16:23:54] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:23:55] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkU1Wk1UWEhiYTc5dDEzM0NRVkpVK0E9PSIsInZhbHVlIjoiNE1kT3FscThCZlF0c3JlNEdza2J1M0ZMQ2R6OXJxc1hkSTVXNzdBaHF2MGI5SlF6SHVRcDJwZDhOaHFqWktpcGpOQlpTa3hYeWpvTFFCY2ZWWTJGaGZzbG5BSk81cVB4WFZMV2trZWJFZStMR3Z4a0NtRFhwNk9ONlhkaHpONnIiLCJtYWMiOiJjZWRjZmQ4Zjc1ODA1ZjU1MzAyYTA4ZmUyOTJiYTA1ZjU3N2QwMzk0Y2VlMjA5YWU4NWNhOGQ1NzIyOTVmNDFhIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlhSSm1GYXJLM0lycGplNlF4Qk9hOVE9PSIsInZhbHVlIjoiUHk0SHBqR2xWRmFWanY1ZVZLSnA1bXhxYytrMEMxUndzYTB6QXhLVEJ5R0ZYdDE1bGhOVGpYVXlKT3RWaytCOG9vQ3c5NTNWMlM0a1hSVVo5OVdVNUsyb2JQblVpVG5tYXEzaUwyMGhsb3Nvc3FUeUgzYmZKOU9DTDFQZjF2T2MiLCJtYWMiOiI0MzQ3ZDM5OGVlY2U5ZTczZWE1NmU1M2M4M2M0MWJhNGFlMGVhNjc4MjA3MDczMmYwMDRhYTUwMjI1MzYyODhhIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/emplogin
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:24:00] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:24:00] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkcrZFN0eDZzQTJlMFZLTGFUOWY2dVE9PSIsInZhbHVlIjoiWDdFd3JoaWt0V2syOHRWdE9RWTNHcW9xWHAzakxQMkNWRWF5WFlocnIza2JGNUF6d2RuaFJTcTByQ0EvZGhiVnp0cVlwUUlteXNkTnBjQUJJRFdmK1RnbjJueWhFMEFhY0FMLzhTTjZaREN3M0NRV1JnVEE4cnNrRHFIWXgxbCsiLCJtYWMiOiJkNDVkOGM0MTViZDZmNjdjZGRkYWExYmM4YmMwOTUyMmI0NDRmZGIxYTYyOTU2MDFiMTQ5MTM1YzE4Y2UzNTVjIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImZCNVJUS1NvTnUwL21xaysvanRUNmc9PSIsInZhbHVlIjoiOE5FODNlTW9SZGxOSjl5NjIvSklxcXJWRm80bStnTEo5R0ltSi9IQmxRTnA3RS9pQTFhQnVHeFhtUSsrV1hhZlJ3WlBtdlZuS0d3KzR0cVVRN1lnaHI1VmF3V2VvbFBTa214bytZUEJmYVZQWGlrdU1zZ2NVQThTWVEyaEdwMXAiLCJtYWMiOiIyZDljMGIxOWRlZDVlYzVjNzhjYWQ5MmM3NzhhOWIyNDUwNjJhMWRmZTU4ZWYyYjQ5ODllNWQ2ZmE4MGM3N2RjIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:24:04] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:24:04] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkcrZFN0eDZzQTJlMFZLTGFUOWY2dVE9PSIsInZhbHVlIjoiWDdFd3JoaWt0V2syOHRWdE9RWTNHcW9xWHAzakxQMkNWRWF5WFlocnIza2JGNUF6d2RuaFJTcTByQ0EvZGhiVnp0cVlwUUlteXNkTnBjQUJJRFdmK1RnbjJueWhFMEFhY0FMLzhTTjZaREN3M0NRV1JnVEE4cnNrRHFIWXgxbCsiLCJtYWMiOiJkNDVkOGM0MTViZDZmNjdjZGRkYWExYmM4YmMwOTUyMmI0NDRmZGIxYTYyOTU2MDFiMTQ5MTM1YzE4Y2UzNTVjIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImZCNVJUS1NvTnUwL21xaysvanRUNmc9PSIsInZhbHVlIjoiOE5FODNlTW9SZGxOSjl5NjIvSklxcXJWRm80bStnTEo5R0ltSi9IQmxRTnA3RS9pQTFhQnVHeFhtUSsrV1hhZlJ3WlBtdlZuS0d3KzR0cVVRN1lnaHI1VmF3V2VvbFBTa214bytZUEJmYVZQWGlrdU1zZ2NVQThTWVEyaEdwMXAiLCJtYWMiOiIyZDljMGIxOWRlZDVlYzVjNzhjYWQ5MmM3NzhhOWIyNDUwNjJhMWRmZTU4ZWYyYjQ5ODllNWQ2ZmE4MGM3N2RjIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:24:19] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:24:19] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /slip HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjhnVzJXZTZYcVhKQ2lRbG4yWFkwbHc9PSIsInZhbHVlIjoic3JKR25UTC9GcUNxbExPbVdZdHdrTTdwNjRsNG1GT3JNSjNoTjBmaVZ5NlpUMC9PNXBOS3hOclErL082OHh1djNmaUhnVUFNZ3FNMTJZdm9sVWR4YjU1cjQ5VENhTHcwRXZCWnlLaW5EaGQwY09UdlBPWDR5eUNVM3gyZ0pXV2EiLCJtYWMiOiJiMjVhNzQzOTM5Y2IyYjMwMzlkYjY4ZmI3YTliNzA5MTMwNTI1NWYxNTA0NWNkY2QwOWY5YTllYTg5NzNlMzAxIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Iko1M1Q2NkQvTXlYMjNrNkJsSEp0UWc9PSIsInZhbHVlIjoiVTc5d0RHVjJDREN5WXo5YkFWRGlqcWZVaTFXa1YyZjlqR3dsWk1FR1BOcVkyV2pOUFBlMUNKRFUvRFY3STNpbFVSSmFKdzlaVzlsNkM2Qm54MjFqeW9IWHdmcGlqZ0w4djlTOXd2VWxpZHpaaGphMDVZUnNHK01yVzVXWlppSUgiLCJtYWMiOiIyMzczZDI3Y2E0ZTZjYzY5ODk0MGI4ZTA3OWNhODQ4YjlkM2E2MDZlYmE3YTA4MDg5MDg1NTgzNWNkZGEyNmVhIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:24:41] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:24:41] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImtlZmZ2MEhCTG9ONVBoMEpNc0Fha1E9PSIsInZhbHVlIjoiZjRPalFQL1RocTJneHhSNTJGbjBiS081V2Rwd3dkN2h5eGJFNXE1QVI0cWtrS1NQYVZBSnFCWkJNTVdQVnhPeWtCYkthdHY5RnJ6aHdBMXVZOVB2VFRaSXJ5aXo2a05ybktxQWdqQkxBcWNHVzM1MWdYaUlHYitaWm05Q21DV3MiLCJtYWMiOiI4NTU5NjJmMGU5YTBlZGMwMjdkMzY0NDg2MzExZGI1NTg2ODBlY2FjMTIxMjJiNGZkOTBlZTY0MmM0NjM4ZjJjIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjNCVkpWQlRKRmdJakJFOUZMUnlod3c9PSIsInZhbHVlIjoiNTI2QmwzOGJsNThsbi95dkJFeWo4RWd3K3FYck1HcGJIay9aaWkzd1lIVE00Y251dHduRjB4L0RKU3Rka2NrNEZqOFpScnlKejB0YkZqbWI5OUtzYVBqWGlPY1hSUHFxTnZHdXhibTJDNWRYMXJjd3FtS1Jmb1FrOTFCOWtTd1kiLCJtYWMiOiJmMDBhYTY4MDQ0MGM3OTUwNDk3NDQzM2QwZDUyMDc2M2YxYzAzMTQwMzViZTZlZGViMTBmNzczZDIwMTM4MTJmIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/slip
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:25:36] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:25:36] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImNKRG41RytSd1RsZjlUVjRjNUV4MUE9PSIsInZhbHVlIjoiRW05bDBGbEk5Vm8xOUJvZWcvdURHUGdKZXNhUXB4OG5qYk1YS1AvN1lNZjZ0ZkFNWEtPTlhwNEpKTlVIck9LWURSb0pmRWtPS3RNTVBZemlhY0JXVzNSeGpoc29xSlF5ZTJQRkhqdXNWTHRBN0NYUDVvbU9tRXYyOXhpVm45MzAiLCJtYWMiOiI2ODY3YmU4NDVkYjJmNTI0ZWMwYWRkOGQzYjc3ODI4ZDRlOWU5YWIyODAzMWFjMTI1ZjYyNDliZGNjYzUxZWU4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImNHNmgyb0lrbkZCRUdDRzZFNGpFUFE9PSIsInZhbHVlIjoiV1NpZ0xiN1BYUUVkakRjSlIvNGtjT1BGajFlLzJtb3JtUk15MmxHajdpRnVRdnFKNTJEaHkrQjhHdDJpK2NzaXNEdkRlcWFUOHBOeXVZd0YwUVhCRDVHVndHcm5BQ2VjTmxOVjVaQnBUdEJUNjhEL3ZFNXBaTmZ5dzBIR09uRkIiLCJtYWMiOiIyNmZhYjE4MmJjODVlYTk3OWNkOTIwNWJmYjI4OGQxZjA1N2Y5MWQzNzUzMDQ5MDg4ZGZjMjExZGQ3ZGUyZGRhIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/HelpDesk
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:25:45] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:25:45] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImZYQTFUaHhCYlI3ek8wQWU4YjBVQ0E9PSIsInZhbHVlIjoibmo1UzB0TUhBWmh2MHBxK1FjK3FMZFcrRTgvR1VCcytIMUJQeFU2aXcxSFo3Unh4bjN2YVAzMi9Dd2IwbzFCRmhYQ1J1dUdsM2kyR1ZZcXFvbXlvMzFVZmpBdUQwL1hxL054RWMxVksxSTVCUy9TTnBnaXlQVmtsSUg3TGtNZW4iLCJtYWMiOiIyODg3NzJkMWE1NTYzMWQ4NGRmMDI2NmQ5MWVhMmU3MDcwYzRlODIzYzM1ZTQwZDg5OWZjNzIzOGFhYjY0MDk1IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjhFQk5LR2oyMHlIQWJzZld0eUZ0TlE9PSIsInZhbHVlIjoiV0E5dXhWSjdLS3FyeXFkNk5iNmZteUk0YlkvS2IvSC9kckhZNVBnSUxXa2VjNXIyRnJvNlFNV1Q2TThSc3hjcyt5YUxnOGsvcWFHMklmR1JoTHEwYzhtRi92eWVjNmw0L3lNYUcxUm8xWGlMMVVIOUpaVVphWlpwTkEwOUkrbjciLCJtYWMiOiJiZDZlN2Y4ZDgzMDg1ZTQxYzBkMGYyMTc0ZjZmNzI1ZDVhM2QyMmVmODE5MTlhMDQ1NGFkYTdhZDg2ZTFkMDMyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:25:48] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:25:48] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImZYQTFUaHhCYlI3ek8wQWU4YjBVQ0E9PSIsInZhbHVlIjoibmo1UzB0TUhBWmh2MHBxK1FjK3FMZFcrRTgvR1VCcytIMUJQeFU2aXcxSFo3Unh4bjN2YVAzMi9Dd2IwbzFCRmhYQ1J1dUdsM2kyR1ZZcXFvbXlvMzFVZmpBdUQwL1hxL054RWMxVksxSTVCUy9TTnBnaXlQVmtsSUg3TGtNZW4iLCJtYWMiOiIyODg3NzJkMWE1NTYzMWQ4NGRmMDI2NmQ5MWVhMmU3MDcwYzRlODIzYzM1ZTQwZDg5OWZjNzIzOGFhYjY0MDk1IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjhFQk5LR2oyMHlIQWJzZld0eUZ0TlE9PSIsInZhbHVlIjoiV0E5dXhWSjdLS3FyeXFkNk5iNmZteUk0YlkvS2IvSC9kckhZNVBnSUxXa2VjNXIyRnJvNlFNV1Q2TThSc3hjcyt5YUxnOGsvcWFHMklmR1JoTHEwYzhtRi92eWVjNmw0L3lNYUcxUm8xWGlMMVVIOUpaVVphWlpwTkEwOUkrbjciLCJtYWMiOiJiZDZlN2Y4ZDgzMDg1ZTQxYzBkMGYyMTc0ZjZmNzI1ZDVhM2QyMmVmODE5MTlhMDQ1NGFkYTdhZDg2ZTFkMDMyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:27:17] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:27:17] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IndzY2Q3dWF4K2FUNlJVVE04eFNWOXc9PSIsInZhbHVlIjoiUG9mM3RYZXByd3ZEN0lCY0NKbGRJQ1VqNkRBTEh3U3IzTkRLemFZQVhBVFZrR1lwa0RtYzc2UU8rd1RXQThHQ0JlUDFNbE9QZ2phVkJCbERuNWU2bmpac283T3NBRXA5S1k2RXVhRG44OGozRHpUazJQODdMNWxheDBhQlpUdXgiLCJtYWMiOiIzYzgyYTU0ZmEzOWVlOGE0NTU2ZmFlZDNmYzU2NzIxMWE2NGIwOWZkZWU1ZjgxOWZlODlkNmZlY2NlZjQ1YWE2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IndvWkZQSHhIdW5qL0ozQktFbnIya0E9PSIsInZhbHVlIjoiVTFMQ0Q0ckd3Q3dmWEQyMWlsaE1vK3U1VG95aVlIWGZPOWxxTFJqajQwMVlyUE5Lam1RWmh4WjVDUVJrSW04K2NIYUtNd3hVSXU3ZWFaTzBsbUxiU2czS1ZWciszK2p2YkZsU2ZUaWd1YllyY0pvV2h1T2Y4K2FrSlo1a1Awb2EiLCJtYWMiOiIzYzgxMmRkYzFlNGYwNTdiNGVhMzhmYzg1YjRkNDAxMzllYmZiZDc5ZjMzOTI2NzE0YjFlZTNjY2E5YmUxNGQ2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:27:33] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:27:33] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlpLWFFVWVZpektORUdaWTVxaUJsT3c9PSIsInZhbHVlIjoiR0svN3lGUnVJZEp4OTBwUS9JMnRISFdQb2J6ZjNBMWRUQXZvT0s4S2dGRXJ2a3VFMFF0MEc4UmRScFdHdFA1TlplWi9nNDRoSjVwTmpIbHZORGx6dDBNWWh4Ty82Q3U5M1cwWkhBNHhiWW50dmVDTXJkaHlBZDRYd215YUpIVjYiLCJtYWMiOiJjMDVjZmQ0MzM5NmY1N2RiNTJlMGY5NWJjYjVhNzE3M2NiODZkYWNmMGRkNTZlYmEwNTQ4MDY3ZWQyM2Q4ZWI1IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InVJT1dSUHR2U013NGhTT09Ta3Y4bEE9PSIsInZhbHVlIjoiaXZuWnVYNHNKeUl0Qy9NUTJwelZEa0R6M2h0aFlSa0dsQ1BIdzZ4cVVxczlBcGoycGRMWHBrZEVuM2dCZk5hSUZGRGRRTjBGT1lLTmtldTE2aHFwTWlnUGUrZzZGMm1MRGdjbmorWkZ5Q09OZWlKaEJucCtXSHBKVGdpTU9QWVYiLCJtYWMiOiI0NjY1OTgyNzBiZmRiYTY0NjQ3NzI4MGU5NmJmOTUxNjkzM2U5M2YyOTcwNjRlNTFmOWFjNzYxNmM0Mjg4ZmRiIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:27:38] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:27:38] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Im5FRlVDclhXRCsyazJadmRjUWNuL2c9PSIsInZhbHVlIjoib09kYlozeWpVKys2Qk10Q3h0R2VMSXlVZTlKNmtzV2wwSGNiVXFyR2ZHTlpiTGpPSG01T1RXZk8zTXBlRGtCVWhxeWFpZHY4bjVsRitzRTlBZkZUWWxYcGRIRTFQeXhmcEFDZ21NOEgwa05aUENTVWxGbVNUbjd0V2lZUFM2dDgiLCJtYWMiOiIxNGE5YmNhMTQxZDUzYzRjOTAzMDYyZjY4YzY3NWYwNjQ4ZGJmYTY5MWZkOTc3Yjc4M2VkYTZkODkwNmQwOGQ5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IndtR0RmMjQzY0hrUURFelBJNWZSZ3c9PSIsInZhbHVlIjoiYkY0N2EzSStzS1UzVHBVRUVmL1lXamcyUlFMR29UaW5FaGdMTEVzeHBDUDlvSG5XR0xSZzhwMzJGVVYxZ2paMHpHczYwanNxUFY0dTVVRkFmNHFjVkppVk96MnBLMDR0eW5ISmpGNUhtWlN1dW8xb216WVNnRmlBQUZoaXBRWTgiLCJtYWMiOiIwNWRjZDkzMTJmNWU1MTZjZWZiNjJhODY4ZDcwYWE5NGExOGQ5ZDkyNmQwYjU0ZmJhOTI4YmNjMTc5MmNmYzhjIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:27:59] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:27:59] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InlNYjBFZWx5TDRrOVBRZUY0aDNIRFE9PSIsInZhbHVlIjoiaElmSDA1aUtYY1R2ZGQwbWRZTENVek40UWw4clB2TXFqV3FzVDVGRS9QT3BSeHJ5aEpmT2pWUnZOS3JZVVdVTEc4RXBiSE9MYjJkNW9veXQ2ZHE3dHVGYms4ellQamF2SFFXbHZrQzl2TmZ3aG40QUkxdlN5ZDVwYXk1SmgxUm4iLCJtYWMiOiI1ZjBkYTI2YmEwNzBmZGE2OTViOTRjMjAwNWMwZTNmYWYxYmExZmEzOGVhYjQ5ZWNiODBjZmZlNmJlMWFlOTI5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkhJK1BrRHRYTTFFckdlN0dMeUNqdnc9PSIsInZhbHVlIjoiWVdWTk1qeHJkeGdPMUJpTHdab2Q4V1VpVzlLaTg4V3RrblYvTHpSQVFsd3NJeEZ1K3lHZzRSbThpeEIrOXcxRGRvbzl5ODZNZzlOeGdvdWd4VXpDOUxEUEF4aTlYQ3lLWDJRRWtURndLQ2dFS0J3SmZXdWkvRnhacVE4bFZjaWgiLCJtYWMiOiJmNDdmZWQwZjQzYTUwMjZkM2I1YWJiNGJlZmFiNTg0Y2Q0ZWUyYTEyNjViYWFjZTRlMjVjMjJkZTAyY2RkOTdkIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:28:29] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:28:29] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImdxT2MwVldXYnZnYkdsYTJPSzlQdFE9PSIsInZhbHVlIjoiSjJnSkkwWnA4VWYxaGN0UnlReVc0L3ppS01jcnY2dFJPb1kzbFdOU3NmUzVESUJLRjg4UUMxM3J6ZVp3d3BiWGJGMjVDdklrZ0FVOTU4TTBiS3NzTGxFYnpFQjNmMUdHU0l1YUIyU2JRUWltLzdBTUdGclFmdFVCWTF5TVRiYUIiLCJtYWMiOiJiMWZmZWIwMzgwZmIwNjcyNzUxN2JiNDgxYTAxYzYwNjcwODc5NThlMzhlZTkwMTllOGUzOTBmNDBmNGFkMDY4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjNrbkFjT05MYTBXWSswamN6RWYvelE9PSIsInZhbHVlIjoiQk5XakY1M3JXa1hLVU4zb0NjdHJZcjFXYjEwMUt1V0ticlYrWHJwUDUwZStERER4bi9xYmdpZWZJOUlNY21tV25adHhzQlg2SGxHZXVGYU9zV3V0YVJEdDBYQm11aC84WjB5M1ppYWVWcXY3RDVFVk5NclYrOUtjaEE5dnNtZG0iLCJtYWMiOiJlYjIwMGIzYmJkYWU5YjNhMjkyZGIyODA3ZmEzNWRiMjkwY2Q4YWJiYzBmNmEyOTdlN2ZmZTg4N2U0MzNmNjUzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:28:33] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:28:33] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InRGdTh3NnNNdEx0a2s4M0ZDd3Faamc9PSIsInZhbHVlIjoiNDBBeWtNSGZFSk5Mc2pKWHZJTUFFNDZPU0VLb3JqcFo1Z011WENvRVRjTlFoSTl5V2Y3ajZ5WTFYS3R3MEpJZExMTkd0RG10WmwvdEplYzNRRm9ud1k3eGFYOHRUN25UWUhiU2tVVTU2L0RGMjJpY28va2sxSGVGR21FMEt0am4iLCJtYWMiOiI1MDY0NDQ2NWMxZTQ2YzMwNzE1MzQ3MjYzNzUwODNmODBmMzA3OTg2MDMyZjFiMDVhOTRiYjUxOGZkNmJlMzhiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjlvdVVhak9wVncwY3lJK0g1MVRhWXc9PSIsInZhbHVlIjoiRzV1KytQeTNWc094eWRwck5DT01lS3J4bXBlci92QnBleE16MmZJaVpyZ3Roczk5VmtTWDFtNFNQU2R6QlJVd0xPTjhOSHNWQUxuSjlWdE9jaWc3QklRajROQys5UnVxdGpJYWUvZnVKbTlDSFB1OFp4aGxBemJWaHVPV1kwU1AiLCJtYWMiOiI3NDcwNTU3NmE4MWQxZmRmZjU2Yjg5MGYxZmVhNjdmYmQxZDc1MDliNTk3MmY2YmZhNjNmNDI2ODYzZTk4OTUxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:29:07] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:29:07] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IldsdUdCb1lMbG9YNEZmRDlIUVNVUEE9PSIsInZhbHVlIjoiQmIvMitEeWo2cll0cG4vclZSNzRPdUhoN3FRa0ZyK2g5NEJJNmNaMDRRek9zZU9EVm5GSnVxb0QwQXZtNWpkWW96ZERBNWV6RThEa004UXcyMmVIT28vNHNqVVFQNlBxczNYOXloMnJsKzU3YTdjQmNwemJkUlgvSFVXalEydXIiLCJtYWMiOiJiYTNkMjZkZmZhNDA4OWFhODJhNDA4N2NhNzY4MzVlMTk3ZTNkNGVmMzFmNGM0NTViNmRmYzk4YjBiYWY1Yzk3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlNOSVFqMUYxUVlBVnVpaGdLeENYcnc9PSIsInZhbHVlIjoiaWZDamZ1THpyeU5HSnBvUHhZbHpkOEtwUWpWT3cxd21ZK1JqbThyMThzbmRRQ2hoc0dQVzlCSlQ0SHg0NW9zb1Zta2NIY0phYkRFMVJkKzVJN1pRWTZPRHNKa24rQ2s4c3FNTmVQem1SQU9majRMOHdiNzdNMnpTUGEwemZxNDkiLCJtYWMiOiI0MDE4Y2I4YzMxN2Q1ZDRkMDdkNmU0MWUxZjgyNWM1MmQzNTk2NTg1NGUwYzM5NGM0NmM3MDQ4ZWIwNjgzMWUyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:30:24] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:30:24] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkxGalVYSUdNZTh6blFlWE1lVTVjT3c9PSIsInZhbHVlIjoicTA4MG5ueDRWRldCVlhnWHNEeCs1WWtkNVNEazA2K1RaQ2kydGp6TU9KZnRwUGgzazhNRzdQQW0xcW93Q2V1ZkVMbmhSWjJib3VOUzAwZkJNZ21NbmQvOHgrdmxOSFRHN2xFZnJscVJQZy84RDZZZ1dBd05ZVkZrQnNIc1NjTGMiLCJtYWMiOiJhYzI1NmE1MzJkYTZlZTQ0ODg3ZDdlMDAxYWQ3ODcyOTYwNTA2ZmIzNDI3ZTdhZDc4NzI3YWZkNjdiMjc4OTI2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkZNRCtlMnl3aitubEt0aHJXNTQ0Smc9PSIsInZhbHVlIjoid2dSYzZOcXNRYXJhd0sxVml2UmJVZzNScHpZQkVnRWRIM3FQdVpKWHR1eVhwNE13UHdtN3dSeENZRFkxWUkvRWxDbGlJSkNwcjZ0Y05TNDQ4bzhQZ0FHam1VSlNIU3djcjZ5cG1sWkg4a0NuU25EaWtNaHM3S09DQVN1ZTZVV3YiLCJtYWMiOiJmYjk0ZjZiYjc3MDE3NDcwOWIwMmE3YWFjODI5ZGJkNzcyZjRiYTMwYmZiNzlkNThjZWUzOTM3MmZlN2U4OTYyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:31:03] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:31:03] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IllzNGVjbG51Vm10b1hMWFJreU9WSlE9PSIsInZhbHVlIjoibnppMWZ1aUxzVys2bzRKenFDLy8xd1g1eDVqUjVSYjU3emNCaVFTYTEya2g5eGYzdVlGZ0x0ekRVcE11QmRjcXRMSHgyNkxGbDZqVXAwRW53VUhkeWNqT2ZxcUIvSHJKVjBiSGU4SkU0bXNtVXZKSUhvN3NyRTJJV3NCY3dHemYiLCJtYWMiOiI1NmE5ZTY1ZjQ3ZDFhMDE5MDBjM2ExODM2ZDY3YmMzYTU5NmUzNzE1YzM5MjQ5NTFmYWI0MThiZTc1NDFlNDliIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjByRjJZcVJVSW5XbE00TzhNeE1MUmc9PSIsInZhbHVlIjoicm1IWXM2c0VuaGZiNVhab2IxOUtpSmJuQXVlMEgzZ2gxVEFLa2ZUb3Jpem9oKzFMc0RnZUFoYVpBVW1QZUtERlloQzU1bktrSTZSRmhaSmdtVVJnLzRtYmFvREdTbERjZzdWSDUrT0FEZG96WlpxMkVuWjJSVlpJWXNmdXZsbWwiLCJtYWMiOiIwZGVkZDg5Y2RiYmMyMTBjM2IzOWI3MTg3N2RhNDdmNGU3MWJmYzMwMTI4ZjFhYjI2NWE5M2ZlMGM2NDdkYzkwIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:32:31] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:32:31] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InpRQlE4RHhjdktudTJZQkRYRHZwNkE9PSIsInZhbHVlIjoiUzBSQkV1QVRmNTNFTk1mR2dYSzI5d1Z2MTlWeTh4WnFrQUl4R3gxYkdlK0M0RS9KbXYxR2R2VjkyaHJ2aWhyd2JGU2hFRURTZzVIKzQvMGY2TFhvNkllbnFwNG54ajBEUmo5WFY3a2NpdWVsOVcxUm1tNjlxbnRtY29OdGlPRlEiLCJtYWMiOiJiNGViZDRjMWFkYWNkZmJkMmNiM2FjNzRmN2M1OGU0NjExZTU1NTYzMTY1Y2NlZGYzMWY5ZTNmZGJkNjQyOTQ5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImV1SU9vUHMvVUxLUm9rRWQzVjF1UlE9PSIsInZhbHVlIjoiMlE0clQ1cWUzTkZFZ0U1ZDZibXlWZ1BTOEdvYjdhY1RsVVVpbW13UHhxbVgyNUpCL0pPcnM5aHM0WUNJeGJMazlubXBuZ1NyNnZVVms4S2pIRFVCV3pmUmV2YXpSQ1UyQ2tXMSsxZytTeElRL2VSQURnUjRzMlNPWXVVcTNYSkgiLCJtYWMiOiI5ZWZjMjM4ZTEzMzI1ODg5Njk0M2ZkMTNiOWZjMjg2OWFmZjJlYjhkMDU3YzczOWVhMTUzYjU5YzNmOGI2ODVmIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:34:02] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:34:02] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InZ0Q09VbFFnZmZpcjhBVUYvSTkvV1E9PSIsInZhbHVlIjoianNHRnBpY24yVzlnWTdBcU1NNVRpcDZQNWpzeVZYRjkvbmRhcmRXaHlkaDRNQk5HT2RQTjFvaHFtempXbnpWMklpR0ZWYkt0RCszWWxYNGZjLzlMN05oMmhlNEtIWjZCV2FFdWdFWElqZUhtc0kzTmkzSEtuR3pwWDVKKzdkdVIiLCJtYWMiOiI2Y2FhNTRlN2I0ZWVhYjNiY2QwN2U4OGNjYjhhY2YwODIwM2VjNGZkZDY0ZjViYzZkYTc2MTIyNTg3ZGMyYTY3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkxyR1FJWkp2Wkg4UW1JeVRCbnRNa1E9PSIsInZhbHVlIjoiUkpmU290TWVSY0IrWURMSk9nMWFUL2xVK1ZadzdPODREV0JZYXY0Q2Rrck91dFhTUmpFT1o3Q0hqVGFLOVhxUE1nTzBMUjlDSDViYUo4eS8wcU1KbGh0T0N5c1RGK2tLdDJqcEZuVU5VWS9WL0FTUGhtN1dZUzhiYnN3aDFrTkQiLCJtYWMiOiI3ZGQ1ODdmYWQ0M2VjMjg0ZTE3MGNhZTBiMzE2YmY3ZjI2NzQzYjQ1YWQwZTM2YmMzMTliODA1NjBmZDdhOGY5IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:34:14] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:34:14] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ikh6a3ltY0dXMDBwYjU2dnBTTGw3Wnc9PSIsInZhbHVlIjoiZnNqUGI2WnFpRVZhOUJxZmFlVmlhWW9XRFhycW9WakZlSlFUSng0VFArdnFzS29ZOVIrUzVJSWtSSmFFQ2J4QlhXSHFKK0grdFcyUFdubC9IZENjaUtCVk0rSkZWYTRPWWNiQ0g3OWluSEMyYnhUQUorMTVuUE8zYnFXWVhEWjEiLCJtYWMiOiJkYTQ1M2FlOGMxZmM5YWRmOWIzNDBiNDYwMjdjM2RjZDM1NzI1ZGFlZmRlNmM4ZTA5MjI5Y2I4OTZmYTg2ZjFlIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImRJK29qU1VzUnpSemNmV3dER3oybUE9PSIsInZhbHVlIjoiY244SmxNcXJuQTl3MTBZUDB1NzZkN0p2YlkrdC95WUYyc01zM2RsZ01leGJQS29zdzUyMWhvSFhsYmxlcEMrS3I1bTljZVlsZk9EbXo0M0hmT29hS2FTckhUd3dLTUw1Mmx1SUhoc3hsdnQ5S3JzRmY3Z1BHOXFibk53cFV5bm8iLCJtYWMiOiJhYzc2NzQyNGIwYmYwOGRjZDgzNzQxNjVkZTYzNzBhM2RhNDIyNWUxYTlhMDBlMTJmMWM0NGY2OWZlMGUyYzc2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:34:55] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:34:55] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkxjczNZMklFbm5Oc2Y0UWlRaHVUZEE9PSIsInZhbHVlIjoiRWZBTG5MWUlKbXhqamcvb0xMYUpwQlBweEtGWEJhdjM3RGJvYjhjS3BkMnRHaDVydXBHMGdEMncybGJlY1pUZW96cXQ5ZklVcnh2aUVsTGVGOG52QTZOVW51Z2VPUFZkL3U0d0UzWEVjazg1cVB3YzM2ZldvZ0V1STdlc25uZWYiLCJtYWMiOiIwZGUyOTFjYWZiNmI1OTQ3YzhkM2U0M2FlOWIyYmE0MDJkOWUxODk1NDdlNGYyNGVlODgzYTMyNDVjYWNlN2Y4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InE3emFwNHNKSzlDRXFkMUxSclVNU0E9PSIsInZhbHVlIjoiakJ3QllqR3pzb1pGM3l1Y2lVVFBhYlJ4Y3hiRDc0ajh1ODVyV1U2SkgxV1BpOWJJT3RjSHhmejNEb25IQVpPNXdHNTFSQUkyTUk3WGpTdS9OZ3JYNzRNdW1LbEsvL0hQUWFsNktOZ0VkRElyb2lCd2JzL3Q5OXdNRkRqSWhBSUsiLCJtYWMiOiI1NWU0NDliMTMzNGJkZjQ2YzJmNjc1NzhiNGRmMGM0ZjhiZmVlMDM2ODhlYjM5ZmQ2YWVhYzk0NDQ3NzIwNWE3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:35:38] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:35:38] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /events HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlMxQUFnbTk0Y0NvQnlQRGw4YmdyWXc9PSIsInZhbHVlIjoiZDVDaGFaWnBSd3drRFc5ZUZ3endXbzBTcTdud0FvZ2twTUg0MHQwY1ppOXVldmViMG5Md21SaUtweHRMYTVEN2RnaHIvc1V6QVNiWFdVVGRUS3NCaEthcjdBbjdFM0ZmQ1EwZ1A2NkFLSnFsdWZoaWpVSmJMK05Oc3pIY1pQMVoiLCJtYWMiOiI0YjFiNTQyOWI5OGU1Yjg2OTA4NGNmNjdjNjQ1YzJhNGQ2OTFkMWY0NGVmNGJmNmU2NTE5MTU3YWQ3OWU2ODcwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IktkU2tCSjdWNTNDL1pMYysvWEVnTVE9PSIsInZhbHVlIjoiKzZKdkxTQ2RBTEo5czVrSGk4aGJHS3dNYVlPY1NTUFZQdFBHOVlrcnBFclNEc0lUUHVPYytCRkdHSS9xUUZXYVFEMzlXYlkzQ3JxMVliYXpxNDIyTHFIUnhjNDdaK2oyVkhDVnk1Uyt6ZzJyd2VTYUdjYWYzOXJ5UmJxMVd5U0EiLCJtYWMiOiJjM2FkNTY3MDEzZmZhZGRhY2I5MzgxZTY5NjI1ODE2ZjY4ZWI0MDQxNTg2OTZiNzE1ODQ4NDFlZDgzYzFiNjVjIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:36:14] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:36:14] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /events HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImMvYTI4QXNpOVhKSlZCOUZUWVVremc9PSIsInZhbHVlIjoiN0ZSYkZPL2IyQ3pGd0ZMRjlQREFld2JMVmlvSnNKWEx0Kytka2hzMk84Qnp5dnhnSFNOWkU3clIyOFJpbjdaR05jSy9JdDNoZlE1aWUrdkordXFUTHNZNEJRaDVCVFNlVTNjVnl2dDVRbXI2c3dBR2E1Z1RCdVB3cHdEbElhNSsiLCJtYWMiOiI2NGRlYTA2ZGQwNjFmNWM2ZTYwNTA5MGUxYWY2M2QwNjdjNWQ1ZWRlYjFjOTQ5M2RlODY0ZWUzNmQ3YWU3OGU4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjdDYUxuV3FTYlFBU1lxall1NllBUWc9PSIsInZhbHVlIjoiMzc5TkpqY3pSYS9WVVJFazVZT0VhSHdGSHZvemdPd0l0NkNGbnp2NG50bkNHM0sydGExVkVpTlNJcWl5NjlxZlVleE8wR1BzNU1wVUt0QzRFa2hjYkUrN0xhQmJ3SEFvMWVQbXR1ZXlycjRuelQ0WHNLSkZ6TmNYUVJkMnEvUS8iLCJtYWMiOiJhNWRjMzQ2YzM0YjI5ZjdkM2Y1ZjBhMTM5MGUxNWRlODZiNGQ2MTJlZDNjYWVjMWQ1YTg2OTMzN2NiMzRiMDYxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:36:42] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:36:42] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /events HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImhZazFxck1KSW93YzJMbjBHYkhUYlE9PSIsInZhbHVlIjoiM2Qwc0JPMkFBZTYvRWtnWU5GMlJPSWk0Sks4cm4xSVoyNU5rQUx1UFp1WWhnNFA1RW5vOXRjUWhHOGJYN1lHUVkxc2txMUFwYVJqcHZNQjFQTGRldEdSU0hQVnAyYWR0M3VGTlJvRTBtaXRtWVBTMzFXN1JDK1JCM2VpV0E4clYiLCJtYWMiOiI5N2VjOTVlMzFhMjY3NzcxZTBjYjA3YjdmYjAwNTljZGQ1MzM5ZGIwYTZlMzFmZjM1YTQ3OTg4Y2RiMzZlZmNmIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlQ4ekhBSnpSWnh1d2V2RDNUUTkrelE9PSIsInZhbHVlIjoiSjVHeFVtM091UVBaU2tOdWxxczBqa1ZYN1VDdkJOVHdUd0RtZ3RlZkVuUy9BbmZvWWxjU3NkTTFheklkR015akU0TU5OUS9XbGpnZTNZblk1TWFReDlpME10RTd6OE9YZnVNVk1KZVJvcEthYU5xYkU0WUIyQ2tKNlVwVjhwVDEiLCJtYWMiOiI4YmI5MTY0ZjExNjBlZDcwNTFhODRlYmNlODQwNWFlOTNhZjAyZjZjZjMyMmVlNWQ3MGY4N2Q3ZTAxNTJlYjZhIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:36:54] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:36:54] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /users HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ik1lNHhva1J1dk9CNzM4ZFlNZ1Ezdnc9PSIsInZhbHVlIjoiMHVOOVNHTHEwSGhzOVVSdkovNlgwSCtwWk9rLzJnUU5RUlorSlJUV3lvaWxyeFF1aW1jYkV6TW1MUlJTbEh6NzlBd0VaQWE3a0RHbUNjRFFIb0U0aWovbFg0UEd1T1ExdUUrNDJrYVM0d3orVFZRSWdTSTJQeTJyTjNDOWJSSEwiLCJtYWMiOiI0OWI1MTg5NWIyMGUxMTE0ZTI1M2RmZDVjNjFmOWY0YzA0N2Y4MWNlZDU2MzgxZDZhNjYyZWQ5NGQ0NjZkM2NkIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImgzUEFOYlRac0x2YkVkaWpqc1M0emc9PSIsInZhbHVlIjoidmkyZlNuRGpySmsrR2lIWnRHODZNTFk3cUZXRkwxQTBnSlpuZDlOTlg0dXJhSEF1MjQwTjZOZGNrOElWNkNCbWcyVnNvemNNYzRxeFFGa0tVWUpJSmV4MkMrd3orSzBBSWVFQmhZd3RxSlc1djF4K1FmdGZLS2c1am5iaXlpTVIiLCJtYWMiOiIzMzJhOWExZjY0N2ViOGVhMDdmNWJiNzdmNmI0MWQyODkyN2Q4MzUxODVhYWJkYzNiMTcyZDk3MGIwNGM3YjkyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/events
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:37:29] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:37:29] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /chat/RqQM2GvzyarwWYk83jOenV7dXzP0K5ZDJ6mAER4lXpgoL9Nbxy HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IklNT1ovMnlrMytBejJxVDRIaUp1aHc9PSIsInZhbHVlIjoiaGNzSStsUWFmZXRiVmdKaDFhU1lYZE0valAxRUZLZ1NUZ1o1NzJ0RktDb0FVZUdVemhyZGd3Qll2QmIrWEE0VkphQW5IbU05QUFOWmJ1T3FrbS81dW9YS1g4Y1VYUGJCOU10cHNZUzZUT05nMDFQRmRrUm1oNHlKK0g1d2lyZTIiLCJtYWMiOiI2ZmUwNzE0YmIyZjljOTFjMjhhNWEyMDNlOTVlZDAyYjFiYjAyMGUxN2RkYzlmZTJmMTZhMjE3OWNkOWRjNjkxIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkF4TjYxemlNck1sUkdQY09ZRXVtbEE9PSIsInZhbHVlIjoiQlJZSTgxck9oT1NVYzhSOHNBWVUvNE4wVE80aG90RU9NNVdKa1ZHQnp3cGZjS1M1WHNia00xdDdmbmNLdDk4ZW9xZmxuVC9NR0pIWWJ4Rm5hTklkbW02OWo3akZVVXhlR0JxSGIxbzhDZVRPcUttSkI1a2g5eitkVGIxRjFrOHoiLCJtYWMiOiIzNWI2NTBkZWQwMTkxMzBlOTk5MWZkZWQ4YTRmZjNiYjMzMTc0NTZlYWNiNzVhNDk5NGFjNjVlYTI5YjU3ZTNmIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/users
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:37:31] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:37:31] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /chat/script.js HTTP/1.1
+
+Accept:             */*
+
+Accept-Encoding:    gzip, deflate, br, zstd
+
+Accept-Language:    en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:         keep-alive
+
+Cookie:             XSRF-TOKEN=eyJpdiI6InQwbE5uUkxkYWNFL21aSTBZdkZUT3c9PSIsInZhbHVlIjoiZnJCZy81UDhYdDhiTExyeU5FbThTdXowUnNvc0I5Nmx1cUxvQXRYWVJ1REkxd05JYlpKazE3TkhYZ1JCZ1gzMEVsaWhqOXFKZm9TTCtqbThVZjJrZmhMSG52UFAxdUttS2FINTY2dXEzR01BdnJNTGhHSGhMcTZMWU5XbTFUUlgiLCJtYWMiOiJjNTY0Mjk5ZmQ5YjhhZjY5YmQ2ODVmMTk3YzBiZmRkYTc2ZjUxMjYwNzdhNTFkMTY4NzIyZThjNzNiMzkwNzFkIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Im1OMUdmSFk2Qk5MVmtjeng4VHh5cXc9PSIsInZhbHVlIjoiQUtUU3hpUnpmUk5iV0hWeks5K0x2RDdoTkY2cnNteFBCKzZEZ1BwNzBuTEg4QnRueklWUE93VmV2anBrKzBjdXNnUEpRRDY2L1dxbCtYL1h5NGY5WDI1SEdydmxJdzhpSU85QUJKYnNyQ29lOXkrL0pOdkJXcU9pN0M4MkJZZmYiLCJtYWMiOiI4YTYzMjUwZmY0MGJkMmFjM2NlMzhmMGRlNTliMTEzNTY3M2Q0MzczZmUzN2I5MGIyN2Q4YWViOTRlYzRjYmEzIiwidGFnIjoiIn0%3D
+
+Host:               127.0.0.1:8000
+
+Referer:            http://127.0.0.1:8000/chat/RqQM2GvzyarwWYk83jOenV7dXzP0K5ZDJ6mAER4lXpgoL9Nbxy
+
+Sec-Ch-Ua:          \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:   ?0
+
+Sec-Ch-Ua-Platform: \"Windows\"
+
+Sec-Fetch-Dest:     script
+
+Sec-Fetch-Mode:     no-cors
+
+Sec-Fetch-Site:     same-origin
+
+User-Agent:         Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:37:31] local.ERROR: Undefined array key 0 {"userId":"XSS-0476","exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\xampp\\htdocs\\GreytHr\\app\\Livewire\\Chat\\Chat.php:32)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\xampp\\\\htdocs...', 32)
+#1 C:\\xampp\\htdocs\\GreytHr\\app\\Livewire\\Chat\\Chat.php(32): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'Undefined array...', 'C:\\\\xampp\\\\htdocs...', 32)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Livewire\\Chat\\Chat->mount('script.js')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Wrapped.php(23): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportLifecycleHooks\\SupportLifecycleHooks.php(134): Livewire\\Wrapped->__call('mount', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportLifecycleHooks\\SupportLifecycleHooks.php(20): Livewire\\Features\\SupportLifecycleHooks\\SupportLifecycleHooks->callHook('mount', Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\ComponentHook.php(19): Livewire\\Features\\SupportLifecycleHooks\\SupportLifecycleHooks->mount(Array, false)
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\ComponentHookRegistry.php(45): Livewire\\ComponentHook->callMount(Array, false)
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\EventBus.php(60): Livewire\\ComponentHookRegistry::Livewire\\{closure}(Object(App\\Livewire\\Chat\\Chat), Array, NULL, false)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\helpers.php(98): Livewire\\EventBus->trigger('mount', Object(App\\Livewire\\Chat\\Chat), Array, NULL, false)
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(50): Livewire\\trigger('mount', Object(App\\Livewire\\Chat\\Chat), Array, NULL, false)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\LivewireManager.php(73): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->mount('App\\\\Livewire\\\\Ch...', Array, NULL)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportPageComponents\\HandlesPageComponents.php(17): Livewire\\LivewireManager->mount('App\\\\Livewire\\\\Ch...', Array)
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportPageComponents\\SupportPageComponents.php(117): Livewire\\Component->Livewire\\Features\\SupportPageComponents\\{closure}()
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportPageComponents\\HandlesPageComponents.php(14): Livewire\\Features\\SupportPageComponents\\SupportPageComponents::interceptTheRenderOfTheComponentAndRetreiveTheLayoutConfiguration(Object(Closure))
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(46): Livewire\\Component->__invoke('script.js')
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Livewire\\Chat\\Chat), '__invoke')
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\CheckAuthAndHandleSession.php(100): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckAuthAndHandleSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'emp')
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#45 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#46 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#47 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#61 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#62 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#65 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#66 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#67 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#68 {main}
+"} 
+[2024-08-06 16:38:03] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:38:03] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /chat/RqQM2GvzyarwWYk83jOenV7dXzP0K5ZDJ6mAER4lXpgoL9Nbxy HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Im5KZ1VsSmFteDUyUlFvY3RFMnhUVkE9PSIsInZhbHVlIjoicy9SbFVMOHB5ZHh4QmVLN0VhUXVWcVpJSlNROHJ6Njk1YTE2aVlXb2ZxMmVKQ29KSmIrVllack1VbEZWYmdPSFlGUUhyb0dBQzVQSFNDWkk0NCtnTCthVmV5QkRaMkFCN1lWbjZzeEZPZ0pwNFBZS1JVVTYrWDg4VWZ5bjBlR0EiLCJtYWMiOiJjYzAyMGNlM2IxZDZmNWVjODAyNTExNGQzMmFmZDVjOWZlNjRjZGMzZTJmYTRmOWIxY2MzMzIxMzkxMjdmOTFiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImgxaTdadkdsMGdOa3ExczdrZ2ZVMHc9PSIsInZhbHVlIjoibUdJWmlFK01yWDZJZ1Y2bEdvSG83YStvVkZjWFlJUnUzcWpTU2l3UFlENUFiaHd5bjRFMmdTY21qRE9OZ0RHaFp3alhlTWVvS1BEMHJhRHo3bEdBV3BLd3lDZjdzbW9yTXE5RHM4aGtQUW9FYzhLYTRYR0xzbkRlMHg3N2RDazYiLCJtYWMiOiI0MDkxYjM2MzNmNzdlNmFhMTgxYWNiZGQ3NDZjYWYyZWVkY2Q5OTRjZmZiOTZkYTNmZDQzMDUxZDExYjdkMmNkIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/chat/RqQM2GvzyarwWYk83jOenV7dXzP0K5ZDJ6mAER4lXpgoL9Nbxy
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:38:09] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:38:09] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ik43RTl2NnQxa0p0NzBIejl2Rk1uVEE9PSIsInZhbHVlIjoiUlNoK3E1THM5cFpmbmNIYUE0ek9jdDNKajJWM3krRnBWb2R3SmR1RkUvWVduWmF2bXp0NDlkWGVmTFppakk1U0lrOE1YRWU4NkIvL0d2ZHlSVnEwcFBoeHF5SmNQNXc1eFgrTkE3UHJZeXNYNGFNSHAyZ2lmYlY1WENmelF4SngiLCJtYWMiOiJhNTRhMDAxYTBjNDAxMTJlYTcxMTBjMjljOTc5N2Y0NTVlNTEyNDkzMWRiYjU1NWYzYmZkNzUwMzgzOTQ3MWY4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Im8vRno5U0t1SmlxQ09qODBJa2NUQUE9PSIsInZhbHVlIjoiVkNUSkVjTWR6RkNDRVUrMGw4RHJ1eVB4ZGNYQjFwWFlxdUJyaEUvbE4xUkE5ZGZuaWtsUjBHbkF2aEFIbXFtY3JGSlk1b0JKSFFNcFpwQ1daQ0JtYlZzQjN6eXl0SUVVekxvNXRmVmNEY2doT2RWUHVKSkdpdGI3RGMvYTFPYkwiLCJtYWMiOiIzMWQzMjMzNzBjMGIxNWI0M2ZkNmU1ZGZkZTZjNGQ5OTY4OWVkNzcxNGIzZDRlMmM3MTFjYTE4YWFiMzBmNmEyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/chat/RqQM2GvzyarwWYk83jOenV7dXzP0K5ZDJ6mAER4lXpgoL9Nbxy
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:38:49] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:38:49] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /slip HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjBjVzZQSU9wUjZGQlFmVFZRVHljL3c9PSIsInZhbHVlIjoiWTAveVp4M09CUHpicUw0RXRpRWFXUVE1RFZGckVMcEw1Z29IbkNUaFhiRmY1VXZ0K0YxWlVnd0p3bjFROXNYOG9BUi9UaG45RHFkclFIaXdFNWJkaG9MZ1E1OThqNW1SSVVsVGdHcGptZWJBYWd5Z25SNUlFa1ZZV0lGa0VsemMiLCJtYWMiOiI2NzAzNWVlMGNhNTk2MmM5NDZiMjc5ZTFmMDhjMmNiNzc5MjZhOGYzNDBmMzgyODAzNWU3MWI0ZThhZmNmMzk4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InB4YUwzWjVhS0RKS0lRSWJsN3VGZWc9PSIsInZhbHVlIjoiRE44b1Y3S0xaTUIyV2daOEhZT2VmbW4rT1J3dWpPMjFwdENQdnB2WkZRZEVtQWd3ZTFwekZoWnYwSDNxaE1wOHdiYk1aK20wcUlDY0ZoVUNqWTlHb29TSnNHNzJ0UURMSWgva09TYW9YejMzU1JGcUNNT3NRUGFhY3J5bjlTcHciLCJtYWMiOiIzZTcxNDRmNTFlYTU4ZjFhMDc5Nzc3ZDk0MGI3Y2I0MWY5ZThkOTk2ZmRhNzRhYTAxMmZkNTdjY2YyY2M5OGZhIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:38:55] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:38:55] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /leave-balances HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImRqNzFNR1JaZkpKcTQrdHFURlpmNUE9PSIsInZhbHVlIjoiSEtFZHlVblJza0Y3WXdmQWZPN0tvcmQ0S2hQZUhkTlhwKzd2NG03bTJTK0lBbEFwMGdKWTNXblozd09vUUhBQ1hLbjFRamRQb0pUa0ZhQWlEbDFCelVkRkNrZFBjVU5aQnJBWUFyeDYzY2xraGlkc0d1WHhvQml5dTM2Z0R4S2EiLCJtYWMiOiI5ODVmODkzMWQwYzhkZDI3YTk1YzU5Zjg0YTliMTFkNGU0ODkyZjg3YTRjNmM0YWU1NzQyMDY3MzQ4MThmODVjIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImovZ3U4S2Y3RktMelFyaEdnczdhQVE9PSIsInZhbHVlIjoiRXk4azgwZS8rUVhCelRZV09Fdi84TFZwUXdVWHhLZG1WVnNLOThWVzkxeGwxQUcrV0Y4SHYxaWUrTEgzM2JoclJPVE5DR21JaHNyUHlJamZ5aEJRcUIza3ZGWitCaWVCcmI4dW9YL3lub3Fsci93d3NQR2hidUREMTZsWFc2WnQiLCJtYWMiOiJmOThkNDI1YWYxNjFkYmU1ZjI3MDA0NjdmNmMzNWM5NjUyNjU5N2FiN2M4ZDU5MTdjYjE1NzAxNzc3ZjA2OGM2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/slip
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 16:39:02] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 16:39:02] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /ytd HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IllTYk53VExKOERLVDNqRXBLaS8rZEE9PSIsInZhbHVlIjoiSHgvWVBuYXZLbkxpZFlVNG4yTVJ2L0pUUGJiTGpLZ0VCQ1BRSDdIVmlTRnJodnFoM2QzRjlpaEp1aURUUlUyVUpkekx0WUxkZDlkWEh3M1ROWkozMy90bExoTjg3ekFVUXU3THVrdjhnblhSZXdyZ3lEMzlUTnFlakNBSDFYQ3kiLCJtYWMiOiI1ZDY3MDZmNzExZDllMjQ3NWExNGM2YTVhNTc3MmYwYzFmZTUwOGM1NWNiMDk2YzFmOTYxNTAyZWJjOGY5YjdlIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjNVT3VyRENYMENzVGIyRXY5Uk96RUE9PSIsInZhbHVlIjoiZmhsbTdqYUpxUEhvalRsRGxJU0RjTUlEaHlZVythYTQwTXpwY3hZdW9NdXhXV04ySWsyYkh4VjFzT3k2Ry9WR0J0VDB1RWVzdU8xQXJuMk8xRnBFQjl2K281TjhWTUlicmZCWDhHR0gvS3RodUJqWmRsTWpSMFducGFoVDJHSk8iLCJtYWMiOiJmMzk3ZTM3MTMwYmU0YjQ2YjA0NDg3OTlmNWM2ZmVhYTVlZTczOGFkNWVmMDEyNTQ5NmUxMTliZjg3ZWIyODk0IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/leave-balances
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:02:24] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:02:24] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /itstatement HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImIxaU5PeVJyc2pDNW5QekJrL21hWnc9PSIsInZhbHVlIjoiWTRWL093Snh3Z2M0ekRnRzVUdkk2VHpRbklzTGhIRW9CTWl3S21HakNwSmlNUDZ2cXZJcjIza1JQaDhjM0RWdmI3ZG5OL3NrZHQ2YVBzWmp3WW5zRnpvb2hqWGo4S0NQdHc0VGlXcmo0NnRzbXNVdVkxZm9OcFhxcGlBSExvYloiLCJtYWMiOiI5NTRjMmQ2M2NlYmJkOWYxNzkxN2MyM2RmZWFhYTc2YTA4NGU3YmRhMjViMjY4YmE2ODc1NjI4ZjA1NGE4YzRmIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InJhbDNlUSs2K2tEOVh4NlZSdVNCL2c9PSIsInZhbHVlIjoiNUNJTjRROUZobEdEV3YvQ1hTU2FBZVV0dFU3L2hQdjJ4SVFhR0xFSlVNbFJpYUJ0eVJZWFZ2cXFNWXhkanZSZDNHbmhRa1ptczJ6dWhMSG53T0FkUjhmaWw5NWlYcndReTFsMElNN0kxMHB4c2N2aVpzTG1DMGVmSm45UElHMTkiLCJtYWMiOiJmNDQ4ZDY4MTBhMWVjZThjZDI0YjY2YjAxMDg5ZDAyYWVhZjYzZmMxZTZlNWVhMGQ3ODhhODQ3YTM3YWY3NGFmIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/ytd
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:02:38] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:02:38] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ijc2d3NnbFd0UC9IbVlXMDhWdTRQZWc9PSIsInZhbHVlIjoiYmhMREMwb083Rm9JRlE2Qm52T0xpQkZleVpFM1pzcTBVci9NV3oyRkp2WWtsTEFROFB4N05ieEFLa0RSdjJmenBrdG9FZlEwY1lIL3BldFUvYm1rM25YWnZXUGdiRVNwVmd0dm5wWGZrSlZEZ1ZXUFlDK0tUUk9UMUxSelVYdHEiLCJtYWMiOiJhMjM4MTg0MGIyZTA4NmZmYWJhMWI4NDliYmQ1YmRkMTYyNzQzZWE2MWQwM2YxY2EwMjk0ZDgwYTFjYWExMDMxIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkFqR240Ym4rdXRrRTJBNlVtY3huRVE9PSIsInZhbHVlIjoiRWc5ZEJrdUh4U0l5RGc5aXl0cUxhTHZoMWdwYjBuZUY2blVyZTcyeGpQTC91dENzaDZiMDNZVUczMFUyYUFUdnhwMWNad2RMdUxUS0grSXptRzlTM09pLzhlOGUwdHV0bmNSblNvTFlnV2JwRnk5azVCelY5djNZV3RDU2pKeEYiLCJtYWMiOiI5MjEwYzI1MDNmNmI1YmMwYTQzNTdjYjlkYTMyZTc0NDVlNjM3ZTgxYzBjZjRjZGZkMDM1YzdjNTM4YzlhOGZmIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/itstatement
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:06:39] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-06 17:07:26] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-06 17:07:53] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-06 17:08:02] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-06 17:09:13] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:09:13] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkRKZU9HQTJodW0rYkE5azR0aU5rRUE9PSIsInZhbHVlIjoiMFRlZ1dSRWZhdGV4MWF5M1FTaFBudGF6YUFBNjFTKy8vNTZQbXZvZy9NUWVxL3NpcHJmeXhzMDF3eGVLdlZsZWZlYzFkZWJGMzJVTTRUWGpWSXVYQzNkbDkwTTJFMGtIaDVXMmozd0pxOEdmMlRkcTAxSVAxdVJiamxodUpLRC8iLCJtYWMiOiJlYzI2ZmUwNDg1MDQxOGYzZTQ3NjVjMTM0MWYyNjYwZGVhYjc2YmZiMTRmZjQ1NzdlN2U2ZjczZDhlM2YxZDhkIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Imh3cXZsb1Ivc2sxN2c1WXBjczAyaXc9PSIsInZhbHVlIjoiTEJMdkR1N1pZKzhhSFdGK3NjdkxEdGVleFk2aDhoQm0xT0tERHQ3V01mTGE0TExrRit0Rk5BVXdRTm5ULzVvMUpqQ3R3Rit3M2YxRnVhUEdFYmJuZzIzcm1RdkxDejQzODNWaDNkZ1oxZ1VuQVd6a0xGQ21OY2JpbzROalFPUjIiLCJtYWMiOiIwZTY1YzU4NWUzNThlMzc1MjM5MTgxMzA5MTFjNjI3ZDRkNzZlYjI1ZGE4MDhjYzRhZGI1ZTIyMTg5YjljOGNlIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:09:52] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:09:52] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ii9mNm9mQ3RTclE0VHlGYkQ5aWE0bUE9PSIsInZhbHVlIjoiZmlLeGpHdHp1MnFLbEh5Z0ZaVTlDNkZFZi96WUJyLzlKSkhoclZlU1czbDNqZ0VrSlhXTktkZUllRnI5SkZiaEVaNFhuRm5nNi94YzdOaDBaVnVDU3lTNWNMeTBvMzJiMHZmVmZhcjkxQWdURTh6eTM3bzVBck8wcWZWUThMTGIiLCJtYWMiOiJkNzg1NjEwMGZiZDQzZDgzMTA0ZjM1YjI4YzA2YjFmZmJkZWU3NGFiYTJkNWZkYmIwYzM4ZWExMmVhMzhhNzlhIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlZQSmROSzFpVDhEazlycnVscWFJdGc9PSIsInZhbHVlIjoiMVVUQk9pNmlncUxuUkh0bXY1REtWRFNRdTRwZHpvbUFsTzBYdjBkWkxKNklGYXlSMmdNZ1JqbHVkV25sV0hjc3hGeVBJblQyRlpqQnptWCtYMnhDdkNGVFhhSmtSaHA4Zk8vSWVMb2FsY2hoN2YwT1AvaDQyMnFpR0VNeFduZ24iLCJtYWMiOiJjMWMxMGVlYWM3ZjZmYThkZWU3MmQyZTcwMDVmMTA0ZDI2MTkxZjkzMTBiNDBmNTk4MzBmYWNhZjc4ZmMyMWRiIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:10:59] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:10:59] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InpxOTN5aElpZ2ZrNW5Yb3paOGhBQlE9PSIsInZhbHVlIjoiTjZqc1BMRlhiN0hiOWtFcnNYa21kSGJoaDBqTVVLazc4dm1oYndsckgyMm55WFlEVUdkejVaTkNKaEZ3UEQxNHV4eUZyb2xqY2xqY3JmLzRleXBudi85ZXoyeVFxOSszd3huYWUwdy9nZm5sSHp6b1JQbXRncERpb0Q4K0lLLzAiLCJtYWMiOiIwYTY4ZGVmYWI1MjdjOGQzNDk3MjZkMTA3NmFhNmI3ZWZjNjM5M2ViMThiYzY2ZTM4Y2Y3NzAyMDhjZGNlNjc2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Im50RTRneEsvazZ6bW5yMThQb3p3T3c9PSIsInZhbHVlIjoiYkxhRVkxL1M4OXZ1aU9XNlU4RnpBSHh2OXBLc0pLT25oaEovTVNBR3ozNjZ2RzlsWnBkcldISW9sVEdwMmFiWm1mSWxQWG5CK0h2V0dJVDJwZmRKdDY2UWJFV0RMWlgxbGJ5K2w1cnBITlJtOWRWTnZSbzBJRUlYZklESXFkMVQiLCJtYWMiOiJmYjVlNjcxMTZjZmY5ZTc4MzU2YWZkYmI5NjMzYThlOWMzMTA1NjYwMWI5ZjY5ZDE1YmQ1YTM3YWRhYmZhZTY1IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:10:59] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-06 17:12:28] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:12:28] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Im9KTVlxb3BjSUFXdysvTi9kbXNDL3c9PSIsInZhbHVlIjoiQklPNlliTHZwRW5NZzkzQ0NhOTJvREt3Q1FQUXMzQ0tNc1MvNXUvaDVWcm1uNzcxamFyYXpqR3kwdndyb0QzbXg1b2FOTjlNck1NazhqdDViK0pIVmlxdlNnNDhXeVBhejVNcDUxbHFIRTZhLzN1ZER6UGNzcFV3cy9oN3Y1dUMiLCJtYWMiOiIwYjVkZWI2OTgwNGM3MGRiYmViZDk0NzkzYmI0OTkwNzgwY2IyMzcxNGY4YzkxZTM3YmE1NDMwOTBhZDhmZmExIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Ii9nSkRNbTZLdzV6Y1lUcXhWSWZsT1E9PSIsInZhbHVlIjoiTXdSRjV4Y3pEcTRrVHY2ZEJHZllBSmdCcHRpcHNnMnFST2tvcVFSMzh2WUkweUhGRHJmSnVOb2tmcWlXbnlCZG9wMy9TbCtzRkVaeEVCM0Y4MEFlajQzQ1VFN2JSdGVNM3gwWDlVc29XMXV4N1VGSHlsVE1oN0YyYkFlaUZtc0siLCJtYWMiOiJiYzY2ODE4NjJhNmU0YjEwZTRjOTE5ODI5MzkwNTM3YjIyMzQwNjdkMzRiNmQxNDYxNjBiM2IxZDlmZjI4ZTFiIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:15:09] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:15:09] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Im1qbkc2eGNYMWJVZDVyd0k1alVSaUE9PSIsInZhbHVlIjoiUjc2OElFSjJNY1Y1WlpyTkZzNG5LUEk2MXZIUWFSNEtTQVJqVVoxd1hnSzhGWWxGbUJNeXJCczdZWXhBaG5TQ0FtZXl6NlZLUjhkTmhBdFowZDgrOG56QURlMHBrMERTWEo1WVh4WTlxZzhodk15cjIyRjZhWTMxcGU3aGJ6YkIiLCJtYWMiOiJlMTFkZDljNWI5MmYwMDMxOGY2OTVlYTNhOWZjYWMzODc3NDE0YTdlMDhmODk0MTZjMTRhYmUyMTVkYzQzOTA2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImIreU84Tmk5R0k2U3N6alFWNVBCenc9PSIsInZhbHVlIjoiTmRjMEVXazE4NHc0eVZFSHB6clVWNzlpR05CMTlmRTluVnZXRm0vZlNDcThrUjhxSFdJQTdCekc5UFZMbmQ0cVpsNGszUWdVaFZUYzRaNVIvUE1WM05qekJvS3k0U0tvcnE1TUlWU2pxUWhmK2JXM0VMMFFNbTRxTnNKR3VxMkEiLCJtYWMiOiI5ZTAzZmQzOTg4MGI3OGViY2ZiMmYyMmMxYzAxMTgwZDE5ZWRiYjI0YTlhMzNjYmIzM2UyMDhiNjgzNWFjYzc4IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:15:14] local.DEBUG: Selected Category: HR  
+[2024-08-06 17:15:14] local.DEBUG: Filtered Results:  [{"id":14,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"Ranjith Kumar C #(XSS-0386), Saiteja Shinde #(XSS-0535)","status":"Recent","priority":"Low","created_at":"2024-08-06T08:02:24.000000Z","updated_at":"2024-08-06T08:02:24.000000Z"},{"id":13,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"Ranjith Kumar C #(XSS-0386), Saiteja Shinde #(XSS-0535)","status":"Recent","priority":"Low","created_at":"2024-08-06T08:01:58.000000Z","updated_at":"2024-08-06T08:01:58.000000Z"},{"id":12,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T08:01:37.000000Z","updated_at":"2024-08-06T08:01:37.000000Z"},{"id":11,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:59:58.000000Z","updated_at":"2024-08-06T07:59:58.000000Z"},{"id":10,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:59:27.000000Z","updated_at":"2024-08-06T07:59:27.000000Z"},{"id":9,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hlo","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:57:11.000000Z","updated_at":"2024-08-06T07:57:11.000000Z"},{"id":8,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"setup","description":"install","file_path":"uploads/help-desk-images/66b1d7106256a_shared image (4).jpg","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:56:00.000000Z","updated_at":"2024-08-06T07:56:00.000000Z"},{"id":4,"emp_id":"XSS-0476","category":"Hardware Maintenance","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hlo","file_path":"N/A","cc_to":null,"status":"Recent","priority":"Low","created_at":"2024-08-05T17:51:32.000000Z","updated_at":"2024-08-05T17:51:32.000000Z"}] 
+[2024-08-06 17:15:25] local.DEBUG: Selected Category: IT  
+[2024-08-06 17:15:25] local.DEBUG: Filtered Results:  [{"id":15,"emp_id":"XSS-0476","category":" Request For IT","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hloo","description":"heyyy","file_path":"uploads/help-desk-images/66b1db2c0b478_shared image.jpg","cc_to":"A Archana #(XSS-0476), Abhinav Jangili #(XSS-0436), Adityaraj Singh Chouhan #(XSS-0518)","status":"Recent","priority":"High","created_at":"2024-08-06T08:13:32.000000Z","updated_at":"2024-08-06T08:13:32.000000Z"},{"id":7,"emp_id":"XSS-0476","category":" Request For IT","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hey need setup","description":"requirements","file_path":"N/A","cc_to":"Siva Kumar Saragada #(XSS-0488)","status":"Recent","priority":"High","created_at":"2024-08-06T05:23:35.000000Z","updated_at":"2024-08-06T05:23:35.000000Z"},{"id":6,"emp_id":"XSS-0476","category":"Distribution List Request","mail":"N/A","distributor_name":"setup","selected_equipment":"keyboard","mobile":"N/A","subject":"need ","description":"installations","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-06T05:22:14.000000Z","updated_at":"2024-08-06T05:22:14.000000Z"},{"id":3,"emp_id":"XSS-0476","category":"Distribution List Request","mail":"N/A","distributor_name":"hii","selected_equipment":"keyboard","mobile":"N/A","subject":"hlo","description":"hey","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-05T17:51:06.000000Z","updated_at":"2024-08-05T17:51:06.000000Z"},{"id":2,"emp_id":"XSS-0476","category":"New Mailbox Request","mail":"ar@gmail.com","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hloo","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-05T17:31:44.000000Z","updated_at":"2024-08-05T17:31:44.000000Z"},{"id":1,"emp_id":"XSS-0476","category":" Request For IT","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hii","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-05T17:29:58.000000Z","updated_at":"2024-08-05T17:29:58.000000Z"}] 
+[2024-08-06 17:15:31] local.DEBUG: Selected Category: Finance  
+[2024-08-06 17:15:31] local.DEBUG: Filtered Results:  [{"id":5,"emp_id":"XSS-0476","category":"Income Tax","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hiii","description":"hlo","file_path":"N/A","cc_to":null,"status":"Recent","priority":"Low","created_at":"2024-08-05T17:53:34.000000Z","updated_at":"2024-08-05T17:53:34.000000Z"}] 
+[2024-08-06 17:15:54] local.DEBUG: Selected Category: Finance  
+[2024-08-06 17:15:54] local.DEBUG: Filtered Results:  [{"id":5,"emp_id":"XSS-0476","category":"Income Tax","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hiii","description":"hlo","file_path":"N/A","cc_to":null,"status":"Recent","priority":"Low","created_at":"2024-08-05T17:53:34.000000Z","updated_at":"2024-08-05T17:53:34.000000Z"}] 
+[2024-08-06 17:16:00] local.DEBUG: Selected Category: HR  
+[2024-08-06 17:16:00] local.DEBUG: Filtered Results:  [{"id":14,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"Ranjith Kumar C #(XSS-0386), Saiteja Shinde #(XSS-0535)","status":"Recent","priority":"Low","created_at":"2024-08-06T08:02:24.000000Z","updated_at":"2024-08-06T08:02:24.000000Z"},{"id":13,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"Ranjith Kumar C #(XSS-0386), Saiteja Shinde #(XSS-0535)","status":"Recent","priority":"Low","created_at":"2024-08-06T08:01:58.000000Z","updated_at":"2024-08-06T08:01:58.000000Z"},{"id":12,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T08:01:37.000000Z","updated_at":"2024-08-06T08:01:37.000000Z"},{"id":11,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:59:58.000000Z","updated_at":"2024-08-06T07:59:58.000000Z"},{"id":10,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:59:27.000000Z","updated_at":"2024-08-06T07:59:27.000000Z"},{"id":9,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hlo","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:57:11.000000Z","updated_at":"2024-08-06T07:57:11.000000Z"},{"id":8,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"setup","description":"install","file_path":"uploads/help-desk-images/66b1d7106256a_shared image (4).jpg","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:56:00.000000Z","updated_at":"2024-08-06T07:56:00.000000Z"},{"id":4,"emp_id":"XSS-0476","category":"Hardware Maintenance","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hlo","file_path":"N/A","cc_to":null,"status":"Recent","priority":"Low","created_at":"2024-08-05T17:51:32.000000Z","updated_at":"2024-08-05T17:51:32.000000Z"}] 
+[2024-08-06 17:16:17] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:16:17] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /catalog HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlZ1ZE03bThxSEVNL0NKeGZ2aldSY2c9PSIsInZhbHVlIjoiQnFrVm9Pakt6WGVrb2k4Q1Y0UDBQc2t2aDR5NDl2aVo1cGhSdTlRc0FLWUxjcTd0cDhKcWVuSXhZTHhhb0c2a0hkUXZqZExNTmROOGRjMU91ZGhZOHY2UmMxeitCcS83S09zY1dzZHZtN0pUOWh0Tm1nTTVxWUNiSmFONHY1TWwiLCJtYWMiOiIxZWYyOGZhNDIzYjQ0NTQ5OGVmOGU4NjMzNDljOTUyNTRjN2I4ZDFkYjI0MDFkYTI5MDRkOTUyMDJkMDAwZjJlIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IitHWkErVWtSanI3ek5oemNnZktaM1E9PSIsInZhbHVlIjoiSTlZVnhvdkdBbHcvdFRDMWdqcFg1ZDBJQWcyU2lFMFpQZzBCTUNXQ2Q1KzlCbHRib0FwblJFb09Vdk10WFJJc05FTDE0bmZONzl3OVhNUWQ4UXc0WGp0c0wxWlZ1LzQ1SHM3NFFOb0J1VTZPU2NDWHpCQndUS053SCtaOWJBOEciLCJtYWMiOiI3NWFiNzUwYjdmZWZiZTBjMjgzNjE2MzZlOTA0MDhmZTRlYWRjN2ZkODNhNWFjNmFjNTVmMDM3ZTg1YjdhY2ZlIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/HelpDesk
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:16:21] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:16:22] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkJWS1FXT3puNzZNL2YxNE9oYTlPTHc9PSIsInZhbHVlIjoiVGFIQ29iL2RrbGpzS3hIeTVDK055enFQSWdFWkVzSytLYklsc3hzN2hrbm9vNTM2cHRtdVNUSFNxQ29hZHVJbEJaQ011b3UvditnbTFhYTNpbG1xRHV5N0xQQVQwbWx0T0lBSUI3U2tpNFMrNUZQdEhQTWlSbVhWYTM4THRQamEiLCJtYWMiOiI1ODY1MzZhMzBiYTlhODNiMGRhZTM4ZGIxZjJiNDAxNzZlYTExZWQ0YjdiNzNlZThjNmM4MmNmMWJjMzEyNWRjIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkRWSm1Dby85TEJDK3pJR2ROQ3lqZlE9PSIsInZhbHVlIjoiUElmekZLT0VOOURIMXJsYmNQTDVwRzZqVnZGdGd0V1pWUHdLWjJVVzVkd3RuM3VtR3Y2QXlVcUlITFJ3Nm1mS3hNTm5lS0I5WkpLRHp2YW9xdDNvR3EwZ094cDh5Z1VuOXUrWGs3MkZFMkdicCs5TjFoM2RCVlRxTENoWTBlYy8iLCJtYWMiOiI1NGE4MDdkNTc4NzAxY2U0NjNmZTJiMmRlOWU0NmIzZmQwNzRiYTIzYzY5MDU2MTU5ZTI5Y2I2ZTljNjYwMTg3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/catalog
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:23:49] local.DEBUG: Selected Category: HR  
+[2024-08-06 17:23:49] local.DEBUG: Filtered Results:  [{"id":14,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"Ranjith Kumar C #(XSS-0386), Saiteja Shinde #(XSS-0535)","status":"Recent","priority":"Low","created_at":"2024-08-06T08:02:24.000000Z","updated_at":"2024-08-06T08:02:24.000000Z"},{"id":13,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"Ranjith Kumar C #(XSS-0386), Saiteja Shinde #(XSS-0535)","status":"Recent","priority":"Low","created_at":"2024-08-06T08:01:58.000000Z","updated_at":"2024-08-06T08:01:58.000000Z"},{"id":12,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T08:01:37.000000Z","updated_at":"2024-08-06T08:01:37.000000Z"},{"id":11,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:59:58.000000Z","updated_at":"2024-08-06T07:59:58.000000Z"},{"id":10,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:59:27.000000Z","updated_at":"2024-08-06T07:59:27.000000Z"},{"id":9,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hlo","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:57:11.000000Z","updated_at":"2024-08-06T07:57:11.000000Z"},{"id":8,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"setup","description":"install","file_path":"uploads/help-desk-images/66b1d7106256a_shared image (4).jpg","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:56:00.000000Z","updated_at":"2024-08-06T07:56:00.000000Z"},{"id":4,"emp_id":"XSS-0476","category":"Hardware Maintenance","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hlo","file_path":"N/A","cc_to":null,"status":"Recent","priority":"Low","created_at":"2024-08-05T17:51:32.000000Z","updated_at":"2024-08-05T17:51:32.000000Z"}] 
+[2024-08-06 17:24:09] local.DEBUG: Selected Category: Finance  
+[2024-08-06 17:24:09] local.DEBUG: Filtered Results:  [{"id":5,"emp_id":"XSS-0476","category":"Income Tax","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hiii","description":"hlo","file_path":"N/A","cc_to":null,"status":"Recent","priority":"Low","created_at":"2024-08-05T17:53:34.000000Z","updated_at":"2024-08-05T17:53:34.000000Z"}] 
+[2024-08-06 17:25:28] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:25:28] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlVXZTkrQXowUWVUcWR0SlpDeUZBT3c9PSIsInZhbHVlIjoicGgvZWNCN1pwbmtpUG9qbEh4c09CcjhQR25NNHFhVHFOK25MRDh1dGpnZnFFV1NEdGliL0w1eUdoQzdnUjVEMFFiaFc2M1VPUnVaV3FBVXZoOHNGSzlrTHBEdHVndzVKdzFZNEIyc0dDbVRUeWhlN3ZOVU1JcE5mcjVTSmRIeVEiLCJtYWMiOiJiYzcyYzM3NWE4MjQwY2I4Zjg4NDRmYzRjOTMzMTM3YWM3ZjAwNmRiNTE4MWI2OWE1ZGNjMDQ1ODY1MTY4NzdjIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IklmcVhJMGpGa1ZseE5zV3dZVXdyc3c9PSIsInZhbHVlIjoiVWUxeWorSnlzdm1yV3hPdVpYZjNFSXhnU2wwajlhaVhpWEloTVZQSU1aRm5iT01hREdkekpDdXJ6Wm5Kb0xZcUZzSmZuTXgvYmt2Ri9HM1J6MVV2cStzSGdBT3BZeCtncmErMUI4YVJhZ3RmT0tsbG5DcHRDVUhSN1JjRDNycUgiLCJtYWMiOiI3YjUzZWQzMzNhODgyMWRkNzUxMTY2ZjQzNzcwZmRiNmQyZDRjODNiMjZhYzFjODMyNDZmMjc0ZDgzNmEzYzE1IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:25:51] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:25:51] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InNvTFppVGEzWmtzN2tTTzNDMTZTWXc9PSIsInZhbHVlIjoiYStTdVlRakRLSXJLUTg2ZUdwbjh4SHIreFFaRnQ1UWhJSDRjWnRicHI1YlVRbkNOam44OVhPckJTU2dRK0FoekcxdjZhSW43RVZwVTJrZ01vT0pPa1NWaHlsOUVIWEFMMi9mNnI3cjFlNTd2RktPckVCK3piLy9RV01mOHp6amIiLCJtYWMiOiI1ZGY1MGU4Y2E4MzAzMjRlMGVmZjY1ZGU5NGM2MzI5OTU3M2NlYmE0MTU4YmQzMDY5MDUyMmEyM2FmZGZiODBmIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjFodU5sRGE2bUJuNVlRa1pka2xHZHc9PSIsInZhbHVlIjoiTDFPbDEzRzQxQlc4SGxRcjVpa3JRM3FrQ0lzWDJORkc2dnhiUEVaSFJYSEdFQXFsTVM1R2Exd3lIOS9lQmhtVVBlbTk3VGVkbUZNV1RSYm9uYm1NOEF1aHovWTJ2NENYWmJ2VzRGa3ZhbCtKeGJJaGN4R1hET05CWnhvdFVPRkUiLCJtYWMiOiI5ZGQwNTNiMGFmZTBlNjQ5OTEyZTg3NjA3MWU1NzI1ZmUxYzAwMTZhN2U4YjY2ODNhM2E5OTMzZWQ5Nzg5ZGQ3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:26:22] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:26:22] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Im1ubi8vQnhrTVBXMlpLM3hmZHNlM3c9PSIsInZhbHVlIjoicU51VnJjMVZ4MGxPVkZuVENHS2FWOTNkNEJ2bFh2V3NEZzlPNXpiZ3c5Z2llSW5uc0I1YWtEZVZZRFppampFOSt3UlpqdlUvc2pRYzRHOWhSV3IwM0lUcjJJeE10RDFKVnVpTStrY0VlVGlSZHFLZVlUbUJNWDZYM0J6ZmtJdTMiLCJtYWMiOiIwYjY4MzZlMDE0YTA5MjM2ZGUyMWJiMTA2ZGJlYjEyOTAzMmFmMmEzYjM3MTE2NmQxOGQ2NmU4ODkyNDg5MGY5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkR1a2hsUW8zZVQ1aGY4OTlJT1Z2blE9PSIsInZhbHVlIjoiRFI5QStyUjc2cXdVcEVFN3dOc3d6SVkzWFZBbVBwSlJTbS9Na3N6M081SFV5ZnZqd3dDR0RudGVhT253NnZudjVPL0I2c2M4Tk55ZCsxWlBIODNMajAzRFh6NkVYMEt6ZjJZcDMwZmdEQ0RuVnJoR1hXWXd3ZlBPZUJaZlNkWXUiLCJtYWMiOiIwZmRkMDI4MDE2Zjc1YmMzZjgzODUwN2U1ZmE5MjAxZDBhZmRiMDU2NmUxYTQ2MDk2ZWIzNjg4YTdmYjI0OTc3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:29:05] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:29:05] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjAwRlU2TXg0UHBURGk0L3RFeG5IYUE9PSIsInZhbHVlIjoiUHBPZTFsQm84ZlJ6ekVHaDM4c3VkOC8rVDRiZG9nZDRzSThzSmNPdG5zMGNSNWlRUkRkWGJPRFNlNTZWdGVwSk5iNkhidHRueHp2YitXQTFkL1l4bG4rcHRnSmMydGhZY0dPVkl2b1dTV2R5MnI5RkhQU3pnakI0ZmovTTRoTGQiLCJtYWMiOiJkZDAyNmIwZTExNzY0YTQwZDk4NmQyODkwMjI0NjY4NTEyN2RkY2E5NmZkZDVlOGJjNzFhYTBjZjhjZmQ3YTU2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkY2b25PS2NnOXBudmtpdEJmMnNJOHc9PSIsInZhbHVlIjoiOU9IOEhaZFEyVE1qdHZQd2dhcVE3ZlVyTWE1RHVDTWI2aDVFQ0YwVVZOSnZDZktlbkRvSUFVKzhacFk3VnJOSGhKbjdsdHhTOXcrZ2ZDNGpObkhPS0w0QlE5ZUlybzR5N2FMais2NHBXZXpUZFV0VFB3endUZlZEMVh0NFVIZXUiLCJtYWMiOiI1M2ExOTNiMzQwZTkzNjE5MGMxNzY4OTAxMTRkZDcwMzBkMDM3Zjk4MWZjM2YzM2ZhY2MxMDZmMjRiOTIyNWFlIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:29:42] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:29:42] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImZIcHY1b1ZnTi8yc2dEcHJ4SFNGYUE9PSIsInZhbHVlIjoiand5ckZPZUxTdEY1eWlRL1I0eE4xanpDQmRvaEdDU1BPbnZ2aVdrdEZ2aUY4bVIvdllDcmRwakRXVkhYbTJ4VXc2L0paRCtsSTQrTk5xaUV3UW02cm5IeW9oa1doVHFPOEg4L1V1b2Q1cnB5eEpqVS9IOVNvNHlaQ3lLdnFTK0UiLCJtYWMiOiIxZTNjODc0NzY0MzhlNmI4MTgwYjg0NTU4MzFiMzUwZGVkNWU1NjBmNmVlZjFjMmNkYjIyMGM1NThkMzQ2NmUyIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImxMcXk2VU5weGdyU1VTN1JJakdBUlE9PSIsInZhbHVlIjoiT0xhOWk2RlVjY2ZzNTBnVFhYbVp6LzlNTndDNDBQeC90SG5DaUxreWVaUTd3VW9Ebk1IK2ljdW5PVWhTckF0UWRWM2Y2VkozRmU1K2V3bVRBVzZaakVDeFc3NkdMdHR5a2h4Zy9sKzJtZGc4QzNIRmwvN0lJNjlsc3JDamxxQ1QiLCJtYWMiOiIyODI1NzFiY2RlNTJkMjI0NzhjYTUwMWY3OTI4OTMwMDRlMWZlNWRjY2UyMzhkODNmYjZjOTk1ZWY0MzZlOTljIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:29:52] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:29:52] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkRkVHpCUDJ6VDRXUmJGTWx2UkpvaVE9PSIsInZhbHVlIjoiOUtmcXdyNnVDRXVyOG83TDFTdHNwZnJTekNlWTRKNEc1Nmt0cEJORDNObnBtalJueUF0L2kvZ0pPTWFVRmpyUTVoa0dlQmJmdXJmV0NNaFQ1R2VmYStvTmlGUExDUzFGYTRSd2N0elc5TjF6SzNLb2NDakR0VS9nR2doT1p3YkciLCJtYWMiOiI4NjA3ZmU5OTdkN2IxZGFjOGNjM2I3Y2ZmMWEyNzYzNjkwYTQ0MzJiYWFmYjAwNjhhZWRjYmQ5ZjA4ZDBmMDg3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlNwV1k0UGJjeWU3bi9nakRMcFpDUmc9PSIsInZhbHVlIjoiczBGWWhuSXV5ZEVLUXFYV1VNd3hIRGtVNm81VlRtNzFPd0lVbHBWL2xzU296V01OZzIzTjZEZTJlTEhWSkRLcHhLRUd2RVZIUXpUK3BjeVlRakpibFlweExRY3dPUDZPSGJqT1dDVG1kZlV4Z0hOeS8vWng4bWZIcjYrVjZxQlIiLCJtYWMiOiJiMjUxZjhkZjU0MWEyMGE2MGMxYzAwMGRhOGQ0OGVjZWYxNWNhYTA4MjQxMDExYzI5MDBlZDRiMWYwZjM1YmIzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:31:14] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:31:14] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Imk2V1hRNGI2MkNISnZwazIwSGVCRnc9PSIsInZhbHVlIjoiaDAvUTJJR3hBc1lCd2ZTY0hYZis5ZmtSN3hwS1NReE42NC9LZUxxMmZqa2xreVFSN1dVYXR3MWt2OHVVSGNyY200ZFRjdGhkSWsyZ05QSkt2UVhLZ3RtaFBwajMxTE9MWUFpVFptSEhNRHA2clB5OGRjeWNlbldzWlEyK0lYTFoiLCJtYWMiOiJhYjg1MDA1ZTYzNzhhYWZmYWI4NWI1NWU5ZjlhZjRhNDAxNzRjNTAxMTAzYTRhNTUzMTkxOWQ4NjQ2NDQ2ZjI1IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkNmUzZTYnVJcGJqaFgyUkFhOE9rcFE9PSIsInZhbHVlIjoiL2FpNGNNcHgrNXdleGl0WDVEVzllK3ZaMURpK3dXaytYVmkzczg4d3I5RUpTdXVhU3RKeFNKSWIzSWhMczBWWHlsS3ZZM3pvWTc2WWFxb0VKU2hxVDE0SmZLTkxLOThxWk5aNlJzNklZVllVUzVFWHdNK1kyeHJndFhZUjZIWGYiLCJtYWMiOiI4YmVhMDU3ZTdmNTlhYzFiOGUwODMwYTM5YjBlMDNlYzlmYThhNTdhNGZhOTA5MmZkYzZkOTAzMWE2Nzg0ODM3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-06 17:32:14] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:32:14] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InZCd0doQnJ6dS9taldWT1RpMDVhcXc9PSIsInZhbHVlIjoiQ083enZYMHRzQ0dSdUwwb2Vsb05mUWZyeFF0OUlPQTlRT1BQV3MxbmlteURSUGQxV2YyQ2pmZWs1UVBHV0tuWmRwK09OQ0dWOFk2V3Q1dzVycUVGQnBzOUZvdWZkRFBRTUZxSWhKNldrRkhzcXRCT05RSjdZZTB4SjJjWDBrVEciLCJtYWMiOiI0MTQ3OTM4NDExZmI5NTllNzY0OGFmN2E3NzYwZGYzM2ViZTQzNjliN2FkOGZmNzFhZGJmMWE5ZTQ4ZjViNmQ5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkRrSDF4V0Q1R0VndEtmNUpNQ3VZWGc9PSIsInZhbHVlIjoiYU4xY2NRUHZGL1praGNrcGh6NHJCeUdEcitaeHBCaFA1bzNoNDM1TjJnVXI5T2Y1R1JkNUpNN01iZEQxbENkd0RDRmF5MG9nUXJ0aDViZGRVMEYwSXUyeFVYVGIydUtXNGpVSjYxQjhuU1ZjS0Q4M0E3S09VMWZWZHh5QTlvSngiLCJtYWMiOiI1MzBlMGU5YjQwOTQyZGU3Zjg1YjgzOTU3MThjYTJlZTI3NjUyNjBiY2I1MzlmMDFlNWViODI3YTQxMTE0MTFkIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
