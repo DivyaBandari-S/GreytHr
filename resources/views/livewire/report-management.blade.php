@@ -347,10 +347,10 @@
                                         style="font-size: 0.785rem; color: rgb(2, 17, 79);">Date</label>
                                 </div>
                                 <div class="col-8" style="display: flex;flex-direction: column;">
-                                    <input type="date" id="to-date" wire:model="DateSelect"
-                                        wire:change="updateDateSelect" wire:model.lazy="toDate"
+                                    <input type="date" id="to-date" wire:model="toDate"
+                                        wire:change="updateToDate" wire:model.lazy="toDate"
                                         style="font-size: 0.785rem; color: #778899;width:45%">
-                                    @error('Date') <span class="error"
+                                    @error('toDate') <span class="error"
                                         style="color: red;font-size:0.7rem;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
@@ -365,18 +365,17 @@
                                         wire:model.lazy="leaveType"
                                         style="font-size: 0.785rem; color: #778899;width: 59%;height: 70%;">
                                         <option value="all">All Leaves</option>
-                                        <option value="Loss Of Pay">Loss Of Pay</option>
+                                        <option value="lop">Loss Of Pay</option>
                                         <option value="casual_leave">Casual Leave</option>
-                                        <option value="earned_leave">Earned Leave</option>
-                                        <option value="Sick Leave">Sick Leave</option>
-                                        <option value="paternity">Paternity Leave</option>
-                                        <option value="Casual Leave Probation">Casul Leave Probation</option>
+                                        <option value="sick">Sick Leave</option>
+                                        <option value="petarnity">Petarnity Leave</option>
+                                        <option value="maternity">Maternity Leave</option>
+                                        <option value="casual_leave_probation">Casul Leave Probation</option>
                                         <option value="marriage_leave">Marriage Leave</option>
 
                                         <!-- Add other leave types as needed -->
                                     </select>
-                                    @error('leaveType') <span class="error"
-                                        style="color: red;font-size:0.7rem;">{{ $message }}</span> @enderror
+                                   
                                 </div>
                             </div>
 
@@ -410,6 +409,7 @@
                                         style="font-size: 0.785rem; color: #778899;width: 59%;height: 70%;">
 
                                         <option value="newest_first" selected>Employee Number (Newest First)</option>
+                                        <option value="oldest_first" >Employee Number (Oldest First)</option>
                                     </select>
                                 </div>
                             </div>
@@ -424,7 +424,7 @@
                                 style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;">Options</button>
                             <button type="button"
                                 style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
-                                wire:click="downloadLeaveAvailedReportInExcel">Run</button>
+                                wire:click="downloadNegativeLeaveBalanceReport">Run</button>
                             <button type="button" data-dismiss="modal"
                                 style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
                                 wire:click='resetFields'>Clear</button>
@@ -686,18 +686,18 @@
                                         wire:model.lazy="leaveType"
                                         style="font-size: 0.785rem; color: #778899;width: 59%;height: 70%;">
                                         <option value="all">All Leaves</option>
-                                        <option value="Loss Of Pay">Loss Of Pay</option>
+                                        <option value="lop">Loss Of Pay</option>
                                         <option value="casual_leave">Casual Leave</option>
-                                        <option value="earned_leave">Earned Leave</option>
-                                        <option value="Sick Leave">Sick Leave</option>
-                                        <option value="paternity">Paternity Leave</option>
-                                        <option value="Casual Leave Probation">Casul Leave Probation</option>
+                                        <option value="sick">Sick Leave</option>
+                                        <option value="petarnity">Petarnity Leave</option>
+                                        <option value="maternity">Maternity Leave</option>
+                                        <option value="casual_leave_probation">Casul Leave Probation</option>
                                         <option value="marriage_leave">Marriage Leave</option>
 
                                         <!-- Add other leave types as needed -->
                                     </select>
-                                    @error('leaveType') <span class="error"
-                                        style="color: red;font-size:0.7rem;">{{ $message }}</span> @enderror
+                                    {{-- @error('leaveType') <span class="error"
+                                        style="color: red;font-size:0.7rem;">{{ $message }}</span> @enderror --}}
                                 </div>
                             </div>
 
@@ -711,12 +711,11 @@
                                     <select id="transactionType" wire:model="transactionType"
                                         wire:change="updateTransactionType" wire:model.lazy="transactionType"
                                         style="font-size: 0.785rem; color: #778899;width: 59%;height: 70%;">
-                                        <option value="all">All </option>
-                                        <option value="Loss Of Pay">Availed</option>
-                                        <!-- Add other leave types as needed -->
+                                        <option value="all">All</option>
+                                        <option value="availed">Availed</option>
                                     </select>
-                                    @error('transactionType') <span class="error"
-                                        style="color: red;font-size:0.7rem;">{{ $message }}</span> @enderror
+                                    {{-- @error('transactionType') <span class="error"
+                                        style="color: red;font-size:0.7rem;">{{ $message }}</span> @enderror --}}
                                 </div>
                             </div>
 
@@ -746,10 +745,11 @@
                                 </div>
                                 <div class="col-8">
                                     <select name="sortBy" wire:model="sortBy" wire:change="updateSortBy"
-                                        id="sortBySelect"
+                                    id="sortBySelect"
                                         style="font-size: 0.785rem; color: #778899;width: 59%;height: 70%;">
 
                                         <option value="newest_first" selected>Employee Number (Newest First)</option>
+                                        <option value="oldest_first">Employee Number (Oldest First)</option>
                                     </select>
                                 </div>
                             </div>
@@ -764,7 +764,7 @@
                                 style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;">Options</button>
                             <button type="button"
                                 style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
-                                wire:click="downloadLeaveAvailedReportInExcel">Run</button>
+                                wire:click="downloadLeaveTransactionReport">Run</button>
                             <button type="button" data-dismiss="modal"
                                 style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
                                 wire:click='resetFields'>Clear</button>
