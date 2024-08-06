@@ -271,8 +271,8 @@ nav .nav-link .icon {
 }
 nav .nav-link .badge {
 	position: absolute;
-	top: -10px;
-	right: -6px;
+	top: 0px;
+	right: 0px;
 	width: 20px;
 	height: 20px;
 	border-radius: 50%;

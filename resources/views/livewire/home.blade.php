@@ -755,7 +755,7 @@ $taskCount = $taskRecords->count();
 <div class="modal" tabindex="-1" role="dialog" style="display: block;">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+            <div class="modal-header d-flex align-items-center" style="background-color: rgb(2, 17, 79); height: 50px">
                 <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Swipes</b></h5>
                 <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
                 </button>

@@ -143,7 +143,7 @@
                 <ul class="profile-link">
                     <li><a href="/ProfileInfo"><i class='fas fa-user-circle icon'></i> Profile</a></li>
                     <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
-                    <li><a href="#" wire:click='handleLogout' style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
+                    <li><a  wire:click="handleLogout" href="#" style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
                 </ul>
             </div>
         </nav>
@@ -157,7 +157,7 @@
     <div>
     <!-- Logout Modal -->
     @if( $showLogoutModal == true)
-    <div class="modal" id="logoutModal" tabindex="-1" style="display: block;">
+    <div class="modal" id="logoutModal" tabindex="4" style="display: block;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header text-white" style=" background-color: rgb(2, 17, 79);">
