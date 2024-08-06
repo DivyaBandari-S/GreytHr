@@ -151,7 +151,7 @@
 
 
             <button class="submit-btn px-4">
-                <i class="bx bx-download" aria-hidden="true" wire:click="downloadexcelforLeave" style="font-size:16px;"></i>
+                <i class="fa fa-download" aria-hidden="true" wire:click="downloadexcelforLeave" style="font-size:16px;"></i>
             </button>
         </div>
         <div class="row" style="margin:0;padding:0;">
@@ -269,7 +269,7 @@
                                 <div class="search-cont ">
                                     <input wire:model.debounce.500ms="searchTerm" type="text" placeholder="Search Employee">
                                     <!-- Search button -->
-                                    <button class="btn-3" wire:click="searchData"><i class="bx bx-search"></i></button>
+                                    <button class="btn-3" wire:click="searchData"><i class="fa fa-search"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -277,7 +277,7 @@
                     <div class="filter-container1">
                         <div id="main" style="margin-left: {{ $showDialog ? '250px' : '0' }}">
                             <button class="openbtn" wire:click="open">
-                                <i class="bx bx-filter-alt" style="color:#778899;"></i>
+                                <i class="fas fa-filter" style="color:#778899;"></i>
                             </button>
                         </div>
 
@@ -291,7 +291,7 @@
                                 <span style="font-size: 14px; font-weight: 500;color:#778899;">Leave transactions({{ count($this->leaveTransactions) }})</span>
                             </div>
                             <div class="arrow-btn" onclick="toggleAccordion(this)">
-                                <i class="bx bx-chevron-down"></i>
+                                <i class="fas fa-chevron-down"></i>
                             </div>
                         </div>
                     </div>
@@ -381,13 +381,13 @@
                 const isOpen = accordionBody.style.display === 'block';
                 if (isOpen) {
                     accordionBody.style.display = 'none';
-                    arrowIcon.classList.remove('bx-chevron-up');
-                    arrowIcon.classList.add('bx-chevron-down');
+                    arrowIcon.classList.remove('fa-chevron-up');
+                    arrowIcon.classList.add('fa-chevron-down');
                     localStorage.setItem('accordionState', 'closed');
                 } else {
                     accordionBody.style.display = 'block';
-                    arrowIcon.classList.remove('bx-chevron-down');
-                    arrowIcon.classList.add('bx-chevron-up');
+                    arrowIcon.classList.remove('fa-chevron-down');
+                    arrowIcon.classList.add('fa-chevron-up');
                     localStorage.setItem('accordionState', 'open');
                 }
 
@@ -402,15 +402,15 @@
                     accordionBodies.forEach(body => {
                         body.style.display = 'none';
                         const arrowIcon = body.previousElementSibling.querySelector('i');
-                        arrowIcon.classList.remove('bx-chevron-up');
-                        arrowIcon.classList.add('bx-chevron-down');
+                        arrowIcon.classList.remove('fa-chevron-up');
+                        arrowIcon.classList.add('fa-chevron-down');
                     });
                 } else {
                     accordionBodies.forEach(body => {
                         body.style.display = 'block';
                         const arrowIcon = body.previousElementSibling.querySelector('i');
-                        arrowIcon.classList.remove('bx-chevron-down');
-                        arrowIcon.classList.add('bx-chevron-up');
+                        arrowIcon.classList.remove('fa-chevron-down');
+                        arrowIcon.classList.add('fa-chevron-up');
                     });
                 }
             });

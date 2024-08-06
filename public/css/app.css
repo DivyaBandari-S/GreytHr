@@ -2319,6 +2319,9 @@ input[type="radio"] {
     font-size: 13px !important;
     color: black !important;
 }
+.form-control{
+    font-size: var(--sub-headings-font-size);
+}
 #category::placeholder {
     color: #778899; /* Placeholder text color */
     font-size: 10px; /* Placeholder font size */
@@ -2623,15 +2626,12 @@ input[type="radio"] {
     margin: 0.975rem auto;
 }
 
-.field {
-    display: flex;
-    justify-content: start;
-    flex-direction: column;
-}
 .leave-type{
     color: #605448; font-size: 12px; font-weight: 600;
 }
-
+.leaveTypeTitle{
+    color: var(--sub-heading-color); font-size: var(--sub-headings-font-size); font-weight: 500;
+}
 .pay-bal {
     display: flex;
     gap: 10px;
@@ -2944,6 +2944,7 @@ input[type="radio"] {
 .balance {
     font-size: var( --normal-font-size);
     color: #778899;
+    padding: 10px 15px;
 }
 .field {
     font-size: var( --normal-font-size);

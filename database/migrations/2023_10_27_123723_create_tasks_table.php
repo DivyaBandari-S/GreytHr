@@ -27,7 +27,6 @@ return new class extends Migration
             $table->string('file_path')->nullable();
             $table->string('status')->default('Open'); // CC to field (nullable)
             $table->timestamps();
-
             $table->foreign('emp_id')
                 ->references('emp_id')
                 ->on('employee_details')
