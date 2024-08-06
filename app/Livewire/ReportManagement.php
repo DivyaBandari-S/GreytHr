@@ -24,6 +24,7 @@ class ReportManagement extends Component
     public $fromDate;
     public $sortBy;
     public $toDate;
+    public $hireDate;
 
     public $notFound;
 
@@ -31,6 +32,7 @@ class ReportManagement extends Component
     public $transactionType='all';
 
     public $employees;
+    public $dateErrorMessage;
     public function showContent($section)
     {
 
@@ -296,9 +298,11 @@ public  function updateTransactionType($event){
                     ->orWhere('employee_details.employee_status', 'terminated');
             });
            }
+         
 
             $query = $query->orderBy('date_only', 'asc')
             ->get();
+   
 
         // Aggregate data by date
         $aggregatedData = $query->groupBy('date_only')->map(function ($group) {
@@ -342,6 +346,274 @@ public  function updateTransactionType($event){
         return response()->streamDownload(function() use($pdf){
             echo $pdf->stream();
         }, 'Daywise_leave_transactions.pdf');
+    }
+
+
+   
+    public function downloadLeaveTransactionReport()
+    {
+        $this->validate([
+            'fromDate' => 'required|date',
+            'toDate' => 'required|date|after_or_equal:fromDate',
+            'transactionType' => 'required',
+            'employeeType' => 'required',
+        ], [
+            'fromDate.required' => 'From date is required.',
+            'toDate.required' => 'To date is required.',
+            'toDate.after_or_equal' => 'To date must be a date after or equal to the from date.',
+            'transactionType.required' => 'Leave type is required.',
+            'employeeType.required' => 'Employee type is required.',
+        ]);
+    
+        $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+    
+        $query = LeaveRequest::select(
+            DB::raw('DATE(from_date) as date_only'),
+            DB::raw('count(*) as total_requests'),
+            'leave_applications.emp_id',
+            'employee_details.first_name',
+            'employee_details.last_name',
+            'leave_applications.leave_type',
+            'leave_applications.from_date as leave_from_date',
+            'leave_applications.to_date as leave_to_date',
+            'leave_applications.reason',
+            'leave_applications.created_at',
+            'leave_applications.from_session',
+            'leave_applications.to_session',
+            'leave_applications.status'
+        )
+        ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+        ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
+           
+            $leaveTypes = [
+                'lop' => 'Loss of Pay',
+                'casual_leave' => 'Casual Leave',
+                'sick' => 'Sick Leave',
+                'petarnity' => 'Petarnity Leave',
+                'casual_leave_probation' => 'Casual Leave Probation',
+                'maternity' => 'Maternity Leave',
+                'marriage_leave' => 'Marriage Leave',
+            ];
+
+            if (array_key_exists($this->leaveType, $leaveTypes)) {
+                $query->where('leave_applications.leave_type', $leaveTypes[$this->leaveType]);
+            }
+        })
+        ->where(function ($query) use ($loggedInEmpId) {
+            $query->whereJsonContains('applying_to', [['manager_id' => $loggedInEmpId]])
+                ->orWhereJsonContains('cc_to', [['emp_id' => $loggedInEmpId]]);
+        })
+        ->where(function ($query) {
+            $query->whereBetween('from_date', [$this->fromDate, $this->toDate])
+                ->orWhereBetween('to_date', [$this->fromDate, $this->toDate])
+                ->orWhere(function ($query) {
+                    $query->where('from_date', '<=', $this->toDate)
+                        ->where('to_date', '>=', $this->fromDate);
+                });
+        });
+    
+        if ($this->transactionType === 'availed' || $this->transactionType === 'all') {
+            $query->where('leave_applications.status', 'approved');
+        }
+    
+        if ($this->employeeType == 'active') {
+            $query->where('employee_details.employee_status', $this->employeeType);
+        } else {
+            $query->where(function ($query) {
+                $query->where('employee_details.employee_status', 'resigned')
+                    ->orWhere('employee_details.employee_status', 'terminated');
+            });
+        }
+    
+        $query = $query->groupBy(
+            'date_only',
+            'leave_applications.emp_id',
+            'employee_details.first_name',
+            'employee_details.last_name',
+            'leave_applications.leave_type',
+            'leave_applications.from_date',
+            'leave_applications.to_date',
+            'leave_applications.reason',
+            'leave_applications.created_at',
+            'leave_applications.from_session',
+            'leave_applications.to_session',
+            'leave_applications.status'
+        )
+        ->orderBy('date_only', 'asc')
+        ->get();
+    
+       
+    
+        // Aggregate data by date
+        $aggregatedData = $query->groupBy('date_only')->map(function ($group) {
+            return [
+                'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
+                'details' => $group->map(function ($item) {
+                    $leaveRequest = new LeaveRequest();
+                    $leaveDays = $leaveRequest->calculateLeaveDays(
+                        $item->leave_from_date,
+                        $item->from_session,
+                        $item->leave_to_date,
+                        $item->to_session
+                    );
+                    return [
+                        'emp_id' => $item->emp_id,
+                        'first_name' => $item->first_name,
+                        'last_name' => $item->last_name,
+                        'leave_type' => $item->leave_type,
+                        'leave_from_date' => $item->leave_from_date,
+                        'leave_to_date' => $item->leave_to_date,
+                        'reason' => $item->reason,
+                        'created_at' => $item->created_at,
+                        'from_session' => $item->from_session,
+                        'to_session' => $item->to_session,
+                        'leave_days' => $leaveDays,
+                        'leave_status' => $item->status,
+                    ];
+                })
+            ];
+        });
+    
+        $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
+        $pdf = Pdf::loadView('leaveTransactionReportPdf', [
+            'employeeDetails' => $employeeDetails,
+            'leaveTransactions' => $aggregatedData,
+            'fromDate' => $this->fromDate,
+            'toDate' => $this->toDate,
+        ]);
+    
+        return response()->streamDownload(function() use($pdf) {
+            echo $pdf->stream();
+        }, 'leave_transactions_report.pdf');
+    }
+    
+    public function downloadNegativeLeaveBalanceReport()
+    {
+        $this->validate([
+            'toDate' => 'required|date',
+            'employeeType' => 'required',
+        ], [
+            'toDate.required' => 'Date is required.',
+            'employeeType.required' => 'Employee type is required.',
+        ]);
+    
+        $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+    
+        $query = LeaveRequest::select(
+            DB::raw('DATE(to_date) as date_only'),
+            DB::raw('count(*) as total_requests'),
+            'leave_applications.emp_id',
+            'employee_details.first_name',
+            'employee_details.last_name',
+            'employee_details.hire_date',
+            'employee_details.job_role',
+            'leave_applications.leave_type',
+            'leave_applications.from_date as leave_from_date',
+            'leave_applications.to_date as leave_to_date',
+            'leave_applications.from_session',
+            'leave_applications.to_session',
+            'leave_applications.status'
+        )
+        ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+        ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
+           
+            $leaveTypes = [
+                'lop' => 'Loss of Pay',
+                'casual_leave' => 'Casual Leave',
+                'sick' => 'Sick Leave',
+                'petarnity' => 'Petarnity Leave',
+                'casual_leave_probation' => 'Casual Leave Probation',
+                'maternity' => 'Maternity Leave',
+                'marriage_leave' => 'Marriage Leave',
+            ];
+
+            if (array_key_exists($this->leaveType, $leaveTypes)) {
+                $query->where('leave_applications.leave_type', $leaveTypes[$this->leaveType]);
+            }
+        })
+        ->where(function ($query) use ($loggedInEmpId) {
+            $query->whereJsonContains('applying_to', [['manager_id' => $loggedInEmpId]])
+                ->orWhereJsonContains('cc_to', [['emp_id' => $loggedInEmpId]]);
+        })
+        ->where('to_date', '<=', $this->toDate);
+
+       
+    
+    
+        if ($this->employeeType == 'active') {
+            $query->where('employee_details.employee_status', $this->employeeType);
+        } else {
+            $query->where(function ($query) {
+                $query->where('employee_details.employee_status', 'resigned')
+                    ->orWhere('employee_details.employee_status', 'terminated');
+            });
+        }
+       
+       
+    
+        $query = $query->groupBy(
+            'date_only',
+            'leave_applications.emp_id',
+            'employee_details.first_name',
+            'employee_details.last_name',
+            'employee_details.hire_date',
+            'employee_details.job_role',
+            'leave_applications.leave_type',
+            'leave_applications.to_date',
+            'leave_applications.from_date',
+            'leave_applications.from_session',
+            'leave_applications.to_session',
+            'leave_applications.status',
+        )
+        ->orderBy('date_only', 'asc')
+        ->get();
+
+ 
+       
+    
+        // Aggregate data by date
+        $aggregatedData = $query->groupBy('date_only')->map(function ($group) {
+            return [
+                'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
+                'details' => $group->map(function ($item) {
+                    $leaveRequest = new LeaveRequest();
+                    $leaveDays = $leaveRequest->calculateLeaveDays(
+                        $item->leave_from_date,
+                        $item->from_session,
+                        $item->leave_to_date,
+                        $item->to_session
+                    );
+                    return [
+                        'emp_id' => $item->emp_id,
+                        'first_name' => $item->first_name,
+                        'last_name' => $item->last_name,
+                        'hire_date' => $item->hire_date,
+                        'job_role' => $item->job_role,
+                        'leave_type' => $item->leave_type,
+                        'leave_from_date' => $item->leave_from_date,
+                        'leave_to_date' => $item->leave_to_date,
+                        'from_session' => $item->from_session,
+                        'to_session' => $item->to_session,
+                        'leave_days' => $leaveDays,
+                        'leave_status' => $item->status,
+                    ];
+                })
+            ];
+        });
+
+
+    
+        $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
+        $pdf = Pdf::loadView('negativeLeaveBalanceReportPdf', [
+            'employeeDetails' => $employeeDetails,
+            'leaveTransactions' => $aggregatedData,
+            'fromDate' => $this->fromDate,
+            'toDate' => $this->toDate,
+        ]);
+    
+        return response()->streamDownload(function() use($pdf) {
+            echo $pdf->stream();
+        }, 'negative_leave_balance_report.pdf');
     }
 
     public function render()

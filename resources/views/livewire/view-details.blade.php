@@ -2,7 +2,7 @@
     <div class="detail-container ">
         <div class="row m-0 p-0">
             <div class="col-md-4 p-0 m-0 mb-2 ">
-                <div aria-label="breadcrumb">
+                <div aria-label="breadcrumb bg-none">
                     <ol class="breadcrumb d-flex align-items-center ">
                         <li class="breadcrumb-item"><a type="button" style="color:#fff !important;" class="submit-btn" href="{{ route('review') }}">Back</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Review - View Details</li>
@@ -191,7 +191,9 @@
                                         <span class="custom-label">Applied to</span>
                                         <span class="custom-label">Reason</span>
                                         <span class="custom-label">Contact</span>
+                                        @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-label">CC to</span>
+                                        @endif
                                     </div>
 
                                     <div class="custom-grid-item">
@@ -226,6 +228,7 @@
                                             @endforeach
                                             @endif
                                         </span>
+                                        @else
                                         @endif
                                     </div>
                                 </div>

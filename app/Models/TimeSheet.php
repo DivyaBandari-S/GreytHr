@@ -9,7 +9,7 @@ class TimeSheet extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'emp_id',
+        'emp_id',t
         'start_date',
         'end_date',
         'time_sheet_type',
@@ -17,8 +17,12 @@ class TimeSheet extends Model
         'submission_status',
         'approval_status_for_manager',
         'approval_status_for_hr',
+        'reject_reason_for_manager',
+        'resubmit_reason_for_manager',
+        'reject_reason_for_hr',
+        'resubmit_reason_for_hr',
     ];
- 
+
     protected $casts = [
         'date_and_day_with_tasks' => 'array',
     ];
