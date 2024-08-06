@@ -1,4 +1,0 @@
-[2024-08-06 13:02:12] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
-[stacktrace]
-#0 {main}
-"} 
