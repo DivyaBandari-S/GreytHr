@@ -9,9 +9,9 @@
     @endif
     <!-- Assuming you are using Blade templates in Laravel -->
     @if (session('popupMessage') || $showPopupMessage)
-        <div class="error-message">
-            {{ session('popupMessage') }}
-        </div>
+    <div class="error-message">
+        {{ session('popupMessage') }}
+    </div>
     @endif
 
     <div class="applyContainer bg-white">
@@ -423,9 +423,12 @@
                 @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group mt-3">
-                <input type="file" wire:model="files" wire:loading.attr="disabled" style="font-size: 12px;" multiple />
-                @error('file_paths') <span class="text-danger">{{ $message }}</span> @enderror
+                <input type="file" wire:model="file_paths" wire:loading.attr="disabled" style="font-size: 12px;" multiple accept=".jpg,.png,.pdf,.xlsx,.xls" />
+                @error('file_paths')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
+
 
             <div class="buttons-leave">
                 <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>

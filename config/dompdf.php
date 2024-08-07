@@ -247,6 +247,8 @@ return array(
          */
         "enable_javascript" => true,
 
+        
+
         /**
          * Enable remote file access
          *
@@ -280,5 +282,10 @@ return array(
         "enable_html5_parser" => true,
     ),
 
-
+    'font_dir' => storage_path('fonts'), // Updated to match your storage path
+    'font_cache' => storage_path('fonts'),
+    'default_font' => 'montserrat',
+    'font_height_ratio' => 1.1,
+    'temp_dir' => storage_path('fonts'),
+    'chroot' => base_path(),
 );

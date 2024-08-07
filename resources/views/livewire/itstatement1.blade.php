@@ -1,4 +1,21 @@
 <div class="container-it" style="width:90%;">
+@if ($salaryRevision->isEmpty())
+<div style="align-items:center;justify-content:center;">
+<div class="homeCard4" style="width:80%;justify-content:center;align-items:center">
+                            <div class="py-2 px-3" style="height:400px;justify-content:center">
+                                <div class="d-flex justify-content-center">
+                                    <p style="font-size:20px;color:#778899;font-weight:500;align-items:center">IT Statements</p>
+                                    
+                                </div>
+
+                                <div style="display:flex;align-items:center;flex-direction:column;">
+                                        <img src="https://th.bing.com/th/id/OIP.pdoKODCp_FelHFj7crhbCwHaEK?w=316&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="" style="height:300px;width:450px;">
+                                    <p style="color: #677A8E;  margin-bottom: 20px; font-size:12px;"> We are currently working on your IT Statements!</p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+@else
     <div>
         <div class="d-flex justify-content-end">
             <button onclick="window.location.href='/itform'" id="pdfLink2023_4" class="pdf-download btn-primary px-3 rounded ml-9" download style="display: inline-block;background:rgb(2, 17, 79);"><i class="fas fa-download"></i></button>
@@ -344,7 +361,7 @@
 
 
     </div>
-
+@endif
 <script>
     function toggleVisibility(buttonId, containerId) {
         const button = document.getElementById(buttonId);

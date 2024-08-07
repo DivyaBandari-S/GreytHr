@@ -509,39 +509,51 @@ public function loadaddComments()
     }
 
     public function render()
-{
-    // Initialize variables
-    $this->employeeDetails = collect();
-    $this->hr = collect();
-    $storedEmojis = collect();
-    $emojis = collect();
-
-    // Check if 'emp' guard is authenticated
-    if (auth()->guard('emp')->check()) {
-        $this->employeeDetails = EmployeeDetails::with('personalInfo') // Eager load personal info
-        ->where('emp_id', auth()->guard('emp')->user()->emp_id)
-        ->get();
-        $storedEmojis = Emoji::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
-        $emojis = EmojiReaction::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
-    } 
-    // Check if 'hr' guard is authenticated
-    elseif (auth()->guard('hr')->check()) {
-        $this->employeeDetails = Hr::where('hr_emp_id', auth()->guard('hr')->user()->hr_emp_id)->get();
+    {
+        // Initialize variables
+        $this->employeeDetails = collect();
+        $this->hr = collect();
+        $storedEmojis = collect();
+        $emojis = collect();
     
+        // Check if 'emp' guard is authenticated
+        if (auth()->guard('emp')->check()) {
+            $this->employeeDetails = EmployeeDetails::with('personalInfo') // Eager load personal info
+                ->where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->get();
+    
+            $storedEmojis = Emoji::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
+            $emojis = EmojiReaction::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
+    
+            // Check if no employee details are found
+            if ($this->employeeDetails->isEmpty()) {
+                // Redirect or handle the case where no employee details are found
+                return redirect()->route('Feeds'); // Redirect to a route for no employee details
+            }
+        } 
+        // Check if 'hr' guard is authenticated
+        elseif (auth()->guard('hr')->check()) {
+            $this->employeeDetails = Hr::where('hr_emp_id', auth()->guard('hr')->user()->hr_emp_id)->get();
+            
+            // Check if no employee details are found
+            if ($this->employeeDetails->isEmpty()) {
+                // Redirect or handle the case where no employee details are found
+                return redirect()->route('no-employee-details'); // Redirect to a route for no employee details
+            }
+        }
+    
+        // Return the view with the necessary data
+        return view('livewire.feeds', [
+            'comments' => $this->comments,
+            'addcomments' => $this->addcomments,
+            'empCompanyLogoUrl' => $this->empCompanyLogoUrl,
+            'hr' => $this->employeeDetails,
+            'employees' => $this->employeeDetails,
+            'emojis' => $emojis,
+            'storedEmojis' => $storedEmojis
+        ]);
     }
-
-    // Return the view with the necessary data
-    return view('livewire.feeds', [
-        'comments' => $this->comments,
-        'addcomments' => $this->addcomments,
-        'empCompanyLogoUrl' => $this->empCompanyLogoUrl,
-        'hr' => $this->employeeDetails,
-        'employees' => $this->employeeDetails,
-        'emojis' => $emojis,
-        'storedEmojis' => $storedEmojis
-    ]);
-}
-
+    
 public function showEmployee($id)
 {
     $employee = EmployeeDetails::find($id);

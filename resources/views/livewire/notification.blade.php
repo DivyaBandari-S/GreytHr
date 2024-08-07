@@ -1,4 +1,4 @@
-<div class="d-flex align-items-center gap-3">
+<div class="d-flex align-items-center ">
 
     <div  id="notificationButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
         <a href="#" class="nav-link">
