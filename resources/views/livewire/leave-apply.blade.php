@@ -308,7 +308,7 @@
                         <div class="d-flex gap-4 align-items-center" style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             @if($employee['image'])
                             <div class="employee-profile-image-container">
-                                <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius:50%;">
+                                <img height="35px" width="35px" src="{{ $employee['image'] }}" style="border-radius:50%;">
                             </div>
                             @else
                             <div class="employee-profile-image-container">
