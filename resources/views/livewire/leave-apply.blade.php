@@ -312,7 +312,7 @@
                             </div>
                             @else
                             <div class="employee-profile-image-container">
-                                <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
                             </div>
                             @endif
                             <div class="center d-flex flex-column mt-2 mb-2">
