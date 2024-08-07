@@ -21,41 +21,44 @@
 
                 <ul class="p-2 grid w-full space-y-2" style="list-style: none; padding: 0;">
                     <div class="c" style="contain: content; margin-left:20px;overflow-y: auto; height: 420px;">
-                        @if ($conversations)
+                        <!--[if BLOCK]><![endif]--><?php if($conversations): ?>
 
 
-                        @foreach ($conversations as $key => $conversation)
+                        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $conversations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $conversation): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                        <li id="conversation-{{ $conversation->id }}" wire:key="{{ $conversation->id }}" class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2 {{ $conversation->id == $selectedConversation?->emp_id ? 'bg-gray-100/70' : '' }}" style="margin-bottom: 10px;height:70px;width:90%; ">
-                            <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;" src="{{ asset('storage/' . $conversation->getReceiver()->image) }}" class="card-img-top" alt="...">
+                        <li id="conversation-<?php echo e($conversation->id); ?>" wire:key="<?php echo e($conversation->id); ?>" class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2 <?php echo e($conversation->id == $selectedConversation?->emp_id ? 'bg-gray-100/70' : ''); ?>" style="margin-bottom: 10px;height:70px;width:90%; ">
+                            <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;" src="<?php echo e(asset('storage/' . $conversation->getReceiver()->image)); ?>" class="card-img-top" alt="...">
                             <aside class="grid grid-cols-12 w-full">
 
-                                <a href="#" wire:click="redirectToEncryptedLink('{{ $conversation->id }}')" class="col-span-11 border-b pb-2 border-gray-200 relative truncate leading-5 w-full flex-nowrap p-1" style="display: block; text-decoration: none;">
+                                <a href="#" wire:click="redirectToEncryptedLink('<?php echo e($conversation->id); ?>')" class="col-span-11 border-b pb-2 border-gray-200 relative truncate leading-5 w-full flex-nowrap p-1" style="display: block; text-decoration: none;">
                                     <div class="flex justify-between w-full items-center">
                                         <div style="display:flex">
                                             <h6 class="truncate font-medium tracking-wider " style="color: black;font-size:12px">
-                                                {{ ucfirst(strtolower($conversation->getReceiver()->first_name)) }}&nbsp;{{ ucwords(strtolower($conversation->getReceiver()->last_name)) }}
+                                                <?php echo e(ucfirst(strtolower($conversation->getReceiver()->first_name))); ?>&nbsp;<?php echo e(ucwords(strtolower($conversation->getReceiver()->last_name))); ?>
+
                                             </h6>
-                                            <small class="text-gray-700" style="color: #888888;margin-left: auto;">{{ $conversation->messages?->last()?->created_at?->shortAbsoluteDiffForHumans() }}</small>
+                                            <small class="text-gray-700" style="color: #888888;margin-left: auto;"><?php echo e($conversation->messages?->last()?->created_at?->shortAbsoluteDiffForHumans()); ?></small>
                                         </div>
                                         <div class="flex gap-x-2 items-center ">
-                                            @if ($conversation->messages?->last()?->sender_id == auth()->id())
-                                            @endif
-                                            @php
+                                            <!--[if BLOCK]><![endif]--><?php if($conversation->messages?->last()?->sender_id == auth()->id()): ?>
+                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                            <?php
                                             $lastMessage = $conversation->messages
                                             ? $conversation->messages->last()
                                             : null;
-                                            @endphp
+                                            ?>
                                             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
                                                 <p class="grow truncate text-sm font-[100]" style="font-size: 10px; margin-right: 5px; flex: 1;color:#888888">
-                                                    {{ Str::limit($lastMessage ? $lastMessage->body : '', 15) }}
+                                                    <?php echo e(Str::limit($lastMessage ? $lastMessage->body : '', 15)); ?>
+
                                                 </p>
-                                                {{-- unread count --}}
-                                                @if ($conversation->unreadMessagesCount() > 0)
+                                                
+                                                <!--[if BLOCK]><![endif]--><?php if($conversation->unreadMessagesCount() > 0): ?>
                                                 <span style="font-weight: bold; padding: 1px 4px; font-size: 0.75rem; border-radius: 50%; background-color: #007bff; color: #ffffff; display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; flex-shrink: 0;">
-                                                    {{ $conversation->unreadMessagesCount() }}
+                                                    <?php echo e($conversation->unreadMessagesCount()); ?>
+
                                                 </span>
-                                                @endif
+                                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                             </div>
 
                                         </div>
@@ -64,7 +67,7 @@
 
                                 </a>
 
-                                {{-- Dropdown --}}
+                                
 
 
 
@@ -76,9 +79,9 @@
                     </aside>
 
                     </li>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
 
-                    @endif
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 </ul>
             </main>
         </div>
@@ -87,7 +90,7 @@
         <div class="chat" style="background-image: url('https://i.pinimg.com/originals/39/cf/bc/39cfbc81276720ddf5003854e42c2769.jpg');">
 
             <div class="chat-header clearfix" style="border-radius:5px;border:2px solid silver;background-image: url('https://th.bing.com/th/id/OIP.D5JnKq5hq9D54giN_liHTQHaHa?w=163&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7');height:80px">
-                <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 50px; width: 50px;margin-top:5px" src="{{ asset('storage/' . $selectedConversation->getReceiver()->image) }}" class="card-img-top" alt="...">
+                <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 50px; width: 50px;margin-top:5px" src="<?php echo e(asset('storage/' . $selectedConversation->getReceiver()->image)); ?>" class="card-img-top" alt="...">
                 <div class="chat-about">
                     <div class="chat-with mt-1">
                         <div class="d-flex align-items-center">
@@ -95,9 +98,10 @@
                             <div class="name-box">
                                 <div style="color:white">
                                     <div>
-                                        {{ ucfirst(strtolower($selectedConversation->getReceiver()->first_name)) }}&nbsp;{{ ucwords(strtolower($selectedConversation->getReceiver()->last_name)) }}
+                                        <?php echo e(ucfirst(strtolower($selectedConversation->getReceiver()->first_name))); ?>&nbsp;<?php echo e(ucwords(strtolower($selectedConversation->getReceiver()->last_name))); ?>
+
                                     </div>
-                                    <div class="text" style="color:white">{{ $selectedConversation->getReceiver()->emp_id }}</div>
+                                    <div class="text" style="color:white"><?php echo e($selectedConversation->getReceiver()->emp_id); ?></div>
                                 </div>
                             </div>
 
@@ -113,47 +117,49 @@
                 <ul>
                     <li class="message clearfix" id="conversation">
                         <!-- end chat-header -->
-                        @if ($loadedMessages)
-                            @foreach ($loadedMessages as $key => $message)
-                                {{-- keep track of the previous message --}}
+                        <!--[if BLOCK]><![endif]--><?php if($loadedMessages): ?>
+                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $loadedMessages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $message): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                
              
 
                                 <div
-                                    class="message-container clearfix @if ($message->sender_id === auth()->id()) sent @else received @endif">
-                                    {{-- message body --}}
+                                    class="message-container clearfix <?php if($message->sender_id === auth()->id()): ?> sent <?php else: ?> received <?php endif; ?>">
+                                    
                                     <div class="message-body" style="display:flex">
                                         <div style="display: flex; flex-direction: column;">
-                                            <p class="message-content" style="font-size:10px">{{ $message->body }}
+                                            <p class="message-content" style="font-size:10px"><?php echo e($message->body); ?>
+
                                             </p>
-                                            @if ($message->file_path)
-                                                {{-- Display the image if the file path is for an image --}}
-                                                @if (Str::startsWith($message->file_path, 'chating-files') &&
-                                                        Str::endsWith($message->file_path, ['.jpg', '.jpeg', '.png', '.gif']))
-                                                    <img src="{{ asset('uploads/' . $message->file_path) }}"
+                                            <!--[if BLOCK]><![endif]--><?php if($message->file_path): ?>
+                                                
+                                                <!--[if BLOCK]><![endif]--><?php if(Str::startsWith($message->file_path, 'chating-files') &&
+                                                        Str::endsWith($message->file_path, ['.jpg', '.jpeg', '.png', '.gif'])): ?>
+                                                    <img src="<?php echo e(asset('uploads/' . $message->file_path)); ?>"
                                                         alt="Attached Image" style="max-width: 100px;">
-                                                    {{-- Display a link to download PDF or a generic download link for other file types --}}
-                                                @else
+                                                    
+                                                <?php else: ?>
                                                     <button class="message-content"
                                                         style="font-size: 10px;background:white;border:1px solid silver;border-radius:4px;display:flex">
-                                                        <a href="{{ asset('uploads/' . $message->file_path) }}"
+                                                        <a href="<?php echo e(asset('uploads/' . $message->file_path)); ?>"
                                                             target="_blank">
                                                             <span
                                                                 style="font-size: 30px;margin-top:10px;color:black">&#8595;</span>
-                                                            {{ basename($message->file_path) }}
+                                                            <?php echo e(basename($message->file_path)); ?>
+
                                                         </a>
                                                     </button>
-                                                @endif
-                                            @endif
+                                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                         </div>
-                                        {{-- Display message time and status --}}
+                                        
                                         <div style="display: flex; ">
                                             <span class="message-time"
-                                                style="font-size:10px;margin-left:20px">{{ $message->created_at->format('g:i a') }}</span>
-                                            {{-- message status, only show if message belongs to auth --}}
-                                            @if ($message->sender_id === auth()->id())
-                                                <div x-data="{ markAsRead: @json($message->isRead()) }">
-                                                    {{-- double ticks --}}
-                                                    <span x-cloak x-show="markAsRead" @class('text-gray-200')>
+                                                style="font-size:10px;margin-left:20px"><?php echo e($message->created_at->format('g:i a')); ?></span>
+                                            
+                                            <!--[if BLOCK]><![endif]--><?php if($message->sender_id === auth()->id()): ?>
+                                                <div x-data="{ markAsRead: <?php echo json_encode($message->isRead(), 15, 512) ?> }">
+                                                    
+                                                    <span x-cloak x-show="markAsRead" class="<?php echo \Illuminate\Support\Arr::toCssClasses('text-gray-200'); ?>">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16"
                                                             height="16" fill="currentColor" class="bi bi-check2-all"
                                                             viewBox="0 0 16 16">
@@ -163,8 +169,8 @@
                                                                 d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z" />
                                                         </svg>
                                                     </span>
-                                                    {{-- single ticks --}}
-                                                    <span x-show="!markAsRead" @class('text-gray-200')>
+                                                    
+                                                    <span x-show="!markAsRead" class="<?php echo \Illuminate\Support\Arr::toCssClasses('text-gray-200'); ?>">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16"
                                                             height="16" fill="currentColor" class="bi bi-check2"
                                                             viewBox="0 0 16 16">
@@ -173,12 +179,12 @@
                                                         </svg>
                                                     </span>
                                                 </div>
-                                            @endif
+                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
-                        @endif
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
 
@@ -191,24 +197,25 @@
                 </ul>
             </div>
             <form wire:submit.prevent="sendMessage" method="POST" enctype="multipart/form-data" id="messageForm">
-                @csrf
+                <?php echo csrf_field(); ?>
 
                 <div class="card-footer">
 
                     <div class="input-group">
                         <!-- Attachment -->
                         <div class="row" style="width:100%;">
-                            @if ($attachment && !$body)
+                            <!--[if BLOCK]><![endif]--><?php if($attachment && !$body): ?>
                             <div class="container attachment-container" style="width:100%;height:60px">
-                                @if (Str::startsWith($attachment->getMimeType(), 'image/'))
-                                <img src="{{ $attachment->temporaryUrl() }}" alt="Selected Image" class="attachment-image" style="height: 50px; width: 100%;">
-                                @else
+                                <!--[if BLOCK]><![endif]--><?php if(Str::startsWith($attachment->getMimeType(), 'image/')): ?>
+                                <img src="<?php echo e($attachment->temporaryUrl()); ?>" alt="Selected Image" class="attachment-image" style="height: 50px; width: 100%;">
+                                <?php else: ?>
                                 <i class="fas fa-file attachment-icon"></i>
-                                {{ $attachment->getClientOriginalName() }}
-                                @endif
+                                <?php echo e($attachment->getClientOriginalName()); ?>
+
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                             </div>
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                         <div class="input-group-prepend">
                             <label class="btn btn-secondary attach-btn">
@@ -223,24 +230,31 @@
 
                         <!-- Send button -->
                         <div class="input-group-append">
-                            @if ($attachment || $body)
+                            <!--[if BLOCK]><![endif]--><?php if($attachment || $body): ?>
                             <button id="sendMessageButton" type="submit" class="btn btn send-btn" style="background-color: rgb(2, 17, 79);color:white">
                                 <i class="fas fa-location-arrow"></i> Send
                             </button>
-                            @else
+                            <?php else: ?>
                             <button id="sendMessageButton" type="submit" class="btn btn send-btn" style="background-color: rgb(2, 17, 79);color:white">
                                 <i class="fas fa-location-arrow"></i> Send
                             </button>
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                     </div>
 
                     <!-- Display selected attachment -->
 
                 </div>
-                @error('body')
-                <p>{{ $message }}</p>
-                @enderror
+                <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['body'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <p><?php echo e($message); ?></p>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
             </form>
 
 
@@ -1031,4 +1045,4 @@
     }
 </style>
 </div>
-</div>
+</div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/chat/chat-box.blade.php ENDPATH**/ ?>

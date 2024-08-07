@@ -9,6 +9,8 @@ use App\Models\SalaryRevision;
 use App\Models\EmpBankDetail;
 use DateTime;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+
 class SalarySlips extends Component
 {
     public $employeeDetails;
@@ -35,6 +37,7 @@ class SalarySlips extends Component
     }
     public function downloadPdf()
     {
+       
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
         $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
@@ -46,14 +49,15 @@ class SalarySlips extends Component
             'empBankDetails' => $this->empBankDetails,
             'netPay' => $this->calculateNetPay()
         ];
-    
-        // Generate PDF using the fetched data
-        $pdf = Pdf::loadView('download-pdf', $data);
   
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, 'salary-slips.pdf');
+        $dompdf = new Dompdf();
+        $dompdf->set_option('font_dir', storage_path('fonts'));
+        $dompdf->set_option('font_cache', storage_path('fonts/cache'));
+        $dompdf->loadHtml(view('download-pdf', $data)->render());
+        $dompdf->render();
+       
+        return $dompdf->stream('salary-slips.pdf');
+       
     }
     
 

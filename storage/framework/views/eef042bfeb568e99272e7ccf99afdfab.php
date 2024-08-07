@@ -10,16 +10,16 @@
    
         <div class="mx-2">
             <select class="dropdown-salary bg-white px-3 py-1" wire:model="selectedMonth">
-                @foreach($options as $value => $label)
-                    <option value="{{ $value }}" style="background-color: #fff; color: #333; font-size: 13px;">{{ $label }}</option>
-                @endforeach
+                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $options; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($value); ?>" style="background-color: #fff; color: #333; font-size: 13px;"><?php echo e($label); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
             </select>
         </div>
 
 </div>
 <div class ="row mt-4 mx-0 salary-slip-h6" style="display: flex;" >
     <div class="col">
-    @if ($salaryRevision->isEmpty())
+    <!--[if BLOCK]><![endif]--><?php if($salaryRevision->isEmpty()): ?>
     <div class="homeCard5">
                             <div class="py-2 px-3" style="height:400px">
                                 <div class="d-flex justify-content-center">
@@ -40,10 +40,10 @@
 </div> -->
 
 </div>
-@else
+<?php else: ?>
     </div>
 
-@foreach($salaryRevision as $employee)
+<!--[if BLOCK]><![endif]--><?php $__currentLoopData = $salaryRevision; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
 <div class="col-md-4 mb-2">
    <div class="bg-white earnings-tab rounded">
@@ -54,34 +54,34 @@
         <div class="px-3 py-2 earning-details">
             <div class="column" style="display: flex; justify-content: space-between;">
                 <p>BASIC</p>
-                <span>{{ number_format($employee->basic, 2) }} </span>
+                <span><?php echo e(number_format($employee->basic, 2)); ?> </span>
             </div>
 
             <div class="column" style="display: flex; justify-content: space-between;">
                 <p>HRA</p>
-                <span>{{ number_format($employee->hra, 2) }} </span>
+                <span><?php echo e(number_format($employee->hra, 2)); ?> </span>
             </div>
 
             <div class="column" style="display: flex; justify-content: space-between;">
                 <p>CONVEYANCE</p>
-                <span>{{ number_format($employee->conveyance, 2) }} </span>
+                <span><?php echo e(number_format($employee->conveyance, 2)); ?> </span>
             </div>
 
             <div class="column" style="display: flex; justify-content: space-between;">
                 <p>MEDICAL ALLOWANCE</p>
-                <span>{{ number_format($employee->medical, 2) }} </span>
+                <span><?php echo e(number_format($employee->medical, 2)); ?> </span>
             </div>
 
             <div class="column" style="display: flex; justify-content: space-between;">
                 <p>SPECIAL ALLOWANCE</p>
-                <span>{{ number_format($employee->special, 2) }}</span>
+                <span><?php echo e(number_format($employee->special, 2)); ?></span>
             </div>
 
         </div>
 
         <div class="total-sal px-3 py-2" style="display: flex; color:black;font-weight:500;font-size:13px; text-align: center;justify-content: space-between;background:#e8f0f8;align-items:center;   border-bottom-left-radius: 5px;   border-bottom-right-radius: 5px;">
                 <p class="mb-0">Total</p>
-                <p class="mb-0">{{ number_format($employee->calculateTotalAllowance(), 2) }}</p>
+                <p class="mb-0"><?php echo e(number_format($employee->calculateTotalAllowance(), 2)); ?></p>
         </div>
     </div>
 </div>
@@ -95,12 +95,12 @@
         <div class="px-3 py-2 earning-details mb-5">
             <div class="column" style="display: flex; justify-content: space-between;">
                 <p>PF</p>
-                <span>{{ number_format($employee->calculatePf(), 2) }}</span>
+                <span><?php echo e(number_format($employee->calculatePf(), 2)); ?></span>
             </div>
 
             <div class="column" style="display: flex; justify-content: space-between;">
                 <p>ESI</p>
-                <span>{{ number_format($employee->calculateEsi(), 2) }}</span>
+                <span><?php echo e(number_format($employee->calculateEsi(), 2)); ?></span>
             </div>
 
             <div class="column" style="display: flex; justify-content: space-between;">
@@ -111,50 +111,52 @@
 
         <div class="total-sal px-3 py-2 mt-4" style="display: flex; color:black;font-weight:500;font-size:13px; text-align: center;justify-content: space-between;background:#e8f0f8;align-items:center;   border-bottom-left-radius: 5px;   border-bottom-right-radius: 5px;">
                 <p class="mb-0">Total</p>
-                <p class="mb-0">{{ number_format($employee->calculateTotalDeductions(), 2) }}</p>
+                <p class="mb-0"><?php echo e(number_format($employee->calculateTotalDeductions(), 2)); ?></p>
         </div>
     </div>
 </div>
-@endforeach
-@endif
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 <div class="col-md-4 mb-2">
 <div class="employee-details-container  px-3  rounded" style="background-color: #ffffe8;">
     <div class="mt-3 d-flex justify-content-between">
        <h6 style="color: #778899;font-weight:500;">Employee details</h6>
        <p style="font-size: 12px; cursor: pointer;color:deepskyblue;font-weight:500;" wire:click="toggleDetails">
-        {{ $showDetails ? 'Hide' : 'Info' }}
+        <?php echo e($showDetails ? 'Hide' : 'Info'); ?>
+
     </p>
     </div>
-    @if ($showDetails)
+    <!--[if BLOCK]><![endif]--><?php if($showDetails): ?>
   <div class="row d-flex justify-content-between py-2">
     <div class="details-column">
-  @foreach($employees as $employee)
+  <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $employees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         <div class="detail">
             <p class="emp-details-p">Name <br>
-                <span class="emp-details-span">{{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}</span>
+                <span class="emp-details-span"><?php echo e(ucwords(strtolower($employee->first_name))); ?> <?php echo e(ucwords(strtolower($employee->last_name))); ?></span>
             </p>
         </div>
         <div class="detail">
            <p class="emp-details-p">Joining Date <br>
-                <span class="emp-details-span">{{ date('d M Y', strtotime($employee->hire_date)) }}</span>
+                <span class="emp-details-span"><?php echo e(date('d M Y', strtotime($employee->hire_date))); ?></span>
             </p>
         </div>
         <div class="detail">
            <p class="emp-details-p">Designation <br>
-                <span class="emp-details-span">{{ empty($employee->job_role) ? '-' : ucwords(strtolower($employee->job_role)) }}</span>
+                <span class="emp-details-span"><?php echo e(empty($employee->job_role) ? '-' : ucwords(strtolower($employee->job_role))); ?></span>
             </p>
         </div>
         <div class="detail">
            <p class="emp-details-p">Department <br>
            <span class="emp-details-span">
-                {{ empty($employee->department) ? '-' : ucwords(strtolower($employee->department)) }}
+                <?php echo e(empty($employee->department) ? '-' : ucwords(strtolower($employee->department))); ?>
+
             </span>
             </p>
         </div>
         <div class="detail">
            <p class="emp-details-p">Location <br>
-                <span class="emp-details-span">{{ empty($employee->job_location) ? '-' : ucwords(strtolower($employee->job_location)) }}</span>
+                <span class="emp-details-span"><?php echo e(empty($employee->job_location) ? '-' : ucwords(strtolower($employee->job_location))); ?></span>
             </p>
         </div>
         <div class="detail">
@@ -171,10 +173,10 @@
     <div class="details-column">
         <div class="detail">
             <p class="emp-details-p">Employee No <br>
-                <span class="emp-details-span">{{ empty($employee->emp_id) ? '-' : ucwords(strtoupper($employee->emp_id)) }}</span>
+                <span class="emp-details-span"><?php echo e(empty($employee->emp_id) ? '-' : ucwords(strtoupper($employee->emp_id))); ?></span>
             </p>
         </div>
-        @if($empBankDetails->isEmpty())
+        <!--[if BLOCK]><![endif]--><?php if($empBankDetails->isEmpty()): ?>
             <div class="detail">
                 <p class="emp-details-p">Bank Name <br>
                     <span class="emp-details-span">N/A</span>
@@ -185,56 +187,58 @@
                     <span class="emp-details-span">N/A</span>
                 </p>
             </div>
-        @else
-            @foreach($empBankDetails as $bankDetail)
+        <?php else: ?>
+            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $empBankDetails; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bankDetail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="detail">
                     <p class="emp-details-p">Bank Name <br>
                         <span class="emp-details-span">
-                            {{ empty($bankDetail->bank_name) ? 'N/A' : ucwords(strtolower($bankDetail->bank_name)) }}
+                            <?php echo e(empty($bankDetail->bank_name) ? 'N/A' : ucwords(strtolower($bankDetail->bank_name))); ?>
+
                         </span>
                     </p>
                 </div>
                 <div class="detail">
                     <p class="emp-details-p">Bank Account No <br>
                         <span class="emp-details-span">
-                            {{ empty($bankDetail->account_number) ? 'N/A' : ucwords(strtolower($bankDetail->account_number)) }}
+                            <?php echo e(empty($bankDetail->account_number) ? 'N/A' : ucwords(strtolower($bankDetail->account_number))); ?>
+
                         </span>
                     </p>
                 </div>
-            @endforeach
-        @endif
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
         <div class="detail">
            <p class="emp-details-p">PAN Number <br>
-                <span class="emp-details-span">{{ empty($employee->pan_no) ? '-' : $employee->pan_no }}</span></span>
+                <span class="emp-details-span"><?php echo e(empty($employee->pan_no) ? '-' : $employee->pan_no); ?></span></span>
             </p>
         </div>
         <div class="detail">
            <p class="emp-details-p">PF No <br>
-                <span class="emp-details-span">{{ empty($employee->pf_no) ? '-' : $employee->pf_no }}</span></span>
+                <span class="emp-details-span"><?php echo e(empty($employee->pf_no) ? '-' : $employee->pf_no); ?></span></span>
             </p>
         </div>
         <div class="detail">
            <p class="emp-details-p">PF UAN <br>
-                <span class="emp-details-span">{{ empty($employee->pf_uan) ? '-' : $employee->pf_uan }}</span></span>
+                <span class="emp-details-span"><?php echo e(empty($employee->pf_uan) ? '-' : $employee->pf_uan); ?></span></span>
             </p>
         </div>
     </div>
-@endforeach
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
     </div>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 </div>
     <div class="total-count mt-3 bg-white py-1">
         <p style="font-size: 14px;">Net Pay for Dec 2023</p>
             <!-- Display the net pay -->
-            @if ($netPay > 0)
-                <p style="font-size: 14px; color:green;font-weight:500;">₹ {{ number_format($netPay, 2) }}</p>
-            @else
+            <!--[if BLOCK]><![endif]--><?php if($netPay > 0): ?>
+                <p style="font-size: 14px; color:green;font-weight:500;">₹ <?php echo e(number_format($netPay, 2)); ?></p>
+            <?php else: ?>
                 <p style="font-size: 12px;">-</p>
-            @endif
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-            <p style="color:#778899;font-size:12px;margin-bottom:0;">{{ 'Rupees ' . ucwords( $this->convertNumberToWords($netPay)) . ' Only' }}</p>
+            <p style="color:#778899;font-size:12px;margin-bottom:0;"><?php echo e('Rupees ' . ucwords( $this->convertNumberToWords($netPay)) . ' Only'); ?></p>
     </div>
 </div>
 </div>
@@ -242,4 +246,4 @@
   </div>
 
  
- </div>
+ </div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/salary-slips.blade.php ENDPATH**/ ?>

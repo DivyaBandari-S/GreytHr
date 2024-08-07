@@ -200,7 +200,7 @@ class ChatBox extends Component
             'body' => $this->body,
         ]);
 
-        $this->reset('body');
+        $this->reset('body','file_path','attachment');
          #scroll to bottom
          $this->dispatch('scroll-bottom');
 
