@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 use App\Models\LeaveRequest;
+use App\Models\EmployeeLeaveBalances;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class ReportManagement extends Component
 {
@@ -33,6 +35,7 @@ class ReportManagement extends Component
 
     public $employees;
     public $dateErrorMessage;
+    public $leaveBalance = [];
     public function showContent($section)
     {
 
@@ -108,6 +111,7 @@ class ReportManagement extends Component
         $this->toDate = null;
         $this->leaveType = null;
         $this->employeeType = null;
+        $this->leaveBalance = [];
     }
 
     public function downloadLeaveAvailedReportInExcel()
@@ -347,6 +351,77 @@ public  function updateTransactionType($event){
             echo $pdf->stream();
         }, 'Daywise_leave_transactions.pdf');
     }
+    public function leaveBalanceAsOnADayReport()
+    {
+        // Validate the 'toDate' input
+        $this->validate([
+            'toDate' => 'required|date',
+        ], [
+            'toDate.required' => 'Date is required.',
+        ]);
+    
+        // Check if any employees are selected
+        if (empty($this->leaveBalance)) {
+            return redirect()->back()->with('error', 'Select at least one employee detail');
+        } else {
+            // Fetch employee details for selected employees
+         
+            $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
+            ->whereIn('emp_id', $this->leaveBalance)
+            ->select('emp_id', 'first_name', 'last_name')
+            ->get();
+           
+
+        // Fetch leave balances and join with employee details
+        $leaveBalances = EmployeeLeaveBalances::select(
+            'employee_leave_balances.emp_id',
+            DB::raw('COALESCE(JSON_EXTRACT(leave_balance, "$.Casual Leave"), 0) AS casual_leave_balance'),
+            DB::raw('COALESCE(JSON_EXTRACT(leave_balance, "$.Casual Leave Probation"), 0) AS casual_leave_probation_balance'),
+            DB::raw('COALESCE(JSON_EXTRACT(leave_balance, "$.Loss Of Pay"), 0) AS loss_of_pay_balance'),
+            DB::raw('COALESCE(JSON_EXTRACT(leave_balance, "$.Sick Leave"), 0) AS sick_leave_balance')
+        )
+        ->whereIn('employee_leave_balances.emp_id', $this->leaveBalance)
+        ->where('employee_leave_balances.status', 'Granted')
+        ->whereDate('employee_leave_balances.to_date', '<=', $this->toDate)
+        ->get()
+        ->keyBy('emp_id');
+      
+
+        // Combine employee details with their leave balances
+        $combinedData = $employees->map(function ($employee) use ($leaveBalances) {
+            $leaveBalance = $leaveBalances->get($employee->emp_id);
+            return [
+                'emp_id' => $employee->emp_id,
+                'first_name' => $employee->first_name,
+                'last_name' => $employee->last_name,
+                'casual_leave_balance' => $leaveBalance ? $leaveBalance->casual_leave_balance : 0,
+                'casual_leave_probation_balance' => $leaveBalance ? $leaveBalance->casual_leave_probation_balance : 0,
+                'loss_of_pay_balance' => $leaveBalance ? $leaveBalance->loss_of_pay_balance : 0,
+                'sick_leave_balance' => $leaveBalance ? $leaveBalance->sick_leave_balance : 0,
+                
+                // Add more leave types if needed
+            ];
+        });
+
+
+
+                $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
+                
+                $pdf = Pdf::loadView('leaveBalanceAsOnDayReport', [
+                    'employeeDetails' => $employeeDetails,
+                    'leaveTransactions' => $combinedData,
+                    'fromDate' => $this->fromDate,
+                    'toDate' => $this->toDate,
+                ]);
+            
+                return response()->streamDownload(function() use($pdf) {
+                    echo $pdf->stream();
+                }, 'leave_balance_as_on_a_day.pdf');
+
+        }
+    }
+    
 
 
    

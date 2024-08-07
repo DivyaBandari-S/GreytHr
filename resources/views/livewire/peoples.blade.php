@@ -48,7 +48,7 @@
 
         .people-empty-text {
             text-align: center;
-            color: #778899;
+            color: var(--label-color);
             font-size: 12px;
         }
 
@@ -68,22 +68,22 @@
 
         .people-default-container-name {
             font-size: 12px;
-            color: black;
+            color: var(--main-heading-color);
             margin-right: 5px;
         }
 
         .people-default-container-name.inactive {
-            color: red;
+            color: var(--requiredAlert);
         }
 
         .people-default-container-empid {
             font-size: 12px;
-            color: #333;
+            color: var(--main-heading-color);
             white-space: nowrap;
         }
 
         .people-default-container-empid.inactive {
-            color: red;
+            color: var(--requiredAlert);
         }
 
         .people-text-blue {
@@ -111,6 +111,8 @@
         .people-selectedperson-name {
             font-size: 16px;
             margin-right: 5px;
+            color: var(--main-heading-color);
+            font-weight: 500;
         }
 
         .people-selectedperson-anchortag {
@@ -124,33 +126,33 @@
         }
 
         .people-selectedperson-empid {
-            color: #778899;
+            color: var(--label-color);
             font-size: 14px;
         }
 
         .people-headings {
             margin-right: 10px;
             font-weight: 500;
-            color: #778899;
+            color: var(--label-color);
             font-size: 12px;
         }
 
         .people-horizontal-line {
             flex-grow: 1;
             width: 50px;
-            color: black;
-            border: 1px solid #778899;
+            color: var(--main-heading-color);
+            border: 1px solid var(--label-color);
             margin: 0;
         }
 
         .people-label {
-            color: #778899;
+            color: var(--label-color);
             font-size: 13px;
         }
 
         .people-value {
             font-weight: 500;
-            color: #333;
+            color: var(--main-heading-color);
             font-size: 13px;
         }
 
@@ -205,17 +207,17 @@
         @if ($mangerid)
         <div class="row justify-content-center" style="width: 35%; position: relative; padding-left: 30px;">
             <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
-                <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'starred')" class="links">
+                <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}" wire:click="$set('activeTab', 'starred')" class="links">
                     Starred
                 </a>
             </div>
             <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
-                <a id="myteam-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'myteam' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'myteam')" class="links">
+                <a id="myteam-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'myteam' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}" wire:click="$set('activeTab', 'myteam')" class="links">
                     My Team
                 </a>
             </div>
             <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
-                <a id="everyone-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'everyone')" class="links">
+                <a id="everyone-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}" wire:click="$set('activeTab', 'everyone')" class="links">
                     Everyone
                 </a>
             </div>
@@ -224,12 +226,12 @@
         @else
         <div class="row justify-content-start" style="width: 40%; position: relative; padding-left: 40px;">
             <div class="col-3 text-start" style="border-radius: 5px; cursor: pointer;">
-                <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'starred')" class="links">
+                <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}" wire:click="$set('activeTab', 'starred')" class="links">
                     Starred
                 </a>
             </div>
             <div class="col-3 text-start" style="border-radius: 5px; cursor: pointer;">
-                <a id="everyone-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'everyone')" class="links">
+                <a id="everyone-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}" wire:click="$set('activeTab', 'everyone')" class="links">
                     Everyone
                 </a>
             </div>
