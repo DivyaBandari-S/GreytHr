@@ -44,15 +44,10 @@ class ProfileInfo extends Component
             ]);
 
             if ($this->image) {
-                if ($this->image instanceof \Illuminate\Http\UploadedFile) {
-                    $imagePath = $this->image->store('employee_image', 'public');
-                } else {
-                    $imagePath = $this->image;
-                }
+                $imagePath = file_get_contents($this->image->getRealPath());
                 $employee->image = $imagePath;
                 $employee->save();
             }
-
             $this->showSuccessMessage = true;
         } catch (\Exception $e) {
             Log::error('Error in updateProfile method: ' . $e->getMessage());
@@ -71,15 +66,10 @@ class ProfileInfo extends Component
             $this->employeeDetails = EmployeeDetails::with(['empBankDetails', 'empParentDetails', 'empPersonalInfo','empSpouseDetails'])
                 ->where('emp_id', $empId)
                 ->first();
-              
 
-              
                 return view('livewire.profile-info');
               
-              
-    
-    
-           
+
         } catch (\Exception $e) {
             Log::error('Error in render method: ' . $e->getMessage());
             return view('livewire.profile-info')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);

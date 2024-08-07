@@ -13,7 +13,7 @@
                 <div class="col-md-6">
                     <div class="ps-4" style="height: 15em; border-radius: 10px; background-color: #fff;">
                         @if($this->greetingText)
-                        <h1 class="pt-4 greet-text text-secondary-500 pb-1.5x" style="font-size: 24px; font-family: montserrat;color:rgb(2, 17, 79); font-weight: 600;">{{$greetingText}}</h1>
+                        <h1 class="pt-4 greet-text text-secondary-500 pb-1.5x" style="font-size: 24px; font-family: montserrat;color:rgb(2, 17, 79); font-weight: 600;">{{ $greetingText }}</h1>
                         @endif
                         <p class="fw-bold fs-5" style="color:rgb(2, 17, 79);">Welcome, {{ ucwords(strtolower($loginEmployee->first_name)) }} {{ ucwords(strtolower($loginEmployee->last_name)) }} </p>
                     </div>
