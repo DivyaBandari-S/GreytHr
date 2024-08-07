@@ -158,7 +158,7 @@
                     </div>
                     <button type="button" style="border-radius: 50%; color: #778899; border: 1px solid #778899;" class="add-button" wire:click="toggleRotation">
                         <div class="icon-container">
-                            <i class="bx bx-plus" style="color: #778899;"></i>
+                            <i class="fas fa-plus" style="color: #778899;"></i>
                         </div>
                     </button>
                     <span style="color: #778899; font-size: 12px;">Add</span>
@@ -403,7 +403,7 @@
         <div class="input-group people-input-group-container">
             <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
             <div class="input-group-append">
-                <button wire:click="searchActiveHelpDesk" class="people-search-btn" type="button" >
+                <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button" >
                     <i class="fa fa-search people-search-icon"></i>
                 </button>
             </div>
@@ -513,7 +513,7 @@
         <div class="input-group people-input-group-container">
             <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
             <div class="input-group-append">
-                <button wire:click="searchClosedHelpDesk" class="people-search-btn" type="button" >
+                <button wire:click="searchClosedHelpDesk" class="submit-btn" type="button" >
                     <i class="fa fa-search people-search-icon"></i>
                 </button>
             </div>
@@ -613,7 +613,7 @@
         <div class="input-group people-input-group-container">
             <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
             <div class="input-group-append">
-                <button wire:click="searchPendingHelpDesk" class="people-search-btn" type="button" >
+                <button wire:click="searchPendingHelpDesk" class="submit-btn" type="button" >
                     <i class="fa fa-search people-search-icon"></i>
                 </button>
             </div>

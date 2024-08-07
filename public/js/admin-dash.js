@@ -7,7 +7,7 @@ allDropdown.forEach(item=> {
 	a.addEventListener('click', function (e) {
 		e.preventDefault();
 
-		if(!this.classList.contains('active')) {
+		if(!this.classList.contains('active-side-dropdown')) {
 			allDropdown.forEach(i=> {
 				const aLink = i.parentElement.querySelector('a:first-child');
 
@@ -21,6 +21,56 @@ allDropdown.forEach(item=> {
 	})
 })
 
+// function setActiveLink(link, targetUrl) {
+// 	var currentUrl = window.location.pathname;
+
+// 	// Check if the target URL is the same as the current URL
+// 	if (currentUrl !== targetUrl) {
+// 		// openModal();
+// 		// Remove active class from all links
+// 		var links = document.querySelectorAll('a:first-child');
+// 		links.forEach(function(element) {
+// 			element.classList.remove('active');
+// 		});
+
+// 		// Add active class to the clicked link
+// 		link.classList.add('active');
+
+// 	} else {
+// 		// If target URL is same as current URL, prevent modal opening
+// 		event.preventDefault();
+// 		console.log("Already on the same page.");
+// 	}
+// }
+
+
+
+// Check and set active link on page load
+document.addEventListener("DOMContentLoaded", function() {
+	var currentPath = window.location.pathname;
+	var links = document.querySelectorAll('a:first-child');
+
+	links.forEach(function(link) {
+		link.classList.remove('active');
+		if (link.getAttribute("href") === currentPath) {
+			link.classList.add('active');
+			link.parentNode.classList.add('active');
+		}
+	});
+
+	// Adding active class for dropdown parents
+    var dropdownLinks = document.querySelectorAll('.side-dropdown a');
+
+    dropdownLinks.forEach(function(link) {
+        if (link.getAttribute("href") === currentPath) {
+            var parentLink = link.closest('ul').previousElementSibling;
+            if (parentLink) {
+                parentLink.classList.add('active-side-dropdown');
+                // parentLink.parentNode.classList.add('active-side-dropdown');
+            }
+        }
+    });
+});
 
 
 
@@ -197,4 +247,4 @@ tooltip: {
 };
 
 var chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();
+chart.render();c
