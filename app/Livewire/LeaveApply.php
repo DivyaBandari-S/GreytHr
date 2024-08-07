@@ -25,6 +25,7 @@ use App\Models\HolidayCalendar;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class LeaveApply extends Component
 {
@@ -44,7 +45,6 @@ class LeaveApply extends Component
     public $managerId;
     public $employeeId;
     public $file_paths;
-    public $filePaths = [];
     public $defaultApplyingTo;
     public $cc_to;
     public $searchTerm = '';
@@ -82,6 +82,7 @@ class LeaveApply extends Component
     public $fromSession;
     public $toSession;
     public $toDate;
+    public $file;
     public $calculatedNumberOfDays = 0;
     public $loginEmpManagerProfile;
     public $differenceInMonths;
@@ -356,24 +357,24 @@ class LeaveApply extends Component
         }
     }
     public $showPopupMessage = false;
-public $numberOfDays;
+    public $numberOfDays;
     //it will update the number of days in leave apply page
     public function handleFieldUpdate($field)
     {
         try {
             $this->showNumberOfDays = true;
             $this->showPopupMessage = false; // Ensure popup is not shown by default
-    
+
             if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session') {
                 list($result, $errorMessage) = $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
-    
+
                 if ($errorMessage) {
                     // If there's an error, set the popup message
                     session()->flash('popupMessage', $errorMessage);
                     $this->showPopupMessage = true;
                 } else {
                     $this->numberOfDays = $result;
-    
+
                     // Check if number of days is 0 and set the popup flag
                     if ($this->numberOfDays === 0) {
                         dd('ghj');
@@ -529,11 +530,13 @@ public $numberOfDays;
 
         try {
             $this->selectleave();
+
             // Check for weekend
             if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
-                $this->errorMessage = 'Looks like its already your non working day. Please pick different date(s) to apply.';
+                $this->errorMessage = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
                 return redirect()->back()->withInput();
             }
+
             // Check for overlapping leave
             $overlappingLeave = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where(function ($query) {
@@ -551,12 +554,12 @@ public $numberOfDays;
                 ->whereIn('status', ['approved', 'pending'])
                 ->exists();
 
-            // If overlapping leave is found, set the error message
             if ($overlappingLeave) {
                 $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
                 return;
             }
-            //to check validation for fromdate to todate
+
+            // Validate from_date to to_date
             if ($this->to_date < $this->from_date) {
                 $this->errorMessage = 'To date must be greater than or equal to from date.';
                 return redirect()->back()->withInput();
@@ -575,44 +578,40 @@ public $numberOfDays;
                 $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
                 return redirect()->back()->withInput();
             }
-            $filePaths = [];
-            // Check if files are set and is an array
-            if (isset($this->files) && is_array($this->files)) {
-                foreach ($this->files as $file) {
-                    // Check if file is a valid uploaded file
-                    if ($file->isValid()) {
-                        try {
-                            // Generate a unique file name
-                            $fileName = uniqid() . '_' . $file->getClientOriginalName();
+            $fileContent = null;
+            if ($this->file_paths) {
+                $validator = Validator::make(
+                    ['file_paths' => $this->file_paths],
+                    ['file_paths' => 'nullable|file|max:2048|mimes:jpg,png,pdf,xlsx,xls'] // Validate file type and size
+                );
 
-                            // Store the file
-                            $file->storeAs('public/help-desk-files', $fileName);
+                if ($validator->fails()) {
+                    $this->errorMessage = 'The file is invalid. Please upload a valid file with a size of up to 2MB.';
+                    return redirect()->back()->withInput();
+                }
 
-                            // Add file path to array
-                            $filePaths[] = 'help-desk-files/' . $fileName;
-                        } catch (\Exception $e) {
-                            // Log the error
-                            Log::error("Error storing file: " . $e->getMessage());
-                            // Optionally, handle the error as needed
-                            $this->errorMessage = 'Error uploading files. Please try again.';
-                            return redirect()->back()->withInput();
-                        }
-                    } else {
-                        // Handle invalid file error
-                        $this->errorMessage = 'One or more files are not valid.';
+                if ($this->file_paths->isValid()) {
+                    try {
+                        // Convert file to binary data
+                        $fileContent = file_get_contents($this->file_paths->getRealPath());
+                    } catch (\Exception $e) {
+                        Log::error("Error processing file: " . $e->getMessage());
+                        $this->errorMessage = 'Error processing the file. Please try again.';
                         return redirect()->back()->withInput();
                     }
+                } else {
+                    Log::warning('File is not valid or is null', ['file' => $this->file_paths]);
                 }
             }
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $ccToDetails = [];
+
             foreach ($this->selectedCCEmployees as $selectedEmployeeId) {
                 // Check if the employee ID already exists in ccToDetails
                 $existingIds = array_column($ccToDetails, 'emp_id');
 
                 if (!in_array($selectedEmployeeId, $existingIds)) {
-
                     // Fetch additional details from EmployeeDetails table
                     $employeeDetails = EmployeeDetails::where('emp_id', $selectedEmployeeId)->first();
 
@@ -625,7 +624,7 @@ public $numberOfDays;
                     ];
                 }
             }
-            $employeeId = auth()->guard('emp')->user()->emp_id;
+
             $applyingToDetails = [];
 
             if (empty($this->selectedManager)) {
@@ -643,11 +642,13 @@ public $numberOfDays;
                         $managerfullName = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
                         $applyingToDetails[] = [
                             'manager_id' => $selectedManagerId,
-                            'report_to' =>  $managerfullName,
+                            'report_to' => $managerfullName,
                         ];
                     }
                 }
             }
+
+            // Create the leave request
             $this->createdLeaveRequest = LeaveRequest::create([
                 'emp_id' => $employeeId,
                 'leave_type' => $this->leave_type,
@@ -657,14 +658,14 @@ public $numberOfDays;
                 'to_session' => $this->to_session,
                 'to_date' => $this->to_date,
                 'applying_to' => json_encode($applyingToDetails),
-                'file_paths' => json_encode($filePaths),
+                'file_paths' => $fileContent, // Store file content in binary column
                 'cc_to' => json_encode($ccToDetails),
                 'contact_details' => $this->contact_details,
                 'reason' => $this->reason,
             ]);
 
             Notification::create([
-                'emp_id' =>  $employeeId,
+                'emp_id' => $employeeId,
                 'notification_type' => 'leave',
                 'leave_type' => $this->leave_type,
                 'leave_reason' => $this->reason,
@@ -673,13 +674,11 @@ public $numberOfDays;
             ]);
 
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
-            // Check if emp_id is set on the $createdLeaveRequest object
+
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
-                // Reset the component
                 session()->flash('message', 'Leave application submitted successfully!');
                 return redirect()->to('/leave-page');
             } else {
-                // Log an error if there's an issue with creating the LeaveRequest
                 logger('Error creating LeaveRequest', ['emp_id' => $employeeId]);
                 session()->flash('error', 'Error submitting leave application. Please try again.');
                 return redirect()->to('/leave-page');
@@ -708,6 +707,7 @@ public $numberOfDays;
             // Redirect the user back to the leave application page
         }
     }
+
     public function cancelLeaveApplication()
     {
         Log::info('Before reset:');

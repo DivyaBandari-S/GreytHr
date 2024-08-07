@@ -10,7 +10,7 @@
         <div>
             @if($employee->image)
             <div class="employee-profile-image-container">
-                <img height="35px" width="35px" src="{{ asset('storage/' . $employee->image) }}" style="border-radius:50%;border:2px solid green;">
+                <img height="35px" width="35px" src="{{ $employee->image_url }}" style="border-radius:50%;border:2px solid green;">
             </div>
             @else
             <div class="employee-profile-image-container">

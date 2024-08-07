@@ -37,14 +37,13 @@
                             PROFILE</div>
                         <div class="col">
 
-                            @if ($employeeDetails)
-
+                            @if ($employeeDetails->image)
                             <div class="employee-profile-image-container" style="margin-left: 15px;">
-                                <img height="80" src="{{ asset('storage/' . $employeeDetails->image) }}" class="employee-profile-image">
+                                <img height="80" src="{{ $employeeDetails->image_url }}" class="employee-profile-image">
                             </div>
                             @else
-                            <div class="employee-profile-image-container" style="margin-left: 15px;">
-                                <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" height="80" alt="Default Image">
+                            <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
+                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" height="80" alt="Default Image">
                             </div>
                             @endif
                             @if ($errors->has('image'))
