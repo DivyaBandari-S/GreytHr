@@ -248,12 +248,14 @@
                         <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
                     @elseif($managerDetails)
+                    @if($managerDetails->image)
                     <div class="employee-profile-image-container">
-                        <img height="40" width="40" src="{{ asset('storage/' . $managerDetails->image) }}" style="border-radius:50%;">
+                        <img height="40" width="40" src="{{ $managerDetails->image_url }}" style="border-radius:50%;">
                     </div>
+                    @endif
                     @else
                     <div class="employee-profile-image-container">
-                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
                     @endif
                     <div class="center p-0 m-0">
@@ -306,15 +308,16 @@
                         @if(!empty($managerFullName))
                         @foreach($managerFullName as $employee)
                         <div class="d-flex gap-4 align-items-center" style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
-                            @if($employee['image'])
+                            @if(!empty($employee['image']) && $employee['image'] !== 'null')
                             <div class="employee-profile-image-container">
-                                <img height="35px" width="35px" src="{{ $employee['image'] }}" style="border-radius:50%;">
+                                <img height="35px" width="35px" src="{{ $employee['image_url'] }}" style="border-radius: 50%;">
                             </div>
                             @else
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
                             </div>
                             @endif
+
                             <div class="center d-flex flex-column mt-2 mb-2">
                                 <span class="ellipsis mb-0" value="{{ $employee['full_name'] }}">{{ $employee['full_name'] }}</span>
                                 <span class="mb-0 normalTextValue" style="font-size:10px;" value="{{ $employee['full_name'] }}"> #{{ $employee['emp_id'] }} </span>
@@ -383,15 +386,16 @@
                             <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
                                 <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
 
-                                @if($employee['image'])
+                                @if(!empty($employee['image']) && $employee['image'] !== 'null')
                                 <div class="employee-profile-image-container">
-                                    <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius: 50%;">
+                                    <img height="35px" width="35px" src="{{ $employee['image_url'] }}" style="border-radius: 50%;">
                                 </div>
                                 @else
                                 <div class="employee-profile-image-container">
-                                    <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
+                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
                                 </div>
                                 @endif
+
 
                                 <div class="center mb-2 mt-2">
                                     <p class="mb-0 empCcName">{{ ucwords(strtolower($employee['full_name'])) }}</p>
