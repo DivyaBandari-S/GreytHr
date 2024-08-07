@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\HelpDesks;
+use App\Models\HolidayCalendar;
 use Livewire\Component;
 use Carbon\Carbon;
 class AuthChecking extends Component
@@ -87,9 +88,36 @@ class AuthChecking extends Component
                 ->orderBy('created_at', 'desc')
                 ->whereIn('category', ['Income Tax', 'Loans', 'Payslip'])
                 ->get();
-        } elseif (auth()->guard('admins')->check()) {
+        } if (auth()->guard('admins')->check()) {
             $companyId = auth()->guard('admins')->user()->company_id;
             $thresholdDate = Carbon::now()->subDays(7);
+        
+            // Get holidays within the last 7 days
+            $holidays = HolidayCalendar::whereBetween('date', [$thresholdDate->startOfDay(), Carbon::now()->endOfDay()])
+                                        ->pluck('date')
+                                        ->map(function($date) {
+                                            return Carbon::parse($date)->format('Y-m-d'); // Normalize date format
+                                        })
+                                        ->toArray();
+        
+            // Count the number of non-holiday days in the last 7 days
+            $nonHolidayDays = 0;
+            $currentDate = Carbon::now()->startOfDay();
+      
+            while ($currentDate->greaterThanOrEqualTo($thresholdDate->startOfDay())) {
+                $formattedDate = $currentDate->format('Y-m-d');
+        
+                // Check if it's a weekend or a holiday
+                if (!in_array($formattedDate, $holidays) && !in_array($currentDate->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY])) {
+                    $nonHolidayDays++;
+                }
+        
+                $currentDate->subDay(); // Move to the previous day
+            }
+        
+        
+      
+        
             HelpDesks::where('status', 'Recent')
                 ->where('created_at', '<=', $thresholdDate)
                 ->update(['status' => 'Open']);
@@ -99,7 +127,7 @@ class AuthChecking extends Component
                 })
                 ->orderBy('created_at', 'desc') // Order by created_at in descending order to get the most recent records first
                 ->get();
-            
+       
         }
         if ($this->selectedNew == 'active') {
             $this->forAdmin = HelpDesks::with('emp')

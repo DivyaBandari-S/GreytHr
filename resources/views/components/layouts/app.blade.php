@@ -39,10 +39,15 @@
     <livewire:emplogin />
     @else
     <section>
+        @auth('emp')
         @livewire('main-layout')
+        @endauth
         <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
             {{ $slot }}
         </main>
+        @auth('admins')
+        @livewire('auth-checking')
+        @endauth
     </section>
     @endguest
     @livewireScripts
