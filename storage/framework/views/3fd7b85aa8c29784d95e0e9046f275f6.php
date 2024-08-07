@@ -214,20 +214,20 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
         
         <!--[if BLOCK]><![endif]--><?php if($isRotated): ?>
         <div style="border-radius: 5px; background-color: grey; padding: 8px; width: 330px; margin-top: 10px; height: 200px; overflow-y: auto;">
-            <div class="input-group" style="margin-bottom: 10px; display: flex;">
-                <input wire:model="searchTerm"  style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                <div class="input-group-append">
-                    <button wire:click="filter" style=" border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                        <i style="text-align: center;" class="fa fa-search"></i>
-                    </button>
-                    </div>
-                    <div class="col-md-2 ml-4 p-0">
-                    <button wire:click="closePeoples" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); margin-left:10px">
-                            <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                        </button>
-                    </div>
-              
+        <div class="input-group" style="margin-bottom: 10px;">
+            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+            <div class="input-group-append">
+                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
+                    <i style="text-align: center;" class="fa fa-search"></i>
+                </button>
+
+                                <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
+                                </div>
             </div>
+        </div>
 
             <!--[if BLOCK]><![endif]--><?php if($peopleData && $peopleData->isEmpty()): ?>
                 <div class="container" style="text-align: center; color: white; font-size: 12px"> No People Found
@@ -424,20 +424,23 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
         
         <!--[if BLOCK]><![endif]--><?php if($isRotated): ?>
         <div style="border-radius: 5px; background-color: grey; padding: 8px; width: 330px; margin-top: 10px; height: 200px; overflow-y: auto;">
-            <div class="input-group" style="margin-bottom: 10px; display: flex;">
-                <input wire:model="searchTerm"  style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                <div class="input-group-append">
-                    <button wire:click="filter" style=" border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                        <i style="text-align: center;" class="fa fa-search"></i>
-                    </button>
-                    </div>
-                    <div class="col-md-2 ml-4 p-0">
-                    <button wire:click="closePeoples" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); margin-left:10px">
-                            <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                        </button>
-                    </div>
-              
+        <div class="input-group" style="margin-bottom: 10px;">
+            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+            <div class="input-group-append">
+                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
+                    <i style="text-align: center;" class="fa fa-search"></i>
+                </button>
+
+                                <div class="col-md-2 ml-4 p-0">
+                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
+                                </button>
+                                </div>
             </div>
+        </div>
+        
+        
+ 
 
             <!--[if BLOCK]><![endif]--><?php if($peopleData && $peopleData->isEmpty()): ?>
                 <div class="container" style="text-align: center; color: white; font-size: 12px"> No People Found
