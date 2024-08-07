@@ -56,6 +56,7 @@ if (isset($__slots)) unset($__slots);
 ?>
     <?php else: ?>
     <section>
+        <?php if(auth()->guard('emp')->check()): ?>
         <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
@@ -72,10 +73,29 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
+        <?php endif; ?>
         <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
             <?php echo e($slot); ?>
 
         </main>
+        <?php if(auth()->guard('admins')->check()): ?>
+        <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('auth-checking');
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-2754017833-2', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
+        <?php endif; ?>
     </section>
     <?php endif; ?>
     <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
