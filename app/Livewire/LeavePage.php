@@ -137,6 +137,7 @@ class LeavePage extends Component
 
     public function mount()
     {
+         $this->activeSection = 'applyButton';
         $this->activeSection = request()->query('tab', 'applyButton');
         $this->toggleSection($this->activeSection);
         // Get the logged-in user's ID and company ID

@@ -38,16 +38,23 @@
         <div class="nav-buttons d-flex justify-content-center">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</a>
+                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link  {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">
+                        Apply
+                    </a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
-                    <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
+                    <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">
+                        Pending
+                    </a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
+                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">
+                        History
+                    </a>
                 </li>
             </ul>
         </div>
+
 
 
 

@@ -10,17 +10,17 @@
         </div>
         <div class="content">
             <div class="row m-0 mb-3">
-                <div class="col-md-6 mb-3">
-                    <div class="homeCard4 ps-4" style="height: 15em;">
+                <div class="col-md-6">
+                    <div class="ps-4" style="height: 15em; border-radius: 10px; background-color: #fff;">
                         @if($this->greetingText)
-                        <h1 class="mt-4 greet-text text-secondary-500 pb-1.5x" style="font-size: 24px; font-family: montserrat;;color:rgb(2, 17, 79); font-weight: 600;">{{$greetingText}}</h1>
+                        <h1 class="pt-4 greet-text text-secondary-500 pb-1.5x" style="font-size: 24px; font-family: montserrat;color:rgb(2, 17, 79); font-weight: 600;">{{$greetingText}}</h1>
                         @endif
-                        <p class="fw-bold fs-3">Welcome, Shishir Kumar</p>
+                        <p class="fw-bold fs-5" style="color:rgb(2, 17, 79);">Welcome, {{ ucwords(strtolower($loginEmployee->first_name)) }} {{ ucwords(strtolower($loginEmployee->last_name)) }} </p>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <div class="homeCard4" style="background-image: url({{ asset('/images/morning_animated-ezgif.gif') }}); height: 15em;     background-repeat: no-repeat;
-    background-size: 100% 15em;">
+                <div class="col-md-6">
+                    <div class="" style="background-image: url({{ asset('/images/morning_animated-ezgif.gif') }}); height: 15em;     background-repeat: no-repeat;
+    background-size: 100% 15em; border-radius: 10px; background-color: #fff;">
 
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                                         {{$count}} <br>
                                         <span style="color: #778899; font-size:11px; font-weight: 500;">Things to review</span>
                                     </p>
-                                    <img src="{{ asset('/images/review-pending.jpg') }}" alt="" style="height: 40px; width: 40px;">
+                                    <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg" alt="" style="height: 40px; width: 40px;">
                                 </div>
                                 <div class="leave-display d-flex align-items-center border-top p-3 gap-1">
                                     @php
@@ -218,7 +218,7 @@
         <div class="homeCard6" style="padding:10px 15px;">
             <div style="display:flex; justify-content:space-between;">
                 <p style="font-size:12px;color:#778899;font-weight:500;">Upcoming Holidays</p>
-                <a href="/holiday-calendar" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
+                <a href="/holiday-calender" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
             </div>
 
             @if($calendarData->isEmpty())
@@ -491,7 +491,7 @@
             </div>
             @else
             <div style="display:flex;justify-content:center;flex-direction:column;align-items:center;">
-                <img src="{{asset('images/no data.png')}}" alt="Image Description" style="width: 120px; height:100px;">
+                <img src="https://i.pinimg.com/originals/52/4c/6c/524c6c3d7bd258cd165729ba9b28a9a2.png" alt="Image Description" style="width: 120px; height:100px;">
                 <p class="homeText">
                     Wow! No leaves planned today.
                 </p>
@@ -755,7 +755,7 @@ $taskCount = $taskRecords->count();
 <div class="modal" tabindex="-1" role="dialog" style="display: block;">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header d-flex align-items-center" style="background-color: rgb(2, 17, 79); height: 50px">
+            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
                 <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Swipes</b></h5>
                 <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
                 </button>

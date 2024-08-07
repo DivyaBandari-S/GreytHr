@@ -8,7 +8,7 @@ use App\Models\EmployeeDetails;
 use App\Models\SalaryRevision;
 use App\Models\EmpBankDetail;
 use DateTime;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 class SalarySlips extends Component
 {
     public $employeeDetails;
@@ -21,6 +21,46 @@ class SalarySlips extends Component
     {
         $this->showDetails = !$this->showDetails;
     }
+    private function calculateNetPay()
+    {
+        $totalGrossPay = 0;
+        $totalDeductions = 0;
+
+        foreach ($this->salaryRevision as $revision) {
+            $totalGrossPay += $revision->calculateTotalAllowance();
+            $totalDeductions += $revision->calculateTotalDeductions();
+        }
+
+        return $totalGrossPay - $totalDeductions;
+    }
+    public function downloadPdf()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
+        $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
+        $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
+
+        $data = [
+            'employees' => $this->employeeDetails,
+            'salaryRevision' => $this->salaryRevision,
+            'empBankDetails' => $this->empBankDetails,
+         
+            'netPay' => $this->calculateNetPay()
+        ];
+       // Generate PDF using the fetched data
+       $pdf = Pdf::loadView('download-pdf', [
+        'employeeDetails' =>  $this->employeeDetails,
+   
+    ]);
+    
+
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->output();
+        }, 'salary-slips.pdf');
+    }
+
+
+
     public function convertNumberToWords($number)
     {
         // Array to represent numbers from 0 to 19 and the tens up to 90

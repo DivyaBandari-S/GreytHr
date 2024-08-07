@@ -10,11 +10,11 @@
     <!-- SIDEBAR -->
     <section id="sidebar">
         <a href="#" class="brand">
-            <!-- <i class='fa fas-smilea icon'></i> -->
+            <!-- <i class='bx bxs-smile icon'></i> -->
             <img class="m-auto" src="{{ asset('images/hr_new_blue.png') }}" alt="Company Logo" style="width: 6em !important;">
         </a>
         <ul class="side-menu">
-            <li><a href="/" class="active"><i class='fas fa-home icon'></i> Dashboard</a></li>
+            <li><a href="/" class="active"><i class='fas fa-home icon'></i> Home</a></li>
             <li><a href="/time-sheet"><i class='fas fa-clock icon'></i> Time Sheet</a></li>
             <li><a href="/Feeds"><i class='fas fa-rss icon'></i> Feeds</a></li>
             <li><a href="/PeoplesList"><i class='fas fa-users icon'></i> People</a></li>
@@ -27,7 +27,7 @@
                 </ul>
             </li>
             <li>
-                <a href="#"><i class='fas fa-solid fa-money-bill-transfer icon'></i> Salary <i class='fa fa-chevron-right icon-right'></i></a>
+                <a href="#"><i class='fas fas-solid fa-money-bill-transfer icon'></i> Salary <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
                     <li><a href="/slip">Payslips</a></li>
                     <li><a href="/ytd">YTD Reports</a></li>
@@ -35,7 +35,7 @@
                     <li><a href="/formdeclaration">IT Declaration</a></li>
                     <li><a href="/reimbursement">Reimbursement</a></li>
                     <li><a href="/investment">Proof of Investment</a></li>
-                    <li><a href="/salary-revision">Salary Revision</a></li>
+                    <li><a href="//salary-revision">Salary Revision</a></li>
                 </ul>
             </li>
             <li>
@@ -47,7 +47,7 @@
                     <li><a href="/holiday-calendar">Holiday Calendar</a></li>
                     @if($managerId)
                     <li>
-                        <a href="/team-on-leave-chart">
+                        <a href="//team-on-leave-chart">
                             @livewire('team-on-leave')
                         </a>
                     </li>
@@ -95,14 +95,14 @@
             <li>
                 <a href="/reports">
 
-                    <i class="fas fa-file-alt icon"></i> Reports
+                    <i class="fas fa-file-alt icon" style="color:#6c7e90"></i> Reports
                 </a>
             </li>
             @endif
             <!-- <li class="divider" data-text="table and forms">Table and forms</li>
-			<li><a href="#"><i class='fa fa-table icon' ></i> Tables</a></li>
+			<li><a href="#"><i class='bx bx-table icon' ></i> Tables</a></li>
 			<li>
-				<a href="#"><i class='fa fas-notepad icon' ></i> Forms <i class='fa fa-chevron-right icon-right' ></i></a>
+				<a href="#"><i class='bx bxs-notepad icon' ></i> Forms <i class='bx bx-chevron-right icon-right' ></i></a>
 				<ul class="side-dropdown">
 					<li><a href="#">Basic</a></li>
 					<li><a href="#">Select</a></li>
@@ -126,9 +126,9 @@
         <nav>
             <i class='fas fa-bars toggle-sidebar'></i>
             <form action="#">
-                <div class="form-group mb-0">
-                    <input type="text" placeholder="Search...">
-                    <i class='fa fa-search icon'></i>
+                <div class="input-group">
+                    <input type="text" class="form-control" aria-label="Search..." placeholder="Search...">
+                    <span class="input-group-text"><i class='fa fa-search icon'></i></span>
                 </div>
             </form>
             <div>
@@ -143,43 +143,32 @@
                 <ul class="profile-link">
                     <li><a href="/ProfileInfo"><i class='fas fa-user-circle icon'></i> Profile</a></li>
                     <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
-                    <li><a  wire:click="handleLogout" href="#" style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
+                    <li><a wire:click="handleLogout" href="#" style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
                 </ul>
             </div>
         </nav>
         <!-- NAVBAR -->
-
-        <!-- MAIN -->
-
-        <!-- MAIN -->
     </section>
-
-    <div>
-    <!-- Logout Modal -->
-    @if( $showLogoutModal == true)
-    <div class="modal" id="logoutModal" tabindex="4" style="display: block;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header text-white" style=" background-color: rgb(2, 17, 79);">
-                    <h6 class="modal-title " id="logoutModalLabel" style="align-items: center;">Confirm Logout</h6>
-                </div>
-                <div class="modal-body text-center" style="font-size: 16px;">
-                    Are you sure you want to logout?
-                </div>
-                <div class="d-flex justify-content-center p-3" style="gap: 10px;">
-                    <button type="button" class="submit-btn mr-3" wire:click="confirmLogout">Logout</button>
-                    <button type="button" class="cancel-btn1" wire:click="cancelLogout">Cancel</button>
+        <!-- Logout Modal -->
+        @if( $showLogoutModal == true)
+        <div class="modal" id="logoutModal" tabindex="4" style="display: block;">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header text-white" style=" background-color: rgb(2, 17, 79);">
+                        <h6 class="modal-title " id="logoutModalLabel" style="align-items: center;">Confirm Logout</h6>
+                    </div>
+                    <div class="modal-body text-center" style="font-size: 16px;">
+                        Are you sure you want to logout?
+                    </div>
+                    <div class="d-flex justify-content-center p-3" style="gap: 10px;">
+                        <button type="button" class="submit-btn mr-3" wire:click="confirmLogout">Logout</button>
+                        <button type="button" class="cancel-btn1" wire:click="cancelLogout">Cancel</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal-backdrop fade show"></div>
-    @endif
-
-
-
-
-</div>
+        <div class="modal-backdrop fade show"></div>
+        @endif
 
     <!-- NAVBAR -->
 </div>
