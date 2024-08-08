@@ -245,7 +245,7 @@
                 <div class="reporting mb-2" wire:ignore.self>
                     @if(!$loginEmpManagerProfile)
                     <div class="employee-profile-image-container">
-                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                        <img src="{{ $loginEmpManagerProfile }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
                     @elseif($managerDetails)
                     @if($managerDetails->image)
@@ -294,7 +294,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2 m-0 p-0">
+                            <div class="col-md-1 m-0 p-0">
                                 <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
                                     <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i>
                                     </span>
@@ -367,7 +367,7 @@
                                 <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
                                     <button type="button" wire:click="searchCCRecipients" class="search-btn">
-                                        <i style="margin-right: 10px;" class="fas fa-search"></i>
+                                        <i style="margin-left: 10px;" class="fas fa-search"></i>
                                     </button>
                                 </div>
                             </div>

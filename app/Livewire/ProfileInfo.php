@@ -32,13 +32,13 @@ class ProfileInfo extends Component
     {
         $this->showSuccessMessage = false;
     }
-    
+
     public function updateProfile()
     {
         try {
             $empId = Auth::guard('emp')->user()->emp_id;
             $employee = EmployeeDetails::where('emp_id', $empId)->first();
-         
+
             $this->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:1024', // 1024 kilobytes = 1 megabyte
             ]);
@@ -69,6 +69,7 @@ class ProfileInfo extends Component
 
                 return view('livewire.profile-info');
               
+
 
         } catch (\Exception $e) {
             Log::error('Error in render method: ' . $e->getMessage());
