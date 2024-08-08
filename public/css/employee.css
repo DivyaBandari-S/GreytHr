@@ -55,7 +55,7 @@ li {
 	z-index: 100;
 }
 .icon {
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: var(--dark);
     cursor: pointer;
 }
@@ -133,14 +133,18 @@ li {
 	border-left: 5px solid #0037ff;
 }
 
-.active-side-dropdown,
-.active-side-dropdown:hover {
+.active-side-dropdown {
 	background: var(--blue);
 	color: var(--light) !important;
 	border-left: 5px solid #0037ff;
 }
-.active-side-dropdown .icon,
+.active-side-dropdown:hover{
+	color: var(--dark) !important;
+}
 .active-side-dropdown:hover .icon {
+	color: var(--dark) !important;
+}
+.active-side-dropdown .icon{
 	color: var(--light) !important;
 }
 /* Icon color when link is active */
@@ -300,8 +304,8 @@ nav .nav-link .icon {
 }
 nav .nav-link .badge {
 	position: absolute;
-	top: -3px;
-	right: 2px;
+	top: -12px;
+	right: -12px;
 	width: 20px;
 	height: 20px;
 	border-radius: 50%;

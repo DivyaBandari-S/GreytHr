@@ -3173,10 +3173,6 @@ input[type="radio"] {
     margin: 0 auto;
 }
 
-img {
-    max-width: 100%;
-}
-
 .date {
     font-size: 0.9rem;
 }

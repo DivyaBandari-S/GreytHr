@@ -8,11 +8,7 @@
     </div>
     @endif
     <!-- Assuming you are using Blade templates in Laravel -->
-    @if (session('popupMessage') || $showPopupMessage)
-    <div class="error-message">
-        {{ session('popupMessage') }}
-    </div>
-    @endif
+
 
     <div class="applyContainer bg-white">
         @if($showinfoMessage)
@@ -29,7 +25,7 @@
             <p class="info-paragraph" wire:click="toggleInfo">Info</p>
             @endif
         </div>
-        <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
+        <form wire:submit.prevent="leaveApply" enctype="multipart/form-data" >
             <div class="row d-flex align-items-center">
                 <div class="col-md-7">
                     <div class="form-group ">
@@ -244,19 +240,24 @@
                 </div>
                 <div class="reporting mb-2" wire:ignore.self>
                     @if(!$loginEmpManagerProfile)
-                    <div class="employee-profile-image-container">
-                        <img src="{{ $loginEmpManagerProfile }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                    @if(!empty($loginEmpManagerProfile) && $loginEmpManagerProfile !== 'null')
+                    <div class="employee-profile-image-container" style="margin-left: 15px;">
+                        <img height="40" width="40" src="{{ $employeeDetails->image }}" class="employee-profile-image">
                     </div>
-                    @elseif($managerDetails)
-                    @if($managerDetails->image)
-                    <div class="employee-profile-image-container">
-                        <img height="40" width="40" src="{{ $managerDetails->image_url }}" style="border-radius:50%;">
+                    @else
+                    <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
+                        <img height="40" width="40" src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder"  alt="">
                     </div>
                     @endif
-                    @else
+                    @elseif($managerDetails)
+                    @if(!empty($managerDetails->image) && $managerDetails->image !== 'null')
                     <div class="employee-profile-image-container">
-                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                        <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($managerDetails->image)}}" style="border-radius:50%;">
                     </div>
+                    <div class="employee-profile-image-container">
+                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40">
+                    </div>
+                    @endif
                     @endif
                     <div class="center p-0 m-0">
                         @if(!$loginEmpManager)
@@ -310,7 +311,7 @@
                         <div class="d-flex gap-4 align-items-center" style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             @if(!empty($employee['image']) && $employee['image'] !== 'null')
                             <div class="employee-profile-image-container">
-                                <img height="35px" width="35px" src="{{ $employee['image_url'] }}" style="border-radius: 50%;">
+                                <img height="35px" width="35px" src="{{ $employee['image'] }}" style="border-radius: 50%;">
                             </div>
                             @else
                             <div class="employee-profile-image-container">
@@ -388,7 +389,7 @@
 
                                 @if(!empty($employee['image']) && $employee['image'] !== 'null')
                                 <div class="employee-profile-image-container">
-                                    <img height="35px" width="35px" src="{{ $employee['image_url'] }}" style="border-radius: 50%;">
+                                    <img height="35px" width="35px" src="{{ $employee['image'] }}" style="border-radius: 50%;">
                                 </div>
                                 @else
                                 <div class="employee-profile-image-container">
@@ -433,9 +434,8 @@
                 @enderror
             </div>
 
-
             <div class="buttons-leave">
-                <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
+                <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif value="Submit">Submit</button>
                 <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
             </div>
         </form>
