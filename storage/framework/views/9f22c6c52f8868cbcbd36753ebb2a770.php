@@ -243,7 +243,7 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
-                    <!--[if BLOCK]><![endif]--><?php if($loginEmployeeProfile->image): ?>
+                    <!--[if BLOCK]><![endif]--><?php if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null'): ?>
                     <img class="navProfileImg" src="<?php echo e($loginEmployeeProfile->image_url); ?>" alt="">
                     <?php else: ?>
                     <img class="navProfileImg" src="<?php echo e(asset('images/user.jpg')); ?>" alt="">
