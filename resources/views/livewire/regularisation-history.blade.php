@@ -265,7 +265,7 @@
                     @if($regularisationrequest->status=='pending')
                         Withdrawn <br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
                         <span style="color: #778899; font-weight: 500;">
-                           {{$empName->first_name}}&nbsp;{{$empName->last_name}}
+                           {{ucwords(strtolower($empName->first_name))}}&nbsp;{{ucwords(strtolower($empName->last_name))}}
                         </span><br>
                                     <span style="color: #778899; font-weight: 400;font-size:11px;">
                                           @if(\Carbon\Carbon::parse($regularisationrequest->withdraw_date)->isToday())
@@ -340,17 +340,17 @@
         </div>
         </div>
     </div>
-  <div class="table-container">
-  <table>
+    <div class="rounded bg-white border mt-4">
+  <table class="custom-table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Approve/Reject</th>
-                <th style="border-right:1px solid black;">Approver&nbsp;Remarks</th>
-                <th>Shift</th>
-                <th>First In Time</th>
-                <th>Last Out Time</th>
-                <th style="border-right:1px solid black;"></th>
+                <th class="header-style">Date</th>
+                <th class="header-style">Approve/Reject</th>
+                <th class="header-style">Approver&nbsp;Remarks</th>
+                <th class="header-style">Shift</th>
+                <th class="header-style">First In Time</th>
+                <th class="header-style">Last Out Time</th>
+                <th class="header-style">Reason</th>
             </tr>
         </thead>
         @foreach($regularisationEntries as $entry)
@@ -363,7 +363,7 @@
                 @elseif($regularisationrequest->status=='rejected')  
                   <td style="text-transform: uppercase;color:#f66;">{{$regularisationrequest->status}}</td>
                 @endif  
-                <td style="border-right:1px solid black;">-</td>
+                <td>-</td>
                 <td class="overflow-cell">10:00 am to 07:00 pm</td>
                 <td>
                        @if(empty($entry['from']))
@@ -379,11 +379,12 @@
                             {{ $entry['to'] }}
                        @endif
                 </td>
-                <td style="padding-right:5px;border-right:1px solid black; overflow: hidden; text-overflow: ellipsis;max-width:5px;">
+                <td style="padding-right:5px; overflow: hidden; text-overflow: ellipsis;max-width:5px;">
                        {{$entry['reason']}}
                 </td>
         </tbody>
         @endforeach
+
     </table>
   </div>
 

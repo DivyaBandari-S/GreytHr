@@ -57,6 +57,7 @@ class Home extends Component
 
     public $showAllLateEmployees=false;
 
+    public $employee_details;
     public $showAllEarlyEmployees=false;
     public $grossPay;
     public $deductions;
@@ -152,6 +153,7 @@ class Home extends Component
         //     ->get();
 
         $currentHour = date('G');
+     
         if ($currentHour >= 4 && $currentHour < 12) {
             $this->greetingImage = 'morning.jpeg';
             $this->greetingText = 'Good Morning';
@@ -166,6 +168,7 @@ class Home extends Component
             $this->greetingText = 'Good Night';
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employee_details=EmployeeDetails::where('emp_id',$employeeId)->select('emp_id', 'first_name', 'last_name')->first();
         $employees=EmployeeDetails::where('manager_id',$employeeId)->select('emp_id', 'first_name', 'last_name')->get();
         $empIds = $employees->pluck('emp_id')->toArray();
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)

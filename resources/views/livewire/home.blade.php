@@ -14,7 +14,7 @@
                         @if($this->greetingText)
                             <h1 class="mt-4 greet-text text-secondary-500 pb-1.5x" style="font-size: 24px; font-family: montserrat;;color:rgb(2, 17, 79); font-weight: 600;">{{$greetingText}}</h1>
                         @endif
-                            <p class="fw-bold fs-3">Welcome, Shishir Kumar</p>
+                            <p class="fw-bold fs-3">Welcome, {{ucwords(strtolower($employee_details->first_name))}} {{ucwords(strtolower($employee_details->last_name))}}</p>
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">

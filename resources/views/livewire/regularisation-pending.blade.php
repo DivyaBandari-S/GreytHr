@@ -119,7 +119,7 @@
         <tbody >
                 <td>{{ \Carbon\Carbon::parse($entry['date'])->format('d M, Y') }}</td>
                 <td style="text-transform: uppercase;">pending</td>
-                <td style="border-right:1px solid black;">-</td>
+                <td>-</td>
                 <td class="overflow-cell">10:00 am to 07:00 pm</td>
                 <td>
                        @if(empty($entry['from']))
@@ -135,7 +135,7 @@
                             {{ $entry['to'] }}
                        @endif
                 </td>
-                <td style="border-right:1px solid black;padding-right:5px;">
+                <td style="padding-right:5px;">
                        @if(empty($entry['reason']))
                             -....
                        @else

@@ -844,8 +844,21 @@
             border: 1px solid transparent;
             border-radius: 4px;
         }
+        .back-button {
+    background-color: transparent; /* Green background */
+    color: rgb(2, 17, 79); /* White text */
+    padding: 10px 30px;
+    margin-left:-35px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none; /* Remove underline */
+   
+}
+
+
     </style>
     <div class="container">
+         <a href="/Attendance" class="back-button">&#8592; Back</a>
         <!-- Check for success message -->
         @if (session()->has('success'))
         <div class="alert alert-success">
@@ -860,6 +873,7 @@
 
         <!-- Your page content here -->
     </div>
+
     <div class="button-container">
         <button class="my-button apply-button" style="background-color: {{ ($isApply == 1 && $defaultApply == 1) ? 'rgb(2,17,79)' : '#fff' }};color: {{ ($isApply == 1 && $defaultApply == 1) ? '#fff' : 'initial' }};" wire:click="applyButton">Apply</button>
         <button class="my-button pending-button" style="background-color: {{ ($isPending==1&&$defaultApply==0) ? 'rgb(2,17,79)' : '#fff' }};color: {{ ($isPending==1&&$defaultApply==0) ? '#fff' : 'initial' }};" wire:click="pendingButton">Pending</button>
@@ -870,12 +884,12 @@
         <div class="col-md-5 mb-3">
             <div class="calendar-box">
                 <div class="calendar-header">
-                    <button class="btn btn-outline-primary p-0" wire:click="previousMonth"><i style="line-height: inherit;" class="fas fa-chevron-left"></i></button>
+                    <button class="btn btn-primary" wire:click="previousMonth"><i style="line-height: inherit;" class="fas fa-chevron-left"></i></button>
                     <p style="margin-top:7px; font-weight: 600">
 
                         {{ \Carbon\Carbon::createFromDate($this->year, $this->month, 1)->format('F Y') }}
                     </p>
-                    <button class="btn btn-outline-primary p-0" wire:click="nextMonth"><i style="line-height: inherit;" class="fas fa-chevron-right"></i></button>
+                    <button class="btn btn-primary" wire:click="nextMonth"><i style="line-height: inherit;" class="fas fa-chevron-right"></i></button>
                 </div>
                 <div class="calendar-weekdays">
                     <div class="weekday">Sun</div>

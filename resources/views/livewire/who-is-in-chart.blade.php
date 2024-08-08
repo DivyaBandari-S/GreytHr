@@ -161,9 +161,9 @@
 </div>
 
 <!-- containers for attendace -->
-<div class="content " style=" display:flex;">
+<div class="row m-0 p-0" style=" display:flex;">
 
-  <div class="col">
+  <div class="col-md-3">
     <div class="container5-who-is-in">
       <div class="heading-who-is-in">
         <h3>Absent&nbsp;({{ str_pad($employeesCount1, 2, '0', STR_PAD_LEFT) }})</h3>
@@ -209,7 +209,7 @@
       </div>
     </div>
   </div>
-  <div class="col">
+  <div class="col-md-3">
     <div class="container5-who-is-in">
       <div class="heading-who-is-in">
         <h3>Late&nbsp;Arrivals&nbsp;({{ str_pad($lateArrival, 2, '0', STR_PAD_LEFT) }})</h3>
@@ -241,7 +241,7 @@
             @if($isLateBy10AM)
 
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;max-width:110px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;">
+              <td style="font-size:10px;font-weight:700;max-width:110px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;padding-left:15px;">
                 @php
                 $firstNameParts = explode(' ', strtolower($s1->first_name));
                 $lastNameParts = explode(' ', strtolower($s1->last_name));
@@ -257,7 +257,7 @@
 
                 <br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span>
               </td>
-              <td style="font-weight:700;font-size:10px;">{{$lateArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
+              <td style="font-weight:700;font-size:10px;padding-left:12px;">{{$lateArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
             </tr>
 
             @endif
@@ -279,7 +279,7 @@
       </div>
     </div>
   </div>
-  <div class="col">
+  <div class="col-md-3">
     <div class="container5-who-is-in" style="margin-left:-20px;">
       <div class="heading-who-is-in">
         <h3>On&nbsp;Time&nbsp;({{ str_pad($onTime, 2, '0', STR_PAD_LEFT) }})</h3>
@@ -328,7 +328,7 @@
       </div>
     </div>
   </div>
-  <div class="col">
+  <div class="col-md-3">
     <div class="container5-who-is-in" style="margin-left:-20px;">
       <div class="heading-who-is-in">
         <h3>On&nbsp;Leave&nbsp;({{ str_pad($ApprovedLeaveRequestsCount, 2, '0', STR_PAD_LEFT) }})</h3>

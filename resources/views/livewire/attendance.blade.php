@@ -8,7 +8,7 @@
             overflow-y: scroll;
             overflow-x: hidden;
             padding-right: 10px;
-            max-height: 600px;
+            max-height: 800px;
         }
 
         .custom-scrollbar::-webkit-scrollbar {
@@ -861,8 +861,8 @@ width: 170px; */
 
         .toggle-box-attendance-info {
 
-            /* background-color: #f0f0f0; */
-
+            background-color: #f0f0f0;
+            margin-left: 40px;
 
             /* margin-left: 850px; */
             /* margin-top: -40px; */
@@ -1201,7 +1201,7 @@ color: #fff;
             font-size: 14px;
         }
 
-        .accordion:after {
+        .accordion:before {
             content: '\02795';
             /* Unicode character for "plus" sign (+) */
             font-size: 13px;
@@ -1210,8 +1210,17 @@ color: #fff;
             margin-left: 5px;
         }
 
-        .active:after {
-            content: "\2796";
+        .accordion:before {
+            content: '\02795';
+            /* Unicode character for "plus" sign (+) */
+            font-size: 13px;
+            color: #fff;
+            float: right;
+            margin-left: 5px;
+        }
+
+        .accordion.active:before {
+            content: '\2796';
             /* Unicode character for "minus" sign (-) */
         }
 
@@ -1306,6 +1315,8 @@ color: #fff;
             </div>
         </div>
 
+
+
         <div class="row m-0 d-flex justify-content-center" style="text-align: center;">
             <div class="col-md-4">
                 <div class="row m-0 topMsg-attendance-info d-flex align-items-center">
@@ -1375,683 +1386,110 @@ color: #fff;
                     </a>
                 </div>
             </div>
-            @if ($öpenattendanceperiodModal)
-<div class="modal" tabindex="-1" role="dialog" style="display: block;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Swipes</b></h5>
-                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
-                </button>
-            </div>
-            <div class="modal-body" style="max-height:300px;overflow-y:auto">
-                <div class="row">
-                    <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Date : <span style="color: #333;">$currentDate</span></div>
-                    <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Shift Time : <span style="color: #333;">10:00 to 19:00</span></div>
-                </div>
-                <table class="swipes-table mt-2 border" style="width: 100%;">
-                    <tr style="background-color: #f6fbfc;">
-                        <th style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Swipe Time</th>
-                        <th style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Sign-In / Sign-Out</th>
-                    </tr>
+            @if ($öpenattendanceperiod==true)
+            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                            <h6 class="modal-title" id="exampleModalLabel" style="color:white;">
+                                {{$modalTitle}}
+                            </h6>
 
-                 
-                    <tr style="border:1px solid #ccc;">
-                        <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">$swipe->swipe_time </td>
-                        <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">$swipe->in_or_out </td>
-                    </tr>
-                  
-                 
-
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal-backdrop fade show blurred-backdrop"></div>
-@endif
-
-
-            <div class="row m-0 mt-3">
-                <div class="col-6" style="text-align: left">
-                    <a href="#" id="toggleSidebar" class="gt-overlay-toggle" style="margin-top:69px;color:rgb(2, 17, 79); display: none">Legend</a>
-                </div>
-                <div class="col-6" style="text-align: -webkit-right;">
-                    <div class="toggle-box-attendance-info">
-                        <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 1 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 1 )? 'rgb(2,17,79)' : '#fff' }}" wire:click="showBars"></i>
-                        <i class="fas fa-bars" id="bars-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 0 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 0 )? 'rgb(2,17,79)' : '#fff' }}" wire:click="showTable"></i>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
-
-            @php
-
-            $presentCount = 0;
-            $offCount = 0;
-            $absentCount=0;
-            $holidayCount = 0;
-            $Regularised=false;
-            @endphp
-
-
-
-
-            <div class="row m-0 p-0">
-                @if($defaultfaCalendar==1)
-                <div class="col-md-7 m-0 p-1 custom-scrollbar">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="calendar-heading-container">
-                            <button wire:click="beforeMonth" class="nav-btn">&lt; Prev</button>
-                            <p style="font-size: 14px;color:black;font-weight:500;margin-bottom:0;">{{ \Carbon\Carbon::createFromDate($year, $month, 1)->format('F Y') }}</p>
-                            <button wire:click="nextMonth" class="nav-btn">Next &gt;</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeattendanceperiodModal">
+                                <span aria-hidden="true close-btn">×</span>
+                            </button>
                         </div>
-                    </div>
-                    <!-- Calendar -->
-                    <div>
-                        <table class="table-1 table-bordered">
-                            <thead class="calender-header bg-white">
-                                <tr>
-                                    <th class="text">Sun</th>
-                                    <th class="text">Mon</th>
-                                    <th class="text">Tue</th>
-                                    <th class="text">Wed</th>
-                                    <th class="text">Thu</th>
-                                    <th class="text">Fri</th>
-                                    <th class="text">Sat</th>
-                                </tr>
-                            </thead>
-                            <tbody id="calendar-body">
-                                @if(!empty($calendar))
-                                @foreach($calendar as $week)
-                                <tr>
-                                    @foreach($week as $day)
-                                    @php
-                                    $carbonDate = \Carbon\Carbon::createFromDate($year, $month, $day['day']);
-
-                                    $formattedDate = $carbonDate->format('Y-m-d');
-                                    $formattedDate1 = $carbonDate->format('Y-m-d');
-                                    $isCurrentMonth = $day['isCurrentMonth'];
-                                    $isWeekend = in_array($carbonDate->dayOfWeek, [0, 6]); // 0 for Sunday, 6 for Saturday
-                                    $isActiveDate = ($selectedDate === $carbonDate->toDateString());
-                                    @endphp
-
-
-                                    @if ($day)
-                                    @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP' ) @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1) rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
-                                        <div>
-
-
-                                            @if ($day['isToday'])
-                                            <div style="background-color: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
-                                                {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
-                                            </div>
-                                            @else
-                                            {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
-                                            @endif
-
-
-                                            <div class="{{ $isWeekend ? '' : 'circle-grey' }}">
-                                                <!-- Render your grey circle -->
-                                                @if ($isWeekend&&$isCurrentMonth)
-                                                <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
-
-                                                <span style="text-align:center;color: #7f8fa4; padding-left:21px;padding-right:26px;margin-left: 6px;white-space: nowrap;">
-                                                    O
-                                                </span>
-                                                @elseif($isCurrentMonth)
-
-
-                                                @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
-
-                                                    @if($day['isPublicHoliday'])
-                                                    <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">H</span>
-                                                    @elseif($day['status'] == 'CLP')
-                                                    <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">CLP</span>
-                                                    @elseif($day['status'] == 'SL')
-                                                    <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">SL</span>
-                                                    @elseif($day['status'] == 'LOP')
-                                                    <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">LOP</span>
-                                                    @elseif($day['status'] == 'A')
-                                                    <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
-                                                    @elseif($day['status'] == 'P')
-                                                    <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px">P</span>
-                                                    @endif
-
-
-                                                    </span>
-                                                    @endif
-                                                    @if($day['isRegularised']==true)
-                                                    @php
-                                                    $Regularised=true;
-                                                    @endphp
-                                                    <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
-                                                        <p class="me-2 mb-0">
-                                                        <div class="down-arrow-reg"></div>
-                                                        </p>
-                                                    </span>
-                                                    @endif
-                                                    @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
-                                                    <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
-                                                        <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
-                                                    </span>
-                                                    @elseif($isCurrentMonth)
-                                                    <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                        <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
-                                                    </span>
-                                                    @endif
-                                                    @endif
-                                            </div>
-                                        </div>
-                                        @endif
-                                        </td>
-
-                                        @endforeach
-                                </tr>
-                                @endforeach
-                                
-                            </tbody>
-
-                        </table>
-                        @else
-                        <p>No calendar data available</p>
-                        @endif
-                    </div>
-
-                    <button class="accordion">Legends</button>
-                    <div class="panel">
-                        <div class="row m-0 mt-3 mb-3">
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <span class="legendsIcon presentIcon">P</span>
-                                </p>
-                                <p class="legendtext m-0">Present</p>
+                        <div class="modal-body">
+                            <div class="form-row" style="display: flex; justify-content: flex-end;">
+                                <div class="form-group col-md-3 col-sm-6">
+                                    <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
+                                        date</label>
+                                    <input type="date" class="form-control" id="fromDate" wire:model="from_date" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
+                                </div>
+                                <div class="form-group col-md-3 col-sm-6">
+                                    <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To
+                                        date</label>
+                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
+                                </div>
                             </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <span class="legendsIcon absentIcon">A</span>
-                                </p>
-                                <p class="legendtext m-0">Absent</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <span class="legendsIcon offDayIcon">O</span>
-                                </p>
-                                <p class="legendtext m-0">Off Day</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <span class="legendsIcon offDayIcon">R</span>
-                                </p>
-                                <p class="legendtext m-0">Rest Day</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <span class="legendsIcon leaveIcon">L</span>
-                                </p>
-                                <p class="legendtext m-0">Leave</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <span class="legendsIcon onDutyIcon">OD</span>
-                                </p>
-                                <p class="legendtext m-0">On Duty</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <span class="legendsIcon holidayIcon">H</span>
-                                </p>
-                                <p class="legendtext m-0">Holiday</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <span class="legendsIcon deductionIcon">&nbsp;&nbsp;</span>
-                                </p>
-                                <p class="legendtext m-0" style="word-break: break-all;"> Deduction</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <span class="legendsIcon alertForDeIcon">&nbsp;&nbsp;</span>
-                                </p>
-                                <p class="legendtext m-0">Allert for Deduction</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <span class="legendsIcon absentIcon">?</span>
-                                </p>
-                                <p class="legendtext m-0">Status Unknown</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <i class="far fa-clock"></i>
-                                </p>
-                                <p class="legendtext m-0">Overtime</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                    <i class="far fa-edit"></i>
-                                </p>
-                                <p class="legendtext m-0">Override</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                <div class="down-arrow-ign-attendance-info"></div>
-                                </p>
-                                <p class="legendtext m-0">Ignored</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                <div class="down-arrow-gra"></div>
-                                </p>
-                                <p class="legendtext m-0">Grace</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="me-2 mb-0">
-                                <div class="down-arrow-reg"></div>
-                                </p>
-                                <p class="legendtext m-0">Regularized</p>
-                            </div>
-                        </div>
-                        <div class="row m-0 mb-3">
-                            <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Day Type</h6>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="mb-0">
-                                    <i class="fas fa-mug-hot"></i>
-                                </p>
-                                <p class="m-1 attendance-legend-text">Rest Day</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="mb-0">
-                                    <i class="fas fa-tv"></i>
-                                </p>
-                                <p class="m-1 attendance-legend-text">Off Day</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="mb-0">
-                                    <i class="fas fa-umbrella"></i>
-                                </p>
-                                <p class="m-1 attendance-legend-text">Holiday</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="mb-0">
-                                    <i class="fas fa-calendar-day"></i>
-                                </p>
-                                <p class="m-1 attendance-legend-text">Half Day</p>
-                            </div>
-                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                                <p class="mb-0">
-                                    <i class="fas fa-battery-empty"></i>
-                                </p>
-                                <p class="m-1 attendance-legend-text">IT Maintanance</p>
-                            </div>
-                        </div>
-                    </div>
+                            <p style="font-size:12px;">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalDays}}</span></p>
 
-                </div>
-                @endif
-                @if($defaultfaCalendar==0)
-                @livewire('attendance-table')
+                            <div class="table-responsive">
+                                <!-- <div class="chart-value"><span style="font-weight:bold;">0</span></div>
+                                <div class="chart-column">AVG.&nbsp;WORK&nbsp;HRS</div>
+                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
+                                <div class="chart-column">AVG.&nbsp;ACTUAL&nbsp;WORK&nbsp;HRS</div>
+                                <div class="chart-value"><span style="font-weight:bold;">0</span></div>
+                                <div class="chart-column">PENALTY&nbsp;DAYS</div>
+                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
+                                <div class="chart-column">LATE&nbsp;IN</div>
+                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
+                                <div class="chart-column">EARLY&nbsp;OUT</div>
+                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
+                                <div class="chart-column">LEAVE&nbsp;TAKEN</div>
+                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
+                                <div class="chart-column">ABSENT&nbsp;DAYS</div>
+                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
+                                <div class="chart-column">EXCEPTION&nbsp;DAYS</div> -->
 
-                @endif
-                <div class="col-md-5">
-                    @if($defaultfaCalendar==1)
-                    <div class="container1" style="background-color:white;">
-                        <!-- Content goes here -->
-                        <div class="row m-0">
-                            <div class="col-2 pb-1 pt-1 p-0" style="border-right: 1px solid #ccc; text-align: center;">
-                                <p class="mb-1" style="font-weight:bold;font-size:14px;color:#778899;">{{ \Carbon\Carbon::parse($currentDate2)->format('d') }}</p>
-                                <p class="m-0" style="font-weight:600;font-size:12px;color:#778899;">
-                                    {{ \Carbon\Carbon::parse($currentDate2)->format('D') }}
-                                </p>
-                            </div>
-                            <div class="col-5 pb-1 pt-1">
-
-                                <p class="text-overflow mb-1" style="font-size:12px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-weight: 500;">
-                                    10:00 am to 07:00 pm</p>
-                                <p class="text-muted m-0" style="font-size:12px;">Shift:10:00 to
-                                    19:00</p>
-                            </div>
-                            <div class="col-5 pb-1 pt-1">
-                                <p class="mb-1" style="font-size:12px;overflow: hidden;font-weight: 500;text-overflow: ellipsis;white-space: nowrap;font-weight: 500;">
-                                    10:00 am to 07:00 pm</p>
-                                <p class="text-muted m-0" style="font-size:12px;">Attendance
-                                    Scheme</p>
-
-                            </div>
-                        </div>
-
-
-                        <div class="horizontal-line-attendance-info"></div>
-                        @if($changeDate==1)
-                        @php
-                        $nextDayDate = \Carbon\Carbon::parse($CurrentDate)->addDay()->setTime(0, 0, 0);
-                        @endphp
-                        <div class="text-muted" style="margin-left:20px;font-weight: 400;font-size: 12px;">Processed On {{ $nextDayDate->format('jS M') }}</div>
-                        @else
-                        <div class="text-muted" style="margin-left:20px;font-weight: 400;font-size: 12px;">Processed On</div>
-                        @endif
-                        <div class="horizontal-line1-attendance-info"></div>
-                        <div style=" overflow-x: auto; max-width: 100%;">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th style="font-weight:normal;font-size:12px;">First&nbsp;In</th>
-                                        <th style="font-weight:normal;font-size:12px;">Last&nbsp;Out</th>
-                                        <th style="font-weight:normal;font-size:12px;">Total&nbsp;Work&nbsp;Hrs</th>
-                                        <th style="font-weight:normal;font-size:12px;">Break&nbsp;Hrs</th>
-                                        <th style="font-weight:normal;font-size:12px;">Actual&nbsp;Work&nbsp;Hrs</th>
-                                        <th style="font-weight:normal;font-size:12px;">
-                                            Work&nbsp;Hours&nbsp;in&nbsp;Shift&nbsp;Time</th>
-                                        <th style="font-weight:normal;font-size:12px;">Shortfall&nbsp;Hrs</th>
-                                        <th style="font-weight:normal;font-size:12px;">Excess&nbsp;Hrs</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-
-                                    <tr>
-
-                                        <td style="font-size:12px;">
-                                            @if($changeDate==1)
-                                            {{$this->first_in_time}}
-                                            @else
-                                            -
-                                            @endif
-                                        </td>
-                                        <td style="font-size:12px;">
-                                            @if($changeDate==1)
-                                            {{$this->last_out_time}}
-                                            @else
-                                            -
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($this->first_in_time!=$this->last_out_time)
-                                            {{str_pad($this->hours, 2, '0', STR_PAD_LEFT)}}:{{str_pad($this->minutesFormatted,2,'0',STR_PAD_LEFT)}}
-                                            @else
-                                            -
-                                            @endif
-
-                                        </td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>{{$this->work_hrs_in_shift_time}}</td>
-                                        <td>{{$this->shortFallHrs}}</td>
-                                        <td>-</td>
-
-                                    </tr>
-
-
-                                    <!-- Add more rows with dashes as needed -->
-                                </tbody>
-                                <!-- Add table rows (tbody) and data here if needed -->
-                            </table>
-
-                        </div>
-                    </div>
-                    @endif
-                    @if($defaultfaCalendar==1)
-                    <div class="container2">
-                        <h3 style="padding-left:10px;margin-top:10px;color: #7f8fa4;font-size:14px;">Status Details</h3>
-
-                        <div style=" overflow-x: auto; max-width: 100%;">
-                            <table style="margin-top:-10px;">
-                                <thead>
-                                    <tr>
-                                        <th style="font-weight:normal;font-size:12px;padding-top:16px;">Status</th>
-                                        <th style="font-weight:normal;font-size:12px;padding-top:16px;">Remarks</th>
-                                        <th style="font-weight:normal;font-size:12px;padding-top:16px;"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                        @php
-                                             
-
-                                               $CurrentDate = $currentDate2;
-                                               $swiperecord = App\Models\SwipeRecord::where('emp_id', $employeeIdForRegularisation)->where('is_regularised',1)->get(); // Example query
-
-                                                if ($swiperecord && is_iterable($swiperecord)) {
-                                                    $swipeRecordExists = $swiperecord->contains(function ($record) use ($CurrentDate) {
-                                                        return \Carbon\Carbon::parse($record->created_at)->toDateString() === $CurrentDate;
-                                                    });
-                                                } else {
-                                                    $swipeRecordExists = false;
-                                                }
-                                            @endphp
-                                            
-                                            @if($swipeRecordExists==true)
-                                            Regularisation
-                                            @else
-                                            -
-                                            @endif
-                                        </td>
-                                        <td>-</td>
-                                        @if($swipeRecordExists==true)
-                                        <td>
-                                            <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="checkDateInRegularisationEntries('{{$CurrentDate}}')">
-                                                Info
-                                            </button>
-                                            @if($showRegularisationDialog==true)
-
-                                            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-
-                                                        <div class="modal-header" style="background-color: #eef7fa; height: 50px">
-                                                            <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Regularisation&nbsp;&nbsp;Details</b></h5>
-                                                            <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeRegularisationModal" style="background-color: white; height:10px;width:10px;">
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body" style="max-height:300px;overflow-y:auto">
-                                                            <div class="row m-0 mt-3">
-
-                                                                <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Status : <br /><span style="color: #000000;">Regularization</span></div>
-                                                                <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized By: <br /><span style="color: #000000;">{{ucwords(strtolower($regularised_by))}}</span></div>
-                                                            </div>
-                                                            <div class="row m-0 mt-3">
-                                                                <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Date : <br /><span style="color: #000000;">{{ date('jS M,Y', strtotime($regularised_date)) }}</span></div>
-                                                                <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Time: <br /><span style="color: #000000;">{{ date('H:i:s', strtotime($regularised_date)) }}</span></div>
-                                                            </div>
-                                                            <div class="row m-0 mt-3">
-                                                                <div class="col" style="font-size: 11px;color:#778899;font-weight:500;"> Reason:<br /> <span style="color: #000000;">{{$regularised_reason}}</span></div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-backdrop fade show blurred-backdrop"></div>
-
-                                            @endif
-                                        </td>
-                                        @endif
-                                    </tr>
-                                    <!-- Add more rows with dashes as needed -->
-                                </tbody>
-                                <!-- Add table rows (tbody) and data here if needed -->
-                            </table>
-                        </div>
-                    </div>
-                    @endif
-                    @if($defaultfaCalendar==1)
-                    <div class="container3">
-                        <h3 style="padding-left:10px;margin-top:20px;color: #7f8fa4;font-size:14px;">Session Details</h3>
-
-                        <div style=" overflow-x: auto; max-width: 100%;">
-                            <table style="margin-top:-10px">
-                                <thead>
-                                    <tr>
-                                        <th style="font-weight:normal;font-size:12px;padding-top:16px;">Session</th>
-                                        <th style="font-weight:normal;font-size:12px;padding-top:16px;">Session&nbsp;Timing</th>
-                                        <th style="font-weight:normal;font-size:12px;padding-top:16px;">First&nbsp;In</th>
-                                        <th style="font-weight:normal;font-size:12px;padding-top:16px;">Last&nbsp;Out</th>
-
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-
-                                    <tr style="border-bottom: 1px solid #ddd;">
-                                        <td style="font-weight:normal;font-size:12px;">Session&nbsp;1</td>
-                                        <td style="font-weight:normal;font-size:12px;">10:00 - 14:00</td>
-                                        <td style="font-weight:normal;font-size:12px;">
-                                            @if($changeDate==1)
-                                            {{$this->first_in_time}}
-                                            @else
-                                            -
-                                            @endif
-                                        </td>
-                                        <td style="font-weight:normal;font-size:12px;">-</td>
-
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #ddd;">
-                                        <td style="font-weight:normal;font-size:12px;">Session&nbsp;2</td>
-                                        <td style="font-weight:normal;font-size:12px;">14:01 - 19:00</td>
-                                        <td style="font-weight:normal;font-size:12px;">-</td>
-                                        <td style="font-weight:normal;font-size:12px;">
-                                            @if($changeDate==1)
-                                            {{$this->last_out_time}}
-                                            @else
-                                            -
-                                            @endif
-                                        </td>
-
-                                    </tr>
-                                    <!-- Add more rows with dashes as needed -->
-                                </tbody>
-                                <!-- Add table rows (tbody) and data here if needed -->
-                            </table>
-                        </div>
-
-                    </div>
-                    @endif
-                    @if($defaultfaCalendar==1)
-                    <div class="container6">
-                        <h3 style="margin-left:20px;color: #7f8fa4;font-size:14px;margin-top:15px;align-items:center;">Swipe Details</h3>
-                        <div class="arrow-button" style="float:right;margin-top:-30px;margin-right:20px;" id="toggleButton">
-                        </div>
-
-                        <div class="container-body" style="margin-top:2px;height:auto;" id="myContainerBody">
-                            <!-- Content of the container body -->
-                            <div style="max-width: 100%; text-align: center;">
-
-                                <table>
-                                    <thead>
-                                        @if ($swipe_records_count > 0)
+                                <table class="table" style="width: 100%;">
+                                    <thead style="font-size: 12px;">
                                         <tr>
-                                            <th style="font-weight:normal;font-size:12px;">In/Out</th>
-                                            <th style="font-weight:normal;font-size:12px;">Swipe&nbsp;Time</th>
-                                            <th style="font-weight:normal;font-size:12px;">Location</th>
-                                            <th></th>
+                                            <th scope="col">AVG. WORK HRS</th>
+                                            <th scope="col">AVG. ACTUAL WORK HRS</th>
+                                            <th scope="col">PENALTY DAYS</th>
+                                            <th scope="col">LATE IN</th>
+                                            <th scope="col">EARLY OUT</th>
+                                            <th scope="col">LEAVE TAKEN</th>
+                                            <th scope="col">ABSENT DAYS</th>
+                                            <th scope="col">EXCEPTION DAYS</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-
-                                        @foreach ($Swiperecords as $index =>$swiperecord)
+                                    <tbody style="font-size:12px;color:black;font-weight:500;">
                                         <tr>
-                                            <td style="font-weight:normal;font-size:12px;">{{ $swiperecord->in_or_out }}</td>
-                                            <td>
-                                                <div style="display:flex;flex-direction:column;">
-                                                    <p style="margin-bottom: 0;font-weight:normal;font-size:12px;white-space:nowrap;">
-                                                        {{ date('h:i:s A', strtotime($swiperecord->swipe_time)) }}
-                                                    </p>
-                                                    <p style="margin-bottom: 0;font-size: 10px;color: #a3b2c7;">
-                                                        {{ date('d M Y', strtotime($currentDate1)) }}
-                                                    </p>
-                                                </div>
-                                            </td>
-                                            <td>-</td>
-
-                                            <td><button class="info-button" style="background-color:#007bff; border: 2px solid #007bff;height:20px; color: white; border-radius: 5px;font-size:12px;margin-top:-10px" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
-
+                                            <td style="text-align: center;">0</td>
+                                            <td style="text-align: center;">-</td>
+                                            <td style="text-align: center;">0</td>
+                                            <td style="text-align: center;">{{$avgLateIn}}</td>
+                                            <td style="text-align: center;">{{$avgEarlyOut}}</td>
+                                            <td style="text-align: center;">-</td>
+                                            <td style="text-align: center;">-</td>
+                                            <td style="text-align: center;">-</td>
                                         </tr>
-                                        @if (($index + 1) % 2 == 0)
-                                        <!-- Add a small container after every two records -->
-                                        <tr>
-                                            <td colspan="4" style="height:1px; background-color: #f0f0f0; text-align: left;font-size:10px;">
-                                                Actual Hrs:{{ $actualHours[($index + 1) / 2 - 1] }}</td>
-                                        </tr>
-                                       
-                                        @endif  
-                                        @endforeach
-
-
-
-                                        <!-- Add more rows with dashes as needed -->
                                     </tbody>
-                                    <!-- Add table rows (tbody) and data here if needed -->
-                                    @else
-                                    <img src="https://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
-                                    <div class="text-muted">No record Found</div>
-                                    @endif
                                 </table>
 
                             </div>
 
-                        </div>
-                        @endif
-                        @if($showSR=="true")
-                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header" style="background-color: #eef7fa; height: 50px">
-                                        <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Swipe Details</b></h5>
-                                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeSWIPESR" style="background-color: #eef7fa; height:10px;width:10px;">
-                                        </button>
-                                    </div>
-                                    <div class="modal-body" style="max-height:300px;">
-                                        @if($swiperecord)
-                                        <div class="row m-0 mt-3">
-
-                                            @if ($data->isNotEmpty())
-                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ $data[0]->first_name }} {{ $data[0]->last_name }}</span></div>
-                                            @endif
-                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br /><span style="color: #000000;">{{ $swiperecord->emp_id }}</span></div>
-
-                                        </div>
-                                        <div class="row m-0 mt-3">
-
-
-                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Date:<br /><span style="color: #000000;">{{\Carbon\Carbon::parse($swiperecord->created_at)->format('jS F, Y')}}</span></div>
-
-                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Time:<br /><span style="color: #000000;">{{ $view_student_swipe_time }}</span></div>
-
-                                        </div>
-                                        <div class="row m-0 mt-3">
-
-
-                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">In/Out:<br /><span style="color: #000000;">{{ $view_student_in_or_out }}</span></div>
-
-                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Access&nbsp;Card&nbsp;Number:<br /><span style="color: #000000;">-</span></div>
-
-                                        </div>
-                                        <div class="row m-0 mt-3">
-
-
-
-                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Location<br /><span style="color: #000000;">-</span></div>
-
-                                        </div>
-                                        @endif
-                                    </div>
+                            <div class="row m-0 mt-3">
+                                <div class="col-md-3 col-sm-6 p-0">
+                                    <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$avgSignInTime}}</span></p>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="modal-backdrop fade show blurred-backdrop"></div>
-                        @endif
+                                <div class="col-md-3 col-sm-6 p-0">
+                                    <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$avgSignOutTime}}</span></p>
+                                </div>
 
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+        @endif
 
 
-
+        <div class="row m-0 mt-3">
+            <div class="col-6" style="text-align: left">
+                <a href="#" id="toggleSidebar" class="gt-overlay-toggle" style="margin-top:69px;color:rgb(2, 17, 79); display: none">Legend</a>
+            </div>
+            <div class="col-6" style="text-align: -webkit-right;">
+                <div class="toggle-box-attendance-info">
+                    <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 1 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 1 )? 'rgb(2,17,79)' : '#fff' }};" wire:click="showBars"></i>
+                    <i class="fas fa-bars" id="bars-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 0 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 0 )? 'rgb(2,17,79)' : '#fff' }};" wire:click="showTable"></i>
+                </div>
+            </div>
         </div>
 
 
@@ -2059,111 +1497,753 @@ color: #fff;
 
 
 
+        @php
+
+        $presentCount = 0;
+        $offCount = 0;
+        $absentCount=0;
+        $holidayCount = 0;
+        $Regularised=false;
+        @endphp
 
 
 
 
-        <script>
-            var acc = document.getElementsByClassName("accordion");
-            var i;
+        <div class="row m-0 p-0">
+            @if($defaultfaCalendar==1)
+            <div class="col-md-7 m-0 p-1 custom-scrollbar">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="calendar-heading-container">
+                        <button wire:click="beforeMonth" class="nav-btn">&lt; Prev</button>
+                        <p style="font-size: 14px;color:black;font-weight:500;margin-bottom:0;">{{ \Carbon\Carbon::createFromDate($year, $month, 1)->format('F Y') }}</p>
+                        <button wire:click="nextMonth" class="nav-btn">Next &gt;</button>
+                    </div>
+                </div>
+                <!-- Calendar -->
+                <div>
+                    <table class="table-1 table-bordered">
+                        <thead class="calender-header bg-white">
+                            <tr>
+                                <th class="text">Sun</th>
+                                <th class="text">Mon</th>
+                                <th class="text">Tue</th>
+                                <th class="text">Wed</th>
+                                <th class="text">Thu</th>
+                                <th class="text">Fri</th>
+                                <th class="text">Sat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calendar-body">
+                            @if(!empty($calendar))
+                            @foreach($calendar as $week)
+                            <tr>
+                                @foreach($week as $day)
+                                @php
+                                $carbonDate = \Carbon\Carbon::createFromDate($year, $month, $day['day']);
 
-            for (i = 0; i < acc.length; i++) {
-                acc[i].addEventListener("click", function() {
-                    this.classList.toggle("active");
-                    var panel = this.nextElementSibling;
-                    if (panel.style.display === "block") {
-                        panel.style.display = "none";
-                    } else {
-                        panel.style.display = "block";
-                    }
-                });
-            }
-
-            // September 2023
-        </script>
-        <script>
-            document.getElementById("toggleButton").addEventListener("click", function() {
-                var containerBody = document.getElementById("myContainerBody");
-                if (containerBody.style.display === "none" || containerBody.style.display === "") {
-                    containerBody.style.display = "block";
-                } else {
-                    containerBody.style.display = "none";
-                }
-            });
-        </script>
-        <script>
-            const toggleButton = document.getElementById("toggleButton");
-            const containerBody = document.getElementById("myContainerBody");
-
-            toggleButton.addEventListener("click", function() {
-                toggleButton.classList.toggle("rotate-arrow");
-            });
-        </script>
-
-        <script>
-            document.getElementById("myButton").onclick = function() {
-                // Replace 'destination-page.html' with the URL of the page you want to navigate to
-                window.location.href = 'das.html';
-            };
-        </script>
+                                $formattedDate = $carbonDate->format('Y-m-d');
+                                $formattedDate1 = $carbonDate->format('Y-m-d');
+                                $isCurrentMonth = $day['isCurrentMonth'];
+                                $isWeekend = in_array($carbonDate->dayOfWeek, [0, 6]); // 0 for Sunday, 6 for Saturday
+                                $isActiveDate = ($selectedDate === $carbonDate->toDateString());
+                                @endphp
 
 
+                                @if ($day)
+                                @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP' ) @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1) rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
+                                    <div>
 
-        <script>
-            $(document).ready(function() {
-                $('.toggle-box i.fas.fa-calendar').click(function() {
-                    // Toggle the 'active' class on the calendar icon
-                    $(this).toggleClass('active');
 
-                    // Reset the bars icon to its initial styles
-                    $('.toggle-box i.fas.fa-bars').removeClass('active');
-                });
+                                        @if ($day['isToday'])
+                                        <div style="background-color: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
+                                            {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
+                                        </div>
+                                        @else
+                                        {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
+                                        @endif
 
-                $('.toggle-box i.fas.fa-bars').click(function() {
-                    // Toggle the 'active' class on the bars icon
-                    $(this).toggleClass('active');
 
-                    // Reset the calendar icon to its initial styles
-                    $('.toggle-box i.fas.fa-calendar').removeClass('active');
-                });
-            });
-        </script>
-        <script>
-            function toggleBoxContainer() {
-                const boxContainer = document.getElementById('box-container');
-                if (boxContainer.style.display === 'none') {
-                    boxContainer.style.display = 'block';
-                } else {
-                    boxContainer.style.display = 'none';
-                }
-            }
+                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}">
+                                            <!-- Render your grey circle -->
+                                            @if ($isWeekend&&$isCurrentMonth)
+                                            <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
 
-            function hideBoxContainer() {
-                const boxContainer = document.getElementById('box-container');
-                boxContainer.style.display = 'none';
-            }
+                                            <span style="text-align:center;color: #7f8fa4; padding-left:21px;padding-right:26px;margin-left: 6px;white-space: nowrap;">
+                                                O
+                                            </span>
+                                            @elseif($isCurrentMonth)
 
-            // Event listener for the bars-icon click event
-            const barsIcon = document.getElementById('bars-icon');
-            barsIcon.addEventListener('click', toggleBoxContainer);
 
-            // Event listener for the calendar-icon click event (to hide the box-container)
-            const calendarIcon = document.getElementById('calendar-icon');
-            calendarIcon.addEventListener('click', hideBoxContainer);
-        </script>
+                                            @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
 
-        <script>
-            $(document).ready(function() {
-                $('.attendance-calendar-date').click(function() {
-                    // Remove the 'clicked' class from all elements
-                    $('.attendance-calendar-date').removeClass('clicked');
+                                                @if($day['isPublicHoliday'])
+                                                <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">H</span>
+                                                @elseif($day['status'] == 'CLP')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">CLP</span>
+                                                @elseif($day['status'] == 'SL')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">SL</span>
+                                                @elseif($day['status'] == 'LOP')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">LOP</span>
+                                                @elseif($day['status'] == 'A')
+                                                <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
+                                                @elseif($day['status'] == 'P')
+                                                <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px">P</span>
+                                                @endif
 
-                    // Add the 'clicked' class to the clicked element
-                    $(this).addClass('clicked');
-                });
-            });
-        </script>
+
+                                                </span>
+                                                @endif
+                                                @if($day['isRegularised']==true)
+                                                @php
+                                                $Regularised=true;
+                                                @endphp
+                                                <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
+                                                    <p class="me-2 mb-0">
+                                                    <div class="down-arrow-reg"></div>
+                                                    </p>
+                                                </span>
+                                                @endif
+                                                @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+                                                @elseif($isCurrentMonth)
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+                                                @endif
+                                                @endif
+                                        </div>
+                                    </div>
+                                    @endif
+                                    </td>
+
+                                    @endforeach
+                            </tr>
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+                    @else
+                    <p>No calendar data available</p>
+                    @endif
+                </div>
+
+                <button class="accordion">Legends</button>
+                <div class="panel">
+                    <div class="row m-0 mt-3 mb-3">
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon presentIcon">P</span>
+                            </p>
+                            <p class="legendtext m-0">Present</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon absentIcon">A</span>
+                            </p>
+                            <p class="legendtext m-0">Absent</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon offDayIcon">O</span>
+                            </p>
+                            <p class="legendtext m-0">Off Day</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon offDayIcon">R</span>
+                            </p>
+                            <p class="legendtext m-0">Rest Day</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon leaveIcon">L</span>
+                            </p>
+                            <p class="legendtext m-0">Leave</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon onDutyIcon">OD</span>
+                            </p>
+                            <p class="legendtext m-0">On Duty</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon holidayIcon">H</span>
+                            </p>
+                            <p class="legendtext m-0">Holiday</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon deductionIcon">&nbsp;&nbsp;</span>
+                            </p>
+                            <p class="legendtext m-0" style="word-break: break-all;"> Deduction</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon alertForDeIcon">&nbsp;&nbsp;</span>
+                            </p>
+                            <p class="legendtext m-0">Allert for Deduction</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon absentIcon">?</span>
+                            </p>
+                            <p class="legendtext m-0">Status Unknown</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <i class="far fa-clock"></i>
+                            </p>
+                            <p class="legendtext m-0">Overtime</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <i class="far fa-edit"></i>
+                            </p>
+                            <p class="legendtext m-0">Override</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                            <div class="down-arrow-ign-attendance-info"></div>
+                            </p>
+                            <p class="legendtext m-0">Ignored</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                            <div class="down-arrow-gra"></div>
+                            </p>
+                            <p class="legendtext m-0">Grace</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                            <div class="down-arrow-reg"></div>
+                            </p>
+                            <p class="legendtext m-0">Regularized</p>
+                        </div>
+                    </div>
+                    <div class="row m-0 mb-3">
+                        <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Day Type</h6>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-mug-hot"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">Rest Day</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-tv"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">Off Day</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-umbrella"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">Holiday</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-calendar-day"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">Half Day</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-battery-empty"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">IT Maintanance</p>
+                        </div>
+                    </div>
+                    <div class="row m-0 mb-3">
+                        <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Leave Type</h6>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-mug-hot"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">Rest Day</p>
+                        </div>
+                     
+                        
+                     
+                    </div>
+                </div>
+
+            </div>
+            @endif
+            @if($defaultfaCalendar==0)
+            @livewire('attendance-table')
+
+            @endif
+            <div class="col-md-5">
+                @if($defaultfaCalendar==1)
+                <div class="container1" style="background-color:white;">
+                    <!-- Content goes here -->
+                    <div class="row m-0">
+                        <div class="col-2 pb-1 pt-1 p-0" style="border-right: 1px solid #ccc; text-align: center;">
+                            <p class="mb-1" style="font-weight:bold;font-size:14px;color:#778899;">{{ \Carbon\Carbon::parse($currentDate2)->format('d') }}</p>
+                            <p class="m-0" style="font-weight:600;font-size:12px;color:#778899;">
+                                {{ \Carbon\Carbon::parse($currentDate2)->format('D') }}
+                            </p>
+                        </div>
+                        <div class="col-5 pb-1 pt-1">
+
+                            <p class="text-overflow mb-1" style="font-size:12px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-weight: 500;">
+                                10:00 am to 07:00 pm</p>
+                            <p class="text-muted m-0" style="font-size:12px;">Shift:10:00 to
+                                19:00</p>
+                        </div>
+                        <div class="col-5 pb-1 pt-1">
+                            <p class="mb-1" style="font-size:12px;overflow: hidden;font-weight: 500;text-overflow: ellipsis;white-space: nowrap;font-weight: 500;">
+                                10:00 am to 07:00 pm</p>
+                            <p class="text-muted m-0" style="font-size:12px;">Attendance
+                                Scheme</p>
+
+                        </div>
+                    </div>
+
+
+                    <div class="horizontal-line-attendance-info"></div>
+                    @if($changeDate==1)
+                    @php
+                    $nextDayDate = \Carbon\Carbon::parse($CurrentDate)->addDay()->setTime(0, 0, 0);
+                    @endphp
+                    <div class="text-muted" style="margin-left:20px;font-weight: 400;font-size: 12px;">Processed On {{ $nextDayDate->format('jS M') }}</div>
+                    @else
+                    <div class="text-muted" style="margin-left:20px;font-weight: 400;font-size: 12px;">Processed On</div>
+                    @endif
+                    <div class="horizontal-line1-attendance-info"></div>
+                    <div style=" overflow-x: auto; max-width: 100%;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="font-weight:normal;font-size:12px;">First&nbsp;In</th>
+                                    <th style="font-weight:normal;font-size:12px;">Last&nbsp;Out</th>
+                                    <th style="font-weight:normal;font-size:12px;">Total&nbsp;Work&nbsp;Hrs</th>
+                                    <th style="font-weight:normal;font-size:12px;">Break&nbsp;Hrs</th>
+                                    <th style="font-weight:normal;font-size:12px;">Actual&nbsp;Work&nbsp;Hrs</th>
+                                    <th style="font-weight:normal;font-size:12px;">
+                                        Work&nbsp;Hours&nbsp;in&nbsp;Shift&nbsp;Time</th>
+                                    <th style="font-weight:normal;font-size:12px;">Shortfall&nbsp;Hrs</th>
+                                    <th style="font-weight:normal;font-size:12px;">Excess&nbsp;Hrs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+                                <tr>
+
+                                    <td style="font-size:12px;">
+                                        @if($changeDate==1)
+                                        {{$this->first_in_time}}
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+                                    <td style="font-size:12px;">
+                                        @if($changeDate==1)
+                                        {{$this->last_out_time}}
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($this->first_in_time!=$this->last_out_time)
+                                        {{str_pad($this->hours, 2, '0', STR_PAD_LEFT)}}:{{str_pad($this->minutesFormatted,2,'0',STR_PAD_LEFT)}}
+                                        @else
+                                        -
+                                        @endif
+
+                                    </td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>{{$this->work_hrs_in_shift_time}}</td>
+                                    <td>{{$this->shortFallHrs}}</td>
+                                    <td>-</td>
+
+                                </tr>
+
+
+                                <!-- Add more rows with dashes as needed -->
+                            </tbody>
+                            <!-- Add table rows (tbody) and data here if needed -->
+                        </table>
+
+                    </div>
+                </div>
+                @endif
+                @if($defaultfaCalendar==1)
+                <div class="container2">
+                    <h3 style="padding-left:10px;margin-top:10px;color: #7f8fa4;font-size:14px;">Status Details</h3>
+
+                    <div style=" overflow-x: auto; max-width: 100%;">
+                        <table style="margin-top:-10px;">
+                            <thead>
+                                <tr>
+                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">Status</th>
+                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">Remarks</th>
+                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @php
+
+
+                                        $CurrentDate = $currentDate2;
+                                        $swiperecord = App\Models\SwipeRecord::where('emp_id', $employeeIdForRegularisation)->where('is_regularised',1)->get(); // Example query
+
+                                        if ($swiperecord && is_iterable($swiperecord)) {
+                                        $swipeRecordExists = $swiperecord->contains(function ($record) use ($CurrentDate) {
+                                        return \Carbon\Carbon::parse($record->created_at)->toDateString() === $CurrentDate;
+                                        });
+                                        } else {
+                                        $swipeRecordExists = false;
+                                        }
+                                        @endphp
+
+                                        @if($swipeRecordExists==true)
+                                        Regularisation
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+                                    <td>-</td>
+                                    @if($swipeRecordExists==true)
+                                    <td>
+                                        <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="checkDateInRegularisationEntries('{{$CurrentDate}}')">
+                                            Info
+                                        </button>
+                                        @if($showRegularisationDialog==true)
+
+                                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header" style="background-color: #eef7fa; height: 50px">
+                                                        <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Regularisation&nbsp;&nbsp;Details</b></h5>
+                                                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeRegularisationModal" style="background-color: white; height:10px;width:10px;">
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                                                        <div class="row m-0 mt-3">
+
+                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Status : <br /><span style="color: #000000;">Regularization</span></div>
+                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized By: <br /><span style="color: #000000;">{{ucwords(strtolower($regularised_by))}}</span></div>
+                                                        </div>
+                                                        <div class="row m-0 mt-3">
+                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Date : <br /><span style="color: #000000;">{{ date('jS M,Y', strtotime($regularised_date)) }}</span></div>
+                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Time: <br /><span style="color: #000000;">{{ date('H:i:s', strtotime($regularised_date)) }}</span></div>
+                                                        </div>
+                                                        <div class="row m-0 mt-3">
+                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;"> Reason:<br /> <span style="color: #000000;">{{$regularised_reason}}</span></div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+
+                                        @endif
+                                    </td>
+                                    @endif
+                                </tr>
+                                <!-- Add more rows with dashes as needed -->
+                            </tbody>
+                            <!-- Add table rows (tbody) and data here if needed -->
+                        </table>
+                    </div>
+                </div>
+                @endif
+                @if($defaultfaCalendar==1)
+                <div class="container3">
+                    <h3 style="padding-left:10px;margin-top:20px;color: #7f8fa4;font-size:14px;">Session Details</h3>
+
+                    <div style=" overflow-x: auto; max-width: 100%;">
+                        <table style="margin-top:-10px">
+                            <thead>
+                                <tr>
+                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">Session</th>
+                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">Session&nbsp;Timing</th>
+                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">First&nbsp;In</th>
+                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">Last&nbsp;Out</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="font-weight:normal;font-size:12px;">Session&nbsp;1</td>
+                                    <td style="font-weight:normal;font-size:12px;">10:00 - 14:00</td>
+                                    <td style="font-weight:normal;font-size:12px;">
+                                        @if($changeDate==1)
+                                        {{$this->first_in_time}}
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+                                    <td style="font-weight:normal;font-size:12px;">-</td>
+
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="font-weight:normal;font-size:12px;">Session&nbsp;2</td>
+                                    <td style="font-weight:normal;font-size:12px;">14:01 - 19:00</td>
+                                    <td style="font-weight:normal;font-size:12px;">-</td>
+                                    <td style="font-weight:normal;font-size:12px;">
+                                        @if($changeDate==1)
+                                        {{$this->last_out_time}}
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+
+                                </tr>
+                                <!-- Add more rows with dashes as needed -->
+                            </tbody>
+                            <!-- Add table rows (tbody) and data here if needed -->
+                        </table>
+                    </div>
+
+                </div>
+                @endif
+                @if($defaultfaCalendar==1)
+                <div class="container6">
+                    <h3 style="margin-left:20px;color: #7f8fa4;font-size:14px;margin-top:15px;align-items:center;">Swipe Details</h3>
+                    <div class="arrow-button" style="float:right;margin-top:-30px;margin-right:20px;" id="toggleButton">
+                    </div>
+
+                    <div class="container-body" style="margin-top:2px;height:auto;" id="myContainerBody">
+                        <!-- Content of the container body -->
+                        <div style="max-width: 100%; text-align: center;">
+
+                            <table>
+                                <thead>
+                                    @if ($swipe_records_count > 0)
+                                    <tr>
+                                        <th style="font-weight:normal;font-size:12px;">In/Out</th>
+                                        <th style="font-weight:normal;font-size:12px;">Swipe&nbsp;Time</th>
+                                        <th style="font-weight:normal;font-size:12px;">Location</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach ($Swiperecords as $index =>$swiperecord)
+                                    <tr>
+                                        <td style="font-weight:normal;font-size:12px;">{{ $swiperecord->in_or_out }}</td>
+                                        <td>
+                                            <div style="display:flex;flex-direction:column;">
+                                                <p style="margin-bottom: 0;font-weight:normal;font-size:12px;white-space:nowrap;">
+                                                    {{ date('h:i:s A', strtotime($swiperecord->swipe_time)) }}
+                                                </p>
+                                                <p style="margin-bottom: 0;font-size: 10px;color: #a3b2c7;">
+                                                    {{ date('d M Y', strtotime($currentDate1)) }}
+                                                </p>
+                                            </div>
+                                        </td>
+                                        <td>-</td>
+
+                                        <td><button class="info-button" style="background-color:#007bff; border: 2px solid #007bff;height:20px; color: white; border-radius: 5px;font-size:12px;margin-top:-10px" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
+
+                                    </tr>
+                                    @if (($index + 1) % 2 == 0)
+                                    <!-- Add a small container after every two records -->
+                                    <tr>
+                                        <td colspan="4" style="height:1px; background-color: #f0f0f0; text-align: left;font-size:10px;">
+                                            Actual Hrs:{{ $actualHours[($index + 1) / 2 - 1] }}</td>
+                                    </tr>
+
+                                    @endif
+                                    @endforeach
+
+
+
+                                    <!-- Add more rows with dashes as needed -->
+                                </tbody>
+                                <!-- Add table rows (tbody) and data here if needed -->
+                                @else
+                                <img src="https://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
+                                <div class="text-muted">No record Found</div>
+                                @endif
+                            </table>
+
+                        </div>
+
+                    </div>
+                    @endif
+                    @if($showSR=="true")
+                    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #eef7fa; height: 50px">
+                                    <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Swipe Details</b></h5>
+                                    <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeSWIPESR" style="background-color: #eef7fa; height:10px;width:10px;">
+                                    </button>
+                                </div>
+                                <div class="modal-body" style="max-height:300px;">
+                                    @if($swiperecord)
+                                    <div class="row m-0 mt-3">
+
+                                        @if ($data->isNotEmpty())
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ $data[0]->first_name }} {{ $data[0]->last_name }}</span></div>
+                                        @endif
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br /><span style="color: #000000;">{{ $swiperecord->emp_id }}</span></div>
+
+                                    </div>
+                                    <div class="row m-0 mt-3">
+
+
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Date:<br /><span style="color: #000000;">{{\Carbon\Carbon::parse($swiperecord->created_at)->format('jS F, Y')}}</span></div>
+
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Time:<br /><span style="color: #000000;">{{ $view_student_swipe_time }}</span></div>
+
+                                    </div>
+                                    <div class="row m-0 mt-3">
+
+
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">In/Out:<br /><span style="color: #000000;">{{ $view_student_in_or_out }}</span></div>
+
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Access&nbsp;Card&nbsp;Number:<br /><span style="color: #000000;">-</span></div>
+
+                                    </div>
+                                    <div class="row m-0 mt-3">
+
+
+
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Location<br /><span style="color: #000000;">-</span></div>
+
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-backdrop fade show blurred-backdrop"></div>
+                    @endif
+
+                </div>
+            </div>
+        </div>
 
 
 
     </div>
+
+
+
+
+
+
+
+
+
+
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+
+        // September 2023
+    </script>
+    <script>
+        document.getElementById("toggleButton").addEventListener("click", function() {
+            var containerBody = document.getElementById("myContainerBody");
+            if (containerBody.style.display === "none" || containerBody.style.display === "") {
+                containerBody.style.display = "block";
+            } else {
+                containerBody.style.display = "none";
+            }
+        });
+    </script>
+    <script>
+        const toggleButton = document.getElementById("toggleButton");
+        const containerBody = document.getElementById("myContainerBody");
+
+        toggleButton.addEventListener("click", function() {
+            toggleButton.classList.toggle("rotate-arrow");
+        });
+    </script>
+
+    <script>
+        document.getElementById("myButton").onclick = function() {
+            // Replace 'destination-page.html' with the URL of the page you want to navigate to
+            window.location.href = 'das.html';
+        };
+    </script>
+
+
+
+    <script>
+        $(document).ready(function() {
+            $('.toggle-box i.fas.fa-calendar').click(function() {
+                // Toggle the 'active' class on the calendar icon
+                $(this).toggleClass('active');
+
+                // Reset the bars icon to its initial styles
+                $('.toggle-box i.fas.fa-bars').removeClass('active');
+            });
+
+            $('.toggle-box i.fas.fa-bars').click(function() {
+                // Toggle the 'active' class on the bars icon
+                $(this).toggleClass('active');
+
+                // Reset the calendar icon to its initial styles
+                $('.toggle-box i.fas.fa-calendar').removeClass('active');
+            });
+        });
+    </script>
+    <script>
+        function toggleBoxContainer() {
+            const boxContainer = document.getElementById('box-container');
+            if (boxContainer.style.display === 'none') {
+                boxContainer.style.display = 'block';
+            } else {
+                boxContainer.style.display = 'none';
+            }
+        }
+
+        function hideBoxContainer() {
+            const boxContainer = document.getElementById('box-container');
+            boxContainer.style.display = 'none';
+        }
+
+        // Event listener for the bars-icon click event
+        const barsIcon = document.getElementById('bars-icon');
+        barsIcon.addEventListener('click', toggleBoxContainer);
+
+        // Event listener for the calendar-icon click event (to hide the box-container)
+        const calendarIcon = document.getElementById('calendar-icon');
+        calendarIcon.addEventListener('click', hideBoxContainer);
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('.attendance-calendar-date').click(function() {
+                // Remove the 'clicked' class from all elements
+                $('.attendance-calendar-date').removeClass('clicked');
+
+                // Add the 'clicked' class to the clicked element
+                $(this).addClass('clicked');
+            });
+        });
+    </script>
+
+
+
+</div>

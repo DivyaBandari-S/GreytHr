@@ -698,14 +698,28 @@ width: 170px; */
         }
 
         .second-header-row th.date {
-            background-color: rgb(2, 17, 79);
-            color: white;
+            background-color: #ebf5ff;
+            color: #778899;
             /* Adjust the width of the Date column as needed */
         }
 
         .second-header-row th.date {
 
             /* Adjust the width of the Date column as needed */
+        }
+
+        .scrollable-container {
+            overflow-x: auto;
+            /* Enables horizontal scrolling */
+            white-space: nowrap;
+            /* Prevents the text from wrapping */
+            padding: 10px;
+            /* Adds some padding */
+            border: 1px solid #ddd;
+            /* Optional: Adds a border */
+            background-color: #f9f9f9;
+            /* Optional: Adds a background color */
+            height: auto;
         }
 
         .second-header-row th:not(.date) {
@@ -767,7 +781,7 @@ width: 170px; */
 
         .large-box-attendance-info .first-header-row {
             background-color: rgb(2, 17, 79);
-            color: white;
+            color: #778899;
 
 
         }
@@ -1318,12 +1332,12 @@ color: #fff;
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
     @endphp
 
-    <div class="m-auto" >
+    <div class="m-auto">
         <div class="table-container scrollable-table" style=" width: 100%;
     overflow-x: auto;">
             <table>
-                <tr class="first-header-row" style="background-color:rgb(2, 17, 79);border-bottom: 1px solid #cbd5e1;">
-                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px; position: relative;color:white;">Genaral&nbsp;Details</th>
+                <tr class="first-header-row" style="background-color:#ebf5ff;border-bottom: 1px solid #cbd5e1;">
+                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px; position: relative;color:#778899;border-right:1px solid #cbd5e1;">General&nbsp;Details</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -1334,14 +1348,14 @@ color: #fff;
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th style="font-weight:normal;font-size:12px;padding-top:16px;color:white;">Session&nbsp;1<i class="fa fa-caret-{{ $this->moveCaretLeftSession1 ? 'left' : 'right' }}" style="cursor:pointer;" wire:click="toggleCaretDirectionForSession1"></i></th>
+                    <th style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;">Session&nbsp;1<i class="fa fa-caret-{{ $this->moveCaretLeftSession1 ? 'left' : 'right' }}" style="cursor:pointer;" wire:click="toggleCaretDirectionForSession1"></i></th>
                     @if($this->moveCaretLeftSession1==true)
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     @endif
-                    <th style="font-weight:normal;font-size:12px;padding-top:16px;color:white;">Session&nbsp;2<i class="fa fa-caret-{{ $this->moveCaretLeftSession2 ? 'left' : 'right' }}" style="cursor:pointer;" wire:click="toggleCaretDirectionForSession2"></i></th>
+                    <th style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;">Session&nbsp;2<i class="fa fa-caret-{{ $this->moveCaretLeftSession2 ? 'left' : 'right' }}" style="cursor:pointer;" wire:click="toggleCaretDirectionForSession2"></i></th>
                     @if($this->moveCaretLeftSession2==true)
                     <th></th>
                     <th></th>
@@ -1352,7 +1366,7 @@ color: #fff;
 
                 </tr>
                 <tr class="second-header-row" style="border-bottom: 1px solid #cbd5e1;">
-                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Date</th>
+                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Date</th>
 
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Shift</th>
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Attendance&nbsp;Scheme</th>
@@ -1390,7 +1404,7 @@ color: #fff;
                         <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate? ( $isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isPresent|| $swipeRecordExists?  '#edfaed':'#fcf0f0'))) :'white'}};">
 
 
-                            <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">
                                 <p style="white-space:nowrap;">
                                     {{str_pad($i, 2, '0', STR_PAD_LEFT) }}&nbsp;&nbsp;{{$currentMonthRep}}&nbsp;{{$currentYear}}({{$dayName}})
                                     @if($swipeRecordExists==true)
@@ -1472,48 +1486,11 @@ color: #fff;
                             </td>
 
                             <td>
-                                <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="viewDetails('{{$i}}')">
+                                <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="viewDetails('{{$dateKeyForLookup}}')">
                                     Info
                                 </button>
                             </td>
-                            @if ($showAlertDialog)
-                            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                                            <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Swipes</b></h5>
-                                            <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
-                                            </button>
-                                        </div>
-                                        <div class="modal-body" style="max-height:300px;overflow-y:auto">
-                                            <div class="row">
-                                                <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Date : <span style="color: #000000;">19-06-2024</span></div>
-                                                <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Shift Time : <span style="color: #000000;">10:00 to 19:00</span></div>
-                                            </div>
-                                            <div class="table-responsive">
-                                                <table>
-                                                    <thead>
-                                                        <th>serail no</th>
-                                                        <th>content</th>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>1</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                hello
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-backdrop fade show blurred-backdrop"></div>
-                            @endif
+
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">No&nbsp;attention&nbsp;required</td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">-</td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">10:00-14:00</td>
@@ -1604,5 +1581,48 @@ color: #fff;
                         </tr>
 
         </div>
+        @if ($showAlertDialog)
+    @php
+    $formattedDate = \Carbon\Carbon::parse($date)->format('d M');
+    @endphp
+    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Swipes</b></h5>
+                    <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                    <div class="row">
+                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Date : <span style="color: #333;">$currentDate </span></div>
+                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Shift Time : <span style="color: #333;">10:00 to 19:00</span></div>
+                    </div>
+                    <table class="swipes-table mt-2 border" style="width: 100%;">
+                        <tr style="background-color: #f6fbfc;">
+                            <th style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Swipe Time</th>
+                            <th style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Sign-In / Sign-Out</th>
+                        </tr>
+
+                      
+                            <tr style="border:1px solid #ccc;">
+                                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px"> $swipe->swipe_time </td>
+                                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px"> $swipe->in_or_out </td>
+                            </tr>
+                        
+                            <tr>
+                                <td class="homeText" colspan="2">No swipe records found for today.</td>
+                            </tr>
+                       
+
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="modal-backdrop fade show blurred-backdrop"></div>
+@endif
+
+    </div>
+    
 </div>
