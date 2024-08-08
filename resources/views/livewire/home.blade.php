@@ -250,7 +250,7 @@
                     @endforeach
                 </div>
                 <div class="col-5 m-auto p-0">
-                    <img src="/images/A day off.gif" style="width: 8em">
+                    <img src="/images/A day off.gif" style="width: 5em">
                 </div>
             </div>
 

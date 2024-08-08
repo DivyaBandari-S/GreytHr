@@ -33,7 +33,7 @@ class ExportDataEntries extends Command
         $toEmail = $emailData->to_email;
         $ccEmail = $emailData->cc_email;
         $subject = $subject ?? $emailData->subject;
-        $filePath = storage_path('app/public/data_entries.xlsx');
+        $filePath = storage_path('app/data/data_entries.xlsx');
 
         // Create a new spreadsheet
         $spreadsheet = new Spreadsheet();

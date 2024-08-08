@@ -83,7 +83,7 @@
             <!-- content -->
             <div id="leave" class="row mt-2 align-items-center " style="{{ $showLeave ? '' : 'display:none;' }}">
 
-                <div class="containerWidth">@livewire('leave-apply') </div>
+                <div class="containerWidth">@livewire('leave-form-page') </div>
 
             </div>
 
@@ -144,7 +144,9 @@
             </div>
             <!-- endcontent -->
             @if($showLeaveApply)
-            <div class="containerWidth">@livewire('leave-apply')</div>
+            <div class="containerWidth">
+                <button wire:click="test">text</button>
+            </div>
             @endif
         </div>
 
