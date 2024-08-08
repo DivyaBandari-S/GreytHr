@@ -169,9 +169,9 @@
 
 
                 <p style="font-weight: 500;font-size:13px;color:#47515b;cursor:pointer">Activities</p>
-                <div class="activities" style="width: 100%; height: 30px;">
+                <div id="activitiesSection" class="activities" style="width: 100%; height: 30px;display:none">
     <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
-        <input type="radio" name="radio" value="activities" checked data-url="/Feeds" onclick="handleRadioChange(this)">
+        <input type="radio" name="radio" value="activities"  data-url="/Feeds" onclick="handleRadioChange(this)">
         <div class="feed-icon-container" style="margin-left: 10px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -185,12 +185,12 @@
 </div>
 
 
-<div class="posts" style="width: 100%; height: 30px;">
+<div id="postsSection" class="posts" style="width: 100%; height: 30px;display:block">
     <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
         @if(auth()->guard('emp')->check())
-            <input type="radio" id="radio-emp" name="radio" value="" data-url="/everyone" onclick="handleRadioChange(this)">
+            <input type="radio" id="radio-emp" name="radio" value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
         @elseif(auth()->guard('hr')->check())
-            <input type="radio" id="radio-hr" name="radio" value="" data-url="/hreveryone" onclick="handleRadioChange(this)">
+            <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
         @else
             <p>No employee details available.</p>
         @endif
@@ -808,11 +808,31 @@
         </script>
 
 <script>
-    function handleRadioChange(element) {
-        const url = element.getAttribute('data-url');
-        window.location.href = url;
+    function handleRadioChange(radio) {
+        const selectedValue = radio.value;
+
+        // Hide both sections initially
+        const activitiesSection = document.getElementById('activitiesSection');
+        const postsSection = document.getElementById('postsSection');
+        
+        activitiesSection.style.display = 'none';
+        postsSection.style.display = 'none';
+
+        // Show the selected section
+        if (selectedValue === 'activities') {
+            activitiesSection.style.display = 'block'; // Show activities section
+        } else {
+            postsSection.style.display = 'block'; // Show posts section
+        }
     }
+
+    // Initialize the default display on page load
+    window.onload = function() {
+        document.getElementById('radio-emp').checked = true; // For employees
+        handleRadioChange(document.querySelector('input[name="radio"]:checked')); // Trigger initial display
+    };
 </script>
+
 
     </div>
     </div>

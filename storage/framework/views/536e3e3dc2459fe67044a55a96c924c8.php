@@ -103,7 +103,7 @@
 
             <!--[if BLOCK]><![endif]--><?php if(Session::has('error')): ?>
                 <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert" 
-                    style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius: 4px; background-color: #f8d7da; color: #721c24;">
+                    style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius:4px; background-color: #f8d7da; color: #721c24;">
                     <?php echo e(Session::get('error')); ?>
 
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;"></button>
@@ -194,9 +194,9 @@
 <div class="posts" style="width: 100%; height: 30px;">
     <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
         <!--[if BLOCK]><![endif]--><?php if(auth()->guard('emp')->check()): ?>
-            <input type="radio" id="radio-emp" name="radio" value="" data-url="/everyone" onclick="handleRadioChange(this)">
+            <input type="radio" id="radio-emp" name="radio" value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
         <?php elseif(auth()->guard('hr')->check()): ?>
-            <input type="radio" id="radio-hr" name="radio" value="" data-url="/hreveryone" onclick="handleRadioChange(this)">
+            <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
         <?php else: ?>
             <p>No employee details available.</p>
         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
@@ -216,66 +216,57 @@
                 <div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
                     <div class="row">
                         <div class="col " style="margin: 0px;">
-                            <div class="input-group">
-                                <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;  " type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
-                                <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79);; color: #fff; border: none;" class="search-btn" type="button">
-                                    <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search" ></i>
-                                </button>
-                            </div>
+                        <div class="input-group">
+    <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
+    <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" >
+        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+    </button>
+</div>
                         </div>
                     </div>
+                    <div class="w-full visible mt-1" style="margin-top:20px;display:block">
+    <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;" onclick="toggleDropdown('dropdownContent1', 'arrowSvg1')">
+        <span class="text-xs leading-4" style="font-weight:bold; color: grey;">Groups</span>
+        <span class="arrow-icon" id="arrowIcon1" style="margin-top:-5px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:#3b4452;margin-top:-5px">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </span>
+    </div>
+    <div id="dropdownContent1" style="display: none;">
+        <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
+            <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">All Feeds</a>
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        </ul>
+    </div>
+</div>
 
-                    <div class="w-full visible mt-1" style="margin-top:20px">
-                        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;" onclick="toggleDropdown('dropdownContent1', 'arrowSvg1')">
-                            <span class="text-xs leading-4" style="font-weight:bold; color: grey;">Groups</span>
 
-                            <span class="arrow-icon" id="arrowIcon1" style="margin-top:-5px">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:#3b4452;margin-top:-5px">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
-                        </div>
-                        <div id="dropdownContent1" style="display: none;">
-                            <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
-                                <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">All Feeds</a>
-                                <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-                          
-        <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One </a>
-    <?php elseif(Auth::guard('emp')->check()): ?>
-        <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One </a>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-
-
-
-    <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
-<?php elseif(Auth::guard('emp')->check()): ?>
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
-<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-
-<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
-<?php elseif(Auth::guard('emp')->check()): ?>
-<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
-<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-
-<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
-<?php elseif(Auth::guard('emp')->check()): ?>
-<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Appreciation</a>
-<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-
-<a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
-<?php elseif(Auth::guard('emp')->check()): ?>
-<a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
-<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="w-full visible mt-1" style="margin-top: 20px;">
+                    <div class="w-full visible mt-1" style="margin-top: 20px;display:block">
                         <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
                             <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Location</span>
                             <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')" style="margin-top:-5px;color:#3b4452;">
@@ -285,7 +276,7 @@
                             </span>
                         </div>
                         <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color:#3b4452; text-align: left; padding-left: 0; display: none;">
-                            <ul style="font-size: 12px; margin: 0; padding: 0;">
+                            <ul  class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
                                 <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">India</b>
                                
                                 <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
@@ -367,70 +358,52 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="w-full visible mt-1" style="margin-top: 20px;display:block">
+    <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
+        <span class="text-xs leading-4" style="font-weight: bold; color: grey;">Department</span>
+        <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')" style="margin-top:-5px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color:#3b4452;">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </span>
+    </div>
+    <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
+        <ul  class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">HR</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">HR</a>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations Team</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Production Team</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Production Team</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">QA</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">QA</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Sales Team</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Sales Team</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Testing Team</a>
+            <?php elseif(Auth::guard('emp')->check()): ?>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Testing Team</a>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        </ul>
+    </div>
+</div>
 
-                    <div class="w-full visible mt-1" style="margin-top: 20px;">
-                        <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
-                            <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Department</span>
-                            <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')" style="margin-top:-5px">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color:#3b4452;">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
-                        </div>
-                        <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
-                            <ul style="font-size: 12px; margin: 0; padding: 0;">
-                            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">HR</a>
-
-<?php elseif(Auth::guard('emp')->check()): ?>
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">HR</a>
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Operations Team</a>
-
-
-<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Operations</a>
-
-<?php elseif(Auth::guard('emp')->check()): ?>
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Operations</a>
- <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
- <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Production Team</a>
-
-<?php elseif(Auth::guard('emp')->check()): ?>
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:black;">Production Team</a>
- <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
- <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">QA</a>
-
-<?php elseif(Auth::guard('emp')->check()): ?>
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">QA</a>
- <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-
- <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Sales Team</a>
-
-<?php elseif(Auth::guard('emp')->check()): ?>
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Sales Team</a>
- <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
- <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Testing Team</a>
-
-<?php elseif(Auth::guard('emp')->check()): ?>
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Testing Team</a>
- <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-           
-                         
-                              
-                            </ul>
-                        </div>
-                    </div>
                 </div>
             </div>
          
@@ -2275,24 +2248,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
     function filterDropdowns() {
-        var input, filter, ul, li, a, i;
+        var input, filter, dropdownContents, dropdownContent, menuItems, a, i, j, hasMatch;
         input = document.getElementById('filterSearch');
         filter = input.value.toUpperCase();
-        uls = document.querySelectorAll('.w-full.visible ul');
-        for (i = 0; i < uls.length; i++) {
-            ul = uls[i];
-            lis = ul.getElementsByTagName('a');
-            for (j = 0; j < lis.length; j++) {
-                a = lis[j];
+        
+        // Select all dropdown content elements
+        dropdownContents = [
+            document.getElementById('dropdownContent1'),
+            document.getElementById('dropdownContent2'),
+            document.getElementById('dropdownContent3')
+        ];
+
+        // Loop through each dropdown content
+        dropdownContents.forEach(function(dropdownContent) {
+            menuItems = dropdownContent.getElementsByTagName('a');
+            hasMatch = false; // Reset match flag
+
+            // Loop through all menu items and hide/show based on the filter
+            for (j = 0; j < menuItems.length; j++) {
+                a = menuItems[j];
                 if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    lis[j].style.display = "";
+                    a.style.display = ""; // Show matching item
+                    hasMatch = true; // Found a match
                 } else {
-                    lis[j].style.display = "none";
+                    a.style.display = "none"; // Hide non-matching item
                 }
             }
-        }
+
+            // Show dropdown if there's at least one matching item
+            dropdownContent.style.display = hasMatch ? "block" : "none"; // Show or hide based on match
+        });
     }
 </script>
+
 
 </div>
 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->

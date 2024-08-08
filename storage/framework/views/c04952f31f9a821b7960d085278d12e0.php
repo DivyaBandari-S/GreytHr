@@ -270,7 +270,7 @@ if (isset($__slots)) unset($__slots);
                     <p>(Rupees Seventy Eight Thousand Nine Hundred Sixty Three Only)</p>
                 </div>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
-            <div class="row m-0" style="text-align: center">
+            <div class="row " style="text-align: center;font-size:0.8rem">
                 <p>Currently we are working on payslip .</p>
             </div>
         </div>

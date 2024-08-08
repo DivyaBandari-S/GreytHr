@@ -1,18 +1,17 @@
 <div style="font-size:0.8rem">
 <div  style="height:auto;width:800px;border:1px solid silver; margin: 0 auto; font-family: 'Montserrat', Arial, sans-serif;">
     <h3 class="heading" style="text-align: center;font-family: 'Montserrat', Arial, sans-serif;">Form No. 12BB</h3>
-    @foreach($employees as $employee)
+    <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $employees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <div class="cus-row" style="margin-left:20px">
     <b>Employee Information</b>
-    <div class="row" style="font-size: 12px; width: 100%;">
-    <div class="col-6" style="display: flex; align-items: center;">
+    <div class="row" style="font-size: 12px;width: 100%;">
+    <div class="col-md-6" style="display: flex; align-items: center;">
         <p style="margin: 0;">Name and address of the employee</p>
     </div>
-    <div class="col-6" style="display: flex; align-items: center;">
-        <p style="margin: 0;">: {{$employee->first_name}} {{$employee->last_name}}</p>
+    <div class="col-md-6" style="display: flex; align-items: center;">
+        <p style="margin: 0;">: <?php echo e($employee->first_name); ?> <?php echo e($employee->last_name); ?></p>
     </div>
 </div>
-
 
     <div class="row" style="font-size: 12px;">
         <div class="col-md-3" style="display: flex; align-items: center; padding-right: 0;">
@@ -97,7 +96,7 @@
 
         <div class="claim-details" style="margin-left:20px">
             <p>Verification</p>
-            <p>I,{{$employee->first_name}} {{$employee->last_name}}  son/daughter of  {{$employee->father_name}} do hereby certify that the information given above is complete and correct.</p>
+            <p>I,<?php echo e($employee->first_name); ?> <?php echo e($employee->last_name); ?>  son/daughter of  <?php echo e($employee->father_name); ?> do hereby certify that the information given above is complete and correct.</p>
         </div>
 
         <div class="custom-signature">
@@ -108,9 +107,10 @@
             <p class="custom-text-center" style="  text-align: center;font-family: 'Montserrat', Arial, sans-serif;
     font-size: 12px;">(Signature of the employee)</p>
             <p class="custom-text-center" style="  text-align: center;font-family: 'Montserrat', Arial, sans-serif;
-    font-size: 12px;">Designation:  {{$employee->job_title}}</p>
+    font-size: 12px;">Designation:  <?php echo e($employee->job_title); ?></p>
             <p class="custom-text-center" style="  text-align: center;font-family: 'Montserrat', Arial, sans-serif;
-    font-size: 12px;">Full Name:  {{$employee->first_name}} {{$employee->last_name}}</p>
+    font-size: 12px;">Full Name:  <?php echo e($employee->first_name); ?> <?php echo e($employee->last_name); ?></p>
         </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
     </div>
+<?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/downloadform.blade.php ENDPATH**/ ?>
