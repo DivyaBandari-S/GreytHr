@@ -13351,3 +13351,1121 @@ Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdK
 
 
 "}} 
+[2024-08-08 15:12:13] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:12:13] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImRkelh5Zi95MHpOckpteUZRYnNSd3c9PSIsInZhbHVlIjoiL3o2WE1GRzhVRWVBSDNpYVlzVm92U0NYWFlpc0NDdXJJQlB6YU1OZVJDbGZ1K0w4YVNxOTJad1JoNmFPM3o4T293c3gzaVVnTXNzOEU1a0V5OVRsT0svYVdldlRxdlJuOGcwRHF5VkdReUxJVUg5eVQ4L2lNekR4OXRIdEN2bk4iLCJtYWMiOiIyNWZiMDAyMWQ2YzIxMjkzYjVkNzUxMGQwYjBiMDkyYWEzYjg3MDQzN2JlYWNlOTNkOTg3YjYwZmM3ZDYwNjQxIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkNvZ3JjYTUyT0pZNFVxdHQzYUVUUmc9PSIsInZhbHVlIjoiVk5VbVd2cVFSVDNYc0FFUmJUd0ZnVjBQTEhubHYzUGxWUjFXb01XQnZBcFdLa0dkaTZrNUREclg4WUdqK2V3SmM3cXVZY3IweEhGVzROaTVmMW5ucWRVcWxzWXg2ZWRySUp2Y3BsZm5kWHllLzFHQkxMWVpZTzEydXNUVXdRUXUiLCJtYWMiOiJiYzA1ZDI5NjBjNjVjOTJjNTJmY2VmYTQwOTFmZWE3ZDQwMzExNDRjMDZjYjMxZjc4OTdkMDA3ODU1NzIzYWJkIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:13:35] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:13:35] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IitkWExPNHhSdVBPRnlUNWJRT01IcXc9PSIsInZhbHVlIjoidjVMZytVTWlIakxvbzhxcHZDK3Z3bXFSSVBOcmRKUXVROWhjaG9KRXAvcmRycUNvdHFXd3RISnBTMnVhSGs3bXRaSVo1UVMxWWJaQ2JKUlJkeDMxanQ4a2phN1pINXVIMWVjV010NVZ1YjBBR01xeEhabGpuY3gvcitDa2FDRkoiLCJtYWMiOiI3MzUyZDJjZjk2MGY0NGRkYTI4YWNhOGFkMzIzNzQ4NjNmNWM0ZDFhZDBlYzMwYWI2YTViOTU2YTE4NTBkMjYzIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Ik54SFhDS0F0elo4d3NESHJwQXFISFE9PSIsInZhbHVlIjoiUy81K0kwZkxLSFg0UE1mSkdFNzY5dmIxV1h1SEhhMDRMT3lXQUZ0WFNCRTdMZ3AvVk5mQnF1c2VFV29haXVuK1FVcjNMTHZBN1hNb1NiSE5QN1NPOERlZHBpRUNPT2thYldtUlRlQ1VIZCtPekZEQjE4ajBMVU1COHB3RWs2ZFIiLCJtYWMiOiI3YzYwOWVjNzFiZWYzZjMwNGNlNjk2OGVkMjYyMGQ1Yzg2ZTY2MTJhNzZjMzdkODgxYzdlY2JmMDAxY2FhMmIxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:13:54] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:13:54] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlZTYTdUaDVhRkFVVDJDOFg1dWZHUUE9PSIsInZhbHVlIjoidnlBbGkvYU8zRHBCQzVKV1hYbytoc3NrTnFnMUdpSUFJVTRsbHB3ZVE1MFZoWVErODhRTXY0NFArZVlOVkhrc3F5bUhXcHE5dWJaRzBPVXBYUjBkUnMxczV5TUtoaTVNRUZuWVVXbEdIbU41MFdib2pQaEcrMjIyWDMzMkpYZmkiLCJtYWMiOiIwYzliZDYzN2YxNDg2N2ZiMWM2NjZlZjk0Yjc5N2NlNzIwZjcwZjIyZTI3YmFkMThjZjhjZWY4ZmE4ODM5ZThhIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlJacmQ5T2MzN3YwYUEraFdzRDNpY3c9PSIsInZhbHVlIjoiTEc5L3JodjN4bWhocWx5VnlxbFZyTzhkV0pURmZab2ZxTDh1OVVVNTdmVzJSZ0h6b1ZGRGJSNkluSFhqUngya1VaQXpaRVNEbnNBZUw5L20wWlBldkNCcjRTODdEV255MnpVNGh2Q0g0Z3ZEcS9CMFd6SWlva2J6RGt1bGM5TmwiLCJtYWMiOiI0NWU1ZTNjZjQ2NzZiNTMyYjAxMGI5Yjg3ODI4MGUzYzUyODg5NmQwMzE2YTYyZjI5NzdmZWMwMDQ2NzI3NjkyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:15:37] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:15:37] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkNNN0FLdFgyUUxKMlNyYTRBTW9PU1E9PSIsInZhbHVlIjoiQTZxbm1HaWRaSVdWMWhSWm15a3hjRVZLL1BrQUp2VXBnU3RLcUZuVW9RY3pVWnc3YzRRQ3hGZ0ZKQzgzWXlCQmQ3a1N1S3lLeUhtNUJ3Nyt4V0d5eGpoaFlWTWdaVzU5blF6OE5qNVBlcGVZMjBNUi9Dck9ZNjgybHltZlJhYXQiLCJtYWMiOiJmOGZlMDU3YTdiMWQwMWRiN2ViMjgyOWNiOTk0ZmYzMGVmN2Q2NmU5ZGRjMmFjNDhlMzZjZTE3YWZlYzYyOGJkIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImJXdlcwWi9ERjZQRC8zYXRPVHBnMlE9PSIsInZhbHVlIjoiTFFZNGQyT2p3N0g1U2JFSTdFSmhvNmgxT2xveGxMQjBVbExhWSs3SSt0NlJldnRmQnZSU0NoSjl1VDBkYjhaNDZQK2kyM0laRlByYUt6dnNheGtzS1NNVFdxOGtsTmdtWWFYaGl4VzNidGhnbkc2L04ySEJmTEI5R0VCc2wrVUMiLCJtYWMiOiJjNjFmZGRmOGY1YzNhODFmMTc0NWExYWNiMzY4ZGMyZjhmNTFmZjBiMTQxM2U3MjA1ZDhmMDc3YzQyNWVhZWZkIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:15:56] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:15:56] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjErcHZXUE1lOFBhTFlpK0tMd3J0NGc9PSIsInZhbHVlIjoiVkJCREpDNGFEeDFBTjhsU0VuUWV2UklkRExkRnA4K1loQm5FREdZenJZRWZPWGtSZTNvcVovUjlSN2NsOWxxdmpLbCtja1F6bEtXclQ3VmZuUUR5ZHVTejJRUVozclNmenF2Z29BWDVFa0wzZWdtWlVCVVdsbmVMR2VPempqMk8iLCJtYWMiOiIwYzc3ZmJjMTRlNWZiNDJkYzhjMmNmMTY2M2JkNDA1YmUzODljNjI5ODQ5N2ZiNWNmM2QwZDI2NDlkMWQ4MmE3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkpPSmRidEpFV05zOHVBMFkyRzJuR0E9PSIsInZhbHVlIjoiNGp5bWdCUFVnc25XaEtBQlpSbEhnT1FLTUM1YktqTTN2Q1djZGxoMGxJMkZzSW5ydkNydWM4Z25mcTRBZEVOWXU2emFWQXRUa3hOUHpqbUtvRVhkSEVoUi94NFB5cVp5d1ZVZWthT3ppRHdSNCtMSFdxWk9LQVJneENIbVErckgiLCJtYWMiOiI3MzhhYWVhYzQ3MWUxOTAyN2Y4N2M1N2ZhMGUwNmJmNDFmZTM4MTYwMWRlZTE1OTE3NTk3ZjdjMGQ2ODdhNWM2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:15:58] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:15:58] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /time-sheet HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IllhUmdpaXc4alFINDNuMHJrVWZFN3c9PSIsInZhbHVlIjoibWNPVUQzdjZERGJ0WExSUUdtMFR3S3V0dzUzK1BzN2J4NDAvTVp5SCtQNWROdjRpYUxkTWFjUFFmN3dlU1R2UFdUSHFaeDI3Ym43dURrVWQwbmdmTnB4Tk1OeDF3Q2htVVpobStPZE9kM1FSZU9GMkJpWE1QZGNQTWNJcEp3M2YiLCJtYWMiOiI1ZTVkM2FlOTkxY2U5NGI4MjlhOGQ5NTdkYjY1M2EzYTlhYTNjMDE4M2E1ZDAxZDBjZjMwNWI1MDdlOTIzOTA2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkRaQ0pTUzdjZ0lYMzdBQnFSNzR3YUE9PSIsInZhbHVlIjoiYkZZbkxvMnEyanNxTzdRZzVQMkR4M2xnT1dFalN4d1NjQllIUlJadDJxQjZqMmZCY2xkemZVVWUrQlVCMGdBd0ZTNjE5dFZwUmtPb1I0UWtQelNjaVEyd0dhemhsTnVoRjFVaWF4SS95TjBBM2k1YVJ2WU85Y01lYkRCOE02UnMiLCJtYWMiOiJmNWQ1Y2EyYTQ5NDgwNjhhMzFhOTUzYjU3ZjUxODI3NDA4MDljYTY4OWY0OGI1MzJiMTVjMDM2NjRkNmE0OWFjIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:16:02] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:16:02] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjJ6cFJaUXViRmV2VFRoN1M3L25zM3c9PSIsInZhbHVlIjoiWitPWDdFVmRlUXpnQ1BPWFJqdU93T1hpazl0KzJidWJ4enErdjlmUjliSUNPUFlHMUZkYmliOXVkYUtyOXpMUjB0NXdmNm9LSTUrUmdieElmSDRZdWlUZ2FzSEtwTExHT25zVTBCanhzQU9LUFVyOEUzUDZvS0cyaDZaU2ZuTnUiLCJtYWMiOiI0YzA3Y2MzYjgzZDUwNjkzNTA0NzhkNmYwNTg0ZjRkYzFiMWM4NzgxMmZhMjM2ZmIxYTEwNjQxODA3MGM0MDYwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImpQZ3ZpanFXVzZyNXIxc1oyM01TSHc9PSIsInZhbHVlIjoiYTdzZnp5NElQWnpEUSswVW9oY1p1MzNHRnRZRTVWTitvaXBZSXpJUEgzclZPWU9lS1phdmNLWkFObVY3bWQyT3NkNHB4YzlTN1l5N05QNmVzYlR1amJPci9jVmZjbEZvMTJSRENuakgyN2tRbW41UVdUdGRLVGtuWUVLVklnVWIiLCJtYWMiOiJhZWU3ZTQ3NTBhNWUxOTA5NTk1OGMwMjljOWFmYzFhY2RjZjhjZTE3MmY2MGU4ZGM4YTczMjYxMmRjZDI2ZTgxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/time-sheet
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:16:35] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:16:35] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImwzMWttV0xwOWlyOFhtbkZ1M1pKcVE9PSIsInZhbHVlIjoiSnJDV2tVS2xWbkJWM1Zzd3RXUlQ0eUZsczdiUThkZVdTVFNtaWhNQTUzSUoxTlJwSXY4a044M2txb3ZNYnRpVGhraWFTdnNxL1BaKzM2Uy9CMng2L1VNQUpXSE43YnBsb1VDWTcrODhjaDIwYlJVaXdDdXZReG91b01xdGRVb3QiLCJtYWMiOiIwZGEwNDNlOWE5NDQxNDc2M2UxZmU3ZjFjMDU0NGE4OWVjZjk2ZmNmMTkwNTVhMGRjNGQ4MzQ5ZmVhZWU0NTY5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkxUK3EvWDYzUGxlbHlwdFFXWW9pU2c9PSIsInZhbHVlIjoiK1k4NHVXWklnQUtUKzd2Q1ROalpveU1ZMktFN0JZU0VBQTdiNG1ua0dJUlRiRGJ3WHRwVVdXYUVSREpNWXJFRWZiN2M4OVpWcHBCS3NLbVljUURTMmdFd0xJTEZHUjB0VGtJZUgwRkpoVjdLQzZrWmFKTm40cTh2VVcxSEFWT24iLCJtYWMiOiI1YWQ1ZDFjOTc5NjY3MTA1ZTRmNDc5YzMzZTYzMjhjNjQzMDBiZDc2OTA3YjE2OGQ4NGNkZTc0ZWY5MTNkYTRhIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:16:48] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:16:48] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ikl3YnA5bW9hUFE2L0hwd0hzQUdYVUE9PSIsInZhbHVlIjoiQ3J4bHBaTXd1NzVqZG5uTEc2U28zYWVyaWVzcDE0dUppSnlWWlhkOHptbWdwMGZHR1BRcUZ6alpBQm5kekNoaXN0K3BBWGFyTmlFcXo5TG4xcThaYnI2MlJxTFV2TEV0SUZRMlFVdkRxYzFWdG4wSVNCaFdKNGlPemlpOGk1T0UiLCJtYWMiOiJjZGNhMmU2NDRiYzRjN2MzZmEzNTJhOGViNDUzMGI3Y2Q2N2Q5YmRiNzI0ODJlMTlmYWE0NTBkNzUyZGI5YTk3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlVZZm5nQ0UrSTNZZlNJZ1Rpa0RkaVE9PSIsInZhbHVlIjoiS2RBZitTUWp5T3oxYkcxMVpteGlqNUhIdy8rdXRDS3JCbUx1Z2J2MVNzMDVKeS9yMllwUTN6OTdEQ3dNc0xWTjJWbmFqRzNxZ3VZWmxYSDNFSFIzaHJnWHVUYVR6MVBac0hmRWZoaEkwZk5Tc3NyRFRHNk5BdlFsWTlRWXg5NjkiLCJtYWMiOiI3M2M4Zjk2ZjlkMGMxOGJkYjU0MDlhNmMwMDU0MTU2ZTk2N2RjZDdiZjg3ZmJlMTM4OTYzNzM3OGE0ZTYwMTE3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:17:42] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:17:42] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkV6U1U5QWN2Y0psYXRPb3p3dEF1UVE9PSIsInZhbHVlIjoiZTBVbFJmOW5qOUVBbkptQVhFSTdQMitrOU9qNlNoTlA5WXVCU1VjUmFuTGFNa0tQWHY4UER0eUdYR0JUZUJuNDJjMnJMZ1NCdG1WdFlVQTg2RFdtKzM1TWsxUFdjak5uRHNOdkI4TnRrVzBucEFhU0REU0ZjN2R4TFNNUmw2VzgiLCJtYWMiOiI3ZTg5NDhmZjNlNzI1N2E3NGU2NjRhOWFmZGY4NzA1MmQxYjRjNWViOTE5MTAyOGVlNmI4NzhkZDlkNmYxY2FjIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImVrOVBNL2tiVURXV2pndDNDbzNQYlE9PSIsInZhbHVlIjoia01OTFU5Wk0vT2tMWGJ6dkUvOS9QdWNvVFg4b1VzK0ZiZUQ5cWs0TGlGb3AyNzUrcnJ0TGoyQWd4STJGekh2T2dLSTFlc0NlSjhrUDdrVEx1c3NMUHRJVXZTaXF4U2l4VTdOVk5ONytsY2ZPNTBDMWl6b3NSSllIQ0hod3JUZGsiLCJtYWMiOiJlMjlkZWVlMDQ0YTBkYmQ5NjUxNjU2ZTc2YzhiNTJhNzNiZDk2MTcwNjQxY2MyYzUwNDhhYWJlYTUzMzliMTk0IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:20:16] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:20:16] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IitXZ1JuRmJZekUxY2RWS0UzVy9DZVE9PSIsInZhbHVlIjoiUWJ4cjFEOERYcUtJSjNtSDlyTlNvOHZFanNhdDBZM09OL1c4cDRjRnNwaFpmeERKaWVwZW1rVlprVFBCOUpKTGJnV1JJNlY3UG05Vjh2Ri9yWm9lUXd1c1VUeDVEd1UyQW12SkRTZ2xpczZySzFjNHhVWmpTTFZaVzcvcXFEaDciLCJtYWMiOiI3NTQyZmZkNzJmNDQ4OTUzNTQ0MWY3NzMyMWRlNGZkZDk4NzNlYWFiOTBjMTNkNTE2OTJkMjBhODA4YTFjOTQ4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkJxeHE4VTcyZXg5aVFkcXNXZzBUVUE9PSIsInZhbHVlIjoieHJuSE1Ra3JzZmJveTNidkdyOE0veStSeVkva215WW02SG9RRVNTcDJWY0ttcG9hN28xRVZjaWpUTEZGRVFEWU1QL0JZdU5MeGJhSDhnYlVURU9qRVVva1ZzaDdFMno0dGFkc2RUNW1PMjNHaU5wcVFzOVRaUjhMeHQ2bXVsdDUiLCJtYWMiOiI1YWUwY2M3YWJkOWJlYmU4MmNkOTJhOTE3ODZkZWEzYTc5ODVhYjg0YTk4MTc0NzAyNTFlYjM2Y2ZlOTcyM2E4IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:20:24] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:20:24] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ikp3K3d0WUFFY2hFNlFkMDkyWno5WkE9PSIsInZhbHVlIjoiTkprM2p6WHJoL3JMV1ZpTXA4MUowUm5uVXc5aitKWTJmWUFkbHM5MmQ5NHl0ei92ME54TjVRQ0VpVWdLenhrUVNMMmlqdjZIeDBCcVFmU3VvNXNDK3lFWW1YK1Z1di9WTXErZGIrdEJ3SENSM0RkbU9ReUpRdG9xUmEraFNINzEiLCJtYWMiOiJlZGFlMjEyYzMwYTE1MTlkNzc0MWM3MDE2MjBkYTI1NWYxM2UyNTEyM2JiYmU3ZGRkNGQzZGQ4Y2I2MGRhZGY5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImdZNkFHR1AwcHhPREh5ZEoraVhEc3c9PSIsInZhbHVlIjoiRm51ZmdRWVp3OTBoNTRMc2NSRmVjTWEwVFVETnZhbHVtc2VYM3lsS3o5WGpqc09RdG9LQmFySnF2M082QzhNTDNDaUFFSG5YRk5wVzlNdWtRUXhFRkU1TTJ6TllyRWFaYnFIUjArRXBlQ0FYM2ROL1JmMG0wY2l2RktrdjN0aG0iLCJtYWMiOiJmNGE5Y2UzYjk0YTRkYTZkYzBhMjA5OGQzMjA2YzFmNTNlNzVkMDZhZTc5N2UyOGE4MThlMzY1OGY1ZmZlZjhiIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:20:28] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:20:28] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InJuS2J2cFM0ci9JTERPNlJzV05vQmc9PSIsInZhbHVlIjoiVk1nTXhwTzBKUTRDQ1ZtMEVja2IrQS9HN3JkZ05WYld6SGNYMTlHSi9QUUkwQ015elJNeVQvZFIvT0ZnQ0ZRa2pyZGZ5TGFZUnRkOFRlbm9jZlNLNktBMkJsOFE4WFk5VUwvVk0rYk1aR1FINTdSUWM5ZEJRRWxHVXdDNy9DY3ciLCJtYWMiOiJiYzc2ZjRmNGI2MTBmYjVlYTdiODYwNmRlN2MzMGM0YzNjNjFhZGQyNzU1MWYzMGYzNzAxN2I3NWZjMGQ3ZjM2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlFFZjVQblFpTTRWRFVEYjd6YUFyOEE9PSIsInZhbHVlIjoidTZZTjRKWlo1L1lUZm12Q0Y5LzFXUHovU3ZWS2JXbCtkaFVnMDBzdU01U3lpTlRPTWIvZmFJTXd0TmJlQVdkd0o5OHpCYkdTbEQxcllXUzI0N1lDUklsQnIrVnJ6dUY1V3ZBUjk4NnF1aHFJMWgxT3dQNkJVR2l3emJZM0NWRngiLCJtYWMiOiJiYmIxYWY1MWMyMjgyNzZjNDU5ZGRiNmVkZTFmZTdiZGRlOGU5ZjJlNmFmYmY2MmM3NGU0YTFiZjUyNjU3YjU2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:20:32] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:20:32] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ijh6d3ZXTStlSHlhS1BDV2dBMVAzUkE9PSIsInZhbHVlIjoickdlUUV0UUh6Z0VqRGNxUytZTm90Q2x0VjBCaCs2YUFMWFp4bXpadUhFdVhDM1kyTGs2Z2tnNGpFc3RGT1htMmF1TFRiek5ETC9ibkNBWW5DTFVaR2gxSmltVmN2RjFCUzl0aGRMdXo5Z0ZTcWswaWkrKzhPOHJZdUhkSlJIdHIiLCJtYWMiOiI0OGFmNjUyYTQxOTE0ZWM0MjU0ZmMxNzcwY2M5NWVhYmUxYWIxNDljZjI3OWI1NzgyZWU1YjJiOTNkOWIxZGQwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImVHYmJvZDJ0S1RhdXRWSEtJZ0liM2c9PSIsInZhbHVlIjoibG1IUU50TGpqZTRyN3psLzc3L3dHRjBHOW1KcFpPQVpxMzlxaXg1bzc1NXBybEN5OHNDWTloTk55T04yTDFuc2ZjVjhZV1dMNU5NUEdtM1ovc2lYY3VsWVlwcHZGd1pEYURUemZqeFNVODYxbkhRS0RDVThuRnRud0xpUlgzRlciLCJtYWMiOiIzNzdiYzIxMDVhMDA4YzU0MGU0NzAxMDQwN2MzOWQ2MjcwNTA3YTRjZTI2ZWViZGI1ODNmN2EyMTc1NDU5N2U1IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:20:36] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:20:36] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjFnNS9KWDRubEIraTV3UnE2aExtbHc9PSIsInZhbHVlIjoiQzkzWEw2T0J0ZVlyUVlLSU5oTlBtQ3VKRmh0TFRUYitkMmNRSURicjdqWld1SkRrc2VXdTlYRytRenptTEpJUnlhaVJqTzk1VlNDRmFTRzJWcHdYR290dXB2SUJUTUYxejFzWXpwTXFpODJwT0hKZ051dU1hVE1rYnBDSVdsV2wiLCJtYWMiOiJiMzRkNjBmMjY4NGNmNGU2NTE4ZDUzOTA1NDIzOGZiODE1NmFiNGU5YjE3NzM4YjRiNTAwZmNiZDE1ZTY0MjA4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkRkVWN6VzJqdFJwK0YzWGpKNk90b3c9PSIsInZhbHVlIjoiTWZrMXloNm1FeE1WeU44UTlYeCtkZW1CN0hkdFUyZmFXSGNRbkxEcEc3NG1UMExCT2dkV1dlS0FmTXVqWGJKalVuYkhqZmRwL2MwdEtpSGRLZ3owejBZUHYzSkdrYlhLekVseEJPSEtocC9ZR2dKZnc5M2o3MklHVXJpQjBUNHEiLCJtYWMiOiJjNDVmY2NlMzczOTAwMGMwZmZkYWZkOTk0NjgyMGVjMzFhMDc5ZDYyN2ZmYzg5NDBiZDJjMDI3ZjRhNjhmMmNlIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:20:39] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:20:39] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlhuZGtFUDJHWnJnUTdlekdPcUQ2K0E9PSIsInZhbHVlIjoicTRaKzVUNDkzZklydk1oS2p6T2diWDAxdlJSbFFTeWpPemNEVkNCai80bFVXWnBrVlZ3ZkFGUUJqY0tCL255dWxYd2R4ZkZwc3BXbU9nVGNxdDh6WVF4Z01GVURMdSsrMWV2TyswNFZrSit3Z1dkcE15N202ZnQxUXVReHBDMUwiLCJtYWMiOiIxNTYzNjQ2ZDE0YmM1YWYwMDJlMWZiYjQxMjUxOTI5ODZkNmQ4OWViYTM4MDBkZTNjOTkxZWRlMTJmOTExMDA0IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InBoVGROMkx6bXlCaVpnL1dZNkdqcWc9PSIsInZhbHVlIjoiZm9XeTM4VEw2TkNENUJqT3JvbVhJQ0s5djlUREQxczNDZ2dpend4MjNWNE9aTlpyTUxjMUZBOWJCZVJBU1VoeXVtK01tdDJOblo4c3BUdEVSZVF6TnJYOWhjUDB6VXVSMHFQQ2xXNzRvMjR6aWFYYjF3MU8wQzFUb1dRNStTaHUiLCJtYWMiOiI0ZWQ1NTlmNTkzMDZlYWQ3NDUwMTBkMWY0NmQ3ODg0NWZkYzk5OThmNWM5NGViMjBjN2RjODUwNTkwZTgwM2EzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:20:44] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:20:44] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ik14UTVMVzdLeGRuaTA1L3A0V1BTOFE9PSIsInZhbHVlIjoiUlB5M3dzcmhTbUxvL2xCUlluWDNSUmo4aWo3ZTV1RkZwK3RiOVZtL2JnSGlNM2VXYzY5bDB2cXphZTQzbmROZGU3WkhQSC9ucG5PREV0QzVZY3lNUnczbThvbEZnWE1HRkpNdTdMSGlvUk9ORk94aldpdXhoL1QrMlQ0aTJIcVciLCJtYWMiOiJkZGUxMjNkNTU1MmZjNDRlYjBmNTZkZTAxOGJlNTM0YmMwNTljYTMwZDZmM2IwOTdhOGQ1Y2MxY2Q0OGI2OGU0IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Imk3Vnk1MHU5SEloc0ZOT3B5ZzRld2c9PSIsInZhbHVlIjoiYjJuN1c2R1FjSE02bkROYURKNW43Y3BxbW9qZUI1QVVKNEVoeXZlM1k2V0lGWE5DbGVLR0pKakhrVDZJbmJkTzNja1dXNUxGN2ZwaytSQzFrL21taW1GVWdxZFBNNXJ6OWFyTlNUd3ZaVEcvTHAwZU5Sekd1QUIvY3JSUDEvRk8iLCJtYWMiOiI2ZDhhNjcyOTAyMDJkMDYyMGFkMmFhMDVhZWMyZjJkMGQ5NTI1NzBjNjU1M2Y2MDU4YjcwMWEyMTgxOGM5NDIxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:20:47] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:20:47] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImJWNkhzQ0NQOXFMYlJBaEhBL0tqZHc9PSIsInZhbHVlIjoiQ0FySlZoRURYTUx6WlgyMFVDNE1acWFXc1cyNTdza0pRbXBDZFhzdEM4TDF2YmFseEJJLzVnQVlkU1p2aGdOUXRKVkRXN3Fvd1BoemlhY2xBT05uc2g2TE5ieUxJQ1pBOTdHbHh5UzBPbmxsakpOdko0QVg5amVMcjJhZ2dQU0MiLCJtYWMiOiJhNGQxMzljMDNlMzkwOWU5YjBlMGYzYzcxZmFjNmM1NWY5ZGRjZTU1MTNmNDIzZjlmODcyNDhhMWRjOWFmMWU3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkQxSG9SR0JMYXFCcjdTTTVYMEF6MHc9PSIsInZhbHVlIjoiQVJkMkdUWHp2MzlIcEVsbHBYSlhqaCtWdncwWDlBWDNVNTQ3dzZOR2FOSVpUSG9tUHBPSHp2N2NJNTB5RjZrMlZkcUlBa29oUnVYMzd4VGt6UWp4cDlCSGx1YjQ4UUFQY3RNNFRmRzBUb294MlhuTlBPQlU2R1ZhajBqdEZCVzIiLCJtYWMiOiJlNGZkMDFhOTY5YmEzODRlZDBlN2QxNmI5NzZmMDE3ZjAxNTA1ZDAzYzliOTQ3YmUwYjNiOTM0NTcwMGNiNjIxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:21:55] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:21:55] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjJkUjAvYUxacG13SHpQSGNJQnhIanc9PSIsInZhbHVlIjoiQU1xYlpmYzZ3TVhhOXVsNnl2N2ZCNEExZGVwM0xNemZWRXh6Z21oWVlxVlYyVGNKVzZnc3hLRlhkMUVHcUF6dGNBTTYybWVkajhhbVVGWmtvc0FsRFlxV2tzYkVuZWYvejhmYTVMemhZdGtYSGVjSldkem5WTE5aeFlZWUxyelciLCJtYWMiOiIzYWMxZmQyYjQ1OWRjOGQzMjQ2ZTVlOWMwNGNiYWY4Y2Y0YTYxNDY4NzY0MTFhNWUyN2JkMzlhYTM4OWYzZjQwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlIwUGUxY0NkQ3NBeUpNUVJTSnpNU3c9PSIsInZhbHVlIjoiakxmc2xhVmcxVzc5RzNHTVdocU5ZdlM5QmhrSWhDaVB0ZVdCekpGOXc3ZCtJVjRYR1YxT1V4QzdTMWpOMUpCRmxFM25FRUJzcTVFWGJKNEcrRDVhWWFadjNvUjhlaTFCS3V0bnF1cTVPMnFuQnNoSEgxYThvZGtacDl5VlNiUFMiLCJtYWMiOiI5NmU4YmZkNDRjODg5ZTk4M2I1NTYwNzIyOWIxMTBmN2MxYTdkZWIzNzVhMDM5MzkxZWUyNGM4YzljYjk4Yzc2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:21:57] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:21:57] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlZwYzhQQzFDR3czT0VnbkMxd1QwRmc9PSIsInZhbHVlIjoiNnAyS2tyek9WYTFoTXZSNnU4QTduUTFBNlVjakpLd1FtZmdGM1RERGhadjhpVGZBRzZoMTdnMGF5NjFwR1FEZVIzcUZCQVNiZ2QyOUJ0ckh4clR5Zk1wdmRiNTRTYml4SjFXWWRFYzBlZlVEdHpSVGFSUFl4TUlvSUd2NGRzSGEiLCJtYWMiOiIxMDBhYThjNjMwNDU2MGM0NjZkYmRmMzk1ODNlMjRkNjY3OTUzMmM2MzM1NThkOGNlODRkMDczMzk0NzJlODQ5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkF2OWRleGZZOUFCaWdZSVZWdWs3dXc9PSIsInZhbHVlIjoicUxNbXo3OXNZVEJiNkdrVEdOQjN6MmNxTkhTVG83SnlQYlpmWkNqU0drMUh0RHdzWlJUakJrSHNWTmJDMklpcjZRQWdNL3BmYm9yOStEbkVoWmRxM3p3WWF0Z1FmM3hEYXBqTkFzS3VDSFVyMFFvV0QxaVpwRjZ4MnJybHE2cTUiLCJtYWMiOiI5ZWI5YzkwZGFiM2JhZjgyMWM4YzViMGY4MzM5MjQ3ZjcyYzFiMGIyZTFiMmRlZmQ0MTRiNTc4YTFiNjg2YWEzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:22:02] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:22:03] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjZkYnNERTZObjdobndjQi8yVXIwemc9PSIsInZhbHVlIjoiN2lYT0RGaGd1WUw5RTdETFJCSzhhVnMyTm5ZaTZIalloRmpwdnFUVHVLbFpmVEJCUXdmMUFLaHd5Z1NDckxDU0FFemZlUisxS2FINis2dXZhdGw0RDRuOGxDWlRuYkV3TGNmRm8rZEl3WXNwUGhmUnVFUkNYWXNaSTVXNlMxOG0iLCJtYWMiOiI4YmIxMTBkMTNiMDc0MzYxZWMyNTVhMzFhNTk1N2Y5MDNkMTE1MjlkZjg3ZTk1Mzc1NDhhMWJmZTZiODE4YWU0IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Ik5DckoyVWNPVkkwRWk4dmlLa3djY0E9PSIsInZhbHVlIjoiSzBJSnlMcUp1MTF6Wm4wSnpic1V6eHByeGF4ZmZiWWsrZDk4UU9veGhZRUtCL1d1Mk8ycVVTQkZKcHZrdHVpMEpJVG5YaTQ5SmJwU2x1Tks1OVdnYXdMZjZFdmtFeFlpb3Erc2N3N3VKTWpUcUZYVlA4KzZZTW9KZmJ6Y0RaZXYiLCJtYWMiOiJmZTMzZWJlOWVkYWE5NGMzNDFjMDViYTY1NjQ5NWFhMTIzNGUwMmQzYTEyYjE1OWE2YmMxZDhmZDg4OTRlZGEwIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:22:07] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:22:07] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Im5DWGNWQ01xbWNsOFB3bnA1V1RiSEE9PSIsInZhbHVlIjoidkpWUGU5ckFXUlhPUGh1aVVaMncyUXg4d3BXSUlLRzJZM2VZd1daaENmODh1RERFYmU0cU5nczNjUXBiN0RBR1M1VFZHUzd1c3BTOHY3enQyYUhPL2Z6cXRHdytiMFBseVpwa1ZteVNMM0lsaE1VSnV6ZkQ4RkVGaDI5RjduZHEiLCJtYWMiOiI4YjY2MjQ1Zjc2NjgyNDBmYWRlOWMxOTk3OWJkNzE0M2YzNjhkNDk3MzI2MjczNzI5NWFlYTFkYWM3M2FhZDRiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlVxR3BuZjYrSTQ1czNkZ0dkWUdySmc9PSIsInZhbHVlIjoiRHhVaGtiYmlRWDBQSGc5eWFLQlJualBjQzAzcUV5dCtIeE1TSll6bTMzTmMrQ2NBUGRyb002SVFEa3k5dEtTU3BkNWc3R29CcWdsZ3RCODgwandIS0pEUmlvK2NOMXpoVEExMG05R2VLWFh0RXFqK2QyZURxbmNrcEFGY0pROTkiLCJtYWMiOiJlNTY1N2I1ZTY0ODgzM2RlNDQ4YmVlNDJmOTAxMTNjMzM1MzRhOTFmZmFiMGU3YjM4MDk2MWIyNWZmNDBlM2NkIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:23:14] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:23:14] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkxVWmlPYVJNTGlrS2VQREp1MFFOZWc9PSIsInZhbHVlIjoiV1ZEYTJDTlZaQ1JxRVlBRUY2eVFPb2dUNmduL09aNHdVckFwOXRKMktubG55dVZaUlUxR0xKYUN2WDNTRHhOMkVTck9Zd2JLWTRNQVg5YlE5REdHRUxabVIzUmR4bHBicExJVWs0Rk94YmhBM3BuanpqZDY5UnhxMWQxZ2J3U0IiLCJtYWMiOiI3N2RlMDNhNTM0MDkxYTA4MzE4NDE4YzNkMGI4ZmVkMjFmZDM2NjM3YTlhNjZlNzNiOGIxYjhmZDE2ZTc2ZjRkIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImxpL0NUbjk0Ly92U3RhQzJwRjhaeVE9PSIsInZhbHVlIjoiNGpKMmdjUHpMeVhDeC9jMXRzdnJ0aGkzalZlQmtCYXREMXZ1VWZWU3dicUNSNFBqVXdQTkdrWlpDMlV3a291c1I0YnZsaCtHTU9pZWxyVTB1bGtPUjJQR0pKTzNqaDdKWUVkYkJHRWx2V2lQTTJBTGxFVzBWTkh6bVNzaHRPWTYiLCJtYWMiOiJiYjc2MzI0YTdlOWEyYjRiMmVlNGNmMTY5Y2U3ZWUxNzQ2YjQ0Nzk5NzEyMzdjNDk1NzhlNjMzYmMxY2NkMjU3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:23:18] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:23:18] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Img4Z0l6ajU3ZDBzWm8vRWVIb2xDSlE9PSIsInZhbHVlIjoiNlFLVk9VVzFYZ2dVeGV1dXZScWxLR1F6M3JqM0xrcVozSTREcnhzdmdCL3FOWTBibzBLejJvUHJZcTVEYTY4anJZVHR4M1FPVmQ3SE1kL0NwZWxYdTBqWnBsanFlN2xnZVcwMitEakNzN3dsRTI3dXFuSEdkdzVYQ2QyZ2I0MDkiLCJtYWMiOiI0MzVlYjlkZDMzYjY4ZDkxZmY4OWE0ZGRlMjgyMzExY2U0YjliODM1ZmMyM2VhMmQwYTVkOTNkNTBjZjM1NGIxIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InRmQjRDb1RMRWJGOHZXbFo2OU1Rd1E9PSIsInZhbHVlIjoibnh2cTJQcUYraWI4RFQ0TjZ1Y05qV2l1eHgrNWwzZjJ6YmFMU3Fud3pXRnAyRTM0NEJOSE9YWUZWVzJ5S3hlMU56M3FYNGRzMndMWnJPRDc4eW9QR05uV0hjT3lZN0FFT0x4OGQwYXJ6Uk0xbkZRYnRwcmZIWSt0Z3hjN0FCYVUiLCJtYWMiOiI4Yzk3YzRiZDMwZGYyM2I3ZjAyY2Y2ODQxMzM4MmZjYjQ3MzMwNWZmOTUxNGQ4YzA2ZDBiMTU0MTg3MzUzNGU4IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:23:24] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:23:24] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Inc1Snl1d3B0K3YzblNmTkp3V1huTnc9PSIsInZhbHVlIjoiZFJ6MkdQSmdLUVZuL2FURUp0SkZMWDI0bFpiUEZac2FwR3FsRFNOUXk1MFRTWlo5Q2lqUGkzRkpHcHV2TklaRk1EUTJpVEMzK3I2bXpuVXV1K05GNTQyY2hZalpqK01POEVmL2dmcWxyY0FHSFVsWkhhN1ZEUlJwUmFteTFpU0giLCJtYWMiOiJlZWEwNjFjZjI2ZmI5OGY5YWM5YTQyYTZmM2JkZWQzYzExMWIwNjhjMjNhMDEwNDYyNDc0Zjg0NWY4MTI2M2JiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InFzTU5Uc2VselB3bGNJU3o3ZUZuTEE9PSIsInZhbHVlIjoiOFpJN1FJa3pjRDZxelJTeDVNdWlhK2NIUGNhL2pUMTcyeUVOSHk4azMrZnJ5Vk5WS1pYNGR4VGludXdXdkVoTERoWk84a2Z1LzlqME11WTZHM3hNZWphMjVrTmVBd2w1UjlWbXc3MjBFYW04c1REc3N5MUtDWk5QN1FnSUd2elUiLCJtYWMiOiJhMjUxNDZiZTdkZTU1ZmJmMTFlY2FlZGMwNTY3MjBmMTBkM2U3MDFkZmZhZDVkMzg1ZTQxODdkZDQyYmViN2NmIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:24:39] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:24:39] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ikg3akJWV3pyRFIra2lKSEhDQTM2VlE9PSIsInZhbHVlIjoiTnR2ekJtNFlLMm01TkFFeW9TMnpXMkhmdHVmdFRMclJ5UnFBL3lRT3RncFoySFhjbG9vTUF0V3RJRE5RREhPR2p3Z0tEQXB3OEJUa3JaeHI1SlhYOXdTV0h0R3Q5d3lOd3F0akc0dXJqbTBYbE4xWEVYWDg2Y0pidGJHeTBVd0QiLCJtYWMiOiI2ZjUzZTQ4ODIyNjM1ODEwZjRhY2Q1NGE5Y2ExZTgzNjQyOWQ2NDJiNzA2NDkxYzlhODljNTA1MzQ5OGZiMmZlIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImVDN01iSUtQT2pndUNpbXZFRlNWZ1E9PSIsInZhbHVlIjoiQWhMeWpLUzA4SjRpN0owa3FHV2xPZmFidGVScmI1am9xbnhZOWFjSytvMEZLWGZhMEs3bGNoQVZKRVpKMEV0cHU1Q1BwZFlvTTdKbnlXZmdLbHlvaHRGRmRzeUJsTHlIeVBFSG9PbE0yVEdiblIzMjFNK1lHUlhobm13eCtRcnQiLCJtYWMiOiJiODdiOWE0ZjIyOGVkZDQ0ZDk1NGUyZTI4Nzg2MjQwNDk4OTA0ZDlhOTU3NzgwZTQ3MjA2YWI4ZDJmM2VhZjg1IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:24:44] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:24:44] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /everyone HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlhISmNlY24zQWlWUHM2MTNhR2k5Ymc9PSIsInZhbHVlIjoiYUUxRW9GTmc2QWVGNWRFTW9sVTVuUzhwNStLUER1QVlrZm9DVWU1eGJxVFJOSHpXcFZKUTEyMzU0bnA0QzVvWldveThUd3RPQ0ViVm96WDFRSlg0MEZJNndKYkxxM1ZZbjVOZ2pXN243cHdYOTg1VnBFTFAzQ3ZIY3cyWUNualUiLCJtYWMiOiIxMmE2ZTIwNjYxMmJkNmYwODE5ZDY1ODZlNmU1OWM5NTM5MWNlYmUzMTQwYmMxM2I1ZTVmMjIxY2I0NmZkMTk2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkVhNXIxMW1mOHljSTJDU252QkpMY2c9PSIsInZhbHVlIjoiM3hwZjFpRUZ6SmFLUFMvRVJhVVhNaCtHQlJaZEJ6ck5ia2o5Ni9qN3krdWErTkRhRWt2K1ZINzlCeExoQ0x5RHVnWlBYWUt3dTZIWDl1cE9idEthdzQrZGhnWEhBNGhkMEQ3cFlQMHpPMHV6d0JrRG9WbXhkZjNPbi9HUU1SUDgiLCJtYWMiOiI5Mjk3MmZiZTMwMTQxOTg4NzM3NzZlOWQ1Y2IzYTg3MDIxYTdjOTRmMzE5OTk2ODk3N2I3NmE0ZjYzZWNiN2YxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 
+[2024-08-08 15:24:48] local.INFO: emp ID set: XSS-0476  
+[2024-08-08 15:24:48] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjRzWkU2NnQyTVUvcmpGL1F6T0dDb2c9PSIsInZhbHVlIjoiUkhDTllRWGxBa1NubFNITTdOSkRYaFlwSEdWbU1RRE1OSHE1NElkU3RpS1FEbmV3dEZaV3BSNjJZbDZDamlBODkrVE9iZStHNkJzcTRrMmlnNXdCRVJ3K1RVMnVTZEQwaFJJMXNOTDdNYkhIZzUzSWpkMG0ycmUvczBnNktpTUsiLCJtYWMiOiI2NThkODFhNWFiYTYxZjg5Y2NjMmI3NDA0YjllNjcwMDUwMmM5OWVjNjRkMWY1MzdkM2RmNDZmYjQ0NWU1MjIxIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InJlUHk3c3lmenk4SVJCaHFvbEJTQXc9PSIsInZhbHVlIjoieEdaanp4UmhjZkpxRzh3UzJZTGJTY2NaQ0tuOUo5dk9NUkJXdGoycFQrRnNTYzRHK21rdXRZQUxiZytqU2dYQmNPaTN1cDNEMG03M0JGUjYxcVBYbkh6c05FR3plbzZrTW1ucXVzZjY4My9acVEvSVZHdzN2Wjdady9jcFV6b3MiLCJtYWMiOiJhZDRjNTMzZjQ4ZTMwOTVjZDVlYzMxMDllNzFmMzVkYjg2ZjBkZjZiOGNiMjA1ZDg0MWFhYTk2OTFhZDc2MDY2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdKWYETCbLgCljHOTdmOZjNn1aMfLwnlya2P0xFw
+
+
+
+"}} 

@@ -128,7 +128,7 @@
                     <div class="form-group" >
                         <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
                         <textarea wire:model="description" class="form-control" id="content" rows="2" 
-                            style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-230px;;margin-top:5px"
+                            style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-240px;;margin-top:5px"
                             placeholder="Enter your description here..."></textarea>
                     </div>
 
@@ -194,9 +194,9 @@
 <div class="posts" style="width: 100%; height: 30px;">
     <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
         <!--[if BLOCK]><![endif]--><?php if(auth()->guard('emp')->check()): ?>
-            <input type="radio" id="radio-emp" name="radio" value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
+            <input type="radio" id="radio-emp" name="radio"  value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
         <?php elseif(auth()->guard('hr')->check()): ?>
-            <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
+            <input type="radio" id="radio-hr" name="radio"  value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
         <?php else: ?>
             <p>No employee details available.</p>
         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
