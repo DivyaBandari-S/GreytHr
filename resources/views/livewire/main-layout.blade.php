@@ -138,7 +138,7 @@
             <div class="profile">
                 <div class="d-flex brandLogoDiv">
                     @livewire('company-logo')
-                    @if($loginEmployeeProfile->image)
+                    @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
                     <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="">
                     @else
                     <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="">
