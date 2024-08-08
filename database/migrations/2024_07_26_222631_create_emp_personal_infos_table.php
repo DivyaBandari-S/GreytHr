@@ -33,10 +33,10 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('postal_code')->nullable();
             $table->string('country')->nullable();
-            $table->string('qualification')->nullable();
+            $table->json('qualification')->nullable();
             $table->string('company_name')->nullable();
             $table->string('designation')->nullable();
-            $table->string('experience')->nullable();
+            $table->json('experience')->nullable();
             $table->string('skill_set')->nullable();
             $table->text('present_address')->nullable();
             $table->text('permenant_address')->nullable();
