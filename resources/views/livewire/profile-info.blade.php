@@ -36,8 +36,7 @@
                         <div style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px;">
                             PROFILE</div>
                         <div class="col">
-
-                            @if ($employeeDetails->image)
+                            @if(!empty($employeeDetails->image) && $employeeDetails->image !== 'null')
                             <div class="employee-profile-image-container" style="margin-left: 15px;">
                                 <img height="80" src="{{ $employeeDetails->image_url }}" class="employee-profile-image">
                             </div>

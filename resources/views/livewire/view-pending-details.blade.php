@@ -26,10 +26,10 @@
                         <!-- Display leave details here based on $leaveRequest -->
                         <div class="col accordion-content d-flex align-items-center">
                             <div class="accordion-profile" style="display:flex; gap:7px; margin:auto 0;align-items:center;justify-content:center;">
-                                @if(isset($leaveRequest['leaveRequest']->image))
-                                <img src="{{ asset('storage/' . $leaveRequest['leaveRequest']->image) }}" alt="" style="background:#f3f3f3;border:1px solid #ccc;width: 40px; height: 40px; border-radius: 50%;">
+                                @if(isset($leaveRequest['leaveRequest']->image) && $leaveRequest['leaveRequest']->image !== 'null')
+                                <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['leaveRequest']->image)}}" style="border-radius: 50%;">
                                 @else
-                                <img src="https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars.png" alt="" style="background:#f3f3f3;border:1px solid #ccc;width: 40px; height: 40px; border-radius: 50%;">
+                                <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
                                 @endif
                                 <div>
                                     @if(isset($leaveRequest['leaveRequest']->first_name))

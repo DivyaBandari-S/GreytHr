@@ -41,7 +41,7 @@
             <li>
                 <a href="#"><i class='fas fa-file-alt icon'></i> Leave <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
-                    <li><a href="/leave-page">Leave Apply</a></li>
+                    <li><a href="/leave-form-page">Leave Apply</a></li>
                     <li><a href="/leave-balances">Leave Balances</a></li>
                     <li><a href="/leave-calender">Leave Calendar</a></li>
                     <li><a href="/holiday-calendar">Holiday Calendar</a></li>
@@ -138,7 +138,7 @@
             <div class="profile">
                 <div class="d-flex brandLogoDiv">
                     @livewire('company-logo')
-                    @if($loginEmployeeProfile->image)
+                    @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
                     <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="">
                     @else
                     <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="">

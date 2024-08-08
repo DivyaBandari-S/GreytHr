@@ -135,31 +135,6 @@
 
                                         <span class="custom-value">{{ ucfirst($leaveRequest->reason) }}</span>
                                         <span class="custom-value">{{ ucfirst($leaveRequest->contact_details) }}</span>
-                                        @if (!empty($leaveRequest->file_paths))
-                                        @php
-                                        // Decode the JSON array into a PHP array
-                                        $filePaths = json_decode($leaveRequest->file_paths, true);
-                                        @endphp
-
-                                        @if (is_array($filePaths) && !empty($filePaths))
-                                        @foreach ($filePaths as $filePath)
-                                        @if (!is_null($filePath) && $filePath !== 'N/A')
-                                        <a href="{{ asset('storage/' . $filePath) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">
-                                            View File
-                                        </a>
-                                        <br>
-                                        @else
-                                        -
-                                        @endif
-                                        @endforeach
-                                        @else
-                                        -
-                                        @endif
-                                        @else
-                                        -
-                                        @endif
-
-
                                         @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-value">
                                             @if (is_string($leaveRequest->cc_to))
@@ -182,6 +157,28 @@
                                             @endforeach
                                             @endif
                                         </span>
+                                        @endif
+
+                                        @if (!empty($leaveRequest->file_paths))
+                                        @php
+                                        // Decode the JSON array into a PHP array
+                                        $filePaths = json_decode($leaveRequest->file_paths, true);
+                                        @endphp
+
+                                        @if (is_array($filePaths) && !empty($filePaths))
+                                        @foreach ($filePaths as $filePath)
+                                        @if (!is_null($filePath) && $filePath !== 'N/A')
+                                        <a href="{{ asset('storage/' . $filePath) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">
+                                            View File
+                                        </a>
+                                        <br>
+                                        @else
+                                        -
+                                        @endif
+                                        @endforeach
+                                        @else
+                                        -
+                                        @endif
                                         @endif
                                     </div>
                                 </div>
