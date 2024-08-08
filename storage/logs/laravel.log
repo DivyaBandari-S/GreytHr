@@ -1,0 +1,45 @@
+[2024-08-08 14:51:30] local.ERROR: Command "livewire:clean-temp-files" is not defined.
+
+Did you mean one of these?
+    livewire:attribute
+    livewire:configure-s3-upload-cleanup
+    livewire:copy
+    livewire:delete
+    livewire:form
+    livewire:layout
+    livewire:make
+    livewire:move
+    livewire:publish
+    livewire:stubs
+    livewire:upgrade {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"livewire:clean-temp-files\" is not defined.
+
+Did you mean one of these?
+    livewire:attribute
+    livewire:configure-s3-upload-cleanup
+    livewire:copy
+    livewire:delete
+    livewire:form
+    livewire:layout
+    livewire:make
+    livewire:move
+    livewire:publish
+    livewire:stubs
+    livewire:upgrade at C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php:737)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(266): Symfony\\Component\\Console\\Application->find('livewire:clean-...')
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 {main}
+"} 
+[2024-08-08 14:52:45] local.ERROR: Not enough arguments (missing: "name"). {"exception":"[object] (Symfony\\Component\\Console\\Exception\\RuntimeException(code: 0): Not enough arguments (missing: \"name\"). at C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Input\\Input.php:77)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(321): Symfony\\Component\\Console\\Input\\Input->validate()
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Livewire\\Features\\SupportConsoleCommands\\Commands\\DeleteCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#6 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#7 {main}
+"} 
