@@ -1,4 +1,6 @@
 <?php
+
+use App\Livewire\LeaveFormPage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
@@ -222,7 +224,7 @@ Route::middleware(['auth:it', 'handleSession'])->group(function () {
 });
 
 Route::middleware(['auth:admins', 'handleSession'])->group(function () {
-    Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
+Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
 });
 
 
@@ -290,6 +292,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     //leave module
     Route::get('/leave-page', LeavePage::class)->name('leave-page');
+    Route::get('/leave-form-page', LeaveFormPage::class)->name('leave-form-page');
     Route::get('/approved-details/{leaveRequestId}', ApprovedDetails::class)->name('approved-details');
     Route::get('/view-details/{leaveRequestId}', ViewDetails::class)->name('view-details');
     Route::get('/view-pending-details', ViewDetails::class)->name('pending-details');
@@ -317,9 +320,9 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     // Route::get('/chat',Index::class)->name('chat.index');
-    Route::get('/chat/{query}',Chat::class)->name('chat');
-    Route::get('/users',EmployeeList::class)->name('employee');
-    Route::get('/image',ImageUpload::class)->name('image');
+    Route::get('/chat/{query}', Chat::class)->name('chat');
+    Route::get('/users', EmployeeList::class)->name('employee');
+    Route::get('/image', ImageUpload::class)->name('image');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 

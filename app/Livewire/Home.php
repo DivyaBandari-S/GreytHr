@@ -81,7 +81,7 @@ class Home extends Component
     public $holidayCount = 0;
     public $empIdWithoutHyphens;
     public $matchedData = [];
-    public $swipedDataRecords;
+    public $swipedDataRecords,$loginEmployee;
     public $showMessage = true;
     public $swipeDataOfEmployee;
     public function mount()
@@ -107,7 +107,7 @@ class Home extends Component
         // // Get data from MySQL
         // $dataMySql = DB::connection('mysql')
         //     ->table('employee_details')
-        //     ->pluck('emp_id');
+        //     ->pluck('emp_id');2
         // $mysqlEmployeeIds = $dataMySql->toArray();
 
         // // Process and match the data from both databases
@@ -168,7 +168,7 @@ class Home extends Component
             $this->greetingText = 'Good Night';
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employee_details=EmployeeDetails::where('emp_id',$employeeId)->select('emp_id', 'first_name', 'last_name')->first();
+        $this->loginEmployee = EmployeeDetails::where('emp_id',$employeeId)->select('emp_id', 'first_name', 'last_name')->first();
         $employees=EmployeeDetails::where('manager_id',$employeeId)->select('emp_id', 'first_name', 'last_name')->get();
         $empIds = $employees->pluck('emp_id')->toArray();
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
@@ -178,7 +178,7 @@ class Home extends Component
         ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
         ->with('employee') 
         ->get();
-        
+
         $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
         ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
         ->where('status','pending')

@@ -134,7 +134,9 @@ class LeavePage extends Component
         $this->compOffShowinfoMessage = !$this->compOffShowinfoMessage;
         $this->compOffShowinfoButton = !$this->compOffShowinfoButton;
     }
-
+    public function test(){
+        dd('jkl');
+    }
     public function mount()
     {
         $this->activeSection = request()->query('tab', 'applyButton');

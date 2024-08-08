@@ -38,16 +38,23 @@
         <div class="nav-buttons d-flex justify-content-center">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</a>
+                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link  {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">
+                        Apply
+                    </a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
-                    <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
+                    <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">
+                        Pending
+                    </a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
+                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">
+                        History
+                    </a>
                 </li>
             </ul>
         </div>
+
 
 
 
@@ -76,7 +83,7 @@
             <!-- content -->
             <div id="leave" class="row mt-2 align-items-center " style="{{ $showLeave ? '' : 'display:none;' }}">
 
-                <div class="containerWidth">@livewire('leave-apply') </div>
+                <div class="containerWidth">@livewire('leave-form-page') </div>
 
             </div>
 
@@ -137,7 +144,9 @@
             </div>
             <!-- endcontent -->
             @if($showLeaveApply)
-            <div class="containerWidth">@livewire('leave-apply')</div>
+            <div class="containerWidth">
+                <button wire:click="test">text</button>
+            </div>
             @endif
         </div>
 
@@ -187,8 +196,12 @@
                             <div class="col accordion-content">
 
                                 <span class="accordionContentSpan">Pending with</span>
-
-                                <span class="accordionContentSpanValue">N/A</span>
+                                @php
+                                $applyingToArray = json_decode($leaveRequest->applying_to, true);
+                                @endphp
+                                <span class="accordionContentSpanValue">
+                                    {{ ucwords(strtolower($applyingToArray[0]['report_to'])) ?? 'No report_to available' }}
+                                </span>
 
                             </div>
 
@@ -206,15 +219,14 @@
 
 
                             <!-- Add other details based on your leave request structure -->
-
+                            @if(($leaveRequest->category_type === 'Leave') )
                             <div class="col accordion-content">
-
                                 <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($leaveRequest->status) }}</span>
-
                             </div>
+                            @endif
 
                             <div class="arrow-btn">
-                                <i class="bx bx-chevron-down"></i>
+                                <i class="fa fa-chevron-down"></i>
                             </div>
 
                         </div>
@@ -363,7 +375,7 @@
                             </div>
 
                             <div class="arrow-btn">
-                                <i class="bx bx-chevron-down"></i>
+                                <i class="fa fa-chevron-down"></i>
                             </div>
 
                         </div>
@@ -413,7 +425,6 @@
                             </div>
 
                             <div class="content px-2 ">
-
                                 <a href="{{ route('leave-pending', ['leaveRequestId' => $leaveRequest->id]) }}">
                                     <span class="viewDetails">View
                                         Details</span>

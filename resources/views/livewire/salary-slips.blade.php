@@ -1,13 +1,11 @@
 <div>
 
  <div style="text-align: center;display:flex;align-items:center;justify-content:end;">
-
-<button type="button" class="dowload mx-2 px-2 rounded" style="background-color: rgb(2, 17, 79)">
-<a href="/your-download-route" id="pdfLink2023_4" class="pdf-download btn-primary px-3 rounded d-flex align-items-center" download style="color: white; text-decoration: none;">
-<i class="bx bx-download" style="color: white;"></i>
-    </a>
-            
+ <button type="button" class="leave-balance-dowload mx-2 px-2 rounded " wire:click.prevent="downloadPdf">
+            <i class="fas fa-download" style="color: white;"></i>
         </button>
+
+
 
    
         <div class="mx-2">
@@ -22,12 +20,25 @@
 <div class ="row mt-4 mx-0 salary-slip-h6" style="display: flex;" >
     <div class="col">
     @if ($salaryRevision->isEmpty())
+    <div class="homeCard5">
+                            <div class="py-2 px-3" style="height:400px">
+                                <div class="d-flex justify-content-center">
+                                    <p style="font-size:20px;color:#778899;font-weight:500;align-items:center">Payslip</p>
+                                    
+                                </div>
 
-<div class="message-container" style= "background-color: #f7f7f7;border: 1px solid #ccc;border-radius: 5px;padding: 20px;margin-bottom: 20px;width:600px;height:400px;background-color:white;font-family:Montserrat;text-align:center">
-    <img src="https://static.vecteezy.com/system/resources/previews/005/950/625/original/modern-design-icon-of-pay-slip-vector.jpg" style="height:250px;width:250px;justify-content:center;margin-top:0px">
+                                <div style="display:flex;align-items:center;flex-direction:column;">
+                                        <img src="https://th.bing.com/th/id/OIP.mahJODIeDJLFSbIYARY4WwAAAA?pid=ImgDet&w=178&h=178&c=7&dpr=1.5" alt="" style="height:300px;width:300px;">
+                                    <p style="color: #677A8E;  margin-bottom: 20px; font-size:12px;"> We are working on your payslip!</p>
+                                </div>
+                            </div>
+                        </div>
+    <!-- <div class="message-container" style="background-color: white; border: 1px solid #ccc; border-radius: 5px; padding: 20px; margin-bottom: 20px; width: 600px; height: 400px; font-family: Montserrat; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <img src="https://static.vecteezy.com/system/resources/previews/005/950/625/original/modern-design-icon-of-pay-slip-vector.jpg" style="height: 250px; width: 250px; justify-content: center; margin-top: 0px;">
     <br>
-    <p class="message" style=" font-size: 18px;color:  #3b4452;text-align: center;margin-top:20px;font-weight:600">Currently working on Payslip.</p>
-</div>
+    <p class="message" style="font-size: 18px; color: #3b4452; text-align: center; margin-top: 20px; font-weight: 600;">Currently working on Payslip.</p>
+</div> -->
+
 </div>
 @else
     </div>
@@ -131,7 +142,7 @@
         </div>
         <div class="detail">
            <p class="emp-details-p">Designation <br>
-                <span class="emp-details-span">{{ empty($employee->job_title) ? '-' : ucwords(strtolower($employee->job_title)) }}</span>
+                <span class="emp-details-span">{{ empty($employee->job_role) ? '-' : ucwords(strtolower($employee->job_role)) }}</span>
             </p>
         </div>
         <div class="detail">

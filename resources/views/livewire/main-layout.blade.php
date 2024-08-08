@@ -14,20 +14,20 @@
             <img class="m-auto" src="{{ asset('images/hr_new_blue.png') }}" alt="Company Logo" style="width: 6em !important;">
         </a>
         <ul class="side-menu">
-            <li><a href="/" class="active"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
-            <li><a href="/time-sheet"><i class='bx bxs-time-five icon'></i> Time Sheet</a></li>
-            <li><a href="/Feeds"><i class='bx bx-wifi icon'></i> Feeds</a></li>
-            <li><a href="/PeoplesList"><i class='bx bx-group icon'></i> People</a></li>
+            <li><a href="/" class="active"><i class='fas fa-home icon'></i> Home</a></li>
+            <li><a href="/time-sheet"><i class='fas fa-clock icon'></i> Time Sheet</a></li>
+            <li><a href="/Feeds"><i class='fas fa-rss icon'></i> Feeds</a></li>
+            <li><a href="/PeoplesList"><i class='fas fa-users icon'></i> People</a></li>
             <!-- <li class="divider" data-text="main">Main</li> -->
             <li>
-                <a href="#"><i class='bx bxs-file-doc icon'></i> To Do <i class='bx bx-chevron-right icon-right'></i></a>
+                <a href="#"><i class='fas fa-file-alt icon'></i> To Do <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
                     <li><a href="/tasks">Tasks</a></li>
                     <li><a href="/employees-review">Review</a></li>
                 </ul>
             </li>
             <li>
-                <a href="#"><i class='bx bx-money icon'></i> Salary <i class='bx bx-chevron-right icon-right'></i></a>
+                <a href="#"><i class='fas fas-solid fa-money-bill-transfer icon'></i> Salary <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
                     <li><a href="/slip">Payslips</a></li>
                     <li><a href="/ytd">YTD Reports</a></li>
@@ -35,13 +35,13 @@
                     <li><a href="/formdeclaration">IT Declaration</a></li>
                     <li><a href="/reimbursement">Reimbursement</a></li>
                     <li><a href="/investment">Proof of Investment</a></li>
-                    <li><a href="/salary-revision">Salary Revision</a></li>
+                    <li><a href="//salary-revision">Salary Revision</a></li>
                 </ul>
             </li>
             <li>
-                <a href="#"><i class='bx bxs-file-doc icon'></i> Leave <i class='bx bx-chevron-right icon-right'></i></a>
+                <a href="#"><i class='fas fa-file-alt icon'></i> Leave <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
-                    <li><a href="/leave-page">Leave Apply</a></li>
+                    <li><a href="/leave-form-page">Leave Apply</a></li>
                     <li><a href="/leave-balances">Leave Balances</a></li>
                     <li><a href="/leave-calender">Leave Calendar</a></li>
                     <li><a href="/holiday-calendar">Holiday Calendar</a></li>
@@ -55,7 +55,7 @@
                 </ul>
             </li>
             <li>
-                <a href="#"><i class='bx bxs-time-five icon'></i> Attendance <i class='bx bx-chevron-right icon-right'></i></a>
+                <a href="#"><i class='fas fa-clock icon'></i> Attendance <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
                     <li><a href="/Attendance">Attendance Info</a></li>
                     @if ($managerId)
@@ -82,20 +82,20 @@
                     @endif
                 </ul>
             </li>
-            <li><a href="/document"><i class='bx bxs-folder icon'></i>Document Center</a></li>
+            <li><a href="/document"><i class='fas fa-folder icon'></i>Document Center</a></li>
             <li>
-                <a href="#"><i class='bx bx-headphone icon'></i> Helpdesk <i class='bx bx-chevron-right icon-right'></i></a>
+                <a href="#"><i class='fas fa-headset icon'></i> Helpdesk <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
                     <li><a href="/HelpDesk">New Requests</a></li>
                     <li><a href="/users">Connect</a></li>
                 </ul>
             </li>
-            <li><a href="/delegates"><i class='bx bx-group icon'></i> Workflow Delegates</a></li>
+            <li><a href="/delegates"><i class='fas fa-user-friends icon'></i> Workflow Delegates</a></li>
             @if ($managerId)
-            <li >
-                <a  href="/reports">
+            <li>
+                <a href="/reports">
 
-                    <i class="bx bxs-file-doc icon" style="color:#6c7e90"></i> Reports
+                    <i class="fas fa-file-alt icon" style="color:#6c7e90"></i> Reports
                 </a>
             </li>
             @endif
@@ -124,11 +124,11 @@
     <section id="content">
         <!-- NAVBAR -->
         <nav>
-            <i class='bx bx-menu toggle-sidebar'></i>
+            <i class='fas fa-bars toggle-sidebar'></i>
             <form action="#">
-                <div class="form-group">
-                    <input type="text" placeholder="Search...">
-                    <i class='bx bx-search icon'></i>
+                <div class="input-group">
+                    <input type="text" class="form-control" aria-label="Search..." placeholder="Search...">
+                    <span class="input-group-text"><i class='fa fa-search icon'></i></span>
                 </div>
             </form>
             <div>
@@ -138,21 +138,41 @@
             <div class="profile">
                 <div class="d-flex brandLogoDiv">
                     @livewire('company-logo')
-                    <img class="navProfileImg" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="">
+                    @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
+                    <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="">
+                    @else
+                    <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="">
+                    @endif
                 </div>
                 <ul class="profile-link">
-                    <li><a href="/ProfileInfo"><i class='bx bxs-user-circle icon'></i> Profile</a></li>
-                    <li><a href="/Settings"><i class='bx bxs-cog'></i> Settings</a></li>
-                    <li><i class='bx bxs-log-out-circle'></i> @livewire('log-out')</li>
+                    <li><a href="/ProfileInfo"><i class='fas fa-user-circle icon'></i> Profile</a></li>
+                    <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
+                    <li><a wire:click="handleLogout" href="#" style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
                 </ul>
             </div>
         </nav>
         <!-- NAVBAR -->
-
-        <!-- MAIN -->
-
-        <!-- MAIN -->
     </section>
+        <!-- Logout Modal -->
+        @if( $showLogoutModal == true)
+        <div class="modal" id="logoutModal" tabindex="4" style="display: block;">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header text-white" style=" background-color: rgb(2, 17, 79);">
+                        <h6 class="modal-title " id="logoutModalLabel" style="align-items: center;">Confirm Logout</h6>
+                    </div>
+                    <div class="modal-body text-center" style="font-size: 16px;">
+                        Are you sure you want to logout?
+                    </div>
+                    <div class="d-flex justify-content-center p-3" style="gap: 10px;">
+                        <button type="button" class="submit-btn mr-3" wire:click="confirmLogout">Logout</button>
+                        <button type="button" class="cancel-btn1" wire:click="cancelLogout">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
+        @endif
 
     <!-- NAVBAR -->
 </div>

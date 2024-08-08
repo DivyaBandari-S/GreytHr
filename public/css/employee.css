@@ -43,7 +43,7 @@ li {
 /* SIDEBAR */
 #sidebar {
 	position: fixed;
-	max-width: 260px;
+	max-width: 240px;
 	width: 100%;
 	background: var(--light);
 	top: 0;
@@ -52,10 +52,10 @@ li {
 	overflow-y: auto;
 	scrollbar-width: none;
 	transition: all .3s ease;
-	z-index: 200;
+	z-index: 100;
 }
 .icon {
-    font-size: 1.25rem;
+    font-size: 0.875rem;
     color: var(--dark);
     cursor: pointer;
 }
@@ -63,7 +63,7 @@ li {
 	max-width: 60px;
 }
 #sidebar.hide:hover {
-	max-width: 260px;
+	max-width: 240px;
 }
 #sidebar::-webkit-scrollbar {
 	display: none;
@@ -93,6 +93,7 @@ li {
 #sidebar .icon-right {
 	margin-left: auto;
 	transition: all .3s ease;
+	font-size: 0.625rem;
 }
 #sidebar .side-menu {
 	margin: 36px 0;
@@ -108,17 +109,19 @@ li {
 #sidebar .side-menu a {
 	display: flex;
 	align-items: center;
-	font-size: 14px;
+	font-size: 0.8rem;
 	color: var(--dark);
     font-weight: 500;
 	padding: 12px 16px 12px 0;
 	transition: all .3s ease;
 	border-radius: 10px;
 	margin: 4px 0;
+	text-decoration: none;
 	white-space: nowrap;
 }
 #sidebar .side-menu > li > a:hover {
 	background: var(--grey);
+	color: var(--dark) !important;
 }
 #sidebar .side-menu > li > a.active .icon-right {
 	transform: rotateZ(90deg);
@@ -126,6 +129,22 @@ li {
 #sidebar .side-menu > li > a.active,
 #sidebar .side-menu > li > a.active:hover {
 	background: var(--blue);
+	color: var(--light) !important;
+	border-left: 5px solid #0037ff;
+}
+
+.active-side-dropdown {
+	background: var(--blue);
+	color: var(--light) !important;
+	border-left: 5px solid #0037ff;
+}
+.active-side-dropdown:hover{
+	color: var(--dark) !important;
+}
+.active-side-dropdown:hover .icon {
+	color: var(--dark) !important;
+}
+.active-side-dropdown .icon{
 	color: var(--light) !important;
 }
 /* Icon color when link is active */
@@ -180,7 +199,7 @@ li {
 	border-radius: 10px;
 }
 #sidebar .btn-upgrade {
-	font-size: 14px;
+	font-size: 0.8rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -212,14 +231,14 @@ li {
 /* CONTENT */
 #content {
 	position: relative;
-	width: calc(100% - 260px);
-	left: 260px;
+	width: calc(100% - 240px);
+	left: 240px;
 	transition: all .3s ease;
 }
 #maincontent {
 	position: relative;
-	width: calc(100% - 260px);
-	left: 260px;
+	width: calc(100% - 240px);
+	left: 240px;
 	transition: all .3s ease;
 }
 #sidebar.hide + #content,
@@ -352,8 +371,9 @@ nav .profile .profile-link a {
 	padding: 10px 16px;
 	display: flex;
 	grid-gap: 10px;
-	font-size:14px;
+	font-size:0.8rem;
     font-weight: 500;
+	text-decoration: none;
 	color: var(--dark);
 	align-items: center;
 	transition: all .3s ease;
@@ -381,7 +401,7 @@ main .breadcrumbs {
 }
 main .breadcrumbs li,
 main .breadcrumbs li a {
-	font-size: 14px;
+	font-size: 0.8rem;
 }
 main .breadcrumbs li a {
 	color: var(--blue);
@@ -413,7 +433,7 @@ main .card .head h2 {
 	font-weight: 600;
 }
 main .card .head p {
-	font-size: 14px;
+	font-size: 0.8rem;
 }
 main .card .head .icon {
 	font-size: 20px;
@@ -443,7 +463,7 @@ main .card .progress::before {
 	width: var(--value);
 }
 main .card .label {
-	font-size: 14px;
+	font-size: 0.8rem;
 	font-weight: 700;
 }
 main .data {
@@ -501,7 +521,7 @@ main .content-data .head .menu-link.show {
 main .content-data .head .menu-link a {
 	display: block;
 	padding: 6px 16px;
-	font-size: 14px;
+	font-size: 0.8rem;
 	color: var(--dark);
 	transition: all .3s ease;
 }
@@ -552,7 +572,7 @@ main .chat-box .msg {
 	align-items: flex-start;
 }
 main .chat-box .profile .username {
-	font-size: 14px;
+	font-size: 0.8rem;
 	font-weight: 600;
 	display: inline-block;
 	margin-right: 6px;
@@ -562,7 +582,7 @@ main .chat-box .profile .time {
 	color: var(--dark-grey);
 }
 main .chat-box .chat p {
-	font-size: 14px;
+	font-size: 0.8rem;
 	padding: 6px 10px;
 	display: inline-block;
 	max-width: 400px;
@@ -630,8 +650,23 @@ main .btn-send:hover {
 		width: calc(100% - 60px);
 		transition: all .3s ease;
 	}
-	nav .nav-link,
+	/* nav .nav-link,
+	nav .divider {
+		display: block;
+	} */
+	nav form,
 	nav .divider {
 		display: none;
+	}
+	#maincontent.active {
+		width: calc(100% - 0px);
+		left: 0px;
+	}
+	#sidebar.hide + #content, #sidebar.hide + #maincontent {
+		width: calc(100% - 0px);
+		left: 0px;
+	}
+	#sidebar.hide {
+		max-width: 0px;
 	}
 }

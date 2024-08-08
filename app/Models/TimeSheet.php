@@ -17,8 +17,12 @@ class TimeSheet extends Model
         'submission_status',
         'approval_status_for_manager',
         'approval_status_for_hr',
+        'reject_reason_for_manager',
+        'resubmit_reason_for_manager',
+        'reject_reason_for_hr',
+        'resubmit_reason_for_hr',
     ];
- 
+
     protected $casts = [
         'date_and_day_with_tasks' => 'array',
     ];

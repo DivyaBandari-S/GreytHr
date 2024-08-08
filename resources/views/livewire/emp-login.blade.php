@@ -127,11 +127,10 @@
         <div class="text-center pb-2">
             <small>
                 © Xsilica Software Solutions Pvt.Ltd |
-                <a href="https://xsilicasoftwaresolutions.greythr.com/v2/static-content/privacy-policy" target="_blank" style="color: rgb(2, 17, 79);">Privacy Policy</a> |
-                <a href="https://xsilicasoftwaresolutions.greythr.com/v2/static-content/terms-of-use" target="_blank" style="color: rgb(2, 17, 79);">Terms of Service</a>
+                <a href="/Privacy&Policy" target="_blank" style="color: rgb(2, 17, 79);">Privacy Policy</a> |
+                <a href="/Terms&Services" target="_blank" style="color: rgb(2, 17, 79);">Terms of Service</a>
             </small>
         </div>
-
         @if ($showDialog)
         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -310,6 +309,5 @@
             </div>
         </div>
         @endif
-
     </div>
 </div>

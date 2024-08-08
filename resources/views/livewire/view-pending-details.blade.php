@@ -2,19 +2,19 @@
     <div class="col" id="leavePending" style="width: 95%; padding: 0;border-radius: 5px; ">
         <div class="row m-0 p-0 mt-3">
             <div class="d-flex align-items-center justify-content-between p-0">
-            <div class="d-flex align-items-center gap-2">
-                <span class="totalRequestCount">Total Leave Requests
-                             @if($count > 0)
+                <div class="d-flex align-items-center gap-2">
+                    @if($count > 0)
+                    <span class="totalRequestCount">Total Leave Requests
                         <span class="leaveCountReview d-flex align-items-center justify-content-center">
                             {{ $count }}
                         </span>
-                        @endif
-                </span>
-            </div>
-            <div class="search-container d-flex align-items-end justify-content-end p-1">
-                <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Enter employee name" class="border outline-none rounded">
-                <button wire:click="fetchPendingLeaveApplications" id="searchButton" style="border:none;outline:none;background:#fff;border-radius:5px;padding:1px 10px;"><i class="fas fa-search" style="width:7px;height:7px;"></i></button>
-            </div>
+                    </span>
+                    @endif
+                </div>
+                <div class="search-container d-flex align-items-end justify-content-end p-1">
+                    <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Enter employee name" class="border outline-none rounded">
+                    <button wire:click="fetchPendingLeaveApplications" id="searchButton" style="border:none;outline:none;background:#fff;border-radius:5px;padding:1px 10px;"><i class="fas fa-search" style="width:7px;height:7px;"></i></button>
+                </div>
             </div>
         </div>
         @if(!empty($this->leaveApplications))
@@ -26,10 +26,10 @@
                         <!-- Display leave details here based on $leaveRequest -->
                         <div class="col accordion-content d-flex align-items-center">
                             <div class="accordion-profile" style="display:flex; gap:7px; margin:auto 0;align-items:center;justify-content:center;">
-                                @if(isset($leaveRequest['leaveRequest']->image))
-                                <img src="{{ asset('storage/' . $leaveRequest['leaveRequest']->image) }}" alt="" style="background:#f3f3f3;border:1px solid #ccc;width: 40px; height: 40px; border-radius: 50%;">
+                                @if(isset($leaveRequest['leaveRequest']->image) && $leaveRequest['leaveRequest']->image !== 'null')
+                                <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['leaveRequest']->image)}}" style="border-radius: 50%;">
                                 @else
-                                <img src="https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars.png" alt="" style="background:#f3f3f3;border:1px solid #ccc;width: 40px; height: 40px; border-radius: 50%;">
+                                <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
                                 @endif
                                 <div>
                                     @if(isset($leaveRequest['leaveRequest']->first_name))
@@ -161,18 +161,18 @@
                                     <span style="font-size:10px; color: #1d421e;font-weight:500;">CL</span>
                                 </div>
                                 <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['casualLeaveBalance'] }}</span>
+                                <!-- Loss of Pay -->
+                                @if($leaveRequest['leaveRequest']->leave_type === 'Loss Of Pay')
+                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <span style="font-size:10px; color: #890000;font-weight:500;">LOP</span>
+                                </div>
+                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
                                 <!-- Casual Leave Probation-->
-                                @if($leaveRequest['leaveRequest']->leave_type === 'Casual Leave Probation')
+                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Casual Leave Probation')
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #FDEBD0  ; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
                                     <span style="font-size:10px; color: #F39C12  ;font-weight:500;">CLP</span>
                                 </div>
                                 <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['casualProbationLeaveBalance'] }}</span>
-                                <!-- Loss of Pay -->
-                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Loss of Pay')
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
-                                    <span style="font-size:10px; color: #890000;font-weight:500;">LP</span>
-                                </div>
-                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
                                 <!-- marriage leave -->
                                 @elseif($leaveRequest['leaveRequest']->leave_type === 'Marriage Leave')
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">

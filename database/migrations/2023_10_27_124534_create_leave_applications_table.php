@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('emp_id');
             $table->string('category_type')->default('Leave');
-            $table->enum('leave_type', ['Casual Leave Probation ', 'Maternity Leave', 'Loss Of Pay','Sick Leave','Marriage Leave','Casual Leave','Petarnity Leave','Work From Home']);
+            $table->enum('leave_type', ['Casual Leave Probation', 'Maternity Leave', 'Loss Of Pay','Sick Leave','Marriage Leave','Casual Leave','Petarnity Leave','Work From Home']);
             $table->date('from_date');
             $table->string('from_session');
             $table->string('to_session');
             $table->date('to_date');
-            $table->json('file_paths')->nullable();
+            $table->binary('file_paths')->nullable();
             $table->string('applying_to');
             $table->json('cc_to')->nullable();
             $table->string('status')->default('Pending');

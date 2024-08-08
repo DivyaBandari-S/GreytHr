@@ -54,7 +54,7 @@ class WeeklyDataEntries extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'data-entry_content_view',
+            view: 'mail-content',
         );
     }
 

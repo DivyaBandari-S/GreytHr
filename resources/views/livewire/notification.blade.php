@@ -1,8 +1,8 @@
-<div class="d-flex align-items-center gap-3">
+<div class="d-flex align-items-center gap-3 ">
 
     <div  id="notificationButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
         <a href="#" class="nav-link">
-            <i class='bx bxs-bell icon'></i>
+            <i class='fas fa-bell icon' ></i>
             @if ($totalnotificationscount > 0)
             <span class="badge">{{$totalnotificationscount}}</span>
             @endif
@@ -10,7 +10,7 @@
     </div>
     <div>
         <a href="/users" class="nav-link">
-            <i class='bx bxs-message-square-dots icon'></i>
+            <i class='fas fa-comment-dots icon' ></i>
             @if ($chatNotificationCount > 0)
             <span class="badge">
                 {{ $chatNotificationCount }}

@@ -11,13 +11,14 @@
         }
 
         .people-input-group-container {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .people-search-input {
             font-size: 0.75rem !important;
             border-radius: 5px 0 0 5px;
-            cursor: pointer
+            cursor: pointer;
+            height: 32px;
         }
 
 
@@ -47,7 +48,7 @@
 
         .people-empty-text {
             text-align: center;
-            color: #778899;
+            color: var(--label-color);
             font-size: 12px;
         }
 
@@ -67,22 +68,22 @@
 
         .people-default-container-name {
             font-size: 12px;
-            color: black;
+            color: var(--main-heading-color);
             margin-right: 5px;
         }
 
         .people-default-container-name.inactive {
-            color: red;
+            color: var(--requiredAlert);
         }
 
         .people-default-container-empid {
             font-size: 12px;
-            color: #333;
+            color: var(--main-heading-color);
             white-space: nowrap;
         }
 
         .people-default-container-empid.inactive {
-            color: red;
+            color: var(--requiredAlert);
         }
 
         .people-text-blue {
@@ -110,6 +111,8 @@
         .people-selectedperson-name {
             font-size: 16px;
             margin-right: 5px;
+            color: var(--main-heading-color);
+            font-weight: 500;
         }
 
         .people-selectedperson-anchortag {
@@ -123,33 +126,33 @@
         }
 
         .people-selectedperson-empid {
-            color: #778899;
+            color: var(--label-color);
             font-size: 14px;
         }
 
         .people-headings {
             margin-right: 10px;
             font-weight: 500;
-            color: #778899;
+            color: var(--label-color);
             font-size: 12px;
         }
 
         .people-horizontal-line {
             flex-grow: 1;
             width: 50px;
-            color: black;
-            border: 1px solid #778899;
+            color: var(--main-heading-color);
+            border: 1px solid var(--label-color);
             margin: 0;
         }
 
         .people-label {
-            color: #778899;
+            color: var(--label-color);
             font-size: 13px;
         }
 
         .people-value {
             font-weight: 500;
-            color: #333;
+            color: var(--main-heading-color);
             font-size: 13px;
         }
 
@@ -204,17 +207,17 @@
         @if ($mangerid)
         <div class="row justify-content-center" style="width: 35%; position: relative; padding-left: 30px;">
             <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
-                <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'starred')" class="links">
+                <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}" wire:click="$set('activeTab', 'starred')" class="links">
                     Starred
                 </a>
             </div>
             <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
-                <a id="myteam-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'myteam' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'myteam')" class="links">
+                <a id="myteam-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'myteam' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}" wire:click="$set('activeTab', 'myteam')" class="links">
                     My Team
                 </a>
             </div>
             <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
-                <a id="everyone-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'everyone')" class="links">
+                <a id="everyone-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}" wire:click="$set('activeTab', 'everyone')" class="links">
                     Everyone
                 </a>
             </div>
@@ -223,12 +226,12 @@
         @else
         <div class="row justify-content-start" style="width: 40%; position: relative; padding-left: 40px;">
             <div class="col-3 text-start" style="border-radius: 5px; cursor: pointer;">
-                <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'starred')" class="links">
+                <a id="starred-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}" wire:click="$set('activeTab', 'starred')" class="links">
                     Starred
                 </a>
             </div>
             <div class="col-3 text-start" style="border-radius: 5px; cursor: pointer;">
-                <a id="everyone-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : '#333' }}" wire:click="$set('activeTab', 'everyone')" class="links">
+                <a id="everyone-tab-link" style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}" wire:click="$set('activeTab', 'everyone')" class="links">
                     Everyone
                 </a>
             </div>
@@ -243,7 +246,7 @@
 
             <div class="col-12 col-md-4 bg-white people-left-side-container">
                 <div class="input-group people-input-group-container">
-                    <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                    <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                     <div class="input-group-append">
                         <button wire:click="starredFilter" class="people-search-btn" type="button">
                             <i class="fa fa-search people-search-icon"></i>
@@ -271,7 +274,7 @@
                                 @endif
 
                             </div>
-                            <div class="col-9">
+                            <div class="col-md-9 col-12">
                                 <div class="d-flex align-items-center">
                                     <h6 class="username truncate-text people-default-container-name   @isset($people->emp)
                                         @if($people->emp->employee_status != 'active')
@@ -312,7 +315,7 @@
                         @endif
 
                     </div>
-                    <div class="col-7">
+                    <div class="col-md-7 col-12">
                         <div class="people-selectedperson-detail-container">
                             <div class="d-flex align-items-center">
                                 <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($selectStarredPeoples)->name)) }}</h1>
@@ -324,7 +327,7 @@
 
                             </div>
                             @php
-                            $jobTitle = optional($selectStarredPeoples->emp)->job_title;
+                            $jobTitle = optional($selectStarredPeoples->emp)->job_role;
                             $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                             $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                             $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -338,8 +341,11 @@
                         </div>
                         <br>
                         <div class="row">
-                            <label class="col-6 people-label">Mobile Number</label>
-                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->contact_details }}</label>
+                            <label class="col-7 people-label">Mobile Number</label>
+                            <label class="col-5 people-value">{{ optional($selectStarredPeoples)->contact_details && strtolower(optional($selectStarredPeoples)->contact_details) !== 'n/a'
+                                ? optional($selectStarredPeoples)->contact_details
+                                : '-' 
+                            }}</label>
                         </div>
                         <br>
                         <div class="d-flex align-items-center">
@@ -348,8 +354,11 @@
                         </div>
                         <br>
                         <div class="row">
-                            <label class="col-6 people-label">Location</label>
-                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->location }}</label>
+                            <label class="col-7 people-label">Location</label>
+                            <label class="col-5 people-value">{{ optional($selectStarredPeoples)->location && strtolower(optional($selectStarredPeoples)->location) !== 'unknown'
+                                ? optional($selectStarredPeoples)->location
+                                : '-' 
+                            }}</label>
                         </div>
                         <br>
                         <div class="d-flex align-items-center">
@@ -358,12 +367,18 @@
                         </div>
                         <br>
                         <div class="row">
-                            <label class="col-6 people-label">Joining Date</label>
-                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->joining_date ? date('d M, Y', strtotime(optional($selectedPerson)->joining_date)) : '' }}</label>
+                            <label class="col-7 people-label">Joining Date</label>
+                            <label class="col-5 people-value">{{ optional($selectStarredPeoples)->joining_date && strtolower(optional($selectStarredPeoples)->joining_date) !== 'unknown' 
+                                ? date('d M, Y', strtotime(optional($selectStarredPeoples)->joining_date)) 
+                                : '-' 
+                            }}</label>
                         </div>
                         <div class="row">
-                            <label class="col-6 people-label">Date Of Birth</label>
-                            <label class="col-6 people-value">{{ optional($selectStarredPeoples)->date_of_birth ? date('d M, Y', strtotime(optional($selectStarredPeoples)->date_of_birth)) : '' }}</label>
+                            <label class="col-7 people-label">Date Of Birth</label>
+                            <label class="col-5 people-value">{{ optional($selectStarredPeoples)->date_of_birth && strtolower(optional($selectStarredPeoples)->date_of_birth) !== 'unknown' 
+                                ? date('d M, Y', strtotime(optional($selectStarredPeoples)->date_of_birth)) 
+                                : '-' 
+                            }}</label>
                         </div>
 
                     </div>
@@ -389,7 +404,7 @@
                     <img class="people-image" src="{{ Storage::url($firstStarredPerson->profile) }}" alt="">
                     @endif
                 </div>
-                <div class="col-7">
+                <div class="col-md-7 col-12">
                     <div class="people-selectedperson-detail-container">
                         <div class="d-flex align-items-center">
                             <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($firstStarredPerson)->name)) }}</h1>
@@ -401,7 +416,7 @@
 
                         </div>
                         @php
-                        $jobTitle = optional($firstStarredPerson->emp)->job_title;
+                        $jobTitle = optional($firstStarredPerson->emp)->job_role;
                         $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                         $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                         $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -415,8 +430,11 @@
                     </div>
                     <br>
                     <div class="row">
-                        <label class="col-6 people-label">Mobile Number</label>
-                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->contact_details }}</label>
+                        <label class="col-7 people-label">Mobile Number</label>
+                        <label class="col-5 people-value">{{ optional($firstStarredPerson)->contact_details && strtolower(optional($firstStarredPerson)->contact_details) !== 'n/a'
+                            ? optional($firstStarredPerson)->contact_details
+                            : '-' 
+                        }}</label>
                     </div>
                     <br>
                     <div class="d-flex align-items-center">
@@ -425,8 +443,11 @@
                     </div>
                     <br>
                     <div class="row">
-                        <label class="col-6 people-label">Location</label>
-                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->location }}</label>
+                        <label class="col-7 people-label">Location</label>
+                        <label class="col-5 people-value"> {{ optional($firstStarredPerson)->location && strtolower(optional($firstStarredPerson)->location) !== 'unknown'
+                            ? optional($firstStarredPerson)->location
+                            : '-' 
+                        }}</label>
                     </div>
                     <br>
                     <div class="d-flex align-items-center">
@@ -435,12 +456,18 @@
                     </div>
                     <br>
                     <div class="row">
-                        <label class="col-6 people-label">Joining Date</label>
-                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->joining_date ? date('d M, Y', strtotime(optional($firstStarredPerson)->joining_date)) : '' }}</label>
+                        <label class="col-7 people-label">Joining Date</label>
+                        <label class="col-5 people-value"> {{ optional($firstStarredPerson)->joining_date && strtolower(optional($firstStarredPerson)->joining_date) !== 'unknown' 
+                            ? date('d M, Y', strtotime(optional($firstStarredPerson)->joining_date)) 
+                            : '-' 
+                        }}</label>
                     </div>
                     <div class="row">
-                        <label class="col-6 people-label">Date Of Birth</label>
-                        <label class="col-6 people-value">{{ optional($firstStarredPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstStarredPerson)->date_of_birth)) : '' }}</label>
+                        <label class="col-7 people-label">Date Of Birth</label>
+                        <label class="col-5 people-value">{{ optional($firstStarredPerson)->date_of_birth && strtolower(optional($firstStarredPerson)->date_of_birth) !== 'unknown' 
+                            ? date('d M, Y', strtotime(optional($firstStarredPerson)->date_of_birth)) 
+                            : '-' 
+                        }}</label>
                     </div>
 
                 </div>
@@ -476,7 +503,7 @@
 
     <div class="col-12 col-md-4 bg-white people-left-side-container">
         <div class="input-group people-input-group-container">
-            <input wire:model="searchTerm" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+            <input wire:model="searchTerm" type="text" class="form-control people-search-input" placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
             <div class="input-group-append">
                 <button wire:click="filter" class="people-search-btn" type="button">
                     <i class="fa fa-search people-search-icon"></i>
@@ -502,7 +529,7 @@
                             <img class="people-profile-image" src="{{ Storage::url($people->image) }}" alt="">
                             @endif
                         </div>
-                        <div class="col-9">
+                        <div class="col-md-9 col-12">
                             @php
                             $starredPerson = DB::table('starred_peoples')
                             ->where('people_id', $people->emp_id)
@@ -541,7 +568,7 @@
                 @endif
 
             </div>
-            <div class="col-7">
+            <div class="col-md-7 col-12">
                 @php
                 $starredPerson = DB::table('starred_peoples')
                 ->where('people_id', $selectedPerson->emp_id)
@@ -562,7 +589,7 @@
 
                     </div>
                     @php
-                    $jobTitle = optional($selectedPerson)->job_title;
+                    $jobTitle = optional($selectedPerson)->job_role;
                     $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                     $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                     $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -576,8 +603,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Mobile Number</label>
-                    <label class="col-6 people-value">{{ optional($selectedPerson)->mobile_number }}</label>
+                    <label class="col-7 people-label">Mobile Number</label>
+                    <label class="col-5 people-value">{{ optional($selectedPerson)->emergency_contact ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -586,8 +613,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Location</label>
-                    <label class="col-6 people-value">{{ optional($selectedPerson)->job_location }}</label>
+                    <label class="col-7 people-label">Location</label>
+                    <label class="col-5 people-value">{{ optional($selectedPerson)->job_location ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -596,12 +623,12 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Joining Date</label>
-                    <label class="col-6 people-value">{{ optional($selectedPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedPerson)->hire_date)) : '' }}</label>
+                    <label class="col-7 people-label">Joining Date</label>
+                    <label class="col-5 people-value">{{ optional($selectedPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedPerson)->hire_date)) : '-' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6 people-label">Date Of Birth</label>
-                    <label class="col-6 people-value">{{ optional($selectedPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-7 people-label">Date Of Birth</label>
+                    <label class="col-5 people-value">{{ optional($selectedPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedPerson)->date_of_birth)) : '-' }}</label>
                 </div>
 
             </div>
@@ -624,7 +651,7 @@
                 <img class="people-image" src="{{ Storage::url(optional($firstPerson)->image) }}" alt="">
 
             </div>
-            <div class="col-7">
+            <div class="col-md-7 col-12">
                 <div class="people-selectedperson-detail-container">
                     <div class="d-flex align-items-center">
                         <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
@@ -637,7 +664,7 @@
 
                     </div>
                     @php
-                    $jobTitle = optional($firstPerson)->job_title;
+                    $jobTitle = optional($firstPerson)->job_role;
                     $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                     $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                     $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -651,8 +678,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Mobile Number</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->mobile_number }}</label>
+                    <label class="col-7 people-label">Mobile Number</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->emergency_contact ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -661,8 +688,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Location</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->job_location }}</label>
+                    <label class="col-7 people-label">Location</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->job_location ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -671,12 +698,12 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Joining Date</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '' }}</label>
+                    <label class="col-7 people-label">Joining Date</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '-' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6 people-label">Date Of Birth</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-7 people-label">Date Of Birth</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '-' }}</label>
                 </div>
 
             </div>
@@ -715,7 +742,7 @@
     <div class="col-12 col-md-4 bg-white people-left-side-container">
 
         <div class="input-group people-input-group-container">
-            <input wire:model="searchTerm" type="text" class="form-control people-search-input" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+            <input wire:model="searchTerm" type="text" class="form-control people-search-input" placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
             <div class="input-group-append">
                 <button wire:click="filterMyTeam" class="people-search-btn" type="button">
                     <i class="fa fa-search people-search-icon"></i>
@@ -742,7 +769,7 @@
                             <img class="people-profile-image" src="{{ Storage::url($people->image) }}" alt="">
                             @endif
                         </div>
-                        <div class="col-9">
+                        <div class="col-md-9 col-12">
                             @php
                             $starredPerson = DB::table('starred_peoples')
                             ->where('people_id', $people->emp_id)
@@ -783,7 +810,7 @@
                 @endif
 
             </div>
-            <div class="col-7">
+            <div class="col-md-7 col-12">
                 @php
                 $starredPerson = DB::table('starred_peoples')
                 ->where('people_id', $selectedMyTeamPerson->emp_id)
@@ -803,7 +830,7 @@
 
                     </div>
                     @php
-                    $jobTitle = optional($selectedMyTeamPerson)->job_title;
+                    $jobTitle = optional($selectedMyTeamPerson)->job_role;
                     $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                     $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                     $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -817,8 +844,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Mobile Number</label>
-                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->mobile_number }}</label>
+                    <label class="col-7 people-label">Mobile Number</label>
+                    <label class="col-5 people-value">{{ optional($selectedMyTeamPerson)->emergency_contact ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -827,8 +854,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Location</label>
-                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->job_location }}</label>
+                    <label class="col-7 people-label">Location</label>
+                    <label class="col-5 people-value">{{ optional($selectedMyTeamPerson)->job_location ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -837,12 +864,12 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Joining Date</label>
-                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->hire_date)) : '' }}</label>
+                    <label class="col-7 people-label">Joining Date</label>
+                    <label class="col-5 people-value">{{ optional($selectedMyTeamPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->hire_date)) : '-' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6 people-label">Date Of Birth</label>
-                    <label class="col-6 people-value">{{ optional($selectedMyTeamPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-7 people-label">Date Of Birth</label>
+                    <label class="col-5 people-value">{{ optional($selectedMyTeamPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->date_of_birth)) : '-' }}</label>
                 </div>
 
             </div>
@@ -864,7 +891,7 @@
                 <img class="people-image" src="{{ Storage::url(optional($firstPerson)->image) }}" alt="">
 
             </div>
-            <div class="col-7">
+            <div class="col-md-7 col-12">
                 <div class="people-selectedperson-detail-container">
                     <div class="d-flex align-items-center">
                         <h1 class="people-selectedperson-name">{{ ucwords(strtolower(optional($firstPerson)->first_name)) }} {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
@@ -876,7 +903,7 @@
 
                     </div>
                     @php
-                    $jobTitle = optional($firstPerson)->job_title;
+                    $jobTitle = optional($firstPerson)->job_role;
                     $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                     $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                     $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
@@ -890,8 +917,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Mobile Number</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->mobile_number }}</label>
+                    <label class="col-7 people-label">Mobile Number</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->emergency_contact ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -900,8 +927,8 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Location</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->job_location }}</label>
+                    <label class="col-7 people-label">Location</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->job_location ?? '-' }}</label>
                 </div>
                 <br>
                 <div class="d-flex align-items-center">
@@ -910,12 +937,12 @@
                 </div>
                 <br>
                 <div class="row">
-                    <label class="col-6 people-label">Joining Date</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '' }}</label>
+                    <label class="col-7 people-label">Joining Date</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '-' }}</label>
                 </div>
                 <div class="row">
-                    <label class="col-6 people-label">Date Of Birth</label>
-                    <label class="col-6 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '' }}</label>
+                    <label class="col-7 people-label">Date Of Birth</label>
+                    <label class="col-5 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '-' }}</label>
                 </div>
 
             </div>

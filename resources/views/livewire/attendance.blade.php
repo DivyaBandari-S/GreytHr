@@ -1001,10 +1001,6 @@ width: 170px; */
 } */
 
         /* CSS for the icons */
-        .icon {
-            font-size: 24px;
-            margin-right: 10px;
-        }
 
         /* Style for the row container */
 

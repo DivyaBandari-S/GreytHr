@@ -19,21 +19,26 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\HelpDesks;
+use App\Models\Request;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 
 class HelpDesk extends Component
 {
     use WithFileUploads;
-
+    public $selectedCategory = '';
     public $searchTerm = '';
-  
+    public $search = '';
     public $isRotated = false;
+   
+    public $requestCategories = '';
     public $selectedPerson = null;
     public $peoples;
     public $filteredPeoples;
     public $peopleFound = true;
     public $category;
+    public $ccToArray=[];
+    public $request;
     public $subject;
     public $description;
     public $file_path;
@@ -45,8 +50,11 @@ class HelpDesk extends Component
     public $selectedPeopleNames = [];
     public $employeeDetails;
     public $showDialog = false;
+    
     public $showDialogFinance = false;
     public $record;
+    public $peopleData='';
+    public $filterData;
     public $activeTab = 'active';
     public $selectedPeople = [];
     protected $rules = [
@@ -73,12 +81,185 @@ class HelpDesk extends Component
     {
         $this->showDialog = true;
     }
+    public function mount()
+    {
+        // Fetch unique requests with their categories
+        $requestCategories = Request::select('Request', 'category')->get();
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        $companyId = auth()->guard('emp')->user()->company_id;
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
+      
+        $this->peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+        $this->selectedPeople = [];
+        $this->selectedPeopleNames = [];
+    
+        $this->records = HelpDesks::all();
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+        // Group categories by their request
+        $this->requestCategories = $requestCategories->groupBy('Request')->map(function($group) {
+            return $group->unique('category'); // Ensure categories are unique
+        });
+    }
+    
+    
+    
+    
 
     public function openFinance()
     {
         $this->showDialogFinance = true;
     }
+    public function updatedCategory()
+    {
+        $this->filter();
+        logger($this->category); // Log selected category
+        logger($this->records); // Log filtered records
+    }
 
+    
+    
+    
+
+    public function searchCompleted()
+    {
+               // Filter people based on search term
+               $employeeId = auth()->guard('emp')->user()->emp_id;
+               $companyId = Auth::user()->company_id;
+               $this->records = HelpDesks::all();
+               $this->peoples = EmployeeDetails::where('company_id', $companyId)
+               ->where(function($query) {
+                   $query->where('first_name', 'like', '%'.$this->searchTerm.'%')
+                         ->orWhere('last_name', 'like', '%'.$this->searchTerm.'%');
+               })
+               ->orderBy('first_name')
+               ->orderBy('last_name')
+               ->get();
+   
+           $this->filteredPeoples = $this->searchTerm ? $this->peoples : null;
+   
+           // Filter records based on category and search term
+           $this->records = HelpDesks::with('emp')
+           ->whereHas('emp', function($query) {
+               $query->where('first_name', 'like', '%'.$this->searchTerm.'%')
+                     ->orWhere('last_name', 'like', '%'.$this->searchTerm.'%');
+           })
+        
+           ->orderBy('created_at', 'desc')
+           ->get();
+    }
+    public function searchActiveHelpDesk()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $query = HelpDesks::where(function($query) use ($employeeId) {
+            $query->where('emp_id', $employeeId);
+        })
+        ->where('status', 'Recent');
+    
+        if ($this->selectedCategory) {
+            logger('Selected Category: ' . $this->selectedCategory);
+            // Filter HelpDesks based on the selectedCategory's associated categories
+            $query->whereIn('category', Request::where('Request', $this->selectedCategory)->pluck('category'));
+        }
+    
+        // Additional filtering logic, if any, can go here
+    
+        // Final query execution
+        $results = $query->orderBy('created_at', 'desc')->get();
+        logger('Filtered Results: ', $results->toArray());
+        $this->filterData = $results;
+      
+        if ($this->search) {
+            $query->where(function ($query) {
+                $query->where('emp_id', 'like', '%' . $this->search . '%')
+                      ->orWhere('category', 'like', '%' . $this->search . '%')
+                      ->orWhere('subject', 'like', '%' . $this->search . '%')
+                      ->orWhereHas('emp', function ($query) {
+                          $query->where('first_name', 'like', '%' . $this->search . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                      });
+            });
+        }
+    
+        $this->filterData = $query->orderBy('created_at', 'desc')->get();
+        $this->peopleFound = count($this->filterData) > 0;
+    }
+    
+    public function searchPendingHelpDesk()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $query = HelpDesks::where(function($query) use ($employeeId) {
+            $query->where('emp_id', $employeeId);
+        })
+        ->where('status', 'Pending');
+    
+        if ($this->selectedCategory) {
+            logger('Selected Category: ' . $this->selectedCategory);
+            // Filter HelpDesks based on the selectedCategory's associated categories
+            $query->whereIn('category', Request::where('Request', $this->selectedCategory)->pluck('category'));
+        }
+    
+        // Additional filtering logic, if any, can go here
+    
+        // Final query execution
+        $results = $query->orderBy('created_at', 'desc')->get();
+        logger('Filtered Results: ', $results->toArray());
+        $this->filterData = $results;
+      
+        if ($this->search) {
+            $query->where(function ($query) {
+                $query->where('emp_id', 'like', '%' . $this->search . '%')
+                      ->orWhere('category', 'like', '%' . $this->search . '%')
+                      ->orWhere('subject', 'like', '%' . $this->search . '%')
+                      ->orWhereHas('emp', function ($query) {
+                          $query->where('first_name', 'like', '%' . $this->search . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                      });
+            });
+        }
+    
+        $this->filterData = $query->orderBy('created_at', 'desc')->get();
+        $this->peopleFound = count($this->filterData) > 0;
+    }
+    public function searchClosedHelpDesk()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $query = HelpDesks::where(function($query) use ($employeeId) {
+            $query->where('emp_id', $employeeId);
+        })
+        ->where('status', 'Completed');
+    
+        if ($this->selectedCategory) {
+            logger('Selected Category: ' . $this->selectedCategory);
+            // Filter HelpDesks based on the selectedCategory's associated categories
+            $query->whereIn('category', Request::where('Request', $this->selectedCategory)->pluck('category'));
+        }
+    
+        // Additional filtering logic, if any, can go here
+    
+        // Final query execution
+        $results = $query->orderBy('created_at', 'desc')->get();
+        logger('Filtered Results: ', $results->toArray());
+        $this->filterData = $results;
+      
+        if ($this->search) {
+            $query->where(function ($query) {
+                $query->where('emp_id', 'like', '%' . $this->search . '%')
+                      ->orWhere('category', 'like', '%' . $this->search . '%')
+                      ->orWhere('subject', 'like', '%' . $this->search . '%')
+                      ->orWhereHas('emp', function ($query) {
+                          $query->where('first_name', 'like', '%' . $this->search . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                      });
+            });
+        }
+    
+        $this->filterData = $query->orderBy('created_at', 'desc')->get();
+        $this->peopleFound = count($this->filterData) > 0;
+    }
     public function close()
     {
         $this->showDialog = false;
@@ -130,17 +311,26 @@ class HelpDesk extends Component
 
     public function selectPerson($personId)
     {
-        $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
+        try {
+            $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
 
-        if ($selectedPerson) {
-            if (in_array($personId, $this->selectedPeople)) {
-                $this->selectedPeopleNames[] = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
-            } else {
-                $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')']);
+            if ($selectedPerson) {
+                if (in_array($personId, $this->selectedPeople)) {
+                    $this->selectedPeopleNames[] =  ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
+                } else {
+                    $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')']);
+                }
+                $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
             }
-            $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+        } catch (\Exception $e) {
+            // Log the exception message or handle it as needed
+            Log::error('Error selecting person: ' . $e->getMessage());
+            // Optionally, you can set an error message to display to the user
+            $this->dispatchBrowserEvent('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
         }
     }
+
+    
 
 
     public function submit()
@@ -185,7 +375,48 @@ class HelpDesk extends Component
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
     }
+    public function submitHR()
+    {
+       
+       
 
+        try {
+            $validatedData = $this->validate($this->rules);
+          
+            if ($this->image) {
+                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
+                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
+                $filePath = 'uploads/help-desk-images/' . $fileName;
+            } else {
+                $filePath = 'N/A';
+            }
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+            HelpDesks::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+                'category' => $this->category,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path' => $filePath,
+                'cc_to' => $this->cc_to ?? '-',
+                'priority' => $this->priority,
+                'mail' => 'N/A',
+                'mobile' => 'N/A',
+                'distributor_name' => 'N/A',
+            ]);
+
+            session()->flash('message', 'Request created successfully.');
+            $this->reset();
+            return redirect()->to('/HelpDesk');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->setErrorBag($e->validator->getMessageBag());
+        } catch (\Exception $e) {
+            Log::error('Error creating request: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+        }
+    }
     protected function resetInputFields()
     {
         $this->category = '';
@@ -210,54 +441,100 @@ class HelpDesk extends Component
 
     public function toggleRotation()
     {
+        
         $this->isRotated = true;
+      
 
         $this->selectedPeopleNames = [];
+      
         $this->cc_to = '';
     }
+    public function toggle()
+    {
+        
+        $this->isRotated = true;
+      
 
+        $this->selectedPeopleNames = [];
+      
+        $this->cc_to = '';
+    }
     public function filter()
     {
+    
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+    
         $companyId = Auth::user()->company_id;
-        $trimmedSearchTerm = trim($this->searchTerm);
 
-        $this->filteredPeoples = EmployeeDetails::where('company_id', $companyId)
-            ->where(function ($query) use ($trimmedSearchTerm) {
-                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
-                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
-            })
+   
+            $this->peopleData = EmployeeDetails::where('first_name', 'like', '%' . $this->searchTerm . '%')
+            ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%')
+            ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
             ->get();
 
-        $this->peopleFound = count($this->filteredPeoples) > 0;
+        $this->filteredPeoples = $this->searchTerm ? $this->peoples : null;
+
+        // Filter records based on category and search term
+        $this->records = HelpDesks::with('emp')
+        ->whereHas('emp', function($query) {
+            $query->where('first_name', 'like', '%'.$this->searchTerm.'%')
+                  ->orWhere('last_name', 'like', '%'.$this->searchTerm.'%');
+        })
+     
+        ->orderBy('created_at', 'desc')
+        ->get();
+
     }
 
+ 
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $companyId = Auth::user()->company_id;
-
+        $companyId = auth()->guard('emp')->user()->company_id;
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
+      
+        $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+        $this->records = HelpDesks::all();
         $this->peoples = EmployeeDetails::where('company_id', $companyId)
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
 
-        $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+            $searchData = $this->filterData ?: $this->records;
         $this->record = HelpDesks::all();
-
+    
+        if ($this->selectedCategory) {
+            // Filter records where category matches selectedCategory
+            $this->record->where('request', function ($q) {
+                $q->where('category', $this->selectedCategory);
+            });
+        }
         $employee = auth()->guard('emp')->user();
         $employeeId = $employee->emp_id;
         $employeeName = $employee->first_name . ' ' . $employee->last_name . ' #(' . $employeeId . ')';
 
         $this->records = HelpDesks::with('emp')
             ->where(function ($query) use ($employeeId, $employeeName) {
-                $query->where('emp_id', $employeeId)
-                    ->orWhere('cc_to', 'LIKE', "%$employeeName%");
+                $query->where('emp_id', $employeeId);
             })
             ->orderBy('created_at', 'desc')
             ->get();
+            
+            $query = HelpDesks::with('emp')
+            ->where('emp_id', $employeeId);
+
+        // Apply filtering based on the selected category
+
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
+      // Initialize peopleData properly
+    $peopleData = $this->filteredPeoples ?: $this->peoples;
+
+    // Ensure peopleData is a collection, not null
+    $peopleData = $peopleData ?: collect();
 
         return view('livewire.help-desk', [
-            'peopleData' => $peopleData,
+       'records' => $this->records, 
+        'searchData' => $searchData,'requestCategories' => $this->requestCategories,   'peopleData' => $this->peopleData ,
         ]);
     }
 }

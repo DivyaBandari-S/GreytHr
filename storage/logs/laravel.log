@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2024-08-08 11:57:32] local.INFO: emp ID set: XSS-0307  
 [2024-08-08 11:57:32] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Attendance HTTP/1.1
 
@@ -774,15 +775,20 @@ Cookie: XSRF-TOKEN=sbw1EVx8wAzX4j6JDbIh5SovlyDAJgFnZRpkTic7; laravel_session=qO8
 "}} 
 [2024-08-08 12:30:36] local.INFO: emp ID set: XSS-0307  
 [2024-08-08 12:30:37] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Attendance HTTP/1.1
+=======
+[2024-08-06 17:46:58] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:46:58] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+>>>>>>> 8852def7d3aeccbc60f0bb67e3c2e5406c93e39c
 
 Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
 
 Accept-Encoding:           gzip, deflate, br, zstd
 
-Accept-Language:           en-US,en;q=0.9
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
 
 Connection:                keep-alive
 
+<<<<<<< HEAD
 Cookie:                    XSRF-TOKEN=eyJpdiI6IlNYTlM3dElYWW1lRmFlNlFacXlEL1E9PSIsInZhbHVlIjoiaTZ1cnVUUExwb2Q5Wk1PT001ZkxlVGF6VzhaZ1lMYndUUEVvN1Ird0V5R3oxd25qYXYvMlRDTzJBVS9ITjIzdUk5dFBXTitDcXc4b1ZjZmdxZzdvL1hjTGZ1bFMxN1Z3Vnl4dEt3Um1zazY0RjJoeUtCQndZbFNHeUFaSU8zTHQiLCJtYWMiOiI0MWJhZDNiZDhiNmFlNTYxMzEzYTU4MWYwODVmOWQ3OTQ3MGE4MWViZGUyYzMxNzdmM2ZlN2E1Zjg2YjllNTcxIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImtQVFlWdmE4MkZSaEVSTXhrTlZJNEE9PSIsInZhbHVlIjoibXpHVWlDaExXbC95MTdNUG5XeVJJcDh6NXJUb2pCVk84eUhGVWtRb3Y1TGZHTWxCVVczT2h3MS9vU2g2U0phQVZuMGphb2VIKy9ObjhzRjFURUpjaXZwRXd1U2tmeEk0Qmg4ZjhTRzh6dHY3eXhBMnJrY2JYZ2pEd2xrcUwxWkMiLCJtYWMiOiIyNTE1ZTQwMWI5OGNhNjJmZmZjYWExMTIwNmY2YWFhOGUwZTM2OTMyM2E5YzRkMzBhNGVlNmEwM2YwNTY5MDk1IiwidGFnIjoiIn0%3D
 
 Host:                      127.0.0.1:8000
@@ -3256,12 +3262,15 @@ Accept-Language:           en-US,en;q=0.9
 Connection:                keep-alive
 
 Cookie:                    XSRF-TOKEN=eyJpdiI6IkdneUZneDBIRzRVWGZ4TWhMaVdSaFE9PSIsInZhbHVlIjoiTnMvR0dZVlFsZzh6cXJ3S0Zia1NQUXV2NXIxQTZYTmtzTGRUbnEyV3FrZlhNaFJpMWExR3dTWnc1ODFuS0xRTklQa2xENUpwVjFlVG1nbHh2azlPVnhNYTNTallUS09CVWN2Z3N5VTUzSkNERWVrL1ZXUjVXcnIvaFVOQkNwb2kiLCJtYWMiOiIzOGZjMWUxYTM5YzA2MDM4YjEzZThiNzAzNDBmZGUxNWI3MjhlZTZhYmQzMjA4MGZkNjhlN2RmM2VmYTg0MmM0IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IllQU3paeUdQZElFS2ZieEJRQ3N1d2c9PSIsInZhbHVlIjoiY3FxaGV4WXZvRk1lTml5SHBuZzRkOWdjdmRWQmlDOVZodXdSRm5xclBLdEw3R2x6NkhoL2F2Rlg1ZkV1UXlYU0N6Yld0dVh2aFZET2lyaER5MUdGL3BWMVdDN2psNSt1MDdEZVJxWnBTcEh1VWgwWTJZYnhiSUJiY0RlQlpsR2kiLCJtYWMiOiIyNTkzODM2MjAxODI0YTg0NjYyZjUyN2VkZjMzMWExYTQzODU5YTNlMmM5NTk0OTI0ODNjNzVlZmMxMzAzZjQ1IiwidGFnIjoiIn0%3D
+=======
+Cookie:                    XSRF-TOKEN=eyJpdiI6Imp4QXFzc2JkdmM1bVpPUXpPVm1MU1E9PSIsInZhbHVlIjoiL3YxSlJVNXIrdUdaZFZsMjV5a1BVZmltWWJnZ0xSZ3BYL0RXS3JWaHJ5UmpBNXNYNXNiVHFxZjd1TVBHSHA5MnFnVnI3eGVHU0xnQk9KV1VtZE4vbUw5QVZPT3dOQ1puT2hwNEhFTDFnSnBWaytYNWx4YmIxWE1WejVjVzVMa1kiLCJtYWMiOiJmNGVkMzdmYjk4MGEwZWJlYzBkOTE5NGQ5MWY4ZWMxY2QxZmJiOTc0ZWFmODcwYmQzN2FlZWNjZDY5NThiZWZmIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlVJL2JpN00wNC9OelA5SG9MakFXYVE9PSIsInZhbHVlIjoiaitMRGhZMnhqUmhBMlBnWHVUdGhRLy9qVW51clFPQlNMWjBLamtuYXRGWTl2NzJnRjFVcnp3NVZzT05EK0gyUTRYQmRiOWh6VktvR2dpR29naTZrMUh3VzRHY081YXBXelZvT0U4WS83WTV3bVZyTDFiWEl1MXdGaDI4RDhqSjYiLCJtYWMiOiI1YTIzZDczNTFmOTU5NzQ2NDQwNTg3OTU1ZDYyNmM2YWIzNjA3YjgzNGEzZTA0Y2E0ZDBmMDkwYmQ1MmViZThmIiwidGFnIjoiIn0%3D
+>>>>>>> 8852def7d3aeccbc60f0bb67e3c2e5406c93e39c
 
 Host:                      127.0.0.1:8000
 
-Referer:                   http://127.0.0.1:8000/emplogin
+Referer:                   http://127.0.0.1:8000/Feeds
 
-Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
 
 Sec-Ch-Ua-Mobile:          ?0
 
@@ -3277,8 +3286,9 @@ Sec-Fetch-User:            ?1
 
 Upgrade-Insecure-Requests: 1
 
-User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
 
+<<<<<<< HEAD
 Cookie: XSRF-TOKEN=AOE7WdBQrvK882QlpoNn9QHmjzSXLu1ZriK34mPJ; laravel_session=DUE1MqEUnPpbxJgtBAaIPYAL3hMGTuc5yqaQUjHl
 
 
@@ -5503,7 +5513,779 @@ Upgrade-Insecure-Requests: 1
 User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
 
 Cookie: XSRF-TOKEN=OLVdHJvEqZ9tHcZsKFZF3zeGvexcbz6kGYy70zk2; laravel_session=q1atb5vVQ0Drqn1CTVQbVrfwvxh9UPYBG1eoW5ac
+=======
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+>>>>>>> 8852def7d3aeccbc60f0bb67e3c2e5406c93e39c
 
 
 
 "}} 
+[2024-08-06 17:47:03] local.DEBUG: Filtered Results:  [{"id":15,"emp_id":"XSS-0476","category":" Request For IT","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hloo","description":"heyyy","file_path":"uploads/help-desk-images/66b1db2c0b478_shared image.jpg","cc_to":"A Archana #(XSS-0476), Abhinav Jangili #(XSS-0436), Adityaraj Singh Chouhan #(XSS-0518)","status":"Recent","priority":"High","created_at":"2024-08-06T08:13:32.000000Z","updated_at":"2024-08-06T08:13:32.000000Z"},{"id":14,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"Ranjith Kumar C #(XSS-0386), Saiteja Shinde #(XSS-0535)","status":"Recent","priority":"Low","created_at":"2024-08-06T08:02:24.000000Z","updated_at":"2024-08-06T08:02:24.000000Z"},{"id":13,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"Ranjith Kumar C #(XSS-0386), Saiteja Shinde #(XSS-0535)","status":"Recent","priority":"Low","created_at":"2024-08-06T08:01:58.000000Z","updated_at":"2024-08-06T08:01:58.000000Z"},{"id":12,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T08:01:37.000000Z","updated_at":"2024-08-06T08:01:37.000000Z"},{"id":11,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:59:58.000000Z","updated_at":"2024-08-06T07:59:58.000000Z"},{"id":10,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:59:27.000000Z","updated_at":"2024-08-06T07:59:27.000000Z"},{"id":9,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hlo","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:57:11.000000Z","updated_at":"2024-08-06T07:57:11.000000Z"},{"id":8,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"setup","description":"install","file_path":"uploads/help-desk-images/66b1d7106256a_shared image (4).jpg","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:56:00.000000Z","updated_at":"2024-08-06T07:56:00.000000Z"},{"id":7,"emp_id":"XSS-0476","category":" Request For IT","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hey need setup","description":"requirements","file_path":"N/A","cc_to":"Siva Kumar Saragada #(XSS-0488)","status":"Recent","priority":"High","created_at":"2024-08-06T05:23:35.000000Z","updated_at":"2024-08-06T05:23:35.000000Z"},{"id":6,"emp_id":"XSS-0476","category":"Distribution List Request","mail":"N/A","distributor_name":"setup","selected_equipment":"keyboard","mobile":"N/A","subject":"need ","description":"installations","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-06T05:22:14.000000Z","updated_at":"2024-08-06T05:22:14.000000Z"},{"id":5,"emp_id":"XSS-0476","category":"Income Tax","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hiii","description":"hlo","file_path":"N/A","cc_to":null,"status":"Recent","priority":"Low","created_at":"2024-08-05T17:53:34.000000Z","updated_at":"2024-08-05T17:53:34.000000Z"},{"id":4,"emp_id":"XSS-0476","category":"Hardware Maintenance","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hlo","file_path":"N/A","cc_to":null,"status":"Recent","priority":"Low","created_at":"2024-08-05T17:51:32.000000Z","updated_at":"2024-08-05T17:51:32.000000Z"},{"id":3,"emp_id":"XSS-0476","category":"Distribution List Request","mail":"N/A","distributor_name":"hii","selected_equipment":"keyboard","mobile":"N/A","subject":"hlo","description":"hey","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-05T17:51:06.000000Z","updated_at":"2024-08-05T17:51:06.000000Z"},{"id":2,"emp_id":"XSS-0476","category":"New Mailbox Request","mail":"ar@gmail.com","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hloo","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-05T17:31:44.000000Z","updated_at":"2024-08-05T17:31:44.000000Z"},{"id":1,"emp_id":"XSS-0476","category":" Request For IT","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hii","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-05T17:29:58.000000Z","updated_at":"2024-08-05T17:29:58.000000Z"}] 
+[2024-08-06 17:47:04] local.DEBUG: Filtered Results:  [{"id":15,"emp_id":"XSS-0476","category":" Request For IT","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hloo","description":"heyyy","file_path":"uploads/help-desk-images/66b1db2c0b478_shared image.jpg","cc_to":"A Archana #(XSS-0476), Abhinav Jangili #(XSS-0436), Adityaraj Singh Chouhan #(XSS-0518)","status":"Recent","priority":"High","created_at":"2024-08-06T08:13:32.000000Z","updated_at":"2024-08-06T08:13:32.000000Z"},{"id":14,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"Ranjith Kumar C #(XSS-0386), Saiteja Shinde #(XSS-0535)","status":"Recent","priority":"Low","created_at":"2024-08-06T08:02:24.000000Z","updated_at":"2024-08-06T08:02:24.000000Z"},{"id":13,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"Ranjith Kumar C #(XSS-0386), Saiteja Shinde #(XSS-0535)","status":"Recent","priority":"Low","created_at":"2024-08-06T08:01:58.000000Z","updated_at":"2024-08-06T08:01:58.000000Z"},{"id":12,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T08:01:37.000000Z","updated_at":"2024-08-06T08:01:37.000000Z"},{"id":11,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:59:58.000000Z","updated_at":"2024-08-06T07:59:58.000000Z"},{"id":10,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"install","description":"hey","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:59:27.000000Z","updated_at":"2024-08-06T07:59:27.000000Z"},{"id":9,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hlo","file_path":"N/A","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:57:11.000000Z","updated_at":"2024-08-06T07:57:11.000000Z"},{"id":8,"emp_id":"XSS-0476","category":"Incident Report","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"setup","description":"install","file_path":"uploads/help-desk-images/66b1d7106256a_shared image (4).jpg","cc_to":"","status":"Recent","priority":"Low","created_at":"2024-08-06T07:56:00.000000Z","updated_at":"2024-08-06T07:56:00.000000Z"},{"id":7,"emp_id":"XSS-0476","category":" Request For IT","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hey need setup","description":"requirements","file_path":"N/A","cc_to":"Siva Kumar Saragada #(XSS-0488)","status":"Recent","priority":"High","created_at":"2024-08-06T05:23:35.000000Z","updated_at":"2024-08-06T05:23:35.000000Z"},{"id":6,"emp_id":"XSS-0476","category":"Distribution List Request","mail":"N/A","distributor_name":"setup","selected_equipment":"keyboard","mobile":"N/A","subject":"need ","description":"installations","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-06T05:22:14.000000Z","updated_at":"2024-08-06T05:22:14.000000Z"},{"id":5,"emp_id":"XSS-0476","category":"Income Tax","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hiii","description":"hlo","file_path":"N/A","cc_to":null,"status":"Recent","priority":"Low","created_at":"2024-08-05T17:53:34.000000Z","updated_at":"2024-08-05T17:53:34.000000Z"},{"id":4,"emp_id":"XSS-0476","category":"Hardware Maintenance","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hlo","file_path":"N/A","cc_to":null,"status":"Recent","priority":"Low","created_at":"2024-08-05T17:51:32.000000Z","updated_at":"2024-08-05T17:51:32.000000Z"},{"id":3,"emp_id":"XSS-0476","category":"Distribution List Request","mail":"N/A","distributor_name":"hii","selected_equipment":"keyboard","mobile":"N/A","subject":"hlo","description":"hey","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-05T17:51:06.000000Z","updated_at":"2024-08-05T17:51:06.000000Z"},{"id":2,"emp_id":"XSS-0476","category":"New Mailbox Request","mail":"ar@gmail.com","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hloo","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-05T17:31:44.000000Z","updated_at":"2024-08-05T17:31:44.000000Z"},{"id":1,"emp_id":"XSS-0476","category":" Request For IT","mail":"N/A","distributor_name":"N/A","selected_equipment":"keyboard","mobile":"N/A","subject":"hii","description":"hii","file_path":"N/A","cc_to":"-","status":"Recent","priority":"High","created_at":"2024-08-05T17:29:58.000000Z","updated_at":"2024-08-05T17:29:58.000000Z"}] 
+[2024-08-06 17:47:11] local.INFO: emp ID set: XSS-0476  
+[2024-08-06 17:47:11] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /catalog HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Imd2OEJNNURzRlhlbDMwRk1sNWZYOXc9PSIsInZhbHVlIjoiQUxiZFBXR3NhSzRtcmZHelB1YTdQTHVyZHhwTlBYaWRncGU3TzZaRFhBSUVZMFJtU3RGM084VEdKWWNnNmpBUjhJY2lsd0NoMWh5ZFZETzlOcTNlQVNVVjZSalA2bWE2SGlBT1EyNEtIVjRnczZQTXNxbUlTMzFzQVJMaGZ5UUQiLCJtYWMiOiJjYWQzMTk5NDA5MTA1MjFlN2Y3ODE2N2FhNWRkZWNjMjQwNTAxYzAzMjc1MGJjN2FkM2MzZDliZjQ1OTQxZGU3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjdadFVUYXM3M3g5cGthNVpSeXByT2c9PSIsInZhbHVlIjoiNEUxdFM2aVFSWDlmVWFIVDhhaEpBZEZ5c29sTm5CWnQrSHd2NnU1a0hsZWNCK1d2QUhJTTF2ei9uTElVY1pDZUExcDJTbU1FRUNaTjVlV0l0cVJPWU8rcE00VW16cSt6L3RlNXpKZC8xN1pmWFplZ09EMWFtWkViaVFvRUs5RE4iLCJtYWMiOiI3ODk0Y2E1ZDg3YzgwYzdjNTZhYTM5ODY5MmI3YjFmNjhkYjIyNDUzYmZlZmQ5NTk3ODFlNTgyYTViNjYxOTc0IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/HelpDesk
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=O3zZ2tx3l5i7EUnlVMIlbOsCBzUlgGdW5bItIhTk; laravel_session=G4i1svUgigYiZc0IuOl9G6U2rZ04SjZiOmJekzzJ
+
+
+
+"}} 
+[2024-08-07 11:39:59] local.INFO: emp ID set: XSS-0476  
+[2024-08-07 11:39:59] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /slip HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ikw1OG45RnhyMy9EdkJ6SVpxelBxL1E9PSIsInZhbHVlIjoiWjBrSWhaTkFtVkRxcWNLbi8zVkx4NnluODZRQlN1eWo4TjhDSTJlYkErQUNXT211Y25ZMHZwb0Ntd2JrcVEzWmFIMWtuellQTUZTZDR0UlV1OVVCUVIzUitIQkRIM0hSYms0d0wvbEJLK0V3QkN0Z2VnVGE5aGxQc3ZVVVJpZVYiLCJtYWMiOiI4NzBiYzU1OThhZjBlZDdmMTdlZWU1MDkyZWJiZWY1OTcxMDI2MTM2M2I4ZDMwMmZmOGI4MWI3YmQ1YzYyZGIxIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImhiWFlhRUFzSVI1YUVBKzIyU0Iza3c9PSIsInZhbHVlIjoiRHhPWHhqOVJPNnFnYmsrdFlqVDVDQmxlUU9DdW9IRlcxMUI1WHVSZGhqT0dHakhDMDlhNXpYTEw4K0VpcGhUalVMbHBMeC9oR0RiTlBkTW1LeXJYMEdEOVJFVGVGRWZrL1hPNnpmSml4RVFDRlJkY2ZKME9wY1Vrd0MrZjJPLzkiLCJtYWMiOiJlNDM4Mzg4NWJmMTMxNmUwMWRlYTM5YzVhMDlmNjAyNDI5NThmZTBmMjkxNDk4ZGQ5NTRjMzk5MTU3MDZkMzk4IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/slip
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=ESHS5IJLkE5sQwSpnOK79Xur5turL8HanzGtjznG; laravel_session=NrREkg76oFGOw9HFfBY4uLlFI5ZhFECLKIxyEvMP
+
+
+
+"}} 
+[2024-08-07 11:40:07] local.INFO: emp ID set: XSS-0476  
+[2024-08-07 11:40:07] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /tasks HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImJnc0lHY3hkcGk4d1V1cVE3V01GeFE9PSIsInZhbHVlIjoiSlhRWE5aMnZQWHAxRkl5R3VINHJBUGdNK2FZRnNkVHd4T1FOQXBjZU5lNmUwVEowNXVNSTRxbEtEd2hJeUJBemFnMlQ0d0VKWldUM3FFZjN5dW1HNTU0Tk5zUnNOT0I5UFlLQzdGc09kSlppSzNlUmlvQ2YzSE8zMU9yaGIzSVgiLCJtYWMiOiIwMGFjMzM5MmQzMjAzNTBiZWRkNjU3Mjk3MmQ2NmYxODI3ZTAwYjU5NzY3YWFjZTM1YjI0NDc5N2VhNzE0N2Y1IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InZnMWVOQm5PSUcwK1kwNSs2QVFoRlE9PSIsInZhbHVlIjoiRG1Ba2N5VjlEdkE0OUxjdENkVWpZa2NKYnpvUDVCNlJmS2FFQ0RlNlRRV3VjZ0JYRHFTRjM1ZG02cFpMbXdZVjYxRUxueHE2N29Belp2azdvSG4wWGtuenRxeElKMHErMEYyODh2UGxCNGN1VVBUOUhtNEhwR0FPT1JteG0wRnUiLCJtYWMiOiIyMDBjZDYyNTM5ODNlYWNiMWY3Y2ZiMmMwYTNjYjJjYmUyMzM1NDVlZDg4OTM0ZDk0OWYxZWFmYWZhZTE3OGEwIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/slip
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=ESHS5IJLkE5sQwSpnOK79Xur5turL8HanzGtjznG; laravel_session=NrREkg76oFGOw9HFfBY4uLlFI5ZhFECLKIxyEvMP
+
+
+
+"}} 
+[2024-08-07 11:40:12] local.INFO: emp ID set: XSS-0476  
+[2024-08-07 11:40:12] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /time-sheet HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlF4a05zRllpWGcrUksvYmlOOUVqclE9PSIsInZhbHVlIjoiTDJ1SmxxL3dqZXBNU216eXNvWCtxZmRhZEVMZUtHZUNMWjNYQzNCSkZLUjBtK0lnT0ZZa3dHa2hWMGVhRW4rb0lWZktmelloU2I2SVY3aUFmMzFJdzM5K3RUSHZtZEdqTmlncGNYaEtmTWpSWDhxVHdxWmNtb1BRc3FjRUJxL1giLCJtYWMiOiJmMmIzY2M1YWE1NjkyMDNjY2U3MjE3MDcwMzliZGMzMTgxMDY2ZGUyNThmOTBiMTUyZjhlOTk1YjdhMDZlZWJkIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImZ6NUZUQ1Yrc1ZJQW0yWmd3MDdZVWc9PSIsInZhbHVlIjoiTmpoUGhBcEhXQ2kwNHJXelFDclVlS3RyOUFET1BUQ2RHemtNcjJVUzFLRDFZeCtwa0VOSFM4QVVPUHA0aGhTZ1FLZ3VrcUludGJIamk1SkhiTzBrTmE3S1NydUZtYzh1aHpUakx4MnQ0UEZ1ZHlJODNZTENQa2lPenNLa3U1RCsiLCJtYWMiOiI5OWY1ZGVkMzY0MWFkNTVjODI1ZWEyMTM5MDFlMGI2Y2ZhMzQwYzBjYjM4MzU1ZTI2M2M3YTA3MmMyMzU0Y2E5IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/tasks
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=ESHS5IJLkE5sQwSpnOK79Xur5turL8HanzGtjznG; laravel_session=NrREkg76oFGOw9HFfBY4uLlFI5ZhFECLKIxyEvMP
+
+
+
+"}} 
+[2024-08-07 11:40:12] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"userId":"XSS-0476","exception":"[object] (ParseError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure}('C:\\\\xampp\\\\htdocs...')
+#1 C:\\xampp\\htdocs\\GreytHr\\app\\Livewire\\EmpTimeSheet.php(87): Composer\\Autoload\\ClassLoader->loadClass('App\\\\Models\\\\Time...')
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Livewire\\EmpTimeSheet->mount()
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Wrapped.php(23): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportLifecycleHooks\\SupportLifecycleHooks.php(134): Livewire\\Wrapped->__call('mount', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportLifecycleHooks\\SupportLifecycleHooks.php(20): Livewire\\Features\\SupportLifecycleHooks\\SupportLifecycleHooks->callHook('mount', Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\ComponentHook.php(19): Livewire\\Features\\SupportLifecycleHooks\\SupportLifecycleHooks->mount(Array, false)
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\ComponentHookRegistry.php(45): Livewire\\ComponentHook->callMount(Array, false)
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\EventBus.php(60): Livewire\\ComponentHookRegistry::Livewire\\{closure}(Object(App\\Livewire\\EmpTimeSheet), Array, NULL, false)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\helpers.php(98): Livewire\\EventBus->trigger('mount', Object(App\\Livewire\\EmpTimeSheet), Array, NULL, false)
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(50): Livewire\\trigger('mount', Object(App\\Livewire\\EmpTimeSheet), Array, NULL, false)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\LivewireManager.php(73): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->mount('App\\\\Livewire\\\\Em...', Array, NULL)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportPageComponents\\HandlesPageComponents.php(17): Livewire\\LivewireManager->mount('App\\\\Livewire\\\\Em...', Array)
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportPageComponents\\SupportPageComponents.php(117): Livewire\\Component->Livewire\\Features\\SupportPageComponents\\{closure}()
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportPageComponents\\HandlesPageComponents.php(14): Livewire\\Features\\SupportPageComponents\\SupportPageComponents::interceptTheRenderOfTheComponentAndRetreiveTheLayoutConfiguration(Object(Closure))
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(46): Livewire\\Component->__invoke()
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Livewire\\EmpTimeSheet), '__invoke')
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\CheckAuthAndHandleSession.php(100): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckAuthAndHandleSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'emp')
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#45 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#46 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#47 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#49 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#50 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#51 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#55 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#56 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#57 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#58 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#59 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#60 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#61 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#62 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#63 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#64 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#65 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#66 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#67 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#68 {main}
+"} 
+[2024-08-07 11:40:25] local.INFO: emp ID set: XSS-0476  
+[2024-08-07 11:40:25] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjIwZmJyb2p3RWNSZk1RNzdIdDlpcnc9PSIsInZhbHVlIjoiVWJDZHlSeEpTZUtQRUJYVERLVEhXV2gvZnVvTFRadmFOVkRkdGtOWXFRU1IwVDBkaDNZZWpGVEQzckd2SFlrQlZFSWczck1KYVRaYjQ2UUNBT2Y5c3g3aWFCak5MK1pVWE43dHJ3a1J3UEJKa205c0UxK2JpcmdWSjdKYkJpdlUiLCJtYWMiOiI4OTM3MjMwNmQwNjVmMjFhZDNhZWNhODcyMTU2NTQ4ZDU0NTZhZmQ0ZWYzZTliNGM5OGYxNjAwNGY2NzJjMTVkIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Incvem1PMjRFSmdjRi9mSlFET3Q0Nnc9PSIsInZhbHVlIjoiZmNUWVhreDlYN2tFai80WHpuZ3hVeVMwTWxGQUNLNWdZYU5NWmdKSkhVNXVtK3V0cFcvN0NyOXJyTEJ1SFdnU1JURWRiY05ETGdMM2RSamZUQjUrS1NFTGk0OGFTWHFlL04wR1FOL0E2SHM4SjdHYVVRT0lNSUc1M2psckpTTlciLCJtYWMiOiJlZjgzMGViNzRmOTk3ZTU3NjNiNjUxMGYwODhjNzVmYmQ4YWFlOTlhYjk0OWI5NjYxYTNlMTBkOWM3YTg5MWRhIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=ESHS5IJLkE5sQwSpnOK79Xur5turL8HanzGtjznG; laravel_session=NrREkg76oFGOw9HFfBY4uLlFI5ZhFECLKIxyEvMP
+
+
+
+"}} 
+[2024-08-07 11:43:08] local.INFO: Session has timed out  
+[2024-08-07 11:43:12] local.INFO: Session has timed out  
+[2024-08-07 11:44:03] local.INFO: Session has timed out  
+[2024-08-07 11:46:09] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:46:54] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:47:22] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:47:38] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:47:49] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:48:57] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:49:06] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:49:42] local.ERROR: SQLSTATE[HY000]: General error: 1359 Trigger 'u448616157_rpdamsa.generate_hr_emp_id' already exists (Connection: mysql, SQL:     CREATE TRIGGER generate_hr_emp_id BEFORE INSERT ON hr FOR EACH ROW
+    BEGIN
+        -- Check if bill_number is NULL
+        IF NEW.hr_emp_id IS NULL THEN
+            -- Find the maximum bill_number value in the bills table
+            SET @max_id := IFNULL((SELECT MAX(CAST(SUBSTRING(hr_emp_id, 3) AS UNSIGNED)) + 1 FROM hr), 100000);
+
+            -- Increment the max_id and assign it to the new bill_number
+            SET NEW.hr_emp_id = CONCAT('HR', LPAD(@max_id, 6, '0'));
+        END IF;
+    END;) {"exception":"[object] (Illuminate\\Database\\QueryException(code: HY000): SQLSTATE[HY000]: General error: 1359 Trigger 'u448616157_rpdamsa.generate_hr_emp_id' already exists (Connection: mysql, SQL:     CREATE TRIGGER generate_hr_emp_id BEFORE INSERT ON hr FOR EACH ROW
+    BEGIN
+        -- Check if bill_number is NULL
+        IF NEW.hr_emp_id IS NULL THEN
+            -- Find the maximum bill_number value in the bills table
+            SET @max_id := IFNULL((SELECT MAX(CAST(SUBSTRING(hr_emp_id, 3) AS UNSIGNED)) + 1 FROM hr), 100000);
+
+            -- Increment the max_id and assign it to the new bill_number
+            SET NEW.hr_emp_id = CONCAT('HR', LPAD(@max_id, 6, '0'));
+        END IF;
+    END;) at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('    CREATE TRIG...', Array, Object(Closure))
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(630): Illuminate\\Database\\Connection->run('    CREATE TRIG...', Array, Object(Closure))
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\DatabaseManager.php(509): Illuminate\\Database\\Connection->unprepared('    CREATE TRIG...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\DatabaseManager->__call('unprepared', Array)
+#4 C:\\xampp\\htdocs\\GreytHr\\database\\migrations\\2024_08_07_114602_create_admins_table.php(49): Illuminate\\Support\\Facades\\Facade::__callStatic('unprepared', Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\View\\Components\\Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2024_08_07_1146...', Object(Closure))
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2024_08_07_1146...', Object(Closure))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('C:\\\\xampp\\\\htdocs...', 4, false)
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 {main}
+
+[previous exception] [object] (PDOException(code: HY000): SQLSTATE[HY000]: General error: 1359 Trigger 'u448616157_rpdamsa.generate_hr_emp_id' already exists at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:636)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(636): PDO->exec('    CREATE TRIG...')
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('    CREATE TRIG...', Array)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('    CREATE TRIG...', Array, Object(Closure))
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(630): Illuminate\\Database\\Connection->run('    CREATE TRIG...', Array, Object(Closure))
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\DatabaseManager.php(509): Illuminate\\Database\\Connection->unprepared('    CREATE TRIG...')
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\DatabaseManager->__call('unprepared', Array)
+#6 C:\\xampp\\htdocs\\GreytHr\\database\\migrations\\2024_08_07_114602_create_admins_table.php(49): Illuminate\\Support\\Facades\\Facade::__callStatic('unprepared', Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\View\\Components\\Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2024_08_07_1146...', Object(Closure))
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2024_08_07_1146...', Object(Closure))
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('C:\\\\xampp\\\\htdocs...', 4, false)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 {main}
+"} 
+[2024-08-07 11:50:15] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:50:20] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:50:31] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:51:11] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'admin_emp_id' in 'NEW' (Connection: mysql, SQL:     CREATE TRIGGER generate_hr_emp_id BEFORE INSERT ON hr FOR EACH ROW
+    BEGIN
+        -- Check if bill_number is NULL
+        IF NEW.admin_emp_id IS NULL THEN
+            -- Find the maximum bill_number value in the bills table
+            SET @max_id := IFNULL((SELECT MAX(CAST(SUBSTRING(admin_emp_id, 3) AS UNSIGNED)) + 1 FROM hr), 100000);
+
+            -- Increment the max_id and assign it to the new bill_number
+            SET NEW.admin_emp_id = CONCAT('Admin', LPAD(@max_id, 6, '0'));
+        END IF;
+    END;) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'admin_emp_id' in 'NEW' (Connection: mysql, SQL:     CREATE TRIGGER generate_hr_emp_id BEFORE INSERT ON hr FOR EACH ROW
+    BEGIN
+        -- Check if bill_number is NULL
+        IF NEW.admin_emp_id IS NULL THEN
+            -- Find the maximum bill_number value in the bills table
+            SET @max_id := IFNULL((SELECT MAX(CAST(SUBSTRING(admin_emp_id, 3) AS UNSIGNED)) + 1 FROM hr), 100000);
+
+            -- Increment the max_id and assign it to the new bill_number
+            SET NEW.admin_emp_id = CONCAT('Admin', LPAD(@max_id, 6, '0'));
+        END IF;
+    END;) at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('    CREATE TRIG...', Array, Object(Closure))
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(630): Illuminate\\Database\\Connection->run('    CREATE TRIG...', Array, Object(Closure))
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\DatabaseManager.php(509): Illuminate\\Database\\Connection->unprepared('    CREATE TRIG...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\DatabaseManager->__call('unprepared', Array)
+#4 C:\\xampp\\htdocs\\GreytHr\\database\\migrations\\2024_08_07_114602_create_admins_table.php(49): Illuminate\\Support\\Facades\\Facade::__callStatic('unprepared', Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\View\\Components\\Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2024_08_07_1146...', Object(Closure))
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2024_08_07_1146...', Object(Closure))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('C:\\\\xampp\\\\htdocs...', 4, false)
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 {main}
+
+[previous exception] [object] (PDOException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'admin_emp_id' in 'NEW' at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:636)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(636): PDO->exec('    CREATE TRIG...')
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('    CREATE TRIG...', Array)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('    CREATE TRIG...', Array, Object(Closure))
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(630): Illuminate\\Database\\Connection->run('    CREATE TRIG...', Array, Object(Closure))
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\DatabaseManager.php(509): Illuminate\\Database\\Connection->unprepared('    CREATE TRIG...')
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\DatabaseManager->__call('unprepared', Array)
+#6 C:\\xampp\\htdocs\\GreytHr\\database\\migrations\\2024_08_07_114602_create_admins_table.php(49): Illuminate\\Support\\Facades\\Facade::__callStatic('unprepared', Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\View\\Components\\Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2024_08_07_1146...', Object(Closure))
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2024_08_07_1146...', Object(Closure))
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('C:\\\\xampp\\\\htdocs...', 4, false)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 {main}
+"} 
+[2024-08-07 11:51:13] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:51:39] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:51:55] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:52:12] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:52:40] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 11:53:24] local.ERROR: SQLSTATE[HY000]: General error: 1359 Trigger 'u448616157_rpdamsa.generate_hr_emp_id' already exists (Connection: mysql, SQL:     CREATE TRIGGER generate_hr_emp_id BEFORE INSERT ON admins FOR EACH ROW
+    BEGIN
+        -- Check if bill_number is NULL
+        IF NEW.admin_emp_id IS NULL THEN
+            -- Find the maximum bill_number value in the bills table
+            SET @max_id := IFNULL((SELECT MAX(CAST(SUBSTRING(admin_emp_id, 3) AS UNSIGNED)) + 1 FROM admins), 100000);
+
+            -- Increment the max_id and assign it to the new bill_number
+            SET NEW.admin_emp_id = CONCAT('Admin', LPAD(@max_id, 6, '0'));
+        END IF;
+    END;) {"exception":"[object] (Illuminate\\Database\\QueryException(code: HY000): SQLSTATE[HY000]: General error: 1359 Trigger 'u448616157_rpdamsa.generate_hr_emp_id' already exists (Connection: mysql, SQL:     CREATE TRIGGER generate_hr_emp_id BEFORE INSERT ON admins FOR EACH ROW
+    BEGIN
+        -- Check if bill_number is NULL
+        IF NEW.admin_emp_id IS NULL THEN
+            -- Find the maximum bill_number value in the bills table
+            SET @max_id := IFNULL((SELECT MAX(CAST(SUBSTRING(admin_emp_id, 3) AS UNSIGNED)) + 1 FROM admins), 100000);
+
+            -- Increment the max_id and assign it to the new bill_number
+            SET NEW.admin_emp_id = CONCAT('Admin', LPAD(@max_id, 6, '0'));
+        END IF;
+    END;) at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('    CREATE TRIG...', Array, Object(Closure))
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(630): Illuminate\\Database\\Connection->run('    CREATE TRIG...', Array, Object(Closure))
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\DatabaseManager.php(509): Illuminate\\Database\\Connection->unprepared('    CREATE TRIG...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\DatabaseManager->__call('unprepared', Array)
+#4 C:\\xampp\\htdocs\\GreytHr\\database\\migrations\\2024_08_07_114602_create_admins_table.php(49): Illuminate\\Support\\Facades\\Facade::__callStatic('unprepared', Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\View\\Components\\Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2024_08_07_1146...', Object(Closure))
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2024_08_07_1146...', Object(Closure))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('C:\\\\xampp\\\\htdocs...', 4, false)
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 {main}
+
+[previous exception] [object] (PDOException(code: HY000): SQLSTATE[HY000]: General error: 1359 Trigger 'u448616157_rpdamsa.generate_hr_emp_id' already exists at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:636)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(636): PDO->exec('    CREATE TRIG...')
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('    CREATE TRIG...', Array)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('    CREATE TRIG...', Array, Object(Closure))
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(630): Illuminate\\Database\\Connection->run('    CREATE TRIG...', Array, Object(Closure))
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\DatabaseManager.php(509): Illuminate\\Database\\Connection->unprepared('    CREATE TRIG...')
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Database\\DatabaseManager->__call('unprepared', Array)
+#6 C:\\xampp\\htdocs\\GreytHr\\database\\migrations\\2024_08_07_114602_create_admins_table.php(49): Illuminate\\Support\\Facades\\Facade::__callStatic('unprepared', Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(493): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(410): Illuminate\\Database\\Migrations\\Migrator->runMethod(Object(Illuminate\\Database\\MySqlConnection), Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(419): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->runMigration(Object(Illuminate\\Database\\Migrations\\Migration@anonymous), 'up')
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\View\\Components\\Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(756): Illuminate\\Console\\View\\Components\\Task->render('2024_08_07_1146...', Object(Closure))
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(216): Illuminate\\Database\\Migrations\\Migrator->write('Illuminate\\\\Cons...', '2024_08_07_1146...', Object(Closure))
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(181): Illuminate\\Database\\Migrations\\Migrator->runUp('C:\\\\xampp\\\\htdocs...', 4, false)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(124): Illuminate\\Database\\Migrations\\Migrator->runPending(Array, Array)
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(90): Illuminate\\Database\\Migrations\\Migrator->run(Array, Array)
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Migrations\\Migrator.php(633): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Console\\Migrations\\MigrateCommand.php(83): Illuminate\\Database\\Migrations\\Migrator->usingConnection(NULL, Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Database\\Console\\Migrations\\MigrateCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#31 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#32 {main}
+"} 
+[2024-08-07 11:53:41] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:05:43] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:05:51] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:06:03] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:07:04] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:08:47] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:09:34] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:15:45] local.INFO: Session has timed out  
+[2024-08-07 12:29:41] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:29:49] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:30:11] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:30:45] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:35:10] local.ERROR: syntax error, unexpected single-quoted string "start_date", expecting "]" {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): syntax error, unexpected single-quoted string \"start_date\", expecting \"]\" at C:\\xampp\\htdocs\\GreytHr\\app\\Models\\TimeSheet.php:13)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-07 12:35:33] local.INFO: Session has timed out  
+[2024-08-07 12:35:56] local.INFO: Session has timed out  
+[2024-08-07 12:36:05] local.INFO: Session has timed out  
+[2024-08-07 12:40:33] local.INFO: Session has timed out  
+[2024-08-07 12:48:27] local.INFO: admins ID set:   
+[2024-08-07 12:48:27] local.ERROR: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'user_id' cannot be null (Connection: mysql, SQL: insert into `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `iso_code`, `country`, `city`, `state`, `state_name`, `postal_code`, `latitude`, `longitude`, `timezone`, `continent`, `currency`, `payload`, `last_activity`, `created_at`, `updated_at`) values (NfunA9XyE5A65dJC8nLZV51f0VgyppRGmh1Q4kTk, ?, 127.0.0.0, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0, US, United States, New Haven, CT, Connecticut, 06510, 41.31, -72.92, America/New_York, NA, USD, , 1723015107, 2024-08-07 12:48:27, 2024-08-07 12:48:27)) {"userId":"AD-100000","exception":"[object] (Illuminate\\Database\\QueryException(code: 23000): SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'user_id' cannot be null (Connection: mysql, SQL: insert into `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `iso_code`, `country`, `city`, `state`, `state_name`, `postal_code`, `latitude`, `longitude`, `timezone`, `continent`, `currency`, `payload`, `last_activity`, `created_at`, `updated_at`) values (NfunA9XyE5A65dJC8nLZV51f0VgyppRGmh1Q4kTk, ?, 127.0.0.0, Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0, US, United States, New Haven, CT, Connecticut, 06510, 41.31, -72.92, America/New_York, NA, USD, , 1723015107, 2024-08-07 12:48:27, 2024-08-07 12:48:27)) at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `se...', Array, Object(Closure))
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(576): Illuminate\\Database\\Connection->run('insert into `se...', Array, Object(Closure))
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(540): Illuminate\\Database\\Connection->statement('insert into `se...', Array)
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Connection->insert('insert into `se...', Array)
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3596): Illuminate\\Database\\Query\\Builder->insert(Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\CheckAuthAndHandleSession.php(63): Illuminate\\Database\\Query\\Builder->updateOrInsert(Array, Array)
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckAuthAndHandleSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'admins')
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#47 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#48 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#49 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#50 {main}
+
+[previous exception] [object] (PDOException(code: 23000): SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'user_id' cannot be null at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:587)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(587): PDOStatement->execute()
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('insert into `se...', Array)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `se...', Array, Object(Closure))
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(576): Illuminate\\Database\\Connection->run('insert into `se...', Array, Object(Closure))
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(540): Illuminate\\Database\\Connection->statement('insert into `se...', Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Connection->insert('insert into `se...', Array)
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3596): Illuminate\\Database\\Query\\Builder->insert(Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\CheckAuthAndHandleSession.php(63): Illuminate\\Database\\Query\\Builder->updateOrInsert(Array, Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CheckAuthAndHandleSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Auth\\Middleware\\Authenticate.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Auth\\Middleware\\Authenticate->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'admins')
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#45 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#46 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#47 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#48 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#49 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#50 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#51 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#52 {main}
+"} 
