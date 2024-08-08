@@ -217,7 +217,7 @@
                         <div class="input-group">
     <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
     <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" >
-        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+        <i style="text-align: center;background:white;margin-left:10px" class="fa fa-search"></i>
     </button>
 </div>
                         </div>
