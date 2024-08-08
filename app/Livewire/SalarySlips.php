@@ -39,25 +39,23 @@ class SalarySlips extends Component
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
         $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
         $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
-
+    
         $data = [
             'employees' => $this->employeeDetails,
             'salaryRevision' => $this->salaryRevision,
             'empBankDetails' => $this->empBankDetails,
-         
             'netPay' => $this->calculateNetPay()
         ];
-       // Generate PDF using the fetched data
-       $pdf = Pdf::loadView('download-pdf', [
-        'employeeDetails' =>  $this->employeeDetails,
-   
-    ]);
     
+        // Generate PDF using the fetched data
+        $pdf = Pdf::loadView('download-pdf', $data);
+  
 
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->output();
         }, 'salary-slips.pdf');
     }
+    
 
 
 
@@ -167,6 +165,7 @@ class SalarySlips extends Component
     }
 
     $this->netPay = $totalGrossPay - $totalDeductions;
+    $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
     $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
 
     return view('livewire.salary-slips', [

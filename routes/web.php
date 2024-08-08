@@ -223,7 +223,7 @@ Route::middleware(['auth:it', 'handleSession'])->group(function () {
 });
 
 Route::middleware(['auth:admins', 'handleSession'])->group(function () {
-    Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
+Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
 });
 
 

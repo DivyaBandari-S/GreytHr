@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Livewire\Component;
@@ -9,7 +10,12 @@ use Livewire\Component;
 class MainLayout extends Component
 {
     public $showLogoutModal = false;
+    public $loginEmployeeProfile;
 
+    public function mount(){
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->loginEmployeeProfile = EmployeeDetails::where('emp_id',$employeeId)->select('emp_id', 'first_name', 'last_name','image')->first();
+    }
     public function handleLogout()
     {
         $this->showLogoutModal = true;

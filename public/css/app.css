@@ -7,12 +7,14 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
- /* bootstarp v5 downolad */
+/* bootstarp v5 downolad */
 :root {
-    --main-heading-color: #3b4452 /* use main heading along with font-weight-500 */;
+    --main-heading-color: #3b4452
+        /* use main heading along with font-weight-500 */;
     --requiredAlert: red;
     --label-color: #778899;
-    --sub-heading-color: #778899/* use sub heading along with font-weight-500 */;
+    --sub-heading-color: #778899
+        /* use sub heading along with font-weight-500 */;
     --normal-font-size: 0.75rem;
     --sub-headings-font-size: 0.8rem;
     --main-headings-font-size: 1rem;
@@ -113,27 +115,32 @@
 .normalText {
     color: var(--main-heading-color);
     font-weight: 500;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
-.approvedColor{
-    font-size: 12px; font-weight: 500; color:#32CD32;
+.approvedColor {
+    font-size: 12px;
+    font-weight: 500;
+    color: #32cd32;
 }
-.rejectColor{
-    font-size: 12px; font-weight: 500; color:#FF0000;
+.rejectColor {
+    font-size: 12px;
+    font-weight: 500;
+    color: #ff0000;
 }
-.otherStatus{
-    font-size: 12px; font-weight: 500; color:#cf9b17;
-
+.otherStatus {
+    font-size: 12px;
+    font-weight: 500;
+    color: #cf9b17;
 }
-.normalTextValue{
+.normalTextValue {
     color: var(--label-color);
     font-weight: 500;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 .homeText {
     color: #778899;
     text-align: center;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 .leaveCustom-btn {
     width: 100px;
@@ -300,7 +307,7 @@
     box-shadow: 0 0 1px 1px rgba(184, 183, 183, 0.18);
 }
 .earning-details {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #000;
 }
 
@@ -346,7 +353,7 @@
 }
 .emp-details-p {
     color: #778899;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 .emp-details-span {
     color: #000;
@@ -376,7 +383,7 @@ body {
     font-weight: 500;
     border-radius: 5px;
     padding: 6px 12px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     border: none;
 }
 .submit-btn:hover {
@@ -389,7 +396,7 @@ body {
     font-weight: 500;
     border-radius: 5px;
     padding: 6px 12px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     border: none;
 }
 .cancel-btn1 {
@@ -398,7 +405,7 @@ body {
     font-weight: 500;
     border-radius: 5px;
     padding: 6px 12px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     border: 1px solid rgb(2, 17, 79) !important;
 }
 .comment-btn {
@@ -412,7 +419,7 @@ body {
     border: none;
     outline: none;
     color: white;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     margin-top: 10px;
     border-radius: 3px;
 }
@@ -484,7 +491,7 @@ body {
 }
 
 .text-danger {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 
 /* Style the "View File" link */
@@ -506,7 +513,7 @@ button.close-button {
     color: rgb(2, 17, 79);
     cursor: pointer;
     margin-right: 15px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     text-decoration: none;
 }
 
@@ -537,7 +544,7 @@ button.close-button {
 
 .text-gray {
     color: #778899;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 
 .col-6 {
@@ -553,9 +560,12 @@ button.close-button {
     margin-top: 30px;
     border-radius: 5px;
 }
+.people-search-btn {
+    color: #fff;
+}
 
 .text-danger {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 
 .rotate {
@@ -610,7 +620,7 @@ button.close-button {
 }
 
 .tab {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     cursor: pointer;
     transition: color 0.3s ease-in-out;
 }
@@ -621,7 +631,7 @@ button.close-button {
 
 .jump-to {
     cursor: pointer;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     margin-top: 5px;
     transition: color 0.3s ease-in-out;
     border: none;
@@ -642,7 +652,7 @@ button.close-button {
 .button-dl {
     width: 100%;
     max-width: 120px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     padding: 10px;
     background-color: white;
     border: none;
@@ -771,7 +781,7 @@ button.close-button {
 }
 .sidebar-heading {
     color: #4d5256;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     text-transform: uppercase;
     font-weight: 600;
 }
@@ -807,7 +817,7 @@ button.close-button {
 .nav-item .nav-link {
     color: #6c7e90;
     text-decoration: none;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     cursor: pointer;
     font-weight: 500;
     /* padding: 0 auto; */
@@ -921,7 +931,6 @@ button.close-button {
     display: block;
 }
 
-
 @media only screen and (max-width: 768px) {
     .displayNone {
         display: none !important;
@@ -968,7 +977,7 @@ button.close-button {
 }
 
 .employee-count-who-is-in {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 
     padding-top: 5px;
 }
@@ -1028,7 +1037,7 @@ button.close-button {
 .search-text::placeholder {
     font-weight: 60;
     /* Change the font weight */
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     /* Change the font size */
     color: #6c757d;
 }
@@ -1062,7 +1071,7 @@ input::placeholder {
     text-align: left;
     width: 100%;
     font-weight: normal;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #6c757d;
 }
 
@@ -1120,7 +1129,7 @@ input[type="date"]::before {
     margin-right: 10px;
 }
 .form-group label {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: var(--label-color);
     font-weight: 500;
 }
@@ -1186,7 +1195,7 @@ input[type="date"]::before {
 }
 
 .shift-selector-who-is-in::placeholder {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     /* Adjust font size as needed */
     font-weight: 500;
     /* Adjust font weight as needed */
@@ -1314,7 +1323,7 @@ td {
 
 .employee-swipes-table th {
     font-weight: bold;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 
 .dropdown-container1-employee-swipes input[type="text"] {
@@ -1322,10 +1331,10 @@ td {
     border: 1px solid #ccc;
     border-radius: 4px;
     width: 200px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 .employee-swipes-table td {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 .green-section-employee-swipes {
     height: 150px;
@@ -1342,7 +1351,7 @@ td {
 }
 .record-not-found-who-is-in {
     text-align: center;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 .dropdown-container1-employee-swipes:hover .dropdown-content1-employee-swipes {
     display: block;
@@ -1356,7 +1365,7 @@ td {
     border: 1px solid #ccc;
     border-radius: 4px;
     height: 30px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 .button2 {
     margin-top: 30px;
@@ -1368,7 +1377,7 @@ td {
 
 .dropdown-btn1::after {
     content: "\25BE"; /* Unicode character for a down-pointing triangle */
-    font-size: var( --normal-font-size); /* Adjust the size of the arrow */
+    font-size: var(--normal-font-size); /* Adjust the size of the arrow */
     margin-left: 5px; /* Add some spacing between the text and arrow */
 }
 
@@ -1419,7 +1428,7 @@ td {
 }
 .green-section-employee-swipes h6 {
     margin-top: 10px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #000;
 }
 
@@ -1437,7 +1446,7 @@ td {
 }
 .employee-swipes-name-and-id {
     white-space: nowrap;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     padding-left: 10px;
 }
 .employee-swipes-checkbox {
@@ -1469,12 +1478,12 @@ td {
     margin-top: -5px;
 }
 .swipe-deatils-title {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #778899;
     margin-bottom: 0;
 }
 .swipe-details-description {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
 }
 
@@ -1705,7 +1714,7 @@ td {
 
 .text-xs {
     /* Font size */
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: black;
 }
 
@@ -1898,23 +1907,23 @@ td {
 .emoji-selector li {
     margin: 5px;
 }
-    /* Define CSS for the menu items */
-    .menu-item {
-        transition: background-color 0.3s ease;
-        text-decoration:none;
-    }
+/* Define CSS for the menu items */
+.menu-item {
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
 
-    /* Define CSS for the menu items on hover */
-    .menu-item:hover {
-         background-color: #EDF3FF;
-         border-radius: 5px;
-        height:auto;
-        width: 130%;
-        text-decoration:none;
-    }
+/* Define CSS for the menu items on hover */
+.menu-item:hover {
+    background-color: #edf3ff;
+    border-radius: 5px;
+    height: auto;
+    width: 130%;
+    text-decoration: none;
+}
 
- /* CSS for when radio button is checked */
- .input[type="radio"]:checked+.radio-label {
+/* CSS for when radio button is checked */
+.input[type="radio"]:checked + .radio-label {
     background-color: #e1e7f0;
     /* Change background color when checked */
 }
@@ -1931,11 +1940,11 @@ input[type="radio"] {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background-color: #D8D8D8;
+    background-color: #d8d8d8;
     /* You can change this to any desired background color */
 }
-   /* Define the blue background color for the checked state */
-   .input[type="radio"]:checked+.custom-radio-button {
+/* Define the blue background color for the checked state */
+.input[type="radio"]:checked + .custom-radio-button {
     background-color: blue;
 }
 
@@ -1954,38 +1963,37 @@ input[type="radio"] {
     /* Adjust the stroke width as needed */
 }
 
-
 .sort {
-        border: none;
-        background: none;
-        font-size: 1rem;
-        margin-left: 2px;
-        padding: 2px ;
-        align-items: end;
-    }
-    .sort:focus {
-        outline: none;
-    }
+    border: none;
+    background: none;
+    font-size: 1rem;
+    margin-left: 2px;
+    padding: 2px;
+    align-items: end;
+}
+.sort:focus {
+    outline: none;
+}
 .feather {
     width: 1rem;
     height: 1rem;
-    color: #6B46C1;
+    color: #6b46c1;
     /* You can change this to any desired icon color */
 }
 
 .activities,
 .posts {
-height: 60px; /* Fixed height */
-display: flex;
-align-items: center;
-padding: 5px;
-width: 100%;
-border-radius: 5px;
+    height: 60px; /* Fixed height */
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    width: 100%;
+    border-radius: 5px;
 }
 
 .activities:hover,
 .posts:hover {
-background-color: #EDF3FF;
+    background-color: #edf3ff;
 }
 
 .medium-header {
@@ -1994,9 +2002,9 @@ background-color: #EDF3FF;
     font-size: 0.875rem;
     line-height: 1.25rem;
     color: var(--e-color-emoji-text);
-  
-  margin-left: 20px;
-  margin-top:5px
+
+    margin-left: 20px;
+    margin-top: 5px;
 }
 /* CSS for radio-wrapper */
 .radio-wrapper {
@@ -2057,6 +2065,7 @@ input[type="radio"] {
 }
 
 /* start of leave-page styles  (Divya)*/
+/* General button styles */
 .nav-buttons {
     text-decoration: none;
     cursor: pointer;
@@ -2064,7 +2073,7 @@ input[type="radio"] {
     transition: color 0.3s;
 }
 
-/* Define custom tabs for CSS classes */
+/* Custom tab styles */
 .custom-nav-tabs {
     margin-top: 10px;
     background-color: #fff;
@@ -2075,14 +2084,16 @@ input[type="radio"] {
     color: #778899;
     padding: 0;
     margin: 0;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 
+/* Individual tab item */
 .custom-nav-tabs .custom-item {
     flex-grow: 1;
     overflow: hidden;
 }
 
+/* Link styles for tabs */
 .custom-nav-link {
     color: #778899;
     padding: 8px 30px;
@@ -2093,22 +2104,26 @@ input[type="radio"] {
     box-sizing: border-box;
 }
 
+/* Hover state for tabs */
 .custom-nav-link:hover {
-    color: rgb(2, 17, 79);
+    color: rgb(2, 17, 79) !important;
     background-color: #fff;
     border-color: rgb(2, 17, 79);
 }
 
+/* Active tab styling */
 .custom-nav-link.active {
-    color: white;
-    background-color: rgb(2, 17, 79);
+    color: white !important;
+    background-color: rgb(2, 17, 79) !important;
     border-color: rgb(2, 17, 79);
     border-bottom-color: transparent;
 }
 
+/* Ensure links inside items don't inherit text-decoration */
 .custom-item a {
     text-decoration: none !important;
 }
+
 .alert-success {
     font-size: 12px;
     padding: 7px 10px;
@@ -2174,16 +2189,16 @@ input[type="radio"] {
         width: 100% !important;
         margin: 0 auto;
     }
-    .form-control{
+    .form-control {
         width: 100%;
     }
-    .accordion{
+    .accordion {
         overflow-x: auto;
         max-width: 90%;
     }
 }
 .applyingFor {
-    color: var( --main-heading-color);
+    color: var(--main-heading-color);
     font-size: 14px;
     font-weight: 500;
     text-align: start;
@@ -2196,7 +2211,7 @@ input[type="radio"] {
 }
 .requiredMark {
     color: var(--requiredAlert);
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 
 .accordion:hover {
@@ -2204,7 +2219,7 @@ input[type="radio"] {
 }
 
 .info-paragraph {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
     color: #3a9efd;
     cursor: pointer;
@@ -2212,24 +2227,24 @@ input[type="radio"] {
 .hideInfo {
     font-weight: 500;
     color: #3a9efd;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     cursor: pointer;
 }
 .hide-leave-info {
     background-color: #ffffe8;
-    color: var( --main-heading-color);
+    color: var(--main-heading-color);
 }
 /* CSS Stylesheet */
 .addText {
     cursor: pointer; /* Ensure cursor is pointer on hover */
     background: none;
     color: var(--label-color);
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 
 .empCcName {
-    color: var( --main-heading-color);
-    font-size: var( --normal-font-size);
+    color: var(--main-heading-color);
+    font-size: var(--normal-font-size);
     font-weight: 500;
     text-transform: capitalize;
     max-width: 110px;
@@ -2373,17 +2388,17 @@ input[type="radio"] {
 }
 .accordionContentSpan {
     color: #778899;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
 }
-.headers-details{
+.headers-details {
     font-size: var(--main-headings-font-size);
     color: var(--main-heading-color);
     font-weight: 500;
 }
 .accordionContentSpanValue {
     color: #36454f;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
 }
 .hide-info {
@@ -2392,7 +2407,7 @@ input[type="radio"] {
     background: #fffff2;
     gap: 50px;
     padding: 5px 10px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     text-align: start;
     align-items: center;
 }
@@ -2407,7 +2422,7 @@ input[type="radio"] {
     font-size: 13px !important;
     color: black !important;
 }
-.form-control{
+.form-control {
     font-size: var(--sub-headings-font-size);
 }
 #category::placeholder {
@@ -2420,7 +2435,7 @@ input[type="radio"] {
     text-overflow: ellipsis;
     display: block;
     max-width: 80px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
     margin-bottom: 0;
     color: #000;
@@ -2429,7 +2444,7 @@ input[type="radio"] {
 /* //leave apply styles */
 .leave-type-hide {
     display: inline-block;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     max-width: 110px; /* Adjust this value as needed */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2439,7 +2454,7 @@ input[type="radio"] {
 }
 .category-type-hide {
     display: inline-block;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     max-width: 110px; /* Adjust this value as needed */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2451,7 +2466,7 @@ input[type="radio"] {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #778899;
     font-weight: 500;
 }
@@ -2596,7 +2611,7 @@ input[type="radio"] {
     margin-top: 15px;
 }
 .ellipsis {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
@@ -2651,11 +2666,16 @@ input[type="radio"] {
     justify-content: center;
     align-items: center;
 }
-.sickLeaveBalance{
-    font-size: var(--normal-font-size); font-weight: 500; color: var(--main-heading-color); margin-left: 5px;
+.sickLeaveBalance {
+    font-size: var(--normal-font-size);
+    font-weight: 500;
+    color: var(--main-heading-color);
+    margin-left: 5px;
 }
-.Insufficient{
-    color: var(--requiredAlert); font-weight: normal;font-size:var(--normal-font-size);
+.Insufficient {
+    color: var(--requiredAlert);
+    font-weight: normal;
+    font-size: var(--normal-font-size);
 }
 
 /* end of leave apply */
@@ -2714,11 +2734,15 @@ input[type="radio"] {
     margin: 0.975rem auto;
 }
 
-.leave-type{
-    color: #605448; font-size: 12px; font-weight: 600;
+.leave-type {
+    color: #605448;
+    font-size: 12px;
+    font-weight: 600;
 }
-.leaveTypeTitle{
-    color: var(--sub-heading-color); font-size: var(--sub-headings-font-size); font-weight: 500;
+.leaveTypeTitle {
+    color: var(--sub-heading-color);
+    font-size: var(--sub-headings-font-size);
+    font-weight: 500;
 }
 .pay-bal {
     display: flex;
@@ -2757,7 +2781,7 @@ input[type="radio"] {
 
 .group h5 {
     font-weight: 400;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2770,31 +2794,31 @@ input[type="radio"] {
 .custom-grid-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Creates two equal columns */
-  }
+}
 
-  .custom-grid-item {
+.custom-grid-item {
     display: flex;
     flex-direction: column;
     gap: 10px; /* Space between rows within the same column */
-  }
+}
 
-  .custom-label {
+.custom-label {
     font-weight: normal;
     font-size: var(--normal-font-size);
     color: var(--label-color);
-  }
-  
-  .custom-value {
+}
+
+.custom-value {
     font-weight: normal;
     color: var(--main-heading-color);
     font-size: var(--normal-font-size);
-  }
-  
-  .custom-cc-item {
+}
+
+.custom-cc-item {
     font-weight: normal;
     color: var(--main-heading-color);
     font-size: var(--normal-font-size);
-  }
+}
 .cirlce {
     height: 0.75rem;
     width: 0.75rem;
@@ -2811,7 +2835,7 @@ input[type="radio"] {
     color: #778899;
     font-weight: 500;
     background-color: #fff;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 .remainContent {
     color: #0000ff;
@@ -2848,7 +2872,7 @@ input[type="radio"] {
     align-items: center;
     line-height: 1.6;
 }
-.leavePageContent{
+.leavePageContent {
     padding: 10px;
 }
 @media screen and (max-width: 1060px) {
@@ -2880,14 +2904,13 @@ input[type="radio"] {
         display: flex;
         flex-direction: column;
     }
-
 }
 @media screen and (max-width: 460px) {
-    .leavePageContent{
+    .leavePageContent {
         padding: 0;
         margin: 0;
     }
-    .view-container{
+    .view-container {
         width: 100%;
     }
 }
@@ -2914,7 +2937,7 @@ input[type="radio"] {
     border: 1px solid rgb(2, 17, 79);
     padding: 3px 5px;
     color: #fff;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
     border-radius: 5px;
 }
@@ -2923,7 +2946,7 @@ input[type="radio"] {
     border: 1px solid rgb(2, 17, 79);
     padding: 3px 5px;
     color: rgb(2, 17, 79);
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
     border-radius: 5px;
 }
@@ -2987,7 +3010,7 @@ input[type="radio"] {
 .header-style {
     background-color: #ecf5ff;
     font-weight: normal;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #778899;
     text-align: start;
 }
@@ -2998,7 +3021,7 @@ input[type="radio"] {
 }
 .leaveApply-balance-buttons {
     background-color: rgb(2, 17, 79);
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
     color: white;
     border: none;
@@ -3030,12 +3053,12 @@ input[type="radio"] {
     transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 .balance {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #778899;
     padding: 10px 15px;
 }
 .field {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
 }
 .bal-container .row.my-3 .col-md-4 > .leave-bal {
@@ -3055,7 +3078,7 @@ input[type="radio"] {
     flex-direction: column;
 }
 .label-style {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #778899;
     font-weight: 500;
 }
@@ -3129,7 +3152,7 @@ input[type="radio"] {
 .inner-container h6 {
     font-weight: 600;
     margin-bottom: 0px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 
 .inner-container .fest h5 {
@@ -3709,7 +3732,7 @@ select .yearSelect {
     border-radius: 5px;
 }
 ::placeholder {
-    font-size: var( --normal-font-size); /* Adjust the font size as needed */
+    font-size: var(--normal-font-size); /* Adjust the font size as needed */
     color: #778899;
 }
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
@@ -3735,7 +3758,7 @@ select .yearSelect {
 /* attendace muster styles by pranitha and uttej */
 .legend-text {
     color: #778899;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 /* end of attendace muster styles by pranitha and uttej */
 
@@ -3823,7 +3846,7 @@ select .yearSelect {
     margin: 0px 4px 8px 0px;
     display: inline-block;
     cursor: pointer;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #778899;
 }
 .helpChip:hover {
@@ -4199,7 +4222,7 @@ option {
 .employee-timesheet span {
     margin-bottom: 0;
     color: #778899;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     max-width: 100%;
     overflow-x: auto;
     font-weight: normal;
@@ -4207,12 +4230,12 @@ option {
 .employee-timesheet .week-details-heading {
     margin-bottom: 0;
     color: #778899;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
 }
 .timesheet-table {
     border-collapse: collapse;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 
 .timesheet-table th,
@@ -4235,7 +4258,7 @@ option {
     border-bottom: 2px solid #dee2e6; /* Make header border thicker */
 }
 .timesheet-table td {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #778899;
     font-weight: normal;
     border-bottom: 1px solid #dee2e6;
@@ -4250,13 +4273,13 @@ option {
 }
 .placeholder-timesheet {
     color: #000;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 .basic-container {
     border-radius: 10px;
     display: flex;
     border: 1px solid #bbc3cc;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 500;
     color: #47515b;
 }
@@ -4284,7 +4307,7 @@ option {
     font-size: 11px;
 }
 .notification-head {
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
 }
 .notification-text-para {
     color: #535f6b;
@@ -4446,7 +4469,7 @@ option {
 }
 .chat-employee-name {
     color: #333;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     font-weight: 600;
 }
 .chat-emp-details {
@@ -4467,7 +4490,7 @@ option {
 .employee-asset-details th,
 .employee-asset-details td {
     width: 150px;
-    font-size: var( --normal-font-size);
+    font-size: var(--normal-font-size);
     color: #fff;
     font-weight: 500;
     border-bottom: 1px solid #ccc; /* Add horizontal borders */
@@ -4599,7 +4622,6 @@ option {
     height: 40px;
 }
 
-
 /* ////dropdown styles */
 .custom-select-wrapper {
     position: relative;
@@ -4611,8 +4633,8 @@ option {
     appearance: none;
     background: #ffffff;
     border: 1px solid #ced4da;
-    border-radius: .25rem;
-    padding: .375rem .75rem;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
     font-size: 12px;
     width: 100%;
     cursor: pointer;
@@ -4620,10 +4642,10 @@ option {
 }
 
 .custom-select-wrapper::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
-    right: .5rem;
+    right: 0.5rem;
     width: 0;
     height: 0;
     border-left: 0.4rem solid transparent; /* Width of the arrow */
@@ -4638,35 +4660,34 @@ option {
     box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
 }
 
-.privacy{
+.privacy {
     color: #39363f;
     font-size: 38.5px;
-    margin:0px;
+    margin: 0px;
     font-weight: 600;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin-bottom: 20px;
 }
-.privacyContent{
-    margin: 10px 0px ;
+.privacyContent {
+    margin: 10px 0px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 20px;
     color: #333;
 }
-.privacycontentlinks{
+.privacycontentlinks {
     color: #3a9efd;
     text-decoration: none;
 }
 
-.privacyheadings{
-    margin: 25px 0px ;
+.privacyheadings {
+    margin: 25px 0px;
     color: #4d4d4d;
     font-size: 24.5px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 600;
-
 }
-.privacyLabelContent{
+.privacyLabelContent {
     font-size: 14px;
     font-weight: 600;
 }

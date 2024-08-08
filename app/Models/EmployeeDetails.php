@@ -53,11 +53,6 @@ class EmployeeDetails extends Authenticatable
         'probation_Period',
         'service_age',
         'confirmation_date',
-
-
-
-
-
     ];
     public function empBankDetails()
     {
@@ -97,7 +92,6 @@ class EmployeeDetails extends Authenticatable
     {
 
         return $this->emp_id === 'emp_id'  || $this->hasPermission('create-post');
-
     }
 
     // Inside the EmployeeDetails model
@@ -109,11 +103,14 @@ class EmployeeDetails extends Authenticatable
     public function conversations()
     {
 
-        return $this->hasMany(Chating::class,'sender_id')->orWhere('receiver_id',$this->emp_id)->whereNotDeleted();
-
+        return $this->hasMany(Chating::class, 'sender_id')->orWhere('receiver_id', $this->emp_id)->whereNotDeleted();
     }
     public function personalInfo()
     {
         return $this->hasOne(EmpPersonalInfo::class, 'emp_id', 'emp_id');
+    }
+    public function getImageUrlAttribute()
+    {
+        return 'data:image/jpeg;base64,' . base64_encode($this->attributes['image']);
     }
 }

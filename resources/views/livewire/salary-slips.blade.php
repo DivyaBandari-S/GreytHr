@@ -1,13 +1,10 @@
 <div>
 
  <div style="text-align: center;display:flex;align-items:center;justify-content:end;">
+ <button type="button" class="leave-balance-dowload mx-2 px-2 rounded " wire:click.prevent="downloadPdf">
+            <i class="fas fa-download" style="color: white;"></i>
+        </button>
 
- <button type="button" class="dowload mx-2 px-2 rounded" style="background-color: rgb(2, 17, 79)">
-    <a href="#" wire:click.prevent="downloadPdf" class="pdf-download btn-primary px-3 rounded d-flex align-items-center" style="color: white; text-decoration: none;">
-        <i class="bx bx-download" style="color: white;"></i>
-       
-    </a>
-</button>
 
 
    
@@ -145,7 +142,7 @@
         </div>
         <div class="detail">
            <p class="emp-details-p">Designation <br>
-                <span class="emp-details-span">{{ empty($employee->job_title) ? '-' : ucwords(strtolower($employee->job_title)) }}</span>
+                <span class="emp-details-span">{{ empty($employee->job_role) ? '-' : ucwords(strtolower($employee->job_role)) }}</span>
             </p>
         </div>
         <div class="detail">
