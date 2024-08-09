@@ -57,7 +57,8 @@ class Home extends Component
 
     public $showAllLateEmployees = false;
 
-    public $showAllEarlyEmployees = false;
+    public $employee_details;
+    public $showAllEarlyEmployees=false;
     public $grossPay;
     public $deductions;
     public $netPay;
@@ -152,6 +153,7 @@ class Home extends Component
         //     ->get();
 
         $currentHour = date('G');
+     
         if ($currentHour >= 4 && $currentHour < 12) {
             $this->greetingImage = 'morning.jpeg';
             $this->greetingText = 'Good Morning';
@@ -503,7 +505,7 @@ class Home extends Component
                     ->whereIn('emp_id', $employees->pluck('emp_id'))
                     ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
                     ->whereDate('created_at', $currentDate)
-                    ->whereRaw("swipe_time > TIME(DATE_ADD(employee_details.shift_start_time, INTERVAL 1 MINUTE))") // Add this condition to filter swipes before 10:00 AM
+                    ->whereRaw("swipe_time > TIME(employee_details.shift_start_time)") // Add this condition to filter swipes before 10:00 AM
                     ->groupBy('emp_id');
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')

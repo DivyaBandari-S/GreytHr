@@ -55,6 +55,7 @@ class Regularisation extends Component
     public $regularisationEntries=[];
     public $manager1;
    
+    public $withdrawModal=false;
     public $storedArray;
 
     public $storedArray1;
@@ -369,13 +370,20 @@ public function historyButton()
             session()->flash('error', 'An error occurred while updating count.');
         }
     }
-    
+    public function openWithdrawModal()
+    {
+        $this->withdrawModal=true;
+    }
+    public function closewithdrawModal()
+    {
+        $this->withdrawModal=false;   
+    }
        
     public function render()
     {
         try {
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-            $s4 = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->pluck('report_to')->first();
+            $s4 = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->pluck('manager_id')->first();
             $employeeDetails = EmployeeDetails::select('manager_id')
                 ->where('emp_id', $loggedInEmpId)
                 ->first();  
@@ -393,10 +401,11 @@ public function historyButton()
                 ->where('is_withdraw', 0)
                 ->orderByDesc('id')
                 ->get();
-            
+           
             $this->pendingRegularisations = $pendingRegularisations->filter(function ($regularisation) {
                 return $regularisation->regularisation_entries !== "[]";
             });
+        
     
             $historyRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
                 ->whereIn('status', ['pending', 'approved', 'rejected'])
@@ -405,8 +414,8 @@ public function historyButton()
             $this->historyRegularisations = $historyRegularisations->filter(function ($regularisation) {
                 return $regularisation->regularisation_entries !== "[]";
             });
-           
-            $manager = EmployeeDetails::select('manager_id', 'report_to')->distinct()->get();   
+          
+            $manager = EmployeeDetails::select('manager_id')->distinct()->get();   
             $this->data10 = RegularisationDates::where('status', 'pending')->get();
             $this->manager1 = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
             $this->data = RegularisationDates::where('is_withdraw', '0')->count();
