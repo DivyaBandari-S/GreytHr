@@ -162,7 +162,7 @@
                     <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
                 </ul>
             </div>
-            <div class="pointer" title="Logout">@livewire('log-out')</div>
+            <div>@livewire('log-out')</div>
         </nav>
         <!-- NAVBAR -->
     </section>

@@ -944,6 +944,159 @@ button.close-button {
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
+.toggle-box-container-who-is-in {
+    float: right;
+    display: flex;
+    align-items: center;
+  }
+  .checkbox-label-who-is-in {
+    font-size: 12px;
+    /* Text size */
+    /* Text color */
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    /* Center items vertically */
+  }
+
+  .checkbox-label-who-is-in input {
+    margin-right: 5px;
+    /* Space between checkbox and text */
+  }
+
+
+  .wide-short-container-who-is-in {
+    width: 100%;
+    /* Adjust width as needed */
+    height: 80px;
+    /* Adjust height as needed */
+    background-color: transparent;
+    /* Background color */
+    border: 1px solid rgb(211, 211, 211);
+    /* Border */
+    border-radius: 5px;
+    /* Rounded corners */
+    margin-top: 50px;
+    /* Adjust spacing as needed */
+    padding: 10px;
+    /* Padding inside the container */
+
+
+  }
+
+
+.switch-who-is-in {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    /* Reduced width */
+    height: 20px;
+    /* Reduced height */
+  }
+  .switch-who-is-in input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider{
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border: 1px solid #666;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    /* Reduced height */
+    width: 12px;
+    /* Reduced width */
+    left: 4px;
+    /* Adjusted to fit smaller slider */
+    bottom: 4px;
+    /* Adjusted to fit smaller slider */
+    background-color: #666;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  input:checked+.slider {
+    background-color: #2196F3;
+    border: 1px solid #2196F3;
+  }
+
+  input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+    background-color: white;
+
+  }
+
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+
+  .total-employee-count-who-is-in{
+    font-size: 12px;
+    /* Text size */
+    color: #059212;
+    /* Text color */
+    padding-bottom: 10px;
+  }
+  .time-range-who-is-in{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .time-range-who-is-in .start-time-who-is-in,
+  .time-range-who-is-in .end-time-who-is-in {
+    font-size: 12px;
+    /* Text size */
+    color: #778899;
+    /* Text color */
+    margin: 0 10px;
+    /* Adjust spacing as needed */
+  }
+  .time-separator-who-is-in{
+    width: 100%;
+    /* Full width */
+    height: 1px;
+    /* Height of the line */
+    background-color: #778899;
+    /* Line color */
+    margin: 0 10px;
+    /* Adjust spacing as needed */
+  }
+  .save-selectshift-button-who-is-in {
+    background-color: transparent;
+    border: 1px solid #007bff;
+    color: #007bff;
+
+  }
+
+  .save-selectshift-button-who-is-in:hover {
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    color: white;
+
+  }
 
 .container-box-for-employee-information-who-is-in {
     width: 82%;
@@ -1067,7 +1220,7 @@ input::placeholder {
 
 /* CSS for the table header cells (th) */
 .who-is-in-table th {
-    padding: 5px 20px;
+    padding: 3px 12px;
     text-align: left;
     width: 100%;
     font-weight: normal;
@@ -1078,6 +1231,7 @@ input::placeholder {
 .who-is-in-table td {
     padding: 5px 20px;
     text-align: left;
+    color:#3b4452;
 }
 
 input[type="date"]::before {
@@ -1489,6 +1643,15 @@ td {
 
 /*ending of attendance submodule:employee swipes(Pranita Priyadarshi)*/
 /*starting of attendance submodule:attendance muster(Pranita Priyadarshi)*/
+.down-arrow-ign-attendance-info-attendance-muster {
+    width: 0;
+    height: 0;
+    /* border-left: 20px solid transparent; */
+    border-right: 17px solid transparent;
+    border-bottom: 17px solid #677a8e;
+    margin-right: 5px;
+}
+
 .search-bar-attendance-muster {
     display: flex;
     padding: 0;

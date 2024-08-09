@@ -16,10 +16,12 @@ class AttendanceRegularisationReport extends Component
 
     public $selectedStatus = '';
 
+    public $employees;
     public $fromDate;
 
     public $toDate;
 
+   
     public $regularisationDetails;
     public function updateselectedStatus()
     {
@@ -37,7 +39,8 @@ class AttendanceRegularisationReport extends Component
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
         $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
-        $employeeIds = $employees->pluck('emp_id')->toArray();
+     
+        $employeeIds = $this->employees->pluck('emp_id')->toArray();
         if ($this->selectedStatus == 'applied') {
             if ($this->fromDate && $this->toDate) {
                 $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
@@ -136,8 +139,9 @@ class AttendanceRegularisationReport extends Component
     public function render()
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-        $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
-        $employeeIds = $employees->pluck('emp_id')->toArray();
+        $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','employee_status')->get();
+      
+        $employeeIds = $this->employees->pluck('emp_id')->toArray();
         if ($this->selectedStatus == 'applied') {
             if ($this->fromDate && $this->toDate) {
                 $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $employeeIds)
