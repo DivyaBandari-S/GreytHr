@@ -218,44 +218,31 @@
         <div class="homeCard6" style="padding:10px 15px;">
             <div style="display:flex; justify-content:space-between;">
                 <p style="font-size:12px;color:#778899;font-weight:500;">Upcoming Holidays</p>
-                <a href="/holiday-calender" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
+                <a href="/holiday-calendar" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
             </div>
-
             @if($calendarData->isEmpty())
             <p style="color:#778899;font-size:10px;">Uh oh! No holidays to show.</p>
             @else
-            @php
-            $count = 0;
-            @endphp
-
             <div class="row m-0">
                 <div class="col-7 p-0">
                     @foreach($calendarData as $entry)
-                    @if(!empty($entry->festivals))
                     <div>
-                        <p style="color: #677A8E; font-size: 11px;margin-bottom:10px; ">
-                            <span style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }} <span style="font-size: 10px; font-weight: normal;">{{ date('l', strtotime($entry->date)) }}</span></span>
+                        <p style="color: #677A8E; font-size: 11px;margin-bottom:10px;">
+                            <span style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }}
+                                <span style="font-size: 10px; font-weight: normal;">{{ date('l', strtotime($entry->date)) }}</span>
+                            </span>
                             <br>
                             <span style="font-size: 11px; font-weight: normal;">{{ ucfirst($entry->festivals) }}</span>
                         </p>
                     </div>
-                    @php
-                    $count++;
-                    @endphp
-                    @endif
-
-                    @if($count >= 3)
-                    @break
-                    @endif
                     @endforeach
                 </div>
                 <div class="col-5 m-auto p-0">
-                    <img src="/images/A day off.gif" style="width: 8em">
+                    <img src="/images/A day off.gif" style="width: 5em">
                 </div>
             </div>
-
-
             @endif
+
         </div>
     </div>
 </div>

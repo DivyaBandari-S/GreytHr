@@ -37,9 +37,13 @@ class DataEntryForEmail extends Component
             'cc_email' => 'nullable|email',
             'subject' => 'required|string',
         ]);
-
+        SentEmail::create([
+            'to_email' => $this->to_email,
+            'cc_email' => $this->cc_email,
+            'subject' => $this->subject,
+        ]);
         // Send email immediately without storing in database
-        $this->sendEmails($this->subject);
+        //Artisan::call('export:data-entries', ['--subject' => $this->subject]);
 
         // Optionally, you can clear the form fields after sending
         $this->to_email = '';
@@ -51,11 +55,11 @@ class DataEntryForEmail extends Component
         return redirect()->to(url()->previous());
     }
 
-    public function sendEmails($subject)
-    {
-        // Call the Artisan command to trigger export:data-entries with immediate send
-        Artisan::call('export:data-entries', ['--subject' => $subject]);
-    }
+    // public function sendEmails($subject)
+    // {
+    //     // Call the Artisan command to trigger export:data-entries with immediate send
+    //     Artisan::call('export:data-entries', ['--subject' => $subject]);
+    // }
 
     public function scheduleEmails()
     {
@@ -71,6 +75,7 @@ class DataEntryForEmail extends Component
             'to_email' => $this->to_email,
             'cc_email' => $this->cc_email,
             'subject' => $this->subject,
+            'status' =>'pending',
             'scheduled_time' => $this->scheduled_time,
         ]);
         // Clear form fields after storing
@@ -87,17 +92,21 @@ class DataEntryForEmail extends Component
 
     public function scheduleEmailDefault()
     {
-        // Set default scheduled time to every 15 minutes
-        $scheduledTime = Carbon::now()->addMinutes(30);
+        $scheduledTime = Carbon::now()->addMinutes(5);
+
+        // Format scheduled time as 'Y-m-d H:i'
+        $formattedScheduledTime = $scheduledTime->format('Y-m-d H:i');
 
         // Save email data with scheduled time
         SentEmail::create([
             'to_email' => $this->to_email ?? 'bandaridivya1@gmail.com',
             'cc_email' => $this->cc_email,
             'subject' => $this->subject,
-            'scheduled_time' => $scheduledTime,
+            'status' => 'default',
+            'scheduled_time' => $formattedScheduledTime,
         ]);
-
+        $this->cc_email = '';
+        $this->subject = '';
         session()->flash('message', 'Email scheduled successfully.');
     }
 
