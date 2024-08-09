@@ -48,9 +48,9 @@
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;"
+                    <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;"
                         class="custom-nav-link {{ $activeTab === 'open' ? 'active' : '' }}"
-                        wire:click.prevent="setActiveTab('open')">Open</a>
+                        wire:click.prevent="setActiveTab('open')">Open</div>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">
                     <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;"
