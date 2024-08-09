@@ -358,7 +358,7 @@ class HelpDesk extends Component
                 'subject' => $this->subject,
                 'description' => $this->description,
                 'file_path' => $filePath,
-                'cc_to' => $this->cc_to,
+                'cc_to' => $this->cc_to??'-',
                 'priority' => $this->priority,
                 'mail' => 'N/A',
                 'mobile' => 'N/A',

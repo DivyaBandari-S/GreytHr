@@ -31,8 +31,8 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-5 justify-content-center"
                 style="overflow-y: auto; height: 100vh;">
                 @forelse ($employeeDetails as $key => $employee)
-                    <div class="col-lg-4 mb-6"> <!-- Increase width to col-lg-4 -->
-                        <div class="card" style="width: 250px;">
+                    <div class="col-lg-3 mb-6"> <!-- Increase width to col-lg-4 -->
+                        <div class="card" style="width: 200px;">
                             <div class="col d-flex align-items-center justify-content-center mt-4">
                                 @if ($employee->image)
                                     <div>

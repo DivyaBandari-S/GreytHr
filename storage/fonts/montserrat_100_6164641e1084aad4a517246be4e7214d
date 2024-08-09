@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Support\Facades\Storage;
+
+// Define the path for the file
+$directoryPath = storage_path('fonts');
+$filePath = $directoryPath . DIRECTORY_SEPARATOR . 'montserrat_100_6164641e1084aad4a517246be4e7214d.ufm';
+
+try {
+    // Create the directory if it doesn't exist
+    if (!file_exists($directoryPath)) {
+        mkdir($directoryPath, 0755, true);
+    }
+
+    // Create the file if it doesn't exist
+    if (!file_exists($filePath)) {
+        $file = fopen($filePath, 'w');
+        fclose($file);
+    }
+
+    echo "File created successfully: " . $filePath;
+} catch (Exception $e) {
+    echo "Error creating file: " . $e->getMessage();
+}
+

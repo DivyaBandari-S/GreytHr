@@ -1,7 +1,7 @@
 <div>
 
  <div style="text-align: center;display:flex;align-items:center;justify-content:end;">
- <button type="button" class="leave-balance-dowload mx-2 px-2 rounded " wire:click.prevent="downloadPdf">
+ <button type="button" class="leave-balance-dowload mx-2 px-2 rounded " wire:click="downloadPdf">
             <i class="fas fa-download" style="color: white;"></i>
         </button>
 

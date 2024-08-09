@@ -11,13 +11,38 @@ use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Support\Facades\Auth;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+
 class DownloadPdf extends Component
 {
     public $employeeDetails;
     public $salaryRevision;
     public $empBankDetails;
     public $companies;
-
+    public function downloadPdf()
+    {
+    
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
+        $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
+        $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
+    
+        $data = [
+            'employees' => $this->employeeDetails,
+            'salaryRevision' => $this->salaryRevision,
+            'empBankDetails' => $this->empBankDetails,
+            'netPay' => $this->calculateNetPay()
+        ];
+    
+        $dompdf = new Dompdf();
+        $dompdf->set_option('font_dir', storage_path('fonts'));
+        $dompdf->set_option('font_cache', storage_path('fonts/cache'));
+        $dompdf->loadHtml(view('download-pdf', $data)->render());
+        $dompdf->render();
+    
+        return $dompdf->stream('salary-slips.pdf');
+    }
+    
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -37,27 +62,6 @@ class DownloadPdf extends Component
         ]);
     }
 
-    public function downloadPdf()
-    {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
-        $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
-        $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
-
-        $data = [
-            'employees' => $this->employeeDetails,
-            'salaryRevision' => $this->salaryRevision,
-            'empBankDetails' => $this->empBankDetails,
-          
-            'netPay' => $this->calculateNetPay()
-        ];
-
-        $pdf = PDF::loadView('pdf.download-pdf', $data);
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, 'download-pdf.pdf');
-    }
 
     private function calculateNetPay()
     {
