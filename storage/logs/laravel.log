@@ -14709,3 +14709,16 @@ Cookie: XSRF-TOKEN=v36BKgvUy0LHswzzfViXHUPu0K3nETNxcXnl3A0B; laravel_session=IdK
 
 
 "}} 
+[2024-08-09 08:08:22] local.INFO: Session has timed out  
+[2024-08-09 08:09:18] local.INFO: Session has timed out  
+[2024-08-09 08:10:49] local.ERROR: Maximum execution time of 90 seconds exceeded {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Maximum execution time of 90 seconds exceeded at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:65)
+[stacktrace]
+#0 {main}
+"} 
+[2024-08-09 08:13:38] local.INFO: Session has timed out  
+[2024-08-09 08:14:49] local.INFO: Session has timed out  
+[2024-08-09 08:15:16] local.INFO: Session has timed out  
+[2024-08-09 08:16:47] local.ERROR: Maximum execution time of 90 seconds exceeded {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Maximum execution time of 90 seconds exceeded at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:65)
+[stacktrace]
+#0 {main}
+"} 
