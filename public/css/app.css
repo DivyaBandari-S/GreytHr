@@ -2677,6 +2677,51 @@ input[type="radio"] {
     font-weight: normal;
     font-size: var(--normal-font-size);
 }
+.LeaveCancelTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.LeaveCancelTable th,
+.LeaveCancelTable td {
+    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* Define specific widths for columns */
+.LeaveCancelTable th:first-child,
+.LeaveCancelTable td:first-child {
+    width: 10%;
+    /* First column takes 10% */
+}
+
+.LeaveCancelTable th:last-child,
+.LeaveCancelTable td:last-child {
+    width: 30%;
+}
+
+/* Divide remaining width equally among other columns */
+.LeaveCancelTable th:not(:first-child):not(:last-child),
+.LeaveCancelTable td:not(:first-child):not(:last-child) {
+    width: calc((100% - 40%) / 4);
+}
+
+.LeaveCancelTable th {
+    background-color: rgb(2, 17, 79);
+    color: #fff !important;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+@media screen and (max-width: 768px) {
+    .LeaveCancelTable {
+        table-layout: auto;
+    }
+}
+l
 
 /* end of leave apply */
 
@@ -2872,9 +2917,7 @@ input[type="radio"] {
     align-items: center;
     line-height: 1.6;
 }
-.leavePageContent {
-    padding: 10px;
-}
+
 @media screen and (max-width: 1060px) {
     .detail-container {
         width: 100%;

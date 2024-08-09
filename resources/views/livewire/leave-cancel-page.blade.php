@@ -23,53 +23,6 @@
             }
         }, 5000); // 5000 milliseconds = 5 seconds
     </script>
-
-    <style>
-        .LeaveCancelTable {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-
-        .LeaveCancelTable th,
-        .LeaveCancelTable td {
-            border-bottom: 1px solid #ccc;
-            padding: 8px;
-            font-size: 12px;
-            text-align: center;
-        }
-
-        /* Define specific widths for columns */
-        .LeaveCancelTable th:first-child,
-        .LeaveCancelTable td:first-child {
-            width: 10%;
-            /* First column takes 10% */
-        }
-
-        .LeaveCancelTable th:last-child,
-        .LeaveCancelTable td:last-child {
-            width: 30%;
-        }
-
-        /* Divide remaining width equally among other columns */
-        .LeaveCancelTable th:not(:first-child):not(:last-child),
-        .LeaveCancelTable td:not(:first-child):not(:last-child) {
-            width: calc((100% - 40%) / 4);
-        }
-
-        .LeaveCancelTable th {
-            background-color: rgb(2, 17, 79);
-            color: #fff !important;
-            font-weight: 500;
-            font-size: 0.75rem;
-        }
-
-        @media screen and (max-width: 768px) {
-            .LeaveCancelTable {
-                table-layout: auto;
-            }
-        }
-    </style>
     <div class="applyContainer">
         @if($LeaveShowinfoMessage)
         <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
@@ -77,14 +30,13 @@
             <p class="mb-0 hideInfo" wire:click="toggleInfoLeave">Hide</p>
         </div>
         @endif
-
         <div class="d-flex justify-content-between">
             <p class="applyingFor">Applying for Leave Cancel</p>
             @if($LeaveShowinfoButton)
             <p class="info-paragraph" wire:click="toggleInfoLeave">Info</p>
             @endif
         </div>
-        <form wire:submit.prevent="markAsLeaveCancel" enctype="multipart/form-data">
+        <form wire:submit.prevent="markAsLeaveCancel">
             <div>
                 <div class="table-responsive">
                     <table class="LeaveCancelTable">
@@ -120,7 +72,7 @@
                         </tbody>
                     </table>
                 </div>
-
+                <!-- inputs fields -->
                 @if($showApplyingTo)
                 <div class="form-group mt-3" style="margin-top: 10px;">
                     <div style="display:flex; flex-direction:row;">
@@ -131,44 +83,39 @@
                     </div>
                 </div>
                 @endif
-                <!-- Your Blade file -->
                 @if($show_reporting)
                 <div class="form-group mt-3">
-                    <span class="normalTextValue"> Applying To</span>
+                    <span class="normalTextValue">Applying To</span>
                 </div>
                 <div class="reporting mb-2" wire:ignore.self>
-                    @if(!$loginEmpManagerProfile)
+                    @if($managerDetails)
                     <div class="employee-profile-image-container">
+                        @if($managerDetails['image'])
+                        <img height="40" width="40" src="{{ asset('storage/' . $managerDetails['image']) }}" style="border-radius:50%;">
+                        @else
                         <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                        @endif
                     </div>
-                    @elseif($managerDetails)
-                    <div class="employee-profile-image-container">
-                        <img height="40" width="40" src="{{ asset('storage/' . $managerDetails->image) }}" style="border-radius:50%;">
+                    <div class="center p-0 m-0">
+                        <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($managerDetails['report_to'])) }}</p>
+                        <p class="mb-0" style="color:#778899; font-size:10px;margin-bottom:0;" id="managerIdText">
+                            <span class="remaining">#{{ $managerDetails['manager_id'] }}</span>
+                        </p>
                     </div>
                     @else
                     <div class="employee-profile-image-container">
                         <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
-                    @endif
                     <div class="center p-0 m-0">
-                        @if(!$loginEmpManager)
                         <p class="mb-0" style="font-size:10px;margin-bottom:0;">N/A</p>
-                        @else
-                        <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($loginEmpManager)) }}</p>
-                        @endif
-
-                        @if(!$loginEmpManagerId)
                         <p class="mb-0" style="font-size:10px;margin-bottom:0;">#(N/A)</p>
-                        @else
-                        <p class="mb-0" style="color:#778899; font-size:10px;margin-bottom:0;" id="managerIdText"><span class="remaining">#{{$loginEmpManagerId}}</span></p>
-                        @endif
                     </div>
-                    <div class="downArrow" wire:click="applyingTo">
+                    @endif
+                    <div class="downArrow" wire:click="toggleApplyingto">
                         <i class="fas fa-chevron-down" style="cursor:pointer"></i>
                     </div>
                 </div>
                 @endif
-
 
                 @if($showApplyingToContainer)
                 <div class="searchContainer">
@@ -187,7 +134,7 @@
                             </div>
 
                             <div class="col-md-2 m-0 p-0">
-                                <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
+                                <button wire:click="toggleApplyingto" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
                                     <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
                                 </button>
                             </div>
@@ -219,97 +166,96 @@
                     </div>
                 </div>
                 @endif
-            </div>
-            <div class="form-group mt-3">
-                <span class="normalTextValue">
-                    CC To
-                </span>
-                <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
-                    <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
-                        <div class="icon-container">
-                            <i class="fas fa-plus" style="color: #778899;"></i>
-                        </div>
-                    </a>
-                    <!-- Blade Template: your-component.blade.php -->
-                    <span class="addText" wire:click="openCcRecipientsContainer">Add</span>
-
-                    @if(count($selectedCCEmployees) > 0)
-                    <ul class=" d-flex align-items-center mb-0" style="list-style-type: none;gap:10px;">
-                        @foreach($selectedCCEmployees as $recipient)
-                        <li>
-                            <div class="px-2 py-1 d-flex justify-content-between align-items-center" style=" border-radius: 25px; border: 2px solid #adb7c1;" title="{{ ucwords(strtolower( $recipient['first_name'])) }} {{ ucwords(strtolower( $recipient['last_name'])) }}">
-                                <span style="text-transform: uppercase; color: #adb7c1;font-size:12px;">{{ $recipient['initials'] }}</span>
-                                <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer;color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
+                <div class="form-group mt-3">
+                    <span class="normalTextValue">
+                        CC To
+                    </span>
+                    <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
+                        <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
+                            <div class="icon-container">
+                                <i class="fas fa-plus" style="color: #778899;"></i>
                             </div>
-                        </li>
-                        @endforeach
-                    </ul>
-                    @endif
-                </div>
+                        </a>
+                        <!-- Blade Template: your-component.blade.php -->
+                        <span class="addText" wire:click="openCcRecipientsContainer">Add</span>
 
-                @if($showCcRecipents)
-                <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
-                    <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
-                        <div class="col-md-10" style="margin: 0px; padding: 0px">
-                            <div class="input-group">
-                                <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
-                                <div class="input-group-append searchBtnBg d-flex align-items-center">
-                                    <button type="button" wire:click="searchCCRecipients" class="search-btn">
-                                        <i style="margin-right: 5px;" class="fas fa-search"></i>
-                                    </button>
+                        @if(count($selectedCCEmployees) > 0)
+                        <ul class=" d-flex align-items-center mb-0" style="list-style-type: none;gap:10px;">
+                            @foreach($selectedCCEmployees as $recipient)
+                            <li>
+                                <div class="px-2 py-1 d-flex justify-content-between align-items-center" style=" border-radius: 25px; border: 2px solid #adb7c1;" title="{{ ucwords(strtolower( $recipient['first_name'])) }} {{ ucwords(strtolower( $recipient['last_name'])) }}">
+                                    <span style="text-transform: uppercase; color: #adb7c1;font-size:12px;">{{ $recipient['initials'] }}</span>
+                                    <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer;color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2 m-0 p-0">
-                            <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
-                                <span aria-hidden="true" style="color: white; font-size: 24px;"><i class="fas fa-times"></i></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="scrollApplyingTO mb-2 mt-2">
-                        @if(!empty($ccRecipients))
-                        @foreach($ccRecipients as $employee)
-                        <div wire:key="{{ $employee['emp_id'] }}">
-                            <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
-                                <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
-
-                                @if($employee['image'])
-                                <div class="employee-profile-image-container">
-                                    <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius: 50%;">
-                                </div>
-                                @else
-                                <div class="employee-profile-image-container">
-                                    <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
-                                </div>
-                                @endif
-
-                                <div class="center mb-2 mt-2">
-                                    <p class="mb-0 empCcName">{{ ucwords(strtolower($employee['full_name'])) }}</p>
-                                    <p class="mb-0 empIdStyle">#{{ $employee['emp_id'] }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                        @else
-                        <div class="mb-0 normalTextValue">
-                            No data found
-                        </div>
+                            </li>
+                            @endforeach
+                        </ul>
                         @endif
                     </div>
-                </div>
-                @endif
-                @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
-            </div>
-            <div class="form-group mt-3">
-                <label for="reason">Reason for Leave</label>
-                <textarea  id="reason" class="form-control placeholder-small" wire:model="reason" id="reason" name="reason" placeholder="Enter Reason" rows="4"></textarea>
-                @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
-            </div>
 
-            <div class="cancelButtons d-flex align-items-center gap-2 justify-content-center mt-4">
-                <button type="submit" class="submit-btn">Submit</button>
-                <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
+                    @if($showCcRecipents)
+                    <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
+                        <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
+                            <div class="col-md-10" style="margin: 0px; padding: 0px">
+                                <div class="input-group">
+                                    <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                    <div class="input-group-append searchBtnBg d-flex align-items-center">
+                                        <button type="button" wire:click="searchCCRecipients" class="search-btn">
+                                            <i style="margin-right: 5px;" class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 m-0 p-0">
+                                <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 24px;"><i class="fas fa-times"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="scrollApplyingTO mb-2 mt-2">
+                            @if(!empty($ccRecipients))
+                            @foreach($ccRecipients as $employee)
+                            <div wire:key="{{ $employee['emp_id'] }}">
+                                <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
+                                    <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
+
+                                    @if($employee['image'])
+                                    <div class="employee-profile-image-container">
+                                        <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius: 50%;">
+                                    </div>
+                                    @else
+                                    <div class="employee-profile-image-container">
+                                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
+                                    </div>
+                                    @endif
+
+                                    <div class="center mb-2 mt-2">
+                                        <p class="mb-0 empCcName">{{ ucwords(strtolower($employee['full_name'])) }}</p>
+                                        <p class="mb-0 empIdStyle">#{{ $employee['emp_id'] }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                            @else
+                            <div class="mb-0 normalTextValue">
+                                No data found
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+                    @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+                <div class="form-group mt-3">
+                    <label for="reason">Reason for Leave</label>
+                    <textarea id="reason" class="form-control placeholder-small" wire:model="reason" id="reason" name="reason" placeholder="Enter Reason" rows="4"></textarea>
+                    @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+                <div class="cancelButtons d-flex align-items-center gap-2 justify-content-center mt-4">
+                    <button type="submit" class="submit-btn">Submit</button>
+                    <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
+                </div>
             </div>
         </form>
     </div>

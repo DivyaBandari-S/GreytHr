@@ -1,5 +1,5 @@
 <div class="leavePageContent">
-    <div class="d-flex mt-1 mb-3 gap-4 align-items-center position-relative">
+    <div class="d-flex mt-2 mb-3 gap-4 align-items-center position-relative">
         <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
         <!-- leave-page.blade.php -->
         @if(session()->has('message'))
@@ -38,27 +38,17 @@
         <div class="nav-buttons d-flex justify-content-center">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link  {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">
-                        Apply
-                    </div>
+                    <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</div>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
-                    <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">
-                        Pending
-                    </a>
+                    <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">
-                        History
-                    </a>
+                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
                 </li>
             </ul>
         </div>
 
-
-
-
-        {{-- Apply Tab --}}
         <div class="row m-0 p-0" style="{{ $activeSection === 'applyButton' ? '' : 'display:none;' }}">
             <!-- Side Container with Sections -->
             <div class="containerWidth">
@@ -83,7 +73,7 @@
             <!-- content -->
             <div id="leave" class="row mt-2 align-items-center " style="{{ $showLeave ? '' : 'display:none;' }}">
 
-                <div class="containerWidth">@livewire('leave-form-page') </div>
+                <div class="containerWidth">@livewire('leave-apply') </div>
 
             </div>
 
@@ -144,9 +134,7 @@
             </div>
             <!-- endcontent -->
             @if($showLeaveApply)
-            <div class="containerWidth">
-                @livewire('leave-apply')
-            </div>
+            <div class="containerWidth">@livewire('leave-apply')</div>
             @endif
         </div>
 
@@ -463,7 +451,6 @@
 
     </div>
 </div>
-
 
 
 <script>
