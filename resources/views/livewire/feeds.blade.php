@@ -83,9 +83,9 @@
                                 <polyline points="13 2 13 9 20 9"></polyline>
                             </svg>
                         </div>
-                        <div class="row ml-2">
-                            <div class="text-left text-xs" wire:click="addFeeds">Create</div>
-                            <div class="text-left text-xs">Posts</div>
+                        <div class="row  mt-1">
+                            <div class="text-left text-xs" style="margin-left:5px" wire:click="addFeeds">Create Posts</div>
+                      
                         </div>
                     </button>
 
@@ -1114,7 +1114,7 @@
         <div class="F mb-4" style="padding: 15px; background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top: 5px">
 
         <div class="row m-0">
-                                <div class="col-md-4 mb-2" style="text-align: center;">
+                                <div class="col-md-3 mb-2" style="text-align: center;">
                                 <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo">
                                 </div>
                                 <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
@@ -1125,11 +1125,11 @@
                         </div>
                     </div>
                     <div class="row m-0">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <img src="{{ asset('images/New_team_members_gif.gif') }}" alt="Image Description" style="width: 200px;">
                         </div>
                         <div class="col-md-8 m-auto">
-                            <p style="font-size:12px;color:#778899;font-weight:normal;margin-top:10px;">
+                            <p style="font-size:12px;color:#778899;font-weight:normal;margin-top:10px;padding-left:10px">
                                 @php
                                 $hireDate = $data['employee']->hire_date;
                                 $yearsSinceHire = date('Y') - date('Y', strtotime($hireDate));

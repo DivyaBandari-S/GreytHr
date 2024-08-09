@@ -79,10 +79,10 @@
                             <polyline points="13 2 13 9 20 9"></polyline>
                         </svg>
                     </div>
-                    <div class="row ml-2">
-                        <div class="text-left text-xs" wire:click="addFeeds">Create</div>
-                        <div class="text-left text-xs">Posts</div>
-                    </div>
+                    <div class="row  mt-1">
+                            <div class="text-left text-xs" style="margin-left:5px" wire:click="addFeeds">Create Posts</div>
+                      
+                        </div>
                 </button>
 
                 @if($showFeedsDialog)
