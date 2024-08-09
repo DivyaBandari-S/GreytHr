@@ -51,11 +51,23 @@ class WhoIsInChart extends Component
     public $from_date;
 
     public $employees4;
+
+    public $shifts;
     public $search = '';
     public $results = [];
     public function mount()
     {
         $this->currentDate = Carbon::now()->format('Y-m-d');
+        $this->shifts = EmployeeDetails::select('shift_type', 'shift_start_time', 'shift_end_time')
+                        ->distinct()
+                        ->get();
+        
+
+
+    }
+    public function check()
+    {
+        dd('sfdxgchjv');
     }
     //This function will help us to get the details of late arrival employees(who arrived after 10:00am) in excel sheet
     public function downloadExcelForLateArrivals()
@@ -106,7 +118,7 @@ class WhoIsInChart extends Component
                 $isLateBy10AM = $swipeTime->format('H:i') >= $shiftStartTime;
                 if($isLateBy10AM)
                 {
-                    $data[] = [$employee['emp_id'], $employee['first_name'] . 'hii'.$shiftStartTime . $employee['last_name'], $swipeTime1, $lateArrivalTime];
+                    $data[] = [$employee['emp_id'], $employee['first_name'] . $employee['last_name'], $swipeTime1, $lateArrivalTime];
                 }
             }
 
