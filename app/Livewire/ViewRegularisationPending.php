@@ -20,6 +20,7 @@ class ViewRegularisationPending extends Component
 
     public $remarks;
 
+    public $regularised_date;
     public $openRejectPopupModal=false;
 
     public $openApprovePopupModal=false;
@@ -126,8 +127,9 @@ class ViewRegularisationPending extends Component
             }
         }
         $this->countofregularisations--;
-        Session::flash('success', 'Regularisation Request approved successfully');
+       
         $this->remarks='';
+        Session::flash('success', 'Regularisation Request approved successfully');
         $this->closeApproveModal();
     }
 

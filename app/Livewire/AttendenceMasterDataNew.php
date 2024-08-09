@@ -79,8 +79,8 @@ class AttendenceMasterDataNew extends Component
                         return stripos($employee->first_name, $nameFilter) !== false ||
                             stripos($employee->last_name, $nameFilter) !== false ||
                             stripos($employee->emp_id, $nameFilter) !== false ||
-                            stripos($employee->job_title, $nameFilter) !== false ||
-                            stripos($employee->city, $nameFilter) !== false ||
+                            stripos($employee->job_role, $nameFilter) !== false ||
+                            stripos($employee->job_location, $nameFilter) !== false ||
                             stripos($employee->state, $nameFilter) !== false;
                     });
 
@@ -253,7 +253,7 @@ class AttendenceMasterDataNew extends Component
         $employeescount=EmployeeDetails::where('manager_id',$loggedInEmpId)->count();
         $managerId = $loggedInEmpId;
         $employees = EmployeeDetails::where('manager_id', $managerId)
-        ->select('emp_id', 'first_name', 'last_name','job_title','city')
+        ->select('emp_id', 'first_name', 'last_name','job_role','job_location')
         ->get();
         if($this->searching==1)
         {
@@ -262,8 +262,8 @@ class AttendenceMasterDataNew extends Component
                     return stripos($employee->first_name, $nameFilter) !== false ||
                         stripos($employee->last_name, $nameFilter) !== false ||
                         stripos($employee->emp_id, $nameFilter) !== false||
-                        stripos($employee->job_title, $nameFilter) !== false||
-                        stripos($employee->city, $nameFilter) !== false||
+                        stripos($employee->job_role, $nameFilter) !== false||
+                        stripos($employee->job_location, $nameFilter) !== false||
                         stripos($employee->state, $nameFilter) !== false;
                 });
 

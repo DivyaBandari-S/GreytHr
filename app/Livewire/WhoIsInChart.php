@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -50,11 +51,23 @@ class WhoIsInChart extends Component
     public $from_date;
 
     public $employees4;
+
+    public $shifts;
     public $search = '';
     public $results = [];
     public function mount()
     {
         $this->currentDate = Carbon::now()->format('Y-m-d');
+        $this->shifts = EmployeeDetails::select('shift_type', 'shift_start_time', 'shift_end_time')
+                        ->distinct()
+                        ->get();
+        
+
+
+    }
+    public function check()
+    {
+        dd('sfdxgchjv');
     }
     //This function will help us to get the details of late arrival employees(who arrived after 10:00am) in excel sheet
     public function downloadExcelForLateArrivals()
@@ -90,7 +103,7 @@ class WhoIsInChart extends Component
                     ->groupBy('emp_id');
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time')
                 ->get();
             $data = [
                 ['List of Late Arrival Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
@@ -99,11 +112,13 @@ class WhoIsInChart extends Component
 
             foreach ($swipes as $employee) {
                 $swipeTime = Carbon::parse($employee->swipe_time);
+                $shiftStartTime = $employee->shift_start_time;
                 $swipeTime1 = Carbon::parse($employee['created_at'])->format('H:i:s');
-                $lateArrivalTime = $swipeTime->diff(Carbon::parse('10:00'))->format('%H:%I');
-                $isLateBy10AM = $swipeTime->format('H:i') >= '10:01';
-                if ($isLateBy10AM) {
-                    $data[] = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name'], $swipeTime1, $lateArrivalTime];
+                $lateArrivalTime = $swipeTime->diff(Carbon::parse($shiftStartTime))->format('%H:%I');
+                $isLateBy10AM = $swipeTime->format('H:i') >= $shiftStartTime;
+                if($isLateBy10AM)
+                {
+                    $data[] = [$employee['emp_id'], $employee['first_name'] . $employee['last_name'], $swipeTime1, $lateArrivalTime];
                 }
             }
 
@@ -152,7 +167,7 @@ class WhoIsInChart extends Component
                     ->groupBy('emp_id');
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_type','employee_details.shift_start_time','employee_details.shift_end_time')
                 ->get();
             $data = [
                 ['List of On Time Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
@@ -161,11 +176,14 @@ class WhoIsInChart extends Component
             ];
             foreach ($swipes as $employee) {
                 $swipeTime = Carbon::parse($employee->swipe_time);
+                $shiftStartTime = (new DateTime($employee->shift_start_time))->format('H:i');
+
                 $swipeTime1 = Carbon::parse($employee['created_at'])->format('H:i:s');
-                $earlyArrivalTime = $swipeTime->diff(Carbon::parse('10:00'))->format('%H:%I');
-                $isEarlyBy10AM = $swipeTime->format('H:i') < '10:01';
-                if ($isEarlyBy10AM) {
-                    $data[] = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name'], $swipeTime1, $earlyArrivalTime];
+                $earlyArrivalTime = $swipeTime->diff(Carbon::parse($shiftStartTime))->format('%H:%I');
+                $isEarlyBy10AM = $swipeTime->format('H:i') < $shiftStartTime;
+                if($isEarlyBy10AM)
+                {
+                    $data[] = [$employee['emp_id'], $employee['first_name'] .' '. $employee['last_name'], $swipeTime1, $earlyArrivalTime];
                 }
             }
             $filePath = storage_path('app/employees_on_time.xlsx');
@@ -392,6 +410,7 @@ class WhoIsInChart extends Component
             ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
             ->where('employee_status','active')
             ->count();
+            
         $swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
             $query->selectRaw('MIN(id)')
                 ->from('swipe_records')
@@ -406,7 +425,7 @@ class WhoIsInChart extends Component
 
             ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time','employee_details.shift_type')
             ->get();
-
+       
         $lateSwipesCount = SwipeRecord::whereIn('id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
             $query->selectRaw('MIN(id)')
                 ->from('swipe_records')
@@ -418,10 +437,10 @@ class WhoIsInChart extends Component
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
             ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time')
             ->where(function ($query) {
-                $query->whereRaw("TIME(swipe_records.swipe_time) > TIME(DATE_ADD(employee_details.shift_start_time, INTERVAL 1 MINUTE))");
+                $query->whereRaw("swipe_records.swipe_time > employee_details.shift_start_time");
            })
             ->count();
-
+        
         $earlySwipesCount = SwipeRecord::whereIn('id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
             $query->selectRaw('MIN(id)')
                 ->from('swipe_records')
@@ -433,9 +452,10 @@ class WhoIsInChart extends Component
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
             ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
             ->where(function ($query) {
-                $query->whereRaw("TIME(swipe_records.swipe_time) <= TIME(DATE_ADD(employee_details.shift_start_time, INTERVAL 1 MINUTE))");
+                $query->whereRaw("swipe_records.swipe_time <= employee_details.shift_start_time");
            })
             ->count();
+           
         $swipes2 = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
             $query->selectRaw('MIN(id)')
                 ->from('swipe_records')

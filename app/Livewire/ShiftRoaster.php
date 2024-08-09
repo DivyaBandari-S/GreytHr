@@ -35,8 +35,8 @@ class ShiftRoaster extends Component
             return stripos($employee->first_name, $nameFilter) !== false ||
                 stripos($employee->last_name, $nameFilter) !== false ||
                 stripos($employee->emp_id, $nameFilter) !== false ||
-                stripos($employee->job_title, $nameFilter) !== false ||
-                stripos($employee->city, $nameFilter) !== false ||
+                stripos($employee->job_role, $nameFilter) !== false ||
+                stripos($employee->job_location, $nameFilter) !== false ||
                 stripos($employee->state, $nameFilter) !== false;
         });
 
@@ -119,7 +119,7 @@ class ShiftRoaster extends Component
         $currentMonth=$this->selectedMonth;
         $currentYear = date('Y');  
         $year = $currentYear;
-        $employees=EmployeeDetails::where('manager_id',$loggedInEmpId)->select('emp_id', 'first_name', 'last_name','job_title','city','state','shift_type')->get();
+        $employees=EmployeeDetails::where('manager_id',$loggedInEmpId)->select('emp_id', 'first_name', 'last_name','job_role','job_location','shift_type')->get();
         $this->holiday = HolidayCalendar::where('month',$currentMonth)
         ->where('year', $year)
         ->get('date');
@@ -131,9 +131,8 @@ class ShiftRoaster extends Component
                     return stripos($employee->first_name, $nameFilter) !== false ||
                         stripos($employee->last_name, $nameFilter) !== false ||
                         stripos($employee->emp_id, $nameFilter) !== false||
-                        stripos($employee->job_title, $nameFilter) !== false||
-                        stripos($employee->city, $nameFilter) !== false||
-                        stripos($employee->state, $nameFilter) !== false;
+                        stripos($employee->job_role, $nameFilter) !== false||
+                        stripos($employee->job_location, $nameFilter) !== false;
                 });
 
                 if ($filteredEmployees->isEmpty()) {

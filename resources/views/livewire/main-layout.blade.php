@@ -15,7 +15,20 @@
         </a>
         <ul class="side-menu">
             <li><a href="/" class="active"><i class='fas fa-home icon'></i> Home</a></li>
-            <li><a href="/time-sheet"><i class='fas fa-clock icon'></i> Time Sheet</a></li>
+
+            <li>
+                <a href="#"><i class='fas fa-clock icon'></i> Time Sheets <i class='fa fa-chevron-right icon-right'></i></a>
+                <ul class="side-dropdown">
+                    <li><a href="/time-sheet">Time Sheet</a></li>
+                    @if ($managerId)
+                    <li>
+                        <a href="/team-time-sheets">
+                            Team Time Sheets
+                        </a>
+                    </li>
+                    @endif
+                </ul>
+            </li>
             <li><a href="/Feeds"><i class='fas fa-rss icon'></i> Feeds</a></li>
             <li><a href="/PeoplesList"><i class='fas fa-users icon'></i> People</a></li>
             <!-- <li class="divider" data-text="main">Main</li> -->
@@ -147,32 +160,32 @@
                 <ul class="profile-link">
                     <li><a href="/ProfileInfo"><i class='fas fa-user-circle icon'></i> Profile</a></li>
                     <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
-                    <li><a wire:click="handleLogout" href="#" style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
                 </ul>
             </div>
+            <div>@livewire('log-out')</div>
         </nav>
         <!-- NAVBAR -->
     </section>
-        <!-- Logout Modal -->
-        @if( $showLogoutModal == true)
-        <div class="modal" id="logoutModal" tabindex="4" style="display: block;">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header text-white" style=" background-color: rgb(2, 17, 79);">
-                        <h6 class="modal-title " id="logoutModalLabel" style="align-items: center;">Confirm Logout</h6>
-                    </div>
-                    <div class="modal-body text-center" style="font-size: 16px;">
-                        Are you sure you want to logout?
-                    </div>
-                    <div class="d-flex justify-content-center p-3" style="gap: 10px;">
-                        <button type="button" class="submit-btn mr-3" wire:click="confirmLogout">Logout</button>
-                        <button type="button" class="cancel-btn1" wire:click="cancelLogout">Cancel</button>
-                    </div>
+    <!-- Logout Modal -->
+    @if( $showLogoutModal == true)
+    <div class="modal" id="logoutModal" tabindex="4" style="display: block;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-white" style=" background-color: rgb(2, 17, 79);">
+                    <h6 class="modal-title " id="logoutModalLabel" style="align-items: center;">Confirm Logout</h6>
+                </div>
+                <div class="modal-body text-center" style="font-size: 16px;">
+                    Are you sure you want to logout?
+                </div>
+                <div class="d-flex justify-content-center p-3" style="gap: 10px;">
+                    <button type="button" class="submit-btn mr-3" wire:click="confirmLogout">Logout</button>
+                    <button type="button" class="cancel-btn1" wire:click="cancelLogout">Cancel</button>
                 </div>
             </div>
         </div>
-        <div class="modal-backdrop fade show"></div>
-        @endif
+    </div>
+    <div class="modal-backdrop fade show"></div>
+    @endif
 
     <!-- NAVBAR -->
 </div>

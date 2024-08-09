@@ -55,7 +55,6 @@ class LeaveApply extends Component
     public $employeeDetails = [];
     public $ccRecipients = [];
     public $applyingToDetails = [];
-    public $files = [];
     public $filteredEmployees = [];
     public $has;
     public $isOpen = false;
@@ -82,7 +81,6 @@ class LeaveApply extends Component
     public $fromSession;
     public $toSession;
     public $toDate;
-    public $file;
     public $calculatedNumberOfDays = 0;
     public $loginEmpManagerProfile;
     public $differenceInMonths;
@@ -96,7 +94,6 @@ class LeaveApply extends Component
         'to_session' => 'required',
         'contact_details' => 'required',
         'reason' => 'required',
-        'files.*' => 'nullable|file|max:10240',
     ];
 
     protected $messages = [
@@ -107,8 +104,6 @@ class LeaveApply extends Component
         'to_session.required' => 'Session is required',
         'contact_details.required' => 'Contact details are required',
         'reason.required' => 'Reason is required',
-        'files.*.file' => 'Each file must be a valid file',
-        'files.*.max' => 'Each file must not exceed 10MB in size',
     ];
 
 
@@ -529,7 +524,7 @@ class LeaveApply extends Component
         $this->validate();
 
         try {
-            $this->selectleave();
+            $this->selectLeave();
 
             // Check for weekend
             if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
@@ -578,31 +573,7 @@ class LeaveApply extends Component
                 $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
                 return redirect()->back()->withInput();
             }
-            $fileContent = null;
-            if ($this->file_paths) {
-                $validator = Validator::make(
-                    ['file_paths' => $this->file_paths],
-                    ['file_paths' => 'nullable|file|max:2048|mimes:jpg,png,pdf,xlsx,xls'] // Validate file type and size
-                );
 
-                if ($validator->fails()) {
-                    $this->errorMessage = 'The file is invalid. Please upload a valid file with a size of up to 2MB.';
-                    return redirect()->back()->withInput();
-                }
-
-                if ($this->file_paths->isValid()) {
-                    try {
-                        // Convert file to binary data
-                        $fileContent = file_get_contents($this->file_paths->getRealPath());
-                    } catch (\Exception $e) {
-                        Log::error("Error processing file: " . $e->getMessage());
-                        $this->errorMessage = 'Error processing the file. Please try again.';
-                        return redirect()->back()->withInput();
-                    }
-                } else {
-                    Log::warning('File is not valid or is null', ['file' => $this->file_paths]);
-                }
-            }
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $ccToDetails = [];
@@ -648,6 +619,7 @@ class LeaveApply extends Component
                 }
             }
 
+
             // Create the leave request
             $this->createdLeaveRequest = LeaveRequest::create([
                 'emp_id' => $employeeId,
@@ -658,7 +630,6 @@ class LeaveApply extends Component
                 'to_session' => $this->to_session,
                 'to_date' => $this->to_date,
                 'applying_to' => json_encode($applyingToDetails),
-                'file_paths' => $fileContent, // Store file content in binary column
                 'cc_to' => json_encode($ccToDetails),
                 'contact_details' => $this->contact_details,
                 'reason' => $this->reason,
@@ -685,27 +656,23 @@ class LeaveApply extends Component
             }
         } catch (\Exception $e) {
             if ($e instanceof \Illuminate\Database\QueryException) {
-                // Handle database query exceptions
-                Log::error("Database error submitting leave application: " . $e->getMessage());
+                Log::error("Database error: " . $e->getMessage());
                 session()->flash('error', 'Database error occurred. Please try again later.');
             } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
-                // Display a user-friendly error message for null image
                 session()->flash('error', 'Please upload an image.');
             } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
-                // Handle network request exceptions
-                Log::error("Network error submitting leave application: " . $e->getMessage());
+                Log::error("Network error: " . $e->getMessage());
                 session()->flash('error', 'Network error occurred. Please try again later.');
             } elseif ($e instanceof \PDOException) {
-                // Handle database connection errors
-                Log::error("Database connection error submitting leave application: " . $e->getMessage());
+                Log::error("Database connection error: " . $e->getMessage());
                 session()->flash('error', 'Database connection error. Please try again later.');
             } else {
-                // Handle other generic exceptions
-                Log::error("Error submitting leave application: " . $e->getMessage());
+                Log::error("General error: " . $e->getMessage());
                 session()->flash('error', 'Failed to submit leave application. Please try again later.');
             }
-            // Redirect the user back to the leave application page
+            return redirect()->to('/leave-page');
         }
+
     }
 
     public function cancelLeaveApplication()
@@ -719,7 +686,6 @@ class LeaveApply extends Component
         $this->to_date = '';
         $this->selectedManager = [];
         $this->selectedPeople = [];
-        $this->files = '';
         $this->contact_details = '';
         $this->reason = '';
 
@@ -731,8 +697,6 @@ class LeaveApply extends Component
     {
         $this->searchCCRecipients();
     }
-
-
 
     public function selectLeave()
     {

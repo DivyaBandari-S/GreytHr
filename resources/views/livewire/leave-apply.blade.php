@@ -8,7 +8,11 @@
     </div>
     @endif
     <!-- Assuming you are using Blade templates in Laravel -->
-
+    @if (session('popupMessage') || $showPopupMessage)
+    <div class="error-message">
+        {{ session('popupMessage') }}
+    </div>
+    @endif
 
     <div class="applyContainer bg-white">
         @if($showinfoMessage)
@@ -22,7 +26,7 @@
         <div class="d-flex justify-content-between">
             <p class="applyingFor">Applying for Leave</p>
             @if($showinfoButton)
-            <p class="info-paragraph" wire:click="toggleInfo">Info</p>
+            <p class="info-paragraph mb-0" wire:click="toggleInfo">Info</p>
             @endif
         </div>
         <form wire:submit.prevent="leaveApply" enctype="multipart/form-data" >
@@ -53,7 +57,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <div class="pay-bal">
-                            <label>Balance :</label>
+                            <span class="normalTextValue">Balance :</span>
                             @if(!empty($leaveBalances))
                             <div class="d-flex align-items-center justify-content-center" style="cursor:pointer;">
                                 @if($leave_type == 'Sick Leave')
@@ -83,7 +87,7 @@
 
                         </div>
                         <div class="form-group mb-0">
-                            <label for="numberOfDays">Number of Days :</label>
+                            <span class="normalTextValue">Number of Days :</span>
                             @if($showNumberOfDays)
                             <span id="numberOfDays" class="sickLeaveBalance">
                                 <!-- Display the calculated number of days -->
@@ -183,15 +187,15 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="fromDate">From Date <span class="requiredMark">*</span> </label>
-                        <input type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate" wire:change="handleFieldUpdate('from_date')">
+                        <input id="fromDate" type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate" wire:change="handleFieldUpdate('from_date')">
                         @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group ">
-                        <label for="session">Session</label> <br>
+                        <label for="fromSession">Session</label> <br>
                         <div class="custom-select-wrapper">
-                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="session" wire:change="handleFieldUpdate('from_session')">
+                            <select id="fromSession" class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="fromSession" wire:change="handleFieldUpdate('from_session')">
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
@@ -204,7 +208,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="toDate">To Date <span class="requiredMark">*</span> </label>
-                        <input type="date" wire:model.lazy="to_date" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('to_date')" name="toDate" wire:change="handleFieldUpdate('to_date')">
+                        <input id="toDate" type="date" wire:model.lazy="to_date" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('to_date')" name="toDate" wire:change="handleFieldUpdate('to_date')">
                         @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
@@ -212,7 +216,7 @@
                     <div class="form-group ">
                         <label for="session">Session</label> <br>
                         <div class="custom-select-wrapper">
-                            <select class="form-control outline-none rounded placeholder-small" wire:model.lazy="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="session" wire:change="handleFieldUpdate('to_session')">
+                            <select id="session" class="form-control outline-none rounded placeholder-small" wire:model.lazy="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="session" wire:change="handleFieldUpdate('to_session')">
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
@@ -226,38 +230,31 @@
                 @if($showApplyingTo)
                 <div class="form-group mt-3">
                     <div class="d-flex " wire:click="applyingTo">
-                        <label for="applyingToText" id="applyingToText" name="applyingTo" style="cursor: pointer;">
+                        <span class="normalTextValue" style="cursor: pointer;">
                             <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
                             Applying To
-                        </label>
+                        </span>
                     </div>
                 </div>
                 @endif
                 <!-- Your Blade file -->
                 @if($show_reporting)
                 <div class="form-group mt-3">
-                    <label for="applyingTo"> Applying To</label>
+                    <span class="normalTextValue"> Applying To</span>
                 </div>
                 <div class="reporting mb-2" wire:ignore.self>
                     @if(!$loginEmpManagerProfile)
-                    @if(!empty($loginEmpManagerProfile) && $loginEmpManagerProfile !== 'null')
-                    <div class="employee-profile-image-container" style="margin-left: 15px;">
-                        <img height="40" width="40" src="{{ $employeeDetails->image }}" class="employee-profile-image">
+                    <div class="employee-profile-image-container">
+                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                    </div>
+                    @elseif($managerDetails)
+                    <div class="employee-profile-image-container">
+                        <img height="40" width="40" src="{{ asset('storage/' . $managerDetails->image) }}" style="border-radius:50%;">
                     </div>
                     @else
-                    <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
-                        <img height="40" width="40" src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder"  alt="">
-                    </div>
-                    @endif
-                    @elseif($managerDetails)
-                    @if(!empty($managerDetails->image) && $managerDetails->image !== 'null')
                     <div class="employee-profile-image-container">
-                        <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($managerDetails->image)}}" style="border-radius:50%;">
+                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
-                    <div class="employee-profile-image-container">
-                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40">
-                    </div>
-                    @endif
                     @endif
                     <div class="center p-0 m-0">
                         @if(!$loginEmpManager)
@@ -295,7 +292,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-1 m-0 p-0">
+                            <div class="col-md-2 m-0 p-0">
                                 <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
                                     <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i>
                                     </span>
@@ -309,16 +306,15 @@
                         @if(!empty($managerFullName))
                         @foreach($managerFullName as $employee)
                         <div class="d-flex gap-4 align-items-center" style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
-                            @if(!empty($employee['image']) && $employee['image'] !== 'null')
+                            @if($employee['image'])
                             <div class="employee-profile-image-container">
-                                <img height="35px" width="35px" src="{{ $employee['image'] }}" style="border-radius: 50%;">
+                                <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius:50%;">
                             </div>
                             @else
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
+                                <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
                             </div>
                             @endif
-
                             <div class="center d-flex flex-column mt-2 mb-2">
                                 <span class="ellipsis mb-0" value="{{ $employee['full_name'] }}">{{ $employee['full_name'] }}</span>
                                 <span class="mb-0 normalTextValue" style="font-size:10px;" value="{{ $employee['full_name'] }}"> #{{ $employee['emp_id'] }} </span>
@@ -334,9 +330,9 @@
                 @error('applying_to') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group mt-3">
-                <label for="ccToText" id="applyingToText" name="applyingTo">
+                <span class="normalTextValue">
                     CC To
-                </label>
+                </span>
                 <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
                     <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
                         <div class="icon-container">
@@ -362,8 +358,8 @@
 
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
-                    <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
-                        <div class="col-md-10" style="margin: 0px; padding: 0px">
+                    <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
+                        <div class="col-md-10" style="margin: 0;padding:0 2px;">
                             <div class="input-group">
                                 <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
@@ -387,16 +383,15 @@
                             <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
                                 <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
 
-                                @if(!empty($employee['image']) && $employee['image'] !== 'null')
+                                @if($employee['image'])
                                 <div class="employee-profile-image-container">
-                                    <img height="35px" width="35px" src="{{ $employee['image'] }}" style="border-radius: 50%;">
+                                    <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius: 50%;">
                                 </div>
                                 @else
                                 <div class="employee-profile-image-container">
-                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
+                                    <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
                                 </div>
                                 @endif
-
 
                                 <div class="center mb-2 mt-2">
                                     <p class="mb-0 empCcName">{{ ucwords(strtolower($employee['full_name'])) }}</p>
@@ -419,23 +414,22 @@
 
             <div class="form-group mt-3">
                 <label for="contactDetails">Contact Details <span class="requiredMark">*</span> </label>
-                <input type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="width:50%;">
+                <input id="contactDetails" type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="width:50%;">
                 @error('contact_details') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group mt-3">
                 <label for="reason">Reason <span class="requiredMark">*</span> </label>
-                <textarea class="form-control placeholder-small" wire:model.lazy="reason" wire:keydown.debounce.500ms="validateField('reason')" name="reason" placeholder="Enter a reason" rows="4"></textarea>
+                <textarea id="reason" class="form-control placeholder-small" wire:model.lazy="reason" wire:keydown.debounce.500ms="validateField('reason')" name="reason" placeholder="Enter a reason" rows="4"></textarea>
                 @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group mt-3">
-                <input type="file" wire:model="file_paths" wire:loading.attr="disabled" style="font-size: 12px;" multiple accept=".jpg,.png,.pdf,.xlsx,.xls" />
-                @error('file_paths')
-                <span class="text-danger">{{ $message }}</span>
-                @enderror
+                <label for="file">Attachement </label> <br>
+                <input id="file" type="file" wire:model="files" wire:loading.attr="disabled" style="font-size: 12px;" multiple />
+                @error('file_paths') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
 
             <div class="buttons-leave">
-                <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif value="Submit">Submit</button>
+                <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
                 <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
             </div>
         </form>
