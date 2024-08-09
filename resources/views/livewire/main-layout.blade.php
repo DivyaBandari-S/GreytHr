@@ -150,6 +150,7 @@
                     <li><a wire:click="handleLogout" href="#" style="cursor:poiner;"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
                 </ul>
             </div>
+            <div>@livewire('log-out')</div>
         </nav>
         <!-- NAVBAR -->
     </section>

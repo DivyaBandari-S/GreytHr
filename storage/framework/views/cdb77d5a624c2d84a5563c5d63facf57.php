@@ -1,6 +1,7 @@
 <div>
-       <span wire:click="confirmLogout">Log out</span>
-
+    <div class="logout-icon-container">
+        <span wire:click="handleLogout"> <i class='fas fa-sign-out-alt'></i></span>
+    </div>
     <!-- Logout Modal -->
     <!--[if BLOCK]><![endif]--><?php if($showLogoutModal): ?>
     <div class="modal" id="logoutModal" tabindex="-1" style="display: block;">

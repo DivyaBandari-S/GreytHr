@@ -310,7 +310,7 @@
             ?> 
             <!--[if BLOCK]><![endif]--><?php if($isEarlyBy10AM): ?> 
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;"><?php echo e(ucwords(strtolower($s1->first_name))); ?><?php echo e(ucwords(strtolower($s1->last_name))); ?><br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#<?php echo e($s1->emp_id); ?></span></td>
+              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;"><?php echo e(ucwords(strtolower($s1->first_name))); ?> <?php echo e(ucwords(strtolower($s1->last_name))); ?><br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#<?php echo e($s1->emp_id); ?></span></td>
               <td style="font-weight:700;font-size:10px;"><?php echo e($earlyArrivalTime); ?><br /><span class="text-muted" style="font-size:10px;font-weight:300;"><?php echo e($s1->swipe_time); ?></span></td>
             </tr>
 
