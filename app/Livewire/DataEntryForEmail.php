@@ -43,7 +43,7 @@ class DataEntryForEmail extends Component
             'subject' => $this->subject,
         ]);
         // Send email immediately without storing in database
-        $this->sendEmails($this->subject);
+        //Artisan::call('export:data-entries', ['--subject' => $this->subject]);
 
         // Optionally, you can clear the form fields after sending
         $this->to_email = '';
@@ -55,7 +55,11 @@ class DataEntryForEmail extends Component
         return redirect()->to(url()->previous());
     }
 
- s
+    // public function sendEmails($subject)
+    // {
+    //     // Call the Artisan command to trigger export:data-entries with immediate send
+    //     Artisan::call('export:data-entries', ['--subject' => $subject]);
+    // }
 
     public function scheduleEmails()
     {
@@ -88,8 +92,10 @@ class DataEntryForEmail extends Component
 
     public function scheduleEmailDefault()
     {
-        // Set default scheduled time to every 15 minutes
-        $scheduledTime = Carbon::now()->addMinutes(15);
+        $scheduledTime = Carbon::now()->addMinutes(5);
+
+        // Format scheduled time as 'Y-m-d H:i'
+        $formattedScheduledTime = $scheduledTime->format('Y-m-d H:i');
 
         // Save email data with scheduled time
         SentEmail::create([
@@ -97,9 +103,10 @@ class DataEntryForEmail extends Component
             'cc_email' => $this->cc_email,
             'subject' => $this->subject,
             'status' => 'default',
-            'scheduled_time' => $scheduledTime,
+            'scheduled_time' => $formattedScheduledTime,
         ]);
-
+        $this->cc_email = '';
+        $this->subject = '';
         session()->flash('message', 'Email scheduled successfully.');
     }
 

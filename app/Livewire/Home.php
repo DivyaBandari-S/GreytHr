@@ -53,9 +53,9 @@ class Home extends Component
     public $pieChartData;
     public $absent_employees;
 
-    public $showAllAbsentEmployees=false;
+    public $showAllAbsentEmployees = false;
 
-    public $showAllLateEmployees=false;
+    public $showAllLateEmployees = false;
 
     public $employee_details;
     public $showAllEarlyEmployees=false;
@@ -66,7 +66,7 @@ class Home extends Component
     public $showLeaveApplies;
     public $greetingImage;
 
-    public $showReviewLeaveAndAttendance=false;
+    public $showReviewLeaveAndAttendance = false;
 
     public $countofregularisations;
 
@@ -81,7 +81,7 @@ class Home extends Component
     public $holidayCount = 0;
     public $empIdWithoutHyphens;
     public $matchedData = [];
-    public $swipedDataRecords,$loginEmployee;
+    public $swipedDataRecords, $loginEmployee;
     public $showMessage = true;
     public $swipeDataOfEmployee;
     public function mount()
@@ -168,34 +168,32 @@ class Home extends Component
             $this->greetingText = 'Good Night';
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->loginEmployee = EmployeeDetails::where('emp_id',$employeeId)->select('emp_id', 'first_name', 'last_name')->first();
-        $employees=EmployeeDetails::where('manager_id',$employeeId)->select('emp_id', 'first_name', 'last_name')->get();
+        $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->first();
+        $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
         $empIds = $employees->pluck('emp_id')->toArray();
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
-        ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-        ->where('status','pending')
-        ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
-        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
-        ->with('employee') 
-        ->get();
+            ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+            ->where('status', 'pending')
+            ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+            ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
+            ->with('employee')
+            ->get();
 
         $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
-        ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-        ->where('status','pending')
-        ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
-        ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
-        ->with('employee') 
-        ->count();
-        
-        
+            ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+            ->where('status', 'pending')
+            ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+            ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
+            ->with('employee')
+            ->count();
     }
     public function reviewLeaveAndAttendance()
     {
-        $this->showReviewLeaveAndAttendance=true;
+        $this->showReviewLeaveAndAttendance = true;
     }
     public function closereviewLeaveAndAttendance()
     {
-        $this->showReviewLeaveAndAttendance=false;
+        $this->showReviewLeaveAndAttendance = false;
     }
     public function hideMessage()
     {
@@ -203,11 +201,11 @@ class Home extends Component
     }
     public function openLateEmployees()
     {
-        $this->showAllLateEmployees=true;
+        $this->showAllLateEmployees = true;
     }
     public function closeAllAbsentEmployees()
     {
-        $this->showAllAbsentEmployees=false;
+        $this->showAllAbsentEmployees = false;
     }
     public function open()
     {
@@ -269,19 +267,19 @@ class Home extends Component
     }
     public function showEarlyEmployees()
     {
-       $this->showAllEarlyEmployees=true;
+        $this->showAllEarlyEmployees = true;
     }
     public function closeAllEarlyEmployees()
     {
-        $this->showAllEarlyEmployees=false;
+        $this->showAllEarlyEmployees = false;
     }
     public function openAbsentEmployees()
     {
-       $this->showAllAbsentEmployees=true;
+        $this->showAllAbsentEmployees = true;
     }
     public function closeAllLateEmployees()
     {
-        $this->showAllLateEmployees=false;
+        $this->showAllLateEmployees = false;
     }
     public function render()
     {
@@ -289,9 +287,9 @@ class Home extends Component
             $loggedInEmpId = Session::get('emp_id');
             // Check if the logged-in user is a manager by comparing emp_id with manager_id in employeedetails
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
-          
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeShiftDetails=EmployeeDetails::where('emp_id',$employeeId)->first();
+            $this->employeeShiftDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $this->currentDay = now()->format('l');
             $this->currentDate = now()->format('d M Y');
             $today = Carbon::now()->format('Y-m-d');
@@ -439,9 +437,9 @@ class Home extends Component
                         ->whereDate('from_date', '>=', today())
                         ->whereDate('to_date', '<=', today());
                 })
-                ->where('employee_status','active')
+                ->where('employee_status', 'active')
                 ->count();
-              
+
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->where('leave_applications.status', 'approved')
@@ -467,7 +465,7 @@ class Home extends Component
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
-                ->where('employee_status','active')
+                ->where('employee_status', 'active')
                 ->get();
 
             $arrayofabsentemployees = $this->absent_employees->toArray();
@@ -481,7 +479,7 @@ class Home extends Component
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
-                ->where('employee_status','active')
+                ->where('employee_status', 'active')
                 ->count();
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $swipes_early = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate, $approvedLeaveRequests) {
@@ -495,7 +493,7 @@ class Home extends Component
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-                ->where('employee_details.employee_status','active')
+                ->where('employee_details.employee_status', 'active')
                 ->get();
 
             $swipes_early1 = $swipes_early->count();
@@ -512,7 +510,7 @@ class Home extends Component
             })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-                ->where('employee_details.employee_status','active')
+                ->where('employee_details.employee_status', 'active')
                 ->get();
 
             $swipes_late1 = $swipes_late->count();
@@ -530,31 +528,43 @@ class Home extends Component
 
 
             // Assuming $calendarData should contain the data for upcoming holidays
+            // Get the current year and date
             $currentYear = Carbon::now()->year;
             $today = Carbon::today();
 
-            $this->calendarData = HolidayCalendar::where('date', '>=', $today)
+            // Initialize an empty collection to hold valid holidays
+            $validHolidays = collect();
+
+            // Retrieve holidays starting from today
+            $holidays = HolidayCalendar::where('date', '>=', $today)
                 ->whereYear('date', $currentYear)
                 ->orderBy('date')
                 ->get();
 
-            // Check if the festivals are empty for any of the retrieved holidays
-            foreach ($this->calendarData as $index => $holiday) {
-                if (empty($holiday->festivals)) {
-                    // Find the next holiday if the current one doesn't have festivals specified
+            foreach ($holidays as $holiday) {
+                // Add the current holiday if it has festivals
+                if (!empty($holiday->festivals)) {
+                    $validHolidays->push($holiday);
+                } else {
+                    // Find the next holiday with festivals
                     $nextHoliday = HolidayCalendar::where('date', '>', $holiday->date)
-                        ->where('id', '!=', $holiday->id) // Exclude the current holiday
                         ->whereYear('date', $currentYear)
                         ->orderBy('date')
                         ->first();
 
-                    if ($nextHoliday) {
-                        // Replace the current empty festival entry with the next holiday that has festivals
-                        $this->calendarData[$index] = $nextHoliday;
+                    if ($nextHoliday && !empty($nextHoliday->festivals) && !$validHolidays->contains('id', $nextHoliday->id)) {
+                        $validHolidays->push($nextHoliday);
                     }
+                }
+
+                // Break the loop if we have 3 holidays
+                if ($validHolidays->count() >= 4) {
+                    break;
                 }
             }
 
+            // Limit to the first 3 unique holidays
+            $this->calendarData = $validHolidays->unique('id')->take(3);
             $this->holidayCount = $this->calendarData;
 
             $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
