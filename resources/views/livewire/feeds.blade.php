@@ -217,7 +217,7 @@
                         <div class="input-group">
     <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
     <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" >
-        <i style="text-align: center;background:white;margin-left:10px" class="fa fa-search"></i>
+        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
     </button>
 </div>
                         </div>
@@ -452,7 +452,7 @@
 
         <div class="row m-0">
                                 <div class="col-md-4 mb-2" style="text-align: center;">
-                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo">
+                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                                 </div>
                                 <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
                                     Group Events
@@ -463,7 +463,7 @@
                             </div>
                             <div class="row m-0 mt-2">
                                 <div class="col-md-4">
-                                    <img src="{{ asset('images/Blowing_out_Birthday_candles_Gif.gif') }}" alt="Image Description" style="width: 200px;">
+                                    <img src="{{ asset('images/Blowing_out_Birthday_candles_Gif.gif') }}" alt="Image Description" style="width: 120px;">
                                 </div>
                                 <div class="col-md-8 m-auto">
                                     <p style="color: #778899;font-size: 12px;font-weight:normal;">
@@ -1115,7 +1115,7 @@
 
         <div class="row m-0">
                                 <div class="col-md-3 mb-2" style="text-align: center;">
-                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo">
+                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                                 </div>
                                 <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
                                     Group Events
@@ -1126,7 +1126,7 @@
                     </div>
                     <div class="row m-0">
                         <div class="col-md-3">
-                            <img src="{{ asset('images/New_team_members_gif.gif') }}" alt="Image Description" style="width: 200px;">
+                            <img src="{{ asset('images/New_team_members_gif.gif') }}" alt="Image Description" style="width: 120px;">
                         </div>
                         <div class="col-md-8 m-auto">
                             <p style="font-size:12px;color:#778899;font-weight:normal;margin-top:10px;padding-left:10px">
