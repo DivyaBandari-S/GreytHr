@@ -43,7 +43,7 @@ li {
 /* SIDEBAR */
 #sidebar {
 	position: fixed;
-	max-width: 240px;
+	max-width: 250px;
 	width: 100%;
 	background: var(--light);
 	top: 0;
@@ -52,10 +52,10 @@ li {
 	overflow-y: auto;
 	scrollbar-width: none;
 	transition: all .3s ease;
-	z-index: 100;
+	z-index: 200;
 }
 .icon {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: var(--dark);
     cursor: pointer;
 }
@@ -63,7 +63,7 @@ li {
 	max-width: 60px;
 }
 #sidebar.hide:hover {
-	max-width: 240px;
+	max-width: 250px;
 }
 #sidebar::-webkit-scrollbar {
 	display: none;
@@ -93,7 +93,6 @@ li {
 #sidebar .icon-right {
 	margin-left: auto;
 	transition: all .3s ease;
-	font-size: 0.625rem;
 }
 #sidebar .side-menu {
 	margin: 36px 0;
@@ -116,7 +115,6 @@ li {
 	transition: all .3s ease;
 	border-radius: 10px;
 	margin: 4px 0;
-	text-decoration: none;
 	white-space: nowrap;
 }
 #sidebar .side-menu > li > a:hover {
@@ -128,29 +126,25 @@ li {
 }
 #sidebar .side-menu > li > a.active,
 #sidebar .side-menu > li > a.active:hover {
-	background: var(--blue);
-	color: var(--light) !important;
-	border-left: 5px solid #0037ff;
+	/* background: var(--grey);
+	color: var(--dark) !important; */
+	/* border-left: 5px solid #0037ff; */
 }
 
-.active-side-dropdown {
-	background: var(--blue);
+.active-side-dropdown,
+.active-side-dropdown:hover {
+	background: var(--blue) !important;
 	color: var(--light) !important;
 	border-left: 5px solid #0037ff;
 }
-.active-side-dropdown:hover{
-	color: var(--dark) !important;
-}
+.active-side-dropdown .icon,
 .active-side-dropdown:hover .icon {
-	color: var(--dark) !important;
-}
-.active-side-dropdown .icon{
 	color: var(--light) !important;
 }
 /* Icon color when link is active */
 #sidebar .side-menu > li > a.active .icon,
 #sidebar .side-menu > li > a.active:hover .icon {
-    color: var(--light) !important;
+    /* color: var(--light) !important; */
 }
 #sidebar .divider {
 	margin-top: 24px;
@@ -231,14 +225,14 @@ li {
 /* CONTENT */
 #content {
 	position: relative;
-	width: calc(100% - 240px);
-	left: 240px;
+	width: calc(100% - 250px);
+	left: 250px;
 	transition: all .3s ease;
 }
 #maincontent {
 	position: relative;
-	width: calc(100% - 240px);
-	left: 240px;
+	width: calc(100% - 250px);
+	left: 250px;
 	transition: all .3s ease;
 }
 #sidebar.hide + #content,
@@ -373,7 +367,6 @@ nav .profile .profile-link a {
 	grid-gap: 10px;
 	font-size:0.8rem;
     font-weight: 500;
-	text-decoration: none;
 	color: var(--dark);
 	align-items: center;
 	transition: all .3s ease;
@@ -414,7 +407,7 @@ main .breadcrumbs li.divider {
 main .info-data {
 	margin-top: 36px;
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	grid-gap: 20px;
 }
 main .info-data .card {
