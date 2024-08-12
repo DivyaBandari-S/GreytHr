@@ -124,11 +124,8 @@ li {
 #sidebar .side-menu > li > a.active .icon-right {
 	transform: rotateZ(90deg);
 }
-#sidebar .side-menu > li > a.active,
-#sidebar .side-menu > li > a.active:hover {
-	/* background: var(--grey);
-	color: var(--dark) !important; */
-	/* border-left: 5px solid #0037ff; */
+#sidebar .side-menu > li > .active-side-dropdown:hover{
+	color: var(--light) !important;
 }
 
 .active-side-dropdown,
@@ -142,10 +139,7 @@ li {
 	color: var(--light) !important;
 }
 /* Icon color when link is active */
-#sidebar .side-menu > li > a.active .icon,
-#sidebar .side-menu > li > a.active:hover .icon {
-    /* color: var(--light) !important; */
-}
+
 #sidebar .divider {
 	margin-top: 24px;
 	font-size: 12px;
