@@ -1394,7 +1394,7 @@ color: #fff;
         <div class="row m-0 mt-3">
             <div class="row m-0 d-flex justify-content-center" style="display:flex;justify-content:center;">
                 <div class="col-md-3">
-                    <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
+                    <div class="insight-card  bg-white pt-2 pb-2" style="height: 125px;">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
                         <section class="text-center">
                             <p class="text-2" style="margin-top:30px;"> 0 </p>
