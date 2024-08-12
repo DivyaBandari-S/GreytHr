@@ -5,11 +5,22 @@ namespace App\Livewire;
 use App\Models\EmployeeDetails;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class LeaveApplyPage extends Component
 {
+    public $leave_type;
+    public $emp_id;
+    public $from_date;
+    public $from_session = 'Session 1';
+    public $to_session = 'Session 2';
+    public $to_date;
+    public $applying_to;
+    public $contact_details;
+    public $reason;
+    public $selectedPeople = [];
     public  $showinfoMessage = true;
     public  $showinfoButton = false;
     public $errorMessage = '';
@@ -18,13 +29,26 @@ class LeaveApplyPage extends Component
     public $show_reporting = false;
     public $showApplyingTo = true;
     public $leaveBalances = [];
-
-    public $searchTerm = '';
-
     public $selectedYear;
     public $createdLeaveRequest;
     public $calculatedNumberOfDays = 0;
     public $employeeDetails = [];
+    public $showPopupMessage = false;
+    public $numberOfDays;
+    public $showApplyingToContainer = false;
+    public $loginEmpManagerProfile;
+    public $loginEmpManager;
+    public $cc_to;
+    public $showCcRecipents = false;
+    public $loginEmpManagerId;
+    public $probationDetails;
+    public $managerFullName = [];
+    public $ccRecipients = [];
+    public $selectedManager = [];
+    public $searchTerm = '';
+    public $filter = '';
+    public $selectedCcTo = [];
+    public $selectedCCEmployees = [];
     protected $rules = [
         'leave_type' => 'required',
         'from_date' => 'required|date',
@@ -47,45 +71,11 @@ class LeaveApplyPage extends Component
 
     public function mount()
     {
-        try {
-            $this->searchTerm = '';
-            $this->filter = '';
-            $this->selectedYear = Carbon::now()->format('Y');
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->probationDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
-            foreach ($this->probationDetails as $employee) {
-                if ($employee->hire_date) {
-                    $hireDate = Carbon::parse($employee->hire_date);
-                    $this->differenceInMonths = $hireDate->diffInMonths(Carbon::now());
-                }
-            }
-            if ($this->applying_to) {
-                $this->loginEmpManagerId = $this->applying_to->manager_id;
-                // Retrieve the corresponding employee details for the manager
-                $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
-
-                if ($managerDetails) {
-                    // Concatenate first_name and last_name to create the full name
-                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
-                    // Assign the full name to a property for later use
-                    $this->loginEmpManager = $fullName;
-                    $this->loginEmpManagerProfile = $managerDetails->image;
-                } else {
-                    $this->loginEmpManager = $this->applying_to->report_to;
-                }
-            }
-            $this->searchEmployees();
-            $this->searchCCRecipients();
-        } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in mount method: ' . $e->getMessage());
-            // Display a friendly error message to the user
-            session()->flash('error', 'An error occurred while loading leave apply page. Please try again later.');
-            // Redirect the user to a safe location
-            return redirect()->back();
-        }
+        $this->searchTerm = '';
+        $this->filter = '';
+        $this->selectedYear = Carbon::now()->format('Y');
     }
+
     public function validateField($propertyName)
     {
         $this->validateOnly($propertyName);
@@ -96,6 +86,239 @@ class LeaveApplyPage extends Component
         $this->showinfoMessage = !$this->showinfoMessage;
         $this->showinfoButton = !$this->showinfoButton;
     }
+    public function searchEmployees()
+    {
+        try {
+            // Fetch employees based on the search term
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->employeeDetails = EmployeeDetails::where('company_id', $applying_to->company_id)
+                ->where(function ($query) {
+                    $query
+                        ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
+                        ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
+                        ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
+                })
+                ->select('manager_id')
+                ->groupBy('manager_id')
+                ->distinct()
+                ->get();
+            $managers = [];
+            foreach ($this->employeeDetails as $employee) {
+                // Retrieve employee details based on manager_id
+                $empManagerDetails = EmployeeDetails::where('emp_id', $employee->manager_id)->first();
+
+                // Check if employee details exist and concatenate first name and last name
+                if ($empManagerDetails) {
+                    $fullName = ucwords(strtolower($empManagerDetails->first_name)) . ' ' . ucwords(strtolower($empManagerDetails->last_name));
+                    $managers[] = [
+                        'emp_id' => $empManagerDetails->emp_id,
+                        'image' => $empManagerDetails->image,
+                        'full_name' => $fullName
+                    ];
+                }
+            }
+
+            // Apply filtering based on $filter
+            if (!empty($this->filter)) {
+                $managers = array_filter($managers, function ($manager) {
+                    return stripos($manager['full_name'], $this->filter) !== false;
+                });
+            }
+
+            // Sort the managers by full name
+            usort($managers, function ($a, $b) {
+                return strcmp($a['full_name'], $b['full_name']);
+            });
+
+            $this->managerFullName = $managers;
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in searchEmployees method: ' . $e->getMessage());
+            // Display a friendly error message to the user
+            session()->flash('error', 'An error occurred while searching for employees. Please try again later.');
+        }
+    }
+
+
+    //this method used to filter cc recipients from employee details
+    public function searchCCRecipients()
+    {
+        try {
+            // Fetch employees based on the search term for CC To
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->ccRecipients = EmployeeDetails::where('company_id', $applying_to->company_id)
+                ->where('emp_id', '!=', $employeeId) // Exclude the current user
+                ->where(function ($query) {
+                    $query
+                        ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
+                        ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
+                })
+                ->groupBy('emp_id', 'image')
+                ->select(
+                    'emp_id',
+                    'image',
+                    DB::raw('MIN(CONCAT(first_name, " ", last_name)) as full_name')
+                )
+                ->orderBy('full_name')
+                ->get();
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in searchCCRecipients method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while searching for CC recipients. Please try again later.');
+        }
+    }
+
+    public function openCcRecipientsContainer()
+    {
+        try {
+            $this->showCcRecipents = true;
+            $this->searchCCRecipients();
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in openCcRecipientsContainer method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while opening CC recipients container. Please try again later.');
+        }
+    }
+
+
+    //this method will help to close the cc to container
+    public function closeCcRecipientsContainer()
+    {
+        try {
+            $this->showCcRecipents = !$this->showCcRecipents;
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in closeCcRecipientsContainer method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while closing CC recipients container. Please try again later.');
+        }
+    }
+
+    //selected applying to manager details
+    public function toggleManager($empId)
+    {
+        // Select the manager only if it is not already selected
+        if (!in_array($empId, $this->selectedManager)) {
+            $this->selectedManager = [$empId];
+
+            // Fetch details for the selected manager
+            $this->fetchManagerDetails($empId);
+        }
+
+        // Ensure showApplyingToContainer remains false
+        $this->showApplyingToContainer = false;
+    }
+
+    // Method to fetch manager details
+    private function fetchManagerDetails($managerId)
+    {
+        $employeeDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+
+        if ($employeeDetails) {
+            $this->loginEmpManagerProfile = $employeeDetails->image ? 'data:image/jpeg;base64,' . base64_encode($employeeDetails->image) : null;
+            $this->loginEmpManager = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
+            $this->loginEmpManagerId = $employeeDetails->emp_id;
+        } else {
+            // Handle case if details are not found
+            $this->resetManagerDetails(); // Reset to default values or show N/A
+        }
+    }
+
+    // Method to reset manager details
+    private function resetManagerDetails()
+    {
+        $this->loginEmpManagerProfile = null;
+        $this->loginEmpManager = null;
+        $this->loginEmpManagerId = null;
+    }
+    private function isWeekend($date)
+    {
+        // Convert date string to a Carbon instance
+        $carbonDate = Carbon::parse($date);
+        // Check if the day of the week is Saturday or Sunday
+        return $carbonDate->isWeekend();
+    }
+    public function toggleSelection($empId)
+    {
+        if (isset($this->selectedPeople[$empId])) {
+            unset($this->selectedPeople[$empId]);
+        } else {
+            $this->selectedPeople[$empId] = true;
+        }
+        $this->searchCCRecipients();
+        $this->fetchEmployeeDetails();
+    }
+    public function fetchEmployeeDetails()
+    {
+        // Reset the list of selected employees
+        $this->selectedCCEmployees = [];
+
+        // Fetch details for selected employees
+        foreach ($this->selectedPeople as $empId => $selected) {
+            $employee = EmployeeDetails::where('emp_id', $empId)->first();
+
+            if ($employee) {
+                // Calculate initials
+                $firstNameInitial = strtoupper(substr($employee->first_name, 0, 1));
+                $lastNameInitial = strtoupper(substr($employee->last_name, 0, 1));
+                $initials = $firstNameInitial . $lastNameInitial;
+
+                // Add to selectedEmployees array
+                $this->selectedCCEmployees[] = [
+                    'emp_id' => $empId,
+                    'first_name' => $employee->first_name,
+                    'last_name' => $employee->last_name,
+                    'initials' => $initials,
+                ];
+            }
+        }
+    }
+    public function handleCheckboxChange($empId)
+    {
+        if (isset($this->selectedPeople[$empId])) {
+            // If the checkbox is unchecked, remove from CC
+            $this->removeFromCcTo($empId);
+        } else {
+            // If the checkbox is checked, add to CC
+            $this->selectedPeople[$empId] = true;
+        }
+    }
+    public function removeFromCcTo($empId)
+    {
+        // Remove the employee from selectedCcTo array
+        $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($empId) {
+            return $recipient['emp_id'] != $empId;
+        }));
+
+        // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
+        $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
+
+        // Toggle selection state in selectedPeople
+        unset($this->selectedPeople[$empId]);
+        $this->showCcRecipents = true;
+        // Fetch updated employee details
+        $this->fetchEmployeeDetails();
+        $this->searchCCRecipients();
+    }
+
+
+    //this method will handle the search functionality
+    public function handleSearch($type)
+    {
+        try {
+            if ($type === 'employees') {
+                $this->searchEmployees();
+            } elseif ($type === 'ccRecipients') {
+                $this->searchCCRecipients();
+            }
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in handleSearch method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while handling the search. Please try again later.');
+        }
+    }
+
     public function leaveApply()
     {
         $this->validate();
@@ -250,6 +473,50 @@ class LeaveApplyPage extends Component
             return redirect()->to('/leave-page');
         }
     }
+    public function handleFieldUpdate($field)
+    {
+        try {
+            $this->showNumberOfDays = true;
+            $this->showPopupMessage = false; // Ensure popup is not shown by default
+
+            if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session') {
+                list($result, $errorMessage) = $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
+
+                if ($errorMessage) {
+                    // If there's an error, set the popup message
+                    session()->flash('popupMessage', $errorMessage);
+                    $this->showPopupMessage = true;
+                } else {
+                    $this->numberOfDays = $result;
+
+                    // Check if number of days is 0 and set the popup flag
+                    if ($this->numberOfDays === 0) {
+                        session()->flash('popupMessage', 'Selected dates are valid, but no working days are calculated.');
+                        $this->showPopupMessage = true;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in handleFieldUpdate method: ' . $e->getMessage());
+            session()->flash('popupMessage', 'An error occurred while handling field update. Please try again later.');
+            $this->showPopupMessage = true;
+        }
+    }
+    public function applyingTo()
+    {
+        try {
+            $this->showApplyingToContainer = !$this->showApplyingToContainer;
+            $this->show_reporting = true;
+            $this->showApplyingTo = false;
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in openCcRecipientsContainer method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while opening CC recipients container. Please try again later.');
+        }
+
+    }
+
     public function selectLeave()
     {
         try {
@@ -275,6 +542,7 @@ class LeaveApplyPage extends Component
                     $this->leaveBalances = [
                         'lossOfPayBalance' => $allLeaveBalances['lossOfPayBalance']
                     ];
+
                     break;
                 case 'Sick Leave':
                     $this->leaveBalances = [
@@ -392,13 +660,31 @@ class LeaveApplyPage extends Component
     {
         return (int) str_replace('Session ', '', $session);
     }
+
+    public $managerDetails, $fullName;
     public function render()
     {
+        $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
+        $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+        if ($applying_to) {
+            $this->loginEmpManagerId = $applying_to->manager_id;
+            $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
+            if ($managerDetails) {
+                $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                $this->loginEmpManager = $fullName;
+            }
+            $empManagerDetails = $managerDetails;
+        }
         $employeeGender = EmployeeDetails::where('emp_id', $employeeId)->select('gender')->first();
+
         return view('livewire.leave-apply-page', [
             'employeeGender' => $employeeGender,
-            'calculatedNumberOfDays' => $this->calculatedNumberOfDays
+            'calculatedNumberOfDays' => $this->calculatedNumberOfDays,
+            'empManagerDetails' => $empManagerDetails,
+            'loginEmpManager' => $this->loginEmpManager,
+            'managerFullName' => $this->managerFullName,
+            'ccRecipients' => $this->ccRecipients
         ]);
     }
 }
