@@ -142,7 +142,7 @@ class Peoples extends Component
                             'emp_id' => $this->employeeDetails->emp_id,
                             'company_id' => $this->employee->company_id,
                             'name' => $this->employee->first_name . ' ' . $this->employee->last_name ?? '', 
-                            'profile' => $this->employee->image ?? 'https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain',
+                            'profile' => $this->employee->image ?? 'null',
                             'contact_details' => $this->employee->emergency_contact ?? '',
                             'category' => $category,
                             'location' => $this->employee->job_location ?? '',

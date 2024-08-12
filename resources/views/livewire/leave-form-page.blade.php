@@ -73,8 +73,7 @@
          <!-- Sub-Section Content -->
          @if($activeSubSection === 'leave')
          <div class="apply-section">
-            <h3>Apply for Leave</h3>
-            <!-- Add your leave application form or content here -->
+            @livewire('leave-apply-page')
          </div>
          @elseif($activeSubSection === 'restricted')
          <div class="restricted-section">

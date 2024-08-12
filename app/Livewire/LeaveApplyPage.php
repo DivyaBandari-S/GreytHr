@@ -1,36 +1,16 @@
 <?php
-// File Name                       : LeaveApply.php
-// Description                     : This file contains the implementation of Applying for a leave
-// Creator                         : Bandari Divya
-// Email                           : bandaridivya1@gmail.com
-// Organization                    : PayG.
-// Date                            : 2024-03-07
-// Framework                       : Laravel (10.10 Version)
-// Programming Language            : PHP (8.1 Version)
-// Database                        : MySQL
-// Models                          : LeaveRequest,EmployeeDetails.
+
 namespace App\Livewire;
 
-use Livewire\WithFileUploads;
-use Livewire\WithPagination;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use App\Models\LeaveRequest;
-use App\Models\Notification;
 use App\Models\EmployeeDetails;
-use Livewire\Component;
-use Illuminate\Support\Facades\DB;
-use App\Mail\LeaveApplicationNotification;
-use App\Models\HolidayCalendar;
+use App\Models\LeaveRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
+use Livewire\Component;
 
-class LeaveApply extends Component
+class LeaveApplyPage extends Component
 {
-    use WithFileUploads, WithPagination;
-
     public $leave_type;
     public $emp_id;
     public $from_date;
@@ -40,52 +20,35 @@ class LeaveApply extends Component
     public $applying_to;
     public $contact_details;
     public $reason;
-    public $reportTo;
-    public $report_to;
-    public $managerId;
-    public $employeeId;
-    public $file_paths;
-    public $defaultApplyingTo;
-    public $cc_to;
-    public $searchTerm = '';
-    public $selectedEmployeeNames = [];
     public $selectedPeople = [];
-    public $selectedManager = [];
-    public $first_name;
-    public $employeeDetails = [];
-    public $ccRecipients = [];
-    public $applyingToDetails = [];
-    public $filteredEmployees = [];
-    public $has;
-    public $isOpen = false;
-    public $leaveDetails;
-    private $createdLeaveRequest;
-    private $dynamicFromAddress;
-    public $items = [];
-    public $selectedItems = [];
-    public $managerFullName;
-    public $loginEmpManagerId;
-    public $filteredCcRecipients;
-    public $loginEmpManager;
+    public  $showinfoMessage = true;
+    public  $showinfoButton = false;
     public $errorMessage = '';
-    public $filter = '';
-    public $selectedYear;
-    public $leaveBalances = [];
-    public $showCcRecipents = false;
-
+    public $showNumberOfDays = false;
+    public $differenceInMonths;
     public $show_reporting = false;
     public $showApplyingTo = true;
-    public $showNumberOfDays = false;
-    public $showApplyingToContainer = false;
-    public $fromDate;
-    public $fromSession;
-    public $toSession;
-    public $toDate;
+    public $leaveBalances = [];
+    public $selectedYear;
+    public $createdLeaveRequest;
     public $calculatedNumberOfDays = 0;
+    public $employeeDetails = [];
+    public $showPopupMessage = false;
+    public $numberOfDays;
+    public $showApplyingToContainer = false;
     public $loginEmpManagerProfile;
-    public $differenceInMonths;
+    public $loginEmpManager;
+    public $cc_to;
+    public $showCcRecipents = false;
+    public $loginEmpManagerId;
     public $probationDetails;
-    public $managerDetails;
+    public $managerFullName = [];
+    public $ccRecipients = [];
+    public $selectedManager = [];
+    public $searchTerm = '';
+    public $filter = '';
+    public $selectedCcTo = [];
+    public $selectedCCEmployees = [];
     protected $rules = [
         'leave_type' => 'required',
         'from_date' => 'required|date',
@@ -106,60 +69,30 @@ class LeaveApply extends Component
         'reason.required' => 'Reason is required',
     ];
 
+    public function mount()
+    {
+        $this->searchTerm = '';
+        $this->filter = '';
+        $this->selectedYear = Carbon::now()->format('Y');
+    }
 
     public function validateField($propertyName)
     {
         $this->validateOnly($propertyName);
     }
 
-    public function mount()
+    public function toggleInfo()
     {
-        try {
-            $this->searchTerm = '';
-            $this->filter = '';
-            $this->selectedYear = Carbon::now()->format('Y');
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->probationDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            foreach ($this->probationDetails as $employee) {
-                if ($employee->hire_date) {
-                    $hireDate = Carbon::parse($employee->hire_date);
-                    $this->differenceInMonths = $hireDate->diffInMonths(Carbon::now());
-                }
-            }
-            if ($this->applying_to) {
-                $this->loginEmpManagerId = $this->applying_to->manager_id;
-                // Retrieve the corresponding employee details for the manager
-                $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
-
-                if ($managerDetails) {
-                    // Concatenate first_name and last_name to create the full name
-                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
-                    // Assign the full name to a property for later use
-                    $this->loginEmpManager = $fullName;
-                    $this->loginEmpManagerProfile = $managerDetails->image;
-                } else {
-                    $this->loginEmpManager = $this->applying_to->report_to;
-                }
-            }
-            $this->searchEmployees();
-            $this->searchCCRecipients();
-        } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in mount method: ' . $e->getMessage());
-            // Display a friendly error message to the user
-            session()->flash('error', 'An error occurred while loading leave apply page. Please try again later.');
-            // Redirect the user to a safe location
-            return redirect()->back();
-        }
+        $this->showinfoMessage = !$this->showinfoMessage;
+        $this->showinfoButton = !$this->showinfoButton;
     }
-
-    // this method to get managers
     public function searchEmployees()
     {
         try {
             // Fetch employees based on the search term
-            $this->employeeDetails = EmployeeDetails::where('company_id', $this->applying_to->company_id)
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->employeeDetails = EmployeeDetails::where('company_id', $applying_to->company_id)
                 ->where(function ($query) {
                     $query
                         ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
@@ -170,18 +103,17 @@ class LeaveApply extends Component
                 ->groupBy('manager_id')
                 ->distinct()
                 ->get();
-
             $managers = [];
             foreach ($this->employeeDetails as $employee) {
                 // Retrieve employee details based on manager_id
-                $employeeDetails = EmployeeDetails::where('emp_id', $employee->manager_id)->first();
+                $empManagerDetails = EmployeeDetails::where('emp_id', $employee->manager_id)->first();
 
                 // Check if employee details exist and concatenate first name and last name
-                if ($employeeDetails) {
-                    $fullName = ucwords(strtolower($employeeDetails->first_name)) . ' ' . ucwords(strtolower($employeeDetails->last_name));
+                if ($empManagerDetails) {
+                    $fullName = ucwords(strtolower($empManagerDetails->first_name)) . ' ' . ucwords(strtolower($empManagerDetails->last_name));
                     $managers[] = [
-                        'emp_id' => $employeeDetails->emp_id,
-                        'image' => $employeeDetails->image,
+                        'emp_id' => $empManagerDetails->emp_id,
+                        'image' => $empManagerDetails->image,
                         'full_name' => $fullName
                     ];
                 }
@@ -215,7 +147,8 @@ class LeaveApply extends Component
         try {
             // Fetch employees based on the search term for CC To
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->ccRecipients = EmployeeDetails::where('company_id', $this->applying_to->company_id)
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->ccRecipients = EmployeeDetails::where('company_id', $applying_to->company_id)
                 ->where('emp_id', '!=', $employeeId) // Exclude the current user
                 ->where(function ($query) {
                     $query
@@ -236,9 +169,76 @@ class LeaveApply extends Component
             session()->flash('error', 'An error occurred while searching for CC recipients. Please try again later.');
         }
     }
-    public $selectedCcTo = [];
-    public $selectedCCEmployees = [];
 
+    public function openCcRecipientsContainer()
+    {
+        try {
+            $this->showCcRecipents = true;
+            $this->searchCCRecipients();
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in openCcRecipientsContainer method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while opening CC recipients container. Please try again later.');
+        }
+    }
+
+
+    //this method will help to close the cc to container
+    public function closeCcRecipientsContainer()
+    {
+        try {
+            $this->showCcRecipents = !$this->showCcRecipents;
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in closeCcRecipientsContainer method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while closing CC recipients container. Please try again later.');
+        }
+    }
+
+    //selected applying to manager details
+    public function toggleManager($empId)
+    {
+        // Select the manager only if it is not already selected
+        if (!in_array($empId, $this->selectedManager)) {
+            $this->selectedManager = [$empId];
+
+            // Fetch details for the selected manager
+            $this->fetchManagerDetails($empId);
+        }
+
+        // Ensure showApplyingToContainer remains false
+        $this->showApplyingToContainer = false;
+    }
+
+    // Method to fetch manager details
+    private function fetchManagerDetails($managerId)
+    {
+        $employeeDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+
+        if ($employeeDetails) {
+            $this->loginEmpManagerProfile = $employeeDetails->image ? 'data:image/jpeg;base64,' . base64_encode($employeeDetails->image) : null;
+            $this->loginEmpManager = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
+            $this->loginEmpManagerId = $employeeDetails->emp_id;
+        } else {
+            // Handle case if details are not found
+            $this->resetManagerDetails(); // Reset to default values or show N/A
+        }
+    }
+
+    // Method to reset manager details
+    private function resetManagerDetails()
+    {
+        $this->loginEmpManagerProfile = null;
+        $this->loginEmpManager = null;
+        $this->loginEmpManagerId = null;
+    }
+    private function isWeekend($date)
+    {
+        // Convert date string to a Carbon instance
+        $carbonDate = Carbon::parse($date);
+        // Check if the day of the week is Saturday or Sunday
+        return $carbonDate->isWeekend();
+    }
     public function toggleSelection($empId)
     {
         if (isset($this->selectedPeople[$empId])) {
@@ -296,7 +296,7 @@ class LeaveApply extends Component
 
         // Toggle selection state in selectedPeople
         unset($this->selectedPeople[$empId]);
-
+        $this->showCcRecipents = true;
         // Fetch updated employee details
         $this->fetchEmployeeDetails();
         $this->searchCCRecipients();
@@ -319,206 +319,6 @@ class LeaveApply extends Component
         }
     }
 
-    public function applyingTo()
-    {
-        $this->showApplyingToContainer = !$this->showApplyingToContainer;
-        $this->show_reporting = true;
-        $this->showApplyingTo = false;
-    }
-
-
-    //this method used to open the ccto container
-    public function openCcRecipientsContainer()
-    {
-        try {
-            $this->showCcRecipents = true;
-            $this->searchCCRecipients();
-        } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in openCcRecipientsContainer method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while opening CC recipients container. Please try again later.');
-        }
-    }
-
-    //this method will help to close the cc to container
-    public function closeCcRecipientsContainer()
-    {
-        try {
-            $this->showCcRecipents = !$this->showCcRecipents;
-        } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in closeCcRecipientsContainer method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while closing CC recipients container. Please try again later.');
-        }
-    }
-    public $showPopupMessage = false;
-    public $numberOfDays;
-    //it will update the number of days in leave apply page
-    public function handleFieldUpdate($field)
-    {
-        try {
-            $this->showNumberOfDays = true;
-            $this->showPopupMessage = false; // Ensure popup is not shown by default
-
-            if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session') {
-                list($result, $errorMessage) = $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
-
-                if ($errorMessage) {
-                    // If there's an error, set the popup message
-                    session()->flash('popupMessage', $errorMessage);
-                    $this->showPopupMessage = true;
-                } else {
-                    $this->numberOfDays = $result;
-
-                    // Check if number of days is 0 and set the popup flag
-                    if ($this->numberOfDays === 0) {
-                        dd('ghj');
-                        session()->flash('popupMessage', 'Selected dates are valid, but no working days are calculated.');
-                        $this->showPopupMessage = true;
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in handleFieldUpdate method: ' . $e->getMessage());
-            session()->flash('popupMessage', 'An error occurred while handling field update. Please try again later.');
-            $this->showPopupMessage = true;
-        }
-    }
-
-
-    //it will calculate number of days for leave application
-    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
-    {
-        try {
-            $startDate = Carbon::parse($fromDate);
-            $endDate = Carbon::parse($toDate);
-
-            // Check if the start or end date is a weekend
-            if ($startDate->isWeekend() || $endDate->isWeekend()) {
-                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
-            }
-
-            // Check if the start and end sessions are different on the same day
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
-            ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 0.5;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
-            }
-
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
-            ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 1;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
-            }
-
-            $totalDays = 0;
-
-            while ($startDate->lte($endDate)) {
-                // Check if it's a weekday (Monday to Friday)
-                if ($startDate->isWeekday()) {
-                    $totalDays += 1;
-                }
-                // Move to the next day
-                $startDate->addDay();
-            }
-
-            // Deduct weekends based on the session numbers
-            if ($this->getSessionNumber($fromSession) > 1) {
-                $totalDays -= $this->getSessionNumber($fromSession) - 1; // Deduct days for the starting session
-            }
-            if ($this->getSessionNumber($toSession) < 2) {
-                $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
-            }
-            // Adjust for half days
-            if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                // If start and end sessions are the same, check if the session is not 1
-                if ($this->getSessionNumber($fromSession) !== 1) {
-                    $totalDays += 0.5; // Add half a day
-                } else {
-                    $totalDays += 0.5;
-                }
-            } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
-                if ($this->getSessionNumber($fromSession) !== 1) {
-                    $totalDays += 1; // Add half a day
-                }
-            } else {
-                $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
-            }
-
-            return $totalDays;
-        } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
-        }
-    }
-
-    private function getSessionNumber($session)
-    {
-        return (int) str_replace('Session ', '', $session);
-    }
-
-
-    //selected applying to manager details
-    public function toggleManager($empId)
-    {
-        // Select the manager only if it is not already selected
-        if (!in_array($empId, $this->selectedManager)) {
-            $this->selectedManager = [$empId];
-
-            // Fetch details for the selected manager
-            $this->fetchManagerDetails($empId);
-        }
-
-        // Ensure showApplyingToContainer remains false
-        $this->showApplyingToContainer = false;
-    }
-
-
-    // Method to fetch manager details
-    private function fetchManagerDetails($managerId)
-    {
-        $employeeDetails = EmployeeDetails::where('emp_id', $managerId)->first();
-
-        if ($employeeDetails) {
-            $this->loginEmpManagerProfile = $employeeDetails->image ? asset('storage/' . $employeeDetails->image) : null;
-            $this->loginEmpManager = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
-            $this->loginEmpManagerId = $employeeDetails->emp_id;
-        } else {
-            // Handle case if details are not found
-            $this->resetManagerDetails(); // Reset to default values or show N/A
-        }
-    }
-
-    // Method to reset manager details
-    private function resetManagerDetails()
-    {
-        $this->loginEmpManagerProfile = null;
-        $this->loginEmpManager = null;
-        $this->loginEmpManagerId = null;
-    }
-    private function isWeekend($date)
-    {
-        // Convert date string to a Carbon instance
-        $carbonDate = Carbon::parse($date);
-        // Check if the day of the week is Saturday or Sunday
-        return $carbonDate->isWeekend();
-    }
-
-    //method to apply for a leave
     public function leaveApply()
     {
         $this->validate();
@@ -561,7 +361,7 @@ class LeaveApply extends Component
             }
 
             // Check for holidays in the selected date range
-            $holidays = HolidayCalendar::where(function ($query) {
+            $holidays = HolidayCalender::where(function ($query) {
                 $query->whereBetween('date', [$this->from_date, $this->to_date])
                     ->orWhere(function ($q) {
                         $q->where('date', '>=', $this->from_date)
@@ -672,30 +472,49 @@ class LeaveApply extends Component
             }
             return redirect()->to('/leave-page');
         }
-
     }
-
-    public function cancelLeaveApplication()
+    public function handleFieldUpdate($field)
     {
-        Log::info('Before reset:');
-        Log::info($this->reason); // Log current values before reset
+        try {
+            $this->showNumberOfDays = true;
+            $this->showPopupMessage = false; // Ensure popup is not shown by default
 
-        // Reset properties
-        $this->leave_type = '';
-        $this->from_date = '';
-        $this->to_date = '';
-        $this->selectedManager = [];
-        $this->selectedPeople = [];
-        $this->contact_details = '';
-        $this->reason = '';
+            if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session') {
+                list($result, $errorMessage) = $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
 
-        Log::info('After reset:');
-        Log::info($this->reason);
+                if ($errorMessage) {
+                    // If there's an error, set the popup message
+                    session()->flash('popupMessage', $errorMessage);
+                    $this->showPopupMessage = true;
+                } else {
+                    $this->numberOfDays = $result;
+
+                    // Check if number of days is 0 and set the popup flag
+                    if ($this->numberOfDays === 0) {
+                        session()->flash('popupMessage', 'Selected dates are valid, but no working days are calculated.');
+                        $this->showPopupMessage = true;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in handleFieldUpdate method: ' . $e->getMessage());
+            session()->flash('popupMessage', 'An error occurred while handling field update. Please try again later.');
+            $this->showPopupMessage = true;
+        }
     }
-
-    public function handleEnterKey()
+    public function applyingTo()
     {
-        $this->searchCCRecipients();
+        try {
+            $this->showApplyingToContainer = !$this->showApplyingToContainer;
+            $this->show_reporting = true;
+            $this->showApplyingTo = false;
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in openCcRecipientsContainer method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while opening CC recipients container. Please try again later.');
+        }
+
     }
 
     public function selectLeave()
@@ -723,6 +542,7 @@ class LeaveApply extends Component
                     $this->leaveBalances = [
                         'lossOfPayBalance' => $allLeaveBalances['lossOfPayBalance']
                     ];
+
                     break;
                 case 'Sick Leave':
                     $this->leaveBalances = [
@@ -757,20 +577,114 @@ class LeaveApply extends Component
             return redirect()->back();
         }
     }
-    public  $showinfoMessage = true;
-    public  $showinfoButton = false;
-    public function toggleInfo()
+    //it will calculate number of days for leave application
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
-        $this->showinfoMessage = !$this->showinfoMessage;
-        $this->showinfoButton = !$this->showinfoButton;
+        try {
+            $startDate = Carbon::parse($fromDate);
+            $endDate = Carbon::parse($toDate);
+
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+            }
+
+            // Check if the start and end sessions are different on the same day
+            if (
+                $startDate->isSameDay($endDate) &&
+                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
+            ) {
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                    return 0.5;
+                } else {
+                    // If either start or end date is a weekend, return 0
+                    return 0;
+                }
+            }
+
+            if (
+                $startDate->isSameDay($endDate) &&
+                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
+            ) {
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                    return 1;
+                } else {
+                    // If either start or end date is a weekend, return 0
+                    return 0;
+                }
+            }
+
+            $totalDays = 0;
+
+            while ($startDate->lte($endDate)) {
+                // Check if it's a weekday (Monday to Friday)
+                if ($startDate->isWeekday()) {
+                    $totalDays += 1;
+                }
+                // Move to the next day
+                $startDate->addDay();
+            }
+
+            // Deduct weekends based on the session numbers
+            if ($this->getSessionNumber($fromSession) > 1) {
+                $totalDays -= $this->getSessionNumber($fromSession) - 1; // Deduct days for the starting session
+            }
+            if ($this->getSessionNumber($toSession) < 2) {
+                $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
+            }
+            // Adjust for half days
+            if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
+                // If start and end sessions are the same, check if the session is not 1
+                if ($this->getSessionNumber($fromSession) !== 1) {
+                    $totalDays += 0.5; // Add half a day
+                } else {
+                    $totalDays += 0.5;
+                }
+            } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
+                if ($this->getSessionNumber($fromSession) !== 1) {
+                    $totalDays += 1; // Add half a day
+                }
+            } else {
+                $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
+            }
+
+            return $totalDays;
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
     }
+
+    private function getSessionNumber($session)
+    {
+        return (int) str_replace('Session ', '', $session);
+    }
+
+    public $managerDetails, $fullName;
     public function render()
     {
+        $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
+        $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+        if ($applying_to) {
+            $this->loginEmpManagerId = $applying_to->manager_id;
+            $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
+            if ($managerDetails) {
+                $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                $this->loginEmpManager = $fullName;
+            }
+            $empManagerDetails = $managerDetails;
+        }
         $employeeGender = EmployeeDetails::where('emp_id', $employeeId)->select('gender')->first();
-        return view('livewire.leave-apply', [
+
+        return view('livewire.leave-apply-page', [
             'employeeGender' => $employeeGender,
-            'calculatedNumberOfDays' => $this->calculatedNumberOfDays
+            'calculatedNumberOfDays' => $this->calculatedNumberOfDays,
+            'empManagerDetails' => $empManagerDetails,
+            'loginEmpManager' => $this->loginEmpManager,
+            'managerFullName' => $this->managerFullName,
+            'ccRecipients' => $this->ccRecipients
         ]);
     }
 }
