@@ -18,44 +18,29 @@
             </select>
         </div>
 
-        @if(!empty($regularisationDetails))
+      
         <table class="swipes-table mt-2 border" style="width: 100%;">
             <tr style="background-color: #f6fbfc;">
                 <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name</th>
                 <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Number</th>
-                <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Status</th>
-                <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Date</th>
+
             </tr>
 
-            @foreach ($regularisationDetails as $rd)
+            @foreach ($employees as $emp)
 
-            @if($rd->regularisation_entries!='[]')
+            
             <tr style="border:1px solid #ccc;">
                 
-                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{ucwords(strtolower($rd->first_name))}} {{ucwords(strtolower($rd->last_name))}}</td>
-                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{$rd->emp_id}}</td>
-                @if($rd->status=='pending'&&$rd->is_withdraw==0)
-                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">Applied</td>
-                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;"></td>
-                @elseif($rd->status=='pending'&&$rd->is_withdraw==1)
-                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">Withdrawn</td>
-                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{ date('jS M,Y', strtotime($rd->withdraw_date)) }}</td>
-                @else
-                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{ucwords(strtolower($rd->status))}}</td>
-                @if($rd->status=='approved')
-                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{date('jS M,Y',strtotime($rd->approved_date))}}</td>
-                @elseif($rd->status=='rejected')
-                <td style="width:50%;font-size: 10px; color:  <?php echo ($rd->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{date('jS M,Y',strtotime($rd->rejected_date))}}</td>
-                @endif
-                @endif
-
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{ucwords(strtolower($emp->first_name))}} {{ucwords(strtolower($emp->last_name))}}</td>
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{$emp->emp_id}}</td>
+               
             </tr>
 
-            @endif
+          
             @endforeach
 
         </table>
-        @endif
+       
         <div class="modal-footer mt-2"
                             style="background-color: rgb(2, 17, 79); display: flex;justify-content: space-around;;">
                             <button type="button"

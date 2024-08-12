@@ -1,163 +1,5 @@
 <div class=" m-0 p-0">
-  <style>
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 40px;
-      /* Reduced width */
-      height: 20px;
-      /* Reduced height */
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      border: 1px solid #666;
-      -webkit-transition: .4s;
-      transition: .4s;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 12px;
-      /* Reduced height */
-      width: 12px;
-      /* Reduced width */
-      left: 4px;
-      /* Adjusted to fit smaller slider */
-      bottom: 4px;
-      /* Adjusted to fit smaller slider */
-      background-color: #666;
-      -webkit-transition: .4s;
-      transition: .4s;
-    }
-
-    input:checked+.slider {
-      background-color: #2196F3;
-      border: 1px solid #2196F3;
-    }
-
-    input:focus+.slider {
-      box-shadow: 0 0 1px #2196F3;
-    }
-
-    input:checked+.slider:before {
-      -webkit-transform: translateX(26px);
-      -ms-transform: translateX(26px);
-      transform: translateX(26px);
-      background-color: white;
-
-    }
-
-    .slider.round {
-      border-radius: 34px;
-    }
-
-    .slider.round:before {
-      border-radius: 50%;
-    }
-
-    .toggle-box-container-who-is-in {
-      float: right;
-      display: flex;
-      align-items: center;
-    }
-
-    .wide-short-container {
-      width: 100%;
-      /* Adjust width as needed */
-      height: 80px;
-      /* Adjust height as needed */
-      background-color: transparent;
-      /* Background color */
-      border: 1px solid rgb(211, 211, 211);
-      /* Border */
-      border-radius: 5px;
-      /* Rounded corners */
-      margin-top: 50px;
-      /* Adjust spacing as needed */
-      padding: 10px;
-      /* Padding inside the container */
-
-
-    }
-
-    .checkbox-label {
-      font-size: 12px;
-      /* Text size */
-      /* Text color */
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      /* Center items vertically */
-    }
-
-    .checkbox-label input {
-      margin-right: 5px;
-      /* Space between checkbox and text */
-    }
-
-    .total-employee-count {
-      font-size: 12px;
-      /* Text size */
-      color: #059212;
-      /* Text color */
-      padding-bottom: 10px;
-    }
-
-    .time-range {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .time-range .start-time,
-    .time-range .end-time {
-      font-size: 12px;
-      /* Text size */
-      color: #778899;
-      /* Text color */
-      margin: 0 10px;
-      /* Adjust spacing as needed */
-    }
-
-    .time-separator {
-      width: 100%;
-      /* Full width */
-      height: 1px;
-      /* Height of the line */
-      background-color: #778899;
-      /* Line color */
-      margin: 0 10px;
-      /* Adjust spacing as needed */
-    }
-
-    .save-selectshift-button {
-      background-color: transparent;
-      border: 1px solid #007bff;
-      color: #007bff;
-
-    }
-
-    .save-selectshift-button:hover {
-      background-color: #007bff;
-      border: 1px solid #007bff;
-      color: white;
-
-    }
-  </style>
+  
   @php
   $notyetin=0;
   $lateArrival=0;
@@ -180,7 +22,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #eef7fa; height: 50px">
-        <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Shift</b></h5>
+        <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>hiiShift</b></h5>
         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeShiftSelector" style="background-color: white; height:10px;width:10px;">
         </button>
       </div>
@@ -193,59 +35,59 @@
             All(1)
             @endif
           </span>
-          <label class="switch">
+          <label class="switch-who-is-in">
             <input type="checkbox" wire:click="toggle" {{ $isToggled ? 'checked' : '' }}>
             <span class="slider round"></span>
           </label>
         </div>
-        <div class="wide-short-container">
+        <div class="wide-short-container-who-is-in">
           <div style="display:flex;align-items:center;justify-content:space-between">
-            <label class="checkbox-label">
+            <label class="checkbox-label-who-is-in">
               <input type="checkbox">
               10:00 Am to 07:00 Pm(GS)
             </label>
-            <span class="total-employee-count">{{$dayShiftEmployeesCount}} employee(s)</span>
+            <span class="total-employee-count-who-is-in">{{$dayShiftEmployeesCount}} employee(s)</span>
           </div>
-          <div class="time-range">
-            <span class="start-time">10:00</span>
-            <hr class="time-separator">
-            <span class="end-time">19:00</span>
+          <div class="time-range-who-is-in">
+            <span class="start-time-who-is-in">10:00</span>
+            <hr class="time-separator-who-is-in">
+            <span class="end-time-who-is-in">19:00</span>
           </div>
 
         </div>
-        <div class="wide-short-container">
+        <div class="wide-short-container-who-is-in">
           <div style="display:flex;align-items:center;justify-content:space-between">
-            <label class="checkbox-label">
+            <label class="checkbox-label-who-is-in">
               <input type="checkbox">
               02:00 Pm to 11:00 Pm(AS)
             </label>
-            <span class="total-employee-count">{{$afternoonShiftEmployeesCount}} employee(s)</span>
+            <span class="total-employee-count-who-is-in">{{$afternoonShiftEmployeesCount}} employee(s)</span>
           </div>
-          <div class="time-range">
-            <span class="start-time">02:00</span>
-            <hr class="time-separator">
-            <span class="end-time">11:00</span>
+          <div class="time-range-who-is-in">
+            <span class="start-time-who-is-in">02:00</span>
+            <hr class="time-separator-who-is-in">
+            <span class="end-time-who-is-in">11:00</span>
           </div>
 
         </div>
-        <div class="wide-short-container">
+        <div class="wide-short-container-who-is-in">
           <div style="display:flex;align-items:center;justify-content:space-between">
-            <label class="checkbox-label">
+            <label class="checkbox-label-who-is-in">
               <input type="checkbox">
               05:00 Pm to 01:00 Am(ES)
             </label>
-            <span class="total-employee-count">{{$eveningShiftEmployeesCount}} employee(s)</span>
+            <span class="total-employee-count-who-is-in">{{$eveningShiftEmployeesCount}} employee(s)</span>
           </div>
-          <div class="time-range">
-            <span class="start-time">05:00</span>
-            <hr class="time-separator">
-            <span class="end-time">01:00</span>
+          <div class="time-range-who-is-in">
+            <span class="start-time-who-is-in">05:00</span>
+            <hr class="time-separator-who-is-in">
+            <span class="end-time-who-is-in">01:00</span>
           </div>
 
         </div>
         <!-- Collapsible Content -->
         <div class="text-center" style="margin-top: 100px;">
-          <button type="button" class="btn save-selectshift-button">Save</button>
+          <button type="button" class="btn save-selectshift-button-who-is-in"wire:click="check">Save</button>
         </div>
 
       </div>
@@ -319,9 +161,9 @@
 </div>
 
 <!-- containers for attendace -->
-<div class="content " style=" display:flex;">
+<div class="row m-0 p-0" style=" display:flex;">
 
-  <div class="col">
+  <div class="col-md-3">
     <div class="container5-who-is-in">
       <div class="heading-who-is-in">
         <h3>Absent&nbsp;({{ str_pad($employeesCount1, 2, '0', STR_PAD_LEFT) }})</h3>
@@ -367,7 +209,7 @@
       </div>
     </div>
   </div>
-  <div class="col">
+  <div class="col-md-3">
     <div class="container5-who-is-in">
       <div class="heading-who-is-in">
         <h3>Late&nbsp;Arrivals&nbsp;({{ str_pad($lateArrival, 2, '0', STR_PAD_LEFT) }})</h3>
@@ -399,7 +241,7 @@
             @if($isLateBy10AM)
 
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;max-width:110px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;">
+              <td style="font-size:10px;font-weight:700;max-width:110px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;padding-left:15px;">
                 @php
                 $firstNameParts = explode(' ', strtolower($s1->first_name));
                 $lastNameParts = explode(' ', strtolower($s1->last_name));
@@ -415,7 +257,7 @@
 
                 <br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span>
               </td>
-              <td style="font-weight:700;font-size:10px;">{{$lateArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
+              <td style="font-weight:700;font-size:10px;padding-left:12px;">{{$lateArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
             </tr>
 
             @endif
@@ -437,7 +279,7 @@
       </div>
     </div>
   </div>
-  <div class="col">
+  <div class="col-md-3">
     <div class="container5-who-is-in" style="margin-left:-20px;">
       <div class="heading-who-is-in">
         <h3>On&nbsp;Time&nbsp;({{ str_pad($onTime, 2, '0', STR_PAD_LEFT) }})</h3>
@@ -466,7 +308,7 @@
             @endphp 
             @if($isEarlyBy10AM) 
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;">{{ ucwords(strtolower($s1->first_name)) }}{{ ucwords(strtolower($s1->last_name)) }}<br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span></td>
+              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;">{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}<br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span></td>
               <td style="font-weight:700;font-size:10px;">{{$earlyArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
             </tr>
 
@@ -486,7 +328,7 @@
       </div>
     </div>
   </div>
-  <div class="col">
+  <div class="col-md-3">
     <div class="container5-who-is-in" style="margin-left:-20px;">
       <div class="heading-who-is-in">
         <h3>On&nbsp;Leave&nbsp;({{ str_pad($ApprovedLeaveRequestsCount, 2, '0', STR_PAD_LEFT) }})</h3>

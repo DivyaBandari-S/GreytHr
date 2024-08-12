@@ -10,10 +10,10 @@
                 <div class="modal-header text-white" style=" background-color: rgb(2, 17, 79);">
                     <h6 class="modal-title " id="logoutModalLabel" style="align-items: center;">Confirm Logout</h6>
                 </div>
-                <div class="modal-body text-center" style="font-size: 16px;">
+                <div class="modal-body text-center" style="font-size: 14px;color:var( --main-heading-color);">
                     Are you sure you want to logout?
                 </div>
-                <div class="d-flex justify-content-center p-3">
+                <div class="d-flex gap-3 justify-content-center p-3">
                     <button type="button" class="submit-btn mr-3" wire:click="confirmLogout">Logout</button>
                     <button type="button" class="cancel-btn1" wire:click="cancelLogout">Cancel</button>
                 </div>
