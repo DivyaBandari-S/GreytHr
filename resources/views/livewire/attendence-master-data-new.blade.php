@@ -284,12 +284,6 @@
             border: 1px solid #cecece;
         }
 
-        .active,
-        .accordion:hover {
-            background-color: #02114f;
-            color: #fff;
-        }
-
         .panel {
             display: none;
             background-color: white;
@@ -304,11 +298,6 @@
             color: #fff;
             float: right;
             margin-left: 5px;
-        }
-
-        .active:after {
-            content: "\2796";
-            /* Unicode character for "minus" sign (-) */
         }
 
         .legendsIcon {
