@@ -135,7 +135,7 @@
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
                     <li class="custom-item m-0 p-0 flex-grow-1">
-                        <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'active')">Active</a>
+                        <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'active')">Active</div>
                     </li>
                     <li class="custom-item m-0 p-0 flex-grow-1">
                         <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'closed')">Closed</a>
@@ -339,7 +339,7 @@
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
                     <li class="custom-item m-0 p-0 flex-grow-1">
-                        <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'active')">Active</a>
+                        <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'active')">Active</div>
                     </li>
                     <li class="custom-item m-0 p-0 flex-grow-1">
                         <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'closed')">Closed</a>
