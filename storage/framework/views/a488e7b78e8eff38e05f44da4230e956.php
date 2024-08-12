@@ -1352,13 +1352,13 @@ color: #fff;
             font-weight: 500;
         }
     </style>
-    @php
+    <?php
     $flag=0;
     $flag1=0;
     $leave=0;
     $todayDate = date('Y-m-d');
 
-    @endphp
+    ?>
 
     <div>
         <div class="row m-0" style="text-align: end;">
@@ -1437,13 +1437,14 @@ color: #fff;
                     </a>
                 </div>
             </div>
-            @if ($öpenattendanceperiod==true)
+            <!--[if BLOCK]><![endif]--><?php if($öpenattendanceperiod==true): ?>
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-lg modal-dialog-centered " role="document">
                     <div class="modal-content attendance-period">
                         <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;display: flex; justify-content: space-between; align-items: center;">
                             <p class="modal-title attendance-period-header" style="color:white;">
-                                {{$modalTitle}}
+                                <?php echo e($modalTitle); ?>
+
                             </p>
 
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeattendanceperiodModal" style="background: none; border: none;">
@@ -1463,7 +1464,7 @@ color: #fff;
                                     <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                             </div>
-                            <p style="font-size:12px;margin-top:3px">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalDays}}</span></p>
+                            <p style="font-size:12px;margin-top:3px">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;"><?php echo e($totalDays); ?></span></p>
 
                             <div class="table-responsive">
 
@@ -1486,8 +1487,8 @@ color: #fff;
                                             <td class="insights-for-attendance-period-avg-working-hours">0</td>
                                             <td class="insights-for-attendance-period-avg-working-hours">-</td>
                                             <td class="insights-for-attendance-period">0</td>
-                                            <td class="insights-for-attendance-period">{{$avgLateIn}}</td>
-                                            <td class="insights-for-attendance-period">{{$avgEarlyOut}}</td>
+                                            <td class="insights-for-attendance-period"><?php echo e($avgLateIn); ?></td>
+                                            <td class="insights-for-attendance-period"><?php echo e($avgEarlyOut); ?></td>
                                             <td class="insights-for-attendance-period">-</td>
                                             <td class="insights-for-attendance-period">-</td>
                                             <td class="insights-for-attendance-period">-</td>
@@ -1499,10 +1500,10 @@ color: #fff;
 
                             <div class="row m-0 mt-3 average-first-and-last-time">
                                 <div class="col-md-3 col-sm-6 p-0">
-                                    <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted}}</span></p>
+                                    <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;"><?php echo e($totalDurationFormatted); ?></span></p>
                                 </div>
                                 <div class="col-md-3 col-sm-6 p-0">
-                                    <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted1}}</span></p>
+                                    <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;"><?php echo e($totalDurationFormatted1); ?></span></p>
                                 </div>
 
                             </div>
@@ -1513,7 +1514,7 @@ color: #fff;
             </div>
         </div>
         <div class="modal-backdrop fade show blurred-backdrop"></div>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
         <div class="row m-0 mt-3">
@@ -1522,8 +1523,8 @@ color: #fff;
             </div>
             <div class="col-12" style="text-align: -webkit-right;">
                 <div class="toggle-box-attendance-info">
-                    <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 1 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 1 )? 'rgb(2,17,79)' : '#fff' }};" wire:click="showBars"></i>
-                    <i class="fas fa-bars" id="bars-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 0 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 0 )? 'rgb(2,17,79)' : '#fff' }};" wire:click="showTable"></i>
+                    <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;padding:2px 2px;color: <?php echo e(($defaultfaCalendar == 1 )? '#fff' : 'rgb(2,17,79)'); ?>;background-color: <?php echo e(($defaultfaCalendar == 1 )? 'rgb(2,17,79)' : '#fff'); ?>;" wire:click="showBars"></i>
+                    <i class="fas fa-bars" id="bars-icon" style="cursor:pointer;padding:2px 2px;color: <?php echo e(($defaultfaCalendar == 0 )? '#fff' : 'rgb(2,17,79)'); ?>;background-color: <?php echo e(($defaultfaCalendar == 0 )? 'rgb(2,17,79)' : '#fff'); ?>;" wire:click="showTable"></i>
                 </div>
             </div>
         </div>
@@ -1533,25 +1534,25 @@ color: #fff;
 
 
 
-        @php
+        <?php
 
         $presentCount = 0;
         $offCount = 0;
         $absentCount=0;
         $holidayCount = 0;
         $Regularised=false;
-        @endphp
+        ?>
 
 
 
 
         <div class="row m-0 p-0">
-            @if($defaultfaCalendar==1)
+            <!--[if BLOCK]><![endif]--><?php if($defaultfaCalendar==1): ?>
             <div class="col-md-7 m-0 p-1 custom-scrollbar">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="calendar-heading-container">
                         <button wire:click="beforeMonth" class="nav-btn">&lt; Prev</button>
-                        <p style="font-size: 14px;color:black;font-weight:500;margin-bottom:0;">{{ \Carbon\Carbon::createFromDate($year, $month, 1)->format('F Y') }}</p>
+                        <p style="font-size: 14px;color:black;font-weight:500;margin-bottom:0;"><?php echo e(\Carbon\Carbon::createFromDate($year, $month, 1)->format('F Y')); ?></p>
                         <button wire:click="nextMonth" class="nav-btn">Next &gt;</button>
                     </div>
                 </div>
@@ -1570,11 +1571,11 @@ color: #fff;
                             </tr>
                         </thead>
                         <tbody id="calendar-body">
-                            @if(!empty($calendar))
-                            @foreach($calendar as $week)
+                            <!--[if BLOCK]><![endif]--><?php if(!empty($calendar)): ?>
+                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $calendar; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $week): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                @foreach($week as $day)
-                                @php
+                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $week; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $day): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php
                                 $carbonDate = \Carbon\Carbon::createFromDate($year, $month, $day['day']);
 
                                 $formattedDate = $carbonDate->format('Y-m-d');
@@ -1582,88 +1583,90 @@ color: #fff;
                                 $isCurrentMonth = $day['isCurrentMonth'];
                                 $isWeekend = in_array($carbonDate->dayOfWeek, [0, 6]); // 0 for Sunday, 6 for Saturday
                                 $isActiveDate = ($selectedDate === $carbonDate->toDateString());
-                                @endphp
+                                ?>
 
 
-                                @if ($day)
-                                @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP' ) @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1) rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
+                                <!--[if BLOCK]><![endif]--><?php if($day): ?>
+                                <!--[if BLOCK]><![endif]--><?php if(strtotime($formattedDate) < strtotime(date('Y-m-d'))): ?> <?php $flag=1; ?> <?php else: ?> <?php $flag=0; ?> <?php endif; ?><!--[if ENDBLOCK]><![endif]--> <!--[if BLOCK]><![endif]--><?php if($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP' ): ?> <?php $leave=1; ?> <?php else: ?> <?php $leave=0; ?> <?php endif; ?><!--[if ENDBLOCK]><![endif]--> <td wire:click="dateClicked('<?php echo e($formattedDate); ?>')" wire:model="dateclicked" class="attendance-calendar-date <?php echo e($isCurrentMonth && !$isWeekend ? 'clickable-date' : ''); ?>" style="text-align:start;color: <?php echo e($isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black')  : '#c5cdd4'); ?>;background-color:  <?php if($isCurrentMonth && !$isWeekend && $flag==1 ): ?> <?php if($day['isPublicHoliday'] ): ?> #f3faff <?php elseif($leave == 1): ?> rgb(252, 242, 255) <?php elseif($day['status'] == 'A'): ?> #fcf0f0 <?php elseif($day['status'] == 'P'): ?> #edfaed <?php endif; ?> <?php elseif($isCurrentMonth && $isWeekend && $flag==1): ?>rgb(247, 247, 247) <?php endif; ?> ;">
                                     <div>
 
 
-                                        @if ($day['isToday'])
+                                        <!--[if BLOCK]><![endif]--><?php if($day['isToday']): ?>
                                         <div style="background-color: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
-                                            {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
+                                            <?php echo e(str_pad($day['day'], 2, '0', STR_PAD_LEFT)); ?>
+
                                         </div>
-                                        @else
-                                        {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
-                                        @endif
+                                        <?php else: ?>
+                                        <?php echo e(str_pad($day['day'], 2, '0', STR_PAD_LEFT)); ?>
+
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
-                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}">
+                                        <div class="<?php echo e($isWeekend ? '' : 'circle-grey'); ?>">
                                             <!-- Render your grey circle -->
-                                            @if ($isWeekend&&$isCurrentMonth)
+                                            <!--[if BLOCK]><![endif]--><?php if($isWeekend&&$isCurrentMonth): ?>
                                             <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
 
                                             <span style="text-align:center;color: #7f8fa4; padding-left:21px;padding-right:26px;margin-left: 6px;white-space: nowrap;">
                                                 O
                                             </span>
-                                            @elseif($isCurrentMonth)
+                                            <?php elseif($isCurrentMonth): ?>
 
 
-                                            @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
+                                            <!--[if BLOCK]><![endif]--><?php if(strtotime($formattedDate) < strtotime(date('Y-m-d'))): ?> <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
 
-                                                @if($day['isPublicHoliday'])
+                                                <!--[if BLOCK]><![endif]--><?php if($day['isPublicHoliday']): ?>
                                                 <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">H</span>
-                                                @elseif($day['status'] == 'CLP')
+                                                <?php elseif($day['status'] == 'CLP'): ?>
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">CLP</span>
-                                                @elseif($day['status'] == 'SL')
+                                                <?php elseif($day['status'] == 'SL'): ?>
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">SL</span>
-                                                @elseif($day['status'] == 'LOP')
+                                                <?php elseif($day['status'] == 'LOP'): ?>
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">LOP</span>
-                                                @elseif($day['status'] == 'A')
+                                                <?php elseif($day['status'] == 'A'): ?>
                                                 <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
-                                                @elseif($day['status'] == 'P')
+                                                <?php elseif($day['status'] == 'P'): ?>
                                                 <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px">P</span>
-                                                @endif
+                                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
                                                 </span>
-                                                @endif
-                                                @if($day['isRegularised']==true)
-                                                @php
+                                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                                <!--[if BLOCK]><![endif]--><?php if($day['isRegularised']==true): ?>
+                                                <?php
                                                 $Regularised=true;
-                                                @endphp
+                                                ?>
                                                 <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
                                                     <p class="me-2 mb-0">
                                                     <div class="down-arrow-reg"></div>
                                                     </p>
                                                 </span>
-                                                @endif
-                                                @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
+                                                <?php endif; ?>
+                                                <?php if(strtotime($formattedDate) >= strtotime(date('Y-m-d'))): ?>
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;"><?php echo e($employee->shift_type); ?></p>
                                                 </span>
-                                                @elseif($isCurrentMonth)
+                                                <?php elseif($isCurrentMonth): ?>
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;"><?php echo e($employee->shift_type); ?></p>
                                                 </span>
-                                                @endif
-                                                @endif
+                                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                         </div>
                                     </div>
-                                    @endif
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </td>
 
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                             </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
 
                         </tbody>
 
                     </table>
-                    @else
+                    <?php else: ?>
                     <p>No calendar data available</p>
-                    @endif
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
 
                 <button class="accordion">Legends</button>
@@ -1808,20 +1811,36 @@ color: #fff;
                 </div>
 
             </div>
-            @endif
-            @if($defaultfaCalendar==0)
-            @livewire('attendance-table')
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            <!--[if BLOCK]><![endif]--><?php if($defaultfaCalendar==0): ?>
+            <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('attendance-table');
 
-            @endif
+$__html = app('livewire')->mount($__name, $__params, 'lw-1748121091-0', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
+
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             <div class="col-md-5">
-                @if($defaultfaCalendar==1)
+                <!--[if BLOCK]><![endif]--><?php if($defaultfaCalendar==1): ?>
                 <div class="container1" style="background-color:white;">
                     <!-- Content goes here -->
                     <div class="row m-0">
                         <div class="col-2 pb-1 pt-1 p-0" style="border-right: 1px solid #ccc; text-align: center;">
-                            <p class="mb-1" style="font-weight:bold;font-size:14px;color:#778899;">{{ \Carbon\Carbon::parse($currentDate2)->format('d') }}</p>
+                            <p class="mb-1" style="font-weight:bold;font-size:14px;color:#778899;"><?php echo e(\Carbon\Carbon::parse($currentDate2)->format('d')); ?></p>
                             <p class="m-0" style="font-weight:600;font-size:12px;color:#778899;">
-                                {{ \Carbon\Carbon::parse($currentDate2)->format('D') }}
+                                <?php echo e(\Carbon\Carbon::parse($currentDate2)->format('D')); ?>
+
                             </p>
                         </div>
                         <div class="col-5 pb-1 pt-1">
@@ -1842,14 +1861,14 @@ color: #fff;
 
 
                     <div class="horizontal-line-attendance-info"></div>
-                    @if($changeDate==1)
-                    @php
+                    <!--[if BLOCK]><![endif]--><?php if($changeDate==1): ?>
+                    <?php
                     $nextDayDate = \Carbon\Carbon::parse($CurrentDate)->addDay()->setTime(0, 0, 0);
-                    @endphp
-                    <div class="text-muted" style="margin-left:20px;font-weight: 400;font-size: 12px;">Processed On {{ $nextDayDate->format('jS M') }}</div>
-                    @else
+                    ?>
+                    <div class="text-muted" style="margin-left:20px;font-weight: 400;font-size: 12px;">Processed On <?php echo e($nextDayDate->format('jS M')); ?></div>
+                    <?php else: ?>
                     <div class="text-muted" style="margin-left:20px;font-weight: 400;font-size: 12px;">Processed On</div>
-                    @endif
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                     <div class="horizontal-line1-attendance-info"></div>
                     <div style=" overflow-x: auto; max-width: 100%;">
                         <table>
@@ -1872,31 +1891,34 @@ color: #fff;
                                 <tr>
 
                                     <td style="font-size:12px;">
-                                        @if($changeDate==1)
-                                        {{$this->first_in_time}}
-                                        @else
+                                        <!--[if BLOCK]><![endif]--><?php if($changeDate==1): ?>
+                                        <?php echo e($this->first_in_time); ?>
+
+                                        <?php else: ?>
                                         -
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </td>
                                     <td style="font-size:12px;">
-                                        @if($changeDate==1)
-                                        {{$this->last_out_time}}
-                                        @else
+                                        <!--[if BLOCK]><![endif]--><?php if($changeDate==1): ?>
+                                        <?php echo e($this->last_out_time); ?>
+
+                                        <?php else: ?>
                                         -
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </td>
                                     <td>
-                                        @if($this->first_in_time!=$this->last_out_time)
-                                        {{str_pad($this->hours, 2, '0', STR_PAD_LEFT)}}:{{str_pad($this->minutesFormatted,2,'0',STR_PAD_LEFT)}}
-                                        @else
+                                        <!--[if BLOCK]><![endif]--><?php if($this->first_in_time!=$this->last_out_time): ?>
+                                        <?php echo e(str_pad($this->hours, 2, '0', STR_PAD_LEFT)); ?>:<?php echo e(str_pad($this->minutesFormatted,2,'0',STR_PAD_LEFT)); ?>
+
+                                        <?php else: ?>
                                         -
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                                     </td>
                                     <td>-</td>
                                     <td>-</td>
-                                    <td>{{$this->work_hrs_in_shift_time}}</td>
-                                    <td>{{$this->shortFallHrs}}</td>
+                                    <td><?php echo e($this->work_hrs_in_shift_time); ?></td>
+                                    <td><?php echo e($this->shortFallHrs); ?></td>
                                     <td>-</td>
 
                                 </tr>
@@ -1909,8 +1931,8 @@ color: #fff;
 
                     </div>
                 </div>
-                @endif
-                @if($defaultfaCalendar==1)
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><?php if($defaultfaCalendar==1): ?>
                 <div class="container2">
                     <h3 style="padding-left:10px;margin-top:10px;color: #7f8fa4;font-size:14px;">Status Details</h3>
 
@@ -1926,7 +1948,7 @@ color: #fff;
                             <tbody>
                                 <tr>
                                     <td>
-                                        @php
+                                        <?php
 
 
                                         $CurrentDate = $currentDate2;
@@ -1939,21 +1961,21 @@ color: #fff;
                                         } else {
                                         $swipeRecordExists = false;
                                         }
-                                        @endphp
+                                        ?>
 
-                                        @if($swipeRecordExists==true)
+                                        <!--[if BLOCK]><![endif]--><?php if($swipeRecordExists==true): ?>
                                         Regularisation
-                                        @else
+                                        <?php else: ?>
                                         -
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </td>
                                     <td>-</td>
-                                    @if($swipeRecordExists==true)
+                                    <!--[if BLOCK]><![endif]--><?php if($swipeRecordExists==true): ?>
                                     <td>
-                                        <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="checkDateInRegularisationEntries('{{$CurrentDate}}')">
+                                        <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="checkDateInRegularisationEntries('<?php echo e($CurrentDate); ?>')">
                                             Info
                                         </button>
-                                        @if($showRegularisationDialog==true)
+                                        <!--[if BLOCK]><![endif]--><?php if($showRegularisationDialog==true): ?>
 
                                         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1968,14 +1990,14 @@ color: #fff;
                                                         <div class="row m-0 mt-3">
 
                                                             <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Status : <br /><span style="color: #000000;">Regularization</span></div>
-                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized By: <br /><span style="color: #000000;">{{ucwords(strtolower($regularised_by))}}</span></div>
+                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized By: <br /><span style="color: #000000;"><?php echo e(ucwords(strtolower($regularised_by))); ?></span></div>
                                                         </div>
                                                         <div class="row m-0 mt-3">
-                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Date : <br /><span style="color: #000000;">{{ date('jS M,Y', strtotime($regularised_date)) }}</span></div>
-                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Time: <br /><span style="color: #000000;">{{ date('H:i:s', strtotime($regularised_date)) }}</span></div>
+                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Date : <br /><span style="color: #000000;"><?php echo e(date('jS M,Y', strtotime($regularised_date))); ?></span></div>
+                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Time: <br /><span style="color: #000000;"><?php echo e(date('H:i:s', strtotime($regularised_date))); ?></span></div>
                                                         </div>
                                                         <div class="row m-0 mt-3">
-                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;"> Reason:<br /> <span style="color: #000000;">{{$regularised_reason}}</span></div>
+                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;"> Reason:<br /> <span style="color: #000000;"><?php echo e($regularised_reason); ?></span></div>
                                                         </div>
 
                                                     </div>
@@ -1984,9 +2006,9 @@ color: #fff;
                                         </div>
                                         <div class="modal-backdrop fade show blurred-backdrop"></div>
 
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </td>
-                                    @endif
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 </tr>
                                 <!-- Add more rows with dashes as needed -->
                             </tbody>
@@ -1994,8 +2016,8 @@ color: #fff;
                         </table>
                     </div>
                 </div>
-                @endif
-                @if($defaultfaCalendar==1)
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><?php if($defaultfaCalendar==1): ?>
                 <div class="container3">
                     <h3 style="padding-left:10px;margin-top:20px;color: #7f8fa4;font-size:14px;">Session Details</h3>
 
@@ -2017,11 +2039,12 @@ color: #fff;
                                     <td style="font-weight:normal;font-size:12px;">Session&nbsp;1</td>
                                     <td style="font-weight:normal;font-size:12px;">10:00 - 14:00</td>
                                     <td style="font-weight:normal;font-size:12px;">
-                                        @if($changeDate==1)
-                                        {{$this->first_in_time}}
-                                        @else
+                                        <!--[if BLOCK]><![endif]--><?php if($changeDate==1): ?>
+                                        <?php echo e($this->first_in_time); ?>
+
+                                        <?php else: ?>
                                         -
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </td>
                                     <td style="font-weight:normal;font-size:12px;">-</td>
 
@@ -2031,11 +2054,12 @@ color: #fff;
                                     <td style="font-weight:normal;font-size:12px;">14:01 - 19:00</td>
                                     <td style="font-weight:normal;font-size:12px;">-</td>
                                     <td style="font-weight:normal;font-size:12px;">
-                                        @if($changeDate==1)
-                                        {{$this->last_out_time}}
-                                        @else
+                                        <!--[if BLOCK]><![endif]--><?php if($changeDate==1): ?>
+                                        <?php echo e($this->last_out_time); ?>
+
+                                        <?php else: ?>
                                         -
-                                        @endif
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </td>
 
                                 </tr>
@@ -2046,8 +2070,8 @@ color: #fff;
                     </div>
 
                 </div>
-                @endif
-                @if($defaultfaCalendar==1)
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><?php if($defaultfaCalendar==1): ?>
                 <div class="container6">
                     <h3 style="margin-left:20px;color: #7f8fa4;font-size:14px;margin-top:15px;align-items:center;">Swipe Details</h3>
                     <div class="arrow-button" style="float:right;margin-top:-30px;margin-right:20px;" id="toggleButton">
@@ -2059,7 +2083,7 @@ color: #fff;
 
                             <table>
                                 <thead>
-                                    @if ($swipe_records_count > 0)
+                                    <!--[if BLOCK]><![endif]--><?php if($swipe_records_count > 0): ?>
                                     <tr>
                                         <th style="font-weight:normal;font-size:12px;">In/Out</th>
                                         <th style="font-weight:normal;font-size:12px;">Swipe&nbsp;Time</th>
@@ -2069,50 +2093,52 @@ color: #fff;
                                 </thead>
                                 <tbody>
 
-                                    @foreach ($Swiperecords as $index =>$swiperecord)
+                                    <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $Swiperecords; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index =>$swiperecord): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td style="font-weight:normal;font-size:12px;">{{ $swiperecord->in_or_out }}</td>
+                                        <td style="font-weight:normal;font-size:12px;"><?php echo e($swiperecord->in_or_out); ?></td>
                                         <td>
                                             <div style="display:flex;flex-direction:column;">
                                                 <p style="margin-bottom: 0;font-weight:normal;font-size:12px;white-space:nowrap;">
-                                                    {{ date('h:i:s A', strtotime($swiperecord->swipe_time)) }}
+                                                    <?php echo e(date('h:i:s A', strtotime($swiperecord->swipe_time))); ?>
+
                                                 </p>
                                                 <p style="margin-bottom: 0;font-size: 10px;color: #a3b2c7;">
-                                                    {{ date('d M Y', strtotime($currentDate1)) }}
+                                                    <?php echo e(date('d M Y', strtotime($currentDate1))); ?>
+
                                                 </p>
                                             </div>
                                         </td>
                                         <td>-</td>
 
-                                        <td><button class="info-button" style="background-color:#007bff; border: 2px solid #007bff;height:20px; color: white; border-radius: 5px;font-size:12px;margin-top:-10px" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
+                                        <td><button class="info-button" style="background-color:#007bff; border: 2px solid #007bff;height:20px; color: white; border-radius: 5px;font-size:12px;margin-top:-10px" wire:click="viewDetails('<?php echo e($swiperecord->id); ?>')">Info</button></td>
 
                                     </tr>
-                                    @if (($index + 1) % 2 == 0)
+                                    <!--[if BLOCK]><![endif]--><?php if(($index + 1) % 2 == 0): ?>
                                     <!-- Add a small container after every two records -->
                                     <tr>
                                         <td colspan="4" style="height:1px; background-color: #f0f0f0; text-align: left;font-size:10px;">
-                                            Actual Hrs:{{ $actualHours[($index + 1) / 2 - 1] }}</td>
+                                            Actual Hrs:<?php echo e($actualHours[($index + 1) / 2 - 1]); ?></td>
                                     </tr>
 
-                                    @endif
-                                    @endforeach
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
 
 
 
                                     <!-- Add more rows with dashes as needed -->
                                 </tbody>
                                 <!-- Add table rows (tbody) and data here if needed -->
-                                @else
+                                <?php else: ?>
                                 <img src="https://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
                                 <div class="text-muted">No record Found</div>
-                                @endif
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </table>
 
                         </div>
 
                     </div>
-                    @endif
-                    @if($showSR=="true")
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><?php if($showSR=="true"): ?>
                     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
@@ -2122,27 +2148,27 @@ color: #fff;
                                     </button>
                                 </div>
                                 <div class="modal-body" style="max-height:300px;">
-                                    @if($swiperecord)
+                                    <!--[if BLOCK]><![endif]--><?php if($swiperecord): ?>
                                     <div class="row m-0 mt-3">
 
-                                        @if ($data->isNotEmpty())
-                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ $data[0]->first_name }} {{ $data[0]->last_name }}</span></div>
-                                        @endif
-                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br /><span style="color: #000000;">{{ $swiperecord->emp_id }}</span></div>
+                                        <!--[if BLOCK]><![endif]--><?php if($data->isNotEmpty()): ?>
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;"><?php echo e($data[0]->first_name); ?> <?php echo e($data[0]->last_name); ?></span></div>
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br /><span style="color: #000000;"><?php echo e($swiperecord->emp_id); ?></span></div>
 
                                     </div>
                                     <div class="row m-0 mt-3">
 
 
-                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Date:<br /><span style="color: #000000;">{{\Carbon\Carbon::parse($swiperecord->created_at)->format('jS F, Y')}}</span></div>
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Date:<br /><span style="color: #000000;"><?php echo e(\Carbon\Carbon::parse($swiperecord->created_at)->format('jS F, Y')); ?></span></div>
 
-                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Time:<br /><span style="color: #000000;">{{ $view_student_swipe_time }}</span></div>
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Time:<br /><span style="color: #000000;"><?php echo e($view_student_swipe_time); ?></span></div>
 
                                     </div>
                                     <div class="row m-0 mt-3">
 
 
-                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">In/Out:<br /><span style="color: #000000;">{{ $view_student_in_or_out }}</span></div>
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">In/Out:<br /><span style="color: #000000;"><?php echo e($view_student_in_or_out); ?></span></div>
 
                                         <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Access&nbsp;Card&nbsp;Number:<br /><span style="color: #000000;">-</span></div>
 
@@ -2154,13 +2180,13 @@ color: #fff;
                                         <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Location<br /><span style="color: #000000;">-</span></div>
 
                                     </div>
-                                    @endif
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-backdrop fade show blurred-backdrop"></div>
-                    @endif
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                 </div>
             </div>
@@ -2282,4 +2308,4 @@ color: #fff;
 
 
 
-</div>
+</div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/attendance.blade.php ENDPATH**/ ?>
