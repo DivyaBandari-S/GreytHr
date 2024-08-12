@@ -321,16 +321,19 @@ class Tasks extends Component
 
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
+        $this->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
+        ]);
+        
         // Validate and upload the image file
         if ($this->image) {
             $this->isLoadingImage = true;
-            if ($this->image instanceof \Illuminate\Http\UploadedFile) {
-                $imagePath = $this->image->store('tasks-images', 'public');
-                $this->image_path = $imagePath;
-                $this->isLoadingImage = false;
-            }
+            $imagePath = file_get_contents($this->image->getRealPath());
+            $this->image_path = $imagePath;
+            $this->isLoadingImage = false;
         }
+       
+        
 
         Task::create([
             'emp_id' => $this->employeeDetails->emp_id,

@@ -420,7 +420,7 @@
 
                     <div class="col-3">
                         @if (!empty($firstStarredPerson->profile) && $firstStarredPerson->profile !== 'null')
-                            <img class="people-image" src="{{ $firstStarredPerson->profile_url }}">
+                            <img class="people-image" src="{{'data:image/jpeg;base64,' . base64_encode($firstStarredPerson->profile)}}">
                         @else
                             <img src="{{ asset('images/user.jpg') }}" class="people-image" alt="Default Image">
                         @endif
