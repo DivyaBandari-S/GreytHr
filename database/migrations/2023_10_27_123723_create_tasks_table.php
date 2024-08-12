@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('followers')->nullable();
             $table->string('subject')->nullable();
             $table->text('description')->nullable();
-            $table->string('file_path')->nullable();
+            $table->binary('file_path')->nullable();
             $table->string('status')->default('Open'); // CC to field (nullable)
             $table->timestamps();
             $table->foreign('emp_id')
