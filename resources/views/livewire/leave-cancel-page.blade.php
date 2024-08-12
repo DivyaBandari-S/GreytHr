@@ -161,8 +161,9 @@
                         </div>
                         @endforeach
                         @else
-                        <p>No managers found.</p>
+                        <p class="normalTextValue mb-0 text-center">No managers found.</p>
                         @endif
+
                     </div>
                 </div>
                 @endif

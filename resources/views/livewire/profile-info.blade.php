@@ -10,7 +10,7 @@
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link active" onclick="toggleDetails('personalDetails', this)">Personal</a>
+                    <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link active" onclick="toggleDetails('personalDetails', this)">Personal</div>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
                     <a href="#" style="border-radius:none;" class="custom-nav-link " onclick="toggleDetails('accountDetails', this)">Accounts & Statements</a>
