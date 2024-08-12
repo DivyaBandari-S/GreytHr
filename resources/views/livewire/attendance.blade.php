@@ -162,7 +162,7 @@ width: 170px; */
             Z-index: 1
         }
 
-        .info-icon-container-attendance-info:hover .info-box-attendance-info {
+        .info-icon-container-attendance-info .fa-info-circle:hover+.info-box-attendance-info {
             display: block;
         }
 
@@ -863,7 +863,7 @@ width: 170px; */
 
             background-color: #f0f0f0;
             margin-left: 40px;
-
+            float: right;
             /* margin-left: 850px; */
             /* margin-top: -40px; */
             /* padding: 5.5px 6px; */
@@ -1295,6 +1295,62 @@ color: #fff;
             font-size: 12px;
             color: #778899;
         }
+
+        .attendanceperiod {
+            text-transform: uppercase;
+            margin-top: 40px;
+            color: rgb(2, 17, 79);
+            text-decoration: none;
+        }
+
+        .attendanceperiod:hover {
+
+            text-decoration: underline;
+        }
+
+        .insights-for-attendance-period-avg-working-hours {
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 400;
+            padding: 1px;
+            margin: 0px;
+            width: 15%;
+            border: 1px solid lightgray;
+        }
+
+        .insights-for-attendance-period {
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 400;
+            padding: 1px;
+            margin: 0px;
+            width: 5%;
+            border: 1px solid lightgray;
+
+        }
+
+        .attendance-period {
+            width: 90rem
+        }
+
+        .attendence-period-table {
+            width: 100%
+        }
+
+        .start-date-for-attend-period {
+            margin-right: 8px;
+        }
+
+        .average-first-and-last-time {
+            display: flex;
+            white-space: nowrap;
+            justify-content: space-evenly;
+            text-align: center;
+        }
+
+        .attendance-period-header {
+            font-weight: 500;
+        }
     </style>
     @php
     $flag=0;
@@ -1325,7 +1381,6 @@ color: #fff;
 
                     <!-- Blue info icon on the right -->
                     <div class="info-icon-container-attendance-info col-4">
-
                         <i class="fa fa-info-circle" aria-hidden="true" style="margin-left:25px;font-size: 14px; color: blue;"></i>
                         <div class="info-box-attendance-info">
                             Contact administrator to get access card assigned.
@@ -1339,7 +1394,7 @@ color: #fff;
         <div class="row m-0 mt-3">
             <div class="row m-0 d-flex justify-content-center" style="display:flex;justify-content:center;">
                 <div class="col-md-3">
-                    <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
+                    <div class="insight-card  bg-white pt-2 pb-2" style="height: 125px;">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
                         <section class="text-center">
                             <p class="text-2" style="margin-top:30px;"> 0 </p>
@@ -1377,27 +1432,27 @@ color: #fff;
                     </div>
                 </div>
                 <div class="col-md-2 mt-5" style="text-align: center">
-                    <a href="#" wire:click="öpenattendanceperiodModal" style="text-transform:uppercase;margin-top:40px;color:rgb(2, 17, 79);">
+                    <a href="#" class="attendanceperiod" wire:click="öpenattendanceperiodModal">
                         +3 Insights
                     </a>
                 </div>
             </div>
             @if ($öpenattendanceperiod==true)
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h6 class="modal-title" id="exampleModalLabel" style="color:white;">
+                <div class="modal-dialog modal-lg modal-dialog-centered " role="document">
+                    <div class="modal-content attendance-period">
+                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;display: flex; justify-content: space-between; align-items: center;">
+                            <p class="modal-title attendance-period-header" style="color:white;">
                                 {{$modalTitle}}
-                            </h6>
+                            </p>
 
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeattendanceperiodModal">
-                                <span aria-hidden="true close-btn">×</span>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeattendanceperiodModal" style="background: none; border: none;">
+                                <span aria-hidden="true" class="close-btn" style="color: white; font-size: 30px;">×</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-row" style="display: flex; justify-content: flex-end;">
-                                <div class="form-group col-md-3 col-sm-6">
+                            <div class="form-row" style="display: flex; justify-content: center;">
+                                <div class="form-group col-md-3 col-sm-6 start-date-for-attend-period">
                                     <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
                                         date</label>
                                     <input type="date" class="form-control" id="fromDate" wire:model="from_date" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
@@ -1408,61 +1463,46 @@ color: #fff;
                                     <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                             </div>
-                            <p style="font-size:12px;">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalDays}}</span></p>
+                            <p style="font-size:12px;margin-top:3px">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalDays}}</span></p>
 
                             <div class="table-responsive">
-                                <!-- <div class="chart-value"><span style="font-weight:bold;">0</span></div>
-                                <div class="chart-column">AVG.&nbsp;WORK&nbsp;HRS</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">AVG.&nbsp;ACTUAL&nbsp;WORK&nbsp;HRS</div>
-                                <div class="chart-value"><span style="font-weight:bold;">0</span></div>
-                                <div class="chart-column">PENALTY&nbsp;DAYS</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">LATE&nbsp;IN</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">EARLY&nbsp;OUT</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">LEAVE&nbsp;TAKEN</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">ABSENT&nbsp;DAYS</div>
-                                <div class="chart-value"><span style="font-weight:bold;">-</span></div>
-                                <div class="chart-column">EXCEPTION&nbsp;DAYS</div> -->
 
-                                <table class="table" style="width: 100%;">
-                                    <thead style="font-size: 12px;">
+
+                                <table class="attendence-period-table">
+                                    <thead>
                                         <tr>
-                                            <th scope="col">AVG. WORK HRS</th>
-                                            <th scope="col">AVG. ACTUAL WORK HRS</th>
-                                            <th scope="col">PENALTY DAYS</th>
-                                            <th scope="col">LATE IN</th>
-                                            <th scope="col">EARLY OUT</th>
-                                            <th scope="col">LEAVE TAKEN</th>
-                                            <th scope="col">ABSENT DAYS</th>
-                                            <th scope="col">EXCEPTION DAYS</th>
+                                            <th class="insights-for-attendance-period-avg-working-hours">Avg. Work Hrs</th>
+                                            <th class="insights-for-attendance-period-avg-working-hours">Avg. Actual Work Hrs</th>
+                                            <th class="insights-for-attendance-period">Penalty Days</th>
+                                            <th class="insights-for-attendance-period">Late In</th>
+                                            <th class="insights-for-attendance-period">Early Out</th>
+                                            <th class="insights-for-attendance-period">Leave Taken</th>
+                                            <th class="insights-for-attendance-period">Absent Days</th>
+                                            <th class="insights-for-attendance-period">Exception Days</th>
                                         </tr>
                                     </thead>
-                                    <tbody style="font-size:12px;color:black;font-weight:500;">
+                                    <tbody>
                                         <tr>
-                                            <td style="text-align: center;">0</td>
-                                            <td style="text-align: center;">-</td>
-                                            <td style="text-align: center;">0</td>
-                                            <td style="text-align: center;">{{$avgLateIn}}</td>
-                                            <td style="text-align: center;">{{$avgEarlyOut}}</td>
-                                            <td style="text-align: center;">-</td>
-                                            <td style="text-align: center;">-</td>
-                                            <td style="text-align: center;">-</td>
+                                            <td class="insights-for-attendance-period-avg-working-hours">0</td>
+                                            <td class="insights-for-attendance-period-avg-working-hours">-</td>
+                                            <td class="insights-for-attendance-period">0</td>
+                                            <td class="insights-for-attendance-period">{{$avgLateIn}}</td>
+                                            <td class="insights-for-attendance-period">{{$avgEarlyOut}}</td>
+                                            <td class="insights-for-attendance-period">-</td>
+                                            <td class="insights-for-attendance-period">-</td>
+                                            <td class="insights-for-attendance-period">-</td>
                                         </tr>
                                     </tbody>
                                 </table>
 
                             </div>
 
-                            <div class="row m-0 mt-3">
+                            <div class="row m-0 mt-3 average-first-and-last-time">
                                 <div class="col-md-3 col-sm-6 p-0">
-                                    <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$avgSignInTime}}</span></p>
+                                    <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted}}</span></p>
                                 </div>
                                 <div class="col-md-3 col-sm-6 p-0">
-                                    <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$avgSignOutTime}}</span></p>
+                                    <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted1}}</span></p>
                                 </div>
 
                             </div>
@@ -1480,7 +1520,7 @@ color: #fff;
             <div class="col-6" style="text-align: left">
                 <a href="#" id="toggleSidebar" class="gt-overlay-toggle" style="margin-top:69px;color:rgb(2, 17, 79); display: none">Legend</a>
             </div>
-            <div class="col-6" style="text-align: -webkit-right;">
+            <div class="col-12" style="text-align: -webkit-right;">
                 <div class="toggle-box-attendance-info">
                     <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 1 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 1 )? 'rgb(2,17,79)' : '#fff' }};" wire:click="showBars"></i>
                     <i class="fas fa-bars" id="bars-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 0 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 0 )? 'rgb(2,17,79)' : '#fff' }};" wire:click="showTable"></i>
@@ -1761,9 +1801,9 @@ color: #fff;
                             </p>
                             <p class="m-1 attendance-legend-text">Rest Day</p>
                         </div>
-                     
-                        
-                     
+
+
+
                     </div>
                 </div>
 

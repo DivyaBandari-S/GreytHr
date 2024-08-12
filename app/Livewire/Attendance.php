@@ -20,6 +20,7 @@ use App\Models\LeaveRequest;
 use App\Models\RegularisationDates;
 use Livewire\Component;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Log;
 
 class Attendance extends Component
@@ -99,7 +100,12 @@ class Attendance extends Component
 
     public $employeeIdForRegularisation;
 
+   public $totalDurationFormatted;
+
+   public $avgDurationFormatted;
     public $öpenattendanceperiod = false;
+
+    public $totalDurationFormatted1;
     public $errorMessage;
     public $showRegularisationDialog = false;
     public $distinctDates;
@@ -260,6 +266,69 @@ class Attendance extends Component
             //insights
             $this->from_date = now()->startOfMonth()->toDateString();
             $this->to_date = now()->toDateString();
+            $currentDate = Carbon::parse($this->from_date);
+            $endDate = Carbon::parse($this->to_date);
+            $timeDifferences = [];
+            function formatTime($seconds) {
+                $hours = floor($seconds / 3600);
+                $minutes = floor(($seconds % 3600) / 60);
+                $seconds = $seconds % 60;
+                return sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
+            }
+            
+            while ($currentDate->lte($endDate)) {
+                $dateString = $currentDate->toDateString();
+            
+                // Get "IN" and "OUT" times for the current date
+                $inTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                    ->where('in_or_out', 'IN')
+                    ->whereDate('created_at', $dateString)
+                    ->pluck('swipe_time');
+            
+                $outTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                    ->where('in_or_out', 'OUT')
+                    ->whereDate('created_at', $dateString)
+                    ->pluck('swipe_time');
+                $totalDifferenceForDay=0;
+                // Calculate total time differences for the current date
+                foreach ($inTimes as $index => $inTime) {
+                    if (isset($outTimes[$index])) {
+                        $inCarbon = Carbon::parse($inTime);
+                        $outCarbon = Carbon::parse($outTimes[$index]);
+                        $difference = $outCarbon->diffInSeconds($inCarbon);
+                        $totalDifferenceForDay += $difference;
+                       
+                        $timeDifferences[$dateString][] = $difference; // Store differences for each date
+                    }
+                }
+               
+                $currentDate->addDay(); // Move to the next day
+                
+            }
+            echo "Time Difference :" .formatTime($totalDifferenceForDay);
+            // Optionally, calculate average time difference per day
+            $averageDifferences = [];
+            foreach ($timeDifferences as $date => $differences) {
+                if (count($differences) > 0) {
+                    $averageDifference = array_sum($differences) / count($differences);
+                    $averageDifferences[$date] = $averageDifference;
+                    
+                }
+            }
+            
+            // Helper function to format seconds as HH:MM:SS
+            // function formatTime($seconds) {
+            //     $hours = floor($seconds / 3600);
+            //     $minutes = floor(($seconds % 3600) / 60);
+            //     $seconds = $seconds % 60;
+            //     return sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
+            // }
+            
+            // Example output
+            // foreach ($averageDifferences as $date => $avgDiff) {
+
+            //     echo "Date: $date, Average Time Difference: " . formatTime($avgDiff) . "\n";
+            // }
             $this->updateModalTitle();
             $this->calculateTotalDays();
 
@@ -625,9 +694,38 @@ class Attendance extends Component
     {
         try {
             // Format the dates and update the modal title
-            $formattedFromDate = Carbon::parse($this->from_date)->format('d M');
-            $formattedToDate = Carbon::parse($this->to_date)->format('d M');
-            $this->modalTitle = "Insights for Attendance Period $formattedFromDate - $formattedToDate";
+            $formattedFromDate = Carbon::parse($this->from_date)->format('Y-m-d');
+            $formattedToDate = Carbon::parse($this->to_date)->format('Y-m-d');
+            $formattedFromDateForModalTitle = Carbon::parse($this->from_date)->format('d M');
+            $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
+            $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
+            $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'IN')
+            ->whereBetween('created_at', [$formattedFromDate, $formattedToDate])
+            ->select('swipe_time')->get();
+            $FirstOutTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'OUT')
+            ->whereBetween('created_at', [$formattedFromDate, $formattedToDate])
+            ->select('swipe_time')->get();
+            $totalDuration = CarbonInterval::seconds(0); // Initialize total duration to zero
+            $totalDuration1 = CarbonInterval::seconds(0);
+            foreach ($FirstInTimes as $record) {
+                $time = Carbon::parse($record->swipe_time); // Parse swipe_time to Carbon instance
+                $totalDuration->addSeconds($time->secondsSinceMidnight()); // Add time to total duration
+            }
+            foreach ($FirstOutTimes as $record) {
+                $time1 = Carbon::parse($record->swipe_time); // Parse swipe_time to Carbon instance
+                $totalDuration1->addSeconds($time1->secondsSinceMidnight()); // Add time to total duration
+            }
+
+            $this->totalDurationFormatted = $totalDuration->cascade()->format('%H:%I:%S');
+            $this->totalDurationFormatted1 = $totalDuration1->cascade()->format('%H:%I:%S');
+            $FirstInTimesCount = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'IN')
+            ->whereBetween('created_at', [$formattedFromDate, $formattedToDate])
+            ->count();
+            $this->avgDurationFormatted=$this->totalDurationFormatted/$FirstInTimesCount;
+          
+            
+            
+            
         } catch (\Exception $e) {
             Log::error('Error in updateModalTitle method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while updating the modal title. Please try again later.');
@@ -997,8 +1095,8 @@ class Attendance extends Component
             $this->calculateActualHours($swipe_records);
             return view('livewire.attendance', [
                 'Holiday' => $this->holiday, 'Swiperecords' => $swipe_records, 'SwiperecordsCount' => $swipe_records_count, 'Swiperecords1' => $swipe_records1, 'data' => $data, 'CurrentDateTwoRecord' => $this->currentDate2record, 'ChangeDate' => $this->changeDate, 'CurrentDate2recordexists' => $this->currentDate2recordexists,
-                'avgLateIn' => $this->avgLateIn, 'avgEarlyOut' => $this->avgEarlyOut,
-                'avgSignInTime' => $this->avgSwipeInTime, 'avgSignOutTime' => $this->avgSwipeOutTime,
+                'avgLateIn' => $this->avgLateIn, 'avgEarlyOut' => $this->avgEarlyOut
+                , 'avgSignOutTime' => $this->avgSwipeOutTime,
                 'modalTitle' => $this->modalTitle, 'totalDays' => $this->totalDays
             ]);
         } catch (\Exception $e) {
