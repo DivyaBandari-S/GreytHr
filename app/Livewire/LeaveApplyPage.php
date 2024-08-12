@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
+use App\Models\LeaveRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -17,8 +18,78 @@ class LeaveApplyPage extends Component
     public $show_reporting = false;
     public $showApplyingTo = true;
     public $leaveBalances = [];
+
+    public $searchTerm = '';
+
     public $selectedYear;
     public $createdLeaveRequest;
+    public $calculatedNumberOfDays = 0;
+    public $employeeDetails = [];
+    protected $rules = [
+        'leave_type' => 'required',
+        'from_date' => 'required|date',
+        'from_session' => 'required',
+        'to_date' => 'required|date',
+        'to_session' => 'required',
+        'contact_details' => 'required',
+        'reason' => 'required',
+    ];
+
+    protected $messages = [
+        'leave_type.required' => 'Leave type is required',
+        'from_date.required' => 'From date is required',
+        'from_session.required' => 'Session is required',
+        'to_date.required' => 'To date is required',
+        'to_session.required' => 'Session is required',
+        'contact_details.required' => 'Contact details are required',
+        'reason.required' => 'Reason is required',
+    ];
+
+    public function mount()
+    {
+        try {
+            $this->searchTerm = '';
+            $this->filter = '';
+            $this->selectedYear = Carbon::now()->format('Y');
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->probationDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
+            foreach ($this->probationDetails as $employee) {
+                if ($employee->hire_date) {
+                    $hireDate = Carbon::parse($employee->hire_date);
+                    $this->differenceInMonths = $hireDate->diffInMonths(Carbon::now());
+                }
+            }
+            if ($this->applying_to) {
+                $this->loginEmpManagerId = $this->applying_to->manager_id;
+                // Retrieve the corresponding employee details for the manager
+                $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
+
+                if ($managerDetails) {
+                    // Concatenate first_name and last_name to create the full name
+                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                    // Assign the full name to a property for later use
+                    $this->loginEmpManager = $fullName;
+                    $this->loginEmpManagerProfile = $managerDetails->image;
+                } else {
+                    $this->loginEmpManager = $this->applying_to->report_to;
+                }
+            }
+            $this->searchEmployees();
+            $this->searchCCRecipients();
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error in mount method: ' . $e->getMessage());
+            // Display a friendly error message to the user
+            session()->flash('error', 'An error occurred while loading leave apply page. Please try again later.');
+            // Redirect the user to a safe location
+            return redirect()->back();
+        }
+    }
+    public function validateField($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
 
     public function toggleInfo()
     {
@@ -67,7 +138,7 @@ class LeaveApplyPage extends Component
             }
 
             // Check for holidays in the selected date range
-            $holidays = HolidayCalendar::where(function ($query) {
+            $holidays = HolidayCalender::where(function ($query) {
                 $query->whereBetween('date', [$this->from_date, $this->to_date])
                     ->orWhere(function ($q) {
                         $q->where('date', '>=', $this->from_date)
@@ -238,89 +309,89 @@ class LeaveApplyPage extends Component
             return redirect()->back();
         }
     }
-        //it will calculate number of days for leave application
-        public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
-        {
-            try {
-                $startDate = Carbon::parse($fromDate);
-                $endDate = Carbon::parse($toDate);
-    
-                // Check if the start or end date is a weekend
-                if ($startDate->isWeekend() || $endDate->isWeekend()) {
-                    return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
-                }
-    
-                // Check if the start and end sessions are different on the same day
-                if (
-                    $startDate->isSameDay($endDate) &&
-                    $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
-                ) {
-                    // Inner condition to check if both start and end dates are weekdays
-                    if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                        return 0.5;
-                    } else {
-                        // If either start or end date is a weekend, return 0
-                        return 0;
-                    }
-                }
-    
-                if (
-                    $startDate->isSameDay($endDate) &&
-                    $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
-                ) {
-                    // Inner condition to check if both start and end dates are weekdays
-                    if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                        return 1;
-                    } else {
-                        // If either start or end date is a weekend, return 0
-                        return 0;
-                    }
-                }
-    
-                $totalDays = 0;
-    
-                while ($startDate->lte($endDate)) {
-                    // Check if it's a weekday (Monday to Friday)
-                    if ($startDate->isWeekday()) {
-                        $totalDays += 1;
-                    }
-                    // Move to the next day
-                    $startDate->addDay();
-                }
-    
-                // Deduct weekends based on the session numbers
-                if ($this->getSessionNumber($fromSession) > 1) {
-                    $totalDays -= $this->getSessionNumber($fromSession) - 1; // Deduct days for the starting session
-                }
-                if ($this->getSessionNumber($toSession) < 2) {
-                    $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
-                }
-                // Adjust for half days
-                if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                    // If start and end sessions are the same, check if the session is not 1
-                    if ($this->getSessionNumber($fromSession) !== 1) {
-                        $totalDays += 0.5; // Add half a day
-                    } else {
-                        $totalDays += 0.5;
-                    }
-                } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
-                    if ($this->getSessionNumber($fromSession) !== 1) {
-                        $totalDays += 1; // Add half a day
-                    }
-                } else {
-                    $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
-                }
-    
-                return $totalDays;
-            } catch (\Exception $e) {
-                return 'Error: ' . $e->getMessage();
+    //it will calculate number of days for leave application
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    {
+        try {
+            $startDate = Carbon::parse($fromDate);
+            $endDate = Carbon::parse($toDate);
+
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
             }
+
+            // Check if the start and end sessions are different on the same day
+            if (
+                $startDate->isSameDay($endDate) &&
+                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
+            ) {
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                    return 0.5;
+                } else {
+                    // If either start or end date is a weekend, return 0
+                    return 0;
+                }
+            }
+
+            if (
+                $startDate->isSameDay($endDate) &&
+                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
+            ) {
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                    return 1;
+                } else {
+                    // If either start or end date is a weekend, return 0
+                    return 0;
+                }
+            }
+
+            $totalDays = 0;
+
+            while ($startDate->lte($endDate)) {
+                // Check if it's a weekday (Monday to Friday)
+                if ($startDate->isWeekday()) {
+                    $totalDays += 1;
+                }
+                // Move to the next day
+                $startDate->addDay();
+            }
+
+            // Deduct weekends based on the session numbers
+            if ($this->getSessionNumber($fromSession) > 1) {
+                $totalDays -= $this->getSessionNumber($fromSession) - 1; // Deduct days for the starting session
+            }
+            if ($this->getSessionNumber($toSession) < 2) {
+                $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
+            }
+            // Adjust for half days
+            if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
+                // If start and end sessions are the same, check if the session is not 1
+                if ($this->getSessionNumber($fromSession) !== 1) {
+                    $totalDays += 0.5; // Add half a day
+                } else {
+                    $totalDays += 0.5;
+                }
+            } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
+                if ($this->getSessionNumber($fromSession) !== 1) {
+                    $totalDays += 1; // Add half a day
+                }
+            } else {
+                $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
+            }
+
+            return $totalDays;
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
         }
-    
-        private function getSessionNumber($session)
-        {
-            return (int) str_replace('Session ', '', $session);
-        }
+    }
+
+    private function getSessionNumber($session)
+    {
+        return (int) str_replace('Session ', '', $session);
+    }
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
