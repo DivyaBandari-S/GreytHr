@@ -11,54 +11,37 @@
     
     <div class="row bg-white rounded border" style="height:80px">
  
-        <div class="col-md-1 mt-3" style="height:60px">
-        @if(auth('emp')->check())
-@php
-    $empEmployeeId = auth('emp')->user()->emp_id;
-    $employeeDetails = \App\Models\EmployeeDetails::with('personalInfo') // Eager load personal info
-        ->where('emp_id', $empEmployeeId)
-        ->get();
-@endphp
+    <div class="col-md-1 mt-3" style="height:60px">
+            @if(auth('emp')->check() || auth('hr')->check())
+    @php
+        // Determine the employee ID based on the authentication guard
+        $empEmployeeId = auth('emp')->check() ? auth('emp')->user()->emp_id : auth('hr')->user()->hr_emp_id;
 
-@if($employeeDetails && $employeeDetails->count() > 0)
-    @foreach($employeeDetails as $employee)
-        @if($employee->personalInfo && $employee->personalInfo->image)
-            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $employee->personalInfo->image) }}">
+        // Fetch the employee details from EmployeeDetails model
+        $employeeDetails = \App\Models\EmployeeDetails::where('emp_id', $empEmployeeId)->first();
+    @endphp
+
+    @if($employeeDetails && $employeeDetails->image)
+        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
+    @else
+        @if($employeeDetails && $employeeDetails->gender == "Male")
+            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Image">
+        @elseif($employeeDetails && $employeeDetails->gender == "Female")
+            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Default Female Image">
         @else
-            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
         @endif
-    @endforeach
+    @endif
 @else
-    <p>No employee details found.</p>
+    <p>User is not authenticated.</p>
 @endif
 
 
 
-@elseif(auth('hr')->check())
-@php
-    $hrEmployeeId = auth('hr')->user()->hr_emp_id;
-    $hrEmployeeDetails = \App\Models\Hr::where('hr_emp_id', $hrEmployeeId)->get();
-@endphp
-
-@if($hrEmployeeDetails && $hrEmployeeDetails->count() > 0)
-    @foreach($hrEmployeeDetails as $hr)
-        @if($hr->image)
-            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $hr->image) }}">
-        @else
-            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
-        @endif
-    @endforeach
-@else
-    <p>No HR employee details found.</p>
-@endif
-
-@else
-<p>User is not authenticated.</p>
-@endif
 
 
-  
-        </div>
+      
+            </div>
         <div class="col-md-10 mt-2 bg-white d-flex align-items-center justify-content-between">
             <div style="color:#3b4452;">
             @if(auth()->guard('emp')->check())
@@ -72,7 +55,7 @@
                 <div class="text-xs" style="color:#3b4452;">Ready to dive in?</div>
             </div>
             <div>
-                <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20 h-20 p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;">
+                <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20 h-20 p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;width:130px">
                     <div class="w-6 h-6 rounded bg-purple-200">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
                             <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
@@ -213,7 +196,7 @@
                     <div class="input-group">
 <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
 <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" >
-    <i style="text-align: center;background:white;margin-left:10px" class="fa fa-search"></i>
+    <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
 </button>
 </div>
                     </div>
@@ -429,337 +412,416 @@
 
 
 
-     
-            <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> -->
-            <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
-            <script>
-                document.addEventListener('livewire:load', function() {
-                    // Listen for clicks on emoji triggers and toggle the emoji list
-                    document.querySelectorAll('.emoji-trigger').forEach(trigger => {
-                        trigger.addEventListener('click', function() {
-                            var index = this.dataset.index;
-                            var emojiList = document.getElementById('emoji-list-' + index);
-                            emojiList.style.display = (emojiList.style.display === "none" || emojiList.style.display === "") ? "block" : "none";
-                        });
-                    });
-                })
+<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+@push('scripts')
+<script>
 
-                // Hide emoji list when an emoji is selected
-                document.querySelectorAll('.emoji-option').forEach(option => {
-                    option.addEventListener('click', function() {
-                        document.querySelectorAll('.emoji-list').forEach(list => {
-                            list.style.display = "none";
-                        });
-                    });
+
+    Livewire.on('updateSortType', sortType => {
+        Livewire.emit('refreshComments', sortType);
+    });
+</script>
+@endpush
+<script>
+    function handleRadioChange(element) {
+        const url = element.getAttribute('data-url');
+        window.location.href = url;
+    }
+</script>
+
+
+<script>
+    document.addEventListener('livewire:load', function() {
+        // Listen for clicks on emoji triggers and toggle the emoji list
+        document.querySelectorAll('.emoji-trigger').forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                var index = this.dataset.index;
+                var emojiList = document.getElementById('emoji-list-' + index);
+                emojiList.style.display = (emojiList.style.display === "none" || emojiList.style.display === "") ? "block" : "none";
+            });
+        });
+    })
+
+    // Hide emoji list when an emoji is selected
+    document.querySelectorAll('.emoji-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.emoji-list').forEach(list => {
+                list.style.display = "none";
+            });
+        });
+    });
+
+    function showEmojiList(index,cardId) {
+        var emojiList = document.getElementById('emoji-list-' + index);
+        if (emojiList.style.display === "none" || emojiList.style.display === "") {
+            emojiList.style.display = "block";
+        } else {
+            emojiList.style.display = "none";
+        }
+    }
+
+    function comment(index,cardId) {
+        var div = document.getElementById('replyDiv_' + index);
+        if (div.style.display === 'none') {
+            div.style.display = 'flex';
+        } else {
+            div.style.display = 'none';
+        }
+    }
+
+
+
+
+
+
+    function subReply(index) {
+        var div = document.getElementById('subReplyDiv_' + index);
+        if (div.style.display === 'none') {
+            div.style.display = 'flex';
+        } else {
+            div.style.display = 'none';
+        }
+    }
+
+
+    document.querySelector('emoji-picker').addEventListener('emoji-click', event => console.log(event.detail));
+    // JavaScript function to toggle arrow icon visibility
+    // JavaScript function to toggle arrow icon and dropdown content visibility
+    // JavaScript function to toggle dropdown content visibility and arrow rotation
+    function toggleDropdown(contentId, arrowId) {
+        var dropdownContent = document.getElementById(contentId);
+        var arrowSvg = document.getElementById(arrowId);
+
+        if (dropdownContent.style.display === 'none') {
+            dropdownContent.style.display = 'block';
+            arrowSvg.style.transform = 'rotate(180deg)';
+        } else {
+            dropdownContent.style.display = 'none';
+            arrowSvg.style.transform = 'rotate(0deg)';
+        }
+    }
+
+
+    function reply(caller) {
+        var replyDiv = $(caller).siblings('.replyDiv');
+        $('.replyDiv').not(replyDiv).hide(); // Hide other replyDivs
+        replyDiv.toggle(); // Toggle display of clicked replyDiv
+    }
+
+
+    function react(reaction) {
+        // Handle reaction logic here, you can send it to the server or perform any other action
+        console.log('Reacted with: ' + reaction);
+    }
+</script>
+
+<script>
+
+
+    function toggleEmojiDrawer() {
+        let drawer = document.getElementById('drawer');
+
+        if (drawer.classList.contains('hidden')) {
+            drawer.classList.remove('hidden');
+        } else {
+            drawer.classList.add('hidden');
+        }
+    }
+
+    function toggleDropdown(contentId, arrowId) {
+        var content = document.getElementById(contentId);
+        var arrow = document.getElementById(arrowId);
+
+        if (content.style.display === 'block') {
+            content.style.display = 'none';
+            arrow.classList.remove('rotate');
+        } else {
+            content.style.display = 'block';
+            arrow.classList.add('rotate');
+        }
+
+        // Close the dropdown when clicking on a link
+        content.addEventListener('click', function(event) {
+            if (event.target.tagName === 'A') {
+                content.style.display = 'none';
+                arrow.classList.remove('rotate');
+            }
+        });
+    }
+</script>
+<script>
+        $(document).ready(function() {
+            $('input[name="radio"]').on('change', function() {
+                var url = $(this).data('url');
+                window.location.href = url;
+            });
+
+            // Ensures the corresponding radio button is selected based on current URL
+            var currentUrl = window.location.pathname;
+            $('input[name="radio"]').each(function() {
+                if ($(this).data('url') === currentUrl) {
+                    $(this).prop('checked', true);
+                }
+            });
+
+            // Click handler for the custom radio label to trigger the radio input change
+            $('.custom-radio-label').on('click', function() {
+                $(this).find('input[type="radio"]').prop('checked', true).trigger('change');
+            });
+        });
+    </script>
+@push('scripts')
+<script>
+    Livewire.on('commentAdded', () => {
+        // Reload comments after adding a new comment
+        Livewire.emit('refreshComments');
+    });
+    
+</script>
+@endpush
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var dropdownToggle = document.getElementById('dropdown-toggle');
+
+    // Set the initial dropdown value based on the sort type
+    var initialSortType = dropdownToggle.childNodes[0].textContent.trim();
+    dropdownToggle.childNodes[0].textContent = initialSortType === 'Newest First' ? 'Newest First' : 'Most Recent Interacted';
+
+    dropdownToggle.addEventListener('click', function(event) {
+        event.stopPropagation();
+        var dropdownMenu = this.nextElementSibling;
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    window.addEventListener('click', function() {
+        var dropdownMenus = document.querySelectorAll('.dropdown-menu');
+        dropdownMenus.forEach(function(menu) {
+            menu.style.display = 'none';
+        });
+    });
+
+    document.querySelectorAll('.dropdown-item').forEach(function(item) {
+        item.addEventListener('click', function(event) {
+            event.preventDefault();
+            var dropdownToggle = document.getElementById('dropdown-toggle');
+            dropdownToggle.childNodes[0].textContent = this.textContent.trim();
+            dropdownToggle.nextElementSibling.style.display = 'none';
+
+            var sortType = this.getAttribute('data-sort');
+            Livewire.emit('updateSortType', sortType); // Ensure this event exists and is handled
+        });
+
+        item.addEventListener('mouseover', function() {
+            this.style.backgroundColor = '#E3EBF9';
+        });
+
+        item.addEventListener('mouseout', function() {
+            this.style.backgroundColor = 'white';
+        });
+    });
+
+    Livewire.on('refreshComments', function(sortType) {
+        sortComments(sortType);
+    });
+
+    function sortComments(type) {
+        var commentsContainer = document.getElementById('comments-container');
+        var comments = Array.from(commentsContainer.getElementsByClassName('comment-item'));
+
+        if (sortType === 'newest') {
+            comments.sort(function(a, b) {
+                return new Date(b.dataset.created) - new Date(a.dataset.created);
+            });
+        } else if (sortType === 'interacted') {
+            comments = comments.filter(function(comment) {
+                return parseInt(comment.dataset.comments) > 2; // Only keep comments with more than 2 comments
+            });
+
+            comments.sort(function(a, b) {
+                return new Date(b.dataset.interacted) - new Date(a.dataset.interacted);
+            });
+        }
+
+        commentsContainer.innerHTML = '';
+        comments.forEach(function(comment) {
+            commentsContainer.appendChild(comment);
+        });
+    }
+});
+</script>
+
+
+<script>
+    // Add event listener to menu items
+    const menuItems = document.querySelectorAll('.menu-item');
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove background color from all menu items
+            menuItems.forEach(item => {
+                item.classList.remove('selected');
+            });
+            // Add background color to the clicked menu item
+            this.classList.add('selected');
+        });
+    });
+</script>
+<script>
+    function selectEmoji(emoji, empId,index) {
+        // Your existing logic to select an emoji
+
+        // Toggle the emoji list visibility using the showEmojiList function
+        showEmojiList();
+    }
+    // Function to show the emoji list when clicking on the smiley emoji
+    function showEmojiList(index) {
+        var emojiList = document.getElementById('emoji-list-' + index);
+        if (emojiList.style.display === "none") {
+            emojiList.style.display = "block";
+        } else {
+            emojiList.style.display = "none";
+        }
+    }
+</script>
+<script>
+
+    function addEmoji(emoji_reaction, empId, cardId) {
+        // Your existing logic to select an emoji
+
+        // Toggle the emoji list visibility using the showEmojiList function
+        showEmojiList();
+    }
+    // Function to show the emoji list when clicking on the smiley emoji
+    function showEmojiList(index) {
+        var emojiList = document.getElementById('emoji-list-' + index);
+        if (emojiList.style.display === "none") {
+            emojiList.style.display = "block";
+        } else {
+            emojiList.style.display = "none";
+        }
+    }
+</script>
+
+
+
+
+
+
+<script>
+    document.addEventListener('livewire:load', function() {
+        // Listen for clicks on emoji triggers and toggle the emoji list
+        document.querySelectorAll('.emoji-trigger').forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                var index = this.dataset.index;
+                var emojiList = document.getElementById('emoji-list-' + index);
+                emojiList.style.display = (emojiList.style.display === "none" || emojiList.style.display === "") ? "block" : "none";
+            });
+        });
+
+        // Hide emoji list when an emoji is selected
+        document.querySelectorAll('.emoji-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.emoji-list').forEach(list => {
+                    list.style.display = "none";
                 });
-
-                function showEmojiList(index) {
-                    var emojiList = document.getElementById('emoji-list-' + index);
-                    if (emojiList.style.display === "none" || emojiList.style.display === "") {
-                        emojiList.style.display = "block";
-                    } else {
-                        emojiList.style.display = "none";
-                    }
-                }
-
-                function comment(index) {
-                    var div = document.getElementById('replyDiv_' + index);
-                    if (div.style.display === 'none') {
-                        div.style.display = 'flex';
-                    } else {
-                        div.style.display = 'none';
-                    }
-                }
+            });
+        });
+    });
+</script>
 
 
+<script>
+    document.addEventListener('click', function(event) {
+        const dropdowns = document.querySelectorAll('.cus-button');
+        dropdowns.forEach(function(dropdown) {
+            if (!dropdown.contains(event.target)) {
+                const dropdownContent = dropdown.nextElementSibling;
+                dropdownContent.style.display = 'none';
+            }
+        });
+    });
+
+    function toggleDropdown(dropdownId, arrowId) {
+        const dropdownContent = document.getElementById(dropdownId);
+        const arrowSvg = document.getElementById(arrowId);
+
+        if (dropdownContent.style.display === 'block') {
+            dropdownContent.style.display = 'none';
+            arrowSvg.classList.remove('arrow-rotate');
+        } else {
+            dropdownContent.style.display = 'block';
+            arrowSvg.classList.add('arrow-rotate');
+        }
+    }
+</script>
+<script>
+    window.addEventListener('post-creation-failed', event => {
+        alert('Employees do not have permission to create a post.');
+    });
+</script>
+
+<script>
+    document.addEventListener('click', function(event) {
+        const dropdowns = document.querySelectorAll('.cus-button');
+        dropdowns.forEach(function(dropdown) {
+            if (!dropdown.contains(event.target)) {
+                const dropdownContent = dropdown.nextElementSibling;
+                dropdownContent.style.display = 'none';
+            }
+        });
+    });
+
+    function toggleDropdown(dropdownId, arrowId) {
+        const dropdownContent = document.getElementById(dropdownId);
+        const arrowSvg = document.getElementById(arrowId);
+
+        if (dropdownContent.style.display === 'block') {
+            dropdownContent.style.display = 'none';
+            arrowSvg.classList.remove('arrow-rotate');
+        } else {
+            dropdownContent.style.display = 'block';
+            arrowSvg.classList.add('arrow-rotate');
+        }
+    }
+    document.querySelectorAll('.custom-radio-label a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        // Ensure no preventDefault() call is here unless necessary for custom handling
+    });
+});
+
+</script>
+@push('scripts')
+<script src="dist/emoji-popover.umd.js"></script>
+<link rel="stylesheet" href="dist/style.css" />
+
+<script>
+    document.addEventListener('livewire:load', function() {
+        const el = new EmojiPopover({
+            button: '.picker',
+            targetElement: '.emoji-picker',
+            emojiList: [{
+                    value: '🤣',
+                    label: 'laugh and cry'
+                },
+                // Add more emoji objects here
+            ]
+        });
+
+        el.onSelect(l => {
+            document.querySelector(".emoji-picker").value += l;
+        });
+
+        // Toggle the emoji picker popover manually
+        document.querySelector('.picker').addEventListener('click', function() {
+            el.toggle();
+        });
+    });
+</script>
+@endpush
 
 
-
-
-                function subReply(index) {
-                    var div = document.getElementById('subReplyDiv_' + index);
-                    if (div.style.display === 'none') {
-                        div.style.display = 'flex';
-                    } else {
-                        div.style.display = 'none';
-                    }
-                }
-
-
-                document.querySelector('emoji-picker').addEventListener('emoji-click', event => console.log(event.detail));
-                // JavaScript function to toggle arrow icon visibility
-                // JavaScript function to toggle arrow icon and dropdown content visibility
-                // JavaScript function to toggle dropdown content visibility and arrow rotation
-                function toggleDropdown(contentId, arrowId) {
-                    var dropdownContent = document.getElementById(contentId);
-                    var arrowSvg = document.getElementById(arrowId);
-
-                    if (dropdownContent.style.display === 'none') {
-                        dropdownContent.style.display = 'block';
-                        arrowSvg.style.transform = 'rotate(180deg)';
-                    } else {
-                        dropdownContent.style.display = 'none';
-                        arrowSvg.style.transform = 'rotate(0deg)';
-                    }
-                }
-
-
-                function reply(caller) {
-                    var replyDiv = $(caller).siblings('.replyDiv');
-                    $('.replyDiv').not(replyDiv).hide(); // Hide other replyDivs
-                    replyDiv.toggle(); // Toggle display of clicked replyDiv
-                }
-
-
-                function react(reaction) {
-                    // Handle reaction logic here, you can send it to the server or perform any other action
-                    console.log('Reacted with: ' + reaction);
-                }
-            </script>
-            <script>
-                $(document).ready(function() {
-                    $('input[name="radio"]').on('change', function() {
-                        var url = $(this).data('url');
-                        window.location.href = url;
-                    });
-
-                    // Ensures the corresponding radio button is selected based on current URL
-                    var currentUrl = window.location.pathname;
-                    $('input[name="radio"]').each(function() {
-                        if ($(this).data('url') === currentUrl) {
-                            $(this).prop('checked', true);
-                        }
-                    });
-
-                    // Click handler for the custom radio label to trigger the radio input change
-                    $('.custom-radio-label').on('click', function() {
-                        $(this).find('input[type="radio"]').prop('checked', true).trigger('change');
-                    });
-                });
-            </script>
-            <script>
-                function addEmoji(emoji) {
-                    let inputEle = document.getElementById('input');
-
-                    input.value += emoji;
-                }
-
-                function toggleEmojiDrawer() {
-                    let drawer = document.getElementById('drawer');
-
-                    if (drawer.classList.contains('hidden')) {
-                        drawer.classList.remove('hidden');
-                    } else {
-                        drawer.classList.add('hidden');
-                    }
-                }
-
-                function toggleDropdown(contentId, arrowId) {
-                    var content = document.getElementById(contentId);
-                    var arrow = document.getElementById(arrowId);
-
-                    if (content.style.display === 'block') {
-                        content.style.display = 'none';
-                        arrow.classList.remove('rotate');
-                    } else {
-                        content.style.display = 'block';
-                        arrow.classList.add('rotate');
-                    }
-
-                    // Close the dropdown when clicking on a link
-                    content.addEventListener('click', function(event) {
-                        if (event.target.tagName === 'A') {
-                            content.style.display = 'none';
-                            arrow.classList.remove('rotate');
-                        }
-                    });
-                }
-            </script>
-            <script>
-                tinymce.init({
-                    height: 140,
-                    selector: "textarea#mytextarea",
-                    plugins: "emoticons",
-                    toolbar: "emoticons",
-                    toolbar_location: "bottom",
-                    menubar: false,
-                    setup: function(editor) {
-                        editor.on('input', function() {
-                            autoResizeTextarea();
-                        });
-                    }
-                });
-
-                function autoResizeTextarea() {
-                    var textarea = document.getElementById('mytextarea');
-                    textarea.style.height = '140';
-                }
-            </script>
-            @push('scripts')
-            <script>
-                Livewire.on('commentAdded', () => {
-                    // Reload comments after adding a new comment
-                    Livewire.emit('refreshComments');
-                });
-            </script>
-            @endpush
-            <script>
-                // Add event listener to menu items
-                const menuItems = document.querySelectorAll('.menu-item');
-                menuItems.forEach(item => {
-                    item.addEventListener('click', function() {
-                        // Remove background color from all menu items
-                        menuItems.forEach(item => {
-                            item.classList.remove('selected');
-                        });
-                        // Add background color to the clicked menu item
-                        this.classList.add('selected');
-                    });
-                });
-            </script>
-            <script>
-                function selectEmoji(emoji, empId) {
-                    // Your existing logic to select an emoji
-
-                    // Toggle the emoji list visibility using the showEmojiList function
-                    showEmojiList();
-                }
-                // Function to show the emoji list when clicking on the smiley emoji
-                function showEmojiList(index) {
-                    var emojiList = document.getElementById('emoji-list-' + index);
-                    if (emojiList.style.display === "none") {
-                        emojiList.style.display = "block";
-                    } else {
-                        emojiList.style.display = "none";
-                    }
-                }
-            </script>
-            <script>
-                function addEmoji(emoji_reaction, empId) {
-                    // Your existing logic to select an emoji
-
-                    // Toggle the emoji list visibility using the showEmojiList function
-                    showEmojiList();
-                }
-                // Function to show the emoji list when clicking on the smiley emoji
-                function showEmojiList(index) {
-                    var emojiList = document.getElementById('emoji-list-' + index);
-                    if (emojiList.style.display === "none") {
-                        emojiList.style.display = "block";
-                    } else {
-                        emojiList.style.display = "none";
-                    }
-                }
-            </script>
-
-
-
-
-            <script>
-                document.addEventListener('livewire:load', function() {
-                    // Listen for clicks on emoji triggers and toggle the emoji list
-                    document.querySelectorAll('.emoji-trigger').forEach(trigger => {
-                        trigger.addEventListener('click', function() {
-                            var index = this.dataset.index;
-                            var emojiList = document.getElementById('emoji-list-' + index);
-                            emojiList.style.display = (emojiList.style.display === "none" || emojiList.style.display === "") ? "block" : "none";
-                        });
-                    });
-
-                    // Hide emoji list when an emoji is selected
-                    document.querySelectorAll('.emoji-option').forEach(option => {
-                        option.addEventListener('click', function() {
-                            document.querySelectorAll('.emoji-list').forEach(list => {
-                                list.style.display = "none";
-                            });
-                        });
-                    });
-                });
-            </script>
-
-
-            <script>
-                document.addEventListener('click', function(event) {
-                    const dropdowns = document.querySelectorAll('.cus-button');
-                    dropdowns.forEach(function(dropdown) {
-                        if (!dropdown.contains(event.target)) {
-                            const dropdownContent = dropdown.nextElementSibling;
-                            dropdownContent.style.display = 'none';
-                        }
-                    });
-                });
-
-                function toggleDropdown(dropdownId, arrowId) {
-                    const dropdownContent = document.getElementById(dropdownId);
-                    const arrowSvg = document.getElementById(arrowId);
-
-                    if (dropdownContent.style.display === 'block') {
-                        dropdownContent.style.display = 'none';
-                        arrowSvg.classList.remove('arrow-rotate');
-                    } else {
-                        dropdownContent.style.display = 'block';
-                        arrowSvg.classList.add('arrow-rotate');
-                    }
-                }
-            </script>
-
-
-            <script>
-                document.addEventListener('click', function(event) {
-                    const dropdowns = document.querySelectorAll('.cus-button');
-                    dropdowns.forEach(function(dropdown) {
-                        if (!dropdown.contains(event.target)) {
-                            const dropdownContent = dropdown.nextElementSibling;
-                            dropdownContent.style.display = 'none';
-                        }
-                    });
-                });
-
-                function toggleDropdown(dropdownId, arrowId) {
-                    const dropdownContent = document.getElementById(dropdownId);
-                    const arrowSvg = document.getElementById(arrowId);
-
-                    if (dropdownContent.style.display === 'block') {
-                        dropdownContent.style.display = 'none';
-                        arrowSvg.classList.remove('arrow-rotate');
-                    } else {
-                        dropdownContent.style.display = 'block';
-                        arrowSvg.classList.add('arrow-rotate');
-                    }
-                }
-            </script>
-            @push('scripts')
-            <script src="dist/emoji-popover.umd.js"></script>
-            <link rel="stylesheet" href="dist/style.css" />
-
-            <script>
-                document.addEventListener('livewire:load', function() {
-                    const el = new EmojiPopover({
-                        button: '.picker',
-                        targetElement: '.emoji-picker',
-                        emojiList: [{
-                                value: '🤣',
-                                label: 'laugh and cry'
-                            },
-                            // Add more emoji objects here
-                        ]
-                    });
-
-                    el.onSelect(l => {
-                        document.querySelector(".emoji-picker").value += l;
-                    });
-
-                    // Toggle the emoji picker popover manually
-                    document.querySelector('.picker').addEventListener('click', function() {
-                        el.toggle();
-                    });
-                });
-            </script>
-            @endpush
-
-     
-            <script>
+<script>
     function filterDropdowns() {
         var input, filter, dropdownContents, dropdownContent, menuItems, a, i, j, hasMatch;
         input = document.getElementById('filterSearch');
@@ -792,32 +854,6 @@
             dropdownContent.style.display = hasMatch ? "block" : "none"; // Show or hide based on match
         });
     }
-</script>
-
-<script>
-    function handleRadioChange(radio) {
-        const selectedValue = radio.value;
-
-        // Hide both sections initially
-        const activitiesSection = document.getElementById('activitiesSection');
-        const postsSection = document.getElementById('postsSection');
-        
-        activitiesSection.style.display = 'none';
-        postsSection.style.display = 'none';
-
-        // Show the selected section
-        if (selectedValue === 'activities') {
-            activitiesSection.style.display = 'block'; // Show activities section
-        } else {
-            postsSection.style.display = 'block'; // Show posts section
-        }
-    }
-
-    // Initialize the default display on page load
-    window.onload = function() {
-        document.getElementById('radio-emp').checked = true; // For employees
-        handleRadioChange(document.querySelector('input[name="radio"]:checked')); // Trigger initial display
-    };
 </script>
 
 

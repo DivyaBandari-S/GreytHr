@@ -30,33 +30,34 @@
 
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-5 justify-content-center"
                 style="overflow-y: auto; height: 100vh;">
-                @forelse ($employeeDetails as $key => $employee)
+                <!--[if BLOCK]><![endif]--><?php $__empty_1 = true; $__currentLoopData = $employeeDetails; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <div class="col-lg-3 mb-6"> <!-- Increase width to col-lg-4 -->
                         <div class="card" style="width: 200px;">
                             <div class="col d-flex align-items-center justify-content-center mt-4">
                         
-                            @if ($employee->image_url)
-                <img src="{{ $employee->image_url }}" height="50" width="50" style="border-radius:50%;" alt="Employee Image">
-            @elseif ($employee->gender == 'Male')
+                            <!--[if BLOCK]><![endif]--><?php if($employee->image_url): ?>
+                <img src="<?php echo e($employee->image_url); ?>" height="50" width="50" style="border-radius:50%;" alt="Employee Image">
+            <?php elseif($employee->gender == 'Male'): ?>
                 <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" height="50" width="50" style="border-radius:50%;" alt="Default Male Profile">
-            @elseif ($employee->gender == 'Female')
+            <?php elseif($employee->gender == 'Female'): ?>
                 <img src="https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7" height="50" width="50" style="border-radius:50%;" alt="Default Female Profile">
-            @else
+            <?php else: ?>
                 <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" height="50" width="50" style="border-radius:50%;" alt="Default Profile Image">
-            @endif
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                             </div>
                             <div class="card-body text-center">
                                 <div class="chat-employee-name">
-                                    {{ ucwords(strtolower($employee->first_name)) }}&nbsp;{{ ucwords(strtolower($employee->last_name)) }}
+                                    <?php echo e(ucwords(strtolower($employee->first_name))); ?>&nbsp;<?php echo e(ucwords(strtolower($employee->last_name))); ?>
+
                                 </div>
-                                @php
+                                <?php
                                     $jobTitle = $employee->job_title;
                                     $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
                                     $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
                                     $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
-                                @endphp
-                                <p class="card-text px-4 mb-0" style="display: inline-block;">{{ $convertedTitle }}</p>
+                                ?>
+                                <p class="card-text px-4 mb-0" style="display: inline-block;"><?php echo e($convertedTitle); ?></p>
                                 <div class="d-flex justify-content-between mt-3">
                                     <div class="chat-emp-head d-flex flex-column align-items-start gap-1">
                                         <span>Employee Id</span>
@@ -65,9 +66,9 @@
 
                                     </div>
                                     <div class="chat-emp-details d-flex flex-column align-items-end gap-1">
-                                        <span>{{ $employee->emp_id }}</span>
-                                        <span>{{ $employee->department }}</span>
-                                        <span>{{ \Carbon\Carbon::parse($employee->hire_date)->format('d M, Y') }}</span>
+                                        <span><?php echo e($employee->emp_id); ?></span>
+                                        <span><?php echo e($employee->department); ?></span>
+                                        <span><?php echo e(\Carbon\Carbon::parse($employee->hire_date)->format('d M, Y')); ?></span>
 
                                     </div>
                                 </div>
@@ -81,16 +82,17 @@
                                 <!-- Chat Icon -->
                                 <button class="submit-btn px-4 d-flex align-items-center justify-content-center"
                                     style="border-radius: 10px; width: 30px; height: 30px;cursor:pointer;"
-                                    wire:click="message('{{ $employee->emp_id }}')">
+                                    wire:click="message('<?php echo e($employee->emp_id); ?>')">
                                     <i class="fas fa-comment" style="font-size: 14px;padding:5px;"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <p class="col text-center">No employees found.</p>
-                @endforelse
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             </div>
         </div>
     </div>
 </div>
+<?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/chat/employee-list.blade.php ENDPATH**/ ?>

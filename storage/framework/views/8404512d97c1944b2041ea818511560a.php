@@ -1,40 +1,41 @@
 <div class="px-4">
 <div class="px-4" style="position: relative;">
-@if ($message)
+<!--[if BLOCK]><![endif]--><?php if($message): ?>
     <div class="alert alert-info alert-dismissible fade show" role="alert">
-        {{ $message }}
+        <?php echo e($message); ?>
+
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-@endif
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 <div class="container  mt-3" style="height:60px;margin-top:10px">
     
     <div class="row bg-white rounded border" style="height:80px">
  
     <div class="col-md-1 mt-3" style="height:60px">
-            @if(auth('emp')->check() || auth('hr')->check())
-    @php
+            <!--[if BLOCK]><![endif]--><?php if(auth('emp')->check() || auth('hr')->check()): ?>
+    <?php
         // Determine the employee ID based on the authentication guard
         $empEmployeeId = auth('emp')->check() ? auth('emp')->user()->emp_id : auth('hr')->user()->hr_emp_id;
 
         // Fetch the employee details from EmployeeDetails model
         $employeeDetails = \App\Models\EmployeeDetails::where('emp_id', $empEmployeeId)->first();
-    @endphp
+    ?>
 
-    @if($employeeDetails && $employeeDetails->image)
-        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
-    @else
-        @if($employeeDetails && $employeeDetails->gender == "Male")
+    <!--[if BLOCK]><![endif]--><?php if($employeeDetails && $employeeDetails->image): ?>
+        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="<?php echo e($employeeDetails->image_url); ?>" alt="Employee Image">
+    <?php else: ?>
+        <!--[if BLOCK]><![endif]--><?php if($employeeDetails && $employeeDetails->gender == "Male"): ?>
             <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Image">
-        @elseif($employeeDetails && $employeeDetails->gender == "Female")
+        <?php elseif($employeeDetails && $employeeDetails->gender == "Female"): ?>
             <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Default Female Image">
-        @else
+        <?php else: ?>
         <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
-        @endif
-    @endif
-@else
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+<?php else: ?>
     <p>User is not authenticated.</p>
-@endif
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
 
@@ -44,13 +45,13 @@
             </div>
         <div class="col-md-10 mt-2 bg-white d-flex align-items-center justify-content-between">
             <div style="color:#3b4452;">
-            @if(auth()->guard('emp')->check())
-<span class="text-base">Hey {{ ucwords(strtolower(auth()->guard('emp')->user()->first_name)) }} {{ ucwords(strtolower(auth()->guard('emp')->user()->last_name)) }}</span>
-@elseif(auth()->guard('hr')->check())
-<span class="text-base">Hey {{ ucwords(strtolower(auth()->guard('hr')->user()->employee_name)) }}</span>
-@else
+            <!--[if BLOCK]><![endif]--><?php if(auth()->guard('emp')->check()): ?>
+<span class="text-base">Hey <?php echo e(ucwords(strtolower(auth()->guard('emp')->user()->first_name))); ?> <?php echo e(ucwords(strtolower(auth()->guard('emp')->user()->last_name))); ?></span>
+<?php elseif(auth()->guard('hr')->check()): ?>
+<span class="text-base">Hey <?php echo e(ucwords(strtolower(auth()->guard('hr')->user()->employee_name))); ?></span>
+<?php else: ?>
 <p>No employee details available.</p>
-@endif
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                 <div class="text-xs" style="color:#3b4452;">Ready to dive in?</div>
             </div>
@@ -68,7 +69,7 @@
                         </div>
                 </button>
 
-                @if($showFeedsDialog)
+                <!--[if BLOCK]><![endif]--><?php if($showFeedsDialog): ?>
                 <div class="modal" tabindex="-1" role="dialog" style="display: block; color: #3b4452; font-family: Montserrat, sans-serif;">
 <div class="modal-dialog modal-dialog-centered" role="document" style="color: #3b4452;">
     <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
@@ -79,13 +80,14 @@
            </span>
         </div>
 
-        @if(Session::has('error'))
+        <!--[if BLOCK]><![endif]--><?php if(Session::has('error')): ?>
             <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert" 
                 style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius:4px; background-color: #f8d7da; color: #721c24;">
-                {{ Session::get('error') }}
+                <?php echo e(Session::get('error')); ?>
+
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;"></button>
             </div>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
         <form wire:submit.prevent="submit">
             <div class="modal-body" style="padding: 20px;">
@@ -113,11 +115,11 @@
                     <label for="attachment" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
                     <div style="text-align: start;">
                         <input wire:model="image" type="file" accept="image/*" style="font-size: 12px ;margin-top:5px">
-                        @if ($image)
+                        <!--[if BLOCK]><![endif]--><?php if($image): ?>
                             <div class="mt-2">
-                                <img src="{{ $image->temporaryUrl() }}" height="50" width="50" alt="Image Preview" style="max-width: 100px; border-radius: 4px; border: 1px solid #ccc;">
+                                <img src="<?php echo e($image->temporaryUrl()); ?>" height="50" width="50" alt="Image Preview" style="max-width: 100px; border-radius: 4px; border: 1px solid #ccc;">
                             </div>
-                        @endif
+                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
                 </div>
             </div>
@@ -138,7 +140,7 @@
 
 
                 <div class="modal-backdrop fade show"></div>
-                @endif
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             </div>
         </div>
     </div>
@@ -170,13 +172,13 @@
 
 <div class="posts" style="width: 100%; height: 30px;">
 <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
-    @if(auth()->guard('emp')->check())
+    <!--[if BLOCK]><![endif]--><?php if(auth()->guard('emp')->check()): ?>
         <input type="radio" id="radio-emp" name="radio" checked value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
-    @elseif(auth()->guard('hr')->check())
+    <?php elseif(auth()->guard('hr')->check()): ?>
         <input type="radio" id="radio-hr" name="radio" checked value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
-    @else
+    <?php else: ?>
         <p>No employee details available.</p>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
     <div class="feed-icon-container" style="margin-left: 10px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
             <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
@@ -213,31 +215,31 @@
 <div id="dropdownContent1" style="display: none;">
     <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
         <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">All Feeds</a>
-        @if (Auth::guard('hr')->check())
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
-        @endif
-        @if (Auth::guard('hr')->check())
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
-        @endif
-        @if (Auth::guard('hr')->check())
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
-        @endif
-        @if (Auth::guard('hr')->check())
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
-        @endif
-        @if (Auth::guard('hr')->check())
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
     </ul>
 </div>
 </div>
@@ -256,81 +258,81 @@
                         <ul  class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
                             <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">India</b>
                            
-                            @if (Auth::guard('hr')->check())
+                            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
 
-@elseif (Auth::guard('emp')->check())
+<?php elseif(Auth::guard('emp')->check()): ?>
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
-@endif 
+<?php endif; ?><!--[if ENDBLOCK]><![endif]--> 
                          
-@if (Auth::guard('hr')->check())
+<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Doddaballapur</a>
 
-@elseif (Auth::guard('emp')->check())
+<?php elseif(Auth::guard('emp')->check()): ?>
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Doddaballapur</a>
-@endif 
-                            @if (Auth::guard('hr')->check())
+<?php endif; ?><!--[if ENDBLOCK]><![endif]--> 
+                            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
 
-@elseif (Auth::guard('emp')->check())
+<?php elseif(Auth::guard('emp')->check()): ?>
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
 
-@endif
-@if (Auth::guard('hr')->check())
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hyderabad</a>
 
-@elseif (Auth::guard('emp')->check())
+<?php elseif(Auth::guard('emp')->check()): ?>
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Hyderabad</a>
-@endif      
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->      
 
-@if (Auth::guard('hr')->check())
+<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
 
-@elseif (Auth::guard('emp')->check())
+<?php elseif(Auth::guard('emp')->check()): ?>
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
-@endif      
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->      
  
-@if (Auth::guard('hr')->check())
+<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
 
-@elseif (Auth::guard('emp')->check())
+<?php elseif(Auth::guard('emp')->check()): ?>
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
-@endif      
-@if (Auth::guard('hr')->check())
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->      
+<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
 
-@elseif (Auth::guard('emp')->check())
+<?php elseif(Auth::guard('emp')->check()): ?>
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight:700">USA</a>
-@endif      
-@if (Auth::guard('hr')->check())
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->      
+<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">California</a>
 
-@elseif (Auth::guard('emp')->check())
+<?php elseif(Auth::guard('emp')->check()): ?>
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">California</a>
-@endif
-@if (Auth::guard('hr')->check())
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">New York</a>
 
-@elseif (Auth::guard('emp')->check())
+<?php elseif(Auth::guard('emp')->check()): ?>
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">New York</a>
-@endif      
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->      
  
-@if (Auth::guard('hr')->check())
+<!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
 
 <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
 
-@elseif (Auth::guard('emp')->check())
+<?php elseif(Auth::guard('emp')->check()): ?>
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
-@endif                 
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->                 
 
                         </ul>
                     </div>
@@ -346,37 +348,37 @@
 </div>
 <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
     <ul  class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
-        @if (Auth::guard('hr')->check())
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">HR</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">HR</a>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations Team</a>
-        @endif
-        @if (Auth::guard('hr')->check())
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations</a>
-        @endif
-        @if (Auth::guard('hr')->check())
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Production Team</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Production Team</a>
-        @endif
-        @if (Auth::guard('hr')->check())
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">QA</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">QA</a>
-        @endif
-        @if (Auth::guard('hr')->check())
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Sales Team</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Sales Team</a>
-        @endif
-        @if (Auth::guard('hr')->check())
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><?php if(Auth::guard('hr')->check()): ?>
             <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Testing Team</a>
-        @elseif (Auth::guard('emp')->check())
+        <?php elseif(Auth::guard('emp')->check()): ?>
             <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Testing Team</a>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
     </ul>
 </div>
 </div>
@@ -387,68 +389,87 @@
 <div class="col" >
     
 <div id="eventsSection" style=" display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;margin-top:-130px">
-@if($posts->isEmpty())
+<!--[if BLOCK]><![endif]--><?php if($posts->isEmpty()): ?>
         <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png" alt="Empty Image" style="width: 300px; height: auto; display: block;">
         <p style="font-size:20px;font-weight:500; text-align: center;color:#3b4452">It feels empty here!</p>
         <p style="font-size:12px;color:#778899; text-align: center;">Your feed is still in making as there's no post to show.</p>
         <button style="background-color:rgb(2, 17, 79); width:110px; height:30px; border:1px solid grey; border-radius:5px; color:white;" wire:click="addFeeds">Create Post</button>
 
         <!-- Begin the form outside the .form-group div -->
-        @if($showFeedsDialog)
+        <!--[if BLOCK]><![endif]--><?php if($showFeedsDialog): ?>
             <!-- Form content here -->
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 </div>
 
-                @else
+                <?php else: ?>
                 <div class="col-md-7 text-right" style="display:flex; justify-content: flex-end; overflow-y: auto;scroll-behavior: smooth;">
 
        
                 </div>
-                @foreach($posts as $post)
+                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $posts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $post): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="col-md-8">
 
                     <!-- Upcoming Birthdays List -->
                     <div class="F" style="background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top:20px">
                         <div class="m-0 mb-3 mt-1 row">
                         <div class="col-md-4 mb-2" style="text-align: center;">
-                        @livewire('company-logo')
+                        <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('company-logo');
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-3430058205-0', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
                                 </div>
                          
                             <div class="col-4 m-auto" style="font-size: 13px; font-weight: normal; color: #9E9696;text-align:center;">
-                                {{ $post->category }}
+                                <?php echo e($post->category); ?>
+
                             </div>
                             <div class="col-4 m-auto" style="font-size: 11px; font-weight: normal; color: #9E9696; text-align: end;">
-                    {{ $post->created_at->diffForHumans() }}
+                    <?php echo e($post->created_at->diffForHumans()); ?>
+
                 </div>
                         </div>
                         <div class="row m-0 mb-3">
-                            @php
+                            <?php
                             $employee = \App\Models\Hr::where('hr_emp_id', $post->hr_emp_id)->first();
-                            @endphp
-                            @if($employee)
+                            ?>
+                            <!--[if BLOCK]><![endif]--><?php if($employee): ?>
                             <div class="col-3">
-                                <img style="border-radius: 50%;" height="50" width="50" src="{{ asset('storage/'. $employee->image) }}">
+                                <img style="border-radius: 50%;" height="50" width="50" src="<?php echo e(asset('storage/'. $employee->image)); ?>">
                             </div>
                             <div class="col-9 m-auto" style="text-align: left">
                                 <p class="text-base m-0" style="margin-left: 20px; font-size: 14px;">
-                                    {{ ucwords(strtolower($employee->employee_name)) }}
+                                    <?php echo e(ucwords(strtolower($employee->employee_name))); ?>
+
                                 </p>
 
                             </div>
-                            @else
+                            <?php else: ?>
                             <p>No employee details available.</p>
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
 
 
                         <div class="row m-0 mb-3">
                             <div class="col-md-6">
-                                <img src="{{ asset('storage/' . $post->attachment) }}" alt="Post Image" style="width: 200px; height: 60px">
+                                <img src="<?php echo e(asset('storage/' . $post->attachment)); ?>" alt="Post Image" style="width: 200px; height: 60px">
                             </div>e
                             <div class="col-md-6 m-auto">
                                 <p style="font-size: 14px; font-family: 'Open Sans', sans-serif; margin-top: 10px; font-weight: 100; color: #677A8E;">
-                                    {{ $post->description }}
+                                    <?php echo e($post->description); ?>
+
                                 </p>
                             </div>
 
@@ -473,10 +494,10 @@
                     </div>
                 </div>
 
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
 
 
-                @endif
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 
             </div>
@@ -652,14 +673,14 @@
                     textarea.style.height = '140';
                 }
             </script>
-            @push('scripts')
+            <?php $__env->startPush('scripts'); ?>
             <script>
                 Livewire.on('commentAdded', () => {
                     // Reload comments after adding a new comment
                     Livewire.emit('refreshComments');
                 });
             </script>
-            @endpush
+            <?php $__env->stopPush(); ?>
             <script>
                 // Add event listener to menu items
                 const menuItems = document.querySelectorAll('.menu-item');
@@ -785,7 +806,7 @@
                     }
                 }
             </script>
-            @push('scripts')
+            <?php $__env->startPush('scripts'); ?>
             <script src="dist/emoji-popover.umd.js"></script>
             <link rel="stylesheet" href="dist/style.css" />
 
@@ -812,7 +833,7 @@
                     });
                 });
             </script>
-            @endpush
+            <?php $__env->stopPush(); ?>
 
      
             <script>
@@ -859,4 +880,4 @@
 </script>
 
     </div>
-    </div>
+    </div><?php /**PATH C:\xampp\htdocs\GreytHr\resources\views/livewire/everyone.blade.php ENDPATH**/ ?>

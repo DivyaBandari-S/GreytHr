@@ -16,49 +16,32 @@
         <div class="row bg-white rounded border" style="height:80px">
      
             <div class="col-md-1 mt-3" style="height:60px">
-            @if(auth('emp')->check())
+            @if(auth('emp')->check() || auth('hr')->check())
     @php
-        $empEmployeeId = auth('emp')->user()->emp_id;
-        $employeeDetails = \App\Models\EmployeeDetails::with('personalInfo') // Eager load personal info
-            ->where('emp_id', $empEmployeeId)
-            ->get();
+        // Determine the employee ID based on the authentication guard
+        $empEmployeeId = auth('emp')->check() ? auth('emp')->user()->emp_id : auth('hr')->user()->hr_emp_id;
+
+        // Fetch the employee details from EmployeeDetails model
+        $employeeDetails = \App\Models\EmployeeDetails::where('emp_id', $empEmployeeId)->first();
     @endphp
 
-    @if($employeeDetails && $employeeDetails->count() > 0)
-        @foreach($employeeDetails as $employee)
-            @if($employee->personalInfo && $employee->personalInfo->image)
-                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $employee->personalInfo->image) }}">
-            @else
-                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
-            @endif
-        @endforeach
+    @if($employeeDetails && $employeeDetails->image)
+        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
     @else
-        <p>No employee details found.</p>
+        @if($employeeDetails && $employeeDetails->gender == "Male")
+            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Image">
+        @elseif($employeeDetails && $employeeDetails->gender == "Female")
+            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Default Female Image">
+        @else
+        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+        @endif
     @endif
-
-
-
-@elseif(auth('hr')->check())
-    @php
-        $hrEmployeeId = auth('hr')->user()->hr_emp_id;
-        $hrEmployeeDetails = \App\Models\Hr::where('hr_emp_id', $hrEmployeeId)->get();
-    @endphp
-
-    @if($hrEmployeeDetails && $hrEmployeeDetails->count() > 0)
-        @foreach($hrEmployeeDetails as $hr)
-            @if($hr->image)
-                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{ asset('storage/' . $hr->image) }}">
-            @else
-                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
-            @endif
-        @endforeach
-    @else
-        <p>No HR employee details found.</p>
-    @endif
-
 @else
     <p>User is not authenticated.</p>
 @endif
+
+
+
 
 
       
@@ -76,7 +59,7 @@
                     <div class="text-xs" style="color:#3b4452;">Ready to dive in?</div>
                 </div>
                 <div>
-                    <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20 h-20 p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;">
+                    <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20 h-20 p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;width:130px">
                         <div class="w-6 h-6 rounded bg-purple-200">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
                                 <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
@@ -458,7 +441,7 @@
                                     Group Events
                                 </div>
                                 <div class="c col-md-4 m-auto" style="font-size: 13px; font-weight: 100px; color: #9E9696; text-align: center;">
-                                {{ date('d M', strtotime($data['employee']->personalInfo->date_of_birth)) }}
+                                {{ date('d M', strtotime($data['employee']->personalInfo->date_of_birth??'-')) }}
                                 </div>
                             </div>
                             <div class="row m-0 mt-2">
@@ -472,7 +455,13 @@
                                         Have a great year ahead!
                                     </p>
                                     <div style="display: flex; align-items: center;">
-                                        <img src="https://logodix.com/logo/1984436.jpg" alt="Image Description" style="height: 25px; width: 20px;">
+                                    @if($data['employee'] && $data['employee']->image_url)
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
+@else
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+
+
+                                @endif
                                         <p style="margin-left: 10px; font-size: 12px; color:#3b4452;margin-bottom:0;font-weight:600;">
                                             Happy Birthday {{ ucwords(strtoupper($data['employee']->first_name)) }}
                                             {{ ucwords(strtoupper($data['employee']->last_name)) }}! 🎂
@@ -685,77 +674,85 @@
                             </form>
                         </div>
                         <div class="row m-0">
-
-                        @php
-    $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
-
-
+    @php
+        $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
     @endphp
-     <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
+    <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
   
-  @if($currentCardComments && $currentCardComments->count() > 0)
-      @foreach ($currentCardComments as $comment)
-     
-      <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
-      @if($comment->employee)
-    @if($comment->employee->personalInfo && $comment->employee->personalInfo->image)
-        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->personalInfo->image) }}">
-    @else
-    @if($comment->employee->personalInfo && $comment->employee->personalInfo->gender == "Male")
-            <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
-        @elseif($comment->employee->personalInfo && $comment->employee->personalInfo->gender == "Female")
-            <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
-        @endif
-    @endif
+    @if($currentCardComments && $currentCardComments->count() > 0)
+        @foreach ($currentCardComments as $comment)
+            <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
+                @if($comment->employee)
+                    @php
+                        $employee = $comment->employee;
+                        $imageUrl = $employee->image_url; // Retrieves image URL using the accessor
+                      
+                    @endphp
 
-    <div class="comment" style="font-size: 10px;">
-        <b style="color:#778899; font-weight:500; font-size: 10px;">
-            {{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}
-        </b>
-        <p class="mb-0" style="font-size: 11px;">
-            {{ ucfirst($comment->comment) }}
-        </p>
-    </div>
-
-
-@elseif($comment->hr)
-  @if($comment->hr->image)
-      <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
-  @else
-      @if($comment->hr->gender == "Male")
-          <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
-      @elseif($comment->hr->gender == "Female")
-          <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
-      @else
-          <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
-      @endif
-  @endif
-  <div class="comment" style="font-size: 10px;">
-      <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
-      <p class="mb-0" style="font-size: 11px;">
-          {{ ucfirst($comment->comment) }}
-      </p>
-  </div>
+@if($employee->image_url)
+    <!-- Display the employee's actual image -->
+    <img style="border-radius: 50%;" height="25" width="25" src="{{ $employee->image_url }}" alt="Employee Image">
 @else
-  <div class="comment" style="font-size: 10px;">
-      <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
-      <p class="mb-0" style="font-size: 11px;">
-          {{ ucfirst($comment->comment) }}
-      </p>
-  </div>
+    <!-- Display a default image based on gender or a generic fallback -->
+    @if($employee->gender == "Male")
+        <img class="feeds-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" style="border-radius: 50%;" height="25" width="25">
+    @elseif($employee->gender == "Female")
+        <img class="feeds-image" src="https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Default Female Profile" style="border-radius: 50%;" height="25" width="25">
+    @else
+        <img style="border-radius: 50%;" height="25" width="25" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Profile Image">
+    @endif
 @endif
+
+
+                    <div class="comment" style="font-size: 10px;">
+                        <b style="color:#778899; font-weight:500; font-size: 10px;">
+                            {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}
+                        </b>
+                        <p class="mb-0" style="font-size: 11px;">
+                            {{ ucfirst($comment->comment) }}
+                        </p>
+                    </div>
+
+                @elseif($comment->hr)
+                    @php
+                        $hr = $comment->hr;
+                        $imageUrl = $hr->image_url; // Retrieves image URL using the accessor for HR
+                    @endphp
+
+                    @if($imageUrl)
+                        <img style="border-radius: 50%;" height="25" width="25" src="{{ $imageUrl }}" alt="HR Image">
+                    @else
+                        @if($hr->gender == "Male")
+                            <img class="feeds-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" style=" border-radius: 50%;" height="25" width="25">
+                        @elseif($hr->gender == "Female")
+                            <img class="feeds-image" src="https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Default Female Profile" height="25" width="25" style="border-radius:50%">
+                        @else
+                            <img style="border-radius: 50%;" height="25" width="25" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+                        @endif
+                    @endif
+
+                    <div class="comment" style="font-size: 10px;">
+                        <b style="color:#778899; font-weight:500; font-size: 10px;">
+                            {{ ucwords(strtolower($hr->first_name)) }} {{ ucwords(strtolower($hr->last_name)) }}
+                        </b>
+                        <p class="mb-0" style="font-size: 11px;">
+                            {{ ucfirst($comment->comment) }}
+                        </p>
+                    </div>
+                @else
+                    <div class="comment" style="font-size: 10px;">
+                        <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+                        <p class="mb-0" style="font-size: 11px;">
+                            {{ ucfirst($comment->comment) }}
+                        </p>
+                    </div>
+                @endif
+            </div>
+        @endforeach
+    @endif
+</div>
 </div>
 
-      @endforeach
-  @endif
-
-
-
-
-</div>
-
-
-</div>
                   
 
                             </div>
@@ -785,8 +782,8 @@
         @if ($filteredComments->where('card_id', $birthdayCardId)->count() > 0)
         <div class="F mb-4" style="padding: 15px; background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top: 5px">
                             <div class="row m-0">
-                                <div class="col-md-4 mb-2" style="text-align: center;">
-                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo">
+                                <div class="col-md-3 mb-2" style="text-align: center;">
+                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                                 </div>
                                 <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
                                     Group Events
@@ -796,8 +793,8 @@
                                 </div>
                             </div>
                             <div class="row m-0 mt-2">
-                                <div class="col-md-4">
-                                    <img src="{{ asset('images/Blowing_out_Birthday_candles_Gif.gif') }}" alt="Image Description" style="width: 200px;">
+                                <div class="col-md-3">
+                                    <img src="{{ asset('images/Blowing_out_Birthday_candles_Gif.gif') }}" alt="Image Description" style="width: 120px;">
                                 </div>
                                 <div class="col-md-8 m-auto">
                                     <p style="color: #778899;font-size: 12px;font-weight:normal;">
@@ -806,7 +803,13 @@
                                         Have a great year ahead!
                                     </p>
                                     <div style="display: flex; align-items: center;">
-                                        <img src="https://logodix.com/logo/1984436.jpg" alt="Image Description" style="height: 25px; width: 20px;">
+                                    @if($data['employee'] && $data['employee']->image_url)
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
+@else
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+
+
+                                @endif
                                         <p style="margin-left: 10px; font-size: 12px; color: #47515b;margin-bottom:0;font-weight:600;">
                                             Happy Birthday {{ ucwords(strtoupper($data['employee']->first_name)) }}
                                             {{ ucwords(strtoupper($data['employee']->last_name)) }}! 🎂
@@ -1044,52 +1047,67 @@
  @foreach ($filteredComments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at') as $comment)
  <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
  @if($comment->employee)
-    @if($comment->employee->personalInfo && $comment->employee->personalInfo->image)
-        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->personalInfo->image) }}">
+    @php
+        $employee = $comment->employee;
+        $employeeDetails = $employee->employeeDetails;
+        $imageUrl = $employeeDetails->image_url ?? null;
+        $gender = $employeeDetails->gender ?? null;
+    @endphp
+
+    @if($imageUrl)
+        <img style="border-radius: 50%;" height="25" width="25" src="{{ $imageUrl }}" alt="Employee Image">
     @else
-    @if($comment->employee->personalInfo && $comment->employee->personalInfo->gender == "Male")
+        @if($gender == "Male")
             <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
-        @elseif($comment->employee->personalInfo && $comment->employee->personalInfo->gender == "Female")
+        @elseif($gender == "Female")
             <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
+        @else
+            <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
         @endif
     @endif
 
     <div class="comment" style="font-size: 10px;">
         <b style="color:#778899; font-weight:500; font-size: 10px;">
-            {{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}
+            {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}
         </b>
         <p class="mb-0" style="font-size: 11px;">
             {{ ucfirst($comment->comment) }}
         </p>
     </div>
 
+@elseif ($comment->hr)
+    @php
+        $imageUrl = $comment->hr->image;
+        $gender = $comment->hr->gender;
+    @endphp
 
-                @elseif ($comment->hr)
-                    @if ($comment->hr->image)
-                        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
-                    @else
-                        @if ($comment->hr->gender == "Male")
-                            <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
-                        @elseif ($comment->hr->gender == "Female")
-                            <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
-                        @else
-                            <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
-                        @endif
-                    @endif
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
-                @else
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
-                    @endif
+    @if ($imageUrl)
+        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $imageUrl) }}">
+    @else
+        @if ($gender == "Male")
+            <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
+        @elseif ($gender == "Female")
+            <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
+        @else
+            <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
+        @endif
+    @endif
+
+    <div class="comment" style="font-size: 10px;">
+        <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
+        <p class="mb-0" style="font-size: 11px;">
+            {{ ucfirst($comment->comment) }}
+        </p>
+    </div>
+@else
+    <div class="comment" style="font-size: 10px;">
+        <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+        <p class="mb-0" style="font-size: 11px;">
+            {{ ucfirst($comment->comment) }}
+        </p>
+    </div>
+@endif
+
                     </div>
  @endforeach
  </div>
@@ -1142,12 +1160,12 @@
 
                             </p>
                             <div style="display: flex; align-items: center;">
-                                @if($data['employee']->image)
-                                <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ asset('storage/' . $data['employee']->image) }}">
-                                @else
-                                <div class="employee-profile-image-container">
-                                    <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
-                                </div>
+                            @if($data['employee'] && $data['employee']->image_url)
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
+@else
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+
+
                                 @endif
                                 <p style="margin-left: 10px; font-size: 12px;color:#3b4452;margin-bottom:0;font-weight:600;">
                                     Congratulations, {{ ucwords(strtoupper($data['employee']->first_name)) }}
@@ -1371,55 +1389,58 @@
      <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
   
   @if($currentCardComments && $currentCardComments->count() > 0)
-      @foreach ($currentCardComments as $comment)
-     
-      <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
-@if($comment->employee)
-@if($comment->employee->personalInfo && $comment->employee->personalInfo->image)
-        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->personalInfo->image) }}">
-    @else
-  
-    @if($comment->employee->personalInfo && $comment->employee->personalInfo->gender == "Male")
-            <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
-        @elseif($comment->employee->personalInfo && $comment->employee->personalInfo->gender == "Female")
-            <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
-        @endif
-  @endif
-  <div class="comment" style="font-size: 10px;">
-      <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
-      <p class="mb-0" style="font-size: 11px;">
-          {{ ucfirst($comment->addcomment) }}
-      </p>
-  </div>
-@elseif($comment->hr)
-  @if($comment->hr->image)
-      <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
-  @else
-      @if($comment->hr->gender == "Male")
-          <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
-      @elseif($comment->hr->gender == "Female")
-          <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
-      @else
-          <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
-      @endif
-  @endif
-  <div class="comment" style="font-size: 10px;">
-      <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
-      <p class="mb-0" style="font-size: 11px;">
-          {{ ucfirst($comment->addcomment) }}
-      </p>
-  </div>
-@else
-  <div class="comment" style="font-size: 10px;">
-      <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
-      <p class="mb-0" style="font-size: 11px;">
-          {{ ucfirst($comment->addcomment) }}
-      </p>
-  </div>
-@endif
-</div>
+  @foreach ($currentCardComments as $comment)
+    <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
+        
+        @php
+          
+          
 
-      @endforeach
+            // Determine if it's an employee or HR
+            if ($comment->employee) {
+                $employee = $comment->employee;
+                $imageUrl = $employee->image_url; // Assuming 'image_url' is directly in Employee model
+            } elseif ($comment->hr) {
+                $imageUrl = $comment->hr->image ? asset('storage/' . $comment->hr->image) : null;
+            }
+
+            // Determine default images based on gender if no image URL is available
+            if (!$imageUrl) {
+                $gender = $comment->employee->gender ?? $comment->hr->gender ;
+
+                if ($gender == "Male") {
+                    $imageUrl = "https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png";
+                } elseif ($gender == "Female") {
+                    $imageUrl = "https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW";
+                } else {
+                    $imageUrl = "https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain";
+                }
+            }
+        @endphp
+
+        <img style="border-radius: 50%;" height="25" width="25" src="{{ $imageUrl }}" alt="Profile Image">
+
+        <div class="comment" style="font-size: 10px;">
+            @if($comment->employee)
+                <b style="color:#778899; font-weight:500; font-size: 10px;">
+                    {{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}
+                </b>
+            @elseif($comment->hr)
+                <b style="color:#778899; font-weight:500; font-size: 10px;">
+                    {{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}
+                </b>
+            @else
+                <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+            @endif
+
+            <p class="mb-0" style="font-size: 11px;">
+                {{ ucfirst($comment->addcomment) }}
+            </p>
+        </div>
+    </div>
+@endforeach
+
+
   @endif
 
 
@@ -1462,7 +1483,7 @@
         <div class="F mb-4" style="padding: 15px; background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top: 5px">
         <div class="row m-0">
                                 <div class="col-md-4 mb-2" style="text-align: center;">
-                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo">
+                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                                 </div>
                                 <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
                                     Group Events
@@ -1472,8 +1493,8 @@
                         </div>
                     </div>
                     <div class="row m-0">
-                        <div class="col-md-4">
-                            <img src="{{ asset('images/New_team_members_gif.gif') }}" alt="Image Description" style="width: 200px;">
+                        <div class="col-md-3">
+                            <img src="{{ asset('images/New_team_members_gif.gif') }}" alt="Image Description" style="width: 120px;">
                         </div>
                         <div class="col-md-8 m-auto">
                             <p style="font-size:12px;color:#778899;font-weight:normal;margin-top:10px;">
@@ -1489,12 +1510,12 @@
 
                             </p>
                             <div style="display: flex; align-items: center;">
-                                @if($data['employee']->image)
-                                <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ asset('storage/' . $data['employee']->image) }}">
-                                @else
-                                <div class="employee-profile-image-container">
-                                    <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
-                                </div>
+                            @if($data['employee'] && $data['employee']->image_url)
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
+@else
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+
+
                                 @endif
                                 <p style="margin-left: 10px; font-size: 12px; color: #47515b;margin-bottom:0;font-weight:600;">
                                     Congratulations, {{ ucwords(strtoupper($data['employee']->first_name)) }}
@@ -1735,48 +1756,50 @@ $currentCardComments = $addcomments->where('card_id', $data['employee']->emp_id)
  <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
  @foreach ($filteredComments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at') as $comment)
  <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
-                @if ($comment->employee)
-                @if($comment->employee->personalInfo && $comment->employee->personalInfo->image)
-                        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->employee->image) }}">
-                    @else
-                    @if($comment->employee->personalInfo && $comment->employee->personalInfo->gender == "Male")
-            <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
-        @elseif($comment->employee->personalInfo && $comment->employee->personalInfo->gender == "Female")
-            <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
-        @endif
-                    @endif
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->addcomment) }}
-                        </p>
-                    </div>
-                @elseif ($comment->hr)
-                    @if ($comment->hr->image)
-                        <img style="border-radius: 50%;" height="25" width="25" src="{{ asset('storage/' . $comment->hr->image) }}">
-                    @else
-                        @if ($comment->hr->gender == "Male")
-                            <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
-                        @elseif ($comment->hr->gender == "Female")
-                            <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
-                        @else
-                            <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
-                        @endif
-                    @endif
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->addcomment) }}
-                        </p>
-                    </div>
+ @if ($comment->employee)
+            @if($comment->employee->image)
+                <img style="border-radius: 50%;" height="25" width="25" src="{{ $comment->employee->image_url }}" alt="Employee Image">
+            @else
+                @if($comment->employee->gender == "Male")
+                    <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
+                @elseif($comment->employee->gender == "Female")
+                    <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
                 @else
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
-                    @endif
+                    <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
+                @endif
+            @endif
+            <div class="comment" style="font-size: 10px;">
+                <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
+                <p class="mb-0" style="font-size: 11px;">
+                    {{ ucfirst($comment->addcomment) }}
+                </p>
+            </div>
+        @elseif ($comment->hr)
+            @if ($comment->hr->image)
+                <img style="border-radius: 50%;" height="25" width="25" src="{{ $comment->hr->image_url }}" alt="HR Image">
+            @else
+                @if ($comment->hr->gender == "Male")
+                    <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
+                @elseif ($comment->hr->gender == "Female")
+                    <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
+                @else
+                    <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
+                @endif
+            @endif
+            <div class="comment" style="font-size: 10px;">
+                <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
+                <p class="mb-0" style="font-size: 11px;">
+                    {{ ucfirst($comment->addcomment) }}
+                </p>
+            </div>
+        @else
+            <div class="comment" style="font-size: 10px;">
+                <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+                <p class="mb-0" style="font-size: 11px;">
+                    {{ ucfirst($comment->comment) }}
+                </p>
+            </div>
+        @endif
                     </div>
  @endforeach
  </div>
