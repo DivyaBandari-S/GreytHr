@@ -926,7 +926,7 @@ $taskCount = $taskRecords->count();
         datasets: [{
                 data: [{
                         {
-                            !empty($salaries) ? $salaries - > calculateTotalAllowance() : 0
+                            !empty($salaries) ? $salaries -> calculateTotalAllowance() : 0
                         }
                     },
                     2, // Placeholder value for the second dataset
