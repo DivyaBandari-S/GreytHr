@@ -30,6 +30,8 @@ class LeaveCancelPage extends Component
     public $leaveRequestDetails;
     public $applyingToDetails = [];
     public $managerDetails = [];
+    public $selectedManager = [];
+
     public $showApplyingToContainer = false;
     public $show_reporting = false;
     public $showApplyingTo = false;
@@ -63,6 +65,8 @@ class LeaveCancelPage extends Component
             $this->searchTerm = '';
             $this->filter = '';
             $this->selectedYear = Carbon::now()->format('Y');
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in mount method: ' . $e->getMessage());
@@ -166,20 +170,20 @@ class LeaveCancelPage extends Component
                 ->groupBy('manager_id')
                 ->distinct()
                 ->get();
-
             $managers = [];
             foreach ($this->employeeDetails as $employee) {
-                // Retrieve employee details based on manager_id
-                $employeeDetails = EmployeeDetails::where('emp_id', $employee->manager_id)->first();
-
-                // Check if employee details exist and concatenate first name and last name
-                if ($employeeDetails) {
-                    $fullName = ucwords(strtolower($employeeDetails->first_name)) . ' ' . ucwords(strtolower($employeeDetails->last_name));
-                    $managers[] = [
-                        'emp_id' => $employeeDetails->emp_id,
-                        'image' => $employeeDetails->image,
-                        'full_name' => $fullName
-                    ];
+                if ($employee->manager_id) {
+                    // Retrieve employee details based on manager_id
+                    $managerDetails = EmployeeDetails::where('emp_id', $employee->manager_id)->get();
+                    // Check if employee details exist and concatenate first name and last name
+                    if ($managerDetails) {
+                        $fullName = ucwords(strtolower($managerDetails->first_name)) . ' ' . ucwords(strtolower($employeeDetails->last_name));
+                        $managers[] = [
+                            'emp_id' => $managerDetails->emp_id,
+                            'image' => $managerDetails->image,
+                            'full_name' => $fullName
+                        ];
+                    }
                 }
             }
 
@@ -203,6 +207,46 @@ class LeaveCancelPage extends Component
             session()->flash('error', 'An error occurred while searching for employees. Please try again later.');
         }
     }
+    public function toggleManager($empId)
+    {
+        if (!in_array($empId, $this->selectedManager)) {
+            $this->selectedManager = [$empId];
+            $this->fetchManagerDetails($empId);
+
+            // Update the database with the selected manager ID for the particular leave request
+            // Assuming you have a leave request ID and a LeaveRequest model
+            $leaveRequest = LeaveRequest::find($this->leaveRequestId); // Make sure $this->leaveRequestId is set
+            if ($leaveRequest) {
+                $leaveRequest->manager_id = $empId;
+                $leaveRequest->save();
+            }
+        }
+
+        $this->showApplyingToContainer = false;
+    }
+    private function fetchManagerDetails($managerId)
+    {
+        $employeeDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+
+        if ($employeeDetails) {
+            $this->loginEmpManagerProfile = $employeeDetails->image ? asset('storage/' . $employeeDetails->image) : null;
+            $this->loginEmpManager = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
+            $this->loginEmpManagerId = $employeeDetails->emp_id;
+        } else {
+            // Handle case if details are not found
+            $this->resetManagerDetails(); // Reset to default values or show N/A
+        }
+    }
+
+    // Method to reset manager details
+    private function resetManagerDetails()
+    {
+        $this->loginEmpManagerProfile = null;
+        $this->loginEmpManager = null;
+        $this->loginEmpManagerId = null;
+    }
+
+
     public function markAsLeaveCancel()
     {
         try {
@@ -266,7 +310,6 @@ class LeaveCancelPage extends Component
                     return 0;
                 }
             }
-
 
             $totalDays = 0;
 
@@ -336,7 +379,8 @@ class LeaveCancelPage extends Component
             $this->managerDetails = null;
         }
     }
-    public function toggleApplyingto() {
+    public function toggleApplyingto()
+    {
         $this->showApplyingToContainer = !$this->showApplyingToContainer;
     }
 
