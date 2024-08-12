@@ -17,7 +17,8 @@
 
 
 
-            <main class="grow h-full relative" style="contain: content;background:#FFFFFF " >
+            <main class="grow h-full relative" style="contain: content;background:#FFFFFF ;background-image: url('https://wallpaperbat.com/img/334645-3d-modern-background-design-royalty-free-stock-vectors-and-photos.jpg');width:100%" >
+          
 
                 <ul class="p-2 grid w-full space-y-2" style="list-style: none; padding: 0;">
                     <div class="c" style="contain: content; margin-left:20px;overflow-y: auto; height: 420px;">
@@ -25,9 +26,33 @@
 
 
                         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $conversations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $conversation): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-
+                        <?php
+        $receiver = $conversation->getReceiver();
+    ?>
                         <li id="conversation-<?php echo e($conversation->id); ?>" wire:key="<?php echo e($conversation->id); ?>" class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2 <?php echo e($conversation->id == $selectedConversation?->emp_id ? 'bg-gray-100/70' : ''); ?>" style="margin-bottom: 10px;height:70px;width:90%; ">
-                            <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;" src="<?php echo e(asset('storage/' . $conversation->getReceiver()->image)); ?>" class="card-img-top" alt="...">
+                        <?php
+        $receiver = $conversation->getReceiver();
+        // Get the image URL using the accessor
+        $imageUrl = $receiver->image_url; 
+
+        // Check if the image URL is null and set a default image if needed
+        if (empty($imageUrl)) {
+            if ($receiver->gender === 'Male') {
+                $imageUrl = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'; // Default male image
+            } elseif ($receiver->gender === 'Female') {
+                $imageUrl = 'https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7'; // Default female image
+            } else {
+                $imageUrl = 'https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain'; // Default image for unspecified gender
+            }
+        }
+    ?>
+
+    <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;" 
+        src="<?php echo e($imageUrl); ?>" 
+        class="card-img-top" 
+        alt="">
+
+
                             <aside class="grid grid-cols-12 w-full">
 
                                 <a href="#" wire:click="redirectToEncryptedLink('<?php echo e($conversation->id); ?>')" class="col-span-11 border-b pb-2 border-gray-200 relative truncate leading-5 w-full flex-nowrap p-1" style="display: block; text-decoration: none;">
@@ -90,7 +115,23 @@
         <div class="chat" style="background-image: url('https://i.pinimg.com/originals/39/cf/bc/39cfbc81276720ddf5003854e42c2769.jpg');">
 
             <div class="chat-header clearfix" style="border-radius:5px;border:2px solid silver;background-image: url('https://th.bing.com/th/id/OIP.D5JnKq5hq9D54giN_liHTQHaHa?w=163&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7');height:80px">
-                <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 50px; width: 50px;margin-top:5px" src="<?php echo e(asset('storage/' . $selectedConversation->getReceiver()->image)); ?>" class="card-img-top" alt="...">
+            <!--[if BLOCK]><![endif]--><?php if($selectedConversation->getReceiver() && $selectedConversation->getReceiver()->employeeDetails): ?>
+            <img 
+        style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;" 
+        src="<?php echo e($selectedConversation->getReceiver()->employeeDetails->image_url); ?>" 
+        class="card-img-top" 
+        alt="Profile Image"
+    >
+<?php else: ?>
+    <!-- Optionally, display a default image if employeeDetails or image is not available -->
+    <img 
+        style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top:5px" 
+        src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" 
+        class="card-img-top" 
+        alt="Default Profile Image"
+    >
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+
                 <div class="chat-about">
                     <div class="chat-with mt-1">
                         <div class="d-flex align-items-center">
@@ -131,25 +172,34 @@
 
                                             </p>
                                             <!--[if BLOCK]><![endif]--><?php if($message->file_path): ?>
-                                                
-                                                <!--[if BLOCK]><![endif]--><?php if(Str::startsWith($message->file_path, 'chating-files') &&
-                                                        Str::endsWith($message->file_path, ['.jpg', '.jpeg', '.png', '.gif'])): ?>
-                                                    <img src="<?php echo e(asset('uploads/' . $message->file_path)); ?>"
-                                                        alt="Attached Image" style="max-width: 100px;">
-                                                    
-                                                <?php else: ?>
-                                                    <button class="message-content"
-                                                        style="font-size: 10px;background:white;border:1px solid silver;border-radius:4px;display:flex">
-                                                        <a href="<?php echo e(asset('uploads/' . $message->file_path)); ?>"
-                                                            target="_blank">
-                                                            <span
-                                                                style="font-size: 30px;margin-top:10px;color:black">&#8595;</span>
-                                                            <?php echo e(basename($message->file_path)); ?>
+    
+    <!--[if BLOCK]><![endif]--><?php if($message->isImage()): ?>
+        <img src="<?php echo e($message->isImage()); ?>"
+            alt="Attached Image" style="max-width: 100px; border-radius: 5px;">
+    <?php elseif(Str::endsWith($message->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx'])): ?>
+        
+        <button class="message-content"
+            style="font-size: 10px; background: white; border: 1px solid silver; border-radius: 4px; display: flex;">
+            <a href="<?php echo e(route('download.file', $message->id)); ?>" target="_blank">
+                <span style="font-size: 30px; margin-top: 10px; color: black">&#8595;</span>
+                <?php echo e(basename($message->file_path)); ?>
 
-                                                        </a>
-                                                    </button>
-                                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+            </a>
+        </button>
+    <?php else: ?>
+        
+        <button class="message-content"
+            style="font-size: 10px; background: white; border: 1px solid silver; border-radius: 4px; display: flex;">
+            <a href="<?php echo e(route('download.file', $message->id)); ?>" target="_blank">
+                <span style="font-size: 30px; margin-top: 10px; color: black">&#8595;</span>
+                <?php echo e(basename($message->file_path)); ?>
+
+            </a>
+        </button>
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+
+
                                         </div>
                                         
                                         <div style="display: flex; ">

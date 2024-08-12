@@ -20,11 +20,11 @@
                     <h6 class="text-start text-5xl font-bold py-3 px-4 employees-details-chat">Users</h6>
                 </div>
                 <div class="col-md-6 input-group">
-                    <input type="text" class="form-control" placeholder="Search..."
-                        wire:model="searchTerm" aria-label="Search" aria-describedby="search-addon"
+                    <input type="text" class="form-control3" placeholder="Search..."
+                        wire:model="searchTerm" aria-label="Search" aria-describedby="search-addon" style="width:220px;height:40px;border-radius:5px; border: 1px solid #ced4da;padding: 0 10px;"
                         wire:input="filter">
                     <button class="submit-btn" wire:click="filter" id="search-addon"
-                        style="height:37px; line-height: 2;">Search</button>
+                        style="height:40px; line-height: 2;">Search</button>
                 </div>
             </div>
 
@@ -36,14 +36,15 @@
                             <div class="col d-flex align-items-center justify-content-center mt-4">
                         
                             <!--[if BLOCK]><![endif]--><?php if($employee->image_url): ?>
-                <img src="<?php echo e($employee->image_url); ?>" height="50" width="50" style="border-radius:50%;" alt="Employee Image">
-            <?php elseif($employee->gender == 'Male'): ?>
-                <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" height="50" width="50" style="border-radius:50%;" alt="Default Male Profile">
-            <?php elseif($employee->gender == 'Female'): ?>
-                <img src="https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7" height="50" width="50" style="border-radius:50%;" alt="Default Female Profile">
-            <?php else: ?>
-                <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" height="50" width="50" style="border-radius:50%;" alt="Default Profile Image">
-            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <img src="<?php echo e($employee->image_url); ?>" height="50" width="50" style="border-radius:50%;" alt="Employee Image">
+<?php elseif($employee->gender == 'Male'): ?>
+    <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" height="50" width="50" style="border-radius:50%;" alt="Default Male Profile">
+<?php elseif($employee->gender == 'Female'): ?>
+    <img src="https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7" height="50" width="50" style="border-radius:50%;" alt="Default Female Profile">
+<?php else: ?>
+    <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" height="50" width="50" style="border-radius:50%;" alt="Default Profile Image">
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+
 
                             </div>
                             <div class="card-body text-center">

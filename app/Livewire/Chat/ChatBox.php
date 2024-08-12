@@ -183,14 +183,12 @@ class ChatBox extends Component
             'body' => 'required|string|max:255',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960',
         ]);
-    
+        $filePath = null;
         if ($this->attachment) {
-            $fileName = uniqid() . '_' . $this->attachment->getClientOriginalName();
-            $this->attachment->storeAs('public/uploads/chating-files', $fileName);
-            $filePath = 'chating-files' . $fileName;
-        } else {
-            $filePath = null;
+            // Get the file contents as binary data
+            $filePath = file_get_contents($this->attachment->getRealPath());
         }
+    
     
         $createdMessage = Message::create([
             'chating_id' => $this->selectedConversation->id,
