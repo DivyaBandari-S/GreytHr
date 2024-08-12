@@ -175,6 +175,27 @@
                     </div>
                 </div>
             </div>
+            <div class="row d-flex mt-2">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="fromDate">From Date <span class="requiredMark">*</span> </label>
+                        <input id="fromDate" type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate" wire:change="handleFieldUpdate('from_date')">
+                        @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <label for="fromSession">Session</label> <br>
+                        <div class="custom-select-wrapper">
+                            <select id="fromSession" class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="fromSession" wire:change="handleFieldUpdate('from_session')">
+                                <option value="Session 1">Session 1</option>
+                                <option value="Session 2">Session 2</option>
+                            </select>
+                            @error('from_session') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="form-group mt-3">
                 <label for="contactDetails">Contact Details <span class="requiredMark">*</span> </label>
                 <input id="contactDetails" type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="width:50%;">
