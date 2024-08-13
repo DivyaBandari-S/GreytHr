@@ -274,24 +274,22 @@
                                                                     style="border: none; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     {{ ucfirst($record->description ?? '-') }}
                                                                 </td>
-                                                                <td
-                                                                    style="border: none; width: 30%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                 
+                                                                <td style="border: none; width: 30%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
-                                                                        <a href="{{ 'data:image/jpeg;base64,' . base64_encode($record->file_path)  }}"
-                                                                            target="_blank"
-                                                                            style="text-decoration: none; color: #007BFF;">View
-                                                                            File</a>
-                                                                            {{-- <img class="profile-image"
-                                                    src="{{ 'data:image/jpeg;base64,' . base64_encode($record->file_path) }}"> --}}
+                                                                        <a href="#" wire:click="showViewFile('{{$record->id}}')"
+                                                                           style="text-decoration: none; color: #007BFF;">View File</a>
+                                                        
                                                                     @else
                                                                         N/A
                                                                     @endif
-                
                                                                 </td>
+                                                                
+                                                                
                                                             </tr>
                                                         </tbody>
                                                     </table>
+                                                    <!-- Modal Structure (updated to include record ID) -->
+
                                                     
                                                 </div>
                                             </td>
@@ -303,7 +301,11 @@
                     </table>
                 </div>
             </div>
+
+
+            
         @endif
+
         @if ($activeTab == 'completed')
             <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
                 <form wire:submit.prevent="applyFilters" class="form-inline row" style="margin-bottom: -15px;">
@@ -465,11 +467,10 @@
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    @if ($record->file_path)
-                                                                        <a href="{{ asset('storage/' . $record->file_path) }}"
-                                                                            target="_blank"
-                                                                            style="text-decoration: none; color: #007BFF;">View
-                                                                            File</a>
+                                                                    @if (!empty($record->file_path) && $record->file_path !== 'null')
+                                                                        <a href="#" wire:click="showViewFile('{{$record->id}}')"
+                                                                           style="text-decoration: none; color: #007BFF;">View File</a>
+                                                        
                                                                     @else
                                                                         N/A
                                                                     @endif
@@ -863,6 +864,22 @@
     </div>
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
+    {{-- view file popup --}}
+    @if ($showViewFileDialog)
+    <div class="modal"  tabindex="-1" role="dialog"  style="display: block;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img  src="{{ 'data:image/jpeg;base64,' . base64_encode($viewrecord->file_path) }}" class="img-fluid" alt="Image preview">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancel-btn1" wire:click="closeViewFile">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
     <!-- Add Comment Modal -->
     @if ($showModal)
         <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog"
@@ -995,6 +1012,12 @@
         setTimeout(() => {
             container.style.display = 'none';
         }, 3000);
+    }
+    function updateModalImage(imageSrc, recordId) {
+        const modalImage = document.querySelector(`#modalImage-${recordId}`);
+        if (modalImage) {
+            modalImage.src = imageSrc;
+        }
     }
 </script>
 </div>
