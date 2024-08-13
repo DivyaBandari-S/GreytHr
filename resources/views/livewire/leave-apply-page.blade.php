@@ -30,12 +30,14 @@
                             <select id="leaveType" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType">
                                 <option value="default">Select Type</option>
                                 <option value="Casual Leave">Casual Leave</option>
+                                @if($showCasualLeaveProbation)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
+                                @endif
                                 <option value="Loss of Pay">Loss of Pay</option>
                                 <option value="Marriage Leave">Marriage Leave</option>
                                 @if($employeeGender && $employeeGender->gender === 'Female')
                                 <option value="Maternity Leave">Maternity Leave</option>
-                                @else
+                                @elseif($employeeGender && $employeeGender->gender === 'Male')
                                 <option value="Paternity Leave">Paternity Leave</option>
                                 @endif
                                 <option value="Sick Leave">Sick Leave</option>
@@ -371,15 +373,24 @@
                         <div wire:key="{{ $employee['emp_id'] }}">
                             <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
                                 <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
-
                                 @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
                                 <div class="employee-profile-image-container">
                                     <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius: 50%;">
                                 </div>
                                 @else
-                                <div class="employee-profile-image-container">
-                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
-                                </div>
+                                    @if($employee['gender'] === "Male")
+                                    <div class="employee-profile-image-container">
+                                        <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="33" width="33" >
+                                    </div>
+                                    @elseif($employee['gender'] === "Female")
+                                    <div class="employee-profile-image-container">
+                                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="33" width="33" >
+                                    </div>
+                                    @else
+                                    <div class="employee-profile-image-container">
+                                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" >
+                                    </div>
+                                    @endif
                                 @endif
 
                                 <div class="center mb-2 mt-2">
