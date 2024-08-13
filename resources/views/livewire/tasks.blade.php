@@ -274,23 +274,25 @@
                                                                     style="border: none; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     {{ ucfirst($record->description ?? '-') }}
                                                                 </td>
-                                                                <td style="border: none; width: 30%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <td
+                                                                    style="border: none; width: 30%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
-                                                                        <a href="#" wire:click="showViewFile('{{$record->id}}')"
-                                                                           style="text-decoration: none; color: #007BFF;">View File</a>
-                                                        
+                                                                        <a href="#"
+                                                                            wire:click="showViewFile('{{ $record->id }}')"
+                                                                            style="text-decoration: none; color: #007BFF;">View
+                                                                            File</a>
                                                                     @else
                                                                         N/A
                                                                     @endif
                                                                 </td>
-                                                                
-                                                                
+
+
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                     <!-- Modal Structure (updated to include record ID) -->
 
-                                                    
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -303,7 +305,7 @@
             </div>
 
 
-            
+
         @endif
 
         @if ($activeTab == 'completed')
@@ -468,9 +470,10 @@
                                                                 <td
                                                                     style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
-                                                                        <a href="#" wire:click="showViewFile('{{$record->id}}')"
-                                                                           style="text-decoration: none; color: #007BFF;">View File</a>
-                                                        
+                                                                        <a href="#"
+                                                                            wire:click="showViewFile('{{ $record->id }}')"
+                                                                            style="text-decoration: none; color: #007BFF;">View
+                                                                            File</a>
                                                                     @else
                                                                         N/A
                                                                     @endif
@@ -582,13 +585,28 @@
                                                             </div>
                                                             <div class="col-auto">
                                                                 @if (!empty($people->image) && $people->image !== 'null')
-                                                                    <img class="profile-image" style="margin-left: 10px;"
+                                                                    <img class="profile-image"
+                                                                        style="margin-left: 10px;"
                                                                         src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
                                                                 @else
-                                                                    <img src="{{ asset('images/user.jpg') }}" style="margin-left: 10px;"
-                                                                        class="profile-image" alt="Default Image">
+                                                                    @if ($people && $people->gender == 'Male')
+                                                                        <img style="margin-left: 10px;"
+                                                                            class="profile-image"
+                                                                            src="{{ asset('images/male-default.png') }}"
+                                                                            alt="Default Male Image">
+                                                                    @elseif($people && $people->gender == 'Female')
+                                                                        <img style="margin-left: 10px;"
+                                                                            class="profile-image"
+                                                                            src="{{ asset('images/female-default.jpg') }}"
+                                                                            alt="Default Female Image">
+                                                                    @else
+                                                                        <img style="margin-left: 10px;"
+                                                                            class="profile-image"
+                                                                            src="{{ asset('images/user.jpg') }}"
+                                                                            alt="Default Image">
+                                                                    @endif
                                                                 @endif
-                                                           
+
                                                             </div>
                                                             <div class="col">
                                                                 <h6 class="username"
@@ -790,12 +808,23 @@
                                                         </div>
                                                         <div class="col-auto">
                                                             @if (!empty($people->image) && $people->image !== 'null')
-                                                                    <img class="profile-image" 
-                                                                        src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                                <img class="profile-image"
+                                                                    src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                            @else
+                                                                @if ($people && $people->gender == 'Male')
+                                                                    <img class="profile-image"
+                                                                        src="{{ asset('images/male-default.png') }}"
+                                                                        alt="Default Male Image">
+                                                                @elseif($people && $people->gender == 'Female')
+                                                                    <img class="profile-image"
+                                                                        src="{{ asset('images/female-default.jpg') }}"
+                                                                        alt="Default Female Image">
                                                                 @else
-                                                                    <img src="{{ asset('images/user.jpg') }}" 
-                                                                        class="profile-image" alt="Default Image">
+                                                                    <img class="profile-image"
+                                                                        src="{{ asset('images/user.jpg') }}"
+                                                                        alt="Default Image">
                                                                 @endif
+                                                            @endif
                                                         </div>
                                                         <div class="col">
                                                             <h6 class="username"
@@ -866,19 +895,20 @@
     @endif
     {{-- view file popup --}}
     @if ($showViewFileDialog)
-    <div class="modal"  tabindex="-1" role="dialog"  style="display: block;">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <img  src="{{ 'data:image/jpeg;base64,' . base64_encode($viewrecord->file_path) }}" class="img-fluid" alt="Image preview">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="cancel-btn1" wire:click="closeViewFile">Close</button>
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <img src="{{ 'data:image/jpeg;base64,' . base64_encode($viewrecord->file_path) }}"
+                            class="img-fluid" alt="Image preview">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="cancel-btn1" wire:click="closeViewFile">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
     <!-- Add Comment Modal -->
     @if ($showModal)
@@ -1013,6 +1043,7 @@
             container.style.display = 'none';
         }, 3000);
     }
+
     function updateModalImage(imageSrc, recordId) {
         const modalImage = document.querySelector(`#modalImage-${recordId}`);
         if (modalImage) {
