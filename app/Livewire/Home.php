@@ -83,6 +83,7 @@ class Home extends Component
     public $matchedData = [];
     public $swipedDataRecords, $loginEmployee;
     public $showMessage = true;
+    public $showAlert = false;
     public $swipeDataOfEmployee;
     public function mount()
     {
@@ -199,6 +200,9 @@ class Home extends Component
     {
         $this->showMessage = false;
     }
+    public function hideAlert(){
+        $this->showAlert = false;
+    }
     public function openLateEmployees()
     {
         $this->showAllLateEmployees = true;
@@ -260,6 +264,7 @@ class Home extends Component
                 : "You have successfully signed out.";
 
             session()->flash('success', $message);
+            $this->showAlert = true;
         } catch (Throwable $e) {
             // Log or handle the exception as needed
             session()->flash('error', 'An error occurred while toggling sign state. Please try again later.');

@@ -30,16 +30,15 @@
                             <select id="leaveType" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType">
                                 <option value="default">Select Type</option>
                                 <option value="Casual Leave">Casual Leave</option>
-                                @if (($differenceInMonths < 6)) <option value="Casual Leave Probation">Casual Leave Probation</option>
-                                    @endif
-                                    <option value="Loss of Pay">Loss of Pay</option>
-                                    <option value="Marriage Leave">Marriage Leave</option>
-                                    @if($employeeGender && $employeeGender->gender === 'Female')
-                                    <option value="Maternity Leave">Maternity Leave</option>
-                                    @else
-                                    <option value="Paternity Leave">Paternity Leave</option>
-                                    @endif
-                                    <option value="Sick Leave">Sick Leave</option>
+                                <option value="Casual Leave Probation">Casual Leave Probation</option>
+                                <option value="Loss of Pay">Loss of Pay</option>
+                                <option value="Marriage Leave">Marriage Leave</option>
+                                @if($employeeGender && $employeeGender->gender === 'Female')
+                                <option value="Maternity Leave">Maternity Leave</option>
+                                @else
+                                <option value="Paternity Leave">Paternity Leave</option>
+                                @endif
+                                <option value="Sick Leave">Sick Leave</option>
                             </select>
                         </div>
                         <br>
