@@ -166,7 +166,7 @@
             border: 1px solid #6c757d;
         }
 
-        .down-arrow-gra {
+        .down-arrow-gra-attendance-muster {
             width: 0;
             height: 0;
             /* border-left: 20px solid transparent; */
@@ -284,12 +284,6 @@
             border: 1px solid #cecece;
         }
 
-        .active,
-        .accordion:hover {
-            background-color: #02114f;
-            color: #fff;
-        }
-
         .panel {
             display: none;
             background-color: white;
@@ -304,11 +298,6 @@
             color: #fff;
             float: right;
             margin-left: 5px;
-        }
-
-        .active:after {
-            content: "\2796";
-            /* Unicode character for "minus" sign (-) */
         }
 
         .legendsIcon {
@@ -369,15 +358,7 @@
             margin-right: 5px;
         }
 
-        .down-arrow-ign-attendance-info {
-            width: 0;
-            height: 0;
-            /* border-left: 20px solid transparent; */
-            border-right: 17px solid transparent;
-            border-bottom: 17px solid #677a8e;
-            margin-right: 5px;
-        }
-
+       
         .emptyday {
             color: #aeadad;
             pointer-events: none;
@@ -501,7 +482,7 @@
                 </div>
                 <div class="col-md-3 mb-2 pe-0" style="display: flex">
                     <p class="me-2 mb-0">
-                    <div class="down-arrow-ign-attendance-info"></div>
+                    <div class="down-arrow-ign-attendance-info-attendance-muster"></div>
                     </p>
                     <p class="m-0 legend-text">Ignored</p>
                 </div>
@@ -609,7 +590,7 @@
                 <tr>
 
                     <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        {{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<span class="text-muted">(#{{ $emp->emp_id }})</span><br /><span class="text-muted" style="font-size:11px;">{{ucfirst($emp->job_title)}},{{ucfirst($emp->city)}}</span>
+                        {{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<span class="text-muted">(#{{ $emp->emp_id }})</span><br /><span class="text-muted" style="font-size:11px;">{{ucfirst($emp->job_role)}},{{ucfirst($emp->job_location)}}</span>
                     </td>
                     @php
                     $found = false;

@@ -149,7 +149,7 @@
             </div>
             <span class="divider"></span>
             <div class="profile">
-                <div class="d-flex brandLogoDiv">
+                <div class="d-flex brandLogoDiv" onclick="openProfile()">
                     @livewire('company-logo')
                     @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
                     <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="">
@@ -162,7 +162,7 @@
                     <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
                 </ul>
             </div>
-            <div class="pointer" title="Logout">@livewire('log-out')</div>
+            <div class="pointer">@livewire('log-out')</div>
         </nav>
         <!-- NAVBAR -->
     </section>

@@ -1,11 +1,11 @@
 <div class="px-4">
-<div class="px-4" style="position: relative;">
-@if ($message)
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        {{ $message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
+    <div class="px-4" style="position: relative;">
+        @if ($message)
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ $message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
 
 <div class="container  mt-3" style="height:60px;margin-top:10px">
     
@@ -258,7 +258,7 @@
                            
                             @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
@@ -266,22 +266,22 @@
                          
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Doddaballapur</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Doddaballapur</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Doddaballapur</a>
 @endif 
                             @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
 
-@endif
-@if (Auth::guard('hr')->check())
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hyderabad</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hyderabad</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Hyderabad</a>
@@ -289,7 +289,7 @@
 
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
@@ -297,14 +297,14 @@
  
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
 @endif      
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight:700">USA</a>
@@ -318,7 +318,7 @@
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">New York</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">New York</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">New York</a>
@@ -326,7 +326,7 @@
  
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
@@ -393,99 +393,99 @@
         <p style="font-size:12px;color:#778899; text-align: center;">Your feed is still in making as there's no post to show.</p>
         <button style="background-color:rgb(2, 17, 79); width:110px; height:30px; border:1px solid grey; border-radius:5px; color:white;" wire:click="addFeeds">Create Post</button>
 
-        <!-- Begin the form outside the .form-group div -->
-        @if($showFeedsDialog)
-            <!-- Form content here -->
-        @endif
-
-</div>
-
-                @else
-                <div class="col-md-7 text-right" style="display:flex; justify-content: flex-end; overflow-y: auto;scroll-behavior: smooth;">
-
-       
-                </div>
-                @foreach($posts as $post)
-                <div class="col-md-8">
-
-                    <!-- Upcoming Birthdays List -->
-                    <div class="F" style="background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top:20px">
-                        <div class="m-0 mb-3 mt-1 row">
-                        <div class="col-md-4 mb-2" style="text-align: center;">
-                        @livewire('company-logo')
-                                </div>
-                         
-                            <div class="col-4 m-auto" style="font-size: 13px; font-weight: normal; color: #9E9696;text-align:center;">
-                                {{ $post->category }}
-                            </div>
-                            <div class="col-4 m-auto" style="font-size: 11px; font-weight: normal; color: #9E9696; text-align: end;">
-                    {{ $post->created_at->diffForHumans() }}
-                </div>
-                        </div>
-                        <div class="row m-0 mb-3">
-                            @php
-                            $employee = \App\Models\Hr::where('hr_emp_id', $post->hr_emp_id)->first();
-                            @endphp
-                            @if($employee)
-                            <div class="col-3">
-                                <img style="border-radius: 50%;" height="50" width="50" src="{{ asset('storage/'. $employee->image) }}">
-                            </div>
-                            <div class="col-9 m-auto" style="text-align: left">
-                                <p class="text-base m-0" style="margin-left: 20px; font-size: 14px;">
-                                    {{ ucwords(strtolower($employee->employee_name)) }}
-                                </p>
-
-                            </div>
-                            @else
-                            <p>No employee details available.</p>
-                            @endif
-                        </div>
-
-
-                        <div class="row m-0 mb-3">
-                            <div class="col-md-6">
-                                <img src="{{ asset('storage/' . $post->attachment) }}" alt="Post Image" style="width: 200px; height: 60px">
-                            </div>e
-                            <div class="col-md-6 m-auto">
-                                <p style="font-size: 14px; font-family: 'Open Sans', sans-serif; margin-top: 10px; font-weight: 100; color: #677A8E;">
-                                    {{ $post->description }}
-                                </p>
-                            </div>
-
-                        </div>
-                        <confirmation-modal class="confirmation-modal">
-                            <gt-popup-modal label="modal" size="sm" class="hydrated">
-                                <div class="body-content">
-                                    <div slot="modal-body">
-                                        <!-- Content for modal body -->
-                                    </div>
-                                </div>
-                                <div slot="modal-footer">
-                                    <div class="flex justify-end">
-                                        <gt-button shade="secondary" name="Cancel" class="mr-2x hydrated"></gt-button>
-                                        <gt-button shade="primary" name="Confirm" class="hydrated"></gt-button>
-                                    </div>
-                                </div>
-                            </gt-popup-modal>
-                        </confirmation-modal>
-                        <!-- Like Button -->
+                        <!-- Begin the form outside the .form-group div -->
+                        @if($showFeedsDialog)
+                        <!-- Form content here -->
+                        @endif
 
                     </div>
+
+                    @else
+                    <div class="col-md-7 text-right" style="display:flex; justify-content: flex-end; overflow-y: auto;scroll-behavior: smooth;">
+
+
+                    </div>
+                    @foreach($posts as $post)
+                    <div class="col-md-8">
+
+                        <!-- Upcoming Birthdays List -->
+                        <div class="F" style="background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top:20px">
+                            <div class="m-0 mb-3 mt-1 row">
+                                <div class="col-md-4 mb-2" style="text-align: center;">
+                                    @livewire('company-logo')
+                                </div>
+
+                                <div class="col-4 m-auto" style="font-size: 13px; font-weight: normal; color: #9E9696;text-align:center;">
+                                    {{ $post->category }}
+                                </div>
+                                <div class="col-4 m-auto" style="font-size: 11px; font-weight: normal; color: #9E9696; text-align: end;">
+                                    {{ $post->created_at->diffForHumans() }}
+                                </div>
+                            </div>
+                            <div class="row m-0 mb-3">
+                                @php
+                                $employee = \App\Models\Hr::where('hr_emp_id', $post->hr_emp_id)->first();
+                                @endphp
+                                @if($employee)
+                                <div class="col-3">
+                                    <img style="border-radius: 50%;" height="50" width="50" src="{{ asset('storage/'. $employee->image) }}">
+                                </div>
+                                <div class="col-9 m-auto" style="text-align: left">
+                                    <p class="text-base m-0" style="margin-left: 20px; font-size: 14px;">
+                                        {{ ucwords(strtolower($employee->employee_name)) }}
+                                    </p>
+
+                                </div>
+                                @else
+                                <p>No employee details available.</p>
+                                @endif
+                            </div>
+
+
+                            <div class="row m-0 mb-3">
+                                <div class="col-md-6">
+                                    <img src="{{ asset('storage/' . $post->attachment) }}" alt="Post Image" style="width: 200px; height: 60px">
+                                </div>e
+                                <div class="col-md-6 m-auto">
+                                    <p style="font-size: 14px; font-family: 'Open Sans', sans-serif; margin-top: 10px; font-weight: 100; color: #677A8E;">
+                                        {{ $post->description }}
+                                    </p>
+                                </div>
+
+                            </div>
+                            <confirmation-modal class="confirmation-modal">
+                                <gt-popup-modal label="modal" size="sm" class="hydrated">
+                                    <div class="body-content">
+                                        <div slot="modal-body">
+                                            <!-- Content for modal body -->
+                                        </div>
+                                    </div>
+                                    <div slot="modal-footer">
+                                        <div class="flex justify-end">
+                                            <gt-button shade="secondary" name="Cancel" class="mr-2x hydrated"></gt-button>
+                                            <gt-button shade="primary" name="Confirm" class="hydrated"></gt-button>
+                                        </div>
+                                    </div>
+                                </gt-popup-modal>
+                            </confirmation-modal>
+                            <!-- Like Button -->
+
+                        </div>
+                    </div>
+
+                    @endforeach
+
+
+                    @endif
+
+
                 </div>
-
-                @endforeach
-
-
-                @endif
-
 
             </div>
 
-</div>
 
 
 
-     
             <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> -->
             <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
@@ -858,5 +858,5 @@
     }
 </script>
 
-    </div>
+        </div>
     </div>

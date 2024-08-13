@@ -411,7 +411,7 @@
                 @if(($Employees))
                 <tr>
                     <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}<span class="text-muted">(#{{$emp->emp_id}})</span><br /><span class="text-muted" style="font-size:11px;">{{ucwords(strtolower($emp->job_title))}},{{ucwords(strtolower($emp->city))}},{{ucwords(strtolower($emp->state))}}</span>
+                        {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}<span class="text-muted">(#{{$emp->emp_id}})</span><br /><span class="text-muted" style="font-size:11px;">{{ucwords(strtolower($emp->job_role))}},{{ucwords(strtolower($emp->job_location))}}</span>
                     </td>
 
 
@@ -420,7 +420,22 @@
                     @php
                     $dateCount=0;
                     @endphp
-                    @for ($i = 1; $i <= $daysInMonth; $i++) @php $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format @endphp @if($dayName==='Sat' || $dayName==='Sun' ) @php $dateCount+=1; @endphp @endif @endfor @php $noofregulardays=$daysInMonth-$dateCount-$CountOfHoliday @endphp <td>{{$noofregulardays}}</td>
+                    @for ($i = 1; $i <= $daysInMonth; $i++) 
+                          @php 
+                             $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); 
+                             $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) 
+                             $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format 
+                          @endphp 
+                          @if($dayName==='Sat' || $dayName==='Sun' ) 
+                                @php 
+                                   $dateCount+=1; 
+                                @endphp 
+                          @endif 
+                @endfor 
+                    @php 
+                        $noofregulardays=$daysInMonth-$dateCount-$CountOfHoliday 
+                    @endphp 
+                    <td>{{$noofregulardays}}</td>
 
                 </tr>
                 @else
@@ -478,28 +493,30 @@
                 @foreach ($Employees as $emp)
 
 
-
+               
                 <tr style="background-color:#fff;">
+                   @if(!empty($emp->shift_type))
+                        @for ($i = 1; $i <= $daysInMonth; $i++)
+                        
+                                @php
+                                    $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear);
+                                    $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon)
+                                    $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format
+                                @endphp
+                        
+                                <td style="background-color: {{ in_array($dayName, ['Sat', 'Sun']) ? '#f2f2f2' : '#fff' }};">
+                        
+                                   @foreach($Holiday as $h)
 
-                    @for ($i = 1; $i <= $daysInMonth; $i++) 
-                        @php 
-                           $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); 
-                           $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) 
-                           $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format 
-                        @endphp 
-                        <td style="background-color: {{ in_array($dayName, ['Sat', 'Sun']) ? '#f2f2f2' : '#fff' }};">
+                                       @if($h->date==$fullDate)
 
-                        @foreach($Holiday as $h)
+                                           @php
+                                                 $isHoliday=1;
+                                                 break;
+                                           @endphp
+                                       @endif
 
-                        @if($h->date==$fullDate)
-
-                        @php
-                        $isHoliday=1;
-                        break;
-                        @endphp
-                        @endif
-
-                        @endforeach
+                                   @endforeach
 
 
 
@@ -514,20 +531,23 @@
 
                         @else
 
-                         <p style="font-weight:bold;padding-top:15px;">{{$emp->shift_type}}</p>
+                            <p style="font-weight:bold;padding-top:15px;">{{$emp->shift_type}}</p>
                         @endif
 
                         </td>
 
+
+                        
                         @php
                         $isHoliday=0;
+
                         @endphp
 
 
                         @endfor
-
-
-
+                   @else
+                         <td colspan="35"style="text-align:center;">Shift Details Not Available</td>
+                   @endif
                 </tr>
 
 

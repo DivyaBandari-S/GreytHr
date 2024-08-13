@@ -44,13 +44,12 @@
 
     <div class="container"
         style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow-x: hidden;padding-bottom: 15px;">
-
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-left-radius:5px;border-bottom-left-radius:5px;"
+                    <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;"
                         class="custom-nav-link {{ $activeTab === 'open' ? 'active' : '' }}"
-                        wire:click.prevent="setActiveTab('open')">Open</a>
+                        wire:click.prevent="setActiveTab('open')">Open</div>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">
                     <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;"
@@ -153,18 +152,17 @@
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 7%">
                                     <i class="fa fa-angle-down" style="color: white; padding-left: 8px;"></i>
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 12%">Assignee
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 14%">Task Name
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 13%">Followers
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 16%">Assigned By
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 12%">Assigned By
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 13%">Assignee
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Task Name
-                                </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 12%">Due Date
-                                </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 12%">Assigned
+
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 14%">Assigned
                                     Date
+                                </th>
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 14%">Due Date
                                 </th>
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 22%">Actions
                                 </th>
@@ -191,29 +189,27 @@
                                             </td>
 
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%">
-                                                {{ ucfirst($record->assignee) }}
-                                            </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: {{ $record->followers ? 'start' : 'center' }}; width: 13%">
-                                                {{ ucfirst($record->followers) ?: '-' }}
-                                            </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%">
-                                                {{ ucwords(strtolower($record->emp->first_name)) }}
-                                                {{ ucwords(strtolower($record->emp->last_name)) }}
-                                            </td>
-                                            <td
-                                                style="padding: 10px; border:none;font-size: 0.75rem; text-align: start; width: 10%">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 14%">
                                                 {{ ucfirst($record->task_name) }}
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%;">
-                                                {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 16%">
+                                                {{ ucwords(strtolower($record->emp->first_name)) }}
+                                                {{ ucwords(strtolower($record->emp->last_name)) }}
+
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 12%">
+                                                style="padding: 10px; border:none;font-size: 0.75rem; text-align: start; width: 13%">
+
+                                                {{ ucfirst($record->assignee) }}
+                                            </td>
+                                            <td
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 14%">
                                                 {{ \Carbon\Carbon::parse($record->created_at)->format('d M, Y') }}
+                                            </td>
+                                            <td
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 14%;">
+                                                {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 22%">
@@ -244,17 +240,18 @@
                                                                 <th
                                                                     style="font-weight: 500; width: 22%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     Priority</th>
+
                                                                 <th
                                                                     style="font-weight: 500; width: 18%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    Due Date</th>
+                                                                    Followers</th>
                                                                 <th
-                                                                    style="font-weight: 500; width: 18%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                    style="font-weight: 500; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     Subject</th>
                                                                 <th
                                                                     style="font-weight: 500; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     Description</th>
                                                                 <th
-                                                                    style="font-weight: 500; width: 38%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                    style="font-weight: 500; width: 30%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     Attach</th>
                                                             </tr>
                                                         </thead>
@@ -264,12 +261,13 @@
                                                                     style="border: none; width: 22%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     {{ $record->priority }}
                                                                 </td>
+
                                                                 <td
                                                                     style="border: none; width: 18%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
+                                                                    {{ ucfirst($record->followers) ?: '-' }}
                                                                 </td>
                                                                 <td
-                                                                    style="border: none; width: 18%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                    style="border: none; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     {{ ucfirst($record->subject ?? '-') }}
                                                                 </td>
                                                                 <td
@@ -277,19 +275,24 @@
                                                                     {{ ucfirst($record->description ?? '-') }}
                                                                 </td>
                                                                 <td
-                                                                    style="border: none; width: 38%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    @if ($record->file_path)
-                                                                        <a href="{{ asset('storage/' . $record->file_path) }}"
+                                                                    style="border: none; width: 30%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                 
+                                                                    @if (!empty($record->file_path) && $record->file_path !== 'null')
+                                                                        <a href="{{ 'data:image/jpeg;base64,' . base64_encode($record->file_path)  }}"
                                                                             target="_blank"
                                                                             style="text-decoration: none; color: #007BFF;">View
                                                                             File</a>
+                                                                            {{-- <img class="profile-image"
+                                                    src="{{ 'data:image/jpeg;base64,' . base64_encode($record->file_path) }}"> --}}
                                                                     @else
                                                                         N/A
                                                                     @endif
+                
                                                                 </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
+                                                    
                                                 </div>
                                             </td>
                                         </tr>
@@ -333,18 +336,19 @@
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 7%">
                                     <i class="fa fa-angle-down" style="color: white; padding-left: 8px;"></i>
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Assignee
-                                </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 10%">Followers
-                                </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Assigned By
-                                </th>
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Task Name
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Due Date
+
+
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Assigned By
+                                </th>
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Assignee
                                 </th>
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Assigned
                                     Date</th>
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Due Date
+                                </th>
+
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Closed
                                     Date</th>
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 23%">Actions
@@ -372,28 +376,27 @@
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                                {{ ucfirst($record->assignee) }}
+                                                {{ ucfirst($record->task_name) }}
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: {{ $record->followers ? 'start' : 'center' }}; width: 10%">
-                                                {{ ucfirst($record->followers) ?: '-' }}
-                                            </td>
+
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
                                                 {{ ucwords(strtolower($record->emp->first_name)) }}
                                                 {{ ucwords(strtolower($record->emp->last_name)) }}
                                             </td>
+
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                                {{ ucfirst($record->task_name) }}
+                                                {{ ucfirst($record->assignee) }}
+                                            </td>
+
+                                            <td
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
+                                                {{ \Carbon\Carbon::parse($record->created_at)->format('d M, Y') }}
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%; color: {{ \Carbon\Carbon::parse($record->updated_at)->startOfDay()->gt(\Carbon\Carbon::parse($record->due_date)->startOfDay())? 'red': 'inherit' }};">
                                                 {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
-                                            </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                                {{ \Carbon\Carbon::parse($record->created_at)->format('d M, Y') }}
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
@@ -430,7 +433,7 @@
                                                                     Priority</th>
                                                                 <th
                                                                     style="font-weight: 500; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    Due Date</th>
+                                                                    Followers</th>
                                                                 <th
                                                                     style="font-weight: 500; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     Subject</th>
@@ -449,8 +452,8 @@
                                                                     {{ $record->priority }}
                                                                 </td>
                                                                 <td
-                                                                    style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
+                                                                    style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: {{ $record->followers ? 'start' : 'center' }};">
+                                                                    {{ ucfirst($record->followers) ?: '-' }}
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
@@ -532,6 +535,7 @@
                                         <span class="text-danger">Assignee is required</span>
                                     @enderror
                                 </div>
+
                                 @if ($assigneeList)
                                     <div
                                         style="border-radius:5px;background-color:grey;padding:8px;width:350px;max-height:250px;overflow-y:auto; ">
@@ -576,15 +580,14 @@
                                                                     value="{{ $people->emp_id }}">
                                                             </div>
                                                             <div class="col-auto">
-                                                                <img class="profile-image" style="margin-left: 10px;"
-                                                                    src="{{ !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL)
-                                                                        ? $people->image
-                                                                        : (!empty($people->image)
-                                                                            ? Storage::url($people->image)
-                                                                            : ($people->gender == 'Male'
-                                                                                ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
-                                                                                : 'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0')) }}"
-                                                                    alt="">
+                                                                @if (!empty($people->image) && $people->image !== 'null')
+                                                                    <img class="profile-image" style="margin-left: 10px;"
+                                                                        src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                                @else
+                                                                    <img src="{{ asset('images/user.jpg') }}" style="margin-left: 10px;"
+                                                                        class="profile-image" alt="Default Image">
+                                                                @endif
+                                                           
                                                             </div>
                                                             <div class="col">
                                                                 <h6 class="username"
@@ -734,8 +737,8 @@
                                     <label for="assignee"
                                         style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Followers</label>
                                     <br>
-                                    <i wire:change="autoValidate" style="margin-top: 10px; cursor: pointer" class="fas fa-user icon"
-                                        id="profile-icon"></i>
+                                    <i wire:change="autoValidate" style="margin-top: 10px; cursor: pointer"
+                                        class="fas fa-user icon" id="profile-icon"></i>
                                     @if ($showFollowers)
                                         <strong style="font-size: 12;">Selected Followers:
                                         </strong>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}
@@ -785,15 +788,13 @@
                                                                 value="{{ $people->emp_id }}">
                                                         </div>
                                                         <div class="col-auto">
-                                                            <img class="profile-image"
-                                                                src="{{ !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL)
-                                                                    ? $people->image
-                                                                    : (!empty($people->image)
-                                                                        ? Storage::url($people->image)
-                                                                        : ($people->gender == 'Male'
-                                                                            ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
-                                                                            : 'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0')) }}"
-                                                                alt="">
+                                                            @if (!empty($people->image) && $people->image !== 'null')
+                                                                    <img class="profile-image" 
+                                                                        src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                                @else
+                                                                    <img src="{{ asset('images/user.jpg') }}" 
+                                                                        class="profile-image" alt="Default Image">
+                                                                @endif
                                                         </div>
                                                         <div class="col">
                                                             <h6 class="username"

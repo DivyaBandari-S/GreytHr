@@ -7,13 +7,6 @@
         </button>
     </div>
     @endif
-    <!-- Assuming you are using Blade templates in Laravel -->
-    @if (session('popupMessage') || $showPopupMessage)
-    <div class="error-message">
-        {{ session('popupMessage') }}
-    </div>
-    @endif
-
     <div class="applyContainer bg-white">
         @if($showinfoMessage)
         <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex gap-2 align-items-center">
@@ -22,14 +15,13 @@
             <p class="mb-0 hideInfo" wire:click="toggleInfo">Hide</p>
         </div>
         @endif
-
         <div class="d-flex justify-content-between">
             <p class="applyingFor">Applying for Leave</p>
             @if($showinfoButton)
             <p class="info-paragraph mb-0" wire:click="toggleInfo">Info</p>
             @endif
         </div>
-        <form wire:submit.prevent="leaveApply" enctype="multipart/form-data" >
+        <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
             <div class="row d-flex align-items-center">
                 <div class="col-md-7">
                     <div class="form-group ">
@@ -65,7 +57,7 @@
                                 <span class="sickLeaveBalance" title="Sick Leave">{{ $leaveBalances['sickLeaveBalance'] }}</span>
                                 @elseif($leave_type == 'Casual Leave')
                                 <!-- Casual Leave -->
-                                <span class="sickLeaveBalance" title="Casual Leave">{{ $leaveBalances['casualLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance" title="Casual Leave Probation">{{ $leaveBalances['casualLeaveBalance'] }}</span>
                                 @elseif($leave_type == 'Casual Leave Probation')
                                 <!-- Casual Leave Probation -->
                                 <span class="sickLeaveBalance">{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
@@ -83,6 +75,8 @@
                                 <span class="sickLeaveBalance">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
                                 @endif
                             </div>
+                            @else
+                            <span class="normalText"></span>
                             @endif
 
                         </div>
@@ -243,17 +237,13 @@
                     <span class="normalTextValue"> Applying To</span>
                 </div>
                 <div class="reporting mb-2" wire:ignore.self>
-                    @if(!$loginEmpManagerProfile)
+                    @if($empManagerDetails->image)
                     <div class="employee-profile-image-container">
-                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
-                    </div>
-                    @elseif($managerDetails)
-                    <div class="employee-profile-image-container">
-                        <img height="40" width="40" src="{{ asset('storage/' . $managerDetails->image) }}" style="border-radius:50%;">
+                        <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($empManagerDetails->image)}}" style="border-radius:50%;">
                     </div>
                     @else
                     <div class="employee-profile-image-container">
-                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
                     @endif
                     <div class="center p-0 m-0">
@@ -308,11 +298,11 @@
                         <div class="d-flex gap-4 align-items-center" style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             @if($employee['image'])
                             <div class="employee-profile-image-container">
-                                <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius:50%;">
+                                <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius:50%;">
                             </div>
                             @else
                             <div class="employee-profile-image-container">
-                                <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
                             </div>
                             @endif
                             <div class="center d-flex flex-column mt-2 mb-2">
@@ -322,7 +312,7 @@
                         </div>
                         @endforeach
                         @else
-                        <p class="mb-0 normalTextValue m-auto ">No managers found.</p>
+                        <p class="mb-0 normalTextValue m-auto text-center">No managers found.</p>
                         @endif
                     </div>
                 </div>
@@ -383,13 +373,13 @@
                             <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
                                 <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
 
-                                @if($employee['image'])
+                                @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
                                 <div class="employee-profile-image-container">
-                                    <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius: 50%;">
+                                    <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius: 50%;">
                                 </div>
                                 @else
                                 <div class="employee-profile-image-container">
-                                    <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
+                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
                                 </div>
                                 @endif
 
@@ -410,8 +400,6 @@
                 @endif
                 @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
-
-
             <div class="form-group mt-3">
                 <label for="contactDetails">Contact Details <span class="requiredMark">*</span> </label>
                 <input id="contactDetails" type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="width:50%;">

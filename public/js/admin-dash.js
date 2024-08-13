@@ -7,7 +7,7 @@ allDropdown.forEach(item=> {
 	a.addEventListener('click', function (e) {
 		e.preventDefault();
 
-		if(!this.classList.contains('active-side-dropdown')) {
+		if(!this.classList.contains('active')) {
 			allDropdown.forEach(i=> {
 				const aLink = i.parentElement.querySelector('a:first-child');
 
@@ -51,10 +51,10 @@ document.addEventListener("DOMContentLoaded", function() {
 	var links = document.querySelectorAll('a:first-child');
 
 	links.forEach(function(link) {
-		link.classList.remove('active');
+		link.classList.remove('active-side-dropdown');
 		if (link.getAttribute("href") === currentPath) {
-			link.classList.add('active');
-			link.parentNode.classList.add('active');
+			link.classList.add('active-side-dropdown');
+			// link.parentNode.classList.add('active-side-dropdown');
 		}
 	});
 
@@ -154,11 +154,18 @@ sidebar.addEventListener('mouseenter', function () {
 // PROFILE DROPDOWN
 const profile = document.querySelector('nav .profile');
 const imgProfile = profile.querySelector('img');
+// const imgProfile2 = document.getElementsByClassName('brandLogoDiv');
 const dropdownProfile = profile.querySelector('.profile-link');
 
-imgProfile.addEventListener('click', function () {
+// imgProfile2.addEventListener('click', function () {
+// 	dropdownProfile.classList.toggle('show');
+// })
+
+function openProfile () {
+	const profile = document.querySelector('nav .profile');
+	const dropdownProfile = profile.querySelector('.profile-link');
 	dropdownProfile.classList.toggle('show');
-})
+}
 
 
 
@@ -178,13 +185,13 @@ allMenu.forEach(item=> {
 
 
 window.addEventListener('click', function (e) {
-	if(e.target !== imgProfile) {
-		if(e.target !== dropdownProfile) {
-			if(dropdownProfile.classList.contains('show')) {
-				dropdownProfile.classList.remove('show');
-			}
-		}
-	}
+	// if(e.target !== imgProfile) {
+	// 	if(e.target !== dropdownProfile) {
+	// 		if(dropdownProfile.classList.contains('show')) {
+	// 			dropdownProfile.classList.remove('show');
+	// 		}
+	// 	}
+	// }
 
 	allMenu.forEach(item=> {
 		const icon = item.querySelector('.icon');
@@ -247,4 +254,4 @@ tooltip: {
 };
 
 var chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();c
+chart.render();

@@ -1,11 +1,11 @@
 <div class="px-4">
-<div class="px-4" style="position: relative;">
-@if ($message)
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        {{ $message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
+    <div class="px-4" style="position: relative;">
+        @if ($message)
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ $message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
 
 <div class="container  mt-3" style="height:60px;margin-top:10px">
     
@@ -258,7 +258,7 @@
                            
                             @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
@@ -266,22 +266,22 @@
                          
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Doddaballapur</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Doddaballapur</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Doddaballapur</a>
 @endif 
                             @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
 
-@endif
-@if (Auth::guard('hr')->check())
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hyderabad</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hyderabad</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Hyderabad</a>
@@ -289,7 +289,7 @@
 
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
@@ -297,14 +297,14 @@
  
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
 @endif      
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight:700">USA</a>
@@ -318,7 +318,7 @@
 @endif
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">New York</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">New York</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">New York</a>
@@ -326,7 +326,7 @@
  
 @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
 
 @elseif (Auth::guard('emp')->check())
 <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
@@ -388,25 +388,25 @@
     
 <div id="eventsSection" style=" display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;margin-top:-130px">
 
-        <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png" alt="Empty Image" style="width: 300px; height: auto; display: block;">
-        <p style="font-size:20px;font-weight:500; text-align: center;color:#3b4452">It feels empty here!</p>
-        <p style="font-size:12px;color:#778899; text-align: center;">Your feed is still in making as there's no post to show.</p>
+                        <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png" alt="Empty Image" style="width: 300px; height: auto; display: block;">
+                        <p style="font-size:20px;font-weight:500; text-align: center;color:#3b4452">It feels empty here!</p>
+                        <p style="font-size:12px;color:#778899; text-align: center;">Your feed is still in making as there's no post to show.</p>
 
 
-        <!-- Begin the form outside the .form-group div -->
-        @if($showFeedsDialog)
-            <!-- Form content here -->
-        @endif
+                        <!-- Begin the form outside the .form-group div -->
+                        @if($showFeedsDialog)
+                        <!-- Form content here -->
+                        @endif
 
-</div>
-
-           
-          
+                    </div>
 
 
 
 
-            </div>
+
+
+
+                </div>
 
 </div>
 
@@ -857,5 +857,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
-    </div>
+        </div>
     </div>

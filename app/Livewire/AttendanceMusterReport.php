@@ -66,7 +66,19 @@ class AttendanceMusterReport extends Component
     { 
            if(empty($this->selectedEmployees))
            {
-             return redirect()->back()->with('error', 'Select at least one employee detail');
+              return redirect()->back()->with('error', 'Select at least one employee detail');
+           }
+           elseif(empty($this->fromDate) && empty($this->toDate))
+           {
+              return redirect()->back()->with('error', 'Please select FromDate and ToDate');
+           }
+           elseif(empty($this->fromDate))
+           {
+              return redirect()->back()->with('error', 'Please select FromDate');
+           }
+           elseif(empty($this->toDate))
+           {
+              return redirect()->back()->with('error', 'Please select toDate');
            }
            else
            {

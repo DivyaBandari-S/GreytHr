@@ -1,13 +1,13 @@
 <div class="container-fluid my-1">
-    <div class="row">
+    <div class="row m-0 p-0">
         <!-- Left Side: Department Dropdown -->
         <div class="col-md-3 border-end bg-white" style="height: 100vh; overflow-y: auto;">
             <div class="bg-white" style="height: 100%;"> <!-- Set background color and full height -->
                 <div class="d-flex flex-column mb-2">
                     <h6 class="text-start text-5xl font-bold py-3 px-4">Departments</h6>
-                    <select class="form-control mb-4" wire:model="selectedDepartment"  wire:change="filter">
+                    <select class="form-control mb-4" wire:model="selectedDepartment" wire:change="filter">
                         <option value="">All Departments</option>
-                      
+
                     </select>
                 </div>
             </div>
@@ -15,7 +15,7 @@
 
         <!-- Right Side: Search and Employee Details -->
         <div class="col-md-9">
-            <div class="d-flex justify-content-between mb-2">
+            <div class="d-flex justify-content-between align-items-center mb-2">
                 <div class="col-md-6">
                     <h6 class="text-start text-5xl font-bold py-3 px-4 employees-details-chat">Users</h6>
                 </div>
@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-5 justify-content-center"
+            <div class="row m-0 p-0 justify-content-center"
                 style="overflow-y: auto; height: 100vh;">
                 @forelse ($employeeDetails as $key => $employee)
                     <div class="col-lg-3 mb-6"> <!-- Increase width to col-lg-4 -->
@@ -64,32 +64,39 @@
                                         <span>Department</span>
                                         <span>Join Date</span>
 
-                                    </div>
-                                    <div class="chat-emp-details d-flex flex-column align-items-end gap-1">
-                                        <span>{{ $employee->emp_id }}</span>
-                                        <span>{{ $employee->department }}</span>
-                                        <span>{{ \Carbon\Carbon::parse($employee->hire_date)->format('d M, Y') }}</span>
-
-                                    </div>
+                                </div>
+                                <div class="chat-emp-details d-flex flex-column align-items-end gap-1">
+                                    <span>{{ $employee->emp_id }}</span>
+                                    @if($employee->department)
+                                    <span>{{ $employee->department }}</span>
+                                    @else
+                                    <span>-</span>
+                                    @endif
+                                    @if($employee->hire_date)
+                                    <span>{{ \Carbon\Carbon::parse($employee->hire_date)->format('d M, Y') }}</span>
+                                    @else
+                                    <span>N/A</span>
+                                    @endif
                                 </div>
                             </div>
-                            <div class="card-footer d-flex gap-4 justify-content-center">
-                                <!-- Call Icon -->
-                                <button class="cancel-btn px-4 d-flex align-items-center justify-content-center"
-                                    style="border:1px solid rgb(12,17,79); border-radius: 10px; width: 30px; height: 30px;cursor:pointer;">
-                                    <i class="fas fa-phone-alt fa-rotate-90" style="font-size: 13px;padding:5px;"></i>
-                                </button>
-                                <!-- Chat Icon -->
-                                <button class="submit-btn px-4 d-flex align-items-center justify-content-center"
-                                    style="border-radius: 10px; width: 30px; height: 30px;cursor:pointer;"
-                                    wire:click="message('{{ $employee->emp_id }}')">
-                                    <i class="fas fa-comment" style="font-size: 14px;padding:5px;"></i>
-                                </button>
-                            </div>
+                        </div>
+                        <div class="card-footer d-flex gap-4 justify-content-center">
+                            <!-- Call Icon -->
+                            <button class="cancel-btn px-4 d-flex align-items-center justify-content-center"
+                                style="border:1px solid rgb(12,17,79); border-radius: 10px; width: 30px; height: 30px;cursor:pointer;">
+                                <i class="fas fa-phone-alt fa-rotate-90" style="font-size: 13px;padding:5px;"></i>
+                            </button>
+                            <!-- Chat Icon -->
+                            <button class="submit-btn px-4 d-flex align-items-center justify-content-center"
+                                style="border-radius: 10px; width: 30px; height: 30px;cursor:pointer;"
+                                wire:click="message('{{ $employee->emp_id }}')">
+                                <i class="fas fa-comment" style="font-size: 14px;padding:5px;"></i>
+                            </button>
                         </div>
                     </div>
+                </div>
                 @empty
-                    <p class="col text-center">No employees found.</p>
+                <p class="col text-center">No employees found.</p>
                 @endforelse
             </div>
         </div>

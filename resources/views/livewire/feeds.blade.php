@@ -44,6 +44,9 @@
 
 
 
+
+
+
       
             </div>
             <div class="col-md-10 mt-2 bg-white d-flex align-items-center justify-content-between">
@@ -60,12 +63,16 @@
                 </div>
                 <div>
                     <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20 h-20 p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;width:130px">
+                    <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20 h-20 p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;width:130px">
                         <div class="w-6 h-6 rounded bg-purple-200">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
                                 <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                                 <polyline points="13 2 13 9 20 9"></polyline>
                             </svg>
                         </div>
+                        <div class="row  mt-1">
+                            <div class="text-left text-xs" style="margin-left:5px" wire:click="addFeeds">Create Posts</div>
+                      
                         <div class="row  mt-1">
                             <div class="text-left text-xs" style="margin-left:5px" wire:click="addFeeds">Create Posts</div>
                       
@@ -85,6 +92,7 @@
 
             @if(Session::has('error'))
                 <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert" 
+                    style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius:4px; background-color: #f8d7da; color: #721c24;">
                     style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius:4px; background-color: #f8d7da; color: #721c24;">
                     {{ Session::get('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;"></button>
@@ -109,6 +117,7 @@
                     <div class="form-group" >
                         <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
                         <textarea wire:model="description" class="form-control" id="content" rows="2" 
+                            style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-240px;;margin-top:5px"
                             style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-240px;;margin-top:5px"
                             placeholder="Enter your description here..."></textarea>
                     </div>
@@ -176,7 +185,9 @@
     <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
         @if(auth()->guard('emp')->check())
             <input type="radio" id="radio-emp" name="radio"  value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
+            <input type="radio" id="radio-emp" name="radio"  value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
         @elseif(auth()->guard('hr')->check())
+            <input type="radio" id="radio-hr" name="radio"  value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
             <input type="radio" id="radio-hr" name="radio"  value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
         @else
             <p>No employee details available.</p>
@@ -197,6 +208,12 @@
                 <div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
                     <div class="row">
                         <div class="col " style="margin: 0px;">
+                        <div class="input-group">
+    <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
+    <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" >
+        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+    </button>
+</div>
                         <div class="input-group">
     <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
     <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" >
@@ -245,7 +262,49 @@
         </ul>
     </div>
 </div>
+                    <div class="w-full visible mt-1" style="margin-top:20px;display:block">
+    <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;" onclick="toggleDropdown('dropdownContent1', 'arrowSvg1')">
+        <span class="text-xs leading-4" style="font-weight:bold; color: grey;">Groups</span>
+        <span class="arrow-icon" id="arrowIcon1" style="margin-top:-5px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:#3b4452;margin-top:-5px">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </span>
+    </div>
+    <div id="dropdownContent1" style="display: none;">
+        <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
+            <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">All Feeds</a>
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
+            @endif
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
+            @endif
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
+            @endif
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
+            @endif
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
+            @endif
+        </ul>
+    </div>
+</div>
 
+
+                    <div class="w-full visible mt-1" style="margin-top: 20px;display:block">
 
                     <div class="w-full visible mt-1" style="margin-top: 20px;display:block">
                         <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
@@ -257,6 +316,7 @@
                             </span>
                         </div>
                         <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color:#3b4452; text-align: left; padding-left: 0; display: none;">
+                            <ul  class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
                             <ul  class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
                                 <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">India</b>
                                
@@ -385,6 +445,52 @@
     </div>
 </div>
 
+                    <div class="w-full visible mt-1" style="margin-top: 20px;display:block">
+    <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
+        <span class="text-xs leading-4" style="font-weight: bold; color: grey;">Department</span>
+        <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')" style="margin-top:-5px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color:#3b4452;">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </span>
+    </div>
+    <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
+        <ul  class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">HR</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">HR</a>
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations Team</a>
+            @endif
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations</a>
+            @endif
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Production Team</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Production Team</a>
+            @endif
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">QA</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">QA</a>
+            @endif
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Sales Team</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Sales Team</a>
+            @endif
+            @if (Auth::guard('hr')->check())
+                <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Testing Team</a>
+            @elseif (Auth::guard('emp')->check())
+                <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Testing Team</a>
+            @endif
+        </ul>
+    </div>
+</div>
+
                 </div>
             </div>
          
@@ -436,16 +542,19 @@
         <div class="row m-0">
                                 <div class="col-md-4 mb-2" style="text-align: center;">
                                 <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
+                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                                 </div>
                                 <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
                                     Group Events
                                 </div>
                                 <div class="c col-md-4 m-auto" style="font-size: 13px; font-weight: 100px; color: #9E9696; text-align: center;">
                                 {{ date('d M', strtotime($data['employee']->personalInfo->date_of_birth??'-')) }}
+                                {{ date('d M', strtotime($data['employee']->personalInfo->date_of_birth??'-')) }}
                                 </div>
                             </div>
                             <div class="row m-0 mt-2">
                                 <div class="col-md-4">
+                                    <img src="{{ asset('images/Blowing_out_Birthday_candles_Gif.gif') }}" alt="Image Description" style="width: 120px;">
                                     <img src="{{ asset('images/Blowing_out_Birthday_candles_Gif.gif') }}" alt="Image Description" style="width: 120px;">
                                 </div>
                                 <div class="col-md-8 m-auto">
@@ -455,6 +564,13 @@
                                         Have a great year ahead!
                                     </p>
                                     <div style="display: flex; align-items: center;">
+                                    @if($data['employee'] && $data['employee']->image_url)
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
+@else
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+
+
+                                @endif
                                     @if($data['employee'] && $data['employee']->image_url)
     <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
 @else
@@ -676,7 +792,10 @@
                         <div class="row m-0">
     @php
         $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
+    @php
+        $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
     @endphp
+    <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
     <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
   
 
@@ -706,6 +825,14 @@
 @endif
 
 
+                    <div class="comment" style="font-size: 10px;">
+                        <b style="color:#778899; font-weight:500; font-size: 10px;">
+                            {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}
+                        </b>
+                        <p class="mb-0" style="font-size: 11px;">
+                            {{ ucfirst($comment->comment) }}
+                        </p>
+                    </div>
                     <div class="comment" style="font-size: 10px;">
                         <b style="color:#778899; font-weight:500; font-size: 10px;">
                             {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}
@@ -784,6 +911,8 @@
                             <div class="row m-0">
                                 <div class="col-md-3 mb-2" style="text-align: center;">
                                 <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
+                                <div class="col-md-3 mb-2" style="text-align: center;">
+                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                                 </div>
                                 <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
                                     Group Events
@@ -795,6 +924,8 @@
                             <div class="row m-0 mt-2">
                                 <div class="col-md-3">
                                     <img src="{{ asset('images/Blowing_out_Birthday_candles_Gif.gif') }}" alt="Image Description" style="width: 120px;">
+                                <div class="col-md-3">
+                                    <img src="{{ asset('images/Blowing_out_Birthday_candles_Gif.gif') }}" alt="Image Description" style="width: 120px;">
                                 </div>
                                 <div class="col-md-8 m-auto">
                                     <p style="color: #778899;font-size: 12px;font-weight:normal;">
@@ -803,6 +934,13 @@
                                         Have a great year ahead!
                                     </p>
                                     <div style="display: flex; align-items: center;">
+                                    @if($data['employee'] && $data['employee']->image_url)
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
+@else
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+
+
+                                @endif
                                     @if($data['employee'] && $data['employee']->image_url)
     <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
 @else
@@ -1138,6 +1276,8 @@
         <div class="row m-0">
                                 <div class="col-md-3 mb-2" style="text-align: center;">
                                 <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
+                                <div class="col-md-3 mb-2" style="text-align: center;">
+                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                                 </div>
                                 <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
                                     Group Events
@@ -1149,8 +1289,11 @@
                     <div class="row m-0">
                         <div class="col-md-3">
                             <img src="{{ asset('images/New_team_members_gif.gif') }}" alt="Image Description" style="width: 120px;">
+                        <div class="col-md-3">
+                            <img src="{{ asset('images/New_team_members_gif.gif') }}" alt="Image Description" style="width: 120px;">
                         </div>
                         <div class="col-md-8 m-auto">
+                            <p style="font-size:12px;color:#778899;font-weight:normal;margin-top:10px;padding-left:10px">
                             <p style="font-size:12px;color:#778899;font-weight:normal;margin-top:10px;padding-left:10px">
                                 @php
                                 $hireDate = $data['employee']->hire_date;
@@ -1164,6 +1307,12 @@
 
                             </p>
                             <div style="display: flex; align-items: center;">
+                            @if($data['employee'] && $data['employee']->image_url)
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
+@else
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+
+
                             @if($data['employee'] && $data['employee']->image_url)
     <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
 @else
@@ -1445,6 +1594,58 @@
 @endforeach
 
 
+  @foreach ($currentCardComments as $comment)
+    <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
+        
+        @php
+          
+          
+
+            // Determine if it's an employee or HR
+            if ($comment->employee) {
+                $employee = $comment->employee;
+                $imageUrl = $employee->image_url; // Assuming 'image_url' is directly in Employee model
+            } elseif ($comment->hr) {
+                $imageUrl = $comment->hr->image ? asset('storage/' . $comment->hr->image) : null;
+            }
+
+            // Determine default images based on gender if no image URL is available
+            if (!$imageUrl) {
+                $gender = $comment->employee->gender ?? $comment->hr->gender ;
+
+                if ($gender == "Male") {
+                    $imageUrl = "https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png";
+                } elseif ($gender == "Female") {
+                    $imageUrl = "https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW";
+                } else {
+                    $imageUrl = "https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain";
+                }
+            }
+        @endphp
+
+        <img style="border-radius: 50%;" height="25" width="25" src="{{ $imageUrl }}" alt="Profile Image">
+
+        <div class="comment" style="font-size: 10px;">
+            @if($comment->employee)
+                <b style="color:#778899; font-weight:500; font-size: 10px;">
+                    {{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}
+                </b>
+            @elseif($comment->hr)
+                <b style="color:#778899; font-weight:500; font-size: 10px;">
+                    {{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}
+                </b>
+            @else
+                <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+            @endif
+
+            <p class="mb-0" style="font-size: 11px;">
+                {{ ucfirst($comment->addcomment) }}
+            </p>
+        </div>
+    </div>
+@endforeach
+
+
   @endif
 
 
@@ -1488,6 +1689,7 @@
         <div class="row m-0">
                                 <div class="col-md-4 mb-2" style="text-align: center;">
                                 <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
+                                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                                 </div>
                                 <div class="col-md-4 m-auto" style="color: #677A8E; font-size: 14px;font-weight: 100px; text-align: center;">
                                     Group Events
@@ -1497,6 +1699,8 @@
                         </div>
                     </div>
                     <div class="row m-0">
+                        <div class="col-md-3">
+                            <img src="{{ asset('images/New_team_members_gif.gif') }}" alt="Image Description" style="width: 120px;">
                         <div class="col-md-3">
                             <img src="{{ asset('images/New_team_members_gif.gif') }}" alt="Image Description" style="width: 120px;">
                         </div>
@@ -1514,6 +1718,12 @@
 
                             </p>
                             <div style="display: flex; align-items: center;">
+                            @if($data['employee'] && $data['employee']->image_url)
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
+@else
+    <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Image">
+
+
                             @if($data['employee'] && $data['employee']->image_url)
     <img style="border-radius: 50%; margin-left: 10px;" height="35" width="35" src="{{ $data['employee']->image_url }}" alt="Employee Image">
 @else
@@ -1760,6 +1970,50 @@ $currentCardComments = $addcomments->where('card_id', $data['employee']->emp_id)
  <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
  @foreach ($filteredComments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at') as $comment)
  <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
+ @if ($comment->employee)
+            @if($comment->employee->image)
+                <img style="border-radius: 50%;" height="25" width="25" src="{{ $comment->employee->image_url }}" alt="Employee Image">
+            @else
+                @if($comment->employee->gender == "Male")
+                    <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
+                @elseif($comment->employee->gender == "Female")
+                    <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
+                @else
+                    <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
+                @endif
+            @endif
+            <div class="comment" style="font-size: 10px;">
+                <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}</b>
+                <p class="mb-0" style="font-size: 11px;">
+                    {{ ucfirst($comment->addcomment) }}
+                </p>
+            </div>
+        @elseif ($comment->hr)
+            @if ($comment->hr->image)
+                <img style="border-radius: 50%;" height="25" width="25" src="{{ $comment->hr->image_url }}" alt="HR Image">
+            @else
+                @if ($comment->hr->gender == "Male")
+                    <img src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" height="25" width="25">
+                @elseif ($comment->hr->gender == "Female")
+                    <img src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW" alt="Default Female Profile" height="25" width="25">
+                @else
+                    <img src="https://via.placeholder.com/25" alt="Default Profile" height="25" width="25">
+                @endif
+            @endif
+            <div class="comment" style="font-size: 10px;">
+                <b style="color:#778899; font-weight:500; font-size: 10px;">{{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}</b>
+                <p class="mb-0" style="font-size: 11px;">
+                    {{ ucfirst($comment->addcomment) }}
+                </p>
+            </div>
+        @else
+            <div class="comment" style="font-size: 10px;">
+                <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+                <p class="mb-0" style="font-size: 11px;">
+                    {{ ucfirst($comment->comment) }}
+                </p>
+            </div>
+        @endif
  @if ($comment->employee)
             @if($comment->employee->image)
                 <img style="border-radius: 50%;" height="25" width="25" src="{{ $comment->employee->image_url }}" alt="Employee Image">
@@ -2245,8 +2499,25 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
     function filterDropdowns() {
         var input, filter, dropdownContents, dropdownContent, menuItems, a, i, j, hasMatch;
+        var input, filter, dropdownContents, dropdownContent, menuItems, a, i, j, hasMatch;
         input = document.getElementById('filterSearch');
         filter = input.value.toUpperCase();
+        
+        // Select all dropdown content elements
+        dropdownContents = [
+            document.getElementById('dropdownContent1'),
+            document.getElementById('dropdownContent2'),
+            document.getElementById('dropdownContent3')
+        ];
+
+        // Loop through each dropdown content
+        dropdownContents.forEach(function(dropdownContent) {
+            menuItems = dropdownContent.getElementsByTagName('a');
+            hasMatch = false; // Reset match flag
+
+            // Loop through all menu items and hide/show based on the filter
+            for (j = 0; j < menuItems.length; j++) {
+                a = menuItems[j];
         
         // Select all dropdown content elements
         dropdownContents = [
@@ -2266,7 +2537,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
                     a.style.display = ""; // Show matching item
                     hasMatch = true; // Found a match
+                    a.style.display = ""; // Show matching item
+                    hasMatch = true; // Found a match
                 } else {
+                    a.style.display = "none"; // Hide non-matching item
                     a.style.display = "none"; // Hide non-matching item
                 }
             }
@@ -2274,8 +2548,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show dropdown if there's at least one matching item
             dropdownContent.style.display = hasMatch ? "block" : "none"; // Show or hide based on match
         });
+
+            // Show dropdown if there's at least one matching item
+            dropdownContent.style.display = hasMatch ? "block" : "none"; // Show or hide based on match
+        });
     }
 </script>
+
 
 
 </div>
