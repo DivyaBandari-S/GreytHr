@@ -22,7 +22,7 @@ use App\Models\HelpDesks;
 use App\Models\Request;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
-
+use Illuminate\Support\Facades\Response;
 class HelpDesk extends Component
 {
     use WithFileUploads;
@@ -348,90 +348,103 @@ class HelpDesk extends Component
     
 
 
-    public function submit()
+    public function showFile($id)
     {
-       
-       
-
-        try {
-            $validatedData = $this->validate($this->rules);
-          
-            if ($this->image) {
-                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-                $filePath = 'uploads/help-desk-images/' . $fileName;
-            } else {
-                $filePath = 'N/A';
-            }
-
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-            HelpDesks::create([
-                'emp_id' => $this->employeeDetails->emp_id,
-                'category' => $this->category,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path' => $filePath,
-                'cc_to' => $this->cc_to??'-',
-                'priority' => $this->priority,
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
-                'distributor_name' => 'N/A',
-            ]);
-
-            session()->flash('message', 'Request created successfully.');
-            $this->reset();
-            return redirect()->to('/HelpDesk');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->setErrorBag($e->validator->getMessageBag());
-        } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+        $record = HelpDesks::findOrFail($id);
+    
+        if ($record && $record->file_path !== 'N/A') {
+            $mimeType = 'image/jpeg'; // Adjust as necessary
+    
+            return response($record->file_path, 200)
+                ->header('Content-Type', $mimeType)
+                ->header('Content-Disposition', 'inline; filename="image.jpg"'); // Adjust filename and extension as needed
         }
+    
+        return abort(404, 'File not found');
     }
-    public function submitHR()
-    {
-       
-       
+    
+public function submit()
+{
+   
+   
 
-        try {
-            $validatedData = $this->validate($this->rules);
-          
-            if ($this->image) {
-                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-                $filePath = 'uploads/help-desk-images/' . $fileName;
-            } else {
-                $filePath = 'N/A';
-            }
-
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-            HelpDesks::create([
-                'emp_id' => $this->employeeDetails->emp_id,
-                'category' => $this->category,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path' => $filePath,
-                'cc_to' => $this->cc_to ?? '-',
-                'priority' => $this->priority,
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
-                'distributor_name' => 'N/A',
-            ]);
-
-            session()->flash('message', 'Request created successfully.');
-            $this->reset();
-            return redirect()->to('/HelpDesk');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->setErrorBag($e->validator->getMessageBag());
-        } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+    try {
+        $validatedData = $this->validate($this->rules);
+      
+        $filePath = 'N/A';
+        if ($this->file_path && $this->image) {
+            // Ensure the file is an image
+            $image = $this->image->getRealPath();
+            $filePath = file_get_contents($image);
         }
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+        HelpDesks::create([
+            'emp_id' => $this->employeeDetails->emp_id,
+            'category' => $this->category,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path' => $filePath,
+            'cc_to' => $this->cc_to??'-',
+            'priority' => $this->priority,
+            'mail' => 'N/A',
+            'mobile' => 'N/A',
+            'distributor_name' => 'N/A',
+        ]);
+
+        session()->flash('message', 'Request created successfully.');
+        $this->reset();
+        return redirect()->to('/HelpDesk');
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        $this->setErrorBag($e->validator->getMessageBag());
+    } catch (\Exception $e) {
+        Log::error('Error creating request: ' . $e->getMessage());
+        session()->flash('error', 'An error occurred while creating the request. Please try again.');
     }
+}
+
+public function submitHR()
+{
+   
+   
+
+    try {
+        $validatedData = $this->validate($this->rules);
+      
+        $filePath = 'N/A';
+        if ($this->file_path && $this->image) {
+            // Ensure the file is an image
+            $image = $this->image->getRealPath();
+            $filePath = file_get_contents($image);
+        }
+
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+        HelpDesks::create([
+            'emp_id' => $this->employeeDetails->emp_id,
+            'category' => $this->category,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path' => $filePath,
+            'cc_to' => $this->cc_to ?? '-',
+            'priority' => $this->priority,
+            'mail' => 'N/A',
+            'mobile' => 'N/A',
+            'distributor_name' => 'N/A',
+        ]);
+
+        session()->flash('message', 'Request created successfully.');
+        $this->reset();
+        return redirect()->to('/HelpDesk');
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        $this->setErrorBag($e->validator->getMessageBag());
+    } catch (\Exception $e) {
+        Log::error('Error creating request: ' . $e->getMessage());
+        session()->flash('error', 'An error occurred while creating the request. Please try again.');
+    }
+}
     protected function resetInputFields()
     {
         $this->category = '';
@@ -514,6 +527,9 @@ class HelpDesk extends Component
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
+            foreach ($this->records as $record) {
+                $record->image_url ;
+            }
 
             $searchData = $this->filterData ?: $this->records;
             $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';

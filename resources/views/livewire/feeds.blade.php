@@ -689,17 +689,17 @@
                       
                     @endphp
 
-@if($employee->image_url)
+@if (!empty($employee->image) && $employee->image !== 'null')   
     <!-- Display the employee's actual image -->
     <img style="border-radius: 50%;" height="25" width="25" src="{{ $employee->image_url }}" alt="Employee Image">
 @else
     <!-- Display a default image based on gender or a generic fallback -->
     @if($employee->gender == "Male")
-        <img class="feeds-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="Default Male Profile" style="border-radius: 50%;" height="25" width="25">
+        <img class="feeds-image" src="{{asset("images/male-default.png")}}" alt="Default Male Profile" style="border-radius: 50%;" height="25" width="25">
     @elseif($employee->gender == "Female")
-        <img class="feeds-image" src="https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Default Female Profile" style="border-radius: 50%;" height="25" width="25">
+        <img class="feeds-image" src="{{asset("images/female-default.jpg")}}" alt="Default Female Profile" style="border-radius: 50%;" height="25" width="25">
     @else
-        <img style="border-radius: 50%;" height="25" width="25" src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" alt="Default Profile Image">
+        <img style="border-radius: 50%;" height="25" width="25" src="{{asset("images/user.jpg")}}" alt="Default Profile Image">
     @endif
 @endif
 

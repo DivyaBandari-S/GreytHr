@@ -226,15 +226,13 @@
                                 <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                             </div>
                             <div class="col-auto">
-                                @if($people->image == "")
-                                    @if($people->gender == "Male")
-                                        <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                    @elseif($people->gender == "Female")
-                                        <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                    @endif
-                                @else
-                                    <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                                @endif
+                            @if (!empty($people->image) && $people->image !== 'null')
+                                            <img class="people-profile-image"
+                                                src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                        @else
+                                            <img src="{{ asset('images/user.jpg') }}" class="people-profile-image"
+                                                alt="Default Image">
+                                        @endif
                             </div>
                             <div class="col">
                                 <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
@@ -413,15 +411,29 @@
                                 <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                             </div>
                             <div class="col-auto">
-                                @if($people->image == "")
-                                    @if($people->gender == "Male")
-                                        <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                    @elseif($people->gender == "Female")
-                                        <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                    @endif
-                                @else
-                                    <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                                @endif
+                            @if (!empty($people->image) && $people->image !== 'null')
+    <!-- Display base64 encoded image if available -->
+    <img class="people-profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}" style="border-radius: 50%; margin-left: 10px;" height="40" width="40" alt="Profile Image">
+@else
+    <!-- Fallback to default images based on gender -->
+    @if($employeeDetails)
+        @switch($employeeDetails->gender)
+            @case('Male')
+                <img style="border-radius: 50%; margin-left: 10px;" height="40" width="40" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                @break
+            @case('Female')
+                <img style="border-radius: 50%; margin-left: 10px;" height="40" width="40" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                @break
+            @default
+                <img style="border-radius: 50%; margin-left: 10px;" height="40" width="40" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+        @endswitch
+    @else
+        <!-- Fallback if $employeeDetails is not set -->
+        <img style="border-radius: 50%; margin-left: 10px;" height="40" width="40" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+    @endif
+@endif
+
+
                             </div>
                             <div class="col">
                                 <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
@@ -510,11 +522,12 @@
                             {{ $record->description }}
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center;">
-                            @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
-                                <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
-                            @else
-                                -
-                            @endif
+                        @if($record->file_path !== 'N/A')
+    <img src="{{  $record->file_path}}" alt="Attached Image" style="max-width: 200px; max-height: 200px;">
+@else
+    -
+@endif
+
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
                             @php

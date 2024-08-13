@@ -19,6 +19,10 @@ class HelpDesks extends Model
     {
         return $this->belongsTo(Request::class, 'emp_id');// Update the foreign key as necessary
     }
+    public function getImageUrlAttribute()
+    {
+        return 'data:image/jpeg;base64,' . base64_encode($this->attributes['file_path']);
+    }
 
 }
     
