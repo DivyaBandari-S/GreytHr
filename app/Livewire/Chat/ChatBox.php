@@ -183,49 +183,47 @@ class ChatBox extends Component
             'body' => 'required|string|max:255',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960',
         ]);
-        $filePath = null;
+    
+        $fileBinary = null;
         if ($this->attachment) {
             // Get the file contents as binary data
-            $filePath = file_get_contents($this->attachment->getRealPath());
+            $fileBinary = file_get_contents($this->attachment->getRealPath());
         }
-    
     
         $createdMessage = Message::create([
             'chating_id' => $this->selectedConversation->id,
             'sender_id' => auth()->user()->emp_id,
             'receiver_id' => optional($this->selectedConversation->getReceiver())->emp_id,
-            'file_path' => $filePath,
+            'file_path' => $fileBinary,  // Store the binary data in the database
             'body' => $this->body,
         ]);
-dd($filePath);
-        $this->reset('body','file_path','attachment');
-         #scroll to bottom
-         $this->dispatch('scroll-bottom');
-
-
-         #push the message
-         $this->loadedMessages->push($createdMessage);
-
-
-         #update conversation model
-         $this->selectedConversation->updated_at = now();
-         $this->selectedConversation->save();
-
-
-         #refresh chatlist
-         $this->dispatch('chat.chat-list', 'refresh');
-
-         #broadcast
-
-         $this->selectedConversation->getReceiver()
-             ->notify(new MessageSent(
-                 Auth()->User(),
-                 $createdMessage,
-                 $this->selectedConversation,
-                 $this->selectedConversation->getReceiver()->id
-
-             ));
+    
+        $this->reset('body', 'attachment');
+    
+        #scroll to bottom
+        $this->dispatch('scroll-bottom');
+    
+        #push the message
+        $this->loadedMessages->push($createdMessage);
+    
+        #update conversation model
+        $this->selectedConversation->updated_at = now();
+        $this->selectedConversation->save();
+    
+        #refresh chatlist
+        $this->dispatch('chat.chat-list', 'refresh');
+    
+        #broadcast
+        $this->selectedConversation->getReceiver()
+            ->notify(new MessageSent(
+                Auth()->user(),
+                $createdMessage,
+                $this->selectedConversation,
+                $this->selectedConversation->getReceiver()->id
+            ));
     }
+    
+    
         public function mount()
     {
 

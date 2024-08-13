@@ -11,7 +11,7 @@
 
             <div class="col-md-12 d-flex align-items-center justify-content-between;" style="height: 80px; background-image: url('https://th.bing.com/th/id/OIP.D5JnKq5hq9D54giN_liHTQHaHa?w=163&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7');width:100%">
                 <div class="input-group" style="width: 90%; align-items:center">
-                    <input type="text" class="form-control" placeholder="Search..." wire:model="searchTerm" aria-label="Search" aria-describedby="search-addon" wire:input="filter">
+                    <input type="text" class="form-control" placeholder="Search..." wire:model="searchTerm" aria-label="Search" aria-describedby="search-addon" wire:input="filter" style="height:30px">
                 </div>
             </div>
 

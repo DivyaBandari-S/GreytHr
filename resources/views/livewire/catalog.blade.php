@@ -117,7 +117,7 @@
     <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
     <input 
         wire:model="searchTerm" 
-        style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 200px; height: 30px; padding: 5px;" 
+        style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" 
         type="text" 
         class="form-control" 
         placeholder="Search for Emp.Name or ID" 
@@ -296,7 +296,7 @@
     <div class="input-group5" style="display: flex; align-items: center; width: 100%;">
     <input 
         wire:model="searchTerm" 
-        style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 200px; height: 30px; padding: 5px;" 
+        style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" 
         type="text" 
         class="form-control" 
         placeholder="Search for Emp.Name or ID" 
