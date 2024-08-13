@@ -387,7 +387,7 @@ body {
     border: 1px solid rgb(2, 17, 79);
     font-weight: 500;
     border-radius: 5px;
-    padding: 6px 12px;
+    padding: 7px 12px;
     font-size: var(--normal-font-size);
     border: none;
 }
@@ -400,7 +400,7 @@ body {
     color: rgb(2, 17, 79);
     font-weight: 500;
     border-radius: 5px;
-    padding: 6px 12px;
+    padding: 7px 12px;
     font-size: var(--normal-font-size);
     border: none;
 }
@@ -2568,7 +2568,11 @@ input[type="radio"] {
     font-weight: 500;
 }
 .accordionContentSpanValue {
-    color: #36454f;
+    color: var(--main-heading-color);
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: var(--normal-font-size);
     font-weight: 500;
 }

@@ -125,6 +125,8 @@ class LeaveApply extends Component
                 if ($employee->hire_date) {
                     $hireDate = Carbon::parse($employee->hire_date);
                     $this->differenceInMonths = $hireDate->diffInMonths(Carbon::now());
+                }else{
+                    $this->differenceInMonths = 0 ;
                 }
             }
             if ($this->applying_to) {

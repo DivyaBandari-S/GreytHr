@@ -190,7 +190,7 @@
 
                            </div>
 
-                           <div class="col accordion-content">
+                           <div class="col accordion-content" style="padding-left: 20px;" >
 
                               <span class="accordionContentSpan">No. of Days</span>
 
@@ -269,9 +269,12 @@
                                  <span style="color: rgb(2,17,53); font-size: 12px; font-weight: 500;">View
                                     Details</span>
 
-                              </a>
+                              </a>v
+                              @if($leaveRequest->category_type === 'Leave')
                               <button class="withdraw" wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
-
+                              @else
+                              <button class="withdraw" wire:click="cancelLeaveCancel({{ $leaveRequest->id }})">Withdraw</button>
+                              @endif
                            </div>
 
                         </div>

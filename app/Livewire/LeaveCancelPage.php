@@ -254,6 +254,7 @@ class LeaveCancelPage extends Component
             $leaveRequest = LeaveRequest::findOrFail($this->selectedLeaveRequestId);
             // Update the leave request status and category
             $leaveRequest->category_type = 'Leave Cancel';
+            $leaveRequest->status = 'approved';
             $leaveRequest->cancel_status = 'Pending Leave Cancel';
             $leaveRequest->save();
             session()->flash('message', 'Applied request for leave cancel successfully.');
