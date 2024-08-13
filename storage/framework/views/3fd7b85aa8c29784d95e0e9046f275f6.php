@@ -1,4 +1,5 @@
 <div>
+
 <div style="overflow-x:hidden">
 
     <body>
@@ -21,9 +22,18 @@
                 
             <div class="nav-buttons d-flex justify-content-center">
             <ul class="nav custom-nav-tabs border">
-                <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" wire:click="$set('activeTab', 'active')" style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link <?php if($activeTab === 'active'): ?> active <?php else: ?> btn-light <?php endif; ?>" >Active</a>
-                </li>
+            <li class="custom-item m-0 p-0 flex-grow-1">
+    <a href="#" 
+       wire:click="$set('activeTab', 'active')" 
+       style="border-top-left-radius: 5px; border-bottom-left-radius: 5px; 
+              background-color: <?php if($activeTab === 'active' || !$activeTab): ?> rgb(2, 17, 79) <?php else: ?> #f8f9fa <?php endif; ?>; 
+              color: <?php if($activeTab === 'active' || !$activeTab): ?> #fff <?php else: ?> #000 <?php endif; ?>;" 
+       class="custom-nav-link <?php if($activeTab === 'active' || !$activeTab): ?> active <?php else: ?> btn-light <?php endif; ?>">
+       Active
+    </a>
+</li>
+
+
                 <li class="custom-item m-0 p-0 flex-grow-1" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
                     <a href="#" style="border-radius:none;"  wire:click="$set('activeTab', 'pending')" class="custom-nav-link <?php if($activeTab === 'pending'): ?> active <?php else: ?> btn-light <?php endif; ?>">Pending</a>
                 </li>
@@ -443,32 +453,49 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
         
         <!--[if BLOCK]><![endif]--><?php if($isRotated): ?>
         <div style="border-radius: 5px; background-color: grey; padding: 8px; width: 330px; margin-top: 10px; height: 200px; overflow-y: auto;">
-        <div class="input-group" style="margin-bottom: 10px;">
-            <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-            <div class="input-group-append">
-                <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="btn" type="button">
-                    <i style="text-align: center;" class="fa fa-search"></i>
-                </button>
+        <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
+    <input 
+        wire:model="searchTerm" 
+        style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 200px; height: 30px; padding: 5px;" 
+        type="text" 
+        class="form-control" 
+        placeholder="Search for Emp.Name or ID" 
+        aria-label="Search" 
+        aria-describedby="basic-addon1"
+    >
+    <div class="input-group-append" style="display: flex; align-items: center;">
+        <button 
+            wire:click="filter" 
+            style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;" 
+            class="btn" 
+            type="button"
+        >
+            <i style="text-align: center;" class="fa fa-search"></i>
+        </button>
 
-                                <div class="col-md-2 ml-4 p-0">
-                                <button wire:click="closePeoples"  type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:32px;width:33px;">
-                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                                </button>
-                                </div>
-            </div>
-        </div>
+        <button 
+            wire:click="closePeoples"  
+            type="button" 
+            class="close rounded px-1 py-0" 
+            aria-label="Close" 
+            style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;"
+        >
+            <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
+        </button>
+    </div>
+</div>
         
         
  
 
             <!--[if BLOCK]><![endif]--><?php if($peopleData && $peopleData->isEmpty()): ?>
-                <div class="container" style="text-align: center; color: white; font-size: 12px"> No People Found
+                <div class="container" style="text-align: center; color: white; font-size: 12px;"> No People Found
                 </div>
             <?php else: ?>
             <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $peopleData->sortBy(function($person) {
     return $person->first_name . ' ' . $person->last_name;
 }); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $people): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <label wire:click="selectPerson('<?php echo e($people->emp_id); ?>')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                    <label wire:click="selectPerson('<?php echo e($people->emp_id); ?>')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;margin-top:5px">
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <input type="checkbox" wire:model="selectedPeople" value="<?php echo e($people->emp_id); ?>" <?php echo e(in_array($people->emp_id, $selectedPeople) ? 'checked' : ''); ?>>
@@ -534,7 +561,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
 
 
-<table style="width: 100%; border-collapse: collapse; background-color: white;margin-top:10px">
+<table style="width: 100%; background-color: white; margin-top: 10px; border-collapse: collapse;">
     <thead>
         <tr style="background-color: rgb(2, 17, 79); color: white;">
             <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">Request Raised By</th>
@@ -547,19 +574,18 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
         </tr>
     </thead>
     <tbody>
-    <!--[if BLOCK]><![endif]--><?php if($searchData->where('status', 'Recent')->isEmpty()): ?>
+        <!--[if BLOCK]><![endif]--><?php if($searchData->where('status', 'Recent')->isEmpty()): ?>
             <tr>
                 <td colspan="7" style="text-align: center;">
                     <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
                 </td>
             </tr>
         <?php else: ?>
-        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $searchData->sortByDesc('created_at'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-
-                <!--[if BLOCK]><![endif]--><?php if($record->status=="Recent"): ?>
+            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $searchData->sortByDesc('created_at'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <!--[if BLOCK]><![endif]--><?php if($record->status == "Recent"): ?>
                     <tr style="background-color: white;">
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
-                            <?php echo e($record->emp->first_name); ?> <?php echo e($record->emp->last_name); ?> <br>
+                            <?php echo e(ucfirst(strtolower($record->emp->first_name))); ?> <?php echo e(ucfirst(strtolower($record->emp->last_name))); ?> <br>
                             <strong style="font-size: 10px;">(<?php echo e($record->emp_id); ?>)</strong>
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
@@ -581,9 +607,9 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                                 -
                             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </td>
-                        <td  style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; border-top: none;">
+                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
                             <?php
-                                $ccToArray = explode(',', $record->cc_to??'-');
+                                $ccToArray = explode(',', $record->cc_to ?? '-');
                             ?>
                             <?php echo e(count($ccToArray) <= 2 ? implode(', ', $ccToArray) : '-'); ?>
 
@@ -593,17 +619,17 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
                         </td>
                     </tr>
+                 
                     <!--[if BLOCK]><![endif]--><?php if(count($ccToArray) > 2): ?>
-                        <tr class="no-border-top" >
-                            <td  class="no-border-top" colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize;">
-                                <div  class="no-border-top" style="margin-left: 10px; font-size: 12px; text-transform: capitalize; ">
+                        <tr class="B" style="border-top:none">
+                            <td  class="" colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; border-top: none;">
+                                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize;">
                                     CC TO: <?php echo e(implode(', ', $ccToArray)); ?>
 
                                 </div>
                             </td>
                         </tr>
                     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                
                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
@@ -668,8 +694,8 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 <!--[if BLOCK]><![endif]--><?php if($record->status=="Completed"): ?>
                     <tr style="background-color: white;">
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
-                            <?php echo e($record->emp->first_name); ?> <?php echo e($record->emp->last_name); ?> <br>
-                            <strong style="font-size: 10px;">(<?php echo e($record->emp_id); ?>)</strong>
+                        <?php echo e(ucfirst(strtolower($record->emp->first_name))); ?> <?php echo e(ucfirst(strtolower($record->emp->last_name))); ?> <br>
+                        <strong style="font-size: 10px;">(<?php echo e($record->emp_id); ?>)</strong>
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
                             <?php echo e($record->category); ?>
@@ -774,8 +800,8 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 <!--[if BLOCK]><![endif]--><?php if($record->status=="Pending"): ?>
                     <tr style="background-color: white;">
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
-                            <?php echo e($record->emp->first_name); ?> <?php echo e($record->emp->last_name); ?> <br>
-                            <strong style="font-size: 10px;">(<?php echo e($record->emp_id); ?>)</strong>
+                        <?php echo e(ucfirst(strtolower($record->emp->first_name))); ?> <?php echo e(ucfirst(strtolower($record->emp->last_name))); ?> <br>
+                        <strong style="font-size: 10px;">(<?php echo e($record->emp_id); ?>)</strong>
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
                             <?php echo e($record->category); ?>

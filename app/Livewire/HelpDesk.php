@@ -93,12 +93,15 @@ class HelpDesk extends Component
         $this->peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->selectedPeople = [];
         $this->selectedPeopleNames = [];
-    
+        $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
         $this->records = HelpDesks::with('emp')
-            ->where('emp_id', $employeeId)
-            ->orWhere('cc_to', 'like', "%$employeeId%")
-            ->orderBy('created_at', 'desc')
-            ->get();
+        ->where(function ($query) use ($employeeId, $employeeName) {
+            $query->where('emp_id', $employeeId)
+                ->orWhere('cc_to', 'LIKE', "%$employeeName%");
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
+       
         $this->peoples = EmployeeDetails::where('company_id', $companyId)
             ->orderBy('first_name')
             ->orderBy('last_name')
@@ -165,8 +168,9 @@ class HelpDesk extends Component
     public function searchActiveHelpDesk()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
+        
         $query = HelpDesks::where(function($query) use ($employeeId) {
-            $query->where('emp_id', $employeeId);
+            $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
         })
         ->where('status', 'Recent');
     
@@ -203,7 +207,7 @@ class HelpDesk extends Component
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $query = HelpDesks::where(function($query) use ($employeeId) {
-            $query->where('emp_id', $employeeId);
+            $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
         })
         ->where('status', 'Pending');
     
@@ -239,7 +243,7 @@ class HelpDesk extends Component
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $query = HelpDesks::where(function($query) use ($employeeId) {
-            $query->where('emp_id', $employeeId);
+            $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
         })
         ->where('status', 'Completed');
     
@@ -512,25 +516,24 @@ class HelpDesk extends Component
             ->get();
 
             $searchData = $this->filterData ?: $this->records;
+            $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
+
             $this->records = HelpDesks::with('emp')
-            ->where('emp_id', $employeeId)
-            ->orWhere('cc_to', 'like', "%$employeeId%")
-            ->orderBy('created_at', 'desc')
-            ->get();
-            // Fetch records for the logged-in employee
-    $this->records = HelpDesks::with('emp')
-    ->where('emp_id', $employeeId)
-    ->orderBy('created_at', 'desc');
+                ->where(function ($query) use ($employeeId, $employeeName) {
+                    $query->where('emp_id', $employeeId)
+                        ->orWhere('cc_to', 'LIKE', "%$employeeName%");
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
 
 // Apply filtering based on the selected category
 if ($this->selectedCategory) {
-    $this->records->whereHas('request', function ($q) {
+    $this->records->where('request', function ($q) {
         $q->where('category', $this->selectedCategory);
     });
 }
 
-// Execute the query to get the final records
- $this->records = $this->records->get();
+
       
             $query = HelpDesks::with('emp')
             ->where('emp_id', $employeeId);

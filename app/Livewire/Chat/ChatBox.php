@@ -197,7 +197,7 @@ class ChatBox extends Component
             'file_path' => $filePath,
             'body' => $this->body,
         ]);
-
+dd($filePath);
         $this->reset('body','file_path','attachment');
          #scroll to bottom
          $this->dispatch('scroll-bottom');

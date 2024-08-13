@@ -147,7 +147,7 @@
 
         <div class="col-md-4 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:auto;overflow-x: hidden;">
 
-            <p style="font-weight: 500;font-size:13px;color:#47515b;">Filters</p>
+            <p style="font-weight: 700;font-size:13px;color:#47515b;">Filters</p>
             <hr style="width: 100%;border-bottom: 1px solid grey;">
 
 
