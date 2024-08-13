@@ -271,7 +271,6 @@
                     </div>
                     <div class="mt-3 people-starred-list-container">
 
-
                         @if ($starredPeoples->isEmpty())
                             <div class="container people-empty-text">Looks like you don't have any records</div>
                         @else
@@ -284,9 +283,20 @@
                                                 <img class="profile-image"
                                                     src="{{ 'data:image/jpeg;base64,' . base64_encode($people->profile) }}">
                                             @else
-                                                <img src="{{ asset('images/user.jpg') }}" class="profile-image"
-                                                    alt="Default Image">
+                                                @if ($people && $people->emp->gender == 'Male')
+                                                    <img class="profile-image"
+                                                        src="{{ asset('images/male-default.png') }}"
+                                                        alt="Default Male Image">
+                                                @elseif($people && $people->emp->gender == 'Female')
+                                                    <img class="profile-image"
+                                                        src="{{ asset('images/female-default.jpg') }}"
+                                                        alt="Default Female Image">
+                                                @else
+                                                    <img class="profile-image" src="{{ asset('images/user.jpg') }}"
+                                                        alt="Default Image">
+                                                @endif
                                             @endif
+
 
                                         </div>
                                         <div class="col-md-9 col-12">
@@ -328,7 +338,16 @@
                                     <img class="people-image"
                                         src="{{ 'data:image/jpeg;base64,' . base64_encode($selectStarredPeoples->profile) }}">
                                 @else
-                                    <img src="{{ asset('images/user.jpg') }}" class="people-image" alt="Default Image">
+                                    @if ($selectStarredPeoples && $selectStarredPeoples->emp->gender == 'Male')
+                                        <img class="people-image" src="{{ asset('images/male-default.png') }}"
+                                            alt="Default Male Image">
+                                    @elseif($selectStarredPeoples && $selectStarredPeoples->emp->gender == 'Female')
+                                        <img class="people-image" src="{{ asset('images/female-default.jpg') }}"
+                                            alt="Default Female Image">
+                                    @else
+                                        <img class="people-image" src="{{ asset('images/user.jpg') }}"
+                                            alt="Default Image">
+                                    @endif
                                 @endif
 
 
@@ -420,9 +439,18 @@
 
                     <div class="col-3">
                         @if (!empty($firstStarredPerson->profile) && $firstStarredPerson->profile !== 'null')
-                            <img class="people-image" src="{{'data:image/jpeg;base64,' . base64_encode($firstStarredPerson->profile)}}">
+                            <img class="people-image"
+                                src="{{ 'data:image/jpeg;base64,' . base64_encode($firstStarredPerson->profile) }}">
                         @else
-                            <img src="{{ asset('images/user.jpg') }}" class="people-image" alt="Default Image">
+                            @if ($firstStarredPerson && $firstStarredPerson->emp->gender == 'Male')
+                                <img class="people-image" src="{{ asset('images/male-default.png') }}"
+                                    alt="Default Male Image">
+                            @elseif($firstStarredPerson && $firstStarredPerson->emp->gender == 'Female')
+                                <img class="people-image" src="{{ asset('images/female-default.jpg') }}"
+                                    alt="Default Female Image">
+                            @else
+                                <img class="people-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                            @endif
                         @endif
 
                     </div>
@@ -554,8 +582,18 @@
                                             <img class="people-profile-image"
                                                 src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
                                         @else
-                                            <img src="{{ asset('images/user.jpg') }}" class="people-profile-image"
-                                                alt="Default Image">
+                                            @if ($people && $people->gender == 'Male')
+                                                <img class="people-profile-image"
+                                                    src="{{ asset('images/male-default.png') }}"
+                                                    alt="Default Male Image">
+                                            @elseif($people && $people->gender == 'Female')
+                                                <img class="people-profile-image"
+                                                    src="{{ asset('images/female-default.jpg') }}"
+                                                    alt="Default Female Image">
+                                            @else
+                                                <img class="people-profile-image"
+                                                    src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                                            @endif
                                         @endif
                                     </div>
                                     <div class="col-md-9 col-12">
@@ -596,7 +634,15 @@
                             <img class="people-image"
                                 src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedPerson->image) }}">
                         @else
-                            <img src="{{ asset('images/user.jpg') }}" class="people-image" alt="Default Image">
+                            @if ($selectedPerson && $selectedPerson->gender == 'Male')
+                                <img class="people-image" src="{{ asset('images/male-default.png') }}"
+                                    alt="Default Male Image">
+                            @elseif($selectedPerson && $selectedPerson->gender == 'Female')
+                                <img class="people-image" src="{{ asset('images/female-default.jpg') }}"
+                                    alt="Default Female Image">
+                            @else
+                                <img class="people-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                            @endif
                         @endif
 
                     </div>
@@ -692,10 +738,16 @@
                             <img class="people-image"
                                 src="{{ 'data:image/jpeg;base64,' . base64_encode($firstPerson->image) }}">
                         @else
-                            <img src="{{ asset('images/user.jpg') }}" class="people-image" alt="Default Image">
+                            @if ($firstPerson && $firstPerson->gender == 'Male')
+                                <img class="people-image" src="{{ asset('images/male-default.png') }}"
+                                    alt="Default Male Image">
+                            @elseif($firstPerson && $firstPerson->gender == 'Female')
+                                <img class="people-image" src="{{ asset('images/female-default.jpg') }}"
+                                    alt="Default Female Image">
+                            @else
+                                <img class="people-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                            @endif
                         @endif
-                        {{-- <img class="people-image" src="{{ Storage::url(optional($firstPerson)->image) }}"
-                            alt=""> --}}
 
                     </div>
                     <div class="col-md-7 col-12">
@@ -821,8 +873,18 @@
                                             <img class="people-profile-image"
                                                 src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
                                         @else
-                                            <img src="{{ asset('images/user.jpg') }}" class="people-profile-image"
-                                                alt="Default Image">
+                                            @if ($people && $people->gender == 'Male')
+                                                <img class="people-profile-image"
+                                                    src="{{ asset('images/male-default.png') }}"
+                                                    alt="Default Male Image">
+                                            @elseif($people && $people->gender == 'Female')
+                                                <img class="people-profile-image"
+                                                    src="{{ asset('images/female-default.jpg') }}"
+                                                    alt="Default Female Image">
+                                            @else
+                                                <img class="people-profile-image"
+                                                    src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                                            @endif
                                         @endif
                                     </div>
                                     <div class="col-md-9 col-12">
@@ -865,7 +927,15 @@
                             <img class="people-image"
                                 src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedMyTeamPerson->image) }}">
                         @else
-                            <img src="{{ asset('images/user.jpg') }}" class="people-image" alt="Default Image">
+                            @if ($selectedMyTeamPerson && $selectedMyTeamPerson->gender == 'Male')
+                                <img class="people-image" src="{{ asset('images/male-default.png') }}"
+                                    alt="Default Male Image">
+                            @elseif($selectedMyTeamPerson && $selectedMyTeamPerson->gender == 'Female')
+                                <img class="people-image" src="{{ asset('images/female-default.jpg') }}"
+                                    alt="Default Female Image">
+                            @else
+                                <img class="people-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                            @endif
                         @endif
                     </div>
                     <div class="col-md-7 col-12">
@@ -959,91 +1029,94 @@
                             <img class="people-image"
                                 src="{{ 'data:image/jpeg;base64,' . base64_encode($firstPerson->image) }}">
                         @else
-                            <img src="{{ asset('images/user.jpg') }}" class="people-image" alt="Default Image">
+                            @if ($firstPerson && $firstPerson->gender == 'Male')
+                                <img class="people-image" src="{{ asset('images/male-default.png') }}"
+                                    alt="Default Male Image">
+                            @elseif($firstPerson && $firstPerson->gender == 'Female')
+                                <img class="people-image" src="{{ asset('images/female-default.jpg') }}"
+                                    alt="Default Female Image">
+                            @else
+                                <img class="people-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                            @endif
                         @endif
-                        {{-- <img class="people-image" src="{{ Storage::url(optional($firstPerson)->image) }}"
-                            alt=""> --}}
-
-                    </div>
-                    <div class="col-md-7 col-12">
-                        <div class="people-selectedperson-detail-container">
-                            <div class="d-flex align-items-center">
-                                <h1 class="people-selectedperson-name">
-                                    {{ ucwords(strtolower(optional($firstPerson)->first_name)) }}
-                                    {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
-                                <a class="people-selectedperson-anchortag"
-                                    wire:click="toggleStar('{{ optional($firstPerson)->emp_id }}')">
-
-                                    <i
-                                        class="fa fa-star {{ $starredPerson && $starredPerson->starred_status == 'starred' ? 'people-text-blue' : 'text-white people-text-white' }} people-selected-person-star"></i>
-
-                                </a>
-
-                            </div>
-                            @php
-                                $jobTitle = optional($firstPerson)->job_role;
-                                $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
-                                $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
-                                $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
-                            @endphp
-                            <p class="mb-0 people-selectedperson-empid">{{ $convertedTitle }}
-                                (#{{ optional($firstPerson)->emp_id }})</p>
-                        </div>
-                        <br>
-                        <div class="d-flex align-items-center">
-                            <span class="people-headings">CONTACT DETAILS</span>
-                            <hr class="people-horizontal-line">
-                        </div>
-                        <br>
-                        <div class="row">
-                            <label class="col-7 people-label">Mobile Number</label>
-                            <label
-                                class="col-5 people-value">{{ optional($firstPerson)->emergency_contact ?? '-' }}</label>
-                        </div>
-                        <br>
-                        <div class="d-flex align-items-center">
-                            <span class="people-headings">CATEGORY</span>
-                            <hr class="people-horizontal-line">
-                        </div>
-                        <br>
-                        <div class="row">
-                            <label class="col-7 people-label">Location</label>
-                            <label
-                                class="col-5 people-value">{{ optional($firstPerson)->job_location ?? '-' }}</label>
-                        </div>
-                        <br>
-                        <div class="d-flex align-items-center">
-                            <span class="people-headings">OTHER INFORMATION</span>
-                            <hr class="people-horizontal-line">
-                        </div>
-                        <br>
-                        <div class="row">
-                            <label class="col-7 people-label">Joining Date</label>
-                            <label
-                                class="col-5 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '-' }}</label>
-                        </div>
-                        <div class="row">
-                            <label class="col-7 people-label">Date Of Birth</label>
-                            <label
-                                class="col-5 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '-' }}</label>
-                        </div>
-
-                    </div>
-
-                </div>
-            @else
-                <div class="col-12">
-                    <div
-                        class="d-flex flex-column justify-content-center align-items-center h-100 people-nodata-container">
-                        <div class="d-flex flex-column align-items-center">
-                            <img class="people-nodata-img" src="{{ asset('images/nodata.png') }}" alt="">
-                            <p class="people-empty-text">No People Found!</p>
-                        </div>
-                    </div>
-                </div>
-            @endif
 
         </div>
+        <div class="col-md-7 col-12">
+            <div class="people-selectedperson-detail-container">
+                <div class="d-flex align-items-center">
+                    <h1 class="people-selectedperson-name">
+                        {{ ucwords(strtolower(optional($firstPerson)->first_name)) }}
+                        {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
+                    <a class="people-selectedperson-anchortag"
+                        wire:click="toggleStar('{{ optional($firstPerson)->emp_id }}')">
+
+                        <i
+                            class="fa fa-star {{ $starredPerson && $starredPerson->starred_status == 'starred' ? 'people-text-blue' : 'text-white people-text-white' }} people-selected-person-star"></i>
+
+                    </a>
+
+                </div>
+                @php
+                    $jobTitle = optional($firstPerson)->job_role;
+                    $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
+                    $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
+                    $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
+                @endphp
+                <p class="mb-0 people-selectedperson-empid">{{ $convertedTitle }}
+                    (#{{ optional($firstPerson)->emp_id }})</p>
+            </div>
+            <br>
+            <div class="d-flex align-items-center">
+                <span class="people-headings">CONTACT DETAILS</span>
+                <hr class="people-horizontal-line">
+            </div>
+            <br>
+            <div class="row">
+                <label class="col-7 people-label">Mobile Number</label>
+                <label class="col-5 people-value">{{ optional($firstPerson)->emergency_contact ?? '-' }}</label>
+            </div>
+            <br>
+            <div class="d-flex align-items-center">
+                <span class="people-headings">CATEGORY</span>
+                <hr class="people-horizontal-line">
+            </div>
+            <br>
+            <div class="row">
+                <label class="col-7 people-label">Location</label>
+                <label class="col-5 people-value">{{ optional($firstPerson)->job_location ?? '-' }}</label>
+            </div>
+            <br>
+            <div class="d-flex align-items-center">
+                <span class="people-headings">OTHER INFORMATION</span>
+                <hr class="people-horizontal-line">
+            </div>
+            <br>
+            <div class="row">
+                <label class="col-7 people-label">Joining Date</label>
+                <label
+                    class="col-5 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '-' }}</label>
+            </div>
+            <div class="row">
+                <label class="col-7 people-label">Date Of Birth</label>
+                <label
+                    class="col-5 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '-' }}</label>
+            </div>
+
+        </div>
+
     </div>
-    <!-- End of Everyone tab content -->
+@else
+    <div class="col-12">
+        <div class="d-flex flex-column justify-content-center align-items-center h-100 people-nodata-container">
+            <div class="d-flex flex-column align-items-center">
+                <img class="people-nodata-img" src="{{ asset('images/nodata.png') }}" alt="">
+                <p class="people-empty-text">No People Found!</p>
+            </div>
+        </div>
+    </div>
+@endif
+
+</div>
+</div>
+<!-- End of Everyone tab content -->
 @endif

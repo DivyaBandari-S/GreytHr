@@ -22,6 +22,7 @@ class Tasks extends Component
     public $status = false;
     public $searchTerm = '';
     public $showDialog = false;
+    public $showViewFileDialog = false;
     public $showModal = false;
     public $employeeDetails;
     public $emp_id;
@@ -370,6 +371,18 @@ class Tasks extends Component
     public function show()
     {
         $this->showDialog = true;
+    }
+    public $recordId;
+    public $viewrecord;
+    public function showViewFile($recordId)
+    {
+        $this->$recordId=$recordId;
+        $this->viewrecord = Task::find($recordId);
+        $this->showViewFileDialog = true;
+    }
+    public function closeViewFile()
+    {
+        $this->showViewFileDialog = false;
     }
 
     public function close()
