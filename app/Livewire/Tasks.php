@@ -322,7 +322,7 @@ class Tasks extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
         $this->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
         ]);
         
         // Validate and upload the image file
@@ -332,8 +332,7 @@ class Tasks extends Component
             $this->image_path = $imagePath;
             $this->isLoadingImage = false;
         }
-       
-        
+
 
         Task::create([
             'emp_id' => $this->employeeDetails->emp_id,
@@ -372,7 +371,6 @@ class Tasks extends Component
     {
         $this->showDialog = true;
     }
-
 
     public function close()
     {
