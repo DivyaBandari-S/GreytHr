@@ -333,8 +333,7 @@ class Tasks extends Component
             $this->image_path = $imagePath;
             $this->isLoadingImage = false;
         }
-       
-        
+
 
         Task::create([
             'emp_id' => $this->employeeDetails->emp_id,
@@ -385,7 +384,6 @@ class Tasks extends Component
     {
         $this->showViewFileDialog = false;
     }
-
 
     public function close()
     {

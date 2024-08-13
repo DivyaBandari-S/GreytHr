@@ -37,6 +37,7 @@ use App\Livewire\AttendanceMuster;
 use App\Livewire\AttendenceMasterDataNew;
 use App\Livewire\Chat\Chat;
 use App\Livewire\EmployeeSwipesData;
+use Illuminate\Support\Facades\Response;
 use App\Livewire\HelpDesk;
 use App\Livewire\Home;
 use App\Livewire\Peoples;
@@ -102,6 +103,7 @@ use App\Livewire\ShiftRoaster;
 use App\Livewire\SickLeaveBalances;
 use App\Livewire\Test;
 use App\Livewire\Ytdreport;
+use App\Models\Message;
 use App\Models\SalaryRevision;
 use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
@@ -288,7 +290,14 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/investment', Investment::class)->name('proof-of-investment');
     Route::get('/documents', Documents::class);
     Route::get('/ytd', Ytdreport::class)->name('ytdreport');
-
+    Route::get('download/file/{id}', function ($id) {
+        $message = Message::findOrFail($id);
+    
+        return Response::make($message->file_path, 200, [
+            'Content-Type' => 'application/octet-stream',
+            'Content-Disposition' => 'attachment; filename="' . basename($message->file_path) . '"',
+        ]);
+    })->name('download.file');
 
     //leave module
     Route::get('/leave-page', LeavePage::class)->name('leave-page');

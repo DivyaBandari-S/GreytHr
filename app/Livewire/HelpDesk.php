@@ -93,16 +93,30 @@ class HelpDesk extends Component
         $this->peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->selectedPeople = [];
         $this->selectedPeopleNames = [];
-    
-        $this->records = HelpDesks::all();
+        $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
+        $this->records = HelpDesks::with('emp')
+        ->where(function ($query) use ($employeeId, $employeeName) {
+            $query->where('emp_id', $employeeId)
+                ->orWhere('cc_to', 'LIKE', "%$employeeName%");
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
+       
         $this->peoples = EmployeeDetails::where('company_id', $companyId)
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
+   
         // Group categories by their request
-        $this->requestCategories = $requestCategories->groupBy('Request')->map(function($group) {
-            return $group->unique('category'); // Ensure categories are unique
-        });
+        if ($requestCategories->isNotEmpty()) {
+            // Group categories by their request
+            $this->requestCategories = $requestCategories->groupBy('Request')->map(function($group) {
+                return $group->unique('category'); // Ensure categories are unique
+            });
+        } else {
+            // Handle the case where there are no requests
+            $this->requestCategories = collect(); // Initialize as an empty collection
+        }
     }
     
     
@@ -154,8 +168,9 @@ class HelpDesk extends Component
     public function searchActiveHelpDesk()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
+        
         $query = HelpDesks::where(function($query) use ($employeeId) {
-            $query->where('emp_id', $employeeId);
+            $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
         })
         ->where('status', 'Recent');
     
@@ -192,7 +207,7 @@ class HelpDesk extends Component
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $query = HelpDesks::where(function($query) use ($employeeId) {
-            $query->where('emp_id', $employeeId);
+            $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
         })
         ->where('status', 'Pending');
     
@@ -228,7 +243,7 @@ class HelpDesk extends Component
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $query = HelpDesks::where(function($query) use ($employeeId) {
-            $query->where('emp_id', $employeeId);
+            $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
         })
         ->where('status', 'Completed');
     
@@ -358,7 +373,7 @@ class HelpDesk extends Component
                 'subject' => $this->subject,
                 'description' => $this->description,
                 'file_path' => $filePath,
-                'cc_to' => $this->cc_to,
+                'cc_to' => $this->cc_to??'-',
                 'priority' => $this->priority,
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
@@ -494,32 +509,32 @@ class HelpDesk extends Component
         $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
       
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
-        $this->records = HelpDesks::all();
+     
         $this->peoples = EmployeeDetails::where('company_id', $companyId)
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
 
             $searchData = $this->filterData ?: $this->records;
-        $this->record = HelpDesks::all();
-    
-        if ($this->selectedCategory) {
-            // Filter records where category matches selectedCategory
-            $this->record->where('request', function ($q) {
-                $q->where('category', $this->selectedCategory);
-            });
-        }
-        $employee = auth()->guard('emp')->user();
-        $employeeId = $employee->emp_id;
-        $employeeName = $employee->first_name . ' ' . $employee->last_name . ' #(' . $employeeId . ')';
+            $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
 
-        $this->records = HelpDesks::with('emp')
-            ->where(function ($query) use ($employeeId, $employeeName) {
-                $query->where('emp_id', $employeeId);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
-            
+            $this->records = HelpDesks::with('emp')
+                ->where(function ($query) use ($employeeId, $employeeName) {
+                    $query->where('emp_id', $employeeId)
+                        ->orWhere('cc_to', 'LIKE', "%$employeeName%");
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+// Apply filtering based on the selected category
+if ($this->selectedCategory) {
+    $this->records->where('request', function ($q) {
+        $q->where('category', $this->selectedCategory);
+    });
+}
+
+
+      
             $query = HelpDesks::with('emp')
             ->where('emp_id', $employeeId);
 
@@ -534,7 +549,7 @@ class HelpDesk extends Component
 
         return view('livewire.help-desk', [
        'records' => $this->records, 
-        'searchData' => $searchData,'requestCategories' => $this->requestCategories,   'peopleData' => $this->peopleData ,
+         'searchData' => $this->filterData ?: $this->records,'requestCategories' => $this->requestCategories,   'peopleData' => $this->peopleData ,
         ]);
     }
 }

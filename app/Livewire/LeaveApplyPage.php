@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
+use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,10 @@ class LeaveApplyPage extends Component
     public $selectedManager = [];
     public $searchTerm = '';
     public $filter = '';
+    public $fromDate;
+    public $fromSession;
+    public $toSession;
+    public $toDate;
     public $selectedCcTo = [];
     public $selectedCCEmployees = [];
     protected $rules = [
@@ -74,6 +79,7 @@ class LeaveApplyPage extends Component
         $this->searchTerm = '';
         $this->filter = '';
         $this->selectedYear = Carbon::now()->format('Y');
+
     }
 
     public function validateField($propertyName)
@@ -361,7 +367,7 @@ class LeaveApplyPage extends Component
             }
 
             // Check for holidays in the selected date range
-            $holidays = HolidayCalender::where(function ($query) {
+            $holidays = HolidayCalendar::where(function ($query) {
                 $query->whereBetween('date', [$this->from_date, $this->to_date])
                     ->orWhere(function ($q) {
                         $q->where('date', '>=', $this->from_date)

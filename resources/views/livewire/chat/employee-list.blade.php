@@ -7,12 +7,12 @@
                     <h6 class="text-start text-5xl font-bold py-3 px-4">Departments</h6>
                     <select class="form-control mb-4" wire:model="selectedDepartment" wire:change="filter">
                         <option value="">All Departments</option>
-
+ 
                     </select>
                 </div>
             </div>
         </div>
-
+ 
         <!-- Right Side: Search and Employee Details -->
         <div class="col-md-9">
             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div>
-
+ 
             <div class="row m-0 p-0 justify-content-center"
                 style="overflow-y: auto; height: 100vh;">
                 @forelse ($employeeDetails as $key => $employee)
@@ -63,7 +63,7 @@
                                     <span>Employee Id</span>
                                     <span>Department</span>
                                     <span>Join Date</span>
-
+ 
                                 </div>
                                 <div class="chat-emp-details d-flex flex-column align-items-end gap-1">
                                     <span>{{ $employee->emp_id }}</span>
@@ -102,3 +102,4 @@
         </div>
     </div>
 </div>
+ 

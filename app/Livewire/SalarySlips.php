@@ -9,6 +9,8 @@ use App\Models\SalaryRevision;
 use App\Models\EmpBankDetail;
 use DateTime;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+
 class SalarySlips extends Component
 {
     public $employeeDetails;
@@ -35,6 +37,7 @@ class SalarySlips extends Component
     }
     public function downloadPdf()
     {
+       
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
         $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
@@ -46,14 +49,16 @@ class SalarySlips extends Component
             'empBankDetails' => $this->empBankDetails,
             'netPay' => $this->calculateNetPay()
         ];
-    
-        // Generate PDF using the fetched data
-        $pdf = Pdf::loadView('download-pdf', $data);
   
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, 'salary-slips.pdf');
+             // Generate PDF using the fetched data
+             $pdf = Pdf::loadView('download-pdf', [
+              $data
+            ]);
+        return response()->streamDownload(function() use($pdf){
+            echo $pdf->stream();
+        }, 'payslip.pdf');
+    
+       
     }
     
 
@@ -132,21 +137,19 @@ class SalarySlips extends Component
     {
     // Get the current year and month
     $currentYear = date('Y');
-    $currentMonth = date('n');
+    $lastMonth = date('n')-1;
 
     // Generate options for months from January of the previous year to the current month of the current year
     $options = [];
-    for ($year = $currentYear - 1; $year <= $currentYear; $year++) {
-        $startMonth = ($year == $currentYear - 1) ? 1 : 13; // Start from January of the previous year or current month
-        $endMonth = ($year == $currentYear) ? $currentMonth : 12; // End at the current month
+    for ($year = $currentYear; $year >= $currentYear - 1; $year--) {
+        $startMonth = ($year == $currentYear) ? $lastMonth : 12; // Start from the current month or December
+        $endMonth = ($year == $currentYear - 1) ? 1 : 1; // End at January
 
-        for ($month = $startMonth; $month <= $endMonth; $month++) {
+        for ($month = $startMonth; $month >= $endMonth; $month--) {
             // Format the month and year to display
-            $dateObj   = DateTime::createFromFormat('!m', $month);
+            $dateObj = DateTime::createFromFormat('!m', $month);
             $monthName = $dateObj->format('F');
-            $displayYear = ($month == 13) ? $year + 1 : $year; // Display next year for January of the next year
-
-            $options["$year-$month"] = "$monthName $displayYear";
+            $options["$year-$month"] = "$monthName $year";
         }
     }
 
