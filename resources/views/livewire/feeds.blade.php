@@ -1392,51 +1392,52 @@
   @foreach ($currentCardComments as $comment)
     <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
         
-        @php
-          
-          
+    @php
+    // Determine if it's an employee or HR and assign the image URL
+    if ($comment->employee) {
+        $employee = $comment->employee;
+        $imageUrl = $employee->image_url; // Assuming 'image_url' is directly in Employee model
+    } elseif ($comment->hr) {
+        $imageUrl = $comment->hr->image ? asset('storage/' . $comment->hr->image) : null;
+    } else {
+        $imageUrl = null;
+    }
 
-            // Determine if it's an employee or HR
-            if ($comment->employee) {
-                $employee = $comment->employee;
-                $imageUrl = $employee->image_url; // Assuming 'image_url' is directly in Employee model
-            } elseif ($comment->hr) {
-                $imageUrl = $comment->hr->image ? asset('storage/' . $comment->hr->image) : null;
-            }
+    // Determine default images based on gender if no image URL is available
+    if (!$imageUrl) {
+        $gender = $comment->employee->gender ?? $comment->hr->gender;
 
-            // Determine default images based on gender if no image URL is available
-            if (!$imageUrl) {
-                $gender = $comment->employee->gender ?? $comment->hr->gender ;
+        if ($gender == "Male") {
+            $imageUrl = "https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png";
+        } elseif ($gender == "Female") {
+            $imageUrl = "https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW";
+        } else {
+            $imageUrl = "https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain";
+        }
+    }
+@endphp
 
-                if ($gender == "Male") {
-                    $imageUrl = "https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png";
-                } elseif ($gender == "Female") {
-                    $imageUrl = "https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW";
-                } else {
-                    $imageUrl = "https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain";
-                }
-            }
-        @endphp
+<img style="border-radius: 50%;" height="25" width="25" src="{{ $imageUrl }}" alt="Profile Image" 
+     onerror="this.onerror=null;this.src='{{ asset('images/user.jpg')}}';">
 
-        <img style="border-radius: 50%;" height="25" width="25" src="{{ $imageUrl }}" alt="Profile Image">
+<div class="comment" style="font-size: 10px;">
+    @if($comment->employee)
+        <b style="color:#778899; font-weight:500; font-size: 10px;">
+            {{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}
+        </b>
+    @elseif($comment->hr)
+        <b style="color:#778899; font-weight:500; font-size: 10px;">
+            {{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}
+        </b>
+    @else
+        <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+    @endif
 
-        <div class="comment" style="font-size: 10px;">
-            @if($comment->employee)
-                <b style="color:#778899; font-weight:500; font-size: 10px;">
-                    {{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}
-                </b>
-            @elseif($comment->hr)
-                <b style="color:#778899; font-weight:500; font-size: 10px;">
-                    {{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}
-                </b>
-            @else
-                <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
-            @endif
+    <p class="mb-0" style="font-size: 11px;">
+        {{ ucfirst($comment->addcomment) }}
+    </p>
+</div>
 
-            <p class="mb-0" style="font-size: 11px;">
-                {{ ucfirst($comment->addcomment) }}
-            </p>
-        </div>
     </div>
 @endforeach
 
