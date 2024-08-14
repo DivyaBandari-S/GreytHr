@@ -7,7 +7,6 @@
                     <h6 class="text-start text-5xl font-bold py-3 px-4">Departments</h6>
                     <select class="form-control mb-4" wire:model="selectedDepartment" wire:change="filter">
                         <option value="">All Departments</option>
- 
                     </select>
                 </div>
             </div>

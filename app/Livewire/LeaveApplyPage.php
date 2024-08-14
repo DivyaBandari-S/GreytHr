@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
+use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -42,7 +43,7 @@ class LeaveApplyPage extends Component
     public $cc_to;
     public $showCcRecipents = false;
     public $loginEmpManagerId;
-    public $probationDetails;
+    public $employee;
     public $managerFullName = [];
     public $ccRecipients = [];
     public $selectedManager = [];
@@ -54,6 +55,7 @@ class LeaveApplyPage extends Component
     public $toDate;
     public $selectedCcTo = [];
     public $selectedCCEmployees = [];
+    public $showCasualLeaveProbation;
     protected $rules = [
         'leave_type' => 'required',
         'from_date' => 'required|date',
@@ -79,7 +81,10 @@ class LeaveApplyPage extends Component
         $this->searchTerm = '';
         $this->filter = '';
         $this->selectedYear = Carbon::now()->format('Y');
-
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employee = EmployeeDetails::where('emp_id', $employeeId)->first();
+        // Determine if the dropdown option should be displayed
+        $this->showCasualLeaveProbation = $this->employee && !$this->employee->probation_period && !$this->employee->confirmation_date;
     }
 
     public function validateField($propertyName)
@@ -164,6 +169,7 @@ class LeaveApplyPage extends Component
                 ->groupBy('emp_id', 'image')
                 ->select(
                     'emp_id',
+                    'gender',
                     'image',
                     DB::raw('MIN(CONCAT(first_name, " ", last_name)) as full_name')
                 )
@@ -352,7 +358,7 @@ class LeaveApplyPage extends Component
                             ->where('to_date', '<=', $this->to_date);
                     });
                 })
-                ->whereIn('status', ['approved', 'pending'])
+                ->whereIn('status', ['approved', 'Pending'])
                 ->exists();
 
             if ($overlappingLeave) {
@@ -454,11 +460,11 @@ class LeaveApplyPage extends Component
 
             if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
                 session()->flash('message', 'Leave application submitted successfully!');
-                return redirect()->to('/leave-page');
+                return redirect()->to('/leave-form-page');
             } else {
                 logger('Error creating LeaveRequest', ['emp_id' => $employeeId]);
                 session()->flash('error', 'Error submitting leave application. Please try again.');
-                return redirect()->to('/leave-page');
+                return redirect()->to('/leave-form-page');
             }
         } catch (\Exception $e) {
             if ($e instanceof \Illuminate\Database\QueryException) {
@@ -476,7 +482,7 @@ class LeaveApplyPage extends Component
                 Log::error("General error: " . $e->getMessage());
                 session()->flash('error', 'Failed to submit leave application. Please try again later.');
             }
-            return redirect()->to('/leave-page');
+            return redirect()->to('/leave-form-page');
         }
     }
     public function handleFieldUpdate($field)
@@ -520,7 +526,6 @@ class LeaveApplyPage extends Component
             Log::error('Error in openCcRecipientsContainer method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while opening CC recipients container. Please try again later.');
         }
-
     }
 
     public function selectLeave()
@@ -690,7 +695,8 @@ class LeaveApplyPage extends Component
             'empManagerDetails' => $empManagerDetails,
             'loginEmpManager' => $this->loginEmpManager,
             'managerFullName' => $this->managerFullName,
-            'ccRecipients' => $this->ccRecipients
+            'ccRecipients' => $this->ccRecipients,
+            'showCasualLeaveProbation' =>$this->showCasualLeaveProbation
         ]);
     }
 }

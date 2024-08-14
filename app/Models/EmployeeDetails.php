@@ -17,6 +17,7 @@ class EmployeeDetails extends Authenticatable
     use HasFactory;
     protected $primaryKey = 'emp_id';
     public $incrementing = false;
+    protected $table = 'employee_details';
     protected $fillable = [
         'emp_id',
         'company_id',
