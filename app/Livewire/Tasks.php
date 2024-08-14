@@ -59,6 +59,7 @@ class Tasks extends Component
     public $search = '';
     public $closedSearch = '';
     public $filterData;
+    public $showAlert = false;
   
     public function setActiveTab($tab)
     {
@@ -74,6 +75,11 @@ class Tasks extends Component
             $this->end = now()->endOfYear()->format('Y-m-d');
         }
         $this->loadTasks();
+    }
+    public function hideAlert()
+    {
+        $this->showAlert = false;
+        session()->forget('showAlert');
     }
 
     public function loadTasks()
@@ -228,6 +234,9 @@ class Tasks extends Component
         $this->year = Carbon::now()->format('Y');
         $this->start = now()->startOfYear()->format('Y-m-d');
         $this->end = now()->endOfYear()->format('Y-m-d');
+        if (session()->has('showAlert')) {
+            $this->showAlert = session('showAlert');
+        }
     }
 
     public function selectPerson($personId)
@@ -279,7 +288,10 @@ class Tasks extends Component
             $task->update(['status' => 'Completed']);
         }
         session()->flash('message', 'Task closed successfully!');
+        session()->flash('showAlert', true);
+
         return redirect()->to('/tasks');
+      
     }
 
     public function closeForTasks($taskId)
@@ -290,7 +302,10 @@ class Tasks extends Component
             $task->update(['status' => 'Open']);
         }
         session()->flash('message', 'Task has been Re-Opened.');
+        session()->flash('showAlert', true);
+      
         return redirect()->to('/tasks');
+   
     }
 
     public function autoValidate()
@@ -363,7 +378,9 @@ class Tasks extends Component
 
         $this->reset();
         session()->flash('message', 'Task created successfully!');
+        session()->flash('showAlert', true);
         return redirect()->to('/tasks');
+     
     }
 
     public $client_id, $project_name, $image_path;
@@ -443,6 +460,8 @@ class Tasks extends Component
         ]);
 
         session()->flash('comment_message', 'Comment updated successfully.');
+        $this->showAlert = true;
+
 
         // Reset the edit state
         $this->editCommentId = null;
@@ -464,6 +483,8 @@ class Tasks extends Component
         $this->newComment = '';
         $this->showModal = false;
         session()->flash('message', 'Comment added successfully.');
+        $this->showAlert = true;
+       
     }
     public function updatedNewComment($value)
     {
@@ -477,6 +498,7 @@ class Tasks extends Component
             $comment = TaskComment::findOrFail($commentId);
             $comment->delete();
             session()->flash('comment_message', 'Comment deleted successfully.');
+            $this->showAlert = true;
             $this->fetchTaskComments($this->taskId);
         } catch (\Exception $e) {
             // Handle any exceptions that occur during the deletion process
