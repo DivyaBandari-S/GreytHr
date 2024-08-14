@@ -7,7 +7,6 @@
         .people-search-input {
             font-size: 0.75rem;
             border-radius: 5px 0 0 5px;
-            cursor: pointer;
             height: 32px;
         }
 
@@ -40,10 +39,16 @@
                 margin-left: 0px;
             }
         }
+
+        .viewfile {
+            color: var(--main-heading-color);
+            font-size: var(--main-headings-font-size);
+            font-weight: 500;
+        }
     </style>
 
     <div class="container"
-        style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow-x: hidden;padding-bottom: 15px;">
+        style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow-x: hidden;padding-bottom: 15px; position: relative;">
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
@@ -59,38 +64,17 @@
             </ul>
         </div>
 
+        <div id="alert-container" class="d-flex justify-content-center alert-container " wire:poll.5s="hideAlert" style="position: sticky; top: 13%; z-index: 10; width: 100%;" >
 
-
-
-
-
-
-        <div style="display: flex; justify-content: center; align-items: center;margin-top:5px">
-            @if (session()->has('message'))
-                <div id="flash-message"
-                    style="width: 90%; margin: 0.2rem; padding: 0.25rem; background-color: #f0fff4; border: 1px solid #68d391; color: #38a169; border-radius: 0.25rem; text-align: center;"
-                    class="success-message">
+            @if ($showAlert)
+                <p class="alert alert-success" role="alert" style=" font-weight: 400;width:fit-content;padding:10px;border-radius:5px" >
                     {{ session('message') }}
-                </div>
+                    <span style="font-weight:500;margin:0px 10px; cursor: pointer; " wire:click='hideAlert'>x</span>
+                </p>
             @endif
         </div>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    var flashMessage = document.getElementById('flash-message');
-
-                    if (flashMessage) {
-                        flashMessage.style.transition = 'opacity 0.5s ease';
-                        flashMessage.style.opacity = '0';
-                        setTimeout(function() {
-                            flashMessage.remove();
-                        }, 500); // Delay to allow the fade-out effect
-                    }
-                }, 5000); // 5000 milliseconds = 5 seconds
-            });
-
-
             $(document).ready(function() {
                 $('#date_range').datepicker({
                     format: 'yyyy-mm-dd',
@@ -98,7 +82,7 @@
                     endDate: '+0d',
                     todayHighlight: true,
                     multidateSeparator: ' to ',
-                    inputs: $('#start_date, #end_date'), // Adding this line to link both inputs
+                    inputs: $('#start_date, #end_date'), 
                     inputs: {
                         start: $('#start_date'),
                         end: $('#end_date')
@@ -128,7 +112,7 @@
                     <!-- Search Box -->
                     <div class="input-group people-input-group-container">
                         <input wire:model="search" type="text" class="form-control people-search-input"
-                            placeholder="Search anything.." aria-label="Search" aria-describedby="basic-addon1">
+                            placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="searchActiveTasks" class="people-search-btn" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
@@ -314,7 +298,7 @@
                     <!-- Search Box -->
                     <div class="input-group people-input-group-container">
                         <input wire:model="closedSearch" type="text" class="form-control people-search-input"
-                            placeholder="Search anything.." aria-label="Search" aria-describedby="basic-addon1">
+                            placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="searchCompletedTasks" class="people-search-btn" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
@@ -898,11 +882,17 @@
         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title viewfile">View File</h5>
+                    </div>
                     <div class="modal-body text-center">
                         <img src="{{ 'data:image/jpeg;base64,' . base64_encode($viewrecord->file_path) }}"
-                            class="img-fluid" alt="Image preview">
+                            class="img-fluid" alt="Image preview"
+                            >
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="submit-btn"
+                            wire:click.prevent="downloadImage">Download</button>
                         <button type="button" class="cancel-btn1" wire:click="closeViewFile">Close</button>
                     </div>
                 </div>
@@ -916,19 +906,22 @@
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color: #eceff3;">
+                    <div class="modal-header d-flex justify-content-between" style="background-color: rgb(2, 17, 79); color: white; height: 40px; padding: 8px; position: relative;">
                         <h6 class="modal-title" id="exampleModalLongTitle">Add Comment</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            wire:click="closeModal">
+                            wire:click="closeModal" style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    @if (session()->has('comment_message'))
-                        <div id="flash-comment-message"
-                            style="margin: 0.2rem; padding: 0.25rem; background-color: #f0fff4; border: 1px solid #68d391; color: #38a169; border-radius: 0.25rem; text-align: center;">
-                            {{ session('comment_message') }}
-                        </div>
-                    @endif
+                    <div id="alert-container" class="d-flex justify-content-center alert-container " wire:poll.30s="hideAlert" style="position: sticky; top: 12%; z-index: 10; width: 100%;" >
+
+                        @if ($showAlert)
+                            <p class="alert alert-success" role="alert" style=" font-weight: 400;width:fit-content;padding:10px;border-radius:5px; margin-top: 20px;" >
+                                {{ session('comment_message') }}
+                                <span style="font-weight:500;margin:0px 10px; cursor: pointer; " wire:click='hideAlert'>x</span>
+                            </p>
+                        @endif
+                    </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="addComment">
                             <div class="form-group">

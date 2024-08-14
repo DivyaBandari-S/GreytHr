@@ -17,7 +17,6 @@
         .people-search-input {
             font-size: 0.75rem !important;
             border-radius: 5px 0 0 5px;
-            cursor: pointer;
             height: 32px;
         }
 
@@ -280,19 +279,19 @@
                                     <div class="row align-items-center">
                                         <div class="col-3">
                                             @if (!empty($people->profile) && $people->profile !== 'null')
-                                                <img class="profile-image"
+                                                <img class="people-profile-image"
                                                     src="{{ 'data:image/jpeg;base64,' . base64_encode($people->profile) }}">
                                             @else
                                                 @if ($people && $people->emp->gender == 'Male')
-                                                    <img class="profile-image"
+                                                    <img class="people-profile-image"
                                                         src="{{ asset('images/male-default.png') }}"
                                                         alt="Default Male Image">
                                                 @elseif($people && $people->emp->gender == 'Female')
-                                                    <img class="profile-image"
+                                                    <img class="people-profile-image"
                                                         src="{{ asset('images/female-default.jpg') }}"
                                                         alt="Default Female Image">
                                                 @else
-                                                    <img class="profile-image" src="{{ asset('images/user.jpg') }}"
+                                                    <img class="people-profile-image" src="{{ asset('images/user.jpg') }}"
                                                         alt="Default Image">
                                                 @endif
                                             @endif
