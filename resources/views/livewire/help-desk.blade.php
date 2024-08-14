@@ -123,18 +123,16 @@
 </div>
 
 <div class="row mt-2">
-                            <div class="col">
-                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
-                                    <i class="fa fa-paperclip"></i> Attach Image
-                                </label>
-                            </div>
+<div class="form-group">
+<input type="file" wire:model="file_path" id="file_path" class="form-control">
+
+@error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+
+    </div>
                             @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
-                        <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
-
-                        </div>
+                     
                         <div class="form-group mt-2">
     <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
     <div class="input" class="form-control placeholder-small">
@@ -212,36 +210,51 @@
 </div>
 
 
-
-            @if ($peopleData && $peopleData->isEmpty())
-                <div class="container" style="text-align: center; color: white; font-size: 12px;margin-top:5px"> No People Found
+@if ($peopleData && $peopleData->isEmpty())
+    <div class="container" style="text-align: center; color: white; font-size: 12px; margin-top: 5px">
+        No People Found
+    </div>
+@else
+    @foreach($peopleData->sortBy(function($person) {
+        return $person->first_name . ' ' . $person->last_name;
+    }) as $people)
+        <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px; margin-top: 5px">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                 </div>
-            @else
-            @foreach($peopleData->sortBy(function($person) {
-    return $person->first_name . ' ' . $person->last_name;
-}) as $people)
-                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;margin-top:5px">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
-                            </div>
-                            <div class="col-auto">
-                            @if (!empty($people->image) && $people->image !== 'null')
-                                            <img class="people-profile-image"
-                                                src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
-                                        @else
-                                            <img src="{{ asset('images/user.jpg') }}" class="people-profile-image"
-                                                alt="Default Image">
-                                        @endif
-                            </div>
-                            <div class="col">
-                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                            </div>
-                        </div>
-                    </label>
-                @endforeach
-            @endif
+                <div class="col-auto">
+                    @if (!empty($people->image) && $people->image !== 'null')
+                        <!-- Display the actual image if available -->
+                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                    @else
+                        <!-- If image is not available, check the gender and show default images -->
+
+                            @php
+                                // Debugging step to check gender
+                                $gender = $people->gender ?? null;
+                            @endphp
+                            @if ($gender === 'Male')
+                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                            @elseif($gender === 'Female')
+                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                          
+                        @else
+                            <!-- Fallback if emp is not available -->
+                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                        @endif
+                    @endif
+                </div>
+                <div class="col">
+                    <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                    <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                </div>
+            </div>
+        </label>
+    @endforeach
+@endif
+
+
         </div>
         @endif
     </div>
@@ -352,7 +365,7 @@
                     </div>
                     <button type="button" style="border-radius: 50%; color: #778899; border: 1px solid #778899;" class="add-button" wire:click="toggleRotation">
                         <div class="icon-container">
-                            <i class="bx bx-plus" style="color: #778899;"></i>
+                            <i class="bx bx-plus" style="back: #778899;"></i>
                         </div>
                     </button>
                     <span style="color: #778899; font-size: 12px;">Add</span>
@@ -412,26 +425,25 @@
                             </div>
                             <div class="col-auto">
                             @if (!empty($people->image) && $people->image !== 'null')
-    <!-- Display base64 encoded image if available -->
-    <img class="people-profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}" style="border-radius: 50%; margin-left: 10px;" height="40" width="40" alt="Profile Image">
-@else
-    <!-- Fallback to default images based on gender -->
-    @if($employeeDetails)
-        @switch($employeeDetails->gender)
-            @case('Male')
-                <img style="border-radius: 50%; margin-left: 10px;" height="40" width="40" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                @break
-            @case('Female')
-                <img style="border-radius: 50%; margin-left: 10px;" height="40" width="40" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                @break
-            @default
-                <img style="border-radius: 50%; margin-left: 10px;" height="40" width="40" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-        @endswitch
-    @else
-        <!-- Fallback if $employeeDetails is not set -->
-        <img style="border-radius: 50%; margin-left: 10px;" height="40" width="40" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-    @endif
-@endif
+                        <!-- Display the actual image if available -->
+                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                    @else
+                        <!-- If image is not available, check the gender and show default images -->
+
+                            @php
+                                // Debugging step to check gender
+                                $gender = $people->gender ?? null;
+                            @endphp
+                            @if ($gender === 'Male')
+                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                            @elseif($gender === 'Female')
+                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                          
+                        @else
+                            <!-- Fallback if emp is not available -->
+                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                        @endif
+                    @endif
 
 
                             </div>
@@ -522,11 +534,36 @@
                             {{ $record->description }}
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center;">
-                        @if($record->file_path !== 'N/A')
-    <img src="{{  $record->file_path}}" alt="Attached Image" style="max-width: 200px; max-height: 200px;">
-@else
-    -
+                        @if ($record->file_path)
+    {{-- Check if the file path is an image --}}
+    @if ($record->getImageUrlAttribute())
+        <img src="{{ $record->getImageUrlAttribute() }}"
+             style="max-width: 100px; border-radius: 5px;">
+    @elseif (Str::endsWith($record->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx']))
+        {{-- Display a button for PDF or document files --}}
+     
+                <span style="font-size: 30px; margin-top: 10px; color: black">&#8595;</span>
+                {{ $record->file_path }}
+           
+    
+    @else
+        {{-- Generic download link for other file types --}}
+    
+          
+          
+                <span style="font-size: 30px; margin-top: 10px; color: black">&#8595;</span>
+                {{ $record->file_path }}
+           
+      
+    @endif
 @endif
+
+
+
+
+
+
+
 
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">

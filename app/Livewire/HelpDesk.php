@@ -61,7 +61,7 @@ class HelpDesk extends Component
         'category' => 'required|string',
         'subject' => 'required|string',
         'description' => 'required|string',
-     
+         'image' => 'nullable|image|max:2048',
         'priority' => 'required|in:High,Medium,Low',
       
     ];
@@ -367,6 +367,7 @@ public function submit()
 {
    
    
+   
 
     try {
         $validatedData = $this->validate($this->rules);
@@ -392,6 +393,7 @@ public function submit()
             'mobile' => 'N/A',
             'distributor_name' => 'N/A',
         ]);
+        dd($filePath);
 
         session()->flash('message', 'Request created successfully.');
         $this->reset();
@@ -406,17 +408,25 @@ public function submit()
 
 public function submitHR()
 {
-   
-   
-
     try {
         $validatedData = $this->validate($this->rules);
       
-        $filePath = 'N/A';
-        if ($this->file_path && $this->image) {
-            // Ensure the file is an image
-            $image = $this->image->getRealPath();
-            $filePath = file_get_contents($image);
+        $fileContent = null; // Use a separate variable for file content
+        if ($this->file_path) {
+            // Validate and store the uploaded file
+            $validatedFile = $this->validate([
+                'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Accept images and documents up to 5MB
+            ]);
+
+            // Store the file as binary data
+            $fileContent = file_get_contents($this->file_path->getRealPath());
+            if ($fileContent === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                session()->flash('error', 'Failed to read the uploaded file.');
+                return;
+            }
         }
 
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -427,13 +437,14 @@ public function submitHR()
             'category' => $this->category,
             'subject' => $this->subject,
             'description' => $this->description,
-            'file_path' => $filePath,
+            'file_path' => $fileContent, // Store the binary file data
             'cc_to' => $this->cc_to ?? '-',
             'priority' => $this->priority,
             'mail' => 'N/A',
             'mobile' => 'N/A',
             'distributor_name' => 'N/A',
         ]);
+        dd( $fileContent);
 
         session()->flash('message', 'Request created successfully.');
         $this->reset();
@@ -445,6 +456,7 @@ public function submitHR()
         session()->flash('error', 'An error occurred while creating the request. Please try again.');
     }
 }
+
     protected function resetInputFields()
     {
         $this->category = '';
