@@ -7,7 +7,6 @@
         .people-search-input {
             font-size: 0.75rem;
             border-radius: 5px 0 0 5px;
-            cursor: pointer;
             height: 32px;
         }
 
@@ -39,6 +38,12 @@
             .task-date-range-picker {
                 margin-left: 0px;
             }
+        }
+
+        .viewfile {
+            color: var(--main-heading-color);
+            font-size: var(--main-headings-font-size);
+            font-weight: 500;
         }
     </style>
 
@@ -128,7 +133,7 @@
                     <!-- Search Box -->
                     <div class="input-group people-input-group-container">
                         <input wire:model="search" type="text" class="form-control people-search-input"
-                            placeholder="Search anything.." aria-label="Search" aria-describedby="basic-addon1">
+                            placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="searchActiveTasks" class="people-search-btn" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
@@ -314,7 +319,7 @@
                     <!-- Search Box -->
                     <div class="input-group people-input-group-container">
                         <input wire:model="closedSearch" type="text" class="form-control people-search-input"
-                            placeholder="Search anything.." aria-label="Search" aria-describedby="basic-addon1">
+                            placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="searchCompletedTasks" class="people-search-btn" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
@@ -898,11 +903,17 @@
         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title viewfile">View File</h5>
+                    </div>
                     <div class="modal-body text-center">
                         <img src="{{ 'data:image/jpeg;base64,' . base64_encode($viewrecord->file_path) }}"
-                            class="img-fluid" alt="Image preview">
+                            class="img-fluid" alt="Image preview"
+                            >
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="submit-btn"
+                            wire:click.prevent="downloadImage">Download</button>
                         <button type="button" class="cancel-btn1" wire:click="closeViewFile">Close</button>
                     </div>
                 </div>
@@ -916,10 +927,10 @@
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color: #eceff3;">
+                    <div class="modal-header d-flex justify-content-between" style="background-color: rgb(2, 17, 79); color: white; height: 40px; padding: 8px;">
                         <h6 class="modal-title" id="exampleModalLongTitle">Add Comment</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            wire:click="closeModal">
+                            wire:click="closeModal" style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>

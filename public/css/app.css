@@ -418,6 +418,7 @@ body {
     border: none;
     outline: none;
     font-size: 10px;
+    margin-right: 10px;
 }
 .update-btn {
     background: green;
