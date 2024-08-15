@@ -1122,7 +1122,7 @@
         </div>
 
         @endif
-    
+   
 @else(isset($data['type']) && $data['type'] === 'hire_date')
 
 @if($sortType==='newest')
@@ -1346,110 +1346,84 @@
 
 
 
+                <div class="col-md-8 p-0">
+                            <form wire:submit.prevent="createcomment('{{ $data['employee']->emp_id }}')">
+                                @csrf
+                                <div class="row m-0">
+                                    <div class="col-md-3 mb-2">
+                                        <div style="display: flex; align-items: center;">
+                                            <span>
+                                                <i class="comment-icon">💬</i>
+                                            </span>
+                                            <span style="margin-left: 5px;">
+                                                <a href="#" onclick="comment({{ $index }})" style="font-size: 10px;">Comment</a>
+                                            </span>
+                                        </div>
 
-                <div class="col-md-7 p-0">
-                    <form wire:submit.prevent="createcomment('{{ $data['employee']->emp_id }}')">
-                        @csrf
-                        <div class="row m-0">
-                            <div class="col-md-3 mb-2" style="margin-left:10px">
-
-                                <div style="display: flex;">
-                                    <span>
-                                        <i class="comment-icon">💬</i>
-                                    </span>
-                                    <span style="margin-left: 5px;">
-                                        <a href="#" onclick="comment({{ $index }})" style="font-size: 10px;background:">Comment</a>
-                                    </span>
-                                </div>
-
-                            </div>
-                            <div class="col-md-8 p-0 mb-2" style="margin-left:10px;">
-                                <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;">
-                                    <div class="col-md-9">
-                                        <textarea wire:model="newComment" placeholder="Post comment something here" style="font-size: 10px;" name="comment" class="form-control"></textarea>
                                     </div>
-                                    <div class="col-md-2">
-                                        <input type="submit" class="btn btn-primary" style="text-align: center; line-height: 10px; font-size: 10px; margin-left: -20px;background-color:rgb(2, 17, 79);" value="Comment" wire:target="addcomment">
+
+                                    <div class="col-md-8 p-0 mb-2" style="margin-left:10px">
+                                        <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;" style="margin-left:-20px">
+                                            <div class="col-md-8">
+                                                <textarea wire:model="newComment" placeholder="Post comment something here" style="font-size:10px" name="comment" class="form-control"></textarea>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="submit" class="btn btn-primary" style="text-align: center; line-height: 10px; font-size:12px;margin-left:-10px;background-color:rgb(2, 17, 79);" value="comment" wire:target="addcomment">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
-                    </form>
 
+<div class="row m-0">
+    @php
+        $currentCardComments = $addcomments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
+    @endphp
 
+    <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
+        @if($currentCardComments && $currentCardComments->count() > 0)
+            @foreach ($currentCardComments as $comment)
+                <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
+                    @php
+                        // Determine if it's an employee or HR
+                        $employee = $comment->employee;
+                        $imageUrl = $employee ? $employee->image_url : ($comment->hr->image ? asset('storage/' . $comment->hr->image) : null);
 
-                                </div>
-                            
-
-                        <div class="row m-0">
-
-                        @php
-                    $currentCardComments = $addcomments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
+                        // Determine default images based on gender if no image URL is available
+                        if (!$imageUrl) {
+                            $gender = $employee->gender ?? $comment->hr->gender;
+                            $imageUrl = match($gender) {
+                                'Male' => "https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png",
+                                'Female' => "https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW",
+                                default => "https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain"
+                            };
+                        }
                     @endphp
-     <div class="m-0 mt-2 px-2" id="comments-container" style="overflow-y:auto; max-height:150px;">
-  
-  @if($currentCardComments && $currentCardComments->count() > 0)
-  @foreach ($currentCardComments as $comment)
-    <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
-        
-        @php
-          
-          
 
-            // Determine if it's an employee or HR
-            if ($comment->employee) {
-                $employee = $comment->employee;
-                $imageUrl = $employee->image_url; // Assuming 'image_url' is directly in Employee model
-            } elseif ($comment->hr) {
-                $imageUrl = $comment->hr->image ? asset('storage/' . $comment->hr->image) : null;
-            }
-
-            // Determine default images based on gender if no image URL is available
-            if (!$imageUrl) {
-                $gender = $comment->employee->gender ?? $comment->hr->gender ;
-
-                if ($gender == "Male") {
-                    $imageUrl = "https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png";
-                } elseif ($gender == "Female") {
-                    $imageUrl = "https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBW";
-                } else {
-                    $imageUrl = "https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain";
-                }
-            }
-        @endphp
-
-        <img style="border-radius: 50%;" height="25" width="25" src="{{ $imageUrl }}" alt="Profile Image">
-
-        <div class="comment" style="font-size: 10px;">
-            @if($comment->employee)
-                <b style="color:#778899; font-weight:500; font-size: 10px;">
-                    {{ ucwords(strtolower($comment->employee->first_name)) }} {{ ucwords(strtolower($comment->employee->last_name)) }}
-                </b>
-            @elseif($comment->hr)
-                <b style="color:#778899; font-weight:500; font-size: 10px;">
-                    {{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}
-                </b>
-            @else
-                <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
-            @endif
-
-            <p class="mb-0" style="font-size: 11px;">
-                {{ ucfirst($comment->addcomment) }}
-            </p>
-        </div>
+                    <img style="border-radius: 50%;" height="25" width="25" src="{{ $imageUrl }}" alt="Profile Image">
+                    <div class="comment" style="font-size: 10px;">
+                        @if($employee)
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">
+                                {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}
+                            </b>
+                        @elseif($comment->hr)
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">
+                                {{ ucwords(strtolower($comment->hr->first_name)) }} {{ ucwords(strtolower($comment->hr->last_name)) }}
+                            </b>
+                        @else
+                            <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+                        @endif
+                        <p class="mb-0" style="font-size: 11px;">{{ ucfirst($comment->addcomment) }}</p>
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <p style="font-size: 11px;">No comments available for this card.</p>
+        @endif
     </div>
-@endforeach
-
-
-  @endif
-
-
-
-
 </div>
 
-
-</div>
                   
 
                             </div>
@@ -1731,6 +1705,7 @@
 
                                 </div>
                             </div>
+                            
 
                             <div class="row m-0">
 @php
@@ -2083,6 +2058,44 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('selected');
         });
     });
+</script>
+<script>
+    function createcomment(comment, empId,index) {
+        // Your existing logic to select an emoji
+
+        // Toggle the emoji list visibility using the showEmojiList function
+        comment();
+    }
+    // Function to show the emoji list when clicking on the smiley emoji
+    function comment(index,cardId) {
+        var div = document.getElementById('replyDiv_' + index);
+        if (div.style.display === 'none') {
+            div.style.display = 'flex';
+        } else {
+            div.style.display = 'none';
+        }
+    }
+
+
+</script>
+<script>
+    function add_comment(comment, empId,index) {
+        // Your existing logic to select an emoji
+
+        // Toggle the emoji list visibility using the showEmojiList function
+        comment();
+    }
+    // Function to show the emoji list when clicking on the smiley emoji
+    function comment(index,cardId) {
+        var div = document.getElementById('replyDiv_' + index);
+        if (div.style.display === 'none') {
+            div.style.display = 'flex';
+        } else {
+            div.style.display = 'none';
+        }
+    }
+
+
 </script>
 <script>
     function selectEmoji(emoji, empId,index) {

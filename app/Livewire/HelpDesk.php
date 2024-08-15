@@ -28,6 +28,8 @@ class HelpDesk extends Component
     use WithFileUploads;
     public $selectedCategory = '';
     public $searchTerm = '';
+    public $showViewFileDialog = false;
+    public $showModal = false;
     public $search = '';
     public $isRotated = false;
    
@@ -405,26 +407,73 @@ public function submit()
         session()->flash('error', 'An error occurred while creating the request. Please try again.');
     }
 }
+public $recordId;
+public $viewrecord;
+public function showViewFile($id)
+{
+    $this->records = HelpDesks::findOrFail($id);
+
+    if ($this->records && $this->records->file_path !== 'null') {
+        $this->file_path = $this->records->file_path;
+        $this->showViewFileDialog = true;
+       
+    } else {
+        // Handle case where file is not found or is null
+        $this->dispatchBrowserEvent('file-not-found', ['message' => 'File not found.']);
+    }
+}
+public $showImageDialog = false;
+public $imageUrl;
+
+// Other properties and methods...
+
+public function showImage($url)
+{
+    $this->imageUrl = $url;
+    $this->showImageDialog = true;
+}
+
+public function closeImageDialog()
+{
+    $this->showImageDialog = false;
+}
+
+public function show()
+{
+    $this->showDialog = true;
+}
+
+public function closeViewFile()
+{
+    $this->showViewFileDialog = false;
+}
 
 public function submitHR()
 {
     try {
         $validatedData = $this->validate($this->rules);
-      
+
         $fileContent = null; // Use a separate variable for file content
         if ($this->file_path) {
             // Validate and store the uploaded file
             $validatedFile = $this->validate([
-                'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Accept images and documents up to 5MB
+                'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
             ]);
 
             // Store the file as binary data
             $fileContent = file_get_contents($this->file_path->getRealPath());
+
             if ($fileContent === false) {
                 Log::error('Failed to read the uploaded file.', [
                     'file_path' => $this->file_path->getRealPath(),
                 ]);
                 session()->flash('error', 'Failed to read the uploaded file.');
+                return;
+            }
+
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                session()->flash('error', 'File size exceeds the allowed limit.');
                 return;
             }
         }
@@ -444,7 +493,6 @@ public function submitHR()
             'mobile' => 'N/A',
             'distributor_name' => 'N/A',
         ]);
-        dd( $fileContent);
 
         session()->flash('message', 'Request created successfully.');
         $this->reset();
@@ -452,9 +500,37 @@ public function submitHR()
     } catch (\Illuminate\Validation\ValidationException $e) {
         $this->setErrorBag($e->validator->getMessageBag());
     } catch (\Exception $e) {
-        Log::error('Error creating request: ' . $e->getMessage());
+        Log::error('Error creating request: ' . $e->getMessage(), [
+            'employee_id' => $employeeId,
+            'category' => $this->category,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+        ]);
         session()->flash('error', 'An error occurred while creating the request. Please try again.');
     }
+}
+
+public function downloadFile($id)
+{
+    // Fetch the HelpDesk record using the provided ID
+    $helpDeskRecord = HelpDesks::findOrFail($id);
+
+    // Check if the file_path has content
+    if (!$helpDeskRecord->file_path) {
+        return redirect()->back()->with('error', 'File not found.');
+    }
+
+    // Prepare the response for the file download
+    $fileContent = $helpDeskRecord->file_path; // Retrieve binary content from the database
+    $filename = 'document_' . $id; // You may want to generate a more meaningful filename
+
+    return response()->stream(function () use ($fileContent) {
+        echo $fileContent; // Output the file content
+    }, 200, [
+        'Content-Type' => 'application/octet-stream', // Change based on the actual file type
+        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+    ]);
 }
 
     protected function resetInputFields()
@@ -539,9 +615,8 @@ public function submitHR()
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
-            foreach ($this->records as $record) {
-                $record->image_url ;
-            }
+     
+            
 
             $searchData = $this->filterData ?: $this->records;
             $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';

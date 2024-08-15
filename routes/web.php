@@ -299,7 +299,8 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
         ]);
     })->name('download.file');
 // In web.php
-Route::get('file_path/{id}', [HelpDesk::class])->name('file.show');
+Route::get('/download-file/{id}', [HelpDesk::class, 'downloadFile']);
+
 
     //leave module
     Route::get('/leave-page', LeavePage::class)->name('leave-page');

@@ -534,29 +534,70 @@
                             {{ $record->description }}
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center;">
-                        @if ($record->file_path)
-    {{-- Check if the file path is an image --}}
-    @if ($record->getImageUrlAttribute())
-        <img src="{{ $record->getImageUrlAttribute() }}"
-             style="max-width: 100px; border-radius: 5px;">
-    @elseif (Str::endsWith($record->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx']))
-        {{-- Display a button for PDF or document files --}}
+                   
+
      
-                <span style="font-size: 30px; margin-top: 10px; color: black">&#8595;</span>
-                {{ $record->file_path }}
-           
-    
-    @else
+            @if ($record->file_path)
+                {{-- Check if the file path is an image --}}
+                @if ($record->getImageUrlAttribute())
+                    <a href="#" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')"
+                       style="text-decoration: none; color: #007BFF;">
+                       View File
+                    </a>
+                @elseif (Str::endsWith($record->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx']))
+                    {{-- Display a button for PDF or document files --}}
+                    <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-primary" style="margin-top: 10px;">
+                        <span style="font-size: 30px; color: black;">&#8595;</span> Download {{ pathinfo($record->file_path, PATHINFO_EXTENSION) }}
+                    </a>
+                @else
+                    {{-- Generic download link for other file types --}}
+                    <a href="{{ route('/', ['id' => $record->id]) }}" class="btn btn-secondary" style="margin-top: 10px;">
+                        <span style="font-size: 30px; color: black;">&#8595;</span> Download File
+                    </a>
+                @endif
+            @endif
+       
+
+    {{-- Modal for Viewing Image --}}
+    @if ($showImageDialog)
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">View Image</h5>
+                        <button type="button" class="close" wire:click="closeImageDialog" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        @if ($imageUrl)
+                            <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+                        @else
+                            <p>No image available.</p>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" wire:click="closeImageDialog">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+
+      
+ 
+      
+
+
+
         {{-- Generic download link for other file types --}}
     
           
           
-                <span style="font-size: 30px; margin-top: 10px; color: black">&#8595;</span>
-                {{ $record->file_path }}
            
-      
-    @endif
-@endif
+           
+
 
 
 
