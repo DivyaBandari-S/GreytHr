@@ -22,12 +22,14 @@ use App\Models\HelpDesks;
 use App\Models\Request;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
-
+use Illuminate\Support\Facades\Response;
 class HelpDesk extends Component
 {
     use WithFileUploads;
     public $selectedCategory = '';
     public $searchTerm = '';
+    public $showViewFileDialog = false;
+    public $showModal = false;
     public $search = '';
     public $isRotated = false;
    
@@ -61,7 +63,7 @@ class HelpDesk extends Component
         'category' => 'required|string',
         'subject' => 'required|string',
         'description' => 'required|string',
-     
+         'image' => 'nullable|image|max:2048',
         'priority' => 'required|in:High,Medium,Low',
       
     ];
@@ -348,90 +350,252 @@ class HelpDesk extends Component
     
 
 
-    public function submit()
+    public function showFile($id)
     {
-       
-       
+        $record = HelpDesks::findOrFail($id);
+    
+        if ($record && $record->file_path !== 'N/A') {
+            $mimeType = 'image/jpeg'; // Adjust as necessary
+    
+            return response($record->file_path, 200)
+                ->header('Content-Type', $mimeType)
+                ->header('Content-Disposition', 'inline; filename="image.jpg"'); // Adjust filename and extension as needed
+        }
+    
+        return abort(404, 'File not found');
+    }
+    
+public function submit()
+{
+   
+   
+   
 
-        try {
-            $validatedData = $this->validate($this->rules);
-          
-            if ($this->image) {
-                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-                $filePath = 'uploads/help-desk-images/' . $fileName;
-            } else {
-                $filePath = 'N/A';
-            }
+    try {
+        $validatedData = $this->validate($this->rules);
 
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-            HelpDesks::create([
-                'emp_id' => $this->employeeDetails->emp_id,
-                'category' => $this->category,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path' => $filePath,
-                'cc_to' => $this->cc_to??'-',
-                'priority' => $this->priority,
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
-                'distributor_name' => 'N/A',
+        $fileContent = null; // Use a separate variable for file content
+        if ($this->file_path) {
+            // Validate and store the uploaded file
+            $validatedFile = $this->validate([
+                'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
             ]);
 
-            session()->flash('message', 'Request created successfully.');
-            $this->reset();
-            return redirect()->to('/HelpDesk');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->setErrorBag($e->validator->getMessageBag());
-        } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
-        }
-    }
-    public function submitHR()
-    {
-       
-       
+            // Store the file as binary data
+            $fileContent = file_get_contents($this->file_path->getRealPath());
 
-        try {
-            $validatedData = $this->validate($this->rules);
-          
-            if ($this->image) {
-                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-                $filePath = 'uploads/help-desk-images/' . $fileName;
-            } else {
-                $filePath = 'N/A';
+            if ($fileContent === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                session()->flash('error', 'Failed to read the uploaded file.');
+                return;
             }
 
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                session()->flash('error', 'File size exceeds the allowed limit.');
+                return;
+            }
+        }
 
-            HelpDesks::create([
-                'emp_id' => $this->employeeDetails->emp_id,
-                'category' => $this->category,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path' => $filePath,
-                'cc_to' => $this->cc_to ?? '-',
-                'priority' => $this->priority,
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
-                'distributor_name' => 'N/A',
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+        HelpDesks::create([
+            'emp_id' => $this->employeeDetails->emp_id,
+            'category' => $this->category,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path' => $fileContent, // Store the binary file data
+            'cc_to' => $this->cc_to ?? '-',
+            'priority' => $this->priority,
+            'mail' => 'N/A',
+            'mobile' => 'N/A',
+            'distributor_name' => 'N/A',
+        ]);
+
+        session()->flash('message', 'Request created successfully.');
+        $this->reset();
+        return redirect()->to('/HelpDesk');
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        $this->setErrorBag($e->validator->getMessageBag());
+    } catch (\Exception $e) {
+        Log::error('Error creating request: ' . $e->getMessage(), [
+            'employee_id' => $employeeId,
+            'category' => $this->category,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+        ]);
+        session()->flash('error', 'An error occurred while creating the request. Please try again.');
+    }
+}
+public $recordId;
+public $viewrecord;
+public function showViewFile($id)
+{
+    $this->records = HelpDesks::findOrFail($id);
+
+    if ($this->records && $this->records->file_path !== 'null') {
+        $this->file_path = $this->records->file_path;
+        $this->showViewFileDialog = true;
+       
+    } else {
+        // Handle case where file is not found or is null
+        $this->dispatchBrowserEvent('file-not-found', ['message' => 'File not found.']);
+    }
+}
+public $showImageDialog = false;
+public $imageUrl;
+ public function downloadImage()
+ {
+     if ($this->imageUrl) {
+         // Decode the Base64 data if necessary
+         $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $this->imageUrl));
+
+         // Determine MIME type and file extension
+         $finfo = finfo_open(FILEINFO_MIME_TYPE);
+         $mimeType = finfo_buffer($finfo, $fileData);
+         finfo_close($finfo);
+
+         $extension = '';
+         switch ($mimeType) {
+             case 'image/jpeg':
+                 $extension = 'jpg';
+                 break;
+             case 'image/png':
+                 $extension = 'png';
+                 break;
+             case 'image/gif':
+                 $extension = 'gif';
+                 break;
+             default:
+                 return abort(415, 'Unsupported Media Type');
+         }
+
+         // Prepare file name and response
+         $fileName = 'image-' . time() . '.' . $extension;
+         return response()->streamDownload(
+             function () use ($fileData) {
+                 echo $fileData;
+             },
+             $fileName,
+             [
+                 'Content-Type' => $mimeType,
+                 'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+             ]
+         );
+     }
+
+     return abort(404, 'Image not found');
+ }
+public function showImage($url)
+{
+    $this->imageUrl = $url;
+    $this->showImageDialog = true;
+}
+
+public function closeImageDialog()
+{
+    $this->showImageDialog = false;
+}
+
+public function show()
+{
+    $this->showDialog = true;
+}
+
+public function closeViewFile()
+{
+    $this->showViewFileDialog = false;
+}
+
+public function submitHR()
+{
+    try {
+        $validatedData = $this->validate($this->rules);
+
+        $fileContent = null; // Use a separate variable for file content
+        if ($this->file_path) {
+            // Validate and store the uploaded file
+            $validatedFile = $this->validate([
+                'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
             ]);
 
-            session()->flash('message', 'Request created successfully.');
-            $this->reset();
-            return redirect()->to('/HelpDesk');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->setErrorBag($e->validator->getMessageBag());
-        } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+            // Store the file as binary data
+            $fileContent = file_get_contents($this->file_path->getRealPath());
+
+            if ($fileContent === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                session()->flash('error', 'Failed to read the uploaded file.');
+                return;
+            }
+
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                session()->flash('error', 'File size exceeds the allowed limit.');
+                return;
+            }
         }
+
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+        HelpDesks::create([
+            'emp_id' => $this->employeeDetails->emp_id,
+            'category' => $this->category,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path' => $fileContent, // Store the binary file data
+            'cc_to' => $this->cc_to ?? '-',
+            'priority' => $this->priority,
+            'mail' => 'N/A',
+            'mobile' => 'N/A',
+            'distributor_name' => 'N/A',
+        ]);
+
+        session()->flash('message', 'Request created successfully.');
+        $this->reset();
+        return redirect()->to('/HelpDesk');
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        $this->setErrorBag($e->validator->getMessageBag());
+    } catch (\Exception $e) {
+        Log::error('Error creating request: ' . $e->getMessage(), [
+            'employee_id' => $employeeId,
+            'category' => $this->category,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+        ]);
+        session()->flash('error', 'An error occurred while creating the request. Please try again.');
     }
+}
+
+public function downloadFile($id)
+{
+    // Fetch the HelpDesk record using the provided ID
+    $helpDeskRecord = HelpDesks::findOrFail($id);
+
+    // Check if the file_path has content
+    if (!$helpDeskRecord->file_path) {
+        return redirect()->back()->with('error', 'File not found.');
+    }
+
+    // Prepare the response for the file download
+    $fileContent = $helpDeskRecord->file_path; // Retrieve binary content from the database
+    $filename = 'document_' . $id; // You may want to generate a more meaningful filename
+
+    return response()->stream(function () use ($fileContent) {
+        echo $fileContent; // Output the file content
+    }, 200, [
+        'Content-Type' => 'application/octet-stream', // Change based on the actual file type
+        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+    ]);
+}
+
     protected function resetInputFields()
     {
         $this->category = '';
@@ -514,6 +678,8 @@ class HelpDesk extends Component
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
+     
+            
 
             $searchData = $this->filterData ?: $this->records;
             $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';

@@ -1,7 +1,7 @@
 <div>
     <div class="row m-0">
         @if (session()->has('message'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show" role="alert" style="width:500px">
             {{ session('message') }}
             <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style=" font-size: 0.75rem;padding: 0.25rem 0.5rem;margin-top:5px"></button>
         </div>
@@ -157,15 +157,26 @@
                             <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
                         </div>
                         <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
+                        @if (!empty($people->image) && $people->image !== 'null')
+                        <!-- Display the actual image if available -->
+                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                    @else
+                        <!-- If image is not available, check the gender and show default images -->
+
+                            @php
+                                // Debugging step to check gender
+                                $gender = $people->gender ?? null;
+                            @endphp
+                            @if ($gender === 'Male')
+                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                            @elseif($gender === 'Female')
+                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                          
+                        @else
+                            <!-- Fallback if emp is not available -->
+                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                        @endif
+                    @endif
                         </div>
                         <div class="col">
                             <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
@@ -179,7 +190,7 @@
 @endif
 
                                                         </div>
-                                                        <div class="row">
+                                                        <div class="row mt-2">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -189,9 +200,10 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
+                
 
                                                     </form>
                                                 </div>
@@ -336,15 +348,26 @@
                             <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
                         </div>
                         <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
+                        @if (!empty($people->image) && $people->image !== 'null')
+                        <!-- Display the actual image if available -->
+                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                    @else
+                        <!-- If image is not available, check the gender and show default images -->
+
+                            @php
+                                // Debugging step to check gender
+                                $gender = $people->gender ?? null;
+                            @endphp
+                            @if ($gender === 'Male')
+                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                            @elseif($gender === 'Female')
+                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                          
+                        @else
+                            <!-- Fallback if emp is not available -->
+                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                        @endif
+                    @endif
                         </div>
                         <div class="col">
                             <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
@@ -358,7 +381,7 @@
 @endif
 
                                                         </div>
-                                                        <div class="row">
+                                                        <div class="row mt-2">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -368,7 +391,7 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
 
@@ -508,15 +531,26 @@
                             <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
                         </div>
                         <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
+                        @if (!empty($people->image) && $people->image !== 'null')
+                        <!-- Display the actual image if available -->
+                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                    @else
+                        <!-- If image is not available, check the gender and show default images -->
+
+                            @php
+                                // Debugging step to check gender
+                                $gender = $people->gender ?? null;
+                            @endphp
+                            @if ($gender === 'Male')
+                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                            @elseif($gender === 'Female')
+                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                          
+                        @else
+                            <!-- Fallback if emp is not available -->
+                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                        @endif
+                    @endif
                         </div>
                         <div class="col">
                             <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
@@ -530,7 +564,7 @@
 @endif
 
                                                         </div>
-                                                        <div class="row">
+                                                        <div class="row mt-2">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -540,7 +574,7 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
 
@@ -600,18 +634,18 @@
 
 
                                                             <div style="display:flex">
-                                                                <div class="form-group mt-2">
-                                                                    <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
-                                                                    <input wire:model="mobile" type="text" class="form-control">
-                                                                    @error('mobile') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
-                                                                <div class="form-group mt-2 ml-6" style="margin-left:10px">
-                                                                    <label for="contactDetails">Email<span  style="color:red">*</span></label>
-                                                                    <input wire:model="mail" type="text" class="form-control">
-                                                                    @error('mail') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
+                                                           
+    <div class="form-group col-md-6 mt-2">
+        <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
+        <input wire:model="mobile" type="text" class="form-control">
+        @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+    <div class="form-group col-md-6 mt-2" style="margin-left:5px">
+        <label for="contactDetails">Email<span style="color:red">*</span></label>
+        <input wire:model="mail" type="text" class="form-control">
+        @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span  style="color:red">*</span></label>
@@ -625,9 +659,9 @@
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
-                                                            <div class="row m-0">
-                                                                <div class="row">
-                                                                    <div class="form-group mb-3">
+                                                            <div class="row mt-3">
+                                                                <div class="row ml-1">
+                                                                    <div class="form-group mb-1">
                                                                         <label for="cc_to" class="form-label"> Request For :<span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
 
                                                                     </div>
@@ -643,7 +677,7 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;margin-left:10px">
     <div class="input-group6" style="display: flex; align-items: center; width: 100%;">
     <input 
         wire:model="searchTerm" 
@@ -687,15 +721,26 @@
                             <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
                         </div>
                         <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
+                        @if (!empty($people->image) && $people->image !== 'null')
+                        <!-- Display the actual image if available -->
+                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                    @else
+                        <!-- If image is not available, check the gender and show default images -->
+
+                            @php
+                                // Debugging step to check gender
+                                $gender = $people->gender ?? null;
+                            @endphp
+                            @if ($gender === 'Male')
+                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                            @elseif($gender === 'Female')
+                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                          
+                        @else
+                            <!-- Fallback if emp is not available -->
+                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                        @endif
+                    @endif
                         </div>
                         <div class="col">
                             <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
@@ -709,7 +754,7 @@
 @endif
 
                                                             </div>
-                                                            <div class="row">
+                                                            <div class="row mt-2">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -719,7 +764,7 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
 
@@ -773,13 +818,13 @@
 
 
                                                             <div style="display:flex">
-                                                                <div class="form-group mt-2">
+                                                                <div class="form-group col-md-6 mt-2">
                                                                     <label for="contactDetails">Mobile Number<span  style="color:red">*</span></label>
                                                                     <input wire:model="mobile" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
-                                                                <div class="form-group mt-2 ml-3" style="margin-left:10px">
+                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email<span  style="color:red">*</span></label>
                                                                     <input wire:model="mail" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
@@ -798,9 +843,9 @@
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
-                                                            <div class="row m-0">
+                                                            <div class="row mt-3">
                                                                 <div class="row">
-                                                                    <div class="form-group mb-3">
+                                                                    <div class="form-group">
                                                                         <label for="cc_to" class="form-label"> Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
 
 
@@ -818,7 +863,7 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;margin-left:10px">
     <div class="input-group6" style="display: flex; align-items: center; width: 100%;">
     <input 
         wire:model="searchTerm" 
@@ -862,15 +907,26 @@
                             <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
                         </div>
                         <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
+                        @if (!empty($people->image) && $people->image !== 'null')
+                        <!-- Display the actual image if available -->
+                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                    @else
+                        <!-- If image is not available, check the gender and show default images -->
+
+                            @php
+                                // Debugging step to check gender
+                                $gender = $people->gender ?? null;
+                            @endphp
+                            @if ($gender === 'Male')
+                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                            @elseif($gender === 'Female')
+                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                          
+                        @else
+                            <!-- Fallback if emp is not available -->
+                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                        @endif
+                    @endif
                         </div>
                         <div class="col">
                             <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
@@ -885,7 +941,7 @@
 
                                                             </div>
 
-                                                            <div class="row">
+                                                            <div class="row ">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -895,7 +951,7 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
 
@@ -971,7 +1027,7 @@
                                                                 @enderror
                                                             </div>
                                                             <div class="row m-0" style="margin-left:-10px">
-                                                                <div class="row">
+                                                                <div class="row mt-2" >
                                                                     <div class="form-group">
 
                                                                         <div class="form-group m-0 p-0">
@@ -1035,15 +1091,26 @@
                             <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
                         </div>
                         <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
+                        @if (!empty($people->image) && $people->image !== 'null')
+                        <!-- Display the actual image if available -->
+                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                    @else
+                        <!-- If image is not available, check the gender and show default images -->
+
+                            @php
+                                // Debugging step to check gender
+                                $gender = $people->gender ?? null;
+                            @endphp
+                            @if ($gender === 'Male')
+                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                            @elseif($gender === 'Female')
+                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                          
+                        @else
+                            <!-- Fallback if emp is not available -->
+                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                        @endif
+                    @endif
                         </div>
                         <div class="col">
                             <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
@@ -1057,9 +1124,9 @@
 @endif
 
                                                             </div>
-                                                            <div class="row">
+                                                            <div class="row mt-2">
                             <div class="col">
-                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;margin-top:10px">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
                                 </label>
                             </div>
@@ -1067,10 +1134,9 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
-
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
@@ -1127,13 +1193,13 @@
 
 
                                                             <div style="display:flex">
-                                                                <div class="form-group mt-2">
+                                                                <div class="form-group col-md-6 mt-2">
                                                                     <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
                                                                     <input wire:model.lazy="mobile" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
-                                                                <div class="form-group mt-2 ml-3" style="margin-left:10px">
+                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email<span style="color:red">*</span></label>
                                                                     <input wire:model.lazy="mail" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
@@ -1170,7 +1236,7 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;margin-left:10px">
     <div class="input-group9" style="display: flex; align-items: center; width: 100%;">
     <input 
         wire:model="searchTerm" 
@@ -1214,15 +1280,26 @@
                             <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
                         </div>
                         <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
+                        @if (!empty($people->image) && $people->image !== 'null')
+                        <!-- Display the actual image if available -->
+                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                    @else
+                        <!-- If image is not available, check the gender and show default images -->
+
+                            @php
+                                // Debugging step to check gender
+                                $gender = $people->gender ?? null;
+                            @endphp
+                            @if ($gender === 'Male')
+                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                            @elseif($gender === 'Female')
+                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                          
+                        @else
+                            <!-- Fallback if emp is not available -->
+                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                        @endif
+                    @endif
                         </div>
                         <div class="col">
                             <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
@@ -1236,8 +1313,8 @@
 @endif
 
                                                             </div>
-                                                            <div class="row">
-                            <div class="col mt-3">
+                                                            <div class="row mt-2">
+                            <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
                                 </label>
@@ -1246,10 +1323,9 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
-
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
@@ -1318,13 +1394,13 @@
 
 
                                                             <div style="display:flex">
-                                                                <div class="form-group mt-2">
+                                                                <div class="form-group col-md-6 mt-2">
                                                                     <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
                                                                     <input wire:model.lazy="mobile" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
-                                                                <div class="form-group mt-2 ml-3" style="margin-left:10px">
+                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email<span style="color:red">*</span></label>
                                                                     <input wire:model.lazy="mail" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
@@ -1343,7 +1419,7 @@
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
-                                                            <div class="row m-0" >
+                                                            <div class="row " >
                                                                 <div class="row">
                                                                     <div class="form-group mt-2">
                                                                         <label for="cc_to" class="form-label"> Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
@@ -1361,7 +1437,7 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;margin-left:10px">
     <div class="input-group9" style="display: flex; align-items: center; width: 100%;">
     <input 
         wire:model="searchTerm" 
@@ -1405,15 +1481,26 @@
                             <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
                         </div>
                         <div class="col-auto">
-                            @if($people->image == "")
-                                @if($people->gender == "Male")
-                                    <img class="profile-image" src="https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png" alt="">
-                                @elseif($people->gender == "Female")
-                                    <img class="profile-image" src="https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0" alt="">
-                                @endif
-                            @else
-                                <img class="profile-image" src="{{ Storage::url($people->image) }}" alt="">
-                            @endif
+                        @if (!empty($people->image) && $people->image !== 'null')
+                        <!-- Display the actual image if available -->
+                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                    @else
+                        <!-- If image is not available, check the gender and show default images -->
+
+                            @php
+                                // Debugging step to check gender
+                                $gender = $people->gender ?? null;
+                            @endphp
+                            @if ($gender === 'Male')
+                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                            @elseif($gender === 'Female')
+                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                          
+                        @else
+                            <!-- Fallback if emp is not available -->
+                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                        @endif
+                    @endif
                         </div>
                         <div class="col">
                             <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
@@ -1427,8 +1514,8 @@
 @endif
 
                                                             </div>
-                                                            <div class="row" style="margin-left:-10px">
-                            <div class="col mt-2">
+                                                            <div class="row mt-2">
+                            <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
                                 </label>
@@ -1437,10 +1524,9 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
-
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
