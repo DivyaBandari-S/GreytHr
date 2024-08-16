@@ -785,6 +785,7 @@ width: 170px; */
 
 
         }
+        
 
         .large-box-attendance-info .fourth-header-row {
             background-color: #fff;
@@ -864,7 +865,7 @@ width: 170px; */
         .toggle-box-attendance-info {
             display: flex;
             align-items: center;
-            background-color: #f0f0f0;
+            background-color: transparent;
 
             width: 73px;
             /* margin-left: 850px; */
@@ -1317,6 +1318,11 @@ color: #fff;
             border-bottom: 17px solid #f09541;
             margin-right: 5px;
         }
+        .cancel-btn:hover
+        {
+            background-color: rgb(2, 17, 79);
+            color:white;
+        }
     </style>
     @php
     $currentYear = date('Y');
@@ -1328,6 +1334,7 @@ color: #fff;
     @endphp
 
     <div class="m-auto">
+        
         <div class="table-container scrollable-table" style=" width: 100%;
     overflow-x: auto;">
             <table>
@@ -1390,12 +1397,25 @@ color: #fff;
 
                 </tr>
 
-                @for($i = 1; $i <= $daysInMonth; $i++) @php $dateKey=str_pad($i, 2, '0' , STR_PAD_LEFT) . " " . $currentMonthRep . " " . $currentYear; $dateKeyForLookup=$currentYear . '-' .str_pad($currentMonth, 2, '0' , STR_PAD_LEFT) . '-' . str_pad($i, 2, '0' , STR_PAD_LEFT); if (in_array($dateKeyForLookup, $holiday)) { $holidayNote=true; } $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); $dayName=date('D', $timestamp); $isWeekend=($dayName=='Sat' || $dayName=='Sun' ); $isPresent=$distinctDates->has($dateKeyForLookup);
-                    $isDate=($dateKeyForLookup<$todaysDate); $swipeRecordExists=$swiperecord->contains(function ($record) use ($dateKeyForLookup) {
+                @for($i = 1; $i <= $daysInMonth; $i++) 
+                      @php 
+                          $dateKey=str_pad($i, 2, '0' , STR_PAD_LEFT) . " " . $currentMonthRep . " " . $currentYear; 
+                          $dateKeyForLookup=$currentYear . '-' .str_pad($currentMonth, 2, '0' , STR_PAD_LEFT) . '-' . str_pad($i, 2, '0' , STR_PAD_LEFT); 
+                          if (in_array($dateKeyForLookup, $holiday)) 
+                          { 
+                                $holidayNote=true; 
+                          } 
+                          $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); 
+                          $dayName=date('D', $timestamp); 
+                          $isWeekend=($dayName=='Sat' || $dayName=='Sun' ); 
+                          $isPresent=$distinctDates->has($dateKeyForLookup);
+                          
+                          $isDate=($dateKeyForLookup<$todaysDate); 
+                           $swipeRecordExists=$swiperecord->contains(function ($record) use ($dateKeyForLookup) {
                         return \Carbon\Carbon::parse($record->created_at)->toDateString() === $dateKeyForLookup;
                         });
                         @endphp
-
+                     
                         <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate? ( $isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isPresent|| $swipeRecordExists?  '#edfaed':'#fcf0f0'))) :'white'}};">
 
 
@@ -1425,29 +1445,39 @@ color: #fff;
                             @endphp
 
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-
+                                @if($isDate)
                                 {{ date('H:i', strtotime($record['first_in_time'])) }}
-
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if(empty($record['last_out_time']))
-                                @php
-                                $record['last_out_time']=$record['first_in_time'];
-                                @endphp
-                                {{ date('H:i', strtotime($record['last_out_time'])) }}
-                                @else
-                                {{ date('H:i', strtotime($record['last_out_time'])) }}
+                                @else    
+                                 00:00
                                 @endif
                             </td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($record['first_in_time']==$record['last_out_time'])
-                                00:00
+                                @if($isDate)
+                                    @if(empty($record['last_out_time']))
+                                            @php
+                                                $record['last_out_time']=$record['first_in_time'];
+                                            @endphp
+                                            {{ date('H:i', strtotime($record['last_out_time'])) }}
+                                    @else
+                                            {{ date('H:i', strtotime($record['last_out_time'])) }}
+                                    @endif
+                                @else    
+                                    00:00
+                                @endif    
+                            </td>
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                                @if($isDate==false)   
+                                     00:00
+                                @elseif($record['first_in_time']==$record['last_out_time'])
+                                      00:00
                                 @else
-                                {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
+                                 {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
                                 @endif
                             </td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($record['first_in_time']==$record['last_out_time'])
+                                @if($isDate==false)   
+                                             00:00
+                                @elseif($record['first_in_time']==$record['last_out_time'])
                                 00:00
                                 @else
                                 {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
@@ -1497,8 +1527,17 @@ color: #fff;
                             $lateArrivalTime = $firstInTime->diff(\Carbon\Carbon::parse('10:00'))->format('%H:%I');
                             $isLateBy10AM = $firstInTime->format('H:i') > '10:00';
                             @endphp
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{ date('H:i', strtotime($record['first_in_time'])) }}</td>
-                            @if($isLateBy10AM)
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                                @if($isDate)
+                                 {{ date('H:i', strtotime($record['first_in_time'])) }}
+                                @else 
+                                  00:00
+                                @endif  
+
+                            </td>
+                            @if($isDate==false)
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                            @elseif($isLateBy10AM)
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{$lateArrivalTime}}</td>
                             @else
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
@@ -1520,13 +1559,15 @@ color: #fff;
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
                             @if($distinctDates->has($dateKeyForLookup))
                             @php
+
                             $record = $distinctDates[$dateKeyForLookup];
                             $firstInTime = \Carbon\Carbon::parse($record['last_out_time']);
                             $lateArrivalTime = $firstInTime->diff(\Carbon\Carbon::parse('19:00'))->format('%H:%I');
                             $isEarlyBy07PM = $firstInTime->format('H:i') < '19:00' ; @endphp @if(empty($record['last_out_time'])) @php $record['last_out_time']=$record['first_in_time']; $firstInTime=\Carbon\Carbon::parse($record['last_out_time']); $lateArrivalTime=$firstInTime->diff(\Carbon\Carbon::parse('19:00'))->format('%H:%I');
                                 $isEarlyBy07PM = $firstInTime->format('H:i') < '19:00' ; @endphp <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{ date('H:i', strtotime($record['last_out_time'])) }}</td>
                                     @else
-                                    <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{ date('H:i', strtotime($record['last_out_time'])) }}</td>
+         
+                                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{ date('H:i', strtotime($record['last_out_time'])) }}</td>
                                     @endif
                                     @if($isEarlyBy07PM)
                                     <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{$lateArrivalTime}}</td>
@@ -1574,50 +1615,125 @@ color: #fff;
                             <td></td>
                             @endif
                         </tr>
-
+                    </table>
         </div>
         @if ($showAlertDialog)
-    @php
+        @php
     $formattedDate = \Carbon\Carbon::parse($date)->format('d M');
     @endphp
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Swipes</b></h5>
+                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Swipe Details for {{$formattedDate}}</b></h5>
                     <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
                     </button>
                 </div>
-                <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                <div class="modal-body">
+                   
+                    @if($viewDetailsInswiperecord&&$date<$todaysDate)
+                        @php
+                    
+                            $firstInTimestamp = strtotime($viewDetailsInswiperecord->swipe_time);
+                            if($viewDetailsOutswiperecord)
+                            {
+                                $lastOutTimestamp = strtotime($viewDetailsOutswiperecord->swipe_time);
+                                $differenceInSeconds = $lastOutTimestamp - $firstInTimestamp;
+                                // Calculate hours and minutes
+                                $hours = floor($differenceInSeconds / 3600);
+                                $minutes = floor(($differenceInSeconds % 3600) / 60);
+                            }
+                        @endphp      
                     <div class="row">
-                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Date : <span style="color: #333;">$currentDate </span></div>
-                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Shift Time : <span style="color: #333;">10:00 to 19:00</span></div>
+                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name : <span style="color: #333;">{{ucwords(strtolower($employeeDetails->first_name))}}&nbsp;{{ucwords(strtolower($employeeDetails->last_name))}}</span></div>
+                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Employee ID : <span style="color: #333;">{{$employeeDetails->emp_id}}</span></div>
+                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Access Card Number:</div>
                     </div>
-                    <table class="swipes-table mt-2 border" style="width: 100%;">
+                    <div class="swipes-table mt-4 border" style="max-height: 300px; overflow-y: auto; display: block;">
+                    <table style="width: 100%;">
                         <tr style="background-color: #f6fbfc;">
-                            <th style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Swipe Time</th>
-                            <th style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">Sign-In / Sign-Out</th>
+                            <th style="width:15%;font-size: 12px; text-align:start;padding:5px;color:#778899;font-weight:500;white-space:nowrap;">In/Out</th>
+                            <th style="width:15%;font-size: 12px; text-align:start;padding:5px;color:#778899;font-weight:500;white-space:nowrap;">Swipe Time</th>
+                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Location</th>
+                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Status</th>
+                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Last Updated On</th>
+                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Modified Time</th>
+                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Updated By</th>
+                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Longitude</th>
+                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Latitude</th>
                         </tr>
-
-                      
+ 
+                                        
                             <tr style="border:1px solid #ccc;">
-                                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px"> $swipe->swipe_time </td>
-                                <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px"> $swipe->in_or_out </td>
+                                
+                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px 10pxwhite-space:nowrap;"> {{$viewDetailsInswiperecord->in_or_out}} </td>
+                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;"> {{$viewDetailsInswiperecord->swipe_time}} </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
                             </tr>
-                        
-                            <tr>
-                                <td class="homeText" colspan="2">No swipe records found for today.</td>
+                            <tr style="border:1px solid #ccc;">
+                                
+                                @if($viewDetailsOutswiperecord)
+                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:5px;white-space:nowrap;"> {{$viewDetailsOutswiperecord->in_or_out}} </td>
+                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:5px"> {{$viewDetailsOutswiperecord->swipe_time}} </td>
+                                @else
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;"> OUT </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> {{$viewDetailsInswiperecord->swipe_time}} </td>
+                                @endif
+                                @if($viewDetailsOutswiperecord)
+                                  <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
+                                @else
+                                  <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">System inserted out</td>
+                                @endif  
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
                             </tr>
                        
-
+  
+                            <tr style="border:1px solid #ccc; background-color: #f0f0f0;">
+                                @if($viewDetailsOutswiperecord)
+                                 <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">Actual Hours :{{ str_pad($hours, 2, '0', STR_PAD_LEFT) }} hrs {{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }} mins mins'</td>
+                                @else   
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">Actual Hours :00 hrs 00 mins mins'</td>
+                                @endif
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"></td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">  </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">  </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">  </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">  </td>
+                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">  </td>
+                            </tr>
+                       
+ 
                     </table>
+                    </div>
+                    @else
+                       <div style="text-align:center;">
+                           <img src="https://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
+                           <div class="text-muted">No record available</div>
+                       </div>
+                    @endif
+                    <div style="display: flex; justify-content: center; margin-top: 20px;">
+                         <button class="cancel-btn" style="border:1px solid rgb(2, 17, 79);"wire:click="close">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-backdrop fade show blurred-backdrop"></div>
-@endif
 
+        @endif    
     </div>
     
 </div>

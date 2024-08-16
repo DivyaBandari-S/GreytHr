@@ -858,7 +858,7 @@
 
     </style>
     <div class="container">
-         <a href="/Attendance" class="back-button">&#8592; Back</a>
+         <a href="/Attendance" class="submit-btn"style="text-decoration:none;">Back</a>
         <!-- Check for success message -->
         @if (session()->has('success'))
         <div class="alert alert-success">

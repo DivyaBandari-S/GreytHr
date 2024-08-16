@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\SwipeRecord;
 use Carbon\Carbon;
@@ -18,6 +19,7 @@ class AttendanceTable extends Component
     public $viewDetailsOutswiperecord;
     public $moveCaretLeftSession1 = false;
 
+    public $viewDetailsswiperecord;
     public $moveCaretLeftSession2 = false;
     public $holiday;
 
@@ -31,6 +33,7 @@ class AttendanceTable extends Component
 
     public  string $start;
 
+    public $employeeDetails;
     public string $end;
     public $showSR = false;
 
@@ -45,6 +48,7 @@ class AttendanceTable extends Component
         $this->year = Carbon::now()->format('Y');
         $this->start = Carbon::now()->year($this->year)->firstOfMonth()->format('Y-m-d');
         $this->end = Carbon::now()->year($this->year)->lastOfMonth()->format('Y-m-d');
+        $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->select('emp_id','first_name','last_name')->first();
     }
     public function update($start, $end) 
     {
@@ -67,8 +71,11 @@ class AttendanceTable extends Component
     {
         $this->showAlertDialog = true;
         $this->date = $i;
+        $this->viewDetailsswiperecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->date)->get();
         $this->viewDetailsInswiperecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'IN')->whereDate('created_at', $this->date)->first();
+       
         $this->viewDetailsOutswiperecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'OUT')->whereDate('created_at', $this->date)->first();
+        
     }
     public function close()
     {
