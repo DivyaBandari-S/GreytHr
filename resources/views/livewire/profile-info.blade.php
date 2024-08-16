@@ -50,7 +50,6 @@
                             @endif
                             <div class="d-flex align-items-start " style="margin-left: 15px;">
                                 <button class="btn btn-primary btn-sm p-0" style="font-size: 10px; height: 20px;width:55px; background-color: rgb(2,17,79)" wire:click="updateProfile" wire:loading.attr="disabled" wire:target="updateProfile">
-                                    <span style="font-size: 10px;" wire:loading wire:target="image">Uploading...</span>
                                     <span style="font-size: 10px;" wire:loading.remove>Update</span>
                                 </button> <br>
                                 <input type="file" id="imageInput" wire:model="image" class="form-control-small" style="font-size:10px;margin-left:5px;">

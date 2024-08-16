@@ -440,7 +440,7 @@
 
             <div class="buttons-leave">
                 <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
-                <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
+                <button type="button" class=" cancel-btn"  style="border:1px solid rgb(2, 17, 79);">Cancel</button>
             </div>
         </form>
     </div>
