@@ -34,6 +34,7 @@ use App\Livewire\RegularisationPending;
 use App\Livewire\EmployeeSwipes;
 use App\Livewire\AttendanceMusterData;
 use App\Livewire\AttendanceMuster;
+use App\Livewire\AttendanceTableNew;
 use App\Livewire\AttendenceMasterDataNew;
 use App\Livewire\Chat\Chat;
 use App\Livewire\EmployeeSwipesData;
