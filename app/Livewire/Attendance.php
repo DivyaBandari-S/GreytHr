@@ -28,6 +28,8 @@ class Attendance extends Component
     public $currentDate2;
     public $hours;
     public $minutesFormatted;
+
+    public $avgWorkHoursFromJuly=0;
     public $last_out_time;
     public $currentDate;
     public $date1;
@@ -41,6 +43,8 @@ class Attendance extends Component
     public $swipe_records_count;
     public $clickedDate;
     public $currentWeekday;
+
+    public $totalDays;
     public $calendar;
     public $selectedDate;
     public $shortFallHrs;
@@ -61,6 +65,8 @@ class Attendance extends Component
     public $showCalendar = true;
     public $date2;
     public $modalTitle = '';
+
+    public $countofAbsent;
     public $view_student_swipe_time;
     public $view_student_in_or_out;
     public $swipeRecordId;
@@ -77,6 +83,8 @@ class Attendance extends Component
     public $defaultfaCalendar = 1;
     public $dateclicked;
     public $view_table_in;
+
+    public $count;
     public $view_table_out;
     public $employeeDetails;
     public $changeDate = 0;
@@ -98,6 +106,8 @@ class Attendance extends Component
     public $Swiperecords;
     public $employeeId;
 
+    public $holidayCount=0;
+
     public $employeeIdForRegularisation;
 
    public $totalDurationFormatted;
@@ -116,9 +126,23 @@ class Attendance extends Component
     public $session2 = 0;
     public $session1ArrowDirection = 'right';
     public $session2ArrowDirection = 'right';
+
+    public $averageHoursWorked;
+
+    public $totalcount=0;
+
+    public $averageMinutesWorked;
     public $avgSwipeInTime = null;
     public $avgSwipeOutTime = null;
-    public $totalDays;
+    public $totalmodalDays;
+
+
+    public $weekendDays=0;
+    public $daysWithRecords=0;
+
+    public $totalHoursWorked=0;
+
+    public $totalMinutesWorked=0;
     public $avgWorkHours = 0;
     public $avgLateIn = 0;
     public $avgEarlyOut = 0;
@@ -262,12 +286,43 @@ class Attendance extends Component
         // Output results
 
         try {
+                 
             $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('first_name', 'last_name', 'shift_type', 'shift_start_time', 'shift_end_time')->first();
             //insights
             $this->from_date = now()->startOfMonth()->toDateString();
             $this->to_date = now()->toDateString();
+            $fromDate = \Carbon\Carbon::createFromFormat('Y-m-d', $this->from_date);
+            $toDate = \Carbon\Carbon::createFromFormat('Y-m-d', $this->to_date);
+
             $currentDate = Carbon::parse($this->from_date);
             $endDate = Carbon::parse($this->to_date);
+            $totalHoursWorked=0;
+            $totalMinutesWorked=0;
+            while ($fromDate->lte($toDate)) {
+                $inTimeForWorkHrs=SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->where('in_or_out','IN')->whereDate('created_at',$fromDate)->first();
+                $outTimeForWorkHrs=SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->where('in_or_out','OUT')->whereDate('created_at',$fromDate)->first();
+                if ($inTimeForWorkHrs && $outTimeForWorkHrs) {
+                    $inTimeForAvgWorkHrs = \Carbon\Carbon::parse($inTimeForWorkHrs->swipe_time);
+                    $outTimeForAvgWorkHrs = \Carbon\Carbon::parse($outTimeForWorkHrs->swipe_time);
+                
+                    $hoursWorked = $inTimeForAvgWorkHrs->diffInHours($outTimeForAvgWorkHrs);
+                    $minutesWorked = $inTimeForAvgWorkHrs->diffInMinutes($outTimeForAvgWorkHrs) % 60;
+
+                    $this->totalHoursWorked += $hoursWorked;
+                    $this->totalMinutesWorked += $minutesWorked;
+                    $this->daysWithRecords++;
+                }
+                // Move to the next day
+                $fromDate->addDay();
+            }
+            if ($this->daysWithRecords > 0) {
+                $this->averageHoursWorked = $this->totalHoursWorked / $this->daysWithRecords;
+                $this->averageMinutesWorked = $this->totalMinutesWorked / $this->daysWithRecords;
+            
+                
+            } 
+           
+            
             $timeDifferences = [];
             function formatTime($seconds) {
                 $hours = floor($seconds / 3600);
@@ -305,7 +360,7 @@ class Attendance extends Component
                 $currentDate->addDay(); // Move to the next day
                 
             }
-            echo "Time Difference :" .formatTime($totalDifferenceForDay);
+         
             // Optionally, calculate average time difference per day
             $averageDifferences = [];
             foreach ($timeDifferences as $date => $differences) {
@@ -316,19 +371,7 @@ class Attendance extends Component
                 }
             }
             
-            // Helper function to format seconds as HH:MM:SS
-            // function formatTime($seconds) {
-            //     $hours = floor($seconds / 3600);
-            //     $minutes = floor(($seconds % 3600) / 60);
-            //     $seconds = $seconds % 60;
-            //     return sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
-            // }
             
-            // Example output
-            // foreach ($averageDifferences as $date => $avgDiff) {
-
-            //     echo "Date: $date, Average Time Difference: " . formatTime($avgDiff) . "\n";
-            // }
             $this->updateModalTitle();
             $this->calculateTotalDays();
 
@@ -696,6 +739,42 @@ class Attendance extends Component
             // Format the dates and update the modal title
             $formattedFromDate = Carbon::parse($this->from_date)->format('Y-m-d');
             $formattedToDate = Carbon::parse($this->to_date)->format('Y-m-d');
+            $fromDatetemp = Carbon::parse($this->from_date);
+            $toDatetemp = Carbon::parse($this->to_date);
+            $this->totalmodalDays = $fromDatetemp->diffInDays($toDatetemp) + 1;
+
+            $this->count=0;
+           
+            while ($fromDatetemp->lte($toDatetemp)) {
+                // Your logic here, using $fromDate
+                $fromDate = Carbon::parse($fromDatetemp);
+                
+                $fromDateyear = $fromDate->year;
+                $fromDatemonth = $fromDate->month;
+                $fromDateday = $fromDate->day;
+                $timestamp=mktime(0, 0, 0, $fromDatemonth, $fromDateday, $fromDateyear);
+                $dayName=date('D', $timestamp); 
+              
+                $exists = SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $fromDatetemp->format('Y-m-d'))->exists();
+                $holidayexists=HolidayCalendar::where('date',Carbon::parse($this->fromDatetemp)->format('Y-m-d'))->exists();
+                if ($dayName === 'Sat' || $dayName === 'Sun') {
+                    $this->weekendDays++;
+                }
+                if($holidayexists==true)
+                {
+                    $this->holidayCount++;
+                }
+                if($exists)
+                {
+                  $this->count++;   
+                }
+                
+                // Move to the next day
+                $fromDatetemp->addDay();
+                $exists=false;
+            }
+            $this->countofAbsent=$this->totalmodalDays-$this->count-$this->weekendDays-$this->holidayCount;
+            
             $formattedFromDateForModalTitle = Carbon::parse($this->from_date)->format('d M');
             $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
             $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";

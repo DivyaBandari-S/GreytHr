@@ -861,7 +861,7 @@ width: 170px; */
 
         .toggle-box-attendance-info {
 
-            background-color: #f0f0f0;
+            background-color: transparent;
             margin-left: 40px;
             float: right;
             /* margin-left: 850px; */
@@ -1375,13 +1375,13 @@ color: #fff;
 
                     <div class="col-8 p-0">
                         <!-- Small box with the text -->
-                        <div style="white-space:nowrap;text-align:center;margin-left:30px;">Access card details not available</div>
+                        <div style="white-space:nowrap;text-align:center;margin-left:30px;font-size:12px;">Access card details not available</div>
 
                     </div>
 
                     <!-- Blue info icon on the right -->
                     <div class="info-icon-container-attendance-info col-4">
-                        <i class="fa fa-info-circle" aria-hidden="true" style="margin-left:25px;font-size: 14px; color: blue;"></i>
+                        <i class="fa fa-info-circle" aria-hidden="true" style="margin-left:66px;font-size: 14px; color: blue;text-decoration:none;"></i>
                         <div class="info-box-attendance-info">
                             Contact administrator to get access card assigned.
                         </div>
@@ -1411,7 +1411,8 @@ color: #fff;
                             <div>
                                 <span class="text-success ng-star-inserted" style="font-size:10px;"> +233%
                                 </span>
-                                <span class="text-muted" style="font-size:10px;margin-left:0px;"> From August </span>
+                                <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                </span>
                             </div>
                         </section>
                     </div>
@@ -1421,11 +1422,12 @@ color: #fff;
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
                         </h6>
                         <section class="text-center">
-                            <p class="text-2" style="margin-top:30px;">02:00</p>
+                            <p class="text-2" style="margin-top:30px;">{{$averageHoursWorked}}:{{$averageMinutesWorked}}</p>
                             <div>
                                 <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
                                     +233% </span>
-                                <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From August
+                                <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+
                                 </span>
                             </div>
                         </section>
@@ -1489,7 +1491,7 @@ color: #fff;
                                             <td class="insights-for-attendance-period">{{$avgLateIn}}</td>
                                             <td class="insights-for-attendance-period">{{$avgEarlyOut}}</td>
                                             <td class="insights-for-attendance-period">-</td>
-                                            <td class="insights-for-attendance-period">-</td>
+                                            <td class="insights-for-attendance-period">{{$holidayCount}}</td>
                                             <td class="insights-for-attendance-period">-</td>
                                         </tr>
                                     </tbody>
