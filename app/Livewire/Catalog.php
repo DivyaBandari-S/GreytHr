@@ -374,7 +374,7 @@ class Catalog extends Component
         ];
         $this->validate([
             'subject' => 'required|string|max:255',
-            'mail' => 'required|email|unique:help_desks',
+            'mail' => 'required|email',
             'mobile' => 'required|string|max:15',
             'description' => 'required|string',
         ],$messages);
@@ -382,12 +382,29 @@ class Catalog extends Component
         try {
 
 
-            if ($this->image) {
-                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-                $filePath = 'uploads/help-desk-images/' . $fileName;
-            } else {
-                $filePath = 'N/A';
+            $fileContent = null; // Use a separate variable for file content
+            if ($this->file_path) {
+                // Validate and store the uploaded file
+                $validatedFile = $this->validate([
+                    'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
+                ]);
+    
+                // Store the file as binary data
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+    
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    session()->flash('error', 'Failed to read the uploaded file.');
+                    return;
+                }
+    
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    session()->flash('error', 'File size exceeds the allowed limit.');
+                    return;
+                }
             }
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -398,7 +415,7 @@ class Catalog extends Component
                 'mobile' => $this->mobile,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' => $filePath ?? '-',
+                'file_path' => $fileContent ?? '-',
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'distributor_name' => 'N/A',
@@ -436,12 +453,29 @@ class Catalog extends Component
         try {
 
 
-            if ($this->image) {
-                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-                $filePath = 'uploads/help-desk-images/' . $fileName;
-            } else {
-                $filePath = 'N/A';
+            $fileContent = null; // Use a separate variable for file content
+            if ($this->file_path) {
+                // Validate and store the uploaded file
+                $validatedFile = $this->validate([
+                    'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
+                ]);
+    
+                // Store the file as binary data
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+    
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    session()->flash('error', 'Failed to read the uploaded file.');
+                    return;
+                }
+    
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    session()->flash('error', 'File size exceeds the allowed limit.');
+                    return;
+                }
             }
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -452,7 +486,7 @@ class Catalog extends Component
                 'mail' => $this->mail,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' => $filePath,
+                'file_path' => $fileContent ?? '-',
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'mobile' => 'N/A',
@@ -487,12 +521,29 @@ class Catalog extends Component
         try {
 
 
-            if ($this->image) {
-                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-                $filePath = 'uploads/help-desk-images/' . $fileName;
-            } else {
-                $filePath = 'N/A';
+            $fileContent = null; // Use a separate variable for file content
+            if ($this->file_path) {
+                // Validate and store the uploaded file
+                $validatedFile = $this->validate([
+                    'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
+                ]);
+    
+                // Store the file as binary data
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+    
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    session()->flash('error', 'Failed to read the uploaded file.');
+                    return;
+                }
+    
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    session()->flash('error', 'File size exceeds the allowed limit.');
+                    return;
+                }
             }
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -503,7 +554,7 @@ class Catalog extends Component
                 'distributor_name' => $this->distributor_name,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' => $filePath,
+                'file_path' =>  $fileContent ?? '-',
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'mail' => 'N/A',
@@ -537,12 +588,29 @@ class Catalog extends Component
         try {
      
             // Handle file upload
-            if ($this->image) {
-                $fileName = uniqid() . '_' . $this->image->getClientOriginalName();
-                $this->image->storeAs('uploads/help-desk-images', $fileName, 'public');
-                $filePath = 'uploads/help-desk-images/' . $fileName;
-            } else {
-                $filePath = 'N/A';
+            $fileContent = null; // Use a separate variable for file content
+            if ($this->file_path) {
+                // Validate and store the uploaded file
+                $validatedFile = $this->validate([
+                    'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
+                ]);
+    
+                // Store the file as binary data
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+    
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    session()->flash('error', 'Failed to read the uploaded file.');
+                    return;
+                }
+    
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    session()->flash('error', 'File size exceeds the allowed limit.');
+                    return;
+                }
             }
 
             // Get the employee details
@@ -556,7 +624,7 @@ class Catalog extends Component
                 'emp_id' => $this->employeeDetails->emp_id,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' => $filePath,
+                'file_path' => $fileContent ?? '-',
                 'cc_to' => $this->cc_to ?? '-',
                
                 'category' => $this->category ?? '-',
