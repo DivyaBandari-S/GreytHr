@@ -254,4 +254,4 @@ tooltip: {
 };
 
 var chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();e
+chart.render();

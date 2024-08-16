@@ -275,6 +275,36 @@ class ViewPendingDetails extends Component
             session()->flash('error', 'Failed to approve leave application. Please try again.');
         }
     }
+    public function rejectLeaveCancel($index)
+    {
+        try {
+            // Find the leave request by ID
+            $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
+
+            // Calculate the difference in days from the created date to now
+            $createdDate = Carbon::parse($leaveRequest->created_at);
+            $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
+
+            // Check if status is already approved
+            if ($leaveRequest->cancel_status === 'rejected') {
+                session()->flash('message', 'Leave application is already approved.');
+            } else {
+                // Check if days since creation is more than 3 days or status is not yet approved
+                if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
+                    // Update status to 'approved'v
+                    $leaveRequest->cancel_status = 'rejected';
+                    $leaveRequest->save();
+                    $leaveRequest->touch();
+                    session()->flash('message', 'Leave cancel application approved successfully.');
+                    $this->fetchPendingLeaveApplications();
+                }
+            }
+        } catch (\Exception $e) {
+            // Handle the exception
+            Log::error('Error approving leave: ' . $e->getMessage());
+            session()->flash('error', 'Failed to approve leave application. Please try again.');
+        }
+    }
 
     //this to reject the leave
     public function rejectLeave($index)

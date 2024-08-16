@@ -15,6 +15,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Session;
 use \Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class Tasks extends Component
 {
@@ -22,6 +23,7 @@ class Tasks extends Component
     public $status = false;
     public $searchTerm = '';
     public $showDialog = false;
+    public $showViewFileDialog = false;
     public $showModal = false;
     public $employeeDetails;
     public $emp_id;
@@ -57,6 +59,8 @@ class Tasks extends Component
     public $search = '';
     public $closedSearch = '';
     public $filterData;
+    public $showAlert = false;
+  
     public function setActiveTab($tab)
     {
         if ($tab === 'open') {
@@ -71,6 +75,11 @@ class Tasks extends Component
             $this->end = now()->endOfYear()->format('Y-m-d');
         }
         $this->loadTasks();
+    }
+    public function hideAlert()
+    {
+        $this->showAlert = false;
+        session()->forget('showAlert');
     }
 
     public function loadTasks()
@@ -225,6 +234,9 @@ class Tasks extends Component
         $this->year = Carbon::now()->format('Y');
         $this->start = now()->startOfYear()->format('Y-m-d');
         $this->end = now()->endOfYear()->format('Y-m-d');
+        if (session()->has('showAlert')) {
+            $this->showAlert = session('showAlert');
+        }
     }
 
     public function selectPerson($personId)
@@ -276,7 +288,10 @@ class Tasks extends Component
             $task->update(['status' => 'Completed']);
         }
         session()->flash('message', 'Task closed successfully!');
+        session()->flash('showAlert', true);
+
         return redirect()->to('/tasks');
+      
     }
 
     public function closeForTasks($taskId)
@@ -287,7 +302,10 @@ class Tasks extends Component
             $task->update(['status' => 'Open']);
         }
         session()->flash('message', 'Task has been Re-Opened.');
+        session()->flash('showAlert', true);
+      
         return redirect()->to('/tasks');
+   
     }
 
     public function autoValidate()
@@ -321,16 +339,18 @@ class Tasks extends Component
 
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
+        $this->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
+        ]);
+        
         // Validate and upload the image file
         if ($this->image) {
             $this->isLoadingImage = true;
-            if ($this->image instanceof \Illuminate\Http\UploadedFile) {
-                $imagePath = $this->image->store('tasks-images', 'public');
-                $this->image_path = $imagePath;
-                $this->isLoadingImage = false;
-            }
+            $imagePath = file_get_contents($this->image->getRealPath());
+            $this->image_path = $imagePath;
+            $this->isLoadingImage = false;
         }
+
 
         Task::create([
             'emp_id' => $this->employeeDetails->emp_id,
@@ -358,7 +378,9 @@ class Tasks extends Component
 
         $this->reset();
         session()->flash('message', 'Task created successfully!');
+        session()->flash('showAlert', true);
         return redirect()->to('/tasks');
+     
     }
 
     public $client_id, $project_name, $image_path;
@@ -369,7 +391,18 @@ class Tasks extends Component
     {
         $this->showDialog = true;
     }
-
+    public $recordId;
+    public $viewrecord;
+    public function showViewFile($recordId)
+    {
+        $this->$recordId=$recordId;
+        $this->viewrecord = Task::find($recordId);
+        $this->showViewFileDialog = true;
+    }
+    public function closeViewFile()
+    {
+        $this->showViewFileDialog = false;
+    }
 
     public function close()
     {
@@ -427,6 +460,8 @@ class Tasks extends Component
         ]);
 
         session()->flash('comment_message', 'Comment updated successfully.');
+        $this->showAlert = true;
+
 
         // Reset the edit state
         $this->editCommentId = null;
@@ -448,6 +483,8 @@ class Tasks extends Component
         $this->newComment = '';
         $this->showModal = false;
         session()->flash('message', 'Comment added successfully.');
+        $this->showAlert = true;
+       
     }
     public function updatedNewComment($value)
     {
@@ -461,6 +498,7 @@ class Tasks extends Component
             $comment = TaskComment::findOrFail($commentId);
             $comment->delete();
             session()->flash('comment_message', 'Comment deleted successfully.');
+            $this->showAlert = true;
             $this->fetchTaskComments($this->taskId);
         } catch (\Exception $e) {
             // Handle any exceptions that occur during the deletion process
@@ -529,4 +567,46 @@ class Tasks extends Component
             'taskComments' => $this->taskComments,
         ]);
     }
+
+    public function downloadImage()
+    {
+        if ($this->viewrecord && !empty($this->viewrecord->file_path)) {
+            $fileData = $this->viewrecord->file_path;
+    
+            // Determine the MIME type and file extension based on the data URL prefix
+            $mimeType = 'application/octet-stream'; // Fallback MIME type
+            $fileExtension = 'bin'; // Fallback file extension
+    
+            // Check the file's magic number or content to determine MIME type and file extension
+            if (strpos($fileData, "\xFF\xD8\xFF") === 0) {
+                $mimeType = 'image/jpeg';
+                $fileExtension = 'jpg';
+            } elseif (strpos($fileData, "\x89PNG\r\n\x1A\n") === 0) {
+                $mimeType = 'image/png';
+                $fileExtension = 'png';
+            } elseif (strpos($fileData, "GIF87a") === 0 || strpos($fileData, "GIF89a") === 0) {
+                $mimeType = 'image/gif';
+                $fileExtension = 'gif';
+            } else {
+                return abort(415, 'Unsupported Media Type');
+            }
+    
+            $fileName = 'image-' . $this->viewrecord->id . '.' . $fileExtension;
+            return response()->stream(
+                function () use ($fileData) {
+                    echo $fileData;
+                },
+                200,
+                [
+                    'Content-Type' => $mimeType,
+                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                ]
+            );
+        }
+    
+        return abort(404, 'Image not found');
+    }
+    
+    
+    
 }

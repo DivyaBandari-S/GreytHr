@@ -196,7 +196,12 @@
                         </div>
                         <div class="content1">
                             <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" style="color:#007BFF;font-size:11px;">View Details</a>
+                            @if($leaveRequest['leaveRequest']->category_type === 'Leave')
                             <button class="rejectBtn" wire:click="rejectLeave({{ $loop->index }})">Reject</button>
+                            @else
+                            <button class="rejectBtn" wire:click="rejectLeaveCancel({{ $loop->index }})" title="Reject Leave Cancel">Reject</button>
+                            @endif
+
                             @if($leaveRequest['leaveRequest']->category_type === 'Leave')
                             <button class="approveBtn" wire:click="approveLeave({{ $loop->index }})">Approve</button>
                             @else

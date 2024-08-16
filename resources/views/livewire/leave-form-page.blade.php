@@ -72,8 +72,10 @@
 
          <!-- Sub-Section Content -->
          @if($activeSubSection === 'leave')
-         <div class="apply-section">
-            @livewire('leave-apply-page')
+         <div class="apply-section  ">
+            <div class="containerWidth">
+               @livewire('leave-apply-page')
+            </div>
          </div>
          @elseif($activeSubSection === 'restricted')
          <div class="restricted-section">
@@ -190,7 +192,7 @@
 
                            </div>
 
-                           <div class="col accordion-content">
+                           <div class="col accordion-content" style="padding-left: 20px;">
 
                               <span class="accordionContentSpan">No. of Days</span>
 
@@ -270,8 +272,11 @@
                                     Details</span>
 
                               </a>
+                              @if($leaveRequest->category_type === 'Leave')
                               <button class="withdraw" wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
-
+                              @else
+                              <button class="withdraw" wire:click="cancelLeaveCancel({{ $leaveRequest->id }})">Withdraw</button>
+                              @endif
                            </div>
 
                         </div>

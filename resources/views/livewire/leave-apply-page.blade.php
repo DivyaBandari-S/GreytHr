@@ -30,16 +30,17 @@
                             <select id="leaveType" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType">
                                 <option value="default">Select Type</option>
                                 <option value="Casual Leave">Casual Leave</option>
-                                @if (($differenceInMonths < 6)) <option value="Casual Leave Probation">Casual Leave Probation</option>
-                                    @endif
-                                    <option value="Loss of Pay">Loss of Pay</option>
-                                    <option value="Marriage Leave">Marriage Leave</option>
-                                    @if($employeeGender && $employeeGender->gender === 'Female')
-                                    <option value="Maternity Leave">Maternity Leave</option>
-                                    @else
-                                    <option value="Paternity Leave">Paternity Leave</option>
-                                    @endif
-                                    <option value="Sick Leave">Sick Leave</option>
+                                @if($showCasualLeaveProbation)
+                                <option value="Casual Leave Probation">Casual Leave Probation</option>
+                                @endif
+                                <option value="Loss of Pay">Loss of Pay</option>
+                                <option value="Marriage Leave">Marriage Leave</option>
+                                @if($employeeGender && $employeeGender->gender === 'Female')
+                                <option value="Maternity Leave">Maternity Leave</option>
+                                @elseif($employeeGender && $employeeGender->gender === 'Male')
+                                <option value="Paternity Leave">Paternity Leave</option>
+                                @endif
+                                <option value="Sick Leave">Sick Leave</option>
                             </select>
                         </div>
                         <br>
@@ -253,10 +254,10 @@
                         <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($loginEmpManager)) }}</p>
                         @endif
 
-                        @if(!$loginEmpManagerId)
+                        @if(!$empManagerDetails)
                         <p class="mb-0 normalTextValue">#(N/A)</p>
                         @else
-                        <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#{{$loginEmpManagerId}}</span></p>
+                        <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#{{$empManagerDetails->emp_id}}</span></p>
                         @endif
                     </div>
                     <div class="downArrow" wire:click="applyingTo">
@@ -272,11 +273,22 @@
                     <div class="row mb-2 py-0 ">
                         <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
                             <div class="col-md-10">
-                                <div class="input-group">
-                                    <input wire:model="filter" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
-                                    <div class="input-group-append searchBtnBg d-flex align-items-center">
-                                        <button type="button" wire:click="searchEmployees" class="search-btn">
-                                            <i style="color:#fff;margin-left:10px;" class="fas fa-search"></i>
+                                <div class="input-group mb-3">
+                                    <input
+                                        wire:model="filter"
+                                        id="searchInput"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Search for Emp.Name or ID"
+                                        aria-label="Search"
+                                        aria-describedby="basic-addon1"
+                                        style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;">
+                                    <div class="input-group-append">
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            wire:click="searchManager">
+                                            <i class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -293,8 +305,8 @@
 
                     <!-- Your Blade file -->
                     <div class="scrollApplyingTO">
-                        @if(!empty($managerFullName))
-                        @foreach($managerFullName as $employee)
+                        @if(!empty($managers))
+                        @foreach($managers as $employee)
                         <div class="d-flex gap-4 align-items-center" style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             @if($employee['image'])
                             <div class="employee-profile-image-container">
@@ -314,6 +326,7 @@
                         @else
                         <p class="mb-0 normalTextValue m-auto text-center">No managers found.</p>
                         @endif
+
                     </div>
                 </div>
                 @endif
@@ -372,15 +385,24 @@
                         <div wire:key="{{ $employee['emp_id'] }}">
                             <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
                                 <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
-
                                 @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
                                 <div class="employee-profile-image-container">
                                     <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius: 50%;">
                                 </div>
                                 @else
+                                @if($employee['gender'] === "Male")
                                 <div class="employee-profile-image-container">
-                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
+                                    <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="33" width="33">
                                 </div>
+                                @elseif($employee['gender'] === "Female")
+                                <div class="employee-profile-image-container">
+                                    <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="33" width="33">
+                                </div>
+                                @else
+                                <div class="employee-profile-image-container">
+                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px">
+                                </div>
+                                @endif
                                 @endif
 
                                 <div class="center mb-2 mt-2">

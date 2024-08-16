@@ -52,6 +52,7 @@ li {
 	overflow-y: auto;
 	scrollbar-width: none;
 	transition: all .3s ease;
+	text-decoration: none;
 	z-index: 100;
 }
 .icon {
@@ -361,6 +362,7 @@ nav .profile .profile-link a {
 	grid-gap: 10px;
 	font-size:0.8rem;
     font-weight: 500;
+	text-decoration: none;
 	color: var(--dark);
 	align-items: center;
 	transition: all .3s ease;

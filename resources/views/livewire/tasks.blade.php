@@ -7,7 +7,6 @@
         .people-search-input {
             font-size: 0.75rem;
             border-radius: 5px 0 0 5px;
-            cursor: pointer;
             height: 32px;
         }
 
@@ -40,10 +39,16 @@
                 margin-left: 0px;
             }
         }
+
+        .viewfile {
+            color: var(--main-heading-color);
+            font-size: var(--main-headings-font-size);
+            font-weight: 500;
+        }
     </style>
 
     <div class="container"
-        style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow-x: hidden;padding-bottom: 15px;">
+        style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow-x: hidden;padding-bottom: 15px; position: relative;">
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
@@ -59,38 +64,17 @@
             </ul>
         </div>
 
+        <div id="alert-container" class="d-flex justify-content-center alert-container " wire:poll.5s="hideAlert" style="position: sticky; top: 13%; z-index: 10; width: 100%;" >
 
-
-
-
-
-
-        <div style="display: flex; justify-content: center; align-items: center;margin-top:5px">
-            @if (session()->has('message'))
-                <div id="flash-message"
-                    style="width: 90%; margin: 0.2rem; padding: 0.25rem; background-color: #f0fff4; border: 1px solid #68d391; color: #38a169; border-radius: 0.25rem; text-align: center;"
-                    class="success-message">
+            @if ($showAlert)
+                <p class="alert alert-success" role="alert" style=" font-weight: 400;width:fit-content;padding:10px;border-radius:5px" >
                     {{ session('message') }}
-                </div>
+                    <span style="font-weight:500;margin:0px 10px; cursor: pointer; " wire:click='hideAlert'>x</span>
+                </p>
             @endif
         </div>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    var flashMessage = document.getElementById('flash-message');
-
-                    if (flashMessage) {
-                        flashMessage.style.transition = 'opacity 0.5s ease';
-                        flashMessage.style.opacity = '0';
-                        setTimeout(function() {
-                            flashMessage.remove();
-                        }, 500); // Delay to allow the fade-out effect
-                    }
-                }, 5000); // 5000 milliseconds = 5 seconds
-            });
-
-
             $(document).ready(function() {
                 $('#date_range').datepicker({
                     format: 'yyyy-mm-dd',
@@ -98,7 +82,7 @@
                     endDate: '+0d',
                     todayHighlight: true,
                     multidateSeparator: ' to ',
-                    inputs: $('#start_date, #end_date'), // Adding this line to link both inputs
+                    inputs: $('#start_date, #end_date'), 
                     inputs: {
                         start: $('#start_date'),
                         end: $('#end_date')
@@ -128,7 +112,7 @@
                     <!-- Search Box -->
                     <div class="input-group people-input-group-container">
                         <input wire:model="search" type="text" class="form-control people-search-input"
-                            placeholder="Search anything.." aria-label="Search" aria-describedby="basic-addon1">
+                            placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="searchActiveTasks" class="people-search-btn" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
@@ -267,27 +251,32 @@
                                                                     {{ ucfirst($record->followers) ?: '-' }}
                                                                 </td>
                                                                 <td
-                                                                style="border: none; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                {{ ucfirst($record->subject ?? '-') }}
-                                                            </td>
+                                                                    style="border: none; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                    {{ ucfirst($record->subject ?? '-') }}
+                                                                </td>
                                                                 <td
                                                                     style="border: none; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
                                                                     {{ ucfirst($record->description ?? '-') }}
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 30%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    @if ($record->file_path)
-                                                                        <a href="{{ asset('storage/' . $record->file_path) }}"
-                                                                            target="_blank"
+                                                                    @if (!empty($record->file_path) && $record->file_path !== 'null')
+                                                                        <a href="#"
+                                                                            wire:click="showViewFile('{{ $record->id }}')"
                                                                             style="text-decoration: none; color: #007BFF;">View
                                                                             File</a>
                                                                     @else
                                                                         N/A
                                                                     @endif
                                                                 </td>
+
+
                                                             </tr>
                                                         </tbody>
                                                     </table>
+                                                    <!-- Modal Structure (updated to include record ID) -->
+
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -298,14 +287,18 @@
                     </table>
                 </div>
             </div>
+
+
+
         @endif
+
         @if ($activeTab == 'completed')
             <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
                 <form wire:submit.prevent="applyFilters" class="form-inline row" style="margin-bottom: -15px;">
                     <!-- Search Box -->
                     <div class="input-group people-input-group-container">
                         <input wire:model="closedSearch" type="text" class="form-control people-search-input"
-                            placeholder="Search anything.." aria-label="Search" aria-describedby="basic-addon1">
+                            placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="searchCompletedTasks" class="people-search-btn" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
@@ -333,8 +326,8 @@
                                 </th>
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Task Name
                                 </th>
-                              
-                               
+
+
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Assigned By
                                 </th>
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Assignee
@@ -343,7 +336,7 @@
                                     Date</th>
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Due Date
                                 </th>
-                              
+
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Closed
                                     Date</th>
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 23%">Actions
@@ -370,29 +363,29 @@
                                                 </div>
                                             </td>
                                             <td
-                                            style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                            {{ ucfirst($record->task_name) }}
-                                        </td>
-                                           
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
+                                                {{ ucfirst($record->task_name) }}
+                                            </td>
+
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
                                                 {{ ucwords(strtolower($record->emp->first_name)) }}
                                                 {{ ucwords(strtolower($record->emp->last_name)) }}
                                             </td>
-                                           
+
                                             <td
-                                            style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
-                                            {{ ucfirst($record->assignee) }}
-                                        </td>
-                                          
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
+                                                {{ ucfirst($record->assignee) }}
+                                            </td>
+
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
                                                 {{ \Carbon\Carbon::parse($record->created_at)->format('d M, Y') }}
                                             </td>
                                             <td
-                                            style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%; color: {{ \Carbon\Carbon::parse($record->updated_at)->startOfDay()->gt(\Carbon\Carbon::parse($record->due_date)->startOfDay())? 'red': 'inherit' }};">
-                                            {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
-                                        </td>
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%; color: {{ \Carbon\Carbon::parse($record->updated_at)->startOfDay()->gt(\Carbon\Carbon::parse($record->due_date)->startOfDay())? 'red': 'inherit' }};">
+                                                {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
+                                            </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
                                                 {{ \Carbon\Carbon::parse($record->updated_at)->format('d M, Y') }}
@@ -460,9 +453,9 @@
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    @if ($record->file_path)
-                                                                        <a href="{{ asset('storage/' . $record->file_path) }}"
-                                                                            target="_blank"
+                                                                    @if (!empty($record->file_path) && $record->file_path !== 'null')
+                                                                        <a href="#"
+                                                                            wire:click="showViewFile('{{ $record->id }}')"
                                                                             style="text-decoration: none; color: #007BFF;">View
                                                                             File</a>
                                                                     @else
@@ -530,6 +523,7 @@
                                         <span class="text-danger">Assignee is required</span>
                                     @enderror
                                 </div>
+
                                 @if ($assigneeList)
                                     <div
                                         style="border-radius:5px;background-color:grey;padding:8px;width:350px;max-height:250px;overflow-y:auto; ">
@@ -574,15 +568,29 @@
                                                                     value="{{ $people->emp_id }}">
                                                             </div>
                                                             <div class="col-auto">
-                                                                <img class="profile-image" style="margin-left: 10px;"
-                                                                    src="{{ !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL)
-                                                                        ? $people->image
-                                                                        : (!empty($people->image)
-                                                                            ? Storage::url($people->image)
-                                                                            : ($people->gender == 'Male'
-                                                                                ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
-                                                                                : 'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0')) }}"
-                                                                    alt="">
+                                                                @if (!empty($people->image) && $people->image !== 'null')
+                                                                    <img class="profile-image"
+                                                                        style="margin-left: 10px;"
+                                                                        src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                                @else
+                                                                    @if ($people && $people->gender == 'Male')
+                                                                        <img style="margin-left: 10px;"
+                                                                            class="profile-image"
+                                                                            src="{{ asset('images/male-default.png') }}"
+                                                                            alt="Default Male Image">
+                                                                    @elseif($people && $people->gender == 'Female')
+                                                                        <img style="margin-left: 10px;"
+                                                                            class="profile-image"
+                                                                            src="{{ asset('images/female-default.jpg') }}"
+                                                                            alt="Default Female Image">
+                                                                    @else
+                                                                        <img style="margin-left: 10px;"
+                                                                            class="profile-image"
+                                                                            src="{{ asset('images/user.jpg') }}"
+                                                                            alt="Default Image">
+                                                                    @endif
+                                                                @endif
+
                                                             </div>
                                                             <div class="col">
                                                                 <h6 class="username"
@@ -783,15 +791,24 @@
                                                                 value="{{ $people->emp_id }}">
                                                         </div>
                                                         <div class="col-auto">
-                                                            <img class="profile-image"
-                                                                src="{{ !is_null($people->image) && filter_var($people->image, FILTER_VALIDATE_URL)
-                                                                    ? $people->image
-                                                                    : (!empty($people->image)
-                                                                        ? Storage::url($people->image)
-                                                                        : ($people->gender == 'Male'
-                                                                            ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
-                                                                            : 'https://th.bing.com/th/id/R.f931db21888ef3645a8356047504aa7b?rik=63HALWH%2b%2fKtaNQ&riu=http%3a%2f%2fereadcost.eu%2fwp-content%2fuploads%2f2016%2f03%2fblank_profile_female-7.jpg&ehk=atYRSw0KxmUnhESig51u5yzYBWfaD9KBO5KvdxXRCTY%3d&risl=&pid=ImgRaw&r=0')) }}"
-                                                                alt="">
+                                                            @if (!empty($people->image) && $people->image !== 'null')
+                                                                <img class="profile-image"
+                                                                    src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                            @else
+                                                                @if ($people && $people->gender == 'Male')
+                                                                    <img class="profile-image"
+                                                                        src="{{ asset('images/male-default.png') }}"
+                                                                        alt="Default Male Image">
+                                                                @elseif($people && $people->gender == 'Female')
+                                                                    <img class="profile-image"
+                                                                        src="{{ asset('images/female-default.jpg') }}"
+                                                                        alt="Default Female Image">
+                                                                @else
+                                                                    <img class="profile-image"
+                                                                        src="{{ asset('images/user.jpg') }}"
+                                                                        alt="Default Image">
+                                                                @endif
+                                                            @endif
                                                         </div>
                                                         <div class="col">
                                                             <h6 class="username"
@@ -860,25 +877,51 @@
     </div>
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
+    {{-- view file popup --}}
+    @if ($showViewFileDialog)
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title viewfile">View File</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="{{ 'data:image/jpeg;base64,' . base64_encode($viewrecord->file_path) }}"
+                            class="img-fluid" alt="Image preview"
+                            >
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="submit-btn"
+                            wire:click.prevent="downloadImage">Download</button>
+                        <button type="button" class="cancel-btn1" wire:click="closeViewFile">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
     <!-- Add Comment Modal -->
     @if ($showModal)
         <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color: #eceff3;">
+                    <div class="modal-header d-flex justify-content-between" style="background-color: rgb(2, 17, 79); color: white; height: 40px; padding: 8px; position: relative;">
                         <h6 class="modal-title" id="exampleModalLongTitle">Add Comment</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            wire:click="closeModal">
+                            wire:click="closeModal" style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    @if (session()->has('comment_message'))
-                        <div id="flash-comment-message"
-                            style="margin: 0.2rem; padding: 0.25rem; background-color: #f0fff4; border: 1px solid #68d391; color: #38a169; border-radius: 0.25rem; text-align: center;">
-                            {{ session('comment_message') }}
-                        </div>
-                    @endif
+                    <div id="alert-container" class="d-flex justify-content-center alert-container " wire:poll.30s="hideAlert" style="position: sticky; top: 12%; z-index: 10; width: 100%;" >
+
+                        @if ($showAlert)
+                            <p class="alert alert-success" role="alert" style=" font-weight: 400;width:fit-content;padding:10px;border-radius:5px; margin-top: 20px;" >
+                                {{ session('comment_message') }}
+                                <span style="font-weight:500;margin:0px 10px; cursor: pointer; " wire:click='hideAlert'>x</span>
+                            </p>
+                        @endif
+                    </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="addComment">
                             <div class="form-group">
@@ -992,6 +1035,13 @@
         setTimeout(() => {
             container.style.display = 'none';
         }, 3000);
+    }
+
+    function updateModalImage(imageSrc, recordId) {
+        const modalImage = document.querySelector(`#modalImage-${recordId}`);
+        if (modalImage) {
+            modalImage.src = imageSrc;
+        }
     }
 </script>
 </div>

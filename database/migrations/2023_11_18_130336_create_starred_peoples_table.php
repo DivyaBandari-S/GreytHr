@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('company_id');
             $table->string('name')->nullable();
             $table->string('people_id');
-            $table->string('profile')->nullable();
+            $table->binary('profile')->nullable();
             $table->string('contact_details')->nullable();
             $table->string('category')->nullable();
             $table->string('location')->nullable();

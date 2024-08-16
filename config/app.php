@@ -1,7 +1,12 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\BroadcastServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Livewire\LivewireServiceProvider;
 
 return [
 

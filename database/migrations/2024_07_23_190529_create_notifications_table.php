@@ -27,8 +27,6 @@ return new class extends Migration
             $table->string('body')->nullable();
             $table->boolean('is_read')->default(false);
             $table->enum('leave_type', ['Casual Leave', 'Sick Leave', 'Loss Of Pay','Maternity Leave','Casual Leave Probation','Marriage Leave','Petarnity Leave', 'Work From Home' ]);
-
-
             $table->foreign('emp_id')
             ->references('emp_id')
             ->on('employee_details')
