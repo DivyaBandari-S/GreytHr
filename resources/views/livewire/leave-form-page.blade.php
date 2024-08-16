@@ -1,7 +1,5 @@
 <div class="leavePageContent">
    <div class="d-flex mt-2 mb-3 gap-4 align-items-center position-relative">
-      <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
-
       @if(session()->has('message'))
       <div class="alert alert-success w-50 position-absolute m-auto p-1" style="font-size: 12px; right: 25%;" id="success-alert">
          {{ session('message') }}

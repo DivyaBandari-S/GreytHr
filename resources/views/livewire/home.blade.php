@@ -1,7 +1,7 @@
-<div>
+<div style="position:relative;">
     <div class="msg-container">
             @if ($showAlert)
-            <div x-data x-init="checkFadeIn()" wire:poll.1s="hideAlert" class="custom-alert alert-success successAlert row mx-auto" style="text-align:center;margin-left:20%;">
+            <div x-data x-init="checkFadeIn()" wire:poll.50s="hideAlert" class="custom-alert alert-success successAlert row mx-auto" style="text-align:center;margin-left:20%;">
                 <p class="mx-auto mb-0">{{ session('success') }} 😀 <span wire:click="hideAlert" style="cursor: pointer; margin-left:20px;">&#10006;</span> </p>
             </div>
             @endif
@@ -383,7 +383,6 @@
                                     @endforeach
                                 </div>
                             </div>
-
 
                         @endif
                     </div>
