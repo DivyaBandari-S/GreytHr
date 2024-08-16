@@ -54,7 +54,6 @@ class ProfileInfo extends Component
             session()->flash('error', 'An error occurred while updating the profile. Please try again later.');
         }
 
-        
     }
 
     public function render()
@@ -68,7 +67,7 @@ class ProfileInfo extends Component
                 ->first();
 
                 return view('livewire.profile-info');
-              
+
 
 
         } catch (\Exception $e) {

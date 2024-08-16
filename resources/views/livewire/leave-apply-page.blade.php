@@ -254,10 +254,10 @@
                         <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($loginEmpManager)) }}</p>
                         @endif
 
-                        @if(!$empManagerDetails)
-                        <p class="mb-0 normalTextValue">#(N/A)</p>
-                        @else
+                        @if($empManagerDetails)
                         <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#{{$empManagerDetails->emp_id}}</span></p>
+                        @else
+                        <p class="mb-0 normalTextValue">#(N/A)</p>
                         @endif
                     </div>
                     <div class="downArrow" wire:click="applyingTo">
@@ -440,7 +440,7 @@
 
             <div class="buttons-leave">
                 <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
-                <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
+                <button type="button" class=" cancel-btn"  style="border:1px solid rgb(2, 17, 79);">Cancel</button>
             </div>
         </form>
     </div>

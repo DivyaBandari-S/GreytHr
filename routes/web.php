@@ -299,6 +299,10 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
             'Content-Disposition' => 'attachment; filename="' . basename($message->file_path) . '"',
         ]);
     })->name('download.file');
+// In web.php
+Route::get('/download-image', [HelpDesk::class, 'downloadImage'])->name('downloadImage');
+
+
 
     //leave module
     Route::get('/leave-page', LeavePage::class)->name('leave-page');
