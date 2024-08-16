@@ -166,7 +166,7 @@ class LeaveApplyPage extends Component
                         ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
                         ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
                 })
-                ->groupBy('emp_id', 'image')
+                ->groupBy('emp_id', 'image', 'gender')
                 ->select(
                     'emp_id',
                     'gender',
@@ -671,32 +671,80 @@ class LeaveApplyPage extends Component
     {
         return (int) str_replace('Session ', '', $session);
     }
+    public function searchManager(){
+        $this->render();
+    }
 
     public $managerDetails, $fullName;
     public function render()
     {
         $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
-        if ($applying_to) {
-            $this->loginEmpManagerId = $applying_to->manager_id;
-            $managerDetails = EmployeeDetails::where('emp_id', $this->loginEmpManagerId)->first();
-            if ($managerDetails) {
-                $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
-                $this->loginEmpManager = $fullName;
+    
+        $empManagerDetails = null;
+        $this->loginEmpManager = null;
+        $managerId = null;
+        $managers = collect();
+        $employeeGender = null;
+    
+        try {
+            // Fetch details for the current employee
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            if ($applying_to) {
+                $managerId = $applying_to->manager_id;
+    
+                // Fetch the logged-in employee's manager details
+                $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+                if ($managerDetails) {
+                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                    $this->loginEmpManager = $fullName;
+                    $empManagerDetails = $managerDetails;
+    
+                    // Add the logged-in manager to the collection
+                    $managers->push([
+                        'full_name' => $fullName,
+                        'emp_id' => $managerDetails->emp_id,
+                        'gender' => $managerDetails->gender,
+                        'image' => $managerDetails->image,
+                    ]);
+                }
             }
-            $empManagerDetails = $managerDetails;
+    
+            // Fetch the gender of the logged-in employee
+            $employeeGender = EmployeeDetails::where('emp_id', $employeeId)->select('gender')->first();
+    
+            // Fetch employees with job roles CTO and Chairman
+            $jobRoles = ['CTO', 'Chairman'];
+            $filteredManagers = EmployeeDetails::whereIn('job_role', $jobRoles)
+                ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
+
+            // Add the filtered managers to the collection
+            $managers = $managers->merge(
+                $filteredManagers->map(function ($manager) {
+                    $fullName = ucfirst(strtolower($manager->first_name)) . ' ' . ucfirst(strtolower($manager->last_name));
+                    return [
+                        'full_name' => $fullName,
+                        'emp_id' => $manager->emp_id,
+                        'gender' => $manager->gender,
+                        'image' => $manager->image,
+                    ];
+                })
+            );
+
+        } catch (\Exception $e) {
+            // Log the error and handle the exception
+            Log::error('Error fetching employee or manager details: ' . $e->getMessage());
         }
-        $employeeGender = EmployeeDetails::where('emp_id', $employeeId)->select('gender')->first();
 
         return view('livewire.leave-apply-page', [
             'employeeGender' => $employeeGender,
             'calculatedNumberOfDays' => $this->calculatedNumberOfDays,
             'empManagerDetails' => $empManagerDetails,
             'loginEmpManager' => $this->loginEmpManager,
-            'managerFullName' => $this->managerFullName,
+            'managers' => $managers,
             'ccRecipients' => $this->ccRecipients,
-            'showCasualLeaveProbation' =>$this->showCasualLeaveProbation
+            'showCasualLeaveProbation' => $this->showCasualLeaveProbation
         ]);
     }
+
 }
