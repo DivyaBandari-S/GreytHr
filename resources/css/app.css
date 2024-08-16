@@ -4233,6 +4233,12 @@ p::first-letter {
 }
 
 
+  .settings-profile-image{
+    border-radius: 50%; 
+    height: 90px;
+    width: 90px;
+  }
+
 
 
 
