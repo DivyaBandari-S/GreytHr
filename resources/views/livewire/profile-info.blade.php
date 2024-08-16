@@ -64,7 +64,11 @@
                                 Location
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                {{ $employeeDetails->job_location ? $employeeDetails->job_location : '-' }}
+                                @if ($employeeDetails->job_location) 
+                                  {{$employeeDetails->job_location }}
+                                @else
+                                  <span style="padding-left: 25px;">-</span>
+                                @endif
                             </div>
                         </div>
                         <div class="col">
@@ -72,21 +76,31 @@
                                 Name
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                {{ $employeeDetails->first_name && $employeeDetails->last_name
-                                        ? ucwords(strtolower($employeeDetails->first_name)) . ' ' . ucwords(strtolower($employeeDetails->last_name))
-                                        : '-' }}
+                                @if ($employeeDetails->first_name && $employeeDetails->last_name)
+                                    {{ ucwords(strtolower($employeeDetails->first_name)) . ' ' . ucwords(strtolower($employeeDetails->last_name)) }}
+                                @else
+                                    <span style="padding-left: 50px;">-</span>
+                                @endif
                             </div>
                             <div style="font-size: 11px; margin-top: 30px; color: #778899; margin-left: 15px;">
                                 Employee ID
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                {{ $employeeDetails->emp_id ? $employeeDetails->emp_id : '-' }}
+                                @if ($employeeDetails->emp_id)
+                                {{ $employeeDetails->emp_id }}
+                                @else
+                                    <span style="padding-left: 50px;">-</span>
+                                @endif
                             </div>
                             <div style="font-size: 11px; margin-top: 30px; color: #778899; margin-left: 15px;">
                                 Primary Contact No
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                {{ $employeeDetails->emergency_contact ? $employeeDetails->emergency_contact : '-' }}
+                                @if ($employeeDetails->emergency_contact)
+                                    {{ $employeeDetails->emergency_contact }}
+                                @else
+                                    <span style="padding-left: 50px;">-</span>
+                                @endif
                             </div>
                         </div>
                         <div class="col">
@@ -94,7 +108,11 @@
                                 Company E-mail
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                {{ $employeeDetails->email ? $employeeDetails->email : '-' }}
+                                @if ($employeeDetails->email)
+                                {{ $employeeDetails->email }}
+                                @else
+                                    <span style="padding-left: 50px;">-</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -107,22 +125,33 @@
                                 Blood Group
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ optional($employeeDetails->empPersonalInfo)->blood_group ?: '-' }}
+                                @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->blood_group)
+                                {{ $employeeDetails->empPersonalInfo->blood_group }}
+                                @else
+                                <span style="padding-left: 30px;">-</span>
+                                @endif
+                            
                             </div>
                             <div style="margin-top: 20px; font-size: 11px; color: #778899; margin-left: 15px;">
                                 Marital Status
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ optional($employeeDetails->empPersonalInfo)->marital_status
-                                        ? ucwords(strtolower(optional($employeeDetails->empPersonalInfo)->marital_status))
-                                        : '-' }}
+                                @if (optional($employeeDetails->empPersonalInfo)->marital_status)
+                                {{ ucwords(strtolower(optional($employeeDetails->empPersonalInfo)->marital_status)) }}
+                                @else
+                                <span style="padding-left: 50px;">-</span>
+                                @endif
 
                             </div>
                             <div style="font-size: 11px; margin-top: 20px; color: #778899; margin-left: 15px">
                                 Place Of Birth
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ optional($employeeDetails->empPersonalInfo)->city ?? '-' }}
+                                @if (optional($employeeDetails->empPersonalInfo)->city)
+                                    {{ optional($employeeDetails->empPersonalInfo)->city }}
+                                @else
+                                    <span style="padding-left: 30px;">-</span>
+                                @endif
 
                             </div>
                             <div style="font-size: 11px; margin-top: 20px; color: #778899; margin-left: 15px">
@@ -130,7 +159,11 @@
                             </div>
 
                             <div style="margin-left: 15px; font-size: 12px;margin-bottom:10px;">
-                                {{ optional($employeeDetails->empPersonalInfo)->religion ?? '-' }}
+                                @if (optional($employeeDetails->empPersonalInfo)->religion)
+                                {{ optional($employeeDetails->empPersonalInfo)->religion }}
+                                @else
+                                <span style="padding-left: 17px;">-</span>
+                                @endif
 
                             </div>
 
@@ -140,21 +173,31 @@
                                 Date Of Birth
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->date_of_birth
-                                        ? \Carbon\Carbon::parse($employeeDetails->empPersonalInfo->date_of_birth)->format('d-M-Y')
-                                        : '-' }}
+                                @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->date_of_birth)
+                                    {{ \Carbon\Carbon::parse($employeeDetails->empPersonalInfo->date_of_birth)->format('d-M-Y') }}
+                                @else
+                                <span style="padding-left: 50px;">-</span>
+                                @endif
                             </div>
                             <div style="font-size: 11px; margin-top: 20px; color: #778899; margin-left: 15px">
                                 Residential Status
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->job_location ? $employeeDetails->job_location : '-' }}
+                                @if ($employeeDetails->job_location)
+                                    {{ $employeeDetails->job_location }}
+                                @else
+                                <span style="padding-left: 50px;">-</span>
+                                @endif
                             </div>
                             <div style="font-size: 11px; margin-top: 20px; color: #778899; margin-left: 15px">
                                 Physically Challenged
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;">
-                                {{ optional($employeeDetails->empPersonalInfo)->physically_challenge ? ucwords(strtolower(optional($employeeDetails->empPersonalInfo)->physically_challenge)) : '-' }}
+                                @if (optional($employeeDetails->empPersonalInfo)->physically_challenge)
+                                    {{ ucwords(strtolower(optional($employeeDetails->empPersonalInfo)->physically_challenge)) }}
+                                @else
+                                <span style="padding-left: 50px;">-</span>
+                                @endif
 
                             </div>
                         </div>
@@ -163,7 +206,11 @@
                                 Nationality
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ optional($employeeDetails->empPersonalInfo)->nationality ?? '-' }}
+                                @if (optional($employeeDetails->empPersonalInfo)->nationality)
+                                    {{ ucwords(strtolower(optional($employeeDetails->empPersonalInfo)->nationality)) }}
+                                @else
+                                <span style="padding-left: 27px;">-</span>
+                                @endif
 
                             </div>
                             <div style="margin-top: 20px; font-size: 11px; color: #778899; margin-left: 15px">
@@ -171,7 +218,11 @@
                             </div>
 
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ optional($employeeDetails->empSpouseDetails)->name ?? '-' }}
+                                @if (optional($employeeDetails->empSpouseDetails)->name)
+                                    {{ ucwords(strtolower(optional($employeeDetails->empSpouseDetails)->name)) }}
+                                @else
+                                <span style="padding-left: 18px;">-</span>
+                                @endif
 
                             </div>
 
@@ -196,9 +247,12 @@
 
                                 // Show '-' if the combined name is empty
                                 $displayName = $combinedName ? $combinedName : '-';
+                                $paddingLeft = $displayName === '-' ? '35px' : '0px';
                                 @endphp
 
-                                {{ $displayName }}
+                                <div style="padding-left: {{ $paddingLeft }};">
+                                    {{ $displayName }}
+                                </div>
 
                             </div>
 
@@ -206,7 +260,11 @@
                                 International Employee
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->inter_emp ? ucwords(strtolower($employeeDetails->inter_emp)) : '-' }}
+                                @if ($employeeDetails->inter_emp)
+                                    {{ ucwords(strtolower($employeeDetails->inter_emp)) }}
+                                @else
+                                <span style="padding-left: 50px;">-</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -220,7 +278,11 @@
                             </div>
 
                             <div style="margin-left: 15px; font-size: 11px;color:#000;">
-                                {{ optional($employeeDetails->empPersonalInfo)->permenant_address ?: '-' }}
+                                @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->permenant_address)
+                                    {{ $employeeDetails->empPersonalInfo->permenant_address }}
+                                @else
+                                <span style="padding-left: 50px;">-</span>
+                                @endif
 
                             </div>
 
@@ -240,7 +302,11 @@
                             </div>
 
                             <div style="margin-left: 15px; font-size: 11px;color:#000;">
-                                {{ optional($employeeDetails->empPersonalInfo)->present_address ?: '-' }}
+                                @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->present_address)
+                                    {{ $employeeDetails->empPersonalInfo->present_address }}
+                                @else
+                                <span style="padding-left: 41px;">-</span>
+                                @endif
 
                             </div>
 
@@ -248,7 +314,12 @@
                                 Mobile
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ optional($employeeDetails->empPersonalInfo)->mobile_number ?: '-' }}
+                                @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->mobile_number)
+                                    {{ $employeeDetails->empPersonalInfo->mobile_number }}
+                                @else
+                                <span style="padding-left: 17px;">-</span>
+                                @endif
+                            
 
                             </div>
                         </div>
@@ -257,7 +328,11 @@
                                 Email
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                {{ $employeeDetails->email ? $employeeDetails->email : '-' }}
+                                @if ($employeeDetails->email)
+                                    {{ $employeeDetails->email }}
+                                @else
+                                <span style="padding-left: 15px;">-</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -286,14 +361,23 @@
                                 Bank Name
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->empBankDetails ? $employeeDetails->empBankDetails->bank_name : '-' }}
+                                @if ($employeeDetails->empBankDetails)
+                                    {{ $employeeDetails->empBankDetails->bank_name }}
+                                @else
+                                <span style="padding-left: 30px;">-</span>
+                                @endif
+
 
                             </div>
                             <div style="margin-top:10px;font-size: 11px; color: #778899; margin-left: 15px">
                                 IFSC Code
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->empBankDetails ? $employeeDetails->empBankDetails->ifsc_code : '-' }}
+                                @if ($employeeDetails->empBankDetails && $employeeDetails->empBankDetails->ifsc_code)
+                                    {{ $employeeDetails->empBankDetails->ifsc_code }}
+                                @else
+                                <span style="padding-left: 25px;">-</span>
+                                @endif
                             </div>
                         </div>
                         <div class="col">
@@ -301,13 +385,23 @@
                                 Bank Account Number
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->empBankDetails ? $employeeDetails->empBankDetails->account_number : '-' }}
+                                @if ($employeeDetails->empBankDetails && $employeeDetails->empBankDetails->account_number)
+                                    {{ $employeeDetails->empBankDetails->account_number }}
+                                @else
+                                <span style="padding-left: 50px;">-</span>
+                                @endif
+
                             </div>
                             <div style="margin-top:10px;font-size: 11px; color: #778899; margin-left: 15px">
                                 Bank Address
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->empBankDetails ? $employeeDetails->empBankDetails->bank_address : '-' }}
+                                @if ($employeeDetails->empBankDetails && $employeeDetails->empBankDetails->bank_address)
+                                    {{ $employeeDetails->empBankDetails->bank_address }}
+                                @else
+                                <span style="padding-left: 30px;">-</span>
+                                @endif
+                            
                             </div>
                         </div>
                         <div class="col">
@@ -315,7 +409,12 @@
                                 Bank Branch
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->empBankDetails ? $employeeDetails->empBankDetails->bank_branch : '-' }}
+                                @if ($employeeDetails->empBankDetails && $employeeDetails->empBankDetails->bank_branch)
+                                    {{ $employeeDetails->empBankDetails->bank_branch }}
+                                @else
+                                <span style="padding-left: 30px;">-</span>
+                                @endif
+
                             </div>
                         </div>
                     </div>
@@ -328,7 +427,12 @@
                                 PF Number
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->empPersonalInfo ? $employeeDetails->empPersonalInfo->pf_no : '-' }}
+                                @if ($employeeDetails->empPersonalInfo )
+                                    {{ $employeeDetails->empPersonalInfo->pf_no }}
+                                @else
+                                <span style="padding-left: 50px;">-</span>
+                                @endif
+                                
                             </div>
                         </div>
                         <div class="col">
@@ -336,7 +440,11 @@
                                 UAN
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->empPersonalInfo ? $employeeDetails->empPersonalInfo->pan_no : '-' }}
+                                @if ($employeeDetails->empPersonalInfo )
+                                    {{  $employeeDetails->empPersonalInfo->pan_no }}
+                                @else
+                                <span style="padding-left: 50px;">-</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -385,7 +493,11 @@
                                 );
                                 $displayName = $combinedName ?: '-';
                                 @endphp
-                                {{ $displayName }}
+                                @if ($displayName === '-')
+                                    <div style="padding-left: 37px;">{{ $displayName }}</div>
+                                @else
+                                    {{ $displayName }}
+                                @endif
                             </div>
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Address</div>
                             <div style="font-size: 12px; width: 250px">
@@ -399,42 +511,67 @@
                                 ', ',
                                 );
                                 $displayValue = $combined ?: '-';
+                                $hasPadding = $displayValue === '-' ? 'padding-left: 23px;' : '';
                                 @endphp
-                                {{ $displayValue }}
+                                <span style="{{ $hasPadding }}">{{ $displayValue }}</span>
                             </div>
                         </div>
 
                         <div class="col-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Date of Birth</div>
                             <div style="font-size: 12px">
-                                {{ optional($employeeDetails->empParentDetails)->father_dob
-                                        ? \Carbon\Carbon::parse($employeeDetails->empParentDetails->father_dob)->format('d-M-Y')
-                                        : '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->father_dob)
+                                    {{ \Carbon\Carbon::parse(optional($employeeDetails->empParentDetails)->father_dob)->format('d-M-Y') }}
+                                @else
+                                    <span style="padding-left: 37px;">-</span>
+                                @endif
                             </div>
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Nationality</div>
                             <div style="font-size: 12px">
-                                {{ optional($employeeDetails->empParentDetails)->father_nationality ?? '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->father_nationality)
+                                    {{ optional($employeeDetails->empParentDetails)->father_nationality }}
+                                @else
+                                    <span style="padding-left: 29px;">-</span>
+                                @endif
+                            
                             </div>
                         </div>
 
                         <div class="col-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Blood Group</div>
                             <div style="font-size: 12px">
-                                {{ optional($employeeDetails->empParentDetails)->father_blood_group ?? '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->father_blood_group)
+                                    {{ optional($employeeDetails->empParentDetails)->father_blood_group }}
+                                @else
+                                    <span style="padding-left: 50px;">-</span>
+                                @endif
+
                             </div>
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Occupation</div>
                             <div style="font-size: 12px">
-                                {{ optional($employeeDetails->empParentDetails)->father_occupation ?? '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->father_occupation)
+                                    {{ optional($employeeDetails->empParentDetails)->father_occupation }}
+                                @else
+                                    <span style="padding-left: 30px;">-</span>
+                                @endif
                             </div>
                         </div>
                         <div class="col-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Religion</div>
                             <div style="font-size: 12px; word-wrap: break-word;">
-                                {{ optional($employeeDetails->empParentDetails)->father_religion ?? '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->father_religion)
+                                    {{ optional($employeeDetails->empParentDetails)->father_religion }}
+                                @else
+                                    <span style="padding-left: 50px;">-</span>
+                                @endif
                             </div>
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Father Email</div>
                             <div style="font-size: 12px; word-wrap: break-word; white-space: normal;">
-                                {{ optional($employeeDetails->empParentDetails)->father_email ?? '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->father_email)
+                                    {{ optional($employeeDetails->empParentDetails)->father_email }}
+                                @else
+                                    <span style="padding-left: 35px;">-</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -461,8 +598,12 @@
                                 ucwords(strtolower($motherLastName)),
                                 );
                                 $displayName = $combinedName ?: '-';
+                                $paddingLeft = $displayValue === '-' ? '39px' : '0px';
                                 @endphp
-                                {{ $displayName }}
+
+                                <span style="padding-left: {{ $paddingLeft }};">
+                                    {{ $displayName }}
+                                </span>
                             </div>
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Address</div>
                             <div style="font-size: 12px; width: 250px">
@@ -476,42 +617,68 @@
                                 ', ',
                                 );
                                 $displayValue = $combined ?: '-';
+                                $paddingLeft = $displayValue === '-' ? '24px' : '0px';
                                 @endphp
-                                {{ $displayValue }}
+
+                                <span style="padding-left: {{ $paddingLeft }};">
+                                    {{ $displayValue }}
+                                </span>
                             </div>
                         </div>
 
                         <div class="col-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Date of Birth</div>
                             <div style="font-size: 12px">
-                                {{ optional($employeeDetails->empParentDetails)->mother_dob
-                                        ? \Carbon\Carbon::parse($employeeDetails->empParentDetails->mother_dob)->format('d-M-Y')
-                                        : '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->mother_dob)
+                                    {{ \Carbon\Carbon::parse(optional($employeeDetails->empParentDetails)->mother_dob)->format('d-M-Y') }}
+                                @else
+                                    <span style="padding-left: 37px;">-</span>
+                                @endif
                             </div>
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Nationality</div>
                             <div style="font-size: 12px">
-                                {{ optional($employeeDetails->empParentDetails)->mother_nationality ?? '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->mother_nationality)
+                                    {{ optional($employeeDetails->empParentDetails)->mother_nationality }}
+                                @else
+                                    <span style="padding-left: 31px;">-</span>
+                                @endif
                             </div>
                         </div>
 
                         <div class="col-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Blood Group</div>
                             <div style="font-size: 12px">
-                                {{ optional($employeeDetails->empParentDetails)->mother_blood_group ?? '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->mother_blood_group)
+                                    {{ optional($employeeDetails->empParentDetails)->mother_blood_group }}
+                                @else
+                                    <span style="padding-left: 37px;">-</span>
+                                @endif
                             </div>
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Occupation</div>
                             <div style="font-size: 12px">
-                                {{ optional($employeeDetails->empParentDetails)->mother_occupation ?? '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->mother_occupation)
+                                    {{ optional($employeeDetails->empParentDetails)->mother_occupation }}
+                                @else
+                                    <span style="padding-left: 30px;">-</span>
+                                @endif
                             </div>
                         </div>
                         <div class="col-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Religion</div>
                             <div style="font-size: 12px; word-wrap: break-word;">
-                                {{ optional($employeeDetails->empParentDetails)->mother_religion ?? '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->mother_religion)
+                                    {{ optional($employeeDetails->empParentDetails)->mother_religion }}
+                                @else
+                                    <span style="padding-left: 21px;">-</span>
+                                @endif
                             </div>
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Mother Email</div>
                             <div style="font-size: 12px; word-wrap: break-word; white-space: normal;">
-                                {{ optional($employeeDetails->empParentDetails)->mother_email ?? '-' }}
+                                @if (optional($employeeDetails->empParentDetails)->mother_email)
+                                    {{ optional($employeeDetails->empParentDetails)->mother_email }}
+                                @else
+                                    <span style="padding-left: 39px;">-</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -606,20 +773,34 @@
                                 Designation
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->job_role ?: '-' }}
+                                @if ($employeeDetails->job_role)
+                                    {{ $employeeDetails->job_role }}
+                                @else
+                                <span style="padding-left: 31px;">-</span>
+                                @endif
+                            
                             </div>
                             <div style="margin-top: 20px; font-size: 11px; color: #778899; margin-left: 15px">
                                 Location
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ $employeeDetails->job_location ?: '-' }}
+                                @if ($employeeDetails->job_location)
+                                    {{ $employeeDetails->job_location }}
+                                @else
+                                <span style="padding-left: 22px;">-</span>
+                                @endif
+                            
                             </div>
 
                             <div style="margin-top: 20px; font-size: 11px; color: #778899; margin-left: 15px">
                                 Date of Join
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ \Carbon\Carbon::parse($employeeDetails->hire_date)->format('d-M-Y') }}
+                                @if ($employeeDetails->hire_date)
+                                    {{ \Carbon\Carbon::parse($employeeDetails->hire_date)->format('d-M-Y') }}
+                                @else
+                                <span style="padding-left: 50px;">-</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -639,7 +820,11 @@
                                 Card No
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
-                                {{ optional($employeeDetails->empPersonalInfo)->adhar_no ?? '-' }}
+                                @if (optional($employeeDetails->empPersonalInfo)->adhar_no)
+                                    {{ optional($employeeDetails->empPersonalInfo)->adhar_no }}
+                                @else
+                                <span style="padding-left: 20px;">-</span>
+                                @endif
 
                             </div>
                             <div style="margin-top: 20px; font-size: 11px; color: #778899; margin-left: 15px">

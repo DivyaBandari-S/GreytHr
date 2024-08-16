@@ -218,23 +218,26 @@
 
                         <div style="font-size:12px;color: #000;">
                             <div style="display: inline-block;width:65px;color:#778899;">Location</div> : <span
-                                style="font-weight:500; padding:0 5px;">{{ ucwords(strtolower($employee->job_location)) }}</span>
+                                style="font-weight:500; padding:0 5px;">{{ !empty($employee->job_location) ? ucwords(strtolower($employee->job_location)) : '-' }}
+                            </span>
                         </div>
                         <div style="font-size:12px;color: #000;">
                             <div style="display: inline-block;width:65px;color:#778899;">Role</div> : <span
-                                style="font-weight:500; padding:0 5px;">{{ ucwords(strtolower($employee->job_title)) }}</span>
+                                style="font-weight:500; padding:0 5px;">{{ !empty($employee->job_role) ? ucwords(strtolower($employee->job_role)) : '-' }}</span>
                         </div>
                     </div>
                     <div class="col-md-5" style="margin-top: 15px;">
                         <div style="font-size:12px;color: #000;">
                             <div style="display: inline-block;width:100px;color:#778899;">Official Birthday</div> :
                             <span
-                                style="font-weight:500; padding:0 5px;">{{ \Carbon\Carbon::parse($employee->date_of_birth)->format('d-M-Y') }}</span>
+                                style="font-weight:500; padding:0 5px;">  {{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
+                                    ? date('d M, Y', strtotime($employee->empPersonalInfo->date_of_birth))
+                                    : '-' }}</span>
 
                         </div>
                         <div style="font-size:12px;color: #000;">
                             <div style="display: inline-block;width:100px;color:#778899;">Department</div> : <span
-                                style="font-weight:500; padding:0 5px;">{{ ucwords(strtolower($employee->department)) }}</span>
+                                style="font-weight:500; padding:0 5px;">{{ ucwords(strtolower($employee->empDepartment->department)) ?? '-' }}</span>
                         </div>
                     </div>
                 </div>
@@ -281,9 +284,13 @@
                     @else
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->nick_name }}</div>
+                                {{ $employee->empPersonalInfo 
+                                    ? ucwords(strtolower($employee->empPersonalInfo->nick_name ?? '-'))
+                                    : '-' }}</div>
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ \Carbon\Carbon::parse($employee->date_of_birth)->format('d-M-Y') }}</div>
+                                {{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
+                                    ? date('d M, Y', strtotime($employee->empPersonalInfo->date_of_birth))
+                                    : '-' }}</div>
                         </div>
                     @endif
                 </div>
@@ -313,7 +320,7 @@
                                     @endforeach
                                 </select>
                             @else
-                                <div style="color: black; font-size: 12px;">{{ $employee->time_zone }}</div>
+                                <div style="color: black; font-size: 12px;">{{ $employee->time_zone ?? '-' }}</div>
                             @endif
                         </div>
                     </div>
@@ -346,7 +353,10 @@
                     @else
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-12 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->biography }}</div>
+                                {{ $employee->empPersonalInfo 
+                                    ? ucwords(strtolower($employee->empPersonalInfo->biography ?? '-'))
+                                    : '-' }}
+                                </div>
                         </div>
                     @endif
                 </div>
@@ -373,7 +383,7 @@
                     @if ($editingSocialMedia)
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;"> <input
-                                    style="font-size:12px" type="text" class="form-control" wire:model="faceBook"
+                                    style="font-size:12px" type="text" class="form-control" wire:model="facebook"
                                     placeholder="FaceBook">
                             </div>
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;"> <input
@@ -388,11 +398,11 @@
                     @else
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->facebook }}</div>
+                                {{ $employee->empPersonalInfo->facebook ?? '-' }}</div>
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->twitter }}</div>
+                                {{ $employee->empPersonalInfo->twitter ?? '-' }}</div>
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->linked_in }}</div>
+                                {{ $employee->empPersonalInfo->linked_in ?? '-' }}</div>
                         </div>
                     @endif
                 </div>
