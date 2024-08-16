@@ -99,6 +99,7 @@ use App\Livewire\LeaveBalancesChart;
 use App\Livewire\OrganisationChart;
 use App\Livewire\ReportManagement;
 use App\Livewire\ReviewPendingRegularisation;
+use App\Livewire\Session\SessionTimeout;
 use App\Livewire\ShiftRoaster;
 use App\Livewire\SickLeaveBalances;
 use App\Livewire\Test;
@@ -124,6 +125,7 @@ Route::group(['middleware' => 'checkAuth'], function () {
     Route::get('/CreateCV', function () {
         return view('create_cv_view');
     });
+    Route::get('/session-timeout', SessionTimeout::class)->name('session-timeout');
 });
 
 Route::get('/Login&Register', function () {
@@ -226,8 +228,9 @@ Route::middleware(['auth:it', 'handleSession'])->group(function () {
 });
 
 Route::middleware(['auth:admins', 'handleSession'])->group(function () {
-Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
+    Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
 });
+
 
 
 Route::middleware(['auth:emp', 'handleSession'])->group(function () {
@@ -292,7 +295,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/ytd', Ytdreport::class)->name('ytdreport');
     Route::get('download/file/{id}', function ($id) {
         $message = Message::findOrFail($id);
-    
+
         return Response::make($message->file_path, 200, [
             'Content-Type' => 'application/octet-stream',
             'Content-Disposition' => 'attachment; filename="' . basename($message->file_path) . '"',
