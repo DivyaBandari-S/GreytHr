@@ -197,13 +197,17 @@ class ChatBox extends Component
             'file_path' => $fileBinary,  // Store the binary data in the database
             'body' => $this->body,
         ]);
-        Notification::create([
-            'chatting_id' => $this->selectedConversation->id,
-            'notification_type'=>'message',
-            'emp_id' => auth()->user()->emp_id,
-            'receiver_id' => optional($this->selectedConversation->getReceiver())->emp_id,
-            'body' => $this->body,
-        ]);
+        if(auth()->user()->emp_id !=optional($this->selectedConversation->getReceiver())->emp_id){
+
+            Notification::create([
+                'chatting_id' => $this->selectedConversation->id,
+                'notification_type'=>'message',
+                'emp_id' => auth()->user()->emp_id,
+                'receiver_id' => optional($this->selectedConversation->getReceiver())->emp_id,
+                'body' => $this->body,
+            ]);
+        }
+
 
 
         $this->reset('body', 'attachment');
