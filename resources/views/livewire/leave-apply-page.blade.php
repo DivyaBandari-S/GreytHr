@@ -248,10 +248,10 @@
                     </div>
                     @endif
                     <div class="center p-0 m-0">
-                        @if(!$loginEmpManager)
-                        <p class="mb-0" style="font-size:10px;">N/A</p>
+                        @if($empManagerDetails)
+                        <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($empManagerDetails->first_name)) }} {{ ucwords(strtolower($empManagerDetails->last_name)) }}</p>
                         @else
-                        <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($loginEmpManager)) }}</p>
+                        <p class="mb-0" style="font-size:10px;">N/A</p>
                         @endif
 
                         @if($empManagerDetails)
@@ -305,27 +305,27 @@
 
                     <!-- Your Blade file -->
                     <div class="scrollApplyingTO">
-                        @if(!empty($managers))
-                        @foreach($managers as $employee)
-                        <div class="d-flex gap-4 align-items-center" style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
-                            @if($employee['image'])
-                            <div class="employee-profile-image-container">
-                                <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius:50%;">
-                            </div>
-                            @else
-                            <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
-                            </div>
-                            @endif
-                            <div class="center d-flex flex-column mt-2 mb-2">
-                                <span class="ellipsis mb-0" value="{{ $employee['full_name'] }}">{{ $employee['full_name'] }}</span>
-                                <span class="mb-0 normalTextValue" style="font-size:10px;" value="{{ $employee['full_name'] }}"> #{{ $employee['emp_id'] }} </span>
-                            </div>
-                        </div>
-                        @endforeach
-                        @else
-                        <p class="mb-0 normalTextValue m-auto text-center">No managers found.</p>
-                        @endif
+                    @if(!empty($managers))
+    @foreach($managers as $manager)
+        <div class="d-flex gap-4 align-items-center">
+            @if($manager['image'])
+                <div class="employee-profile-image-container">
+                    <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($manager['image'])}}" style="border-radius:50%;">
+                </div>
+            @else
+                <div class="employee-profile-image-container">
+                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                </div>
+            @endif
+            <div class="center d-flex flex-column mt-2 mb-2">
+                <span class="ellipsis mb-0">{{ $manager['full_name'] }}</span>
+                <span class="mb-0 normalTextValue" style="font-size:10px;">#{{ $manager['emp_id'] }}</span>
+            </div>
+        </div>
+    @endforeach
+@else
+    <p class="mb-0 normalTextValue m-auto text-center">No managers found.</p>
+@endif
 
                     </div>
                 </div>

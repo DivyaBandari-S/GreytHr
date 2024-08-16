@@ -1,15 +1,18 @@
+<div>
 <div style="position:relative;">
-    <div class="msg-container">
-        @if ($showAlert)
-        <div  wire:poll.1s="hideAlert" class="custom-alert alert-success successAlert row m-auto " style="text-align:center;">
-            <div class="d-flex align-items-center justify-content-between">
-                <p class="mb-0">{{ session('success') }} 😀 </p>
-                <span wire:click="hideAlert" style="cursor: pointer;">&#10006;</span>
-            </div>
-        </div>
-        @endif
+    @if ($showAlert)
+    <div id="alert-container" class="d-flex justify-content-center alert-container "wire:poll.20s="hideAlert" style="position: sticky; top: 1%; z-index: 10; width: 100%;">
+        <!-- wire:poll.5s="hideAlert" -->
+
+        <p class="alert alert-success" role="alert" style=" font-weight: 400;width:fit-content;padding:10px;border-radius:5px;margin-bottom:0px">
+            {{ session('success') }} 😀
+            <span class="ml-5" style="font-weight:500;margin:0px 10px 0px 20px; cursor: pointer; " wire:click='hideAlert'>x</span>
+        </p>
+
     </div>
-    <div class="content">
+    @endif
+
+    <div class="content p-0 m-0">
         <div class="row m-0 mb-3">
             <div class="col-md-6">
                 <div class="" style="border-radius: 10px; background-color: #fff;">
@@ -975,6 +978,7 @@ $taskCount = $taskRecords->count();
 <div class="modal-backdrop fade show blurred-backdrop"></div>
 @endif
 
+</div>
 </div>
 </div>
 </div>
