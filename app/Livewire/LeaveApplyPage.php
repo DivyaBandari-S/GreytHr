@@ -16,8 +16,8 @@ class LeaveApplyPage extends Component
     public $leave_type;
     public $emp_id;
     public $from_date;
-    public $from_session = 'Session 1';
-    public $to_session = 'Session 2';
+    public $from_session;
+    public $to_session;
     public $to_date;
     public $applying_to;
     public $contact_details;
@@ -47,6 +47,8 @@ class LeaveApplyPage extends Component
     public $managerFullName = [];
     public $ccRecipients = [];
     public $selectedEmployee = [];
+    public $selectedManager = [];
+
     public $searchTerm = '';
     public $filter = '';
     public $fromDate;
@@ -85,7 +87,6 @@ class LeaveApplyPage extends Component
         $this->employee = EmployeeDetails::where('emp_id', $employeeId)->first();
         // Determine if the dropdown option should be displayed
         $this->showCasualLeaveProbation = $this->employee && !$this->employee->probation_period && !$this->employee->confirmation_date;
-        $this->searchManager();
     }
 
     public function validateField($propertyName)
@@ -157,10 +158,23 @@ class LeaveApplyPage extends Component
 
     public $selectedEmployeeId;
     //selected applying to manager details
-    public $empManagerDetails;
-    public $applyingToDetails = [];
-    public function selectEmployee($employeeId) {}
+    public function selectEmployee($employeeId)
+    {
+        // Find the selected employee details
+        $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        if ($employeeDetails) {
+            // Update the component's state with the selected employee's details
+            $this->selectedEmployee = [
+                'emp_id' => $employeeDetails->emp_id,
+                'full_name' => ucfirst(strtolower($employeeDetails->first_name)) . ' ' . ucfirst(strtolower($employeeDetails->last_name)),
+                'gender' => $employeeDetails->gender,
+                'image' => $employeeDetails->image,
+            ];
 
+            // Optionally, you might want to store the selected employee's ID
+            $this->selectedEmployeeId = $employeeId;
+        }
+    }
 
 
     private function isWeekend($date)
@@ -278,12 +292,22 @@ class LeaveApplyPage extends Component
                     });
                 })
                 ->whereIn('status', ['approved', 'Pending'])
-                ->exists();
+                ->get();
 
-            if ($overlappingLeave) {
-                $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
-                return;
-            }
+                if ($overlappingLeave) {
+                    // Assuming $overlappingLeave is an object or associative array containing 'fromSession' and 'toSession'
+                    $existingFromSession = $overlappingLeave->from_session; // or $overlappingLeave['fromSession'] if it's an array
+                    $existingToSession = $overlappingLeave->to_session; // or $overlappingLeave['toSession'] if it's an array
+                    // Check if the existing leave's dates are the same as the entered leave's dates
+                    if ($this->from_session === $existingFromSession && $this->to_session === $existingToSession) {
+                        $this->errorMessage = 'The selected leave dates overlap with an existing leave application with the same dates.';
+                        return;
+                    } else {
+                        $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+                        return;
+                    }
+                }
+
 
             // Validate from_date to to_date
             if ($this->to_date < $this->from_date) {
@@ -347,7 +371,6 @@ class LeaveApplyPage extends Component
                     'image' => $this->loginEmpManagerProfile,
                 ];
             }
-
 
             // Create the leave request
             $this->createdLeaveRequest = LeaveRequest::create([
@@ -588,11 +611,47 @@ class LeaveApplyPage extends Component
     {
         return (int) str_replace('Session ', '', $session);
     }
-    public function searchManager()
+    //selected applying to manager details
+    public function toggleManager($empId)
     {
+        $this->selectedManager = [$empId]; // Ensure this is an array
+        $this->fetchManagerDetails($empId); // Fetch details for the selected manager
+        $this->showApplyingToContainer = false; // Hide the container
+    }
+
+
+
+    // Method to fetch manager details
+    private function fetchManagerDetails($managerId)
+    {
+        $employeeDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+        if ($employeeDetails) {
+            $fullName = ucfirst(strtolower($employeeDetails->first_name)) . ' ' . ucfirst(strtolower($employeeDetails->last_name));
+            $this->loginEmpManager = $fullName;
+            $this->empManagerDetails = $employeeDetails;
+
+        } else {
+            $this->resetManagerDetails();
+        }
+    }
+    
+    private function resetManagerDetails()
+    {
+        $this->empManagerDetails = null;
+    }
+
+
+    public $managerDetails, $fullName;
+    public $empManagerDetails;
+    public function render()
+    {
+        $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $managerId = null;
+        $this->loginEmpManager = null;
+        $this->selectedManager = $this->selectedManager ?? [];
+
         $managers = collect();
+        $employeeGender = null;
 
         try {
             // Fetch details for the current employee
@@ -603,8 +662,10 @@ class LeaveApplyPage extends Component
                 // Fetch the logged-in employee's manager details
                 $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
                 if ($managerDetails) {
+                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                    $this->loginEmpManager = $fullName;
                     $this->empManagerDetails = $managerDetails;
-                    $fullName = $this->empManagerDetails->first_name . ' ' . $this->empManagerDetails->last_name;
+
                     // Add the logged-in manager to the collection
                     $managers->push([
                         'full_name' => $fullName,
@@ -615,7 +676,8 @@ class LeaveApplyPage extends Component
                 }
             }
 
-
+            // Fetch the gender of the logged-in employee
+            $employeeGender = EmployeeDetails::where('emp_id', $employeeId)->select('gender')->first();
 
             // Fetch employees with job roles CTO and Chairman
             $jobRoles = ['CTO', 'Chairman'];
@@ -623,7 +685,7 @@ class LeaveApplyPage extends Component
                 ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
 
             // Add the filtered managers to the collection
-            $this->managers = $managers->merge(
+            $managers = $managers->merge(
                 $filteredManagers->map(function ($manager) {
                     $fullName = ucfirst(strtolower($manager->first_name)) . ' ' . ucfirst(strtolower($manager->last_name));
                     return [
@@ -634,31 +696,15 @@ class LeaveApplyPage extends Component
                     ];
                 })
             );
-
         } catch (\Exception $e) {
-            // Log the error and handle the exception
             Log::error('Error fetching employee or manager details: ' . $e->getMessage());
         }
-    }
-
-    public $managerDetails, $fullName;
-    public $managers=[];
-
-    public function render()
-    {
-        $this->searchManager();
-        $employeeGender = null;
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->selectedYear = Carbon::now()->format('Y');
-        // Fetch the gender of the logged-in employee
-        $employeeGender = EmployeeDetails::where('emp_id', $employeeId)->select('gender')->first();
-
         return view('livewire.leave-apply-page', [
             'employeeGender' => $employeeGender,
             'calculatedNumberOfDays' => $this->calculatedNumberOfDays,
             'empManagerDetails' => $this->empManagerDetails,
             'loginEmpManager' => $this->loginEmpManager,
-            'managers' => $this->managers,
+            'managers' => $managers,
             'ccRecipients' => $this->ccRecipients,
             'showCasualLeaveProbation' => $this->showCasualLeaveProbation
         ]);

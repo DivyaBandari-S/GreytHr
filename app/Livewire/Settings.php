@@ -17,6 +17,7 @@ namespace App\Livewire;
 
 use App\Models\Admin;
 use App\Models\EmployeeDetails;
+use App\Models\EmpPersonalInfo;
 use App\Models\Finance;
 use App\Models\Hr;
 use App\Models\IT;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Settings extends Component
 {
@@ -34,7 +36,7 @@ class Settings extends Component
     public $selectedTimeZone;
     public $timeZones;
     public $biography;
-    public $faceBook;
+    public $facebook;
     public $twitter;
     public $linkedIn;
     public $editingNickName = false;
@@ -53,11 +55,12 @@ class Settings extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->employeeDetails = EmployeeDetails::with(['empPersonalInfo'])
+            ->where('emp_id', $employeeId)->first();
+            $this->biography = $this->employeeDetails->empPersonalInfo->biography ?? '';
             $this->editingBiography = true;
-            $this->biography = $this->employeeDetails->biography ?? '';
         } catch (\Exception $e) {
-            \Log::error('Error in editBiography method: ' . $e->getMessage());
+            Log::error('Error in editBiography method: ' . $e->getMessage());
         }
     }
 
@@ -72,12 +75,25 @@ class Settings extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->employeeDetails->biography = $this->biography;
-            $this->employeeDetails->save();
+            $empPersonalInfo = EmpPersonalInfo::where('emp_id', $employeeId)->first();
+            if ($empPersonalInfo) {
+                $empPersonalInfo->biography = $this->biography;
+                $empPersonalInfo->save();
+            } else {
+                $empPersonalInfo = EmpPersonalInfo::create([
+                    'emp_id' => $employeeId,
+                    'biography' => $this->biography,
+                    'first_name' => '',
+                    'last_name' => '',
+                    'gender' => '',
+                    'email' => '',
+                    'mobile_number' => '',
+                    'alternate_mobile_number' => '',
+                ]);
+            }
             $this->editingBiography = false;
         } catch (\Exception $e) {
-            \Log::error('Error in saveBiography method: ' . $e->getMessage());
+            Log::error('Error in saveBiography method: ' . $e->getMessage());
         }
     }
 
@@ -85,13 +101,15 @@ class Settings extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+          
+            $this->employeeDetails = EmployeeDetails::with(['empPersonalInfo'])
+            ->where('emp_id', $employeeId)->first();
+            $this->facebook = $this->employeeDetails->empPersonalInfo->facebook ?? '';
+            $this->twitter = $this->employeeDetails->empPersonalInfo->twitter ?? '';
+            $this->linkedIn = $this->employeeDetails->empPersonalInfo->linked_in ?? '';
             $this->editingSocialMedia = true;
-            $this->faceBook = $this->employeeDetails->facebook ?? '';
-            $this->twitter = $this->employeeDetails->twitter ?? '';
-            $this->linkedIn = $this->employeeDetails->linked_in ?? '';
         } catch (\Exception $e) {
-            \Log::error('Error in editSocialMedia method: ' . $e->getMessage());
+            Log::error('Error in editSocialMedia method: ' . $e->getMessage());
         }
     }
 
@@ -105,28 +123,52 @@ class Settings extends Component
     public function saveSocialMedia()
     {
         try {
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->employeeDetails->facebook = $this->faceBook;
-            $this->employeeDetails->twitter = $this->twitter;
-            $this->employeeDetails->linked_in = $this->linkedIn;
-            $this->employeeDetails->save();
+            $empPersonalInfo = EmpPersonalInfo::where('emp_id', $employeeId)->first();
+            if ($empPersonalInfo) {
+            
+                $empPersonalInfo->facebook = $this->facebook;
+                $empPersonalInfo->twitter = $this->twitter;
+                $empPersonalInfo->linked_in = $this->linkedIn;
+                $empPersonalInfo->save();
+            
+            } else {
+               
+                $empPersonalInfo = EmpPersonalInfo::create([
+                    'emp_id' => $employeeId,
+                    'facebook' => $this->facebook,
+                    'twitter' => $this->twitter,
+                    'linked_in' => $this->linkedIn,
+                    'first_name' => '',
+                    'last_name' => '',
+                    'gender' => '',
+                    'email' => '',
+                    'mobile_number' => '',
+                    'alternate_mobile_number' => '',
+                ]);
+                
+            }
             $this->editingSocialMedia = false;
+           
         } catch (\Exception $e) {
-            \Log::error('Error in saveSocialMedia method: ' . $e->getMessage());
+            Log::error('Error in saveSocialMedia method: ' . $e->getMessage());
         }
     }
 
     public function editProfile()
     {
         try {
+   
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->nickName = $this->employeeDetails->nick_name ?? '';
-            $this->wishMeOn = $this->employeeDetails->date_of_birth ?? '';
+          
+            $this->employeeDetails = EmployeeDetails::with(['empPersonalInfo'])
+            ->where('emp_id', $employeeId)->first();
+            $this->nickName = $this->employeeDetails->empPersonalInfo->nick_name ?? '';
+            $this->wishMeOn = $this->employeeDetails->empPersonalInfo->date_of_birth ?? '';
             $this->editingNickName = true;
         } catch (\Exception $e) {
-            \Log::error('Error in editProfile method: ' . $e->getMessage());
+            Log::error('Error in editProfile method: ' . $e->getMessage());
         }
     }
 
@@ -135,20 +177,38 @@ class Settings extends Component
     {
         $this->editingNickName = false;
     }
-
     public function saveProfile()
     {
         try {
+         
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->employeeDetails->nick_name = $this->nickName;
-            $this->employeeDetails->date_of_birth = $this->wishMeOn;
-            $this->employeeDetails->save();
+            $empPersonalInfo = EmpPersonalInfo::where('emp_id', $employeeId)->first();
+            if ($empPersonalInfo) {
+                $empPersonalInfo->nick_name = $this->nickName;
+                $empPersonalInfo->date_of_birth = $this->wishMeOn;
+                $empPersonalInfo->save();
+            } else {
+                $empPersonalInfo = EmpPersonalInfo::create([
+                    'emp_id' => $employeeId,
+                    'nick_name' => $this->nickName,
+                    'date_of_birth' => $this->wishMeOn,
+                    'first_name' => '',
+                    'last_name' => '',
+                    'gender' => '',
+                    'email' => '',
+                    'mobile_number' => '',
+                    'alternate_mobile_number' => '',
+                ]);
+            }
+    
             $this->editingNickName = false;
+    
         } catch (\Exception $e) {
-            \Log::error('Error in saveProfile method: ' . $e->getMessage());
+            Log::error('Error in saveProfile method: ' . $e->getMessage());
         }
     }
+    
+    
 
 
     public function editTimeZone()
@@ -159,7 +219,7 @@ class Settings extends Component
             $this->editingTimeZone = true;
             $this->selectedTimeZone = $this->employeeDetails->time_zone ?? '';
         } catch (\Exception $e) {
-            \Log::error('Error in editTimeZone method: ' . $e->getMessage());
+            Log::error('Error in editTimeZone method: ' . $e->getMessage());
         }
     }
 
@@ -175,13 +235,16 @@ class Settings extends Component
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            
             $this->employeeDetails->time_zone = $this->selectedTimeZone;
             $this->employeeDetails->save();
+            
             $this->editingTimeZone = false;
         } catch (\Exception $e) {
-            \Log::error('Error in saveTimeZone method: ' . $e->getMessage());
+            Log::error('Error in saveTimeZone method: ' . $e->getMessage());
         }
     }
+    
 
     public $showAlertDialog = false;
     public $showDialog = false;
@@ -255,7 +318,7 @@ class Settings extends Component
             $this->showDialog = false;
             // $this->passwordChanged = true;
         } catch (\Exception $e) {
-            \Log::error('Error in changePassword method: ' . $e->getMessage());
+            Log::error('Error in changePassword method: ' . $e->getMessage());
         }
     }
 
@@ -263,10 +326,11 @@ class Settings extends Component
     {
         try {
             $this->timeZones = timezone_identifiers_list();
-            $this->employees = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
+            $this->employees = EmployeeDetails::with(['empPersonalInfo', 'empDepartment'])
+            ->where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
             return view('livewire.settings', ['employees' => $this->employees]);
         } catch (\Exception $e) {
-            \Log::error('Error in render method: ' . $e->getMessage());
+            Log::error('Error in render method: ' . $e->getMessage());
             return view('livewire.settings')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
         }
     }

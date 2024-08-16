@@ -431,7 +431,6 @@ Route::get('/decode/{hash}', function ($hash) {
 
 Route::get('/salary/{emp_id}', function ($emp_id) {
     $empSalary = EmpSalary::findOrFail($emp_id);
-    dd($empSalary);
     // Return the salary attribute
     return response()->json([
         'emp_id' => $empSalary->emp_id,

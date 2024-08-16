@@ -507,17 +507,17 @@
 
 
                                 <!-- Assignee -->
-                                <div wire:click="forAssignee" class="form-group"
+                                <div class="form-group"
                                     style="color:grey;font-size:0.75rem;cursor:pointer; margin-bottom: 10px;">
                                     <label for="assignee"
                                         style="font-size: 13px;color:#778899; margin-bottom: 10px;">Assignee*</label>
                                     <br>
-                                    <i wire:change="autoValidate" class="fa fa-user icon" id="profile-icon"></i>
+                                    <i wire:click="forAssignee"  wire:change="autoValidate" class="fa fa-user icon" id="profile-icon"></i>
                                     @if ($showRecipients)
                                         <strong style="font-size: 12;">Selected assignee:
                                         </strong>{{ $selectedPeopleName }}
                                     @else
-                                        <a class="hover-link" style="color:black;cursor:pointer"> Add Assignee</a>
+                                        <a wire:click="forAssignee"  class="hover-link" style="color:black;cursor:pointer"> Add Assignee</a>
                                     @endif <br>
                                     @error('assignee')
                                         <span class="text-danger">Assignee is required</span>
@@ -735,18 +735,18 @@
                                     </div>
                                 </div>
 
-                                <div wire:click="forFollowers" class="form-group"
+                                <div  class="form-group"
                                     style=" color: grey; font-size: 0.75rem">
                                     <label for="assignee"
                                         style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Followers</label>
                                     <br>
-                                    <i wire:change="autoValidate" style="margin-top: 10px; cursor: pointer"
+                                    <i wire:click="forFollowers" wire:change="autoValidate" style="margin-top: 10px; cursor: pointer"
                                         class="fas fa-user icon" id="profile-icon"></i>
                                     @if ($showFollowers)
                                         <strong style="font-size: 12;">Selected Followers:
                                         </strong>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}
                                     @else
-                                        <a class="hover-link" style="color:black;cursor:pointer"> Add Followers</a>
+                                        <a wire:click="forFollowers" class="hover-link" style="color:black;cursor:pointer"> Add Followers</a>
                                     @endif
                                 </div>
                                 @if ($followersList)
@@ -1044,4 +1044,4 @@
         }
     }
 </script>
-</div>
+</div>s
