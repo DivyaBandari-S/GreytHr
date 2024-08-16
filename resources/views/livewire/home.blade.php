@@ -1,7 +1,7 @@
 <div style="position:relative;">
     <div class="msg-container">
         @if ($showAlert)
-        <div x-data x-init="checkFadeIn()" wire:poll.1s="hideAlert" class="custom-alert alert-success successAlert row m-auto " style="text-align:center;">
+        <div  wire:poll.1s="hideAlert" class="custom-alert alert-success successAlert row m-auto " style="text-align:center;">
             <div class="d-flex align-items-center justify-content-between">
                 <p class="mb-0">{{ session('success') }} 😀 </p>
                 <span wire:click="hideAlert" style="cursor: pointer;">&#10006;</span>
