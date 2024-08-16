@@ -560,7 +560,7 @@
 
     {{-- Modal for Viewing Image --}}
     @if ($showImageDialog)
-        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;border:1px solid silver">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
