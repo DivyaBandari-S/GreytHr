@@ -34,6 +34,7 @@ use App\Livewire\RegularisationPending;
 use App\Livewire\EmployeeSwipes;
 use App\Livewire\AttendanceMusterData;
 use App\Livewire\AttendanceMuster;
+use App\Livewire\AttendanceTableNew;
 use App\Livewire\AttendenceMasterDataNew;
 use App\Livewire\Chat\Chat;
 use App\Livewire\EmployeeSwipesData;
@@ -131,6 +132,15 @@ Route::group(['middleware' => 'checkAuth'], function () {
 Route::get('/Login&Register', function () {
     return view('login_and_register_view');
 });
+
+Route::get('/Privacy&Policy', function () {
+    return view('privacy_policy_view');
+});
+
+Route::get('/Terms&Services', function () {
+    return view('terms_services_view');
+});
+
 
 Route::middleware(['auth:web', 'handleSession'])->group(function () {
     Route::get('/CreateCV', function () {
@@ -301,6 +311,10 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
             'Content-Disposition' => 'attachment; filename="' . basename($message->file_path) . '"',
         ]);
     })->name('download.file');
+// In web.php
+Route::get('/download-image', [HelpDesk::class, 'downloadImage'])->name('downloadImage');
+
+
 
     //leave module
     Route::get('/leave-page', LeavePage::class)->name('leave-page');
@@ -420,7 +434,6 @@ Route::get('/decode/{hash}', function ($hash) {
 
 Route::get('/salary/{emp_id}', function ($emp_id) {
     $empSalary = EmpSalary::findOrFail($emp_id);
-    dd($empSalary);
     // Return the salary attribute
     return response()->json([
         'emp_id' => $empSalary->emp_id,

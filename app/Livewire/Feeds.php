@@ -276,6 +276,61 @@ class Feeds extends Component
    
         session()->flash('message', 'Comment added successfully.');
     }
+    public function createcomment($emp_id)
+    {
+        $this->validate();
+    
+        $employeeId = null;
+        $hrId = null;
+  
+        if (auth()->guard('emp')->check()) {
+            // Get the current authenticated employee's emp_id
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+        } elseif (auth()->guard('hr')->check()) {
+            // Get the current authenticated HR's emp_id
+            $hrEmployee = auth()->guard('hr')->user();
+            $hrId = $hrEmployee->emp_id;
+        }
+  
+        // Ensure that either $employeeId or $hrId is set
+        if (is_null($employeeId) && is_null($hrId)) {
+            session()->flash('error', 'Employee ID cannot be null.');
+            return;
+        }
+    
+        // Create the comment based on the authenticated role
+        if ($employeeId) {
+           AddComment::create([
+                'card_id' => $emp_id,
+                'emp_id' => $employeeId,
+               
+                'addcomment' => $this->newComment ?? '',
+            ]);
+        } elseif ($hrId) {
+            AddComment::create([
+                'card_id' => $emp_id,
+                'emp_id' => $employeeId,
+               
+                'addcomment' => $this->newComment ?? '',
+            ]);
+        }
+    
+    
+        // Clear the input field after adding the comment
+        $this->reset(['newComment']);
+        $this->isSubmitting = false;
+    
+   
+            $this->addcomments = Addcomment::with('employee')
+            ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+            ->orderByDesc('created_at')
+            ->get();
+        // Flash a success message
+        session()->flash('message', 'Comment added successfully.');
+        $this->combinedData = $this->combineAndSortData($this->employees);
+   
+ 
+    }
     protected $listeners = ['updateSortType'];
     // Toggle dropdown visibility
     public function toggleDropdown()
@@ -362,48 +417,7 @@ public function loadaddComments()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id');
     }
-    public function createcomment($emp_id)
-    {
-   
-        $this->isSubmitting = true; // Set submitting flag to true
-        // Validate the input fields
-        $this->validate();
-       
-        if (auth()->guard('emp')->check()) {
-            // Get the current authenticated employee's company ID
-            $employeeId = auth()->user()->emp_id;
-    
-    
-   
-        } elseif (auth()->guard('hr')->check()) {
-            $hrEmployee = auth()->guard('hr')->user();
-            $hrId = $hrEmployee->emp_id;
-    
-      
-        }
-  
-    
-        // Create a new comment record using the Comment model
-     
-        // Create a new comment record using the Addcomment model
-        Addcomment::create([
-            'emp_id' => $employeeId,
-            'card_id' => $emp_id,
-         
-            'addcomment' => $this->newComment ?? '',
-        ]);
-        // Clear the input field after adding the comment
-        $this->reset(['newComment']);
 
-        $this->isSubmitting = false; // Set submitting flag to false
-        $this->addcomments = Addcomment::with('employee')
-            ->whereIn('emp_id', $this->employees->pluck('emp_id'))
-            ->orderByDesc('created_at')
-            ->get();
-        // Flash a success message
-        session()->flash('message', 'Comment added successfully.');
-        $this->combinedData = $this->combineAndSortData($this->employees);
-    }
     public function upload()
     {
         $this->validate([

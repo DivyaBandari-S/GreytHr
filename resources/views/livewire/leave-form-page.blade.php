@@ -1,7 +1,5 @@
 <div class="leavePageContent">
    <div class="d-flex mt-2 mb-3 gap-4 align-items-center position-relative">
-      <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
-
       @if(session()->has('message'))
       <div class="alert alert-success w-50 position-absolute m-auto p-1" style="font-size: 12px; right: 25%;" id="success-alert">
          {{ session('message') }}
@@ -72,8 +70,10 @@
 
          <!-- Sub-Section Content -->
          @if($activeSubSection === 'leave')
-         <div class="apply-section">
-            @livewire('leave-apply-page')
+         <div class="apply-section  ">
+            <div class="containerWidth">
+               @livewire('leave-apply-page')
+            </div>
          </div>
          @elseif($activeSubSection === 'restricted')
          <div class="restricted-section">
@@ -190,7 +190,7 @@
 
                            </div>
 
-                           <div class="col accordion-content" style="padding-left: 20px;" >
+                           <div class="col accordion-content" style="padding-left: 20px;">
 
                               <span class="accordionContentSpan">No. of Days</span>
 
@@ -269,7 +269,7 @@
                                  <span style="color: rgb(2,17,53); font-size: 12px; font-weight: 500;">View
                                     Details</span>
 
-                              </a>v
+                              </a>
                               @if($leaveRequest->category_type === 'Leave')
                               <button class="withdraw" wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
                               @else

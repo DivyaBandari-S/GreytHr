@@ -1,10 +1,10 @@
 <div>
-    <div class="detail-container ">
+    <div class="detail-container">
         <div class="row m-0 p-0">
             <div class="col-md-4 p-0 m-0 mb-2 ">
                 <div aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center ">
-                        <li class="breadcrumb-item"><a type="button" style="color:#fff !important;" class="submit-btn" href="{{ route('leave-page') }}">Back</a></li>
+                        <li class="breadcrumb-item"><a type="button" style="color:#fff !important;" class="submit-btn" href="{{ route('leave-form-page') }}">Back</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Leave - View Details</li>
                     </ol>
                 </div>
@@ -27,6 +27,7 @@
                                 Pending with
                                 @endif
                             </span>
+                            <br>
                             @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                             <span class="normalText">
                                 {{ ucwords(strtoupper($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtoupper($this->leaveRequest->employee->last_name)) }}
@@ -62,18 +63,18 @@
                         <div class="view-container m-0 p-0">
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
-                                    <span class="normalTextValue">From date</span>
+                                    <span class="normalTextValue">From date</span> <br>
                                     <span class="normalText" style="font-weight:600;"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
-                                    <span class="normalTextValue">To date</span>
+                                    <span class="normalTextValue">To date</span> <br>
                                     <span class="normalText" style="font-weight:600;">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
                             </div>
                             <div class="box" style="display:flex; text-align:center; padding:5px;">
                                 <div class="field p-2">
-                                    <span class="normalTextValue">No. of days</span>
+                                    <span class="normalTextValue">No. of days</span> <br>
                                     <span class="normalText" style=" font-weight: 600;"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
                                 </div>
                             </div>
@@ -118,7 +119,9 @@
                                         <span class="custom-label">Applied to</span>
                                         <span class="custom-label">Reason</span>
                                         <span class="custom-label">Contact</span>
+                                        @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-label">CC to</span>
+                                        @endif
                                     </div>
 
                                     <div class="custom-grid-item">
@@ -175,12 +178,14 @@
                             <div>
                                 <h5 class="normalText text-start">
                                     @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
-                                    Withdrawn <br><span class="normalText text-start">by</span>
+                                    Withdrawn
+
+                                    <span class="normalText text-start">by</span> <br>
                                     <span class="normalTextValue text-start">
                                         {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
                                     </span>
-                                    @elseif(strtoupper($leaveRequest->status) == 'PENDING')
-                                    <span class="normalTextValue text-start"> Pending <br> with</span>
+                                    @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
+                                    <span class="normalTextValue text-start"> Approved <br> by</span>
                                     @if(!empty($leaveRequest['applying_to']))
                                     @foreach($leaveRequest['applying_to'] as $applyingTo)
                                     <span class="normalText text-start">
