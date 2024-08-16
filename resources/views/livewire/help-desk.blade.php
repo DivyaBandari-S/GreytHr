@@ -4,18 +4,21 @@
 
     <body>
         <div class="row ">
-            @if (session()->has('message'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('message') }}
-                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style=" font-size: 0.75rem;padding: 0.25rem 0.5rem;margin-top:6px"></button>
-            </div>
-            @endif
-            @if (session()->has('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; margin-top: 5px;"></button>
-            </div>
-            @endif
+        @if (session()->has('message'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
+        {{ session('message') }}
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" 
+                style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
+    </div>
+@endif
+@if (session()->has('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
+        {{ session('error') }}
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" 
+                style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
+    </div>
+@endif
+
             <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
                 
             <div class="nav-buttons d-flex justify-content-center">
@@ -123,14 +126,19 @@
 </div>
 
 <div class="row mt-2">
-<div class="form-group">
-<input type="file" wire:model="file_path" id="file_path" class="form-control">
-
-@error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
-
-    </div>
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
+                            </div>
                             @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
+
+                        <div>
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+
+                        </div>
+
 
                      
                         <div class="form-group mt-2">
@@ -138,7 +146,7 @@
     <div class="input" class="form-control placeholder-small">
         <div style="position: relative;">
             <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
-                <option style="color: gray;" value="">Select Priority</option>
+                <option st="color: gray;" value="">Select Priority</option>
                 <option value="High">High</option>
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -325,7 +333,7 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
                         <div class="row">
@@ -537,52 +545,53 @@
                    
 
      
-            @if ($record->file_path)
-                {{-- Check if the file path is an image --}}
-                @if ($record->getImageUrlAttribute())
-                    <a href="#" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')"
-                       style="text-decoration: none; color: #007BFF;">
-                       View File
-                    </a>
-                @elseif (Str::endsWith($record->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx']))
-                    {{-- Display a button for PDF or document files --}}
-                    <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-primary" style="margin-top: 10px;">
-                        <span style="font-size: 30px; color: black;">&#8595;</span> Download {{ pathinfo($record->file_path, PATHINFO_EXTENSION) }}
-                    </a>
-                @else
-                    {{-- Generic download link for other file types --}}
-                    <a href="{{ route('/', ['id' => $record->id]) }}" class="btn btn-secondary" style="margin-top: 10px;">
-                        <span style="font-size: 30px; color: black;">&#8595;</span> Download File
-                    </a>
-                @endif
-            @endif
-       
+                        @if ($record->file_path)
+    {{-- Check if the file path is an image --}}
+    @if ($record->getImageUrlAttribute())
+        <a href="#" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')"
+           style="text-decoration: none; color: #007BFF;">
+           View Image
+        </a>
+    @elseif (Str::endsWith($record->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx']))
+        {{-- Display a button for PDF or document files --}}
+        <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-primary" style="margin-top: 10px;">
+            <span style="font-size: 30px; color: black;">&#8595;</span> Download {{ pathinfo($record->file_path, PATHINFO_EXTENSION) }}
+        </a>
+    @else
+        {{-- Generic download link for other file types --}}
+        <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-secondary" style="margin-top: 10px;">
+            <span style="font-size: 30px; color: black;">&#8595;</span> Download File
+        </a>
+    @endif
+@else
+    {{-- Show this message if no file is attached --}}
+    <p style="color: gray;">-</p>
+@endif
 
-    {{-- Modal for Viewing Image --}}
-    @if ($showImageDialog)
-        <div class="modal" tabindex="-1" role="dialog" style="display: block;border:1px solid silver">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">View Image</h5>
-                        <button type="button" class="close" wire:click="closeImageDialog" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body text-center">
-                        @if ($imageUrl)
-                            <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
-                        @else
-                            <p>No image available.</p>
-                        @endif
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" wire:click="closeImageDialog">Close</button>
-                    </div>
+@if ($showImageDialog)
+    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal-dialog modal-dialog-centered" role="document" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title viewfile">View File</h5>
+                </div>
+                <div class="modal-body text-center">
+                    @if ($imageUrl)
+                        <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
+                    <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
                 </div>
             </div>
         </div>
-    @endif
+    </div>
+    <div class="modal-backdrop fade show blurred-backdrop" style="background-color: rgba(0, 0, 0, 0.1);"></div>
+@endif
+
+
+
 
 
       
@@ -704,12 +713,55 @@
                             {{ $record->description }}
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center;">
-                            @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
-                                <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
-                            @else
-                                -
-                            @endif
-                        </td>
+                   
+
+     
+                   @if ($record->file_path)
+{{-- Check if the file path is an image --}}
+@if ($record->getImageUrlAttribute())
+   <a href="#" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')"
+      style="text-decoration: none; color: #007BFF;">
+      View Image
+   </a>
+@elseif (Str::endsWith($record->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx']))
+   {{-- Display a button for PDF or document files --}}
+   <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-primary" style="margin-top: 10px;">
+       <span style="font-size: 30px; color: black;">&#8595;</span> Download {{ pathinfo($record->file_path, PATHINFO_EXTENSION) }}
+   </a>
+@else
+   {{-- Generic download link for other file types --}}
+   <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-secondary" style="margin-top: 10px;">
+       <span style="font-size: 30px; color: black;">&#8595;</span> Download File
+   </a>
+@endif
+@else
+{{-- Show this message if no file is attached --}}
+<p style="color: gray;">-</p>
+@endif
+
+@if ($showImageDialog)
+<div class="modal" tabindex="-1" role="dialog" style="display: block;">
+   <div class="modal-dialog modal-dialog-centered" role="document" >
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title viewfile">View File</h5>
+           </div>
+           <div class="modal-body text-center">
+               @if ($imageUrl)
+                   <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+               @endif
+           </div>
+           <div class="modal-footer">
+               <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
+               <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
+           </div>
+       </div>
+   </div>
+</div>
+<div class="modal-backdrop fade show blurred-backdrop" style="background-color: rgba(0, 0, 0, 0.1);"></div>
+@endif
+
+                   </td>
                         <td  style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; border-top: none;">
                             @php
                                 $ccToArray = explode(',', $record->cc_to??'-');
@@ -804,12 +856,55 @@
                             {{ $record->description }}
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center;">
-                            @if (!is_null($record->file_path) && $record->file_path !== 'N/A')
-                                <a href="{{ asset('storage/' . $record->file_path) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">View File</a>
-                            @else
-                                -
-                            @endif
-                        </td>
+                   
+
+     
+                   @if ($record->file_path)
+{{-- Check if the file path is an image --}}
+@if ($record->getImageUrlAttribute())
+   <a href="#" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')"
+      style="text-decoration: none; color: #007BFF;">
+      View Image
+   </a>
+@elseif (Str::endsWith($record->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx']))
+   {{-- Display a button for PDF or document files --}}
+   <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-primary" style="margin-top: 10px;">
+       <span style="font-size: 30px; color: black;">&#8595;</span> Download {{ pathinfo($record->file_path, PATHINFO_EXTENSION) }}
+   </a>
+@else
+   {{-- Generic download link for other file types --}}
+   <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-secondary" style="margin-top: 10px;">
+       <span style="font-size: 30px; color: black;">&#8595;</span> Download File
+   </a>
+@endif
+@else
+{{-- Show this message if no file is attached --}}
+<p style="color: gray;">-</p>
+@endif
+
+@if ($showImageDialog)
+<div class="modal" tabindex="-1" role="dialog" style="display: block;">
+   <div class="modal-dialog modal-dialog-centered" role="document" >
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title viewfile">View File</h5>
+           </div>
+           <div class="modal-body text-center">
+               @if ($imageUrl)
+                   <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+               @endif
+           </div>
+           <div class="modal-footer">
+               <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
+               <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
+           </div>
+       </div>
+   </div>
+</div>
+<div class="modal-backdrop fade show blurred-backdrop" style="background-color: rgba(0, 0, 0, 0.1);"></div>
+@endif
+
+                   </td>
                         <td  style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; border-top: none;">
                             @php
                                 $ccToArray = explode(',', $record->cc_to??'-');

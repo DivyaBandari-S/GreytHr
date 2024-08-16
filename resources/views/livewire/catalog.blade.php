@@ -1,7 +1,7 @@
 <div>
     <div class="row m-0">
         @if (session()->has('message'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show" role="alert" style="width:500px">
             {{ session('message') }}
             <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style=" font-size: 0.75rem;padding: 0.25rem 0.5rem;margin-top:5px"></button>
         </div>
@@ -190,9 +190,9 @@
 @endif
 
                                                         </div>
-                                                        <div class="row" style="margin-top:5px">
+                                                        <div class="row mt-2">
                             <div class="col">
-                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;margin-top:5px">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
                                 </label>
                             </div>
@@ -200,9 +200,10 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
+                
 
                                                     </form>
                                                 </div>
@@ -380,7 +381,7 @@
 @endif
 
                                                         </div>
-                                                        <div class="row" style="margin-top:5px">
+                                                        <div class="row mt-2">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -390,7 +391,7 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
 
@@ -563,7 +564,7 @@
 @endif
 
                                                         </div>
-                                                        <div class="row" style="margin-top:5px">
+                                                        <div class="row mt-2">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -573,7 +574,7 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
 
@@ -633,18 +634,18 @@
 
 
                                                             <div style="display:flex">
-                                                                <div class="form-group mt-2">
-                                                                    <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
-                                                                    <input wire:model="mobile" type="text" class="form-control">
-                                                                    @error('mobile') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
-                                                                <div class="form-group mt-2 ml-6" style="margin-left:10px">
-                                                                    <label for="contactDetails">Email<span  style="color:red">*</span></label>
-                                                                    <input wire:model="mail" type="text" class="form-control">
-                                                                    @error('mail') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
+                                                           
+    <div class="form-group col-md-6 mt-2">
+        <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
+        <input wire:model="mobile" type="text" class="form-control">
+        @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+    <div class="form-group col-md-6 mt-2" style="margin-left:5px">
+        <label for="contactDetails">Email<span style="color:red">*</span></label>
+        <input wire:model="mail" type="text" class="form-control">
+        @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span  style="color:red">*</span></label>
@@ -753,7 +754,7 @@
 @endif
 
                                                             </div>
-                                                            <div class="row" style="margin-top:5px">
+                                                            <div class="row mt-2">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -763,7 +764,7 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
 
@@ -817,13 +818,13 @@
 
 
                                                             <div style="display:flex">
-                                                                <div class="form-group mt-2">
+                                                                <div class="form-group col-md-6 mt-2">
                                                                     <label for="contactDetails">Mobile Number<span  style="color:red">*</span></label>
                                                                     <input wire:model="mobile" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
-                                                                <div class="form-group mt-2 ml-3" style="margin-left:10px">
+                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email<span  style="color:red">*</span></label>
                                                                     <input wire:model="mail" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
@@ -940,7 +941,7 @@
 
                                                             </div>
 
-                                                            <div class="row">
+                                                            <div class="row ">
                             <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
@@ -950,7 +951,7 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
 
@@ -1123,9 +1124,9 @@
 @endif
 
                                                             </div>
-                                                            <div class="row">
+                                                            <div class="row mt-2">
                             <div class="col">
-                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;margin-top:10px">
+                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
                                 </label>
                             </div>
@@ -1133,10 +1134,9 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
-
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
@@ -1193,13 +1193,13 @@
 
 
                                                             <div style="display:flex">
-                                                                <div class="form-group mt-2">
+                                                                <div class="form-group col-md-6 mt-2">
                                                                     <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
                                                                     <input wire:model.lazy="mobile" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
-                                                                <div class="form-group mt-2 ml-3" style="margin-left:10px">
+                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email<span style="color:red">*</span></label>
                                                                     <input wire:model.lazy="mail" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
@@ -1313,8 +1313,8 @@
 @endif
 
                                                             </div>
-                                                            <div class="row">
-                            <div class="col mt-3">
+                                                            <div class="row mt-2">
+                            <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
                                 </label>
@@ -1323,10 +1323,9 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
-
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">
@@ -1395,13 +1394,13 @@
 
 
                                                             <div style="display:flex">
-                                                                <div class="form-group mt-2">
+                                                                <div class="form-group col-md-6 mt-2">
                                                                     <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
                                                                     <input wire:model.lazy="mobile" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
-                                                                <div class="form-group mt-2 ml-3" style="margin-left:10px">
+                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email<span style="color:red">*</span></label>
                                                                     <input wire:model.lazy="mail" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
@@ -1515,8 +1514,8 @@
 @endif
 
                                                             </div>
-                                                            <div class="row" style="margin-left:-10px">
-                            <div class="col mt-2">
+                                                            <div class="row mt-2">
+                            <div class="col">
                                 <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
                                     <i class="fa fa-paperclip"></i> Attach Image
                                 </label>
@@ -1525,10 +1524,9 @@
                         </div>
 
                         <div>
-                            <input wire:model="image" type="file" accept="image/*" style="font-size: 12px;">
+                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
                         </div>
-
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer justify-content-center">

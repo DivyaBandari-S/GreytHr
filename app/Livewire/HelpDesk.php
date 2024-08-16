@@ -373,13 +373,32 @@ public function submit()
 
     try {
         $validatedData = $this->validate($this->rules);
-      
-        $filePath = 'N/A';
-        if ($this->file_path && $this->image) {
-            // Ensure the file is an image
-            $image = $this->image->getRealPath();
-            $filePath = file_get_contents($image);
+
+        $fileContent = null; // Use a separate variable for file content
+        if ($this->file_path) {
+            // Validate and store the uploaded file
+            $validatedFile = $this->validate([
+                'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
+            ]);
+
+            // Store the file as binary data
+            $fileContent = file_get_contents($this->file_path->getRealPath());
+
+            if ($fileContent === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                session()->flash('error', 'Failed to read the uploaded file.');
+                return;
+            }
+
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                session()->flash('error', 'File size exceeds the allowed limit.');
+                return;
+            }
         }
+
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
@@ -388,14 +407,13 @@ public function submit()
             'category' => $this->category,
             'subject' => $this->subject,
             'description' => $this->description,
-            'file_path' => $filePath,
-            'cc_to' => $this->cc_to??'-',
+            'file_path' => $fileContent, // Store the binary file data
+            'cc_to' => $this->cc_to ?? '-',
             'priority' => $this->priority,
             'mail' => 'N/A',
             'mobile' => 'N/A',
             'distributor_name' => 'N/A',
         ]);
-        dd($filePath);
 
         session()->flash('message', 'Request created successfully.');
         $this->reset();
@@ -403,7 +421,13 @@ public function submit()
     } catch (\Illuminate\Validation\ValidationException $e) {
         $this->setErrorBag($e->validator->getMessageBag());
     } catch (\Exception $e) {
-        Log::error('Error creating request: ' . $e->getMessage());
+        Log::error('Error creating request: ' . $e->getMessage(), [
+            'employee_id' => $employeeId,
+            'category' => $this->category,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+        ]);
         session()->flash('error', 'An error occurred while creating the request. Please try again.');
     }
 }
@@ -424,9 +448,48 @@ public function showViewFile($id)
 }
 public $showImageDialog = false;
 public $imageUrl;
+ public function downloadImage()
+ {
+     if ($this->imageUrl) {
+         // Decode the Base64 data if necessary
+         $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $this->imageUrl));
 
-// Other properties and methods...
+         // Determine MIME type and file extension
+         $finfo = finfo_open(FILEINFO_MIME_TYPE);
+         $mimeType = finfo_buffer($finfo, $fileData);
+         finfo_close($finfo);
 
+         $extension = '';
+         switch ($mimeType) {
+             case 'image/jpeg':
+                 $extension = 'jpg';
+                 break;
+             case 'image/png':
+                 $extension = 'png';
+                 break;
+             case 'image/gif':
+                 $extension = 'gif';
+                 break;
+             default:
+                 return abort(415, 'Unsupported Media Type');
+         }
+
+         // Prepare file name and response
+         $fileName = 'image-' . time() . '.' . $extension;
+         return response()->streamDownload(
+             function () use ($fileData) {
+                 echo $fileData;
+             },
+             $fileName,
+             [
+                 'Content-Type' => $mimeType,
+                 'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+             ]
+         );
+     }
+
+     return abort(404, 'Image not found');
+ }
 public function showImage($url)
 {
     $this->imageUrl = $url;
