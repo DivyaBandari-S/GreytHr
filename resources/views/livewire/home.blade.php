@@ -387,7 +387,7 @@
 
                         @endif
                     </div>
-                    <a href="/holiday-calender">
+                    <a href="/holiday-calendar">
                         <button class="upholidays-card-button">More info</button>
                     </a>
                 </div>
