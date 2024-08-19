@@ -60,7 +60,7 @@ class Tasks extends Component
     public $closedSearch = '';
     public $filterData;
     public $showAlert = false;
-  
+
     public function setActiveTab($tab)
     {
         if ($tab === 'open') {
@@ -291,7 +291,7 @@ class Tasks extends Component
         session()->flash('showAlert', true);
 
         return redirect()->to('/tasks');
-      
+
     }
 
     public function closeForTasks($taskId)
@@ -303,9 +303,9 @@ class Tasks extends Component
         }
         session()->flash('message', 'Task has been Re-Opened.');
         session()->flash('showAlert', true);
-      
+
         return redirect()->to('/tasks');
-   
+
     }
 
     public function autoValidate()
@@ -330,7 +330,7 @@ class Tasks extends Component
             }
         }
     }
-    
+
 
     public function submit()
     {
@@ -342,7 +342,7 @@ class Tasks extends Component
         $this->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
         ]);
-        
+
         // Validate and upload the image file
         if ($this->image) {
             $this->isLoadingImage = true;
@@ -367,7 +367,12 @@ class Tasks extends Component
             'file_path' => $this->image_path,
             'status' => "Open",
         ]);
-      
+
+        preg_match('/\((.*?)\)/',$this->assignee , $matches);
+        $extracted = isset($matches[1]) ? $matches[1] : $this->assignee;
+
+        // dd( $this->assignee,$extracted,$this->employeeDetails->emp_id);
+        if($extracted!=$this->employeeDetails->emp_id){
 
         Notification::create([
             'emp_id' => $this->employeeDetails->emp_id,
@@ -375,12 +380,13 @@ class Tasks extends Component
             'task_name' => $this->task_name,
             'assignee' => $this->assignee,
         ]);
+    }
 
         $this->reset();
         session()->flash('message', 'Task created successfully!');
         session()->flash('showAlert', true);
         return redirect()->to('/tasks');
-     
+
     }
 
     public $client_id, $project_name, $image_path;
@@ -484,7 +490,7 @@ class Tasks extends Component
         $this->showModal = false;
         session()->flash('message', 'Comment added successfully.');
         $this->showAlert = true;
-       
+
     }
     public function updatedNewComment($value)
     {

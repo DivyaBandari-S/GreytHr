@@ -26,9 +26,9 @@ return new class extends Migration
             $table->string('religion')->nullable();
             $table->enum('marital_status', ['married', 'unmarried']);
             $table->enum('physically_challenge', ['yes', 'no']);
-            $table->string('email')->unique();
-            $table->string('mobile_number')->unique();
-            $table->string('alternate_mobile_number')->unique();
+            $table->string('email')->unique()->nullable();
+            $table->string('mobile_number')->unique()->nullable();
+            $table->string('alternate_mobile_number')->unique()->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('postal_code')->nullable();
