@@ -135,6 +135,9 @@ width: 170px; */
             font-size: 14px;
             color: blue;
         }
+        .info-icon-container-attendance-info .fa-info-circle:hover+.info-box-attendance-info {
+            display: block;
+        }
 
         .info-box-attendance-info {
             display: none;
@@ -151,9 +154,7 @@ width: 170px; */
             Z-index: 1
         }
 
-        .info-icon-container-attendance-info:hover .info-box-attendance-info {
-            display: block;
-        }
+       
 
         .text-2 {
             font-size: 18px;
@@ -526,6 +527,16 @@ width: 170px; */
             /* Set the desired background color when clicked */
             border: 1px solid #c5cdd4;
             /* Set the desired border color */
+        }
+        .custom-container {
+            margin-top:20px;
+            background-color: white; /* White background */
+            width: 100%;            /* Adjust width as needed */
+            height: 100px;           /* Adjust height as needed */
+            padding: 20px;           /* Optional padding for content spacing */
+            border: 1px solid #ddd;  /* Optional border for visual distinction */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+            box-sizing: border-box;  /* Ensure padding and border are included in width and height */
         }
 
         .clickable-date1 {
@@ -1318,28 +1329,30 @@ color: #fff;
             border-bottom: 17px solid #f09541;
             margin-right: 5px;
         }
-        .cancel-btn:hover
-        {
-            background-color: rgb(2, 17, 79);
-            color:white;
-        }
+        
     </style>
     @php
+    $offCount=0;
+    $presentCount=0;
+    $absentCount=0;
+    $holidaycountforcontainer=0;
+    $totalWorkedMinutes=0;
     $currentYear = date('Y');
     $currentMonth=date('n');
     $currentMonthRep=date('F');
     $holidayNote=false;
+    $totalWorkHours=0;
     $currentMonthRep = DateTime::createFromFormat('F', $currentMonthRep)->format('M');
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
     @endphp
 
     <div class="m-auto">
-        
-        <div class="table-container scrollable-table" style=" width: 100%;
+                <div class="table-container scrollable-table" style=" width: 100%;
     overflow-x: auto;">
             <table>
                 <tr class="first-header-row" style="background-color:#ebf5ff;border-bottom: 1px solid #cbd5e1;">
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px; position: relative;color:#778899;border-right:1px solid #cbd5e1;">General&nbsp;Details</th>
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -1379,7 +1392,8 @@ color: #fff;
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Status</th>
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Swipe&nbsp;Details</th>
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Exception</th>
-                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Shortfall/Excess&nbsp;Hrs.</th>
+                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Shortfall&nbsp;Hrs</th>
+                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Excess&nbsp;Hrs</th>
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Shift&nbsp;Timings</th>
                     @if($this->moveCaretLeftSession1==true)
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Start&nbsp;Time</th>
@@ -1434,14 +1448,23 @@ color: #fff;
 
                             @if($distinctDates->has($dateKeyForLookup))
                             @php
+                             $standardHours = 9;
+                             $standardMinutes = 0;
                             $record = $distinctDates[$dateKeyForLookup];
                             $firstInTimestamp = strtotime($record['first_in_time']);
                             $lastOutTimestamp = strtotime($record['last_out_time']);
+                           
+    
+                             // Calculate the standard working minutes (9 hours)
+                            $standardWorkingMinutes = ($standardHours * 60) + $standardMinutes;
                             // Calculate difference in seconds
                             $differenceInSeconds = $lastOutTimestamp - $firstInTimestamp;
                             // Calculate hours and minutes
+                            
                             $hours = floor($differenceInSeconds / 3600);
                             $minutes = floor(($differenceInSeconds % 3600) / 60);
+                            $totalWorkedMinutes = ($hours * 60) + $minutes;
+                            
                             @endphp
 
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">
@@ -1454,10 +1477,8 @@ color: #fff;
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">
                                 @if($isDate)
                                     @if(empty($record['last_out_time']))
-                                            @php
-                                                $record['last_out_time']=$record['first_in_time'];
-                                            @endphp
-                                            {{ date('H:i', strtotime($record['last_out_time'])) }}
+                                            
+                                            {{ date('H:i', strtotime($record['first_in_time'])) }}
                                     @else
                                             {{ date('H:i', strtotime($record['last_out_time'])) }}
                                     @endif
@@ -1466,21 +1487,24 @@ color: #fff;
                                 @endif    
                             </td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                               
+                                
                                 @if($isDate==false)   
                                      00:00
-                                @elseif($record['first_in_time']==$record['last_out_time'])
+                                @elseif(empty($record['last_out_time']))
                                       00:00
                                 @else
-                                 {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
+                                
+                                {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
                                 @endif
                             </td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">
                                 @if($isDate==false)   
                                              00:00
-                                @elseif($record['first_in_time']==$record['last_out_time'])
+                                @elseif(empty($record['last_out_time']))
                                 00:00
                                 @else
-                                {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
+                                 {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
                                 @endif
                             </td>
                             @else
@@ -1496,14 +1520,25 @@ color: #fff;
                             <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666')) ):'black'}}">
                                 @if($isDate==true)
                                 @if($isWeekend==true)
-                                O
+                                 O
+                                    @php
+                                    $offCount++;
+                                    @endphp
                                 @elseif($holidayNote==true)
-                                H
+                                 H
+                                  @php
+                                    $holidaycountforcontainer++;
+                                  @endphp
                                 @elseif($distinctDates->has($dateKeyForLookup))
                                 P
-
+                                   @php
+                                      $presentCount++;
+                                   @endphp
                                 @else
                                 A
+                                  @php
+                                    $absentCount++;
+                                  @endphp
                                 @endif
                                 @else
                                 -
@@ -1517,7 +1552,34 @@ color: #fff;
                             </td>
 
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">No&nbsp;attention&nbsp;required</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">-</td>
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                                @if($totalWorkedMinutes<$standardWorkingMinutes&&!empty($record['last_out_time'])&&$isWeekend==false&&$holidayNote==false&&$isPresent==true)
+                                   @php
+                                      $shortfalltime=$standardWorkingMinutes-$totalWorkedMinutes;
+                                      $shortfallHours = floor($shortfalltime / 60);
+                                      $shortfallMinutes = $shortfalltime % 60;
+                                   @endphp
+                                 
+                                      {{str_pad($shortfallHours, 2, '0', STR_PAD_LEFT)}}: {{ str_pad($shortfallMinutes, 2, '0', STR_PAD_LEFT) }}
+                                    
+                                @else      
+                                  00:00
+                                @endif  
+                            </td>
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                               @if($totalWorkedMinutes>$standardWorkingMinutes&&!empty($record['last_out_time'])&&$isWeekend==false&&$holidayNote==false&&$isPresent==true)
+                                   @php
+                                      $excesstime=$totalWorkedMinutes-$standardWorkingMinutes;
+                                      $excessHours = floor($excesstime / 60);
+                                      $excessMinutes = $excesstime % 60;
+                                   @endphp
+                                 
+                                      {{str_pad($excessHours, 2, '0', STR_PAD_LEFT)}}: {{ str_pad($excessMinutes, 2, '0', STR_PAD_LEFT) }}
+                                    
+                                @else      
+                                  00:00
+                                @endif  
+                            </td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">10:00-14:00</td>
                             @if($this->moveCaretLeftSession1==true)
                             @if($distinctDates->has($dateKeyForLookup))
@@ -1589,7 +1651,7 @@ color: #fff;
 
 
                         <tr style="border-bottom: 1px solid #cbd5e1;background-color:white;">
-                            <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Total </td>
+                            <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Total </td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -1599,6 +1661,7 @@ color: #fff;
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
                             <td></td>
                             @if($this->moveCaretLeftSession1==true)
@@ -1734,6 +1797,22 @@ color: #fff;
     <div class="modal-backdrop fade show blurred-backdrop"></div>
 
         @endif    
+    </div>
+    <div class="custom-container">
+        <div class="row">
+           <div class="col"style="white-space:nowrap;">Present:{{$presentCount}}</div>
+           <div class="col"style="white-space:nowrap;">Leave:0</div>
+           <div class="col"style="white-space:nowrap;">Holiday:{{$holidaycountforcontainer}}</div>
+           <div class="col"style="white-space:nowrap;">Rest Day:0</div>
+           <div class="col"style="white-space:nowrap;">Absent:{{$absentCount}}</div>
+           <div class="col"style="white-space:nowrap;">On Duty:0</div>
+           <div class="col"style="white-space:nowrap;">Shutdown:0</div>
+           <div class="col"style="white-space:nowrap;">Off Day:{{$offCount}}</div>
+        </div>
+        <div class="row">
+            <div class="col"style="white-space:nowrap;">Restricted Holiday:0</div>
+            <div class="col"style="white-space:nowrap;">Status Unknown:0</div>
+        </div>
     </div>
     
 </div>

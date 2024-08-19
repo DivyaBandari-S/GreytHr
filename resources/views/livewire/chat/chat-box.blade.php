@@ -114,11 +114,13 @@
             <div class="chat-header clearfix" style="border-radius:5px;border:2px solid silver;background-image: url('https://th.bing.com/th/id/OIP.D5JnKq5hq9D54giN_liHTQHaHa?w=163&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7');height:80px">
             @if ($selectedConversation->getReceiver() && $selectedConversation->getReceiver()->employeeDetails)
             <img 
-        style="border-radius:50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;" 
-        src="{{ $selectedConversation->getReceiver()->employeeDetails->image_url }}" 
-        class="card-img-top" 
-        alt="Profile Image"
-    >
+    style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;" 
+    src="{{ $imageUrl }}" 
+    class="card-img-top" 
+    alt="Profile Image"
+    onerror="this.onerror=null; this.src='{{ $defaultImageUrl }}';"
+>
+
 @else
     <!-- Optionally, display a default image if employeeDetails or image is not available -->
     <img 

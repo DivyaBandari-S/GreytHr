@@ -1,13 +1,18 @@
 <div class="container">
 <div class="row">
 <div class="col d-flex justify-content-end align-items-center">
-    <button onclick="window.location.href='/itdeclaration'" class="btn btn-primary border" style="margin-left:-20px;background-color:rgb(2, 17, 79)">Tax Planner</button>
-    <span class="ml-3">
-        <select id="yearSelect" class="form-control" style="width: 150px;align-items:center">
-            <option class="dropdown" value="2023">2023</option>
-            <option class="dropdown" value="2024" selected>2024</option>
-        </select>
-    </span>
+<button onclick="window.location.href='/itdeclaration'" class="btn btn-primary border" style="margin-right: 20px; background-color: rgb(2, 17, 79);">
+    Tax Planner
+</button>
+
+<span class="ml-6" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+    <select id="yearSelect" class="form-control" style="width: 150px; text-align: center;">
+        <option class="dropdown" value="2023">2023</option>
+        <option class="dropdown" value="2024" selected>2024</option>
+    </select>
+</span>
+
+
 </div>
 
     </div>
@@ -17,7 +22,7 @@
             <div class="bg-white" style="height: 300px;border:1px solid #EFC3CA;border-radius:5px">
                 <img src="https://th.bing.com/th/id/OIP.vwV51NMNZ8YgCdZ__BSFkQAAAA?pid=ImgDet&rs=1" class="img-fluid" style="height: 200px;">
                 <p>Sigh! Declaration is locked</p>
-                <p style="font-size:  0.8rem;align-items:center">This declaration window is locked. Please wait for the admin notification</p>
+                <p style="font-size: 12px;align-items:center">This declaration window is locked. Please wait for the admin notification</p>
             </div>
             
         </div>
