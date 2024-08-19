@@ -4411,6 +4411,11 @@ select .yearSelect {
     background-color: rgb(2, 17, 79);
     border: none;
 }
+.alert-close{
+    font-size: var(--normal-font-size);
+    background-color: none !important;
+    border: none;
+}
 /* end of styles */
 
 /* team on leave */
@@ -4671,6 +4676,7 @@ option {
 .pointer {
     cursor: pointer;
 }
+
 
 .sideBarIcon {
     font-size: 14px !important;
@@ -5357,3 +5363,15 @@ option {
   }
 
 
+
+
+  .settings-profile-image{
+    border-radius: 50%; 
+    height: 90px;
+    width: 90px;
+  }
+  .chat-icon{
+    font-size: 17px;
+    color: var(--dark);
+    cursor: pointer;
+  }

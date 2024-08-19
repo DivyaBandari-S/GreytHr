@@ -60,7 +60,17 @@ class Tasks extends Component
     public $closedSearch = '';
     public $filterData;
     public $showAlert = false;
-
+    public $openAccordions = [];
+    public function toggleAccordion($recordId)
+    {
+        if (in_array($recordId, $this->openAccordions)) {
+            $this->openAccordions = array_filter($this->openAccordions, function($id) use ($recordId) {
+                return $id !== $recordId;
+            });
+        } else {
+            $this->openAccordions[] = $recordId;
+        }
+    }
     public function setActiveTab($tab)
     {
         if ($tab === 'open') {
@@ -533,6 +543,45 @@ class Tasks extends Component
             ->where('task_id', $taskId)
             ->latest()
             ->get();
+    }
+
+    public function downloadImage()
+    {
+        if ($this->viewrecord && !empty($this->viewrecord->file_path)) {
+            $fileData = $this->viewrecord->file_path;
+    
+            // Determine the MIME type and file extension based on the data URL prefix
+            $mimeType = 'application/octet-stream'; // Fallback MIME type
+            $fileExtension = 'bin'; // Fallback file extension
+    
+            // Check the file's magic number or content to determine MIME type and file extension
+            if (strpos($fileData, "\xFF\xD8\xFF") === 0) {
+                $mimeType = 'image/jpeg';
+                $fileExtension = 'jpg';
+            } elseif (strpos($fileData, "\x89PNG\r\n\x1A\n") === 0) {
+                $mimeType = 'image/png';
+                $fileExtension = 'png';
+            } elseif (strpos($fileData, "GIF87a") === 0 || strpos($fileData, "GIF89a") === 0) {
+                $mimeType = 'image/gif';
+                $fileExtension = 'gif';
+            } else {
+                return abort(415, 'Unsupported Media Type');
+            }
+    
+            $fileName = 'image-' . $this->viewrecord->id . '.' . $fileExtension;
+            return response()->stream(
+                function () use ($fileData) {
+                    echo $fileData;
+                },
+                200,
+                [
+                    'Content-Type' => $mimeType,
+                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                ]
+            );
+        }
+    
+        return abort(404, 'Image not found');
     }
     public function render()
     {
