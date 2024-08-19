@@ -32,7 +32,12 @@ class Everyone extends Component
         'description' => 'required',
         'attachment' => 'nullable|file|max:10240',
     ];
-
+    protected $messages = [
+        'category.required' => 'Category is required.',
+  
+        'description.required' => 'Description is required.',
+       
+    ];
     public function addFeeds()
     {
         $this->showFeedsDialog = true;

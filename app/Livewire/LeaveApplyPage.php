@@ -10,9 +10,11 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class LeaveApplyPage extends Component
 {
+    use WithFileUploads;
     public $leave_type;
     public $emp_id;
     public $from_date;
@@ -50,11 +52,12 @@ class LeaveApplyPage extends Component
 
     public $searchTerm = '';
     public $filter = '';
-    public $errorMessage ='';
-    public $fromDate;
+    public $errorMessage = '';
+    public $fromDate, $file_paths;
     public $fromSession;
     public $toSession;
     public $toDate;
+    public $filePath;
     public $selectedCcTo = [];
     public $selectedCCEmployees = [];
     public $showerrorMessage = false;
@@ -376,6 +379,21 @@ class LeaveApplyPage extends Component
                     'image' => $this->loginEmpManagerProfile,
                 ];
             }
+            // Validate the incoming request for multiple files
+            $this->validate([
+                'file_paths.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024', // 1024 kilobytes = 1 megabyte per file
+            ]);
+
+            // Initialize an array to store file data
+            $fileDataArray = [];
+
+            // Check if files were uploaded
+            if ($this->file_paths) {
+                foreach ($this->file_paths as $file) {
+                    // Read the file contents and encode it
+                    $fileDataArray[] = base64_encode(file_get_contents($file->getRealPath()));
+                }
+            }
 
             // Create the leave request
             $this->createdLeaveRequest = LeaveRequest::create([
@@ -386,6 +404,7 @@ class LeaveApplyPage extends Component
                 'from_session' => $this->from_session,
                 'to_session' => $this->to_session,
                 'to_date' => $this->to_date,
+                'file_paths' => json_encode($fileDataArray),
                 'applying_to' => json_encode($applyingToDetails),
                 'cc_to' => json_encode($ccToDetails),
                 'contact_details' => $this->contact_details,
@@ -660,14 +679,15 @@ class LeaveApplyPage extends Component
         $this->empManagerDetails = null;
     }
 
-    public function resetFields(){
+    public function resetFields()
+    {
         $this->reason = null;
         $this->contact_details = null;
         $this->leave_type = null;
         $this->to_date = null;
         $this->from_date = null;
-        $this->from_session = null;
-        $this->to_session = null;
+        $this->from_session = 'Session 1';
+        $this->to_session = 'Session 2';
         $this->cc_to = null;
         $this->applying_to = null;
     }
@@ -680,7 +700,6 @@ class LeaveApplyPage extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->loginEmpManager = null;
         $this->selectedManager = $this->selectedManager ?? [];
-
         $managers = collect();
         $employeeGender = null;
 
