@@ -22,7 +22,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #eef7fa; height: 50px">
-        <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>hiiShift</b></h5>
+        <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Shift</b></h5>
         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeShiftSelector" style="background-color: white; height:10px;width:10px;">
         </button>
       </div>
@@ -86,7 +86,7 @@
 
         </div>
         <!-- Collapsible Content -->
-        <div class="text-center" style="margin-top: 100px;">
+        <div class="text-center" style="margin-top: 70px;">
           <button type="button" class="btn save-selectshift-button-who-is-in"wire:click="check">Save</button>
         </div>
 
@@ -172,16 +172,12 @@
 
       </div>
 
-      <div>
         <table class="who-is-in-table" style="margin-top:-10px">
-          <thead>
-
+          <thead class="whojhgfd" >
             <tr>
-              <th>Employee</th>
-              <th>Expected&nbsp;In&nbsp;Time</th>
+              <th >Employee</th>
+              <th >Expected&nbsp;In&nbsp;Time</th>
             </tr>
-
-
           </thead>
           <tbody>
             @if($notFound)
@@ -200,13 +196,10 @@
               </td>
               <td style="font-weight:700;font-size:10px;">{{$e1->shift_start_time}}</td>
             </tr>
-
-            <!-- Add more rows with dashes as needed -->
             @endforeach
             @endif
           </tbody><!-- Add table rows (tbody) and data here if needed -->
         </table>
-      </div>
     </div>
   </div>
   <div class="col-md-3">
@@ -344,7 +337,6 @@
             <tr>
               <th>Employee</th>
               <th>Number&nbsp;of&nbsp;days</th>
-
             </tr>
           </thead>
           <tbody>

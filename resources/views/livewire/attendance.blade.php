@@ -150,6 +150,7 @@ width: 170px; */
         .info-box-attendance-info {
             display: none;
             position: absolute;
+            font-size: 10px;
             top: 100%;
             left: 50%;
             color: #fff;
@@ -282,6 +283,17 @@ width: 170px; */
             /* Adjust the value as needed */
             border-bottom-right-radius: 5px;
             /* Adjust the value as needed */
+        }
+        .info-button
+        {
+            background-color:rgb(2,17,79); 
+            border: 2px solid rgb(2,17,79); 
+            color: white; 
+            border-radius: 5px;
+            font-size:10px;
+            padding:2px;
+            
+
         }
 
         .calendar-weekdays-attendance-info {
@@ -632,6 +644,7 @@ width: 170px; */
             /* Adjust the height as needed */
             /* Background color of the container */
             border: 1px solid #ccc;
+            /* border-bottom: 1px solid #ccc; */
             /* Border style for the container */
         }
 
@@ -648,7 +661,7 @@ width: 170px; */
             /* float: right; */
             /* Adjust the height as needed */
             /* Background color of the container */
-            border: 1px solid #ccc;
+            /* border: 1px solid #ccc; */
         }
 
         /* Basic styles for the input container */
@@ -1198,7 +1211,7 @@ color: #fff;
         }
 
         .accordion:before {
-            content: '\02795';
+          
             /* Unicode character for "plus" sign (+) */
             font-size: 13px;
             color: #fff;
@@ -1215,7 +1228,7 @@ color: #fff;
             margin-left: 5px;
         }
 
-        .accordion.active:before {
+        .accordion.active:after {
             content: '\2796';
             /* Unicode character for "minus" sign (-) */
         }
@@ -1394,7 +1407,7 @@ color: #fff;
         <div class="row m-0 mt-3">
             <div class="row m-0 d-flex justify-content-center" style="display:flex;justify-content:center;">
                 <div class="col-md-3">
-                    <div class="insight-card  bg-white pt-2 pb-2" style="height: 125px;">
+                    <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
                         <section class="text-center">
                             <p class="text-2" style="margin-top:30px;"> 0 </p>
@@ -1407,9 +1420,9 @@ color: #fff;
                             Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
                         <section class="text-center">
 
-                            <p class="text-2" style="margin-top:30px;">02:00</p>
+                            <p class="text-2" style="margin-top:30px;">{{$averageFormattedTime}}</p>
                             <div>
-                                <span class="text-success ng-star-inserted" style="font-size:10px;"> +233%
+                                <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($totalWorkingPercentage)}}%
                                 </span>
                                 <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
                                 </span>
@@ -1422,10 +1435,10 @@ color: #fff;
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
                         </h6>
                         <section class="text-center">
-                            <p class="text-2" style="margin-top:30px;">{{$averageHoursWorked}}:{{$averageMinutesWorked}}</p>
+                            <p class="text-2" style="margin-top:30px;">{{$averageFormattedTime}}</p>
                             <div>
                                 <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
-                                    +233% </span>
+                                    +{{intval($totalWorkingPercentage)}}% </span>
                                 <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
 
                                 </span>
@@ -1485,13 +1498,13 @@ color: #fff;
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="insights-for-attendance-period-avg-working-hours">0</td>
-                                            <td class="insights-for-attendance-period-avg-working-hours">-</td>
+                                            <td class="insights-for-attendance-period-avg-working-hours">{{$avgWorkingHrsForModalTitle}}</td>
+                                            <td class="insights-for-attendance-period-avg-working-hours">{{$avgWorkingHrsForModalTitle}}</td>
                                             <td class="insights-for-attendance-period">0</td>
                                             <td class="insights-for-attendance-period">{{$avgLateIn}}</td>
                                             <td class="insights-for-attendance-period">{{$avgEarlyOut}}</td>
-                                            <td class="insights-for-attendance-period">-</td>
-                                            <td class="insights-for-attendance-period">{{$holidayCount}}</td>
+                                            <td class="insights-for-attendance-period">{{$leaveTaken}}</td>
+                                            <td class="insights-for-attendance-period">{{$countofAbsent}}</td>
                                             <td class="insights-for-attendance-period">-</td>
                                         </tr>
                                     </tbody>
@@ -1506,9 +1519,9 @@ color: #fff;
                                 <div class="col-md-3 col-sm-6 p-0">
                                     <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted1}}</span></p>
                                 </div>
-
+                           
                             </div>
-
+                             
                         </div>
                     </div>
                 </div>
@@ -1668,8 +1681,8 @@ color: #fff;
                     @endif
                 </div>
 
-                <button class="accordion">Legends</button>
-                <div class="panel">
+                <button class="accordion"style="content: {{ $legend ? '\2796' : '\02795' }}"wire:click="openlegend">Legends</button>
+                <div class="panel"style="display: {{ $legend ? 'block' : 'none' }};">
                     <div class="row m-0 mt-3 mb-3">
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="me-2 mb-0">
@@ -1979,7 +1992,9 @@ color: #fff;
                                                         <div class="row m-0 mt-3">
                                                             <div class="col" style="font-size: 11px;color:#778899;font-weight:500;"> Reason:<br /> <span style="color: #000000;">{{$regularised_reason}}</span></div>
                                                         </div>
-
+                                                        <div style="display: flex; justify-content: center; margin-top: 20px;">
+                                                                 <button class="cancel-btn" style="border:1px solid rgb(2, 17, 79);"wire:click="closeRegularisationModal">Close</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2052,16 +2067,17 @@ color: #fff;
                 @if($defaultfaCalendar==1)
                 <div class="container6">
                     <h3 style="margin-left:20px;color: #7f8fa4;font-size:14px;margin-top:15px;align-items:center;">Swipe Details</h3>
-                    <div class="arrow-button" style="float:right;margin-top:-30px;margin-right:20px;" id="toggleButton">
+                    <div class="arrow-button" style="float:right;margin-top:-30px;margin-right:20px;" wire:click="opentoggleButton">
                     </div>
 
-                    <div class="container-body" style="margin-top:2px;height:auto;" id="myContainerBody">
+                    <div class="container-body" style="margin-top:2px;height:auto;border-top:1px solid #ccc;display: {{ $toggleButton ? 'block' : 'none' }};">
                         <!-- Content of the container body -->
                         <div style="max-width: 100%; text-align: center;">
-
+                          
                             <table>
+                               @if ($SwiperecordsCount > 0)
                                 <thead>
-                                    @if ($swipe_records_count > 0)
+                                   
                                     <tr>
                                         <th style="font-weight:normal;font-size:12px;">In/Out</th>
                                         <th style="font-weight:normal;font-size:12px;">Swipe&nbsp;Time</th>
@@ -2070,35 +2086,35 @@ color: #fff;
                                     </tr>
                                 </thead>
                                 <tbody>
-
-                                    @foreach ($Swiperecords as $index =>$swiperecord)
-                                    <tr>
-                                        <td style="font-weight:normal;font-size:12px;">{{ $swiperecord->in_or_out }}</td>
-                                        <td>
-                                            <div style="display:flex;flex-direction:column;">
-                                                <p style="margin-bottom: 0;font-weight:normal;font-size:12px;white-space:nowrap;">
-                                                    {{ date('h:i:s A', strtotime($swiperecord->swipe_time)) }}
-                                                </p>
-                                                <p style="margin-bottom: 0;font-size: 10px;color: #a3b2c7;">
-                                                    {{ date('d M Y', strtotime($currentDate1)) }}
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td>-</td>
-
-                                        <td><button class="info-button" style="background-color:#007bff; border: 2px solid #007bff;height:20px; color: white; border-radius: 5px;font-size:12px;margin-top:-10px" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
-
-                                    </tr>
-                                    @if (($index + 1) % 2 == 0)
-                                    <!-- Add a small container after every two records -->
-                                    <tr>
-                                        <td colspan="4" style="height:1px; background-color: #f0f0f0; text-align: left;font-size:10px;">
-                                            Actual Hrs:{{ $actualHours[($index + 1) / 2 - 1] }}</td>
-                                    </tr>
-
-                                    @endif
-                                    @endforeach
-
+                                  
+                                @foreach ($swiperecordsfortoggleButton as $index =>$swiperecord)
+                                <tr>
+                                       <td style="font-weight:normal;font-size:12px;">{{ $swiperecord->in_or_out }}</td>
+                                       <td>
+                                           <div style="display:flex;flex-direction:column;">
+                                               <p style="margin-bottom: 0;font-weight:normal;font-size:12px;white-space:nowrap;">
+                                                   {{ date('h:i:s A', strtotime($swiperecord->swipe_time)) }}
+                                               </p>
+                                               <p style="margin-bottom: 0;font-size: 10px;color: #a3b2c7;">
+                                                   {{ date('d M Y', strtotime($currentDate2)) }}
+                                               </p>
+                                           </div>
+                                       </td>
+                                       <td>-</td>
+ 
+                                       <td><button class="info-button"wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
+ 
+                                   </tr>
+                                   @if (($index + 1) % 2 == 0)
+                                   <!-- Add a small container after every two records -->
+                                   <tr>
+                                       <td colspan="4" style="height:1px; background-color: #f0f0f0; text-align: left;font-size:10px;">
+                                           Actual Hrs:{{ $actualHours[($index + 1) / 2 - 1] }}</td>
+                                   </tr>
+ 
+                                   @endif
+                               
+                                @endforeach
 
 
                                     <!-- Add more rows with dashes as needed -->
@@ -2128,7 +2144,7 @@ color: #fff;
                                     <div class="row m-0 mt-3">
 
                                         @if ($data->isNotEmpty())
-                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ $data[0]->first_name }} {{ $data[0]->last_name }}</span></div>
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($data[0]->first_name)) }} {{ ucwords(strtolower($data[0]->last_name)) }}</span></div>
                                         @endif
                                         <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br /><span style="color: #000000;">{{ $swiperecord->emp_id }}</span></div>
 
@@ -2157,6 +2173,9 @@ color: #fff;
 
                                     </div>
                                     @endif
+                                    <div style="display: flex; justify-content: center; margin-top: 20px;">
+                                            <button class="cancel-btn" style="border:1px solid rgb(2, 17, 79);"wire:click="closeSWIPESR">Close</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2181,42 +2200,8 @@ color: #fff;
 
 
 
-    <script>
-        var acc = document.getElementsByClassName("accordion");
-        var i;
-
-        for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.display === "block") {
-                    panel.style.display = "none";
-                } else {
-                    panel.style.display = "block";
-                }
-            });
-        }
-
-        // September 2023
-    </script>
-    <script>
-        document.getElementById("toggleButton").addEventListener("click", function() {
-            var containerBody = document.getElementById("myContainerBody");
-            if (containerBody.style.display === "none" || containerBody.style.display === "") {
-                containerBody.style.display = "block";
-            } else {
-                containerBody.style.display = "none";
-            }
-        });
-    </script>
-    <script>
-        const toggleButton = document.getElementById("toggleButton");
-        const containerBody = document.getElementById("myContainerBody");
-
-        toggleButton.addEventListener("click", function() {
-            toggleButton.classList.toggle("rotate-arrow");
-        });
-    </script>
+   
+   
 
     <script>
         document.getElementById("myButton").onclick = function() {
@@ -2224,6 +2209,7 @@ color: #fff;
             window.location.href = 'das.html';
         };
     </script>
+
 
 
 
