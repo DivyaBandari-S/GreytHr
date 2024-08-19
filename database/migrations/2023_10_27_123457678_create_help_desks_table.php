@@ -20,11 +20,12 @@ return new class extends Migration
             $table->string('mobile');
             $table->string('subject');
             $table->text('description');
-            $table->binary('file_path')->nullable(); // Store the uploaded file data in binary format
-            $table->string('mime_type')->nullable(); // Store the MIME type of the file
+            $table->string('file_name')->nullable();
+            $table->string('mime_type')->nullable();
+            $table->binary('file_path')->nullable(); // Path to attached file (nullable)
             $table->string('cc_to')->nullable(); // CC to field (nullable)
-            $table->string('status')->default('Recent'); // Status field (default 'Recent')
-            $table->enum('priority', ['High', 'Medium', 'Low']);
+            $table->string('status')->default('Recent'); // CC to field (nullable)
+            $table->enum('priority', ['High', 'Medium', 'Low']); // Priority field with enum values
             $table->timestamps();
 
             $table->foreign('emp_id')
