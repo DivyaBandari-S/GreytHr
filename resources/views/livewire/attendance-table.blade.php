@@ -135,6 +135,9 @@ width: 170px; */
             font-size: 14px;
             color: blue;
         }
+        .info-icon-container-attendance-info .fa-info-circle:hover+.info-box-attendance-info {
+            display: block;
+        }
 
         .info-box-attendance-info {
             display: none;
@@ -151,9 +154,7 @@ width: 170px; */
             Z-index: 1
         }
 
-        .info-icon-container-attendance-info:hover .info-box-attendance-info {
-            display: block;
-        }
+       
 
         .text-2 {
             font-size: 18px;
