@@ -5365,3 +5365,8 @@ option {
     height: 90px;
     width: 90px;
   }
+  .chat-icon{
+    font-size: 17px;
+    color: var(--dark);
+    cursor: pointer;
+  }
