@@ -20,6 +20,22 @@
             color: #778899;
         }
 
+        .btn-export {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: rgba(2, 17, 79, 0.5);
+            padding: 0px;
+            border: none;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .btn-export i {
+            margin-right: 0.1rem;
+        }
+
         .timeValue {
             color: #000;
             font-weight: 500;
@@ -60,7 +76,7 @@
         }
 
         .task-table tbody tr.weekend {
-            background-color: rgb(255, 236, 248);
+            background-color: #BAE0FF
         }
 
         .task-table input[type="text"] {
@@ -98,15 +114,32 @@
             width: 50px;
         }
 
+
+
+        .hours-header {
+            width: 5%;
+        }
+
         .date-header,
         .day-header,
-        .client-header,
-        .hours-header {
-            width: 15%;
+        .client-header {
+            width: 10%
+        }
+
+        .client-header {
+            width: 10%
+        }
+
+        .project-header {
+            width: 13%
         }
 
         .tasks-header {
             width: 40%;
+        }
+
+        .remarks-header {
+            width: 17%;
         }
 
         .input-label {
@@ -117,30 +150,51 @@
         }
 
         .inputValue {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: #000;
             font-weight: normal;
+            margin: 0;
+        }
+
+        .even-td {
+            height: 100%;
+            background-color: #e0f7fa;
+            color: #333;
+        }
+
+        .odd-td {
+            height: 100%;
+            background-color: #b2ebf2;
+            color: #333;
         }
     </style>
-    @if($tab=="timeSheet")
-    <div class="timesheetContainer mt-2 bg-white p-4 m-auto">
+    <div class="timesheetContainer mt-2 bg-white p-4 m-auto" style="width:92%;">
         <div class="row m-0 p-0">
             <div class="col-md-5 d-flex align-items-center">
-                <label for="emp_id" class="input-label mb-0">Employee ID :</label>
+                <label for="emp_id" class="input-label mb-0">Employee :</label>
                 @if ($employeeName)
-                <label class="inputValue mb-0">{{ ucwords(strtolower($employeeName->first_name )) }} {{ ucwords(strtolower($employeeName->last_name )) }}  (#{{ $employeeName->emp_id }})  </label>
+                <label class="inputValue mb-0">{{ ucwords(strtolower($employeeName->first_name )) }} {{ ucwords(strtolower($employeeName->last_name )) }} </label>
+                <label class="inputValue mb-0">(#{{ $employeeName->emp_id }}) </label>
                 @endif
             </div>
-            <!-- Start Date -->
             <div class="col-md-4 d-flex align-items-center">
                 @php
-                $start_date_string = \Carbon\Carbon::parse($start_date_string)->format('Y-m-d');
+                use Carbon\Carbon;
+                $default_start_date = now()->startOfWeek(Carbon::MONDAY)->format('Y-m-d');
                 @endphp
+                @if($defaultTimesheetEntry === "")
                 <div style="display: flex; align-items: center;">
                     <label for="start_date" class="input-label mb-0">Start Date :</label>
-                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" wire:model.lazy="start_date_string" id="start_date" class="inputValue mb-0 border rounded py-1 px-2 outline-none">
-                    <input type="hidden" class="form-control placeholder-small" id="formatted_start_date" value="{{ \Carbon\Carbon::parse($start_date_string)->format('d-M-Y') }}">
+                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" name="default_start_date" id="start_date" class="inputValue mb-0 border rounded py-1 px-2 outline-none" value="{{ old('default_start_date', $default_start_date) }}" wire:model="start_date_string">
+                    <input type="hidden" id="formatted_default_start_date" value="{{ \Carbon\Carbon::parse($default_start_date)->format('d-m-Y') }}">
                 </div>
+                @elseif($defaultTimesheetEntry === "ts")
+                <div style="display: flex; align-items: center;">
+                    <label for="start_date" class="input-label mb-0">Start Date :</label>
+                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" wire:model="start_date_string" id="start_date" class="inputValue mb-0 border rounded py-1 px-2 outline-none">
+                    <input type="hidden" id="formatted_start_date" value="{{ \Carbon\Carbon::parse($start_date_string)->format('d-m-Y') }}">
+                </div>
+                @endif
                 @error('start_date_string')
                 <span class="error-message" style="color: #e53e3e; font-size: 0.8rem; margin-top: 0.25rem; display: block;">
                     {{ $message }}
@@ -154,7 +208,6 @@
                         <label class="d-flex align-items-center mb-0" style="font-size: 0.8rem;">
                             <div wire:change="addTask" wire:model="time_sheet_type" name="time_sheet_type" value="weekly" class="inputValue mb-0"> Weekly</div>
                         </label>
-
                     </div>
                 </div>
                 @error('time_sheet_type')
@@ -163,18 +216,67 @@
                 </span>
                 @enderror
             </div>
-
-            <!-- Time Sheet Type -->
         </div>
     </div>
-
-    @if($defaultTimesheetEntry=="true")
-    <div class="container" style="width:90%;max-width:{{ count($client_names) > 0 ? '90%' : '90%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    @if (session()->has('message'))
+    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <div style="margin: 0.2rem;padding:0.25rem; background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
+            {{ session('message') }}
+        </div>
+    </div>
+    @elseif (session()->has('message-e'))
+    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <div style="margin: 0.2rem;padding:0.25rem;  background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
+            {{ session('message-e') }}
+        </div>
+    </div>
+    @elseif (session()->has('message-u'))
+    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <div style="margin: 0.2rem;padding:0.25rem;  background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
+            Time sheet updated successfully!
+        </div>
+    </div>
+    @elseif (session()->has('message-s'))
+    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <div style="margin: 0.2rem;padding:0.25rem;  background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
+            Time sheet saved successfully!
+        </div>
+    </div>
+    @elseif (session()->has('message-us'))
+    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <div style="margin: 0.2rem;padding:0.25rem;  background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
+            Time sheet status has been updated to "Submitted".
+        </div>
+    </div>
+    @elseif (session()->has('error-dr'))
+    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <div style="margin: 0.2rem;padding:0.25rem; background-color: #FFF6F0; border: 1px solid red;color: #A15038; border-radius: 0.25rem;text-align:center" class="success-message">
+            Time sheet filling is not yet complete, you cannot submit at this time.
+        </div>
+    </div>
+    @elseif(session()->has('message-aets'))
+    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <div style="margin: 0.2rem;padding:0.25rem; background-color: #FFF6F0; border: 1px solid red;color: #A15038; border-radius: 0.25rem;text-align:center" class="success-message">
+            Time sheet already exists for the selected date range.
+        </div>
+    </div>
+    @endif
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var message = document.getElementById('success-message');
+                if (message) {
+                    message.style.display = 'none';
+                }
+            }, 10000);
+        });
+    </script>
+    @if($defaultTimesheetEntry=="")
+    <div class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div class="subTotalExceed">
             @php
             $subTotalExceed = false;
             @endphp
-
             @foreach ($default_date_and_day_with_tasks as $index => $task)
             @if(count($client_names)>=1)
             @php
@@ -194,117 +296,174 @@
             @endforeach
         </div>
 
-        @if (session()->has('message'))
-        <div id="success-message" style="margin: 0.2rem;padding:0.25rem; background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
-            {{ session('message') }}
-        </div>
-        @elseif (session()->has('message-e'))
-        <div id="success-message" style="margin: 0.2rem;padding:0.25rem;  background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
-            {{ session('message-e') }}
-        </div>
-        @endif
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    var message = document.getElementById('success-message');
-                    if (message) {
-                        message.style.display = 'none';
-                    }
-                }, 35000); // 5000 milliseconds = 5 seconds
-            });
-        </script>
-
         <form wire:submit.prevent="defaultSubmit">
+            <div style="text-align: end; ">
+                <a class="btn btn-export" wire:click="exportCSV">
+                    <i class="fas fa-file-csv"></i> Export CSV
+                </a>
+                <a class="btn btn-export" wire:click="exportExcel">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
+            </div>
             <div class="task-table-container">
                 <table class="task-table">
                     <thead>
                         <tr>
-                            <th class="date-header">Date</th>
-                            <th class="day-header">Day</th>
+                            <th class="date-header">Dates</th>
+                            <th class="day-header">Days</th>
                             @if(count($client_names) > 0)
-                            <th class="client-header">Client</th>
+                            <th class="client-header">Clients</th>
+                            @endif
+                            @if(count($client_names) > 0 && count($dTasks) > 0)
+                            <th class="project-header">Projects</th>
+                            <th class="remarks-header">Remarks</th>
                             @endif
                             <th class="hours-header">Hours</th>
                             <th class="tasks-header">Tasks</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($default_date_and_day_with_tasks as $index => $task)
+                        @foreach ($default_date_and_day_with_tasks as $index => $taskData)
                         @php
-                        $date = \Carbon\Carbon::parse($task['date']);
+                        $date = \Carbon\Carbon::parse($taskData['date']);
                         $formattedDate = $date->format('d-M-Y');
                         $isWeekend = $date->isWeekend();
-                        $rowColor = $isWeekend ? 'rgb(255, 236, 248)' : ($index % 2 === 0 ? '#f7fafc' : '#edf2f7');
+                        $rowColor = $isWeekend ? '#BAE0FF;' : ($index % 2 === 0 ? '#f7fafc' : '#edf2f7');
                         @endphp
                         <tr style="padding:0; background-color: {{ $rowColor }};">
                             <td class="date-header py-0">
-                                <input type="text" value="{{ $formattedDate }}"  readonly>
+                                <input type="text" value="{{ $formattedDate }}" readonly>
                             </td>
                             <td class="day-header py-0">
-                                <input type="text" readonly wire:model="default_date_and_day_with_tasks.{{ $index }}.day" >
+                                <input type="text" readonly wire:model="default_date_and_day_with_tasks.{{ $index }}.day">
                             </td>
-                            @if(count($client_names) >= 1)
+
+                            <!-- Clients Column -->
+                            @if(count($taskData['clients']) >= 1)
                             <td class="client-header py-0">
-                                @foreach($task['clients'] as $client)
-                                <input type="text" readonly value="{{ $client }}" >
+                                @foreach($taskData['clients'] as $clientIndexForDTS => $client)
+                                @php
+                                // Retrieve the max height for this client
+                                $clientHeightForDTS = $taskData['maxHeights'][$clientIndexForDTS] ?? 'auto';
+                                @endphp
+                                @if(empty($clientHeightForDTS)||$clientHeightForDTS=="0")
+                                <div class="{{ $clientIndexForDTS % 2 == 0 ? 'even-td' : 'odd-td' }}" style="height:30px;">
+                                    <input type="text" readonly value="{{ $client }}">
+                                </div>
+                                @else
+                                <div class="{{ $clientIndexForDTS % 2 == 0 ? 'even-td' : 'odd-td' }}" style="height: {{ $clientHeightForDTS }}px;">
+                                    <input type="text" readonly value="{{ $client }}">
+                                </div>
+                                @endif
                                 @endforeach
                             </td>
                             @endif
+
+                            <!-- Projects Column -->
+                            @if(isset($dTasks) && count($dTasks) > 0)
+                            @if(isset($taskData['projects']) && count($taskData['projects']) > 0)
+                            <td class="project-header py-0">
+                                @foreach($taskData['projects'] as $projectIndexForDTS => $projectArray)
+                                @php
+                                // Calculate height based on the number of projects
+                                $projectHeightForDTS = count($projectArray) > 0 ? count($projectArray) * 30 : 30; // Default to 50px if empty
+                                @endphp
+                                <div class="{{ $projectIndexForDTS % 2 == 0 ? 'even-td' : 'odd-td' }}" style="height: {{ $projectHeightForDTS }}px;">
+                                    @if(empty($projectArray))
+                                    <input type="text" readonly value="--">
+                                    @else
+                                    @foreach($projectArray as $project)
+                                    <input type="text" readonly value="{{ $project }}">
+                                    @endforeach
+                                    @endif
+                                </div>
+                                @endforeach
+                            </td>
+                            @endif
+
+                            <!-- Remarks Column -->
+                            @if(isset($taskData['remarks']) && count($taskData['remarks']) > 0)
+                            <td class="remarks-header py-0">
+                                @foreach($taskData['remarks'] as $remarksIndexForDTS => $remarksArray)
+                                @php
+                                // Calculate height based on the number of remarks
+                                $remarksHeightForDTS = count($remarksArray) > 0 ? count($remarksArray) * 30 : 30; // Default to 20px if empty
+                                @endphp
+                                <div class="{{ $remarksIndexForDTS % 2 == 0 ? 'even-td' : 'odd-td' }}" style="height: {{ $remarksHeightForDTS }}px;">
+                                    @if(empty($remarksArray))
+                                    <input type="text" readonly value="--">
+                                    @else
+                                    @foreach($remarksArray as $remark)
+                                    <input type="text" readonly value="{{ $remark }}">
+                                    @endforeach
+                                    @endif
+                                </div>
+                                @endforeach
+                            </td>
+                            @endif
+                            @endif
+
+                            <!-- Hours Column -->
                             <td class="hours-header py-0">
-                                @if(count($client_names) >= 1)
+                                @if(count($taskData['clients']) >= 1)
                                 @foreach($default_date_and_day_with_tasks[$index]['hours'] as $hourIndex => $hour)
-                                <input type="text" wire:model="default_date_and_day_with_tasks.{{ $index }}.hours.{{ $hourIndex }}" wire:change="defaultSaveTimeSheet"  pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours.'.$hourIndex) style="border: 1px solid red;" @enderror>
+                                <input type="text" wire:model="default_date_and_day_with_tasks.{{ $index }}.hours.{{ $hourIndex }}" wire:change="defaultSaveTimeSheet" pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('default_date_and_day_with_tasks.'.$index.'.hours.'.$hourIndex) class="error" @enderror>
                                 @error('default_date_and_day_with_tasks.'.$index.'.hours.'.$hourIndex)
-                                <span style="color: red; font-size: 0.5rem; width: 50px;">{{ $message }}</span>
+                                <span class="error-message">{{ $message }}</span>
                                 @enderror
                                 @endforeach
                                 @else
-                                <input type="text" wire:model="default_date_and_day_with_tasks.{{ $index }}.hours" wire:change="defaultSaveTimeSheet"  pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('date_and_day_with_tasks.'.$index.'.hours') style="border: 1px solid red;" @enderror>
+                                <input type="text" wire:model="default_date_and_day_with_tasks.{{ $index }}.hours" wire:change="defaultSaveTimeSheet" pattern="[0-9]*(\.[0-9]{1,2})?" title="Please enter a number between 0.0 and 24.0, with up to 2 decimal places." @error('default_date_and_day_with_tasks.'.$index.'.hours') class="error" @enderror>
                                 @error('default_date_and_day_with_tasks.'.$index.'.hours')
-                                <span style="color: red; font-size: 0.5rem; width: 50px;">{{ $message }}</span>
+                                <span class="error-message">{{ $message }}</span>
                                 @enderror
                                 @endif
                             </td>
-                            <td class="class-header py-0">
-                                @if(count($client_names) >= 1)
+
+                            <!-- Tasks Column -->
+                            <td class="tasks-header py-0">
+                                @if(count($taskData['clients']) >= 1)
                                 @foreach($default_date_and_day_with_tasks[$index]['tasks'] as $taskIndex => $taskDescription)
-                                <textarea wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="defaultSaveTimeSheet" ></textarea><br>
+                                <textarea style="text-align: left;margin-left:5px;width:98%" wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="defaultSaveTimeSheet" title="Enter tasks" @error('default_date_and_day_with_tasks.'.$index.'.tasks.'.$taskIndex) class="error" @enderror></textarea><br>
                                 @endforeach
                                 @else
-                                <textarea wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks" wire:change="defaultSaveTimeSheet"></textarea><br>
+                                <textarea style="text-align: left;margin-left:5px;width:98%" wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks" wire:change="defaultSaveTimeSheet" title="Enter tasks" @error('default_date_and_day_with_tasks.'.$index.'.tasks') class="error" @enderror></textarea><br>
                                 @endif
                             </td>
                         </tr>
+
                         @endforeach
                     </tbody>
                 </table>
-
             </div>
 
             <div class="totalHoursContainer py-2">
                 <div style="text-align: center; flex-grow: 1;">
                     <div class="row m-0 p-0 d-flex align-items-center">
                         <div class="col">
-                            <p class="mb-0 totalDays"> Total days : <span class="timeValue">  {{ $defaultTotalDays }}</span></p>
+                            <p class="totalDays mb-0">Total days : <span class="timeValue">{{ $defaultTotalDays }}</span> </p>
                         </div>
                         <div class="col">
-                            <p class="mb-0 totalDays"> Total days : <span class="timeValue">{{ $allDefaultTotalHours }} </span> </p>
+                            <p class="totalDays mb-0">Total hours : <span class="timeValue">{{ $allDefaultTotalHours }}</span> </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="text-align-center mt-4">
+            @if(session()->has('message-aets'))
+            @else
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="button" wire:click="defaultSave" class="submit-btn">Save</button>
                 <button type="submit" class="submit-btn">Submit</button>
             </div>
+            @endif
+
+
         </form>
 
-        <!-- Flash message for success -->
-
     </div>
-    @elseif($defaultTimesheetEntry=="false")
-    <div class="container" style="width:90%;max-width:{{ count($client_names) > 0 ? '90%' : '90%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    @elseif($defaultTimesheetEntry=="ts")
+    <div class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div class="subTotalExceed">
             @php
             $subTotalExceed = false;
@@ -325,40 +484,33 @@
                 </div>
                 @endif
                 @endif
+
             </div>
             @endforeach
         </div>
 
-        @if (session()->has('message'))
-        <div id="success-message" style="margin: 0.2rem;padding:0.25rem; background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
-            {{ session('message') }}
-        </div>
-        @elseif (session()->has('message-e'))
-        <div id="success-message" style="margin: 0.2rem;padding:0.25rem;  background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
-            {{ session('message-e') }}
-        </div>
-        @endif
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    var message = document.getElementById('success-message');
-                    if (message) {
-                        message.style.display = 'none';
-                    }
-                }, 35000); // 5000 milliseconds = 5 seconds
-            });
-        </script>
 
         <form wire:submit.prevent="submit">
+            <div style="text-align: end; ">
+                <a class="btn btn-export" wire:click="exportCSV">
+                    <i class="fas fa-file-csv"></i> Export CSV
+                </a>
+                <a class="btn btn-export" wire:click="exportExcel">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
+            </div>
             <div class="task-table-container">
                 <table class="task-table">
                     <thead>
                         <tr>
-                            <th class="date-header">Date</th>
-                            <th class="day-header">Day</th>
+                            <th class="date-header">Dates</th>
+                            <th class="day-header">Days</th>
                             @if(count($client_names) > 0)
-                            <th class="client-header">Client</th>
+                            <th class="client-header">Clients</th>
+                            @endif
+                            @if(count($client_names) > 0 && count($tasks) > 0)
+                            <th class="project-header">Projects</th>
+                            <th class="remarks-header">Remarks</th>
                             @endif
                             <th class="hours-header">Hours</th>
                             <th class="tasks-header">Tasks</th>
@@ -370,22 +522,85 @@
                         $date = \Carbon\Carbon::parse($task['date']);
                         $formattedDate = $date->format('d-M-Y');
                         $isWeekend = $date->isWeekend();
-                        $rowClass = $isWeekend ? 'weekend' : ($index % 2 === 0 ? 'even' : 'odd');
+                        $rowColor = $isWeekend ? '#BAE0FF;' : ($index % 2 === 0 ? '#f7fafc' : '#edf2f7');
                         @endphp
-                        <tr class="{{ $rowClass }}">
+                        <tr style="padding:0; background-color: {{ $rowColor }};">
                             <td class="date-header py-0">
                                 <input type="text" value="{{ $formattedDate }}" readonly>
                             </td>
                             <td class="day-header py-0">
                                 <input type="text" readonly wire:model="date_and_day_with_tasks.{{ $index }}.day">
                             </td>
-                            @if(count($client_names) >= 1)
+
+                            <!-- Clients Column -->
+                            @if(count($task['clients']) >= 1)
                             <td class="client-header py-0">
-                                @foreach($task['clients'] as $client)
-                                <input type="text" readonly value="{{ $client }}">
+                                @foreach($task['clients'] as $clientIndexForTs => $client)
+                                @php
+                                // Retrieve the max height for this client
+                                $clientHeight = $task['maxHeights'][$clientIndexForTs] ?? 'auto';
+                                @endphp
+                                @if($clientHeight === 'auto' || $clientHeight=="0")
+                                <div class="{{ $clientIndexForTs % 2 == 0 ? 'even-td' : 'odd-td' }}" style="height: 30px;">
+                                    <input type="text" readonly value="{{ $client }}">
+                                </div>
+                                @else
+                                <div class="{{ $clientIndexForTs % 2 == 0 ? 'even-td' : 'odd-td' }}" style="height: {{ $clientHeight }}px;">
+                                    <input type="text" readonly value="{{ $client }}">
+                                </div>
+                                @endif
                                 @endforeach
                             </td>
                             @endif
+
+                            <!-- Projects Column -->
+                            @if(isset($tasks) && count($tasks) > 0)
+                            @if(isset($task['projects']) && count($task['projects']) > 0)
+                            <td class="project-header py-0">
+                                @foreach($task['projects'] as $projectIndexForTs => $projectArray)
+                                @php
+                                // Calculate height based on the number of projects
+                                $projectHeight = count($projectArray)>0? count($projectArray) * 30:30; // Adjust 24px based on your styling needs
+                                @endphp
+                                <div class="{{ $projectIndexForTs % 2 == 0 ? 'even-td' : 'odd-td' }}" style="height: {{ $projectHeight }}px;">
+                                    @if(empty($projectArray))
+                                    <input type="text" readonly value="--">
+                                    @else
+                                    @foreach($projectArray as $project)
+                                    <input type="text" readonly value="{{ $project }}">
+                                    @endforeach
+                                    @endif
+                                </div>
+                                @endforeach
+                            </td>
+                            @endif
+                            @endif
+
+                            <!-- Remarks Column -->
+                            @if(isset($tasks) && count($tasks) > 0)
+                            @if(isset($task['remarks']) && count($task['remarks']) > 0)
+
+                            <td class="remarks-header py-0">
+                                @foreach($task['remarks'] as $remarksIndexForTs => $remarksArray)
+                                @php
+                                // Calculate height based on the number of remarks
+                                $remarksHeight = count($remarksArray)>0? count($remarksArray) * 30:30; // Adjust 24px based on your styling needs
+                                @endphp
+                                <div class="{{ $remarksIndexForTs % 2 == 0 ? 'even-td' : 'odd-td' }}" style="height: {{ $remarksHeight }}px;">
+                                    @if(empty($remarksArray))
+                                    <input type="text" readonly value="--">
+                                    @else
+                                    @foreach($remarksArray as $remark)
+                                    <input type="text" readonly value="{{ $remark }}">
+                                    @endforeach
+                                    @endif
+                                </div>
+                                @endforeach
+                            </td>
+                            @endif
+                            @endif
+
+                            <!-- Hours Column -->
                             <td class="hours-header py-0">
                                 @if(count($client_names) >= 1)
                                 @foreach($date_and_day_with_tasks[$index]['hours'] as $hourIndex => $hour)
@@ -401,20 +616,22 @@
                                 @enderror
                                 @endif
                             </td>
+
+                            <!-- Tasks Column -->
                             <td class="tasks-header py-0">
                                 @if(count($client_names) >= 1)
                                 @foreach($date_and_day_with_tasks[$index]['tasks'] as $taskIndex => $taskDescription)
-                                <textarea wire:model="date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="saveTimeSheet" title="Enter tasks" @error('date_and_day_with_tasks.'.$index.'.tasks.'.$taskIndex) class="error" @enderror></textarea><br>
+                                <textarea style="text-align: left;margin-left:5px;width:98%" wire:model="date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="saveTimeSheet" title="Enter tasks" @error('date_and_day_with_tasks.'.$index.'.tasks.'.$taskIndex) class="error" @enderror></textarea><br>
                                 @endforeach
                                 @else
-                                <textarea wire:model="date_and_day_with_tasks.{{ $index }}.tasks" wire:change="saveTimeSheet" title="Enter tasks" @error('date_and_day_with_tasks.'.$index.'.tasks') class="error" @enderror></textarea><br>
+                                <textarea style="text-align: left;margin-left:5px;width:98%" wire:model="date_and_day_with_tasks.{{ $index }}.tasks" wire:change="saveTimeSheet" title="Enter tasks" @error('date_and_day_with_tasks.'.$index.'.tasks') class="error" @enderror></textarea><br>
                                 @endif
                             </td>
                         </tr>
+
                         @endforeach
                     </tbody>
                 </table>
-
             </div>
 
             <div class="totalHoursContainer py-2">
@@ -430,17 +647,20 @@
                 </div>
             </div>
 
-            <div style="text-align: center;margin-top:1rem">
+            @if(session()->has('message-aets'))
+            @else
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="button" wire:click="save" class="submit-btn">Save</button>
                 <button type="submit" class="submit-btn">Submit</button>
             </div>
-        </form>
+            @endif
 
+
+        </form>
         <!-- Flash message for success -->
 
     </div>
     @endif
-    @endif
-
     <div class="modal fade" id="timesheetHistoryModal" tabindex="-1" role="dialog" aria-labelledby="timesheetHistoryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -454,16 +674,10 @@
                 <div class="modal-body">
                     @php
                     $auth_empId = auth()->guard('emp')->user()->emp_id;
-
-                    // Fetch clients associated with the authenticated employee
                     $clients = \App\Models\ClientsEmployee::with('client')
                     ->where('emp_id', $auth_empId)
                     ->get();
-
-                    // Extract client IDs from the collection
                     $clientIds = $clients->pluck('client_id')->toArray();
-
-                    // Fetch client names based on the extracted client IDs
                     $client_names = \App\Models\Client::whereIn('client_id', $clientIds)
                     ->pluck('client_name')
                     ->toArray();
@@ -569,7 +783,7 @@
                                                         <td style="background-color: white; color: black; width: 70px; font-size: 0.5rem;">
                                                             {{ $task['day'] }}
                                                         </td>
-                                                        <td style="background-color: white; color: black; width: 120px; font-size: 0.5rem; text-transform: capitalize; overflow: hidden; text-overflow: ellipsis;">
+                                                        <td style=" text-align: left; background-color: white; color: black; width: 120px; font-size: 0.5rem; text-transform: capitalize; overflow: hidden; text-overflow: ellipsis;">
                                                             @if(is_array($task['tasks']) && count($task['tasks']) > 0)
                                                             @foreach($task['tasks'] as $index => $taskItem)
                                                             <li>{{ $taskItem != "" ? $taskItem : '--' }}</li>
@@ -636,41 +850,3 @@
         </div>
     </div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let startDateInput = document.getElementById('start_date');
-        let formattedStartDateInput = document.getElementById('formatted_start_date');
-
-        // Function to format date as d-M-Y
-        function formatDate(d) {
-            let day = ('0' + d.getDate()).slice(-2);
-            let month = d.toLocaleString('default', {
-                month: 'short'
-            });
-            let year = d.getFullYear();
-            return `${day}-${month}-${year}`;
-        }
-
-        // Set initial value if not set
-        if (!startDateInput.value) {
-            let now = new Date();
-            let day = now.getDay();
-            let diff = now.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
-            let monday = new Date(now.setDate(diff));
-
-            let formattedDate = formatDate(monday);
-            startDateInput.value = monday.toISOString().split('T')[0];
-            formattedStartDateInput.value = formattedDate;
-            startDateInput.dispatchEvent(new Event('change'));
-        }
-
-        // Update displayed date on change
-        startDateInput.addEventListener('change', function() {
-            let date = new Date(this.value);
-            let formattedDate = formatDate(date);
-            formattedStartDateInput.value = formattedDate;
-            // Trigger Livewire update if needed
-            formattedStartDateInput.dispatchEvent(new Event('input'));
-        });
-    });
-</script>

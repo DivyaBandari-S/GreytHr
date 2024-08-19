@@ -200,9 +200,7 @@ class Home extends Component
     {
         $this->showMessage = false;
     }
-    public function hideAlert(){
-        $this->showAlert = false;
-    }
+
     public function openLateEmployees()
     {
         $this->showAllLateEmployees = true;

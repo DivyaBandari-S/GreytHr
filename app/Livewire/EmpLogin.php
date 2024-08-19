@@ -51,6 +51,8 @@ class EmpLogin extends Component
     public $error = '';
     public $verify_error = '';
     public $pass_change_error = '';
+    public $showAlert= false;
+    public $alertMessage='';
     protected $rules = [
         'form.emp_id' => 'required',
         'form.password' => 'required',
@@ -408,9 +410,18 @@ class EmpLogin extends Component
         }
     }
 
+    public function hideAlert(){
+        $this->showAlert=false;
+    }
+
 
     public function render()
     {
+        if (Session::has('success')){
+            $this->showAlert=true;
+            $this->alertMessage=Session::get('success');
+        }
+
         return view('livewire.emp-login');
     }
 }

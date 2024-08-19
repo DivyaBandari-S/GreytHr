@@ -28,12 +28,16 @@ class LeaveFormPage extends Component
 
     public  $resShowinfoMessage = true;
     public  $resShowinfoButton = false;
+    public $showAlert = false;
 
 
     public function toggleInfoRes()
     {
         $this->resShowinfoMessage = !$this->resShowinfoMessage;
         $this->resShowinfoButton = !$this->resShowinfoButton;
+    }
+    public function hideAlert(){
+        $this->showAlert = false;
     }
     public  $compOffShowinfoMessage = true;
     public  $compOffShowinfoButton = false;
@@ -214,7 +218,8 @@ class LeaveFormPage extends Component
             $leaveRequest->save();
             $leaveRequest->touch();
             $this->hasPendingLeave();
-            session()->flash('message', 'Leave application Withdrawn.');
+            session()->flash('cancelMessage', 'Leave application Withdrawn.');
+            $this->showAlert = true;
             // Flash success message
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message
@@ -240,7 +245,8 @@ class LeaveFormPage extends Component
             $leaveRequest->save();
             $leaveRequest->touch();
             $this->hasPendingLeave();
-            session()->flash('message', 'Leave application Withdrawn.');
+            session()->flash('cancelMessage', 'Leave application Withdrawn.');
+            $this->showAlert = true;
             // Flash success message
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message
