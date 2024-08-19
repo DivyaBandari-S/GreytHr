@@ -4677,6 +4677,7 @@ option {
     cursor: pointer;
 }
 
+
 .sideBarIcon {
     font-size: 14px !important;
     color: #6c7e90;
@@ -5362,3 +5363,15 @@ option {
   }
 
 
+
+
+  .settings-profile-image{
+    border-radius: 50%; 
+    height: 90px;
+    width: 90px;
+  }
+  .chat-icon{
+    font-size: 17px;
+    color: var(--dark);
+    cursor: pointer;
+  }

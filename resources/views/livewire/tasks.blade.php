@@ -165,10 +165,9 @@
                                 @foreach ($searchData as $index => $record)
                                     @if ($record->status == 'Open')
                                         <tr>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;">
-                                                <div class="arrow-btn" onclick="toggleAccordion(this)">
-                                                    <i class="fa fa-angle-down"></i>
+                                            <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;cursor: pointer;">
+                                                <div class="arrow-btn" wire:click="toggleAccordion('{{ $record->id }}')">
+                                                    <i class="{{ in_array($record->id, $openAccordions) ? 'fa fa-angle-up' : 'fa fa-angle-down' }}"></i>
                                                 </div>
                                             </td>
 
@@ -214,7 +213,7 @@
                                             <td colspan="8" class="m-0 p-0"
                                                 style="background-color: #fff; padding: 0; margin: 0;">
                                                 <div class="accordion-content mt-0"
-                                                    style="display: none; padding: 0 10px;margin-bottom:20px;">
+                                                style="display: {{ in_array($record->id, $openAccordions) ? 'block' : 'none' }}; padding: 0 10px; margin-bottom: 20px;">
                                                     <!-- Content for accordion body -->
                                                     <table class="rounded border"
                                                         style="margin-top: 20px; width: 100%; border-collapse: collapse;">
@@ -321,7 +320,7 @@
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr style="background-color: rgb(2, 17, 79); color: white;">
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 7%">
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 7%;">
                                     <i class="fa fa-angle-down" style="color: white; padding-left: 8px;"></i>
                                 </th>
                                 <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Task Name
@@ -356,10 +355,10 @@
                                 @foreach ($searchData as $record)
                                     @if ($record->status == 'Completed')
                                         <tr>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;">
-                                                <div class="arrow-btn" onclick="toggleAccordion(this)">
-                                                    <i class="fa fa-angle-down"></i>
+                        
+                                            <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;cursor: pointer;">
+                                                <div class="arrow-btn" wire:click="toggleAccordion('{{ $record->id }}')">
+                                                    <i class="{{ in_array($record->id, $openAccordions) ? 'fa fa-angle-up' : 'fa fa-angle-down' }}"></i>
                                                 </div>
                                             </td>
                                             <td
@@ -409,7 +408,7 @@
                                             <td colspan="9" class="m-0 p-0"
                                                 style="background-color: #fff; padding: 0; margin: 0;">
                                                 <div class="accordion-content mt-0"
-                                                    style="display: none; padding: 0 10px;margin-bottom:20px;">
+                                                style="display: {{ in_array($record->id, $openAccordions) ? 'block' : 'none' }}; padding: 0 10px; margin-bottom: 20px;">
                                                     <!-- Content for accordion body -->
                                                     <table class="rounded border"
                                                         style="margin-top: 20px; width: 100%; border-collapse: collapse;">
@@ -913,7 +912,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div id="alert-container" class="d-flex justify-content-center alert-container " wire:poll.30s="hideAlert" style="position: sticky; top: 12%; z-index: 10; width: 100%;" >
+                    <div id="alert-container" class="d-flex justify-content-center alert-container " wire:poll.5s="hideAlert" style="position: sticky; top: 12%; z-index: 10; width: 100%;" >
 
                         @if ($showAlert)
                             <p class="alert alert-success" role="alert" style=" font-weight: 400;width:fit-content;padding:10px;border-radius:5px; margin-top: 20px;" >
@@ -1003,22 +1002,6 @@
 
 
 <script>
-    function toggleAccordion(element) {
-        const accordionContent = element.closest('tr').nextElementSibling.querySelector('.accordion-content');
-        const arrowIcon = element.querySelector('i');
-
-        if (accordionContent.style.display === 'none') {
-            accordionContent.style.display = 'block';
-            arrowIcon.classList.remove('fa-angle-down');
-            arrowIcon.classList.add('fa-angle-up');
-            element.classList.add('active');
-        } else {
-            accordionContent.style.display = 'none';
-            arrowIcon.classList.remove('fa-angle-up');
-            arrowIcon.classList.add('fa-angle-down');
-            element.classList.remove('active');
-        }
-    }
 
     function handleImageChange() {
         // Display a flash message

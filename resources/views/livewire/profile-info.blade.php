@@ -476,7 +476,16 @@
                         DETAILS</div>
                     <div class="row">
                         <div class="col-3">
-                            <img style="border-radius: 5px;" height="150" width="150" src="{{ optional($employeeDetails->empParentDetails)->father_image ?: 'path/to/default/image.jpg' }}" alt="">
+                            @if (($employeeDetails->empParentDetails) && !empty(optional($employeeDetails->empParentDetails)->father_image) && optional($employeeDetails->empParentDetails)->father_image !== 'null')
+                            <img  style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100"
+                                src="{{ 'data:image/jpeg;base64,' . base64_encode(optional($employeeDetails->empParentDetails)->father_image) }}">
+                            @else
+                              
+                                    <img  style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100" src="{{ asset('images/male-default.png') }}"
+                                        alt="Default Male Image">
+                             
+                            @endif
+                            {{-- <img style="border-radius: 5px;" height="150" width="150" src="{{ optional($employeeDetails->empParentDetails)->father_image ?: 'path/to/default/image.jpg' }}" alt=""> --}}
                         </div>
                         <div class="col-3">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Father Name</div>
@@ -562,7 +571,7 @@
                                 @if (optional($employeeDetails->empParentDetails)->father_religion)
                                     {{ optional($employeeDetails->empParentDetails)->father_religion }}
                                 @else
-                                    <span style="padding-left: 50px;">-</span>
+                                    <span style="padding-left: 21px;">-</span>
                                 @endif
                             </div>
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Father Email</div>
@@ -582,7 +591,15 @@
                         DETAILS</div>
                     <div class="row">
                         <div class="col-3">
-                            <img style="border-radius: 5px;" height="150" width="150" src="{{ optional($employeeDetails->empParentDetails)->mother_image ?: 'path/to/default/image.jpg' }}" alt="">
+                            @if (($employeeDetails->empParentDetails) && !empty(optional($employeeDetails->empParentDetails)->mother_image) && optional($employeeDetails->empParentDetails)->mother_image !== 'null')
+                            <img  style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100"
+                                src="{{ 'data:image/jpeg;base64,' . base64_encode(optional($employeeDetails->empParentDetails)->mother_image) }}">
+                            @else
+                               
+                                    <img  style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100" src="{{ asset('images/female-default.jpg') }}"
+                                        alt="Default Female Image">
+                            @endif
+                            {{-- <img style="border-radius: 5px;" height="150" width="150" src="{{ optional($employeeDetails->empParentDetails)->mother_image ?: 'path/to/default/image.jpg' }}" alt=""> --}}
                         </div>
                         <div class="col-3">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Mother Name</div>
