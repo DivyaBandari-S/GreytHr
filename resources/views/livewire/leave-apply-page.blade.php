@@ -2,7 +2,7 @@
     @if($showerrorMessage)
     <div id="errorMessage" class="alert alert-danger" wire:poll.2s="hideAlert">
         {{ $errorMessage }}
-        <button type="button" wire:click="hideAlert" class="close"style="background:none;border:none;" data-dismiss="alert" aria-label="Close">
+        <button type="button" wire:click="hideAlert" class="close" style="background:none;border:none;" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">x</span>
         </button>
     </div>
@@ -191,7 +191,7 @@
                         <label for="fromSession">Session</label> <br>
                         <div class="custom-select-wrapper">
                             <select id="fromSession" class="form-control outline-none rounded placeholder-small" wire:model="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="fromSession" wire:change="handleFieldUpdate('from_session')">
-                                <option value="" disabled >Select a session</option> <!-- Placeholder option -->
+                                <option value="" disabled>Select a session</option> <!-- Placeholder option -->
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
@@ -214,7 +214,7 @@
                         <label for="to_session">Session</label> <br>
                         <div class="custom-select-wrapper">
                             <select id="to_session" class="form-control outline-none rounded placeholder-small" wire:model="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="toSession" wire:change="handleFieldUpdate('to_session')">
-                                <option value="" disabled >Select a session</option> <!-- Placeholder option -->
+                                <option value="" disabled>Select a session</option> <!-- Placeholder option -->
                                 <option value="Session 2">Session 2</option>
 
                                 <option value="Session 1">Session 1</option>
@@ -437,10 +437,11 @@
                 @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group mt-3">
-                <label for="file">Attachement </label> <br>
-                <input id="file" type="file" wire:model="files" wire:loading.attr="disabled" style="font-size: 12px;" multiple />
-                @error('file_paths') <span class="text-danger">{{ $message }}</span> @enderror
+                <label for="file">Attachments</label> <br>
+                <input id="file" type="file" wire:model="file_paths" wire:loading.attr="disabled" multiple style="font-size: 12px;" />
+                @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
+
 
             <div class="buttons-leave">
                 <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>

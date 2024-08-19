@@ -162,14 +162,30 @@
 
                                         @if (!empty($leaveRequest->file_paths))
                                         @php
-                                        // Decode the JSON array into a PHP array
-                                        $filePaths = json_decode($leaveRequest->file_paths, true);
+                                        // Assuming $leaveRequest->file_paths is an array of base64 PNG data
+                                        $filePaths = $leaveRequest->file_paths;
                                         @endphp
 
+                                        <!-- Modal Structure -->
+                                        <div id="fileModal" style="display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5);">
+                                            <div style="background-color: #fff; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%;">
+                                                <span style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;" onclick="document.getElementById('fileModal').style.display='none'">&times;</span>
+                                                <iframe id="modalIframe" style="width: 100%; height: 500px; border: none;"></iframe>
+                                                <a id="modalDownloadLink" href="" download="" target="_blank" style="display: block; text-decoration: none; color: #007BFF; text-transform: capitalize; margin-top: 10px;">Download File</a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Trigger Links -->
                                         @if (is_array($filePaths) && !empty($filePaths))
                                         @foreach ($filePaths as $filePath)
-                                        @if (!is_null($filePath) && $filePath !== 'N/A')
-                                        <a href="{{ asset('storage/' . $filePath) }}" target="_blank" style="text-decoration: none; color: #007BFF; text-transform: capitalize;">
+                                        @php
+                                        // Directly use $filePath if it's base64-encoded data
+                                        $base64File = $filePath;
+                                        $mimeType = 'image/jpeg'; // Adjust if necessary
+                                        @endphp
+
+                                        @if (!empty($base64File))
+                                        <a href="javascript:void(0);" style="text-decoration: none; color: #007BFF; text-transform: capitalize;" onclick="document.getElementById('fileModal').style.display='block'; document.getElementById('modalIframe').src='data:{{ $mimeType }};base64,{{ $base64File }}';">
                                             View File
                                         </a>
                                         <br>
@@ -180,7 +196,9 @@
                                         @else
                                         -
                                         @endif
+
                                         @endif
+
                                     </div>
                                 </div>
                             </div>
