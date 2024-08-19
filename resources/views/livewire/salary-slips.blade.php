@@ -130,16 +130,23 @@
   <div class="row d-flex justify-content-between py-2">
     <div class="details-column">
   @foreach($employees as $employee)
-        <div class="detail">
+        <div class="detail" style="height:50px">
             <p class="emp-details-p">Name <br>
                 <span class="emp-details-span">{{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}</span>
             </p>
         </div>
         <div class="detail">
-           <p class="emp-details-p">Joining Date <br>
-                <span class="emp-details-span">{{ date('d M Y', strtotime($employee->hire_date)) }}</span>
-            </p>
-        </div>
+    <p class="emp-details-p">Joining Date <br>
+        <span class="emp-details-span">
+            @if(!empty($employee->hire_date))
+                {{ date('d M Y', strtotime($employee->hire_date)) }}
+            @else
+                -
+            @endif
+        </span>
+    </p>
+</div>
+
         <div class="detail">
            <p class="emp-details-p">Designation <br>
                 <span class="emp-details-span">{{ empty($employee->job_role) ? '-' : ucwords(strtolower($employee->job_role)) }}</span>
@@ -169,7 +176,7 @@
         </div>
     </div>
     <div class="details-column">
-        <div class="detail">
+        <div class="detail"  style="height:50px">
             <p class="emp-details-p">Employee No <br>
                 <span class="emp-details-span">{{ empty($employee->emp_id) ? '-' : ucwords(strtoupper($employee->emp_id)) }}</span>
             </p>

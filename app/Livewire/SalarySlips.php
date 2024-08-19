@@ -154,7 +154,10 @@ class SalarySlips extends Component
     }
 
     $employeeId = auth()->guard('emp')->user()->emp_id;
-    $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
+    $this->employeeDetails = EmployeeDetails::select('employee_details.*', 'emp_departments.department')
+    ->leftJoin('emp_departments', 'employee_details.dept_id', '=', 'emp_departments.dept_id')
+    ->where('employee_details.emp_id', $employeeId)
+    ->get();
     $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
     $salaryRevision = new SalaryRevision();
 
