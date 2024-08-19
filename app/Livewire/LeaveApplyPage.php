@@ -16,8 +16,8 @@ class LeaveApplyPage extends Component
     public $leave_type;
     public $emp_id;
     public $from_date;
-    public $from_session;
-    public $to_session;
+    public $from_session = 'Session 1';
+    public $to_session = 'Session 2';
     public $to_date;
     public $applying_to;
     public $contact_details;
@@ -25,7 +25,6 @@ class LeaveApplyPage extends Component
     public $selectedPeople = [];
     public  $showinfoMessage = true;
     public  $showinfoButton = false;
-    public $errorMessage = '';
     public $showNumberOfDays = false;
     public $differenceInMonths;
     public $show_reporting = false;
@@ -51,12 +50,14 @@ class LeaveApplyPage extends Component
 
     public $searchTerm = '';
     public $filter = '';
+    public $errorMessage ='';
     public $fromDate;
     public $fromSession;
     public $toSession;
     public $toDate;
     public $selectedCcTo = [];
     public $selectedCCEmployees = [];
+    public $showerrorMessage = false;
     public $showCasualLeaveProbation;
     protected $rules = [
         'leave_type' => 'required',
@@ -85,8 +86,18 @@ class LeaveApplyPage extends Component
         $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employee = EmployeeDetails::where('emp_id', $employeeId)->first();
-        // Determine if the dropdown option should be displayed
-        $this->showCasualLeaveProbation = $this->employee && !$this->employee->probation_period && !$this->employee->confirmation_date;
+        if ($this->employee) {
+            $managerId = $this->employee->manager_id;
+            // Fetch the logged-in employee's manager details
+            $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+            if ($managerDetails) {
+                $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                $this->loginEmpManager = $fullName;
+                $this->selectedManagerDetails = $managerDetails;
+            }
+            // Determine if the dropdown option should be displayed
+            $this->showCasualLeaveProbation = $this->employee && !$this->employee->probation_period && !$this->employee->confirmation_date;
+        }
     }
 
     public function validateField($propertyName)
@@ -99,7 +110,10 @@ class LeaveApplyPage extends Component
         $this->showinfoMessage = !$this->showinfoMessage;
         $this->showinfoButton = !$this->showinfoButton;
     }
-
+    public function hideAlert()
+    {
+        $this->showerrorMessage = false;
+    }
 
     //this method used to filter cc recipients from employee details
     public function searchCCRecipients()
@@ -157,25 +171,6 @@ class LeaveApplyPage extends Component
     }
 
     public $selectedEmployeeId;
-    //selected applying to manager details
-    public function selectEmployee($employeeId)
-    {
-        // Find the selected employee details
-        $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-        if ($employeeDetails) {
-            // Update the component's state with the selected employee's details
-            $this->selectedEmployee = [
-                'emp_id' => $employeeDetails->emp_id,
-                'full_name' => ucfirst(strtolower($employeeDetails->first_name)) . ' ' . ucfirst(strtolower($employeeDetails->last_name)),
-                'gender' => $employeeDetails->gender,
-                'image' => $employeeDetails->image,
-            ];
-
-            // Optionally, you might want to store the selected employee's ID
-            $this->selectedEmployeeId = $employeeId;
-        }
-    }
-
 
     private function isWeekend($date)
     {
@@ -253,7 +248,7 @@ class LeaveApplyPage extends Component
     {
         try {
             if ($type === 'employees') {
-                $this->searchEmployees();
+                $this->toggleManager($this->empId);
             } elseif ($type === 'ccRecipients') {
                 $this->searchCCRecipients();
             }
@@ -273,7 +268,14 @@ class LeaveApplyPage extends Component
 
             // Check for weekend
             if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
+                $this->errorMessage = 'Looks like its already your non-working day. Please pick different date(s) to apply.';
+                $this->showerrorMessage = true;
+                return redirect()->back()->withInput();
+            }
+            // Check for weekend
+            if ($this->isWeekend($this->from_date) && $this->isWeekend($this->to_date)) {
                 $this->errorMessage = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
+                $this->showerrorMessage = true;
                 return redirect()->back()->withInput();
             }
 
@@ -291,28 +293,31 @@ class LeaveApplyPage extends Component
                             ->where('to_date', '<=', $this->to_date);
                     });
                 })
-                ->whereIn('status', ['approved', 'Pending'])
-                ->get();
+                ->whereIn('status', ['approved', 'pending'])
+                ->exists();
 
-                if ($overlappingLeave) {
-                    // Assuming $overlappingLeave is an object or associative array containing 'fromSession' and 'toSession'
-                    $existingFromSession = $overlappingLeave->from_session; // or $overlappingLeave['fromSession'] if it's an array
-                    $existingToSession = $overlappingLeave->to_session; // or $overlappingLeave['toSession'] if it's an array
-                    // Check if the existing leave's dates are the same as the entered leave's dates
-                    if ($this->from_session === $existingFromSession && $this->to_session === $existingToSession) {
-                        $this->errorMessage = 'The selected leave dates overlap with an existing leave application with the same dates.';
-                        return;
-                    } else {
-                        $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
-                        return;
-                    }
-                }
+            if ($overlappingLeave) {
+                $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+                $this->showerrorMessage = true;
+                return;
+            }
+
 
 
             // Validate from_date to to_date
             if ($this->to_date < $this->from_date) {
                 $this->errorMessage = 'To date must be greater than or equal to from date.';
+                $this->showerrorMessage = true;
                 return redirect()->back()->withInput();
+            }
+
+            // Validate from_date to to_date
+            if ($this->from_date == $this->to_date) {
+                if ($this->from_session > $this->to_session) {
+                    $this->errorMessage = 'To date must be greater than or equal to from date.';
+                    $this->showerrorMessage = true;
+                    return redirect()->back()->withInput();
+                }
             }
 
             // Check for holidays in the selected date range
@@ -326,6 +331,7 @@ class LeaveApplyPage extends Component
 
             if ($holidays->isNotEmpty()) {
                 $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
+                $this->showerrorMessage = true;
                 return redirect()->back()->withInput();
             }
 
@@ -352,13 +358,12 @@ class LeaveApplyPage extends Component
             }
 
             $applyingToDetails = [];
-            if ($this->selectedEmployeeId) {
-                $employeeDetails = EmployeeDetails::where('emp_id', $this->selectedEmployeeId)->first();
+            if ($this->selectedManagerDetails) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $this->selectedManagerDetails->emp_id)->first();
                 if ($employeeDetails) {
                     $applyingToDetails[] = [
-                        'manager_id' => $this->selectedEmployeeId,
+                        'manager_id' => $employeeDetails->emp_id,
                         'report_to' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
-                        'image' => $employeeDetails->image,
                     ];
                 }
             } else {
@@ -455,6 +460,7 @@ class LeaveApplyPage extends Component
             $this->showPopupMessage = true;
         }
     }
+    public $empId;
     public function applyingTo()
     {
         try {
@@ -614,35 +620,60 @@ class LeaveApplyPage extends Component
     //selected applying to manager details
     public function toggleManager($empId)
     {
-        $this->selectedManager = [$empId]; // Ensure this is an array
-        $this->fetchManagerDetails($empId); // Fetch details for the selected manager
-        $this->showApplyingToContainer = false; // Hide the container
+        if ($empId) {
+            $this->fetchManagerDetails($empId);
+        } else {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            if ($applying_to) {
+                $managerId = $applying_to->manager_id;
+
+                // Fetch the logged-in employee's manager details
+                $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+                if ($managerDetails) {
+                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                    $this->loginEmpManager = $fullName;
+                    $this->empManagerDetails = $managerDetails;
+                }
+            }
+            $this->selectedManager = [$empId];
+            $this->showApplyingToContainer = false;
+        }
     }
 
 
-
     // Method to fetch manager details
-    private function fetchManagerDetails($managerId)
+    private function fetchManagerDetails($empId)
     {
-        $employeeDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+        $employeeDetails = EmployeeDetails::where('emp_id', $empId)->first();
         if ($employeeDetails) {
             $fullName = ucfirst(strtolower($employeeDetails->first_name)) . ' ' . ucfirst(strtolower($employeeDetails->last_name));
             $this->loginEmpManager = $fullName;
-            $this->empManagerDetails = $employeeDetails;
-
+            $this->selectedManagerDetails = $employeeDetails;
         } else {
             $this->resetManagerDetails();
         }
     }
-    
+
     private function resetManagerDetails()
     {
         $this->empManagerDetails = null;
     }
 
+    public function resetFields(){
+        $this->reason = null;
+        $this->contact_details = null;
+        $this->leave_type = null;
+        $this->to_date = null;
+        $this->from_date = null;
+        $this->from_session = null;
+        $this->to_session = null;
+        $this->cc_to = null;
+        $this->applying_to = null;
+    }
 
     public $managerDetails, $fullName;
-    public $empManagerDetails;
+    public $empManagerDetails, $selectedManagerDetails;
     public function render()
     {
         $this->selectedYear = Carbon::now()->format('Y');
@@ -703,6 +734,7 @@ class LeaveApplyPage extends Component
             'employeeGender' => $employeeGender,
             'calculatedNumberOfDays' => $this->calculatedNumberOfDays,
             'empManagerDetails' => $this->empManagerDetails,
+            'selectedManagerDetails' => $this->selectedManagerDetails,
             'loginEmpManager' => $this->loginEmpManager,
             'managers' => $managers,
             'ccRecipients' => $this->ccRecipients,

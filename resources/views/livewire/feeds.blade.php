@@ -2495,4 +2495,4 @@ document.addEventListener('livewire:load', function () {
 
 </div>
 @endif
-</div>      
+</div>
