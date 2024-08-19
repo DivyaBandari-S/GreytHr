@@ -60,7 +60,7 @@
                     <li><a href="/holiday-calendar">Holiday Calendar</a></li>
                     @if($managerId)
                     <li>
-                        <a href="//team-on-leave-chart">
+                        <a href="/team-on-leave-chart">
                             @livewire('team-on-leave')
                         </a>
                     </li>

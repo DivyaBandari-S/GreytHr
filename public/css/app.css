@@ -4411,6 +4411,11 @@ select .yearSelect {
     background-color: rgb(2, 17, 79);
     border: none;
 }
+.alert-close{
+    font-size: var(--normal-font-size);
+    background-color: none !important;
+    border: none;
+}
 /* end of styles */
 
 /* team on leave */
