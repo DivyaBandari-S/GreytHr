@@ -109,11 +109,11 @@
                     <div class="form-group" >
                         <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
                         <textarea wire:model="description" class="form-control" id="content" rows="2" 
-                            style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-240px;;margin-top:5px"
+                            style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-258px;;margin-top:5px"
                             placeholder="Enter your description here..."></textarea>
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 15px;">
+                    <div class="form-group" style="margin-top: 5px;">
                         <label for="attachment" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
                         <div style="text-align: start;">
                             <input wire:model="image" type="file" accept="image/*" style="font-size: 12px ;margin-top:5px">
@@ -708,78 +708,119 @@
     @if($currentCardComments && $currentCardComments->count() > 0)
         @foreach ($currentCardComments as $comment)
             <div class="mb-3 comment-item" data-created="{{ $comment->created_at }}" data-interacted="{{ $comment->updated_at }}" style="display: flex; gap: 10px; align-items: center;">
-                @if ($comment->employee)
-                    @php
-                        $employee = $comment->employee;
-                        $imageUrl = !empty($employee->image_url) && $employee->image_url !== 'null' ? $employee->image_url : null;
+            @if ($comment->employee)
+    @php
+        $employee = $comment->employee;
+        $imageUrl = !empty($employee->image_url) && $employee->image_url !== 'null' ? $employee->image_url : null;
+    @endphp
 
-                        // Determine default image based on gender or a general default
-                        $defaultImage = $employee->gender == "Male"
-                            ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
-                            : ($employee->gender == "Female"
-                                ? 'https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7'
-                                : 'https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain'
-                            );
-                    @endphp
+    @if($imageUrl)
+        <img class="feeds-image"
+            src="{{ $imageUrl }}"
+            onerror="this.onerror=null; this.src='{{ asset("images/user.jpg") }}';"
+            style="border-radius: 50%;" 
+            height="25" 
+            width="25" 
+            alt="Employee Image"
+        >
+    @else
+        @if($employee->gender == "Male")
+            <img class="feeds-image"
+                src="{{ asset("images/male-default.png") }}"
+                style="border-radius: 50%;" 
+                height="25" 
+                width="25" 
+                alt="Default Male Image"
+            >
+        @elseif($employee->gender == "Female")
+            <img class="feeds-image"
+                src="{{ asset("images/female-default.jpg") }}"
+                style="border-radius: 50%;" 
+                height="25" 
+                width="25" 
+                alt="Default Female Image"
+            >
+        @else
+            <img class="feeds-image"
+                src="{{ asset("images/user.jpg") }}"
+                style="border-radius: 50%;" 
+                height="25" 
+                width="25" 
+                alt="Default Image"
+            >
+        @endif
+    @endif
 
-                    <img class="feeds-image"
-                        src="{{ $imageUrl ?? $defaultImage }}"
-                        onerror="this.onerror=null; this.src='{{ $defaultImage }}';"
-                        style="border-radius: 50%;" 
-                        height="25" 
-                        width="25" 
-                        alt="{{ $employee->gender == 'Male' ? 'Default Male Profile' : ($employee->gender == 'Female' ? 'Default Female Profile' : 'Default Profile Image') }}"
-                    >
+    <div class="comment" style="font-size: 10px;">
+        <b style="color:#778899; font-weight:500; font-size: 10px;">
+            {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}
+        </b>
+        <p class="mb-0" style="font-size: 11px;">
+            {{ ucfirst($comment->comment) }}
+        </p>
+    </div>
 
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">
-                            {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}
-                        </b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
+@elseif ($comment->hr)
+    @php
+        $hr = $comment->hr;
+        $imageUrl = !empty($hr->image_url) && $hr->image_url !== 'null' ? $hr->image_url : null;
+    @endphp
 
-                @elseif ($comment->hr)
-                    @php
-                        $hr = $comment->hr;
-                        $imageUrl = !empty($hr->image_url) && $hr->image_url !== 'null' ? $hr->image_url : null;
+    @if($imageUrl)
+        <img class="feeds-image"
+            src="{{ $imageUrl }}"
+          
+            style="border-radius: 50%;" 
+            height="25" 
+            width="25" 
+            alt="HR Image"
+        >
+    @else
+        @if($hr->gender == "Male")
+            <img class="feeds-image"
+                src="{{ asset("images/male-default.png") }}"
+                style="border-radius: 50%;" 
+                height="25" 
+                width="25" 
+                alt="Default Male Image"
+            >
+        @elseif($hr->gender == "Female")
+            <img class="feeds-image"
+                src="{{ asset("images/female-default.jpg") }}"
+                style="border-radius: 50%;" 
+                height="25" 
+                width="25" 
+                alt="Default Female Image"
+            >
+        @else
+            <img class="feeds-image"
+                src="{{ asset("images/user.jpg") }}"
+                style="border-radius: 50%;" 
+                height="25" 
+                width="25" 
+                alt="Default Image"
+            >
+        @endif
+    @endif
 
-                        // Determine default image based on gender or a general default
-                        $defaultImage = $hr->gender == "Male"
-                            ? 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'
-                            : ($hr->gender == "Female"
-                                ? 'https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7'
-                                : 'https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain'
-                            );
-                    @endphp
+    <div class="comment" style="font-size: 10px;">
+        <b style="color:#778899; font-weight:500; font-size: 10px;">
+            {{ ucwords(strtolower($hr->first_name)) }} {{ ucwords(strtolower($hr->last_name)) }}
+        </b>
+        <p class="mb-0" style="font-size: 11px;">
+            {{ ucfirst($comment->comment) }}
+        </p>
+    </div>
 
-                    <img class="feeds-image"
-                        src="{{ $imageUrl ?? $defaultImage }}"
-                        onerror="this.onerror=null; this.src='{{ $defaultImage }}';"
-                        style="border-radius: 50%;" 
-                        height="25" 
-                        width="25" 
-                        alt="{{ $hr->gender == 'Male' ? 'Default Male Profile' : ($hr->gender == 'Female' ? 'Default Female Profile' : 'Default Profile Image') }}"
-                    >
+@else
+    <div class="comment" style="font-size: 10px;">
+        <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
+        <p class="mb-0" style="font-size: 11px;">
+            {{ ucfirst($comment->comment) }}
+        </p>
+    </div>
+@endif
 
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">
-                            {{ ucwords(strtolower($hr->first_name)) }} {{ ucwords(strtolower($hr->last_name)) }}
-                        </b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
-
-                @else
-                    <div class="comment" style="font-size: 10px;">
-                        <b style="color:#778899; font-weight:500; font-size: 10px;">Unknown Employee</b>
-                        <p class="mb-0" style="font-size: 11px;">
-                            {{ ucfirst($comment->comment) }}
-                        </p>
-                    </div>
-                @endif
             </div>
         @endforeach
     @endif

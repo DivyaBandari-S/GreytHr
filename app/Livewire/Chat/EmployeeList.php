@@ -110,8 +110,18 @@ class EmployeeList extends Component
         $loggedInCompanyId = auth()->user()->company_id;
 
         // Fetching all employee details for the company
-        $this->employeeDetails = EmployeeDetails::where('company_id', $loggedInCompanyId)->orderBy('first_name', 'asc')->get();
+        $this->employeeDetails = EmployeeDetails::select('employee_details.*', 'emp_departments.department')
+        ->leftJoin('emp_departments', 'employee_details.dept_id', '=', 'emp_departments.dept_id')
+        ->where('employee_details.company_id', $loggedInCompanyId)
+        ->orderBy('employee_details.first_name', 'asc')
+        ->get();
 
+    // Ensure every employee has department_name even if the department is missing
+    $this->employeeDetails->each(function ($employee) {
+        if (!$employee->department) {
+            $employee->department = 'No Department';
+        }
+    });
         // Filter out the logged-in user
         $this->employeeDetails = $this->employeeDetails->reject(function ($employee) {
             return $employee->id == auth()->id() // Exclude by ID

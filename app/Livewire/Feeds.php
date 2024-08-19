@@ -120,7 +120,7 @@ class Feeds extends Component
         $this->combinedData = $this->combineAndSortData($this->employees);
 
       $this->loadComments();   
-       $this->loadaddComments();
+ 
        $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
@@ -272,7 +272,7 @@ class Feeds extends Component
             ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'))
             ->orderByDesc('created_at')
             ->get();
-    
+      
    
         session()->flash('message', 'Comment added successfully.');
     }
@@ -327,7 +327,7 @@ class Feeds extends Component
             ->get();
         // Flash a success message
         session()->flash('message', 'Comment added successfully.');
-        $this->combinedData = $this->combineAndSortData($this->employees);
+      
    
  
     }
