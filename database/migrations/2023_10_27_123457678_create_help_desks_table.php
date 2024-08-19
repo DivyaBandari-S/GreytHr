@@ -14,16 +14,17 @@ return new class extends Migration
         Schema::create('help_desks', function (Blueprint $table) {
             $table->id();
             $table->string('emp_id');
-            $table->string('category'); 
-            $table->string('mail'); 
-            $table->string('distributor_name'); 
+            $table->string('category');
+            $table->string('mail');
+            $table->string('distributor_name');
             $table->string('mobile');
             $table->string('subject');
-            $table->text('description'); 
-            $table->string('file_path')->nullable(); // Path to attached file (nullable)
+            $table->text('description');
+            $table->binary('file_path')->nullable(); // Store the uploaded file data in binary format
+            $table->string('mime_type')->nullable(); // Store the MIME type of the file
             $table->string('cc_to')->nullable(); // CC to field (nullable)
-            $table->string('status')->default('Recent'); // CC to field (nullable)
-            $table->enum('priority', ['High', 'Medium', 'Low']); // Priority field with enum values 
+            $table->string('status')->default('Recent'); // Status field (default 'Recent')
+            $table->enum('priority', ['High', 'Medium', 'Low']);
             $table->timestamps();
 
             $table->foreign('emp_id')

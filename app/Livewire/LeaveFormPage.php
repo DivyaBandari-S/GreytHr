@@ -28,12 +28,17 @@ class LeaveFormPage extends Component
 
     public  $resShowinfoMessage = true;
     public  $resShowinfoButton = false;
+    public $showAlert = false;
 
 
     public function toggleInfoRes()
     {
         $this->resShowinfoMessage = !$this->resShowinfoMessage;
         $this->resShowinfoButton = !$this->resShowinfoButton;
+    }
+    public function hideAlert()
+    {
+        $this->showAlert = false;
     }
     public  $compOffShowinfoMessage = true;
     public  $compOffShowinfoButton = false;
@@ -74,12 +79,12 @@ class LeaveFormPage extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         // Fetch all leave requests (pending, approved, rejected) for the logged-in user and company
         $this->leaveRequests = LeaveRequest::where('emp_id', $employeeId)
-        ->where(function($query) {
-            $query->whereIn('status', ['approved', 'rejected', 'Withdrawn'])
-                  ->orWhereIn('cancel_status', ['approved', 'rejected', 'Withdrawn']);
-        })
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->where(function ($query) {
+                $query->whereIn('status', ['approved', 'rejected', 'Withdrawn'])
+                    ->orWhereIn('cancel_status', ['approved', 'rejected', 'Withdrawn']);
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         // Format the date properties
         foreach ($this->leaveRequests as $leaveRequest) {
@@ -95,19 +100,28 @@ class LeaveFormPage extends Component
             // Fetch pending leave requests for the logged-in user and company
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->combinedRequests = LeaveRequest::where('emp_id', $employeeId)
-            ->where(function ($query) {
-                $query->where('status', 'Pending')
-                      ->orWhere(function ($query) {
-                          $query->where('status', 'approved')
+                ->where(function ($query) {
+                    $query->where('status', 'Pending')
+                        ->orWhere(function ($query) {
+                            $query->where('status', 'approved')
                                 ->where('cancel_status', 'Pending Leave Cancel');
-                      });
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+                        });
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
 
             foreach ($this->combinedRequests as $leaveRequest) {
                 $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
                 $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
+
+                // Check and decode file paths if not null
+                if ($leaveRequest->file_paths) {
+                    $fileDataArray = json_decode($leaveRequest->file_paths, true);
+                    foreach ($fileDataArray as &$fileData) {
+                        $fileData = base64_decode($fileData); // Decode base64 data
+                    }
+                    $leaveRequest->file_paths = $fileDataArray; // Optionally set the decoded data
+                }
             }
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message
@@ -214,7 +228,8 @@ class LeaveFormPage extends Component
             $leaveRequest->save();
             $leaveRequest->touch();
             $this->hasPendingLeave();
-            session()->flash('message', 'Leave application Withdrawn.');
+            session()->flash('cancelMessage', 'Leave application Withdrawn.');
+            $this->showAlert = true;
             // Flash success message
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message
@@ -240,7 +255,8 @@ class LeaveFormPage extends Component
             $leaveRequest->save();
             $leaveRequest->touch();
             $this->hasPendingLeave();
-            session()->flash('message', 'Leave application Withdrawn.');
+            session()->flash('cancelMessage', 'Leave application Withdrawn.');
+            $this->showAlert = true;
             // Flash success message
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message

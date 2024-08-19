@@ -131,6 +131,15 @@ Route::get('/Login&Register', function () {
     return view('login_and_register_view');
 });
 
+Route::get('/Privacy&Policy', function () {
+    return view('privacy_policy_view');
+});
+
+Route::get('/Terms&Services', function () {
+    return view('terms_services_view');
+});
+
+
 Route::middleware(['auth:web', 'handleSession'])->group(function () {
     Route::get('/CreateCV', function () {
         return view('create_cv_view');
@@ -293,12 +302,16 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/ytd', Ytdreport::class)->name('ytdreport');
     Route::get('download/file/{id}', function ($id) {
         $message = Message::findOrFail($id);
-    
+
         return Response::make($message->file_path, 200, [
             'Content-Type' => 'application/octet-stream',
             'Content-Disposition' => 'attachment; filename="' . basename($message->file_path) . '"',
         ]);
     })->name('download.file');
+// In web.php
+Route::get('/download-image', [HelpDesk::class, 'downloadImage'])->name('downloadImage');
+
+
 
     //leave module
     Route::get('/leave-page', LeavePage::class)->name('leave-page');
@@ -418,7 +431,6 @@ Route::get('/decode/{hash}', function ($hash) {
 
 Route::get('/salary/{emp_id}', function ($emp_id) {
     $empSalary = EmpSalary::findOrFail($emp_id);
-    dd($empSalary);
     // Return the salary attribute
     return response()->json([
         'emp_id' => $empSalary->emp_id,

@@ -1,12 +1,10 @@
-<div class="leavePageContent">
-   <div class="d-flex mt-2 mb-3 gap-4 align-items-center position-relative">
-      <a type="button" class="submit-btn" href="{{ route('home') }}" style="text-decoration:none;">Back</a>
-
+<div class="leavePageContent position-relative">
+   <div class="d-flex mt-2 mb-3 gap-4 align-items-center ">
       @if(session()->has('message'))
-      <div class="alert alert-success w-50 position-absolute m-auto p-1" style="font-size: 12px; right: 25%;" id="success-alert">
+      <div class="alert alert-success w-50 position-absolute m-auto p-2" style="font-size: 12px; right: 25%;" id="success-alert">
          {{ session('message') }}
-         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+         <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">X</span>
          </button>
       </div>
       <script>
@@ -20,7 +18,7 @@
       <div class="alert alert-danger position-absolute p-1" style="font-size: 12px; right: 25%;" id="error-alert">
          {{ session('error') }}
          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">X</span>
          </button>
       </div>
       <script>
@@ -31,7 +29,7 @@
       @endif
    </div>
 
-   <div class="toggle-container">
+   <div class="toggle-container mt-3">
       <!-- Navigation Buttons -->
       <div class="nav-buttons d-flex justify-content-center">
          <ul class="nav custom-nav-tabs border">
@@ -104,7 +102,7 @@
          </div>
          @elseif($activeSubSection === 'leaveCancel')
          <div class="leave-cancel-section">
-            <div class="containerWlidth">
+            <div class="containerWidth">
                @livewire('leave-cancel-page')
             </div>
          </div>
@@ -137,6 +135,14 @@
          </div>
          @endif
          @elseif($activeSection === 'pendingButton')
+         @if ($showAlert)
+         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.2s="hideAlert" style="font-size: 12px; right: 25%;" id="success-alert">
+            {{ session('cancelMessage') }}
+            <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close" wire:click="hideAlert">
+               <span aria-hidden="true">X</span>
+            </button>
+         </div>
+         @endif
          <div class="pending-section">
             <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}; max-height: 370px;overflow-y: auto;">
                @if(empty($combinedRequests) || $combinedRequests->isEmpty())

@@ -1,9 +1,9 @@
 <div>
-    @if($errorMessage)
-    <div id="errorMessage" class="alert alert-danger">
+    @if($showerrorMessage)
+    <div id="errorMessage" class="alert alert-danger" wire:poll.2s="hideAlert">
         {{ $errorMessage }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" wire:click="hideAlert" class="close" style="background:none;border:none;" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">x</span>
         </button>
     </div>
     @endif
@@ -190,12 +190,14 @@
                     <div class="form-group ">
                         <label for="fromSession">Session</label> <br>
                         <div class="custom-select-wrapper">
-                            <select id="fromSession" class="form-control outline-none rounded placeholder-small" wire:model.lazy="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="fromSession" wire:change="handleFieldUpdate('from_session')">
+                            <select id="fromSession" class="form-control outline-none rounded placeholder-small" wire:model="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="fromSession" wire:change="handleFieldUpdate('from_session')">
+                                <option value="" disabled>Select a session</option> <!-- Placeholder option -->
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
                             @error('from_session') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -209,14 +211,17 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group ">
-                        <label for="session">Session</label> <br>
+                        <label for="to_session">Session</label> <br>
                         <div class="custom-select-wrapper">
-                            <select id="session" class="form-control outline-none rounded placeholder-small" wire:model.lazy="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="session" wire:change="handleFieldUpdate('to_session')">
-                                <option value="Session 1">Session 1</option>
+                            <select id="to_session" class="form-control outline-none rounded placeholder-small" wire:model="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="toSession" wire:change="handleFieldUpdate('to_session')">
+                                <option value="" disabled>Select a session</option> <!-- Placeholder option -->
                                 <option value="Session 2">Session 2</option>
+
+                                <option value="Session 1">Session 1</option>
                             </select>
-                            @error('to_session') <span class="text-danger">{{ $message }}</span> @enderror
+                            @error('from_session') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -237,10 +242,11 @@
                 <div class="form-group mt-3">
                     <span class="normalTextValue"> Applying To</span>
                 </div>
-                <div class="reporting mb-2" wire:ignore.self>
-                    @if($empManagerDetails->image)
+                <div class="reporting mb-2">
+                    @if($selectedManagerDetails)
+                    @if($selectedManagerDetails->image)
                     <div class="employee-profile-image-container">
-                        <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($empManagerDetails->image)}}" style="border-radius:50%;">
+                        <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedManagerDetails->image)}}" style="border-radius:50%;">
                     </div>
                     @else
                     <div class="employee-profile-image-container">
@@ -248,18 +254,15 @@
                     </div>
                     @endif
                     <div class="center p-0 m-0">
-                        @if(!$loginEmpManager)
-                        <p class="mb-0" style="font-size:10px;">N/A</p>
-                        @else
-                        <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($loginEmpManager)) }}</p>
-                        @endif
-
-                        @if(!$empManagerDetails)
-                        <p class="mb-0 normalTextValue">#(N/A)</p>
-                        @else
-                        <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#{{$empManagerDetails->emp_id}}</span></p>
-                        @endif
+                        <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($selectedManagerDetails->first_name)) }} {{ ucwords(strtolower($selectedManagerDetails->last_name)) }}</p>
+                        <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#{{$selectedManagerDetails->emp_id}}</span></p>
                     </div>
+                    @else
+                    <div class="center p-0 m-0">
+                        <p class="mb-0" style="font-size:10px;">N/A</p>
+                        <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText">#(N/A)</p>
+                    </div>
+                    @endif
                     <div class="downArrow" wire:click="applyingTo">
                         <i class="fas fa-chevron-down" style="cursor:pointer"></i>
                     </div>
@@ -272,23 +275,23 @@
                     <!-- Content for the search container -->
                     <div class="row mb-2 py-0 ">
                         <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
-                            <div class="col-md-10">
-                                <div class="input-group mb-3">
+                            <div class="col-md-10 m-0">
+                                <div class="input-group">
                                     <input
                                         wire:model="filter"
                                         id="searchInput"
                                         type="text"
-                                        class="form-control"
+                                        class="form-control placeholder-small"
                                         placeholder="Search for Emp.Name or ID"
                                         aria-label="Search"
                                         aria-describedby="basic-addon1"
                                         style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;">
-                                    <div class="input-group-append">
+                                    <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button
                                             type="button"
-                                            class="btn btn-primary"
+                                            class="search-btn"
                                             wire:click="searchManager">
-                                            <i class="fas fa-search"></i>
+                                            <i style="color:#fff;margin-left:10px;" class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -307,7 +310,9 @@
                     <div class="scrollApplyingTO">
                         @if(!empty($managers))
                         @foreach($managers as $employee)
-                        <div class="d-flex gap-4 align-items-center" style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
+                        <div class="d-flex gap-4 align-items-center"
+                            style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif"
+                            wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             @if($employee['image'])
                             <div class="employee-profile-image-container">
                                 <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius:50%;">
@@ -318,15 +323,14 @@
                             </div>
                             @endif
                             <div class="center d-flex flex-column mt-2 mb-2">
-                                <span class="ellipsis mb-0" value="{{ $employee['full_name'] }}">{{ $employee['full_name'] }}</span>
-                                <span class="mb-0 normalTextValue" style="font-size:10px;" value="{{ $employee['full_name'] }}"> #{{ $employee['emp_id'] }} </span>
+                                <span class="ellipsis mb-0">{{ $employee['full_name'] }}</span>
+                                <span class="mb-0 normalTextValue" style="font-size:10px;"> #{{ $employee['emp_id'] }} </span>
                             </div>
                         </div>
                         @endforeach
                         @else
                         <p class="mb-0 normalTextValue m-auto text-center">No managers found.</p>
                         @endif
-
                     </div>
                 </div>
                 @endif
@@ -433,14 +437,15 @@
                 @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group mt-3">
-                <label for="file">Attachement </label> <br>
-                <input id="file" type="file" wire:model="files" wire:loading.attr="disabled" style="font-size: 12px;" multiple />
-                @error('file_paths') <span class="text-danger">{{ $message }}</span> @enderror
+                <label for="file">Attachments</label> <br>
+                <input id="file" type="file" wire:model="file_paths" wire:loading.attr="disabled" multiple style="font-size: 12px;" />
+                @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
+
 
             <div class="buttons-leave">
                 <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
-                <button type="button" class=" cancel-btn" wire:click="cancelLeaveApplication" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
+                <button type="button" class=" cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
             </div>
         </form>
     </div>

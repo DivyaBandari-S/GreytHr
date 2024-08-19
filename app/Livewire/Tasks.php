@@ -60,7 +60,17 @@ class Tasks extends Component
     public $closedSearch = '';
     public $filterData;
     public $showAlert = false;
-  
+    public $openAccordions = [];
+    public function toggleAccordion($recordId)
+    {
+        if (in_array($recordId, $this->openAccordions)) {
+            $this->openAccordions = array_filter($this->openAccordions, function($id) use ($recordId) {
+                return $id !== $recordId;
+            });
+        } else {
+            $this->openAccordions[] = $recordId;
+        }
+    }
     public function setActiveTab($tab)
     {
         if ($tab === 'open') {
@@ -291,7 +301,7 @@ class Tasks extends Component
         session()->flash('showAlert', true);
 
         return redirect()->to('/tasks');
-      
+
     }
 
     public function closeForTasks($taskId)
@@ -303,9 +313,9 @@ class Tasks extends Component
         }
         session()->flash('message', 'Task has been Re-Opened.');
         session()->flash('showAlert', true);
-      
+
         return redirect()->to('/tasks');
-   
+
     }
 
     public function autoValidate()
@@ -330,7 +340,7 @@ class Tasks extends Component
             }
         }
     }
-    
+
 
     public function submit()
     {
@@ -342,7 +352,7 @@ class Tasks extends Component
         $this->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
         ]);
-        
+
         // Validate and upload the image file
         if ($this->image) {
             $this->isLoadingImage = true;
@@ -367,7 +377,12 @@ class Tasks extends Component
             'file_path' => $this->image_path,
             'status' => "Open",
         ]);
-      
+
+        preg_match('/\((.*?)\)/',$this->assignee , $matches);
+        $extracted = isset($matches[1]) ? $matches[1] : $this->assignee;
+
+        // dd( $this->assignee,$extracted,$this->employeeDetails->emp_id);
+        if($extracted!=$this->employeeDetails->emp_id){
 
         Notification::create([
             'emp_id' => $this->employeeDetails->emp_id,
@@ -375,12 +390,13 @@ class Tasks extends Component
             'task_name' => $this->task_name,
             'assignee' => $this->assignee,
         ]);
+    }
 
         $this->reset();
         session()->flash('message', 'Task created successfully!');
         session()->flash('showAlert', true);
         return redirect()->to('/tasks');
-     
+
     }
 
     public $client_id, $project_name, $image_path;
@@ -484,7 +500,7 @@ class Tasks extends Component
         $this->showModal = false;
         session()->flash('message', 'Comment added successfully.');
         $this->showAlert = true;
-       
+
     }
     public function updatedNewComment($value)
     {
@@ -528,45 +544,6 @@ class Tasks extends Component
             ->latest()
             ->get();
     }
-    public function render()
-    {
-
-        $this->fetchTaskComments($this->taskId);
-        // Retrieve the authenticated employee's ID
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $companyId = Auth::user()->company_id;
-
-        // Fetch employees, ensuring the authenticated employee is shown first
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)
-            ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
-            ->orderBy('first_name')
-            ->orderBy('last_name')
-            ->get();
-
-            if ($this->activeTab === 'open') {
-                $this->searchActiveTasks();
-            } elseif ($this->activeTab === 'completed') {
-                $this->searchCompletedTasks();
-            }
-
-        $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
-
-        $this->record = Task::all();
-        $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
-        $this->records = Task::with('emp')
-            ->where(function ($query) use ($employeeId, $employeeName) {
-                $query->where('emp_id', $employeeId)
-                    ->orWhere('assignee', 'LIKE', "%$employeeName%");
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
-        $searchData = $this->filterData ?: $this->records;
-        return view('livewire.tasks', [
-            'peopleData' => $peopleData,
-            'searchData' => $searchData,
-            'taskComments' => $this->taskComments,
-        ]);
-    }
 
     public function downloadImage()
     {
@@ -606,7 +583,43 @@ class Tasks extends Component
     
         return abort(404, 'Image not found');
     }
-    
-    
-    
+    public function render()
+    {
+
+        $this->fetchTaskComments($this->taskId);
+        // Retrieve the authenticated employee's ID
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $companyId = Auth::user()->company_id;
+
+        // Fetch employees, ensuring the authenticated employee is shown first
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+            ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+
+            if ($this->activeTab === 'open') {
+                $this->searchActiveTasks();
+            } elseif ($this->activeTab === 'completed') {
+                $this->searchCompletedTasks();
+            }
+
+        $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+
+        $this->record = Task::all();
+        $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
+        $this->records = Task::with('emp')
+            ->where(function ($query) use ($employeeId, $employeeName) {
+                $query->where('emp_id', $employeeId)
+                    ->orWhere('assignee', 'LIKE', "%$employeeName%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $searchData = $this->filterData ?: $this->records;
+        return view('livewire.tasks', [
+            'peopleData' => $peopleData,
+            'searchData' => $searchData,
+            'taskComments' => $this->taskComments,
+        ]);
+    }
 }

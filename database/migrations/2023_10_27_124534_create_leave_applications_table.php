@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('from_session');
             $table->string('to_session');
             $table->date('to_date');
-            $table->binary('file_paths')->nullable();
+            $table->json('file_paths')->nullable();
             $table->string('applying_to');
             $table->json('cc_to')->nullable();
             $table->string('status')->default('Pending');
