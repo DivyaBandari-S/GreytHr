@@ -167,11 +167,11 @@
                                         @endphp
 
                                         <!-- Modal Structure -->
-                                        <div id="fileModal" style="display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5);">
+                                        <div id="fileModal" style="display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%;  overflow: auto; background-color: rgba(0, 0, 0, 0.5);">
                                             <div style="background-color: #fff; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%;">
                                                 <span style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;" onclick="document.getElementById('fileModal').style.display='none'">&times;</span>
-                                                <iframe id="modalIframe" style="width: 100%; height: 500px; border: none;"></iframe>
-                                                <a id="modalDownloadLink" href="" download="" target="_blank" style="display: block; text-decoration: none; color: #007BFF; text-transform: capitalize; margin-top: 10px;">Download File</a>
+                                                <iframe id="modalIframe" style="width: 100%;  border: none;"></iframe>
+                                                <a id="modalDownloadLink" href="" download="" target="_blank" style="display: block; text-decoration: none; color: #007BFF; text-transform: capitalize; margin-top: 10px;text-align:end;">Download File</a>
                                             </div>
                                         </div>
 
@@ -185,7 +185,7 @@
                                         @endphp
 
                                         @if (!empty($base64File))
-                                        <a href="javascript:void(0);" style="text-decoration: none; color: #007BFF; text-transform: capitalize;" onclick="document.getElementById('fileModal').style.display='block'; document.getElementById('modalIframe').src='data:{{ $mimeType }};base64,{{ $base64File }}';">
+                                        <a href="javascript:void(0);" style="text-decoration: none;font-size:12px; color: #007BFF; text-transform: capitalize;" onclick="document.getElementById('fileModal').style.display='block'; document.getElementById('modalIframe').src='data:{{ $mimeType }};base64,{{ $base64File }}';">
                                             View File
                                         </a>
                                         <br>
