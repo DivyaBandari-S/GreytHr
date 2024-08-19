@@ -910,4 +910,4 @@
             }
 
             document.getElementById('personalDetails').style.display = 'block';
-        </script>
+        </script>s

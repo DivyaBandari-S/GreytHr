@@ -369,7 +369,11 @@
 /* Ending of home module (Kumar Asapu,Archana Goud,Divya Bandari,Pranita Priyadarshi & Siva)*/
 
 /* Starting of settings module (Kumar Asapu)*/
-
+.settings-profile-image{
+    border-radius: 50%;
+    height: 90px;
+    width: 90px;
+  }
 /* Ending of settings module (Kumar Asapu)*/
 
 /* Starting of tasks module (Kumar Asapu)*/
