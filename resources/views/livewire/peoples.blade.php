@@ -7,7 +7,7 @@
             padding: 20px;
             border-radius: 5px;
             height: 450px;
-            margin-left: 25px;
+            margin-left: 0px;
         }
 
         .people-input-group-container {
@@ -100,6 +100,14 @@
             border-radius: 5px;
             padding: 20px;
             height: 450px;
+            margin-top: 0px;
+        }
+
+        @media (max-width: 767px) {
+            .people-selectedperson-container {
+                margin-top: 10px;
+                height: 490px;
+            }
         }
 
         .people-selectedperson-detail-container {
@@ -187,6 +195,22 @@
             height: 200px;
             width: 200px;
         }
+        @media (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+            .people-employee-detail-container {
+            margin-left: 35px;
+        }
+        .people-left-side-container {
+        flex: 0 0 41.66667%; 
+        max-width: 41.66667%; 
+    }
+
+    .people-selectedperson-container {
+        flex: 0 0 50%; 
+        max-width: 50%; 
+    }
+        }
+
+        
     </style>
     <div class="container mt-3">
         @if (session()->has('emp_error'))
@@ -204,7 +228,7 @@
                 ->first();
         @endphp
         @if ($mangerid)
-            <div class="row justify-content-center" style="width: 35%; position: relative; padding-left: 30px;">
+            <div class="row justify-content-center" style="width: 316px; position: relative; padding-left: 2px;">
                 <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
                     <a id="starred-tab-link"
                         style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}"
@@ -227,11 +251,11 @@
                     </a>
                 </div>
                 <div
-                    style="transition: left 0.3s ease-in-out; position: absolute; bottom: -11px; left: {{ $activeTab === 'starred' ? '30px' : ($activeTab === 'myteam' ? '39%' : '70%') }}; width: 30%; height: 4px; background-color: rgb(2, 17, 79); border-radius: 5px;">
+                    style="transition: left 0.3s ease-in-out; position: absolute; bottom: -11px; left: {{ $activeTab === 'starred' ? '4px' : ($activeTab === 'myteam' ? '111px' : '219px') }}; width: 92px; height: 4px; background-color: rgb(2, 17, 79); border-radius: 5px;">
                 </div>
             </div>
         @else
-            <div class="row justify-content-start" style="width: 40%; position: relative; padding-left: 40px;">
+            <div class="row justify-content-start" style="width: 316px; position: relative; padding-left: 7px;">
                 <div class="col-3 text-start" style="border-radius: 5px; cursor: pointer;">
                     <a id="starred-tab-link"
                         style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}"
@@ -247,7 +271,7 @@
                     </a>
                 </div>
                 <div
-                    style="transition: left 0.3s ease-in-out; position: absolute; bottom: -11px; left: {{ $activeTab === 'starred' ? '30px' : '118px' }}; width: 26%; height: 4px; background-color: rgb(2, 17, 79); border-radius: 5px;">
+                    style="transition: left 0.3s ease-in-out; position: absolute; bottom: -11px; left: {{ $activeTab === 'starred' ? '2px' : '83px' }}; width: 86px; height: 4px; background-color: rgb(2, 17, 79); border-radius: 5px;">
                 </div>
             </div>
         @endif
@@ -255,7 +279,7 @@
 
         @if ($activeTab === 'starred')
             <!-- Starred tab content -->
-            <div class="row mt-3 people-all-tabs-container">
+            <div class="row mt-3">
 
                 <div class="col-12 col-md-4 bg-white people-left-side-container">
                     <div class="input-group people-input-group-container">
@@ -291,14 +315,14 @@
                                                         src="{{ asset('images/female-default.jpg') }}"
                                                         alt="Default Female Image">
                                                 @else
-                                                    <img class="people-profile-image" src="{{ asset('images/user.jpg') }}"
-                                                        alt="Default Image">
+                                                    <img class="people-profile-image"
+                                                        src="{{ asset('images/user.jpg') }}" alt="Default Image">
                                                 @endif
                                             @endif
 
 
                                         </div>
-                                        <div class="col-md-9 col-12">
+                                        <div class="col-9">
                                             <div class="d-flex align-items-center">
                                                 <h6 class="username truncate-text people-default-container-name   @isset($people->emp)
                                         @if ($people->emp->employee_status != 'active')
@@ -351,7 +375,7 @@
 
 
                             </div>
-                            <div class="col-md-7 col-12">
+                            <div class="col-md-7 col-12 people-employee-detail-container">
                                 <div class="people-selectedperson-detail-container">
                                     <div class="d-flex align-items-center">
                                         <h1 class="people-selectedperson-name">
@@ -453,7 +477,7 @@
                         @endif
 
                     </div>
-                    <div class="col-md-7 col-12">
+                    <div class="col-md-7 col-12 people-employee-detail-container">
                         <div class="people-selectedperson-detail-container">
                             <div class="d-flex align-items-center">
                                 <h1 class="people-selectedperson-name">
@@ -555,7 +579,7 @@
 @endif
 @if ($activeTab === 'everyone')
     <!-- Everyone tab content -->
-    <div class="row mt-3 people-all-tabs-container">
+    <div class="row mt-3">
 
         <div class="col-12 col-md-4 bg-white people-left-side-container">
             <div class="input-group people-input-group-container">
@@ -595,7 +619,7 @@
                                             @endif
                                         @endif
                                     </div>
-                                    <div class="col-md-9 col-12">
+                                    <div class="col-9">
                                         @php
                                             $starredPerson = DB::table('starred_peoples')
                                                 ->where('people_id', $people->emp_id)
@@ -645,7 +669,7 @@
                         @endif
 
                     </div>
-                    <div class="col-md-7 col-12">
+                    <div class="col-md-7 col-12 people-employee-detail-container">
                         @php
                             $starredPerson = DB::table('starred_peoples')
                                 ->where('people_id', $selectedPerson->emp_id)
@@ -749,7 +773,7 @@
                         @endif
 
                     </div>
-                    <div class="col-md-7 col-12">
+                    <div class="col-md-7 col-12 people-employee-detail-container">
                         <div class="people-selectedperson-detail-container">
                             <div class="d-flex align-items-center">
                                 <h1 class="people-selectedperson-name">
@@ -844,7 +868,7 @@
 
 @if ($activeTab === 'myteam')
     <!-- MyTeam tab content -->
-    <div class="row mt-3 people-all-tabs-container">
+    <div class="row mt-3">
         <!-- Search input and filter button -->
         <div class="col-12 col-md-4 bg-white people-left-side-container">
 
@@ -886,7 +910,7 @@
                                             @endif
                                         @endif
                                     </div>
-                                    <div class="col-md-9 col-12">
+                                    <div class="col-9">
                                         @php
                                             $starredPerson = DB::table('starred_peoples')
                                                 ->where('people_id', $people->emp_id)
@@ -937,7 +961,7 @@
                             @endif
                         @endif
                     </div>
-                    <div class="col-md-7 col-12">
+                    <div class="col-md-7 col-12 people-employee-detail-container">
                         @php
                             $starredPerson = DB::table('starred_peoples')
                                 ->where('people_id', $selectedMyTeamPerson->emp_id)
@@ -1039,83 +1063,86 @@
                             @endif
                         @endif
 
-        </div>
-        <div class="col-md-7 col-12">
-            <div class="people-selectedperson-detail-container">
-                <div class="d-flex align-items-center">
-                    <h1 class="people-selectedperson-name">
-                        {{ ucwords(strtolower(optional($firstPerson)->first_name)) }}
-                        {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
-                    <a class="people-selectedperson-anchortag"
-                        wire:click="toggleStar('{{ optional($firstPerson)->emp_id }}')">
+                    </div>
+                    <div class="col-md-7 col-12 people-employee-detail-container">
+                        <div class="people-selectedperson-detail-container">
+                            <div class="d-flex align-items-center">
+                                <h1 class="people-selectedperson-name">
+                                    {{ ucwords(strtolower(optional($firstPerson)->first_name)) }}
+                                    {{ ucwords(strtolower(optional($firstPerson)->last_name)) }}</h1>
+                                <a class="people-selectedperson-anchortag"
+                                    wire:click="toggleStar('{{ optional($firstPerson)->emp_id }}')">
 
-                        <i
-                            class="fa fa-star {{ $starredPerson && $starredPerson->starred_status == 'starred' ? 'people-text-blue' : 'text-white people-text-white' }} people-selected-person-star"></i>
+                                    <i
+                                        class="fa fa-star {{ $starredPerson && $starredPerson->starred_status == 'starred' ? 'people-text-blue' : 'text-white people-text-white' }} people-selected-person-star"></i>
 
-                    </a>
+                                </a>
+
+                            </div>
+                            @php
+                                $jobTitle = optional($firstPerson)->job_role;
+                                $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
+                                $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
+                                $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
+                            @endphp
+                            <p class="mb-0 people-selectedperson-empid">{{ $convertedTitle }}
+                                (#{{ optional($firstPerson)->emp_id }})</p>
+                        </div>
+                        <br>
+                        <div class="d-flex align-items-center">
+                            <span class="people-headings">CONTACT DETAILS</span>
+                            <hr class="people-horizontal-line">
+                        </div>
+                        <br>
+                        <div class="row">
+                            <label class="col-7 people-label">Mobile Number</label>
+                            <label
+                                class="col-5 people-value">{{ optional($firstPerson)->emergency_contact ?? '-' }}</label>
+                        </div>
+                        <br>
+                        <div class="d-flex align-items-center">
+                            <span class="people-headings">CATEGORY</span>
+                            <hr class="people-horizontal-line">
+                        </div>
+                        <br>
+                        <div class="row">
+                            <label class="col-7 people-label">Location</label>
+                            <label
+                                class="col-5 people-value">{{ optional($firstPerson)->job_location ?? '-' }}</label>
+                        </div>
+                        <br>
+                        <div class="d-flex align-items-center">
+                            <span class="people-headings">OTHER INFORMATION</span>
+                            <hr class="people-horizontal-line">
+                        </div>
+                        <br>
+                        <div class="row">
+                            <label class="col-7 people-label">Joining Date</label>
+                            <label
+                                class="col-5 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '-' }}</label>
+                        </div>
+                        <div class="row">
+                            <label class="col-7 people-label">Date Of Birth</label>
+                            <label
+                                class="col-5 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '-' }}</label>
+                        </div>
+
+                    </div>
 
                 </div>
-                @php
-                    $jobTitle = optional($firstPerson)->job_role;
-                    $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
-                    $convertedTitle = preg_replace('/\bII\b/', 'II', $jobTitle);
-                    $convertedTitle = preg_replace('/\bIII\b/', 'III', $convertedTitle);
-                @endphp
-                <p class="mb-0 people-selectedperson-empid">{{ $convertedTitle }}
-                    (#{{ optional($firstPerson)->emp_id }})</p>
-            </div>
-            <br>
-            <div class="d-flex align-items-center">
-                <span class="people-headings">CONTACT DETAILS</span>
-                <hr class="people-horizontal-line">
-            </div>
-            <br>
-            <div class="row">
-                <label class="col-7 people-label">Mobile Number</label>
-                <label class="col-5 people-value">{{ optional($firstPerson)->emergency_contact ?? '-' }}</label>
-            </div>
-            <br>
-            <div class="d-flex align-items-center">
-                <span class="people-headings">CATEGORY</span>
-                <hr class="people-horizontal-line">
-            </div>
-            <br>
-            <div class="row">
-                <label class="col-7 people-label">Location</label>
-                <label class="col-5 people-value">{{ optional($firstPerson)->job_location ?? '-' }}</label>
-            </div>
-            <br>
-            <div class="d-flex align-items-center">
-                <span class="people-headings">OTHER INFORMATION</span>
-                <hr class="people-horizontal-line">
-            </div>
-            <br>
-            <div class="row">
-                <label class="col-7 people-label">Joining Date</label>
-                <label
-                    class="col-5 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '-' }}</label>
-            </div>
-            <div class="row">
-                <label class="col-7 people-label">Date Of Birth</label>
-                <label
-                    class="col-5 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '-' }}</label>
-            </div>
+            @else
+                <div class="col-12">
+                    <div
+                        class="d-flex flex-column justify-content-center align-items-center h-100 people-nodata-container">
+                        <div class="d-flex flex-column align-items-center">
+                            <img class="people-nodata-img" src="{{ asset('images/nodata.png') }}" alt="">
+                            <p class="people-empty-text">No People Found!</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
         </div>
-
     </div>
-@else
-    <div class="col-12">
-        <div class="d-flex flex-column justify-content-center align-items-center h-100 people-nodata-container">
-            <div class="d-flex flex-column align-items-center">
-                <img class="people-nodata-img" src="{{ asset('images/nodata.png') }}" alt="">
-                <p class="people-empty-text">No People Found!</p>
-            </div>
-        </div>
-    </div>
-@endif
-
-</div>
-</div>
-<!-- End of Everyone tab content -->
+    <!-- End of Everyone tab content -->
 @endif
