@@ -1336,6 +1336,7 @@ color: #fff;
     $presentCount=0;
     $absentCount=0;
     $holidaycountforcontainer=0;
+    $totalWorkedMinutes=0;
     $currentYear = date('Y');
     $currentMonth=date('n');
     $currentMonthRep=date('F');
