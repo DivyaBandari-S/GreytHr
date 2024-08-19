@@ -1333,6 +1333,7 @@ color: #fff;
     @php
     $offCount=0;
     $presentCount=0;
+    $absentCount=0;
     $holidaycountforcontainer=0;
     $currentYear = date('Y');
     $currentMonth=date('n');
@@ -1528,9 +1529,14 @@ color: #fff;
                                   @endphp
                                 @elseif($distinctDates->has($dateKeyForLookup))
                                 P
-
+                                   @php
+                                      $presentCount++;
+                                   @endphp
                                 @else
                                 A
+                                  @php
+                                    $absentCount++;
+                                  @endphp
                                 @endif
                                 @else
                                 -
@@ -1792,11 +1798,11 @@ color: #fff;
     </div>
     <div class="custom-container">
         <div class="row">
-           <div class="col"style="white-space:nowrap;">Present:10.5</div>
-           <div class="col"style="white-space:nowrap;">Leave:10.5</div>
+           <div class="col"style="white-space:nowrap;">Present:{{$presentCount}}</div>
+           <div class="col"style="white-space:nowrap;">Leave:0</div>
            <div class="col"style="white-space:nowrap;">Holiday:{{$holidaycountforcontainer}}</div>
            <div class="col"style="white-space:nowrap;">Rest Day:0</div>
-           <div class="col"style="white-space:nowrap;">Absent:0</div>
+           <div class="col"style="white-space:nowrap;">Absent:{{$absentCount}}</div>
            <div class="col"style="white-space:nowrap;">On Duty:0</div>
            <div class="col"style="white-space:nowrap;">Shutdown:0</div>
            <div class="col"style="white-space:nowrap;">Off Day:{{$offCount}}</div>
@@ -1806,4 +1812,5 @@ color: #fff;
             <div class="col"style="white-space:nowrap;">Status Unknown:0</div>
         </div>
     </div>
+    
 </div>

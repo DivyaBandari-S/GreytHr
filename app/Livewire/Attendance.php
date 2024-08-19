@@ -786,7 +786,7 @@ class Attendance extends Component
     {
         try {
             // Format the dates and update the modal title
-            $this->from_date=Carbon::now()->startOfMonth()->toDateString();
+            // $this->from_date=Carbon::now()->startOfMonth()->toDateString();
             $formattedFromDate = Carbon::parse($this->from_date)->format('Y-m-d');
             $formattedToDate = Carbon::parse($this->to_date)->format('Y-m-d');
             $fromDatetemp = Carbon::parse($this->from_date);

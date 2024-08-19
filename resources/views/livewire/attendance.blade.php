@@ -1521,11 +1521,7 @@ color: #fff;
                                 </div>
                            
                             </div>
-                            <div class="form-row" style="display: flex; justify-content: center; margin-top: 20px;">
-                                        <div class="form-group col-md-6">
-                                            <canvas id="myChart1"></canvas>
-                                        </div>
-                             </div>    
+                             
                         </div>
                     </div>
                 </div>
