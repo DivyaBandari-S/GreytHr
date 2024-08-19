@@ -98,7 +98,12 @@ class Feeds extends Component
         'description' => 'required',
         'attachment' => 'nullable|file|max:10240',
     ];
-
+    protected $messages = [
+        'category.required' => 'Category is required.',
+  
+        'description.required' => 'Description is required.',
+       
+    ];
 
 
     public function toggleEmojiPicker()
@@ -564,7 +569,7 @@ public function loadaddComments()
             'hr' => $this->employeeDetails,
             'employees' => $this->employeeDetails,
             'emojis' => $emojis,
-        'image'=>     $this->employee->image ?? 'https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain',
+
             'storedEmojis' => $storedEmojis
         ]);
     }

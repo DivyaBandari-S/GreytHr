@@ -58,25 +58,30 @@
                             @endphp
                             <p class="card-text px-4 mb-0" style="display: inline-block;">{{ $convertedTitle }}</p>
                             <div class="d-flex justify-content-between mt-3">
-                                <div class="chat-emp-head d-flex flex-column align-items-start gap-1">
-                                    <span>Employee Id</span>
-                                    <span>Department</span>
-                                    <span>Join Date</span>
- 
-                                </div>
-                                <div class="chat-emp-details d-flex flex-column align-items-end gap-1">
-                                    <span>{{ $employee->emp_id }}</span>
-                                    @if($employee->department)
-                                    <span>{{ $employee->department }}</span>
-                                    @else
-                                    <span>-</span>
-                                    @endif
-                                    @if($employee->hire_date)
-                                    <span>{{ \Carbon\Carbon::parse($employee->hire_date)->format('d M, Y') }}</span>
-                                    @else
-                                    <span>N/A</span>
-                                    @endif
-                                </div>
+                            <div class="chat-emp-head d-flex flex-column align-items-start gap-1">
+    <span  style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Employee Id</span>
+    <span >Department</span>
+    <span>Join Date</span>
+</div>
+<div class="chat-emp-details d-flex flex-column align-items-end gap-1">
+    <span>{{ $employee->emp_id }}</span>
+    <span >
+    @if($employee->department)
+        {{ $employee->department }}
+    @else
+        -
+    @endif
+</span>
+
+    <span>
+        @if($employee->hire_date)
+            {{ \Carbon\Carbon::parse($employee->hire_date)->format('d M, Y') }}
+        @else
+            N/A
+        @endif
+    </span>
+</div>
+
                             </div>
                         </div>
                         <div class="card-footer d-flex gap-4 justify-content-center">

@@ -69,76 +69,79 @@
                 </button>
 
                 @if($showFeedsDialog)
-                <div class="modal" tabindex="-1" role="dialog" style="display: block; color: #3b4452; font-family: Montserrat, sans-serif;">
-<div class="modal-dialog modal-dialog-centered" role="document" style="color: #3b4452;">
-    <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <div class="modal-header" style="border-bottom: 1px solid #ccc; padding: 15px;">
-            <!-- <h5 class="modal-title" style="font-weight: 500; font-size: 1.25rem;color:#3b4452">Creating a Post</h5> -->
-           <span style="justify-content-end">
-            <image src="https://www3.nhk.or.jp/nhkworld/en/tv/bento/season5/images/top_info_20190412_5_pc.png" >
-           </span>
+                    <div class="modal" tabindex="-1" role="dialog" style="display: block; color: #3b4452; font-family: Montserrat, sans-serif;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="color: #3b4452;">
+        <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <div class="modal-header" style="border-bottom: 1px solid #ccc; padding: 15px; height: 40px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+    <!-- <h5 class="modal-title" style="font-weight: 500; font-size: 1.25rem; color: #3b4452;">Creating a Post</h5> -->
+    <p style="font-weight:600px">Create a post</p>
+    <span style="margin-left: auto;margin-top:-5px">
+        <img src="{{ asset('images/Posts.jpg') }}" style="height: 30px; border-radius: 5px;">
+    </span>
+</div>
+
+
+            @if(Session::has('error'))
+                <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert" 
+                    style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius:4px; background-color: #f8d7da; color: #721c24;">
+                    {{ Session::get('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;margin-top:-5px"></button>
+                </div>
+            @endif
+
+            <form wire:submit.prevent="submit">
+    <div class="modal-body" style="padding: 20px;">
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label for="category" style="font-weight: 600; color: #3b4452;">You are posting in:</label>
+            <select wire:model="category" class="form-select" id="category" style="border: 1px solid #ccc; border-radius: 4px; padding: 5px; font-size: 0.75rem; color: #3b4452; margin-top: 5px; height: 30px;">
+                <option value="">Select Category</option>
+                <option value="Appreciations">Appreciations</option>
+                <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
+                <option value="Companynews">Company News</option>
+                <option value="Events">Events</option>
+                <option value="Everyone">Everyone</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="US">US</option>
+            </select>
+            @error('category') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
 
-        @if(Session::has('error'))
-            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert" 
-                style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius:4px; background-color: #f8d7da; color: #721c24;">
-                {{ Session::get('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;"></button>
+        <div class="form-group">
+            <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
+            <textarea wire:model="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
+            @error('description') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
+
+        <div class="form-group" style="margin-top: 5px;">
+            <label for="attachment" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
+            <div style="text-align: start;">
+                <input wire:model="attachment" type="file" accept="image/*" style="font-size: 12px; margin-top: 5px">
+                @error('attachment') <span class="text-danger">{{ $message }}</span> @enderror
+                <span style="font-size:12px">
+                    <a href="https://greythr.freshdesk.com/support/solutions/articles/1060000078626-what-are-the-guidelines-that-an-employee-needs-to-follow-when-using-greythr-engage" target="_blank">
+                        See Posting Guidelines
+                    </a>
+                </span>
             </div>
-        @endif
+        </div>
+    </div>
 
-        <form wire:submit.prevent="submit">
-            <div class="modal-body" style="padding: 20px;">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label for="category" style="font-weight: 600; color: #3b4452;">Select Category:</label>
-                    <select wire:model="category" class="form-select" id="category" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem;color:#3b4452;margin-top:5px">
-                        <option value="Appreciations">Appreciations</option>
-                        <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
-                        <option value="Companynews">Company News</option>
-                        <option value="Events">Events</option>
-                        <option value="Everyone">Everyone</option>
-                        <option value="Hyderabad">Hyderabad</option>
-                        <option value="US">US</option>
-                    </select>
-                </div>
-
-                <div class="form-group" >
-                    <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
-                    <textarea wire:model="description" class="form-control" id="content" rows="2" 
-                        style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%;margin-left:-240px;;margin-top:5px"
-                        placeholder="Enter your description here..."></textarea>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label for="attachment" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
-                    <div style="text-align: start;">
-                        <input wire:model="image" type="file" accept="image/*" style="font-size: 12px ;margin-top:5px">
-                        @if ($image)
-                            <div class="mt-2">
-                                <img src="{{ $image->temporaryUrl() }}" height="50" width="50" alt="Image Preview" style="max-width: 100px; border-radius: 4px; border: 1px solid #ccc;">
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer" style="border-top: 1px solid #ccc; ">
-                <div class="d-flex justify-content-center" style="width: 100%;">
-                <button type="button" wire:click="submit" class="submit-btn">Submit</button>
-                <button wire:click="closeFeeds" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);margin-left:10px">Cancel</button>
-
-                </div>
-            </div>
-        </form>
+    <div class="modal-footer" style="border-top: 1px solid #ccc;">
+        <div class="d-flex justify-content-center" style="width: 100%;">
+            <button type="submit" class="submit-btn">Submit</button>
+            <button wire:click="closeFeeds" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79); margin-left: 10px">Cancel</button>
+        </div>
+    </div>
+</form>
+        </div>
     </div>
 </div>
-</div>
 
 
 
 
-                <div class="modal-backdrop fade show"></div>
-                @endif
+                    <div class="modal-backdrop fade show"></div>
+                    @endif
             </div>
         </div>
     </div>
