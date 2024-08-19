@@ -13,7 +13,6 @@ class AttendanceTable extends Component
     public $distinctDates;
 
     public $todaysDate;
-
     public $viewDetailsInswiperecord;
 
     public $viewDetailsOutswiperecord;
