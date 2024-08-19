@@ -9,23 +9,15 @@
 
     <div class="row m-0">
         <!-- Left Side (Login Form) -->
-        <div class="col-md-6 p-3">
+        <div class="col-md-6 ">
 
-            @if (Session::has('success'))
-            <div>
+            @if ($showAlert)
+            <div class="d-flex justify-content-center w-100" wire:poll.20s='hideAlert'>
 
-                <div class="alert alert-success alert-dismissible fade show" role="alert" style="font-size: 12px; max-width: 400px; margin-left: 21%;">
-
-                    {{ Session::get('success') }}
-
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-
-                        <span aria-hidden="true">&times;</span>
-
-                    </button>
-
+                <div class="alert alert-success " style="font-size: 12px; ">
+                    <p class="mb-0 mr-2"> {{ $alertMessage }}</p>
+                    <span style="margin-left: 20px;cursor:pointer" wire:click='hideAlert'>x</span>
                 </div>
-
             </div>
             @endif
             @if (session('sessionExpired'))
@@ -55,7 +47,7 @@
                 @endif
                 <div class="form-group">
                     <label for="emp_id" style="font-size: 14px;">ID / Mail</label>
-                    <input type="text" class="form-control" id="emp_id" placeholder="Enter ID / Mail" wire:model.lazy="form.emp_id" wire:input="login" wire:keydown.debounce.500ms="validateField('form.emp_id')" oninput="this.value = this.value.toUpperCase()"/>
+                    <input type="text" class="form-control" id="emp_id" placeholder="Enter ID / Mail" wire:model.lazy="form.emp_id" wire:input="login" wire:keydown.debounce.500ms="validateField('form.emp_id')" oninput="this.value = this.value.toUpperCase()" />
 
                     @error('form.emp_id')
                     <p class="pt-2 px-1 text-danger">{{ str_replace('form.emp id', 'Employee ID', $message) }}</p>

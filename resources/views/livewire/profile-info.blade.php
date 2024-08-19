@@ -472,7 +472,7 @@
             <div style="margin:20px auto;border-radius: 5px;display: none;" id="familyDetails">
                 <div class="row" style="border-radius: 5px; height: 200px; width: 100%; background-color: white; margin-bottom: 20px;">
                     <!-- Header -->
-                    <div style="margin-top: 2%; margin-left: 17px; font-size: 12px; font-weight: 500;">FATHER
+                    <div style="margin-top: 2%; margin-left: 17px; font-size: 12px; font-weight: 500;color:#778899;">FATHER
                         DETAILS</div>
                     <div class="row">
                         <div class="col-3">
@@ -587,7 +587,7 @@
                 </div>
                 <div class="row" style="border-radius: 5px; height: 200px; width: 100%; background-color: white; margin-bottom: 20px;">
                     <!-- Header -->
-                    <div style="margin-top: 2%; margin-left: 17px; font-size: 12px; font-weight: 500;">MOTHER
+                    <div style="margin-top: 2%; margin-left: 17px; font-size: 12px; font-weight: 500;color:#778899;">MOTHER
                         DETAILS</div>
                     <div class="row">
                         <div class="col-3">
