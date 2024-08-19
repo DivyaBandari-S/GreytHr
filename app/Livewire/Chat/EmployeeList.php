@@ -86,7 +86,9 @@ class EmployeeList extends Component
     {
         $companyId = Auth::user()->company_id;
         $trimmedSearchTerm = trim($this->searchTerm);
-        $query = EmployeeDetails::where('company_id', $companyId);
+        $query = EmployeeDetails::select('employee_details.*', 'emp_departments.department')
+        ->leftJoin('emp_departments', 'employee_details.dept_id', '=', 'emp_departments.dept_id')
+        ->where('employee_details.company_id', $companyId);
  
     // Filter by selected department if one is selected
     if ($this->selectedDepartment) {
@@ -99,7 +101,7 @@ class EmployeeList extends Component
                 ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
         })
         ->orderBy('first_name', 'asc')->get();
- 
+      
         $this->peopleFound = $this->employeeDetails->isNotEmpty();
     }
  
