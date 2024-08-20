@@ -5380,3 +5380,26 @@ option {
   }
 
 
+
+
+  .settings-profile-image{
+    border-radius: 50%; 
+    height: 90px;
+    width: 90px;
+  }
+  .chat-icon{
+    font-size: 17px;
+    color: var(--dark);
+    cursor: pointer;
+  }
+  .page-title{
+    color: var(--main-heading-color); 
+    width: -webkit-fill-available; 
+  }
+  .title-page{
+    margin-left: -10px;
+    font-weight: 500;
+    color: var(--main-heading-color);
+    justify-content: center; 
+    font-size: var(--main-headings-font-size);
+  }
