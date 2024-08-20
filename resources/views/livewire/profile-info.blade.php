@@ -717,12 +717,6 @@
                                     Resign
                                 </div>
                             </div>
-                            <div class="col">
-                                <div style="margin-top: 2%; font-size: 12px; color: indigo; margin-right: 3px">
-                                    <button style="background-color: blue; color: white; border-radius: 5px">View
-                                        TimeLine</button>
-                                </div>
-                            </div>
                         </div>
                         @php
                         // Fetch the manager details directly in Blade
