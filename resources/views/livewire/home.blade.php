@@ -160,17 +160,23 @@
                                 <p style="font-size:12px;">{{$currentDate}}</p>
                                 <p style="margin-top: 10px; color: #778899; font-size: 11px;">
                                     @php
-                                    $EmployeeStartshiftTime=$employeeShiftDetails->shift_start_time;
-                                    $EmployeeEndshiftTime=$employeeShiftDetails->shift_end_time;
-                                    // Create DateTime objects
-                                    $startShiftTime = new DateTime($EmployeeStartshiftTime);
-                                    $endShiftTime = new DateTime($EmployeeEndshiftTime);
-                                    // Format the times
-                                    $formattedStartShiftTime = $startShiftTime->format('h:i a');
-                                    $formattedEndShiftTime = $endShiftTime->format('H:i a');
+                                        // Fetch shift times
+                                        $EmployeeStartshiftTime = $employeeShiftDetails->shift_start_time;
+                                        $EmployeeEndshiftTime = $employeeShiftDetails->shift_end_time;
+                                
+                                        // Default times
+                                        $defaultStartShiftTime = '10:00 am';
+                                        $defaultEndShiftTime = '7:00 pm';
+                                
+                                        // Format the times if they are not null
+                                        $formattedStartShiftTime = $EmployeeStartshiftTime ? (new DateTime($EmployeeStartshiftTime))->format('h:i a') : $defaultStartShiftTime;
+                                        $formattedEndShiftTime = $EmployeeEndshiftTime ? (new DateTime($EmployeeEndshiftTime))->format('h:i a') : $defaultEndShiftTime;
+                                
+                                        
                                     @endphp
                                     {{$currentDay}} | {{$formattedStartShiftTime}} to {{$formattedEndShiftTime}}
                                 </p>
+                                
                                 <div style="font-size: 14px; display: flex;margin-top:2em;">
                                     <img src="/images/stopwatch.png" class="me-4" alt="Image Description" style="width: 2.7em;">
                                     <p id="current-time" style="margin: auto 0;"></p>
