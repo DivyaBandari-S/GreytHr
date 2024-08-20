@@ -370,7 +370,6 @@
     $flag=0;
     $isFilter=1;
     $isHoliday=0;
-    $todayYear = date('Y');
     $leaveTake=0;
     $currentMonth=date('n');
     if(isset($attendanceYear) && $attendanceYear !== null) {
@@ -390,9 +389,9 @@
                 <i class="fa fa-download" aria-hidden="true"></i>
             </button>
             <select name="year" wire:model="selectedYear" wire:change="updateselectedYear">
-                <option value="{{$todayYear-1}}">{{$todayYear-1}}</option>
-                <option value="{{$todayYear}}">{{$todayYear}}</option>
-                <option value="{{$todayYear+1}}">{{$todayYear+1}}</option>
+                <option value="{{$todayyear-1}}">{{$todayyear-1}}</option>
+                <option value="{{$todayyear}}">{{$todayyear}}</option>
+                <option value="{{$todayyear+1}}">{{$todayyear+1}}</option>
             </select>
             @php
             $attendanceYearAsNumber = intval($attendanceYear);
@@ -623,7 +622,7 @@
     </div>
     <div class="Attendance col-md-9">
         @if($attendanceYear==0)
-        <p style="background:#ebf5ff; padding:5px 15px;font-size:0.755rem;">Attendance for {{date("M", mktime(0, 0, 0, $currentMonth, 1))}},{{$todayYear}}</p>
+        <p style="background:#ebf5ff; padding:5px 15px;font-size:0.755rem;">Attendance for {{date("M", mktime(0, 0, 0, $currentMonth, 1))}},{{$todayyear}}</p>
         @else
         <p style="background:#ebf5ff; padding:5px 15px;font-size:0.755rem;">Attendance for {{date("M", mktime(0, 0, 0, $currentMonth, 1))}},{{$currentYear}}</p>
         @endif

@@ -50,8 +50,13 @@ class AttendenceMasterDataNew extends Component
 
     public $attendanceYear;
 
-    
+    public $todayyear;
 
+    public function mount()
+    {
+        $this->todayyear = date('Y');
+        
+    }
     //This method will update the selected year from the dropdown
     public function updateselectedYear()
     {
@@ -72,7 +77,8 @@ class AttendenceMasterDataNew extends Component
                     $searching = 1;
                     $currentDate = now()->toDateString();
                     $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-                    $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->get();
+                    $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->where('employee_status','active')->get();
+                   
                     $nameFilter = $this->search; 
                     
                     $filteredEmployees = $employees->filter(function ($employee) use ($nameFilter) {
@@ -101,7 +107,7 @@ class AttendenceMasterDataNew extends Component
     {
         try {
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status','active')->get();
             $currentMonth = date('F');
             $currentMonth1 = date('n');
             $AttendanceYear = $this->selectedYear;
@@ -254,6 +260,7 @@ class AttendenceMasterDataNew extends Component
         $managerId = $loggedInEmpId;
         $employees = EmployeeDetails::where('manager_id', $managerId)
         ->select('emp_id', 'first_name', 'last_name','job_role','job_location')
+        ->where('employee_status','active')
         ->get();
         if($this->searching==1)
         {
