@@ -89,7 +89,7 @@
                     <ol class="breadcrumb d-flex align-items-center ">
                         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                         <li class="breadcrumb-item"><a  href="{{ route('leave-balance') }}">Leave Balance</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Casual Leave</li>
+                        <li class="breadcrumb-item active" aria-current="page">Sick Leave</li>
                     </ol>
                 </div>
             </div>
@@ -134,9 +134,9 @@
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Granted</div>
-                            @foreach ($employeeLeaveBalances as $leaveBalance)
-                            <div class="info-value">{{ $leaveBalance->leave_balance }}</div>
-                            @endforeach
+
+                            <div class="info-value">{{ $employeeLeaveBalances }}</div>
+
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Availed</div>
@@ -179,16 +179,17 @@
                                     <td>{{ $balance->reason }}</td>
                                 </tr>
                                 @endforeach
-                                @foreach($employeeLeaveBalances as $index => $balance)
+                                @foreach($leaveGrantedData as $index => $balance)
                                 <tr>
                                     <td>{{ $balance->status }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
-                                    <td>{{ $balance->leave_balance }}</td>
-                                    <td>Annual Grant for the Period</td>
+                                    <td>{{ $employeeLeaveBalances }}</td>
+                                    <td>Annual Grant for the present year </td>
                                 </tr>
                                 @endforeach
+
                             </tbody>
                         </table>
                     </div>
@@ -199,10 +200,24 @@
     </div>
 </div>
 <script>
-    var ctx = document.getElementById('sickLeaveChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: <?php echo json_encode($chartData); ?>,
-        options: <?php echo json_encode($chartOptions); ?>
+    // Ensure that Chart.js is properly loaded
+    document.addEventListener("DOMContentLoaded", function() {
+        // Convert PHP variables to JavaScript
+        var chartData = @json($chartData);
+        var chartOptions = @json($chartOptions);
+
+        // Get the context of the canvas element
+        var ctx = document.getElementById('sickLeaveChart').getContext('2d');
+
+        // Create the chart
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: chartOptions
+        });
+
+        console.log(chartData);
     });
 </script>
+
+
