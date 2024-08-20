@@ -84,7 +84,21 @@ class SickLeaveBalances extends Component
         // You might need to customize this based on your actual session values
         return (int) str_replace('Session ', '', $session);
     }
-    
+    public function yearDropDown()
+    {
+        try {
+            $currentYear = Carbon::now()->format('Y');
+            if ($this->isTrue($currentYear - 2)) {
+            } elseif ($this->isTrue($currentYear - 1)) {
+            } elseif ($this->isTrue($currentYear)) {
+            } else {
+            }
+        } catch (\Exception $e) {
+            // Add an error message or log a message indicating that an error occurred
+            $errorMessage = 'An error occurred in yearDropDown() method: ' . $e->getMessage();
+            $this->addError('session', 'An error occurred. Please try again later.');
+        }
+    }
     public function render()
     {
         try{
@@ -95,7 +109,7 @@ class SickLeaveBalances extends Component
             ->where('leave_type', 'Sick Leave')
             ->get();
             
-            // Now $employeeLeaveBalances contains all the rows from employee_leave_balances 
+            // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
             // where emp_id matches and leave_type is "Sick Leave"
             $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
             ->where('leave_type', 'Sick Leave')

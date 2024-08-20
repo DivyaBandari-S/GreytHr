@@ -99,21 +99,7 @@ class CasualLeaveBalance extends Component
         // You might need to customize this based on your actual session values
         return (int) str_replace('Session ', '', $session);
     }
-    public function yearDropDown()
-    {
-        try {
-            $currentYear = Carbon::now()->format('Y');
-            if ($this->isTrue($currentYear - 2)) {
-            } elseif ($this->isTrue($currentYear - 1)) {
-            } elseif ($this->isTrue($currentYear)) {
-            } else {
-            }
-        } catch (\Exception $e) {
-            // Add an error message or log a message indicating that an error occurred
-            $errorMessage = 'An error occurred in yearDropDown() method: ' . $e->getMessage();
-            $this->addError('session', 'An error occurred. Please try again later.');
-        }
-    }
+    
     public function render()
     {
         $this->yearDropDown();
