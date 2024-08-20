@@ -105,7 +105,7 @@ class Attendance extends Component
     public $regularised_date_to_check;
 
     public $avgWorkingHrsForModalTitle;
-    public $legend=false;
+    public $legend=true;
     public $record;
 
     public $dateToCheck;
