@@ -48,7 +48,7 @@
                     <li><a href="/formdeclaration">IT Declaration</a></li>
                     <li><a href="/reimbursement">Reimbursement</a></li>
                     <li><a href="/investment">Proof of Investment</a></li>
-                    <li><a href="//salary-revision">Salary Revision</a></li>
+                    <li><a href="/salary-revision">Salary Revision</a></li>
                 </ul>
             </li>
             <li>
@@ -138,12 +138,14 @@
         <!-- NAVBAR -->
         <nav>
             <i class='fas fa-bars toggle-sidebar'></i>
-            <form action="#">
+            <h6 class="mx-0 my-0 page-title"> @livewire('page-title')
+            </h6>
+            {{-- <form action="#">
                 <div class="input-group">
                     <input type="text" class="form-control" aria-label="Search..." placeholder="Search...">
                     <span class="input-group-text"><i class='fa fa-search icon'></i></span>
                 </div>
-            </form>
+            </form> --}}
             <div>
                 @livewire('notification')
             </div>
@@ -154,7 +156,13 @@
                     @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
                     <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="">
                     @else
+                    @if($loginEmployeeProfile->gender=='Male')
+                    <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="">
+                    @elseif($loginEmployeeProfile->gender=='Female')
+                    <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="">
+                    @else
                     <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="">
+                    @endif
                     @endif
                 </div>
                 <ul class="profile-link">

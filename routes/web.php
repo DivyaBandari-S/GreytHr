@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\AllTeamTimeSheets;
 use App\Livewire\LeaveFormPage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -267,10 +268,11 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/review-pending-regularation/{id}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
     Route::get('/time-sheet', EmpTimeSheet::class)->name('time-sheet');
+    Route::get('/team-time-sheets', AllTeamTimeSheets::class)->name('team-time-sheets');
 
 
     //Feeds Module
-    Route::get('/Feeds', Feeds::class);
+    Route::get('/Feeds', Feeds::class)->name('Feeds');
     Route::get('/events', Activities::class);
     Route::get('/everyone', Everyone::class);
 

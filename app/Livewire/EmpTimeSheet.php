@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Carbon\Carbon;
 use App\Models\TimeSheet;
+use App\Models\Task;
 use App\Models\ClientsEmployee;
 use App\Models\Client;
 use App\Models\EmployeeDetails;
@@ -24,10 +25,9 @@ class EmpTimeSheet extends Component
     public $timeSheet, $timesheets, $employeeName;
     public $tab = "timeSheet";
 
-    public $defaultTimesheetEntry = "true";
+    public $defaultTimesheetEntry = "";
 
     public $allTotalHours, $totalDays, $allDefaultTotalHours, $defaultTotalDays;
-
 
     public function getTotalDaysAndHours()
     {
@@ -83,14 +83,15 @@ class EmpTimeSheet extends Component
     public function mount()
     {
         $this->auth_empId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeName = EmployeeDetails::where('emp_id', $this->auth_empId )->first();
+        $this->employeeName = EmployeeDetails::where('emp_id', $this->auth_empId)->first();
         $this->timesheets = Timesheet::where('emp_id', $this->auth_empId)->orderBy('created_at', 'desc')->get();
+        $this->start_date_string = now()->startOfWeek(\Carbon\Carbon::MONDAY)->format('Y-m-d');
         $this->defaultTimeSheetaddTask();
     }
 
     public function addTask()
     {
-        $this->defaultTimesheetEntry = "false";
+        $this->defaultTimesheetEntry = "ts";
         $this->default_time_sheet_type = "";
         $this->date_and_day_with_tasks = [];
         // Parse start date and validate
@@ -186,15 +187,57 @@ class EmpTimeSheet extends Component
                 $hoursArray = (string)$hours;
                 $tasksArray = (string)$tasks;
             }
-
+            $empId = auth()->guard('emp')->user()->emp_id;
             // Add day with its default or existing data to date_and_day_with_tasks
-            $this->date_and_day_with_tasks[] = [
+            $this->tasks = Task::with('client')
+                ->where('assignee', 'LIKE', "%$empId%")
+                ->whereNotNull('client_id')
+                ->get();
+
+            $taskData = [
                 'date' => $date->toDateString(),
-                'day' => $date->format('l'), // Format day name (e.g., Monday)
+                'day' => $date->format('l'),
                 'hours' => $hoursArray,
                 'tasks' => $tasksArray,
-                'clients' => $this->client_names->toArray(), // Convert collection to array if needed
+                'clients' => $this->client_names->toArray(),
+                'remarks' => array_fill(0, count($this->client_names), []),
+                'projects' => array_fill(0, count($this->client_names), []),
+                'maxHeights' => [] // Added to store maximum heights
             ];
+
+            foreach ($this->tasks as $task) {
+                $taskStartDate = Carbon::parse($task->created_at);
+                $taskEndDate = Carbon::parse($task->due_date);
+                $taskDateRange = $taskStartDate->toPeriod($taskEndDate);
+
+                foreach ($taskDateRange as $taskDate) {
+                    if ($taskDate->toDateString() === $date->toDateString()) {
+                        $clientName = $task->client ? $task->client->client_name : 'No Client';
+                        $index = array_search($clientName, $this->client_names->toArray());
+
+                        if ($index !== false) {
+                            $taskData['remarks'][$index][] = $task->task_name;
+                            $taskData['projects'][$index][] = $task->project_name;
+                        }
+                    }
+                }
+            }
+
+            // Calculate max heights for each client
+            foreach ($taskData['clients'] as $clientIndex => $client) {
+                $projectsHeight = isset($taskData['projects'][$clientIndex])
+                    ? count($taskData['projects'][$clientIndex]) * 30 // 24px per project item
+                    : 0;
+
+                $remarksHeight = isset($taskData['remarks'][$clientIndex])
+                    ? count($taskData['remarks'][$clientIndex]) * 30 // 24px per remark item
+                    : 0;
+
+                // Determine maximum height
+                $taskData['maxHeights'][$clientIndex] = max($projectsHeight, $remarksHeight);
+            }
+
+            $this->date_and_day_with_tasks[] = $taskData;
         }
 
         // Sort the array based on dates if necessary
@@ -204,42 +247,187 @@ class EmpTimeSheet extends Component
 
         // Calculate total hours and other necessary calculations
         $this->getTotalDaysAndHours();
+        $this->auth_empId = auth()->guard('emp')->user()->emp_id;
+        $existingRecord = TimeSheet::where('emp_id', $this->auth_empId)
+            ->where(function ($query) {
+                $query->where('start_date', '<=', $this->start_date->format('Y-m-d'))
+                    ->where('end_date', '>=', $this->end_date->format('Y-m-d'));
+            })
+            ->first();
+        if ($existingRecord) {
+            if ($existingRecord->submission_status == "submitted") {
+                session()->flash('message-aets', 'A time sheet already exists for the selected date range.');
+            }
+        }
     }
 
     public $default_date_and_day_with_tasks = [];
     public $default_start_date, $default_end_date, $defaultTimeSheet;
     public $default_start_date_string = "";
     public $default_time_sheet_type = "default";
+    public function exportCSV()
+    {
+        // Determine the timesheet data based on the entry type
+        if ($this->defaultTimesheetEntry === "") {
+            $timeSheetData = $this->default_date_and_day_with_tasks;
+        } elseif ($this->defaultTimesheetEntry === "ts") {
+            $timeSheetData = $this->date_and_day_with_tasks;
+        } else {
+            return response()->json(['error' => 'Invalid timesheet entry'], 400);
+        }
 
+        // Initialize CSV columns
+        $csvColumns = ["Date", "Day", "Hours", "Tasks"];
+
+        // Determine if clients, projects, or remarks should be included
+        $includeClients = !empty(array_column($timeSheetData, 'clients'));
+        $includeProjects = !empty(array_filter(array_column($timeSheetData, 'projects')));
+        $includeRemarks = !empty(array_filter(array_column($timeSheetData, 'remarks')));
+
+        if ($includeClients) $csvColumns[] = "Client";
+        if ($includeProjects) $csvColumns[] = "Projects";
+        if ($includeRemarks) $csvColumns[] = "Remarks";
+
+        // Create the CSV header row
+        $csvData = implode(',', array_map('strval', $csvColumns)) . "\n";
+
+        // Populate the CSV data rows
+        foreach ($timeSheetData as $task) {
+            $hours = is_array($task['hours']) ? implode(';', $task['hours']) : $task['hours'];
+            $tasks = is_array($task['tasks']) ? implode(';', $task['tasks']) : $task['tasks'];
+
+            $rowData = [
+                $task['date'],
+                $task['day'],
+                $hours,
+                $tasks
+            ];
+
+            if ($includeClients) {
+                $clients = is_array($task['clients']) ? implode(';', $task['clients']) : $task['clients'];
+                $rowData[] = $clients;
+            }
+            if ($includeProjects) {
+                $projects = is_array($task['projects']) ? implode(';', array_map(fn ($p) => is_array($p) ? implode(';', $p) : $p, $task['projects'])) : $task['projects'];
+                $rowData[] = $projects;
+            }
+            if ($includeRemarks) {
+                $remarks = is_array($task['remarks']) ? implode(';', array_map(fn ($r) => is_array($r) ? implode(';', $r) : $r, $task['remarks'])) : $task['remarks'];
+                $rowData[] = $remarks;
+            }
+
+            // Escape double quotes and commas for CSV
+            $csvData .= '"' . implode('","', array_map(fn ($field) => str_replace('"', '""', $field), $rowData)) . '"' . "\n";
+        }
+
+        // Create a temporary file for the CSV data
+        $filename = 'timesheet.csv';
+        $tempFile = tempnam(sys_get_temp_dir(), $filename);
+        file_put_contents($tempFile, $csvData);
+
+        return response()->download($tempFile, $filename)->deleteFileAfterSend(true);
+    }
+
+    public function exportExcel()
+    {
+        // Determine the timesheet data based on the entry type
+        if ($this->defaultTimesheetEntry === "") {
+            $timeSheetData = $this->default_date_and_day_with_tasks;
+        } elseif ($this->defaultTimesheetEntry === "ts") {
+            $timeSheetData = $this->date_and_day_with_tasks;
+        } else {
+            return response()->json(['error' => 'Invalid timesheet entry'], 400);
+        }
+
+        // Create a new Excel file
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Initialize columns
+        $columns = ['A' => 'Date', 'B' => 'Day', 'C' => 'Hours', 'D' => 'Tasks'];
+        $colIndex = 4;
+
+        // Determine if clients, projects, or remarks should be included
+        $includeClients = !empty(array_column($timeSheetData, 'clients'));
+        $includeProjects = !empty(array_filter(array_column($timeSheetData, 'projects')));
+        $includeRemarks = !empty(array_filter(array_column($timeSheetData, 'remarks')));
+
+        if ($includeClients) $columns[chr(++$colIndex + 64)] = 'Client';
+        if ($includeProjects) $columns[chr(++$colIndex + 64)] = 'Projects';
+        if ($includeRemarks) $columns[chr(++$colIndex + 64)] = 'Remarks';
+
+        // Set the header row
+        foreach ($columns as $col => $header) {
+            $sheet->setCellValue("{$col}1", $header);
+        }
+
+        // Fill the data rows
+        $row = 2;
+        foreach ($timeSheetData as $task) {
+            $sheet->setCellValue("A{$row}", $task['date']);
+            $sheet->setCellValue("B{$row}", $task['day']);
+            $sheet->setCellValue("C{$row}", is_array($task['hours']) ? implode(';', $task['hours']) : $task['hours']);
+            $sheet->setCellValue("D{$row}", is_array($task['tasks']) ? implode(';', $task['tasks']) : $task['tasks']);
+
+            if ($includeClients) {
+                $sheet->setCellValue(chr(65 + ($includeClients ? 4 : 0)) . $row, is_array($task['clients']) ? implode(';', $task['clients']) : $task['clients']);
+            }
+            if ($includeProjects) {
+                $sheet->setCellValue(chr(65 + ($includeClients ? 5 : 4)) . $row, is_array($task['projects']) ? implode(';', array_map(fn ($p) => is_array($p) ? implode(';', $p) : $p, $task['projects'])) : $task['projects']);
+            }
+            if ($includeRemarks) {
+                $sheet->setCellValue(chr(65 + ($includeClients ? ($includeProjects ? 6 : 5) : ($includeProjects ? 5 : 4))) . $row, is_array($task['remarks']) ? implode(';', array_map(fn ($r) => is_array($r) ? implode(';', $r) : $r, $task['remarks'])) : $task['remarks']);
+            }
+
+            $row++;
+        }
+
+        // Create a temporary file for the Excel data
+        $filename = 'timesheet.xlsx';
+        $tempFile = tempnam(sys_get_temp_dir(), $filename);
+
+        // Write the Excel file to the temporary file
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save($tempFile);
+
+        // Return the Excel file as a download response
+        return response()->download($tempFile, $filename)->deleteFileAfterSend(true);
+    }
+
+    public function updatedStartDateString($value)
+    {
+        // This function will be called when the date changes
+        if ($this->defaultTimesheetEntry === "") {
+            $this->defaultTimesheetEntry = "ts"; // Update to "ts" when a date is selected
+            $this->start_date_string = $value; // Update the start date string
+        }
+    }
+
+    public $tasks,$dTasks;
     public function defaultTimeSheetaddTask()
     {
-        $this->default_date_and_day_with_tasks = [];
         $this->default_start_date_string = now()->startOfWeek(Carbon::MONDAY)->toDateString();
-        // Parse start date and validate
         $this->default_start_date = Carbon::parse($this->default_start_date_string)->startOfDay();
 
-        // Adjust start date if it's in the future
         if ($this->default_start_date->isFuture()) {
             $this->default_start_date = now()->startOfDay();
         }
 
-        // Determine end date based on time sheet type
         if ($this->default_time_sheet_type === 'default') {
             $this->default_start_date->startOfWeek(Carbon::MONDAY);
             $this->default_end_date = $this->default_start_date->copy()->addDays(6);
         }
-        // Ensure end date is not in the future
+
         if ($this->default_end_date->isFuture()) {
             $this->default_end_date = now()->endOfDay();
         }
 
-        // Retrieve client names for the authenticated employee
+
         $this->auth_empId = auth()->guard('emp')->user()->emp_id;
         $this->clients = ClientsEmployee::with('client')->where('emp_id', $this->auth_empId)->get();
         $clientIds = $this->clients->pluck('client_id');
         $this->client_names = Client::whereIn('client_id', $clientIds)->pluck('client_name');
 
-        // Fetch existing time sheet data from the database if needed
         $this->defaultTimeSheet = TimeSheet::where('emp_id', $this->auth_empId)
             ->where(function ($query) {
                 $query->whereBetween('start_date', [
@@ -256,8 +444,14 @@ class EmpTimeSheet extends Component
                     });
             })
             ->first();
+        $empId = auth()->guard('emp')->user()->emp_id;
 
-        // Initialize days based on the selected time_sheet_type
+        $this->dTasks = Task::with('client')
+            ->where('assignee', 'LIKE', "%$empId%")
+            ->whereNotNull('client_id')
+            ->get();
+
+
         for ($date = $this->default_start_date->copy(); $date->lte($this->default_end_date); $date->addDay()) {
             // Set default hours based on the day of the week
             $defaultHours = $date->isWeekend() ? 0 : 9;
@@ -266,8 +460,8 @@ class EmpTimeSheet extends Component
             $hours = $defaultHours;
             $tasks = '';
 
-            if ($this->defaultTimeSheet && $this->defaultTimeSheet->date_and_day_with_tasks) {
-                $existingTasks = json_decode($this->defaultTimeSheet->date_and_day_with_tasks, true);
+            if ($this->defaultTimeSheet && $this->defaultTimeSheet->default_date_and_day_with_tasks) {
+                $existingTasks = json_decode($this->defaultTimeSheet->default_date_and_day_with_tasks, true);
 
                 // Check if there is existing data for the current date
                 foreach ($existingTasks as $task) {
@@ -291,25 +485,64 @@ class EmpTimeSheet extends Component
                 $hoursArray = (string)$hours;
                 $tasksArray = (string)$tasks;
             }
-
+            $empId = auth()->guard('emp')->user()->emp_id;
             // Add day with its default or existing data to date_and_day_with_tasks
-            $this->default_date_and_day_with_tasks[] = [
+           
+            $defaultTaskData = [
                 'date' => $date->toDateString(),
-                'day' => $date->format('l'), // Format day name (e.g., Monday)
+                'day' => $date->format('l'),
                 'hours' => $hoursArray,
                 'tasks' => $tasksArray,
-                'clients' => $this->client_names->toArray(), // Convert collection to array if needed
+                'clients' => $this->client_names->toArray(),
+                'remarks' => array_fill(0, count($this->client_names), []),
+                'projects' => array_fill(0, count($this->client_names), []),
+                'maxHeights' => [] // Added to store maximum heights
             ];
+
+            foreach ($this->dTasks as $task) {
+                $taskStartDate = Carbon::parse($task->created_at);
+                $taskEndDate = Carbon::parse($task->due_date);
+                $taskDateRange = $taskStartDate->toPeriod($taskEndDate);
+
+                foreach ($taskDateRange as $taskDate) {
+                    if ($taskDate->toDateString() === $date->toDateString()) {
+                        $clientName = $task->client ? $task->client->client_name : 'No Client';
+                        $index = array_search($clientName, $this->client_names->toArray());
+
+                        if ($index !== false) {
+                            $defaultTaskData['remarks'][$index][] = $task->task_name;
+                            $defaultTaskData['projects'][$index][] = $task->project_name;
+                        }
+                    }
+                }
+            }
+
+            // Calculate max heights for each client
+            foreach ($defaultTaskData['clients'] as $clientIndex => $client) {
+                $projectsHeight = isset($defaultTaskData['projects'][$clientIndex])
+                    ? count($defaultTaskData['projects'][$clientIndex]) * 30 // 24px per project item
+                    : 0;
+
+                $remarksHeight = isset($defaultTaskData['remarks'][$clientIndex])
+                    ? count($defaultTaskData['remarks'][$clientIndex]) * 30 // 24px per remark item
+                    : 0;
+
+                // Determine maximum height
+                $defaultTaskData['maxHeights'][$clientIndex] = max($projectsHeight, $remarksHeight);
+            }
+
+            $this->default_date_and_day_with_tasks[] = $defaultTaskData;
         }
 
-        // Sort the array based on dates if necessary
         usort($this->default_date_and_day_with_tasks, function ($a, $b) {
             return strtotime($a['date']) - strtotime($b['date']);
         });
 
-        // Calculate total hours and other necessary calculations
         $this->defaultGetTotalDaysAndHours();
+        $this->auth_empId = auth()->guard('emp')->user()->emp_id;
     }
+
+
     // Method to update hours based on input changes
 
     public function saveTimeSheet()
@@ -369,6 +602,19 @@ class EmpTimeSheet extends Component
         // Validate with custom error messages
         $this->validate($baseRules, $customMessages);
 
+        $this->auth_empId = auth()->guard('emp')->user()->emp_id;
+
+        $existingRecord = TimeSheet::where('emp_id', $this->auth_empId)
+            ->where(function ($query) {
+                $query->where('start_date', '<=', $this->end_date->format('Y-m-d'))
+                    ->where('end_date', '>=', $this->start_date->format('Y-m-d'));
+            })
+            ->first();
+        if ($existingRecord) {
+            if ($existingRecord->submission_status == "submitted") {
+                session()->flash('message-aets', 'A time sheet already exists for the selected date range.');
+            }
+        }
         // Further logic for saving timesheet can go here, e.g., checking for overlapping records
     }
 
@@ -413,26 +659,24 @@ class EmpTimeSheet extends Component
         $customMessages = [];
         if (count($this->client_names) > 0) {
             foreach ($this->client_names as $clientIndex => $clientName) {
-                $customMessages['default_date_and_day_with_tasksdate_and_day_with_tasks.*.hours.' . $clientIndex . '.required'] = 'The hour field is required.';
-                $customMessages['default_date_and_day_with_tasksdate_and_day_with_tasks.*.hours.' . $clientIndex . '.numeric'] = 'The hour field must be a number.';
-                $customMessages['default_date_and_day_with_tasksdate_and_day_with_tasks.*.hours.' . $clientIndex . '.multiple_of'] = 'The hour field must be a multiple of 0.5.';
-                $customMessages['default_date_and_day_with_tasksdate_and_day_with_tasks.*.hours.' . $clientIndex . '.min'] = 'The hour field must be at least 0.';
-                $customMessages['default_date_and_day_with_tasksdate_and_day_with_tasks.*.hours.' . $clientIndex . '.max'] = 'The hour field may not be greater than 24.0.';
+                $customMessages['default_date_and_day_with_tasks.*.hours.' . $clientIndex . '.required'] = 'The hour field is required.';
+                $customMessages['default_date_and_day_with_tasks.*.hours.' . $clientIndex . '.numeric'] = 'The hour field must be a number.';
+                $customMessages['default_date_and_day_with_tasks.*.hours.' . $clientIndex . '.multiple_of'] = 'The hour field must be a multiple of 0.5.';
+                $customMessages['default_date_and_day_with_tasks.*.hours.' . $clientIndex . '.min'] = 'The hour field must be at least 0.';
+                $customMessages['default_date_and_day_with_tasks.*.hours.' . $clientIndex . '.max'] = 'The hour field may not be greater than 24.0.';
             }
         } else {
-            $customMessages['default_date_and_day_with_tasksdate_and_day_with_tasks.*.hours.required'] = 'The hour field is required.';
-            $customMessages['default_date_and_day_with_tasksdate_and_day_with_tasks.*.hours.numeric'] = 'The hour field must be a number.';
-            $customMessages['default_date_and_day_with_tasksdate_and_day_with_tasks.*.hours.multiple_of'] = 'The hour field must be a multiple of 0.5.';
-            $customMessages['default_date_and_day_with_tasksdate_and_day_with_tasks.*.hours.min'] = 'The hour field must be at least 0.';
-            $customMessages['default_date_and_day_with_tasksdate_and_day_with_tasks.*.hours.max'] = 'The hour field may not be greater than 24.0.';
+            $customMessages['default_date_and_day_with_tasks.*.hours.required'] = 'The hour field is required.';
+            $customMessages['default_date_and_day_with_tasks.*.hours.numeric'] = 'The hour field must be a number.';
+            $customMessages['default_date_and_day_with_tasks.*.hours.multiple_of'] = 'The hour field must be a multiple of 0.5.';
+            $customMessages['default_date_and_day_with_tasks.*.hours.min'] = 'The hour field must be at least 0.';
+            $customMessages['default_date_and_day_with_tasks.*.hours.max'] = 'The hour field may not be greater than 24.0.';
         }
 
         // Validate with custom error messages
         $this->validate($baseRules, $customMessages);
-
-        // Further logic for saving timesheet can go here, e.g., checking for overlapping records
+        $this->auth_empId = auth()->guard('emp')->user()->emp_id;
     }
-
     public function checkSubtotalExceedsLimit()
     {
         $exceedsLimit = false;
@@ -470,6 +714,15 @@ class EmpTimeSheet extends Component
     {
         // Validate the data
         $this->saveTimeSheet();
+        $startDate = Carbon::parse($this->start_date);
+        $endDate = Carbon::parse($this->end_date);
+        $daysDifference = $endDate->diffInDays($startDate);
+        if ($daysDifference !== 6) { // 6 because the range includes both start and end dates
+            session()->flash('error-dr', 'Time sheet filling is not yet complete, you cannot submit at this time.');
+            return;
+        }
+
+
         if (count($this->client_names) > 0) {
             $exceedsLimit = $this->checkSubtotalExceedsLimit();
 
@@ -478,32 +731,35 @@ class EmpTimeSheet extends Component
                 return;
             }
         }
+        // Check if the date range is exactly 7 days
 
         // Check for overlapping records in the database
         $existingRecord = TimeSheet::where('emp_id', $this->auth_empId)
             ->where(function ($query) {
-                $query->where('start_date', '<=', $this->end_date)
-                    ->where('end_date', '>=', $this->start_date);
+                $query->where('start_date', '<=', $this->end_date->format('Y-m-d'))
+                    ->where('end_date', '>=', $this->start_date->format('Y-m-d'));
             })
             ->first();
 
 
 
         if ($existingRecord) {
-            // Update the existing record
-            $existingRecord->update([
-                'start_date' => $this->start_date,
-                'end_date' => $this->end_date,
-                'time_sheet_type' => $this->time_sheet_type,
-                'date_and_day_with_tasks' => json_encode($this->date_and_day_with_tasks),
-                'submission_status' => 'submitted',
-            ]);
-            $this->defaultTimeSheet = "true";
-            $this->default_time_sheet_type = "default";
-            // Set flash message for updating existing record
-            session()->flash('message', 'Time sheet updated successfully!');
+            if ($existingRecord->submission_status == "submitted") {
+                session()->flash('message-aets', 'A time sheet already exists for the selected date range.');
+            } elseif ($existingRecord->submission_status == "saved") {
+                // Insert a new record into the time_sheets table
+                $existingRecord->update([
+                    'date_and_day_with_tasks' => json_encode($this->date_and_day_with_tasks),
+                    'submission_status' => 'submitted',
+                    'approval_status_for_manager' => 'pending',
+                ]);
+                $this->defaultTimesheetEntry = "";
+                $this->default_time_sheet_type = "default";
+
+                // Set flash message for adding new record
+                session()->flash('message-us', 'Timesheet status has been updated to "Submitted".');
+            }
         } else {
-            // Insert a new record into the time_sheets table
             TimeSheet::create([
                 'emp_id' => $this->auth_empId,
                 'start_date' => $this->start_date,
@@ -512,21 +768,91 @@ class EmpTimeSheet extends Component
                 'date_and_day_with_tasks' => json_encode($this->date_and_day_with_tasks),
                 'submission_status' => 'submitted',
             ]);
-            $this->defaultTimeSheet = "true";
+            $this->defaultTimesheetEntry = "true";
             $this->default_time_sheet_type = "default";
 
             // Set flash message for adding new record
             session()->flash('message', 'New time sheet added successfully!');
         }
+        return redirect('/time-sheet');
 
         // Redirect to the timesheet page after saving
-        return redirect('/timesheet-page');
+    }
+    public function save()
+    {
+        // Validate the data
+        $this->saveTimeSheet();
+        $startDate = Carbon::parse($this->start_date);
+        $endDate = Carbon::parse($this->end_date);
+        $daysDifference = $endDate->diffInDays($startDate);
+
+
+        if (count($this->client_names) > 0) {
+            $exceedsLimit = $this->checkSubtotalExceedsLimit();
+
+            if ($exceedsLimit) {
+                // If subtotal exceeds limit, do not proceed further
+                return;
+            }
+        }
+        // Check if the date range is exactly 7 days
+
+        // Check for overlapping records in the database
+        $existingRecord = TimeSheet::where('emp_id', $this->auth_empId)
+            ->where(function ($query) {
+                $query->where('start_date', '<=', $this->end_date->format('Y-m-d'))
+                    ->where('end_date', '>=', $this->start_date->format('Y-m-d'));
+            })
+            ->first();
+
+
+
+        if ($existingRecord) {
+            if ($existingRecord->submission_status == "submitted") {
+                session()->flash('message-aets', 'A time sheet already exists for the selected date range.');
+            } elseif ($existingRecord->submission_status == "saved") {
+                $existingRecord->update([
+                    'date_and_day_with_tasks' => json_encode($this->date_and_day_with_tasks),
+                ]);
+                $this->defaultTimesheetEntry = "true";
+                $this->default_time_sheet_type = "default";
+
+                // Set flash message for adding new record
+                session()->flash('message-u', 'Time sheet updated successfully!');
+            }
+        } else {
+            TimeSheet::create([
+                'emp_id' => $this->auth_empId,
+                'start_date' => $this->start_date->format('Y-m-d'),
+                'end_date' => $this->end_date->format('Y-m-d'),
+                'time_sheet_type' => $this->time_sheet_type,
+                'date_and_day_with_tasks' => json_encode($this->date_and_day_with_tasks),
+                'submission_status' => 'saved',
+            ]);
+            $this->defaultTimesheetEntry = "true";
+            $this->default_time_sheet_type = "default";
+
+            // Set flash message for adding new record
+            session()->flash('message-s', 'Time sheet saved successfully!');
+        }
+        return redirect('/time-sheet');
     }
 
     public function defaultSubmit()
     {
         // Validate the data
         $this->defaultSaveTimeSheet();
+        $startDate = Carbon::parse($this->default_start_date);
+        $endDate = Carbon::parse($this->default_end_date);
+        $daysDifference = $endDate->diffInDays($startDate);
+
+        if ($daysDifference !== 6) { // 6 because the range includes both start and end dates
+            session()->flash('error-dr', 'Time sheet filling is not yet complete, you cannot submit at this time.');
+            return;
+        }
+
+
+
         if (count($this->client_names) > 0) {
             $exceedsLimit = $this->defaultCheckSubtotalExceedsLimit();
 
@@ -536,34 +862,39 @@ class EmpTimeSheet extends Component
             }
         }
 
+        $startDate = Carbon::parse($this->default_start_date);
+        $endDate = Carbon::parse($this->default_end_date);
+        $daysDifference = $endDate->diffInDays($startDate);
+
+
+
         // Check for overlapping records in the database
         $existingRecord = TimeSheet::where('emp_id', $this->auth_empId)
             ->where(function ($query) {
-                $query->where('start_date', '<=', $this->end_date)
-                    ->where('end_date', '>=', $this->start_date);
+                $query->where('start_date', '<=', $this->default_end_date->format('Y-m-d'))
+                    ->where('end_date', '>=', $this->default_start_date->format('Y-m-d'));
             })
             ->first();
 
 
-
         if ($existingRecord) {
-            // Update the existing record
-            $existingRecord->update([
-                'start_date' => $this->default_start_date,
-                'end_date' => $this->default_end_date,
-                'time_sheet_type' => $this->default_time_sheet_type,
-                'date_and_day_with_tasks' => json_encode($this->default_date_and_day_with_tasks),
-                'submission_status' => 'submitted',
-            ]);
 
-            // Set flash message for updating existing record
-            session()->flash('message', 'Time sheet updated successfully!');
+            if ($existingRecord->submission_status == "submitted") {
+                session()->flash('message-aets', 'A time sheet already exists for the selected date range.');
+            } elseif ($existingRecord->submission_status == "saved") {
+                $updateExistingRecord = TimeSheet::where('start_date', $existingRecord->start_date)->first();
+                $updateExistingRecord->update([
+                    'date_and_day_with_tasks' => json_encode($this->default_date_and_day_with_tasks),
+                    "submission_status" => 'submitted',
+                    'approval_status_for_manager' => 'pending',
+                ]);
+                session()->flash('message-us', 'Time sheet status has been updated to "Submitted".');
+            }
         } else {
-            // Insert a new record into the time_sheets table
             TimeSheet::create([
                 'emp_id' => $this->auth_empId,
-                'start_date' => $this->default_start_date,
-                'end_date' => $this->default_end_date,
+                'start_date' => $this->default_start_date->format('Y-m-d'),
+                'end_date' => $this->default_end_date->format('Y-m-d'),
                 'time_sheet_type' => $this->default_time_sheet_type,
                 'date_and_day_with_tasks' => json_encode($this->default_date_and_day_with_tasks),
                 'submission_status' => 'submitted',
@@ -572,10 +903,85 @@ class EmpTimeSheet extends Component
             // Set flash message for adding new record
             session()->flash('message', 'New time sheet added successfully!');
         }
+        return redirect('/time-sheet');
+
 
         // Redirect to the timesheet page after saving
-        return redirect('/timesheet-page');
     }
+
+
+
+    public function defaultSave()
+    {
+        // Validate the data
+        $this->defaultSaveTimeSheet();
+        $startDate = Carbon::parse($this->default_start_date);
+        $endDate = Carbon::parse($this->default_end_date);
+        $daysDifference = $endDate->diffInDays($startDate);
+
+
+
+
+
+
+        if (count($this->client_names) > 0) {
+            $exceedsLimit = $this->defaultCheckSubtotalExceedsLimit();
+
+            if ($exceedsLimit) {
+                // If subtotal exceeds limit, do not proceed further
+                return;
+            }
+        }
+
+        $startDate = Carbon::parse($this->default_start_date);
+        $endDate = Carbon::parse($this->default_end_date);
+        $daysDifference = $endDate->diffInDays($startDate);
+
+
+
+        // Check for overlapping records in the database
+        $existingRecord = TimeSheet::where('emp_id', $this->auth_empId)
+            ->where(function ($query) {
+                $query->where('start_date', '<=', $this->default_end_date->format('Y-m-d'))
+                    ->where('end_date', '>=', $this->default_start_date->format('Y-m-d'));
+            })
+            ->first();
+
+
+
+
+        if ($existingRecord) {
+            if ($existingRecord->submission_status == "submitted") {
+                session()->flash('message-aets', 'A time sheet already exists for the selected date range.');
+            } elseif ($existingRecord->submission_status == "saved") {
+                $existingRecord->update([
+                    'date_and_day_with_tasks' => json_encode($this->default_date_and_day_with_tasks),
+                ]);
+                $this->defaultTimesheetEntry = "true";
+                $this->default_time_sheet_type = "default";
+
+                // Set flash message for adding new record
+                session()->flash('message-u', 'Time sheet updated successfully!');
+            }
+        } else {
+            TimeSheet::create([
+                'emp_id' => $this->auth_empId,
+                'start_date' => $this->default_start_date->format('Y-m-d'),
+                'end_date' => $this->default_end_date->format('Y-m-d'),
+                'time_sheet_type' => $this->time_sheet_type,
+                'date_and_day_with_tasks' => json_encode($this->default_date_and_day_with_tasks),
+                'submission_status' => 'saved',
+            ]);
+            $this->defaultTimesheetEntry = "true";
+            $this->default_time_sheet_type = "default";
+
+            // Set flash message for adding new record
+            session()->flash('message-s', 'Time sheet saved successfully!');
+        }
+        // Redirect to the timesheet page after saving
+        return redirect('/time-sheet');
+    }
+    public $timesheetEntry = false;
 
     public function render()
     {
