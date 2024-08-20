@@ -9,16 +9,14 @@
         </a>
     </div>
     <div>
-        <a href="/users" class="nav-link">
-            <i class='fas fa-comment-dots icon' ></i>
+        <div class="nav-link" onclick="window.location.href='{{ url('/users') }}'">
+            <i class='fas fa-comment-dots chat-icon'></i>
             @if ($chatNotificationCount > 0)
             <span class="badge">
                 {{ $chatNotificationCount }}
             </span>
             @endif
-
-            </i>
-        </a>
+        </div>
     </div>
     <div class="offcanvas offcanvas-end notification-detail-container " style="width: 300px;" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header d-flex justify-content-between align-items-center">

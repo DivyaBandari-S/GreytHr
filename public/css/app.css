@@ -991,139 +991,178 @@ button.close-button {
 .dropdown:hover .dropdown-content {
     display: block;
 }
-/* content slot scrolling */
-.slot {
-    max-height: 88vh;
-    overflow-y: auto;
-    margin: 0;
-    background: #f5f5f5;
-    height: 88vh;
-    overflow-y: auto;
-    font-family: "Montserrat", sans-serif;
-}
-
-.slot::-webkit-scrollbar {
-    width: 7px; /* Set the width of the scrollbar */
-}
-
-.slot::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* Set the color of the thumb */
-    border-radius: 6px; /* Set the border radius of the thumb */
-}
-
-.slot::-webkit-scrollbar-track {
-    background-color: #f5f5f5; /* Set the color of the track */
-}
-
-.slot::-webkit-scrollbar-thumb:hover {
-    background-color: #555; /* Set the color of the thumb on hover */
-}
-.hideMinBar {
-    display: none !important;
-}
-
-.showMinBar {
-    display: block !important;
-}
-.miniBarLogo img {
-    height: auto !important;
-    width: 3em !important;
-}
-.grey-icon {
-    color: grey;
-}
 
 @media only screen and (max-width: 768px) {
     .displayNone {
         display: none !important;
     }
-    .hideMinBar {
-        display: none !important;
-    }
+
     .displayBlock {
         display: block !important;
-    }
-
-    #menu-popup {
-        position: absolute;
-        background: #fff;
-        border: 1px solid #e0dddd;
-        border-radius: 0px;
-        height: auto;
-        width: fit-content;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        top: 3.8em;
-        z-index: 1000;
-    }
-    /* left side menu scroll */
-    #menu-popup {
-        max-height: 400px;
-        overflow-y: auto;
-        scrollbar-width: thin; /* For Firefox */
-        scrollbar-color: #f0f0f0; /* thumb and track color */
-    }
-
-    #menu-popup::-webkit-scrollbar {
-        width: 3px; /* Set the width of the scrollbar */
-    }
-
-    #menu-popup::-webkit-scrollbar-thumb {
-        background-color: #55535333; /* Set the color of the thumb */
-        border-radius: 6px; /* Set the border radius of the thumb */
-    }
-
-    #menu-popup::-webkit-scrollbar-track {
-        background-color: #55535333; /* Set the color of the track */
-    }
-
-    #menu-popup::-webkit-scrollbar-thumb:hover {
-        background-color: #555; /* Set the color of the thumb on hover */
-    }
-}
-
-@media only screen and (min-width: 769px) {
-    .hideHamburger {
-        display: none !important;
-    }
-    .scrollable-container {
-        height: 70%;
-        max-height: 90%;
-        overflow-y: auto;
-    }
-    .scrollable-container::-webkit-scrollbar {
-        width: 2px; /* Set the width of the scrollbar */
-    }
-
-    .scrollable-container::-webkit-scrollbar-thumb {
-        background-color: transparent; /* Set the color of the scrollbar thumb */
-        border-radius: 5px; /* Set the border radius of the thumb */
-    }
-
-    .scrollable-container::-webkit-scrollbar-track {
-        background-color: transparent; /* Set the color of the scrollbar track */
-        border-radius: 5px; /* Set the border radius of the track */
-    }
-}
-
-@media only screen and (min-width: 1440px) {
-    .slot {
-        max-height: 88vh;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-    .left-card-body {
-        width: 230px;
-        padding: 0 5px;
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        max-height: 100vh;
     }
 }
 /* end of app.blade */
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
+.cancel-btn:hover
+        {
+            background-color: rgb(2, 17, 79);
+            color:white;
+        }
+.toggle-box-container-who-is-in {
+    float: right;
+    display: flex;
+    align-items: center;
+  }
+  .checkbox-label-who-is-in {
+    font-size: 12px;
+    /* Text size */
+    /* Text color */
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    /* Center items vertically */
+  }
+
+  .checkbox-label-who-is-in input {
+    margin-right: 5px;
+    /* Space between checkbox and text */
+  }
+
+
+  .wide-short-container-who-is-in {
+    width: 100%;
+    /* Adjust width as needed */
+    height: 80px;
+    /* Adjust height as needed */
+    background-color: transparent;
+    /* Background color */
+    border: 1px solid rgb(211, 211, 211);
+    /* Border */
+    border-radius: 5px;
+    /* Rounded corners */
+    margin-top: 50px;
+    /* Adjust spacing as needed */
+    padding: 10px;
+    /* Padding inside the container */
+
+
+  }
+
+
+.switch-who-is-in {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    /* Reduced width */
+    height: 20px;
+    /* Reduced height */
+  }
+  .switch-who-is-in input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider{
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border: 1px solid #666;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    /* Reduced height */
+    width: 12px;
+    /* Reduced width */
+    left: 4px;
+    /* Adjusted to fit smaller slider */
+    bottom: 4px;
+    /* Adjusted to fit smaller slider */
+    background-color: #666;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  input:checked+.slider {
+    background-color: #2196F3;
+    border: 1px solid #2196F3;
+  }
+
+  input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+    background-color: white;
+
+  }
+
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+
+  .total-employee-count-who-is-in{
+    font-size: 12px;
+    /* Text size */
+    color: #059212;
+    /* Text color */
+    padding-bottom: 10px;
+  }
+  .time-range-who-is-in{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .time-range-who-is-in .start-time-who-is-in,
+  .time-range-who-is-in .end-time-who-is-in {
+    font-size: 12px;
+    /* Text size */
+    color: #778899;
+    /* Text color */
+    margin: 0 10px;
+    /* Adjust spacing as needed */
+  }
+  .time-separator-who-is-in{
+    width: 100%;
+    /* Full width */
+    height: 1px;
+    /* Height of the line */
+    background-color: #778899;
+    /* Line color */
+    margin: 0 10px;
+    /* Adjust spacing as needed */
+  }
+  .save-selectshift-button-who-is-in {
+    background-color: transparent;
+    border: 1px solid #007bff;
+    color: #007bff;
+
+  }
+
+  .save-selectshift-button-who-is-in:hover {
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    color: white;
+
+  }
 
 .container-box-for-employee-information-who-is-in {
     width: 82%;
@@ -1232,14 +1271,18 @@ button.close-button {
 
 /* CSS for the table header (thead) */
 .who-is-in-table thead {
+
     border-top: 1px solid #ddd;
     background-color: #ebf5ff;
     color: white;
-    width: 100%;
-    padding: 20px;
-    font-size: 18px;
-    height: 35px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-right: 3px;
+
+
 }
+
 
 input::placeholder {
     font: 0.85rem/3 sans-serif;
@@ -1247,17 +1290,15 @@ input::placeholder {
 
 /* CSS for the table header cells (th) */
 .who-is-in-table th {
-    padding: 5px 20px;
-    text-align: left;
-    width: 100%;
+    font-size: 0.7rem;
     font-weight: normal;
-    font-size: 0.75rem;
     color: #6c757d;
 }
 
+
 .who-is-in-table td {
     padding: 5px 20px;
-    text-align: left;
+    color:#3b4452;
 }
 
 input[type="date"]::before {
@@ -2511,6 +2552,17 @@ input[type="radio"] {
     font-weight: 500;
     margin-bottom: 0;
     color: #000;
+}
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 80px;
+    margin-bottom: 0;
+    color: #000;
+    font-size: 10px;
+
 }
 
 /* //leave apply styles */
@@ -4221,6 +4273,11 @@ select .yearSelect {
     background-color: rgb(2, 17, 79);
     border: none;
 }
+.alert-close{
+    font-size: var(--normal-font-size);
+    background-color: none !important;
+    border: none;
+}
 /* end of styles */
 
 /* team on leave */
@@ -4481,6 +4538,7 @@ option {
 .pointer {
     cursor: pointer;
 }
+
 
 .sideBarIcon {
     font-size: 14px !important;
@@ -5500,3 +5558,15 @@ option {
   }
 
 
+
+
+  .settings-profile-image{
+    border-radius: 50%;
+    height: 90px;
+    width: 90px;
+  }
+  .chat-icon{
+    font-size: 17px;
+    color: var(--dark);
+    cursor: pointer;
+  }

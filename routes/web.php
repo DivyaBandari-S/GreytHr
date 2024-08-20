@@ -109,7 +109,7 @@ use App\Models\Message;
 use App\Models\SalaryRevision;
 use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
-
+use App\Models\HelpDesks;
 Route::group(['middleware' => 'checkAuth'], function () {
 
     Route::get('/emplogin', EmpLogin::class)->name('emplogin');
