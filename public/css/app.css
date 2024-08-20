@@ -4945,9 +4945,9 @@ option {
 /* From Uiverse.io by alexruix */
 .upholidays-card {
     /* width: 190px; */
-    height: 254px;
+    height: 200px;
     border-radius: 20px;
-    background: #fff;
+    background: #f5f5f5;
     position: relative;
     padding: 1.8rem;
     border: 2px solid #c3c6ce;
@@ -4989,13 +4989,13 @@ option {
    .upholidays-text-title {
     font-size: var(--sub-headings-font-size);
     font-weight: 600;
-    text-align: center;
     color: var(--main-heading-color);
    }
 
    /*Hover*/
    .upholidays-card:hover {
     border-color: #02114f;
+    color: white;
     box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
    }
 
@@ -5380,15 +5380,3 @@ option {
   }
 
 
-
-
-  .settings-profile-image{
-    border-radius: 50%; 
-    height: 90px;
-    width: 90px;
-  }
-  .chat-icon{
-    font-size: 17px;
-    color: var(--dark);
-    cursor: pointer;
-  }

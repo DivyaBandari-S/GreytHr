@@ -7,6 +7,7 @@ use App\Models\EmployeeDetails;
 use App\Models\LeaveRequest;
 use App\Models\EmployeeLeaveBalances;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class SickLeaveBalance extends Component
 {
