@@ -12,7 +12,7 @@
         <div class="col-md-6 ">
 
             @if ($showAlert)
-            <div class="d-flex justify-content-center w-100" wire:poll.20s='hideAlert'>
+            <div class="d-flex justify-content-center w-100" wire:poll.5s='hideAlert'>
 
                 <div class="alert alert-success " style="font-size: 12px; ">
                     <p class="mb-0 mr-2"> {{ $alertMessage }}</p>
