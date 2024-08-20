@@ -186,6 +186,10 @@ class Tasks extends Component
     ];
     protected $messages = [
         'newComment.required' => 'Comment is required.',
+        'image.image' => 'File must be an image.',
+        'image.max' => 'Image size must not exceed 2MB.',
+        'file_path.mimes' => 'File must be a document of type: pdf, xls, xlsx, doc, docx, txt, ppt, pptx, gif, jpg, jpeg, png.',
+        'file_path.max' => 'Document size must not exceed 2MB.',
 
     ];
     public function validateField($field)
@@ -309,8 +313,10 @@ class Tasks extends Component
         $task = Task::find($taskId);
 
         if ($task) {
-            $task->update(['status' => 'Open']);
+            $task->update(['status' => 'Open',
+        'reopened_date' => now()]);
         }
+        
         session()->flash('message', 'Task has been Re-Opened.');
         session()->flash('showAlert', true);
 
@@ -344,22 +350,46 @@ class Tasks extends Component
 
     public function submit()
     {
+        try {
         $this->validate_tasks = true;
         $this->autoValidate();
+      
+            // Validate and store the uploaded file
+            $this->validate([
+                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
+            ]);
+       $fileContent=null;
+       $mimeType = null;
+       $fileName = null;
 
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-        $this->validate([
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
-        ]);
 
-        // Validate and upload the image file
-        if ($this->image) {
-            $this->isLoadingImage = true;
-            $imagePath = file_get_contents($this->image->getRealPath());
-            $this->image_path = $imagePath;
-            $this->isLoadingImage = false;
+        // Store the file as binary data
+        if ($this->file_path) {
+    
+          
+        $fileContent = file_get_contents($this->file_path->getRealPath());
+        if ($fileContent === false) {
+            Log::error('Failed to read the uploaded file.', [
+                'file_path' => $this->file_path->getRealPath(),
+            ]);
+            session()->flash('error', 'Failed to read the uploaded file.');
+            return;
         }
+
+        // Check if the file content is too large
+        if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+            session()->flash('error', 'File size exceeds the allowed limit.');
+            return;
+        }
+
+
+        $mimeType = $this->file_path->getMimeType();
+        $fileName = $this->file_path->getClientOriginalName();
+    }
+   
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
 
         Task::create([
@@ -374,14 +404,16 @@ class Tasks extends Component
             'followers' => $this->followers,
             'subject' => $this->subject,
             'description' => $this->description,
-            'file_path' => $this->image_path,
+            'file_path' => $fileContent, 
+            'file_name' => $fileName,
+            'mime_type' => $mimeType,
             'status' => "Open",
         ]);
 
         preg_match('/\((.*?)\)/',$this->assignee , $matches);
         $extracted = isset($matches[1]) ? $matches[1] : $this->assignee;
 
-        // dd( $this->assignee,$extracted,$this->employeeDetails->emp_id);
+      
         if($extracted!=$this->employeeDetails->emp_id){
 
         Notification::create([
@@ -390,14 +422,27 @@ class Tasks extends Component
             'task_name' => $this->task_name,
             'assignee' => $this->assignee,
         ]);
+    
     }
 
         $this->reset();
         session()->flash('message', 'Task created successfully!');
         session()->flash('showAlert', true);
         return redirect()->to('/tasks');
-
+        
     }
+    catch (\Illuminate\Validation\ValidationException $e) {
+        $this->setErrorBag($e->validator->getMessageBag());
+    } catch (\Exception $e) {
+        Log::error('Error creating request: ' . $e->getMessage(), [
+            'employee_id' => $employeeId,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+        ]);
+        session()->flash('error', 'An error occurred while creating the request. Please try again.');
+    }
+}
 
     public $client_id, $project_name, $image_path;
 
@@ -583,6 +628,7 @@ class Tasks extends Component
     
         return abort(404, 'Image not found');
     }
+   
     public function render()
     {
 

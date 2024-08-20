@@ -1415,27 +1415,37 @@ color: #fff;
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="insight-card bg-white pt-2 pb-2">
+                    <div class="insight-card bg-white pt-2 pb-2"style="{{ $isNextMonth == 1 ? 'height: 135px;' : '' }}">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">
                             Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
                         <section class="text-center">
-
-                            <p class="text-2" style="margin-top:30px;">{{$averageFormattedTime}}</p>
+                            @if($this->isNextMonth==1)
+                               <p class="text-2" style="margin-top:30px;">-</p>
+                            @else
+                               <p class="text-2" style="margin-top:30px;">{{$averageFormattedTime}}</p>
+                            @endif
+                            @if($this->isNextMonth==0)
                             <div>
                                 <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($totalWorkingPercentage)}}%
                                 </span>
                                 <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
                                 </span>
                             </div>
+                            @endif
                         </section>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="insight-card bg-white pt-2 pb-2">
+                    <div class="insight-card bg-white pt-2 pb-2"style="{{ $isNextMonth == 1 ? 'height: 135px;' : '' }}">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
                         </h6>
                         <section class="text-center">
+                            @if($isNextMonth==1)
+                             <p class="text-2" style="margin-top:30px;">-</p>
+                            @else
                             <p class="text-2" style="margin-top:30px;">{{$averageFormattedTime}}</p>
+                            @endif
+                            @if($isNextMonth==0)
                             <div>
                                 <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
                                     +{{intval($totalWorkingPercentage)}}% </span>
@@ -1443,6 +1453,7 @@ color: #fff;
 
                                 </span>
                             </div>
+                            @endif
                         </section>
                     </div>
                 </div>

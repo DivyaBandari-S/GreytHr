@@ -4,7 +4,7 @@
       <div class="alert alert-success w-50 position-absolute m-auto p-2" style="font-size: 12px; right: 25%;" id="success-alert">
          {{ session('message') }}
          <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">X</span>
+            <span >X</span>
          </button>
       </div>
       <script>
@@ -18,7 +18,7 @@
       <div class="alert alert-danger position-absolute p-1" style="font-size: 12px; right: 25%;" id="error-alert">
          {{ session('error') }}
          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">X</span>
+            <span >X</span>
          </button>
       </div>
       <script>
@@ -136,10 +136,10 @@
          @endif
          @elseif($activeSection === 'pendingButton')
          @if ($showAlert)
-         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.2s="hideAlert" style="font-size: 12px; right: 25%;" id="success-alert">
+         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.20s="hideAlert" style="font-size: 12px; right: 25%;" id="success-alert">
             {{ session('cancelMessage') }}
             <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close" wire:click="hideAlert">
-               <span aria-hidden="true">X</span>
+               <span>X</span>
             </button>
          </div>
          @endif

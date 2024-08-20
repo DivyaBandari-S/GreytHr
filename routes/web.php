@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\AllTeamTimeSheets;
 use App\Livewire\LeaveFormPage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -109,6 +110,7 @@ use App\Models\SalaryRevision;
 use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\HelpDesks;
+use App\Models\Task;
 Route::group(['middleware' => 'checkAuth'], function () {
 
     Route::get('/emplogin', EmpLogin::class)->name('emplogin');
@@ -267,6 +269,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/review-pending-regularation/{id}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
     Route::get('/time-sheet', EmpTimeSheet::class)->name('time-sheet');
+    Route::get('/team-time-sheets', AllTeamTimeSheets::class)->name('team-time-sheets');
 
 
     //Feeds Module
@@ -448,3 +451,12 @@ Route::get('/file/{id}', function ($id) {
         'Content-Disposition' => (strpos($file->mime_type, 'image') === false ? 'attachment' : 'inline') . '; filename="' . $file->file_name . '"',
     ]);
 })->name('file.show');
+
+Route::get('/taskfile/{id}', function ($id) {
+    $file = Task::findOrFail($id);
+
+    return Response::make($file->file_path, 200, [
+        'Content-Type' => $file->mime_type,
+        'Content-Disposition' => (strpos($file->mime_type, 'image') === false ? 'attachment' : 'inline') . '; filename="' . $file->file_name . '"',
+    ]);
+})->name('files.showTask');

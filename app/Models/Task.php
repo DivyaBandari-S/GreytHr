@@ -16,11 +16,14 @@ class Task extends Model
         'assignee',
         'priority',
         'due_date',
+        'reopened_date',
         'tags',
         'followers',
         'subject',
         'description',
         'file_path',
+        'file_name',
+        'mime_type',
         'status'
     ];
     public function emp()

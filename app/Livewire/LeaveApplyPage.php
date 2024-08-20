@@ -16,6 +16,7 @@ class LeaveApplyPage extends Component
 {
     use WithFileUploads;
     public $leave_type;
+    public $searchQuery = '';
     public $emp_id;
     public $from_date;
     public $from_session = 'Session 1';
@@ -71,7 +72,6 @@ class LeaveApplyPage extends Component
         'contact_details' => 'required',
         'reason' => 'required',
     ];
-
     protected $messages = [
         'leave_type.required' => 'Leave type is required',
         'from_date.required' => 'From date is required',
@@ -81,11 +81,13 @@ class LeaveApplyPage extends Component
         'contact_details.required' => 'Contact details are required',
         'reason.required' => 'Reason is required',
     ];
-
+    public function validateField($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
     public function mount()
     {
         $this->searchTerm = '';
-        $this->filter = '';
         $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employee = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -103,9 +105,10 @@ class LeaveApplyPage extends Component
         }
     }
 
-    public function validateField($propertyName)
+    public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
+        $this->handleFieldUpdate($propertyName);
     }
 
     public function toggleInfo()
@@ -246,21 +249,6 @@ class LeaveApplyPage extends Component
     }
 
 
-    //this method will handle the search functionality
-    public function handleSearch($type)
-    {
-        try {
-            if ($type === 'employees') {
-                $this->toggleManager($this->empId);
-            } elseif ($type === 'ccRecipients') {
-                $this->searchCCRecipients();
-            }
-        } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in handleSearch method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while handling the search. Please try again later.');
-        }
-    }
 
     public function leaveApply()
     {
@@ -300,27 +288,12 @@ class LeaveApplyPage extends Component
                 ->get(); // Use get() to retrieve all relevant leave requests
 
             $conflict = false;
-
-            if($overlappingLeave){
+            if ($overlappingLeave) {
                 foreach ($overlappingLeave as $leave) {
-                    if ($this->from_date == $leave->from_date && $this->to_date == $leave->to_date) {
-                        dd($this->from_date);
-                        if ($this->from_session == $leave->from_session && $this->to_session == $leave->to_session) {
-                            // Exact same leave request
-                            $conflict = true;
-                            break;
-                        }
-                    } else {
-                        // Allow applying for different sessions
-                        if ($this->from_date == $leave->from_date && $this->to_date == $leave->to_date) {
-                            if ($this->from_session != $leave->from_session && $this->to_session != $leave->to_session) {
-                                dd('bj');
-                                // Exact same leave request
-                                $conflict = false;
-                            }
-                        }
-                            else {
-                            // Other cases where leave dates or sessions overlap
+                    $carbonFromDate = $leave->from_date->format('Y-m-d');
+                    $carbonToDate = $leave->to_date->format('Y-m-d');
+                    if ($this->from_date == $carbonFromDate && $this->to_date == $carbonToDate) {
+                        if ($this->from_session == $leave->from_session) {
                             $conflict = true;
                             break;
                         }
@@ -482,30 +455,13 @@ class LeaveApplyPage extends Component
     {
         try {
             $this->showNumberOfDays = true;
-            $this->showPopupMessage = false; // Ensure popup is not shown by default
-
             if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session') {
-                list($result, $errorMessage) = $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
-
-                if ($errorMessage) {
-                    // If there's an error, set the popup message
-                    session()->flash('popupMessage', $errorMessage);
-                    $this->showPopupMessage = true;
-                } else {
-                    $this->numberOfDays = $result;
-
-                    // Check if number of days is 0 and set the popup flag
-                    if ($this->numberOfDays === 0) {
-                        session()->flash('popupMessage', 'Selected dates are valid, but no working days are calculated.');
-                        $this->showPopupMessage = true;
-                    }
-                }
+                $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
             }
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in handleFieldUpdate method: ' . $e->getMessage());
-            session()->flash('popupMessage', 'An error occurred while handling field update. Please try again later.');
-            $this->showPopupMessage = true;
+            session()->flash('error', 'An error occurred while handling field update. Please try again later.');
         }
     }
     public $empId;
@@ -719,6 +675,7 @@ class LeaveApplyPage extends Component
         $this->to_session = 'Session 2';
         $this->cc_to = null;
         $this->applying_to = null;
+        $this->showNumberOfDays = false;
     }
 
     public $managerDetails, $fullName;
@@ -737,7 +694,6 @@ class LeaveApplyPage extends Component
             $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
             if ($applying_to) {
                 $managerId = $applying_to->manager_id;
-
                 // Fetch the logged-in employee's manager details
                 $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
                 if ($managerDetails) {
@@ -761,6 +717,12 @@ class LeaveApplyPage extends Component
             // Fetch employees with job roles CTO and Chairman
             $jobRoles = ['CTO', 'Chairman'];
             $filteredManagers = EmployeeDetails::whereIn('job_role', $jobRoles)
+                ->where(function ($query) {
+                    // Apply search functionality
+                    if ($this->searchQuery) {
+                        $query->whereRaw('CONCAT(first_name, " ", last_name) LIKE ?', ["%{$this->searchQuery}%"]);
+                    }
+                })
                 ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
 
             // Add the filtered managers to the collection
@@ -778,6 +740,7 @@ class LeaveApplyPage extends Component
         } catch (\Exception $e) {
             Log::error('Error fetching employee or manager details: ' . $e->getMessage());
         }
+
         return view('livewire.leave-apply-page', [
             'employeeGender' => $employeeGender,
             'calculatedNumberOfDays' => $this->calculatedNumberOfDays,
@@ -789,4 +752,9 @@ class LeaveApplyPage extends Component
             'showCasualLeaveProbation' => $this->showCasualLeaveProbation
         ]);
     }
+        // Add a method to update the search query
+        public function getFilteredManagers()
+        {
+            $this->render(); // Re-render to apply the search filter
+        }
 }

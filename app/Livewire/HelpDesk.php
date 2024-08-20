@@ -414,7 +414,6 @@ class HelpDesk extends Component
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
             ]);
-
             session()->flash('message', 'Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
@@ -684,8 +683,6 @@ class HelpDesk extends Component
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
-
-
 
         $searchData = $this->filterData ?: $this->records;
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';

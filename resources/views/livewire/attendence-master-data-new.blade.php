@@ -244,12 +244,23 @@
         }
 
         td {
-            font-size: 0.795rem;
+            font-size: 0.75rem;
         }
 
         .table tbody td {
             border-right: 1px solid #d5d5d5;
             /* Vertical border color and width */
+        }
+
+        .table tbody tr {
+            height: 60px;
+            /* Adjust as needed */
+            align-items: center;
+            /* Center align items vertically */
+        }
+
+        p {
+            margin-bottom: 0;
         }
 
         /* Remove right border for the last cell in each row to avoid extra border */
@@ -358,7 +369,7 @@
             margin-right: 5px;
         }
 
-       
+
         .emptyday {
             color: #aeadad;
             pointer-events: none;
@@ -370,7 +381,6 @@
     $flag=0;
     $isFilter=1;
     $isHoliday=0;
-    $todayYear = date('Y');
     $leaveTake=0;
     $currentMonth=date('n');
     if(isset($attendanceYear) && $attendanceYear !== null) {
@@ -390,9 +400,9 @@
                 <i class="fa fa-download" aria-hidden="true"></i>
             </button>
             <select name="year" wire:model="selectedYear" wire:change="updateselectedYear">
-                <option value="{{$todayYear-1}}">{{$todayYear-1}}</option>
-                <option value="{{$todayYear}}">{{$todayYear}}</option>
-                <option value="{{$todayYear+1}}">{{$todayYear+1}}</option>
+                <option value="{{$todayyear-1}}">{{$todayyear-1}}</option>
+                <option value="{{$todayyear}}">{{$todayyear}}</option>
+                <option value="{{$todayyear+1}}">{{$todayyear+1}}</option>
             </select>
             @php
             $attendanceYearAsNumber = intval($attendanceYear);
@@ -561,8 +571,8 @@
                 @endphp
                 <tr>
 
-                    <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        {{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<span class="text-muted">(#{{ $emp->emp_id }})</span><br /><span class="text-muted" style="font-size:11px;">{{ucfirst($emp->job_title)}},{{ucfirst($emp->city)}}</span>
+                    <td  style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        {{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<span class="text-muted">(#{{ $emp->emp_id }})</span><br /><span class="text-muted" style="font-size:11px;">{{ucfirst($emp->job_title)}}{{ucfirst($emp->city)}}</span>
                     </td>
                     @php
                     $found = false;
@@ -590,7 +600,7 @@
                 <tr>
 
                     <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        {{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<span class="text-muted">(#{{ $emp->emp_id }})</span><br /><span class="text-muted" style="font-size:11px;">{{ucfirst($emp->job_role)}},{{ucfirst($emp->job_location)}}</span>
+                        {{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<span class="text-muted">(#{{ $emp->emp_id }})</span><br /><span class="text-muted" style="font-size:11px;">{{ucfirst($emp->job_role),}}{{ucfirst($emp->job_location)}}</span>
                     </td>
                     @php
                     $found = false;
@@ -623,7 +633,7 @@
     </div>
     <div class="Attendance col-md-9">
         @if($attendanceYear==0)
-        <p style="background:#ebf5ff; padding:5px 15px;font-size:0.755rem;">Attendance for {{date("M", mktime(0, 0, 0, $currentMonth, 1))}},{{$todayYear}}</p>
+        <p style="background:#ebf5ff; padding:5px 15px;font-size:0.755rem;">Attendance for {{date("M", mktime(0, 0, 0, $currentMonth, 1))}},{{$todayyear}}</p>
         @else
         <p style="background:#ebf5ff; padding:5px 15px;font-size:0.755rem;">Attendance for {{date("M", mktime(0, 0, 0, $currentMonth, 1))}},{{$currentYear}}</p>
         @endif
@@ -647,12 +657,12 @@
             <thead>
                 <tr>
 
-                    @for ($i = 1; $i <= $daysInMonth; $i++) 
-                        @php 
-                            $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); 
-                            $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) 
-                            $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format 
-                        @endphp 
+                    @for ($i = 1; $i <= $daysInMonth; $i++)
+                        @php
+                        $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear);
+                        $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon)
+                        $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format
+                        @endphp
                         <th style="width:75%; background:#ebf5ff; color:#778899; font-weight:500; text-align:center;">
                         <div style="font-size:0.825rem;line-height:0.8;font-weight:500;">
                             {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}
@@ -677,28 +687,28 @@
                 $currentYear = date('Y');
                 @endphp
 
-                @if($attendanceYear<=$currentYear) <tr style="height:14px;background-color:#fff;">
+                @if($attendanceYear<=$currentYear) <tr style="height:60px;background-color:#fff;">
                     @php
                     // Get the current day of the month
                     $currentYear = date('Y');
                     $currentDay = $daysInMonth;
 
                     // Check if $attendanceYear is greater than the current year
-                            if ($attendanceYear == $currentYear) {
-                            $currentDay = date('j');
-                            }
-                            elseif($attendanceYear == 0) {
-                            $currentDay = date('j');
-                            }
+                    if ($attendanceYear == $currentYear) {
+                    $currentDay = date('j');
+                    }
+                    elseif($attendanceYear == 0) {
+                    $currentDay = date('j');
+                    }
                     @endphp
 
-                    @for ($i = 1; $i <= $currentDay; $i++) 
-                       @php 
-                          $timestamp=mktime(0, 0, 0, $currentMonth, $i, $SelectedYear); 
-                          $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon) 
-                          $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format 
-                      @endphp 
-                    <td style="height:20px;">
+                    @for ($i = 1; $i <= $currentDay; $i++)
+                        @php
+                        $timestamp=mktime(0, 0, 0, $currentMonth, $i, $SelectedYear);
+                        $dayName=date('D', $timestamp); // Get the abbreviated day name (e.g., Sun, Mon)
+                        $fullDate=date('Y-m-d', $timestamp); // Full date in 'YYYY-MM-DD' format
+                        @endphp
+                        <td >
 
 
 
