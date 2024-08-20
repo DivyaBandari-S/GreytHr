@@ -7,95 +7,102 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Torann\GeoIP\Facades\GeoIP;
 use Jenssegers\Agent\Agent;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Support\Facades\Hash;
 
 class CheckAuthAndHandleSession
 {
-    protected $timeout = 15; // Session timeout in minutes
+    protected $timeout = 15 * 60; // Timeout in seconds (15 minutes)
 
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
      * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Define an array of guards to check
         $guards = ['emp', 'it', 'hr', 'com', 'finance', 'admins'];
-        $userAuthenticated = false;
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 $user = Auth::guard($guard)->user();
-                $currentSessionId = Session::getId();
                 $userId = $this->getUserIdByGuard($guard, $user);
+                $currentSessionId = Session::getId();
+                $ipAddress = $request->ip();
+                $userAgent = $request->header('User-Agent');
 
-                $lastActivity = DB::table('sessions')->where('id', $currentSessionId)->value('last_activity');
+                // Enforce single device login
+                $existingSession = DB::table('sessions')
+                    ->where('user_id', $userId)
+                    ->where('id', '!=', $currentSessionId) // Exclude current session
+                    ->first();
 
-                if ($lastActivity && (now()->timestamp - $lastActivity > $this->timeout * 60)) {
+                if ($existingSession) {
+                    // Invalidate the existing session
+                    DB::table('sessions')
+                        ->where('id', $existingSession->id)
+                        ->delete();
+
+                    // Log a message indicating the user was logged out from another device
+                    $this->logUserLogout($userId, $existingSession->ip_address, $existingSession->user_agent);
+                }
+
+                // Check for session timeout
+                $lastActivity = Session::get('last_activity_time');
+                if ($lastActivity && (time() - $lastActivity > $this->timeout)) {
+                    // Session has expired
                     Auth::guard($guard)->logout();
                     Session::flush();
-
                     return $this->timeoutResponse('Your session has expired. Please login again.');
                 }
 
-                // Handle Remember Me logic manually
-                if (Auth::guard($guard)->viaRemember()) {
-                    $rememberToken = $request->cookies->get('remember_web_' . $guard);
+                // Get device type using Jenssegers\Agent
+                $agent = new Agent();
+                $deviceType = $agent->isMobile() ? 'Mobile' : ($agent->isTablet() ? 'Tablet' : 'Desktop');
 
-                    if (!$rememberToken || !$this->verifyRememberToken($user, $rememberToken)) {
-                        return $this->logout($request, $guard);
-                    }
-                }
+                // Update session data
+                Session::put('last_activity_time', time());
+                Session::put('session_id', $currentSessionId);
+                Session::put('location', $request->ip());
+                Session::put('device_type', $deviceType);
 
-                // Store or update password hash in session
-                $this->storePasswordHashInSession($request, $guard);
+                // Store or update user session info in the sessions table
+                DB::table('sessions')->updateOrInsert(
+                    ['id' => $currentSessionId],
+                    [
+                        'user_id' => $userId,
+                        'ip_address' => $ipAddress,
+                        'user_agent' => $userAgent,
+                        'last_activity' => now()->timestamp,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                );
 
-                if ($request->session()->get('password_hash_' . $guard) !== $request->user()->getAuthPassword()) {
-                    return $this->logout($request, $guard);
-                }
+                // Log the login details
+                Log::info("User {$userId} logged in from IP: {$ipAddress}, Device: {$deviceType}");
 
-                // Ensure the password is provided before calling logoutOtherDevices
-                $password = $request->input('password');
-                if ($password) {
-                    $this->logoutOtherDevices($user, $password);
-                }
-
-                // Update or insert session data
-                $this->updateSessionData($request, $user, $userId);
-
-                $userAuthenticated = true;
+                // If user is authenticated, stop checking other guards
                 break;
             }
         }
 
-        if (!$userAuthenticated) {
-            session(['user_type' => 'guest']);
+        // If no guard is authenticated, set user_type to guest
+        if (!Auth::check()) {
+            Session::put('user_type', 'guest');
+            Log::info('Session has timed out');
         }
+
+        // Debug log before returning next request
+        Log::info('Before next request call', ['request' => $request]);
 
         return $next($request);
     }
 
     /**
-     * Verify the remember token.
-     *
-     * @param $user
-     * @param string $token
-     * @return bool
-     */
-    protected function verifyRememberToken($user, string $token): bool
-    {
-        // Assuming 'remember_token' is the field in the users table
-        return Hash::check($token, $user->remember_token);
-    }
-
-    /**
-     * Get the user ID based on the guard and user object.
+     * Get user ID based on the guard and user.
      *
      * @param string $guard
      * @param $user
@@ -122,103 +129,16 @@ class CheckAuthAndHandleSession
     }
 
     /**
-     * Update or insert session data in the sessions table.
+     * Log a message when a user is logged out from another device.
      *
-     * @param Request $request
-     * @param $user
-     * @param $id
-     */
-    protected function updateSessionData(Request $request, $user, $id)
-    {
-        $location = GeoIP::getLocation($request->ip());
-        $agent = new Agent();
-        $deviceType = $agent->isMobile() ? 'Mobile' : ($agent->isTablet() ? 'Tablet' : 'Desktop');
-
-        $today = now()->format('Y-m-d');
-
-        $existingSession = DB::table('sessions')
-            ->where('user_id', $id)
-            ->whereDate('created_at', $today)
-            ->first();
-
-        if ($existingSession) {
-            DB::table('sessions')
-                ->where('id', $existingSession->id)
-                ->update([
-                    'last_activity' => now()->timestamp,
-                    'updated_at' => now(),
-                ]);
-        } else {
-            DB::table('sessions')->insert([
-                'id' => Session::getId(),
-                'user_id' => $id,
-                'ip_address' => $location->ip ?? 'Unknown IP',
-                'user_agent' => $request->header('User-Agent'),
-                'iso_code' => $location->iso_code ?? 'N/A',
-                'country' => $location->country ?? 'N/A',
-                'city' => $location->city ?? 'N/A',
-                'state' => $location->state ?? 'N/A',
-                'state_name' => $location->state_name ?? 'N/A',
-                'postal_code' => $location->postal_code ?? 'N/A',
-                'latitude' => $location->lat ?? 0,
-                'longitude' => $location->lon ?? 0,
-                'timezone' => $location->timezone ?? 'N/A',
-                'continent' => $location->continent ?? 'N/A',
-                'currency' => $location->currency ?? 'N/A',
-                'device_type' => $deviceType,
-                'last_activity' => now()->timestamp,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-    }
-
-    /**
-     * Store the user's current password hash in the session.
-     *
-     * @param Request $request
-     * @param string $guard
+     * @param mixed $userId
+     * @param string $ipAddress
+     * @param string $userAgent
      * @return void
      */
-    protected function storePasswordHashInSession(Request $request, string $guard)
+    protected function logUserLogout($userId, $ipAddress, $userAgent)
     {
-        if ($request->user()) {
-            $request->session()->put('password_hash_' . $guard, $request->user()->getAuthPassword());
-        }
-    }
-
-    /**
-     * Log the user out of the application.
-     *
-     * @param Request $request
-     * @param string $guard
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws AuthenticationException
-     */
-    protected function logout(Request $request, string $guard)
-    {
-        Auth::guard($guard)->logout();
-        $request->session()->flush();
-
-        return $this->timeoutResponse('You have been logged out due to session timeout.');
-    }
-
-    /**
-     * Log out other devices for the authenticated user.
-     *
-     * @param $user
-     * @param string $password
-     * @return void
-     */
-    protected function logoutOtherDevices($user, string $password)
-    {
-        // Check if the provided password is correct
-        if (Auth::attempt(['email' => $user->email, 'password' => $password])) {
-            Auth::logoutOtherDevices($password);
-        } else {
-            throw new \Exception('Invalid password provided.');
-        }
+        Log::info("User {$userId} was logged out from IP: {$ipAddress}, Device: {$userAgent} due to login from another device.");
     }
 
     /**
@@ -227,57 +147,57 @@ class CheckAuthAndHandleSession
      * @param string $message
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function timeoutResponse($message): Response
+    protected function timeoutResponse(string $message): Response
     {
-        $loginUrl = route('emplogin');
+        $loginUrl = route('emplogin'); // Get the login route URL
 
         $html = <<<HTML
-<html>
-<head>
-    <title>Session Expired</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f5f5f5;
-            margin: 0;
-        }
-        .container {
-            text-align: center;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .message {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        .login-link {
-            display: inline-block;
-            padding: 10px 20px;
-            color: #fff;
-            background-color: #007bff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .login-link:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="message">$message</div>
-        <a href="$loginUrl" class="login-link">Login</a>
-    </div>
-</body>
-</html>
-HTML;
+    <html>
+    <head>
+        <title>Session Expired</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: #f5f5f5;
+                margin: 0;
+            }
+            .container {
+                text-align: center;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            .message {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+            .login-link {
+                display: inline-block;
+                padding: 10px 20px;
+                color: #fff;
+                background-color: #007bff;
+                text-decoration: none;
+                border-radius: 5px;
+                font-weight: bold;
+            }
+            .login-link:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="message">$message</div>
+            <a href="$loginUrl" class="login-link">Login</a>
+        </div>
+    </body>
+    </html>
+    HTML;
 
         return new Response($html, 200);
     }

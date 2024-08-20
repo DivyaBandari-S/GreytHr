@@ -126,7 +126,6 @@ Route::group(['middleware' => 'checkAuth'], function () {
     Route::get('/CreateCV', function () {
         return view('create_cv_view');
     });
-    Route::get('/session-timeout', SessionTimeout::class)->name('session-timeout');
 });
 
 Route::get('/Login&Register', function () {
@@ -244,6 +243,7 @@ Route::middleware(['auth:admins', 'handleSession'])->group(function () {
 
 
 Route::middleware(['auth:emp', 'handleSession'])->group(function () {
+    Route::get('/session-timeout', SessionTimeout::class)->name('session-timeout');
     Route::get('/google-redirect', [GoogleDriveController::class, 'auth'])
         ->name('google-redirect');
     Route::get('/google-callback', [GoogleDriveController::class, 'callback'])
@@ -311,8 +311,8 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
             'Content-Disposition' => 'attachment; filename="' . basename($message->file_path) . '"',
         ]);
     })->name('download.file');
-// In web.php
-Route::get('/download-image', [HelpDesk::class, 'downloadImage'])->name('downloadImage');
+    // In web.php
+    Route::get('/download-image', [HelpDesk::class, 'downloadImage'])->name('downloadImage');
 
 
 
