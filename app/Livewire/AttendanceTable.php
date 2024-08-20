@@ -35,7 +35,7 @@ class AttendanceTable extends Component
     public $employeeDetails;
     public string $end;
 
-    public $legend=false;
+    public $legend=true;
     public $showSR = false;
 
     protected $listeners = [

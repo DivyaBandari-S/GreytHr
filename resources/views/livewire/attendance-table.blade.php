@@ -1579,7 +1579,7 @@ color: #fff;
                                 </button>
                             </td>
 
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">No&nbsp;attention&nbsp;required</td>
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;">No&nbsp;attention&nbsp;required</td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">
                                 @if($totalWorkedMinutes<$standardWorkingMinutes&&!empty($record['last_out_time'])&&$isWeekend==false&&$holidayNote==false&&$isPresent==true)
                                    @php
