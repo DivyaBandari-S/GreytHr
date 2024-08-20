@@ -1828,18 +1828,18 @@ color: #fff;
     </div>
     <div class="custom-container">
         <div class="row">
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#edfaed;color:#778899;text-align:center;font-size:14px;">Present:<span style="font-weight:600;"> {{$presentCount}}</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color:rgb(252, 242, 255);color:#778899;text-align:center;font-size:14px;">Leave:<span style="font-weight:600;"> 0</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:14px;">Holiday:<span style="font-weight:600;"> {{$holidaycountforcontainer}}</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:14px;">Rest Day:<span style="font-weight:600;"> 0</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:14px;">Absent:<span style="font-weight:600;"> {{$absentCount}}</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color: #fff7eb;color:#778899;text-align:center;font-size:14px;">On Duty:<span style="font-weight:600;"> 0</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color: rgba(252, 217, 151,1);color:#778899;text-align:center;font-size:14px;">Shutdown:<span style="font-weight:600;"> 0</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:14px;">Off Day:<span style="font-weight:600;"> {{$offCount}}</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#edfaed;color:#778899;text-align:center;font-size:12px;">Present:<span style="font-weight:600;"> {{$presentCount}}</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color:rgb(252, 242, 255);color:#778899;text-align:center;font-size:12px;">Leave:<span style="font-weight:600;"> 0</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:12px;">Holiday:<span style="font-weight:600;"> {{$holidaycountforcontainer}}</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:12px;">Rest Day:<span style="font-weight:600;"> 0</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:12px;">Absent:<span style="font-weight:600;"> {{$absentCount}}</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color: #fff7eb;color:#778899;text-align:center;font-size:12px;">On Duty:<span style="font-weight:600;"> 0</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color: rgba(252, 217, 151,1);color:#778899;text-align:center;font-size:12px;">Shutdown:<span style="font-weight:600;"> 0</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:12px;">Off Day:<span style="font-weight:600;"> {{$offCount}}</span></div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-auto p-1 m-2"style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:13px;">Restricted Holiday:<span style="font-weight:600;"> 0</span></div>
-            <div class="col-auto p-1 m-2"style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:13px;">Status Unknown:<span style="font-weight:600;"> 0</span></div>
+            <div class="col-auto p-1 m-2"style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:12px;">Restricted Holiday:<span style="font-weight:600;"> 0</span></div>
+            <div class="col-auto p-1 m-2"style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:12px;">Status Unknown:<span style="font-weight:600;"> 0</span></div>
         </div>
     </div>
     <button class="accordion"wire:click="openlegend">Legends</button>
