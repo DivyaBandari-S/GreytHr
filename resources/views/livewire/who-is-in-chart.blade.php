@@ -40,6 +40,7 @@
             <span class="slider round"></span>
           </label>
         </div>
+        
         <div class="wide-short-container-who-is-in">
           <div style="display:flex;align-items:center;justify-content:space-between">
             <label class="checkbox-label-who-is-in">
@@ -213,7 +214,7 @@
 
       <div>
         <table class="who-is-in-table" style="margin-top:-10px">
-          @if($lateArrival > 0)
+          
           <thead>
             <tr>
               <th>Employee</th>
@@ -222,7 +223,7 @@
             </tr>
           </thead>
           <tbody>
-
+            @if($lateArrival > 0)
             @foreach($Swipes as $s1)
 
             @php
@@ -256,9 +257,7 @@
             @endif
 
             @endforeach
-
-          </tbody><!-- Add table rows (tbody) and data here if needed -->
-          @else
+             @else
 
           <tr>
             <td colspan="2" style="text-align: center;margin-top:40px;margin-left:60px;">
@@ -268,6 +267,8 @@
           </tr>
 
           @endif
+          </tbody><!-- Add table rows (tbody) and data here if needed -->
+         
         </table>
       </div>
     </div>
@@ -283,7 +284,7 @@
 
       <div>
         <table class="who-is-in-table" style="margin-top:-10px">
-          @if($onTime > 0)
+        
           <thead style="width: 100px;">
             <tr>
               <th style="width:100px">Employee</th>
@@ -292,7 +293,7 @@
             </tr>
           </thead>
           <tbody>
-
+             @if($onTime > 0)
             @foreach($Swipes as $s1)
             @php
             $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
@@ -307,9 +308,7 @@
 
               @endif
               @endforeach
-
-          </tbody><!-- Add table rows (tbody) and data here if needed -->
-          @else
+              @else
           <tr>
             <td colspan="2 mt-2" style="text-align: center;">
               <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi7kQkKftvg3JCfA63d_BWJbSNrTwsX9QQPRUS7Okm5iTciCkig3wOxRUQB59BO6AM0Ng&usqp=CAU" style="width: 30px;margin-top:20px;">
@@ -317,6 +316,8 @@
             </td>
           </tr>
           @endif
+          </tbody><!-- Add table rows (tbody) and data here if needed -->
+     
         </table>
       </div>
     </div>
@@ -332,7 +333,7 @@
 
       <div>
         <table class="who-is-in-table" style="margin-top:-10px">
-          @if($ApprovedLeaveRequestsCount > 0)
+        
           <thead>
             <tr>
               <th>Employee</th>
@@ -349,7 +350,7 @@
             </tr>
 
             @else
-
+            @if($ApprovedLeaveRequestsCount > 0)
 
             @foreach($ApprovedLeaveRequests as $alr)
 
@@ -377,11 +378,7 @@
 
             </tr>
             @endforeach
-
-            @endif
-          </tbody>
-          <!-- Add table rows (tbody) and data here if needed -->
-          @else
+            @else
           <tr>
             <td colspan="2" style="text-align: center;">
               <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi7kQkKftvg3JCfA63d_BWJbSNrTwsX9QQPRUS7Okm5iTciCkig3wOxRUQB59BO6AM0Ng&usqp=CAU" style="width: 30px;margin-top:20px;">
@@ -389,6 +386,10 @@
             </td>
           </tr>
           @endif
+            @endif
+          </tbody>
+          <!-- Add table rows (tbody) and data here if needed -->
+         
         </table>
       </div>
     </div>

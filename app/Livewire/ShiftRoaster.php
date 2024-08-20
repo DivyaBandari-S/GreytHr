@@ -119,7 +119,7 @@ class ShiftRoaster extends Component
         $currentMonth=$this->selectedMonth;
         $currentYear = date('Y');  
         $year = $currentYear;
-        $employees=EmployeeDetails::where('manager_id',$loggedInEmpId)->select('emp_id', 'first_name', 'last_name','job_role','job_location','shift_type')->get();
+        $employees=EmployeeDetails::where('manager_id',$loggedInEmpId)->where('employee_status','active')->select('emp_id', 'first_name', 'last_name','job_role','job_location','shift_type')->get();
         $this->holiday = HolidayCalendar::where('month',$currentMonth)
         ->where('year', $year)
         ->get('date');
