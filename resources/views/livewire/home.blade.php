@@ -1,32 +1,30 @@
 <div>
-
-    <body>
+    <div class="msg-container">
         @if ($showAlert)
-
         <div id="alert-container" class="d-flex justify-content-center alert-container " wire:poll.20s="hideAlert" style="position: sticky; top: 1%; z-index: 10; width: 100%;">
-
             <!-- wire:poll.5s="hideAlert" -->
-
             <p class="alert alert-success" role="alert" style=" font-weight: 400;width:fit-content;padding:10px;border-radius:5px;margin-bottom:0px">
                 {{ session('success') }} 😀
-
                 <span class="ml-5" style="font-weight:500;margin:0px 10px 0px 20px; cursor: pointer; " wire:click='hideAlert'>x</span>
-
             </p>
         </div>
-
         @endif
-        <div class="content">
-            <div class="row m-0 mb-3">
-                <div class="col-md-6">
-                    <div class="" style="border-radius: 10px; background-color: #fff;">
+    </div>
+    <div class="content">
+        <div class="row m-0 p-0 mb-3">
+            <div class="col-md-6">
+                <div class="row m-0" style="border-radius: 10px; background-color: #02114f;">
+                    <div class="col-6 p-0 ps-3 pt-4">
+                        @if($this->greetingText)
+                        <p class="morning-city">{{$greetingText}}</p>
+                        @endif
+                        <p class="morning-city">Welcome, {{ ucwords(strtolower($loginEmployee->first_name)) }}{{ ucwords(strtolower($loginEmployee->last_name)) }}</p>
+                    </div>
 
+                    <div class="col-6 p-0">
                         <div class="morning-cardContainer w-100">
                             <div class="morning-card w-100">
-                                @if($this->greetingText)
-                                <p class="morning-city">{{$greetingText}}</p>
-                                @endif
-                                <p class="morning-city">Welcome, Shishir Kumar</p>
+
                                 <p class="morning-weather">PARTILY CLOUDY</p>
                                 <svg
                                     class="morning-weather"
@@ -59,383 +57,354 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
+
                 </div>
-                <div class="col-md-6">
-                    <div class="pt-4 pb-4" style="border-radius: 10px; background-color: #fff; text-align: -webkit-center;">
+            </div>
+            <div class="col-md-6">
+                <div class="pt-4 pb-4" style="border-radius: 10px; background-color: #02114f; text-align: -webkit-center;">
 
-                        <div class="section-banner">
-                            <div id="star-1">
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-bottomright"></div>
-                                    <div id="curved-corner-bottomleft"></div>
-                                </div>
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-topright"></div>
-                                    <div id="curved-corner-topleft"></div>
-                                </div>
+                    <div class="section-banner">
+                        <div id="star-1">
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-bottomright"></div>
+                                <div id="curved-corner-bottomleft"></div>
                             </div>
-
-                            <div id="star-2">
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-bottomright"></div>
-                                    <div id="curved-corner-bottomleft"></div>
-                                </div>
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-topright"></div>
-                                    <div id="curved-corner-topleft"></div>
-                                </div>
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-topright"></div>
+                                <div id="curved-corner-topleft"></div>
                             </div>
+                        </div>
 
-                            <div id="star-3">
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-bottomright"></div>
-                                    <div id="curved-corner-bottomleft"></div>
-                                </div>
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-topright"></div>
-                                    <div id="curved-corner-topleft"></div>
-                                </div>
+                        <div id="star-2">
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-bottomright"></div>
+                                <div id="curved-corner-bottomleft"></div>
                             </div>
-
-                            <div id="star-4">
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-bottomright"></div>
-                                    <div id="curved-corner-bottomleft"></div>
-                                </div>
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-topright"></div>
-                                    <div id="curved-corner-topleft"></div>
-                                </div>
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-topright"></div>
+                                <div id="curved-corner-topleft"></div>
                             </div>
+                        </div>
 
-                            <div id="star-5">
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-bottomright"></div>
-                                    <div id="curved-corner-bottomleft"></div>
-                                </div>
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-topright"></div>
-                                    <div id="curved-corner-topleft"></div>
-                                </div>
+                        <div id="star-3">
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-bottomright"></div>
+                                <div id="curved-corner-bottomleft"></div>
                             </div>
-
-                            <div id="star-6">
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-bottomright"></div>
-                                    <div id="curved-corner-bottomleft"></div>
-                                </div>
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-topright"></div>
-                                    <div id="curved-corner-topleft"></div>
-                                </div>
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-topright"></div>
+                                <div id="curved-corner-topleft"></div>
                             </div>
+                        </div>
 
-                            <div id="star-7">
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-bottomright"></div>
-                                    <div id="curved-corner-bottomleft"></div>
-                                </div>
-                                <div class="curved-corner-star">
-                                    <div id="curved-corner-topright"></div>
-                                    <div id="curved-corner-topleft"></div>
-                                </div>
+                        <div id="star-4">
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-bottomright"></div>
+                                <div id="curved-corner-bottomleft"></div>
+                            </div>
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-topright"></div>
+                                <div id="curved-corner-topleft"></div>
+                            </div>
+                        </div>
+
+                        <div id="star-5">
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-bottomright"></div>
+                                <div id="curved-corner-bottomleft"></div>
+                            </div>
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-topright"></div>
+                                <div id="curved-corner-topleft"></div>
+                            </div>
+                        </div>
+
+                        <div id="star-6">
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-bottomright"></div>
+                                <div id="curved-corner-bottomleft"></div>
+                            </div>
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-topright"></div>
+                                <div id="curved-corner-topleft"></div>
+                            </div>
+                        </div>
+
+                        <div id="star-7">
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-bottomright"></div>
+                                <div id="curved-corner-bottomleft"></div>
+                            </div>
+                            <div class="curved-corner-star">
+                                <div id="curved-corner-topright"></div>
+                                <div id="curved-corner-topleft"></div>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
             </div>
 
+        </div>
 
-            <!-- main content -->
 
-            <div class="row m-0">
-                <div class="col-md-3 mb-4 ">
-                    <div class="home-hover">
-                        <div class="homeCard4">
-                            <div style="color: black; padding:10px 15px;">
-                                <p style="font-size:12px;">{{$currentDate}}</p>
-                                <p style="margin-top: 10px; color: #778899; font-size: 11px;">
-                                    @php
-                                        // Fetch shift times
-                                        $EmployeeStartshiftTime = $employeeShiftDetails->shift_start_time;
-                                        $EmployeeEndshiftTime = $employeeShiftDetails->shift_end_time;
-                                
-                                        // Default times
-                                        $defaultStartShiftTime = '10:00 am';
-                                        $defaultEndShiftTime = '7:00 pm';
-                                
-                                        // Format the times if they are not null
-                                        $formattedStartShiftTime = $EmployeeStartshiftTime ? (new DateTime($EmployeeStartshiftTime))->format('h:i a') : $defaultStartShiftTime;
-                                        $formattedEndShiftTime = $EmployeeEndshiftTime ? (new DateTime($EmployeeEndshiftTime))->format('h:i a') : $defaultEndShiftTime;
-                                
-                                        
-                                    @endphp
-                                    {{$currentDay}} | {{$formattedStartShiftTime}} to {{$formattedEndShiftTime}}
-                                </p>
-                                
-                                <div style="font-size: 14px; display: flex;margin-top:2em;">
-                                    <img src="/images/stopwatch.png" class="me-4" alt="Image Description" style="width: 2.7em;">
-                                    <p id="current-time" style="margin: auto 0;"></p>
-                                </div>
-                                <script>
-                                    function updateTime() {
-                                        const currentTimeElement = document.getElementById('current-time');
-                                        const now = new Date();
-                                        const hours = String(now.getHours()).padStart(2, '0');
-                                        const minutes = String(now.getMinutes()).padStart(2, '0');
-                                        const seconds = String(now.getSeconds()).padStart(2, '0');
-                                        const currentTime = `${hours} : ${minutes} : ${seconds}`;
-                                        currentTimeElement.textContent = currentTime;
-                                    }
-                                    updateTime();
-                                    setInterval(updateTime, 1000);
-                                </script>
-                                <div class="A" style="display: flex;flex-direction:row;justify-content:space-between; align-items:center;margin-top:2em">
-                                    <a style="width:50%;font-size:11px;cursor: pointer;color:blue" wire:click="open">View Swipes</a>
-                                    <button id="signButton" style="color: white; width: 80px; height: 26px;font-size:10px; background-color: rgb(2, 17, 79); border: 1px solid #CFCACA; border-radius: 5px; " wire:click="toggleSignState">
-                                        @if($swipes)
-                                        @if ($swipes->in_or_out=="OUT")
-                                        Sign In
-                                        @else
-                                        Sign Out
-                                        @endif
-                                        @else
-                                        Sign In
-                                        @endif
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- main content -->
 
-                @if($ismanager)
-                <div class="col-md-3 mb-4 ">
-                    <div class="home-hover">
-                        <div class="reviews">
-                            <div class="homeCard1">
-                                <div class="home-heading d-flex justify-content-between px-3 py-2">
-                                    <div class="rounded pt-1">
-                                        <p style="font-size:12px;color:#778899;font-weight:500;"> Review</p>
-                                    </div>
-                                    <div>
-                                        <a href="/employees-review" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
-                                    </div>
-                                </div>
-                                @if(($this->count) > 0)
-                                <div class="notify d-flex justify-content-between  px-3">
-                                    <p style="color: black; font-size: 12px; font-weight: 500;">
-                                        {{$count}} <br>
-                                        <span style="color: #778899; font-size:11px; font-weight: 500;">Things to review</span>
-                                    </p>
-                                    <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg" alt="" style="height: 40px; width: 40px;">
-                                </div>
-                                <div class="leave-display d-flex align-items-center border-top p-3 gap-1">
-                                    @php
-                                    function getRandomColor() {
-                                    $colors = ['#FFD1DC', '#B0E57C', '#ADD8E6', '#E6E6FA', '#FFB6C1'];
-                                    return $colors[array_rand($colors)];
-                                    }
-                                    @endphp
-                                    @for ($i = 0; $i < min($count, 3); $i++) <?php
-                                                                                $leaveRequest = $this->leaveApplied[$i]['leaveRequest'] ?? null;
-                                                                                if ($leaveRequest && $leaveRequest->employee) {
-                                                                                    $firstName = $leaveRequest->employee->first_name;
-                                                                                    $lastName = $leaveRequest->employee->last_name;
-                                                                                    $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
-                                                                                ?> <div class="circle-container d-flex flex-column mr-3">
-                                        <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
-                                            <span>{{ $initials }}</span>
-                                        </div>
-                                        <span class="leaveText">Leave</span>
-                                </div>
-
-                            <?php
-                                                                                }
-                            ?>
-                            @endfor
-                            @if ($count > 3)
-                            <div class=" remainContent d-flex flex-column align-items-center" wire:click="reviewLeaveAndAttendance">
-                                <span>+{{ $count - 3}}</span>
-                                <span class="remaining">More</span>
+        <div class="row m-0">
+            <div class="col-md-3 mb-4 ">
+                <div class="home-hover">
+                    <div class="homeCard4">
+                        <div style="color: black; padding:10px 15px;">
+                            <p style="font-size:12px;">{{$currentDate}}</p>
+                            <p style="margin-top: 10px; color: #778899; font-size: 11px;">
+                                @php
+                                $EmployeeStartshiftTime=$employeeShiftDetails->shift_start_time;
+                                $EmployeeEndshiftTime=$employeeShiftDetails->shift_end_time;
+                                // Create DateTime objects
+                                $startShiftTime = new DateTime($EmployeeStartshiftTime);
+                                $endShiftTime = new DateTime($EmployeeEndshiftTime);
+                                // Format the times
+                                $formattedStartShiftTime = $startShiftTime->format('h:i a');
+                                $formattedEndShiftTime = $endShiftTime->format('H:i a');
+                                @endphp
+                                {{$currentDay}} | {{$formattedStartShiftTime}} to {{$formattedEndShiftTime}}
+                            </p>
+                            <div style="font-size: 14px; display: flex;margin-top:2em;">
+                                <img src="/images/stopwatch.png" class="me-4" alt="Image Description" style="width: 2.7em;">
+                                <p id="current-time" style="margin: auto 0;"></p>
                             </div>
-                            @endif
+                            <script>
+                                function updateTime() {
+                                    const currentTimeElement = document.getElementById('current-time');
+                                    const now = new Date();
+                                    const hours = String(now.getHours()).padStart(2, '0');
+                                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                                    const currentTime = `${hours} : ${minutes} : ${seconds}`;
+                                    currentTimeElement.textContent = currentTime;
+                                }
+                                updateTime();
+                                setInterval(updateTime, 1000);
+                            </script>
+                            <div class="A" style="display: flex;flex-direction:row;justify-content:space-between; align-items:center;margin-top:2em">
+                                <a style="width:50%;font-size:11px;cursor: pointer;color:blue" wire:click="open">View Swipes</a>
+                                <button id="signButton" style="color: white; width: 80px; height: 26px;font-size:10px; background-color: rgb(2, 17, 79); border: 1px solid #CFCACA; border-radius: 5px; " wire:click="toggleSignState">
+                                    @if($swipes)
+                                    @if ($swipes->in_or_out=="OUT")
+                                    Sign In
+                                    @else
+                                    Sign Out
+                                    @endif
+                                    @else
+                                    Sign In
+                                    @endif
+                                </button>
                             </div>
-                            @else
-                            <div class="d-flex flex-column justify-content-center align-items-center">
-                                <img src="/images/not_found.png" alt="Image Description" style="width: 7em;">
-                                <p class="mb-2 homeText">
-                                    Hurrah! You've nothing to review.
-                                </p>
-                            </div>
-                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-            @if($showReviewLeaveAndAttendance)
-            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Review</b></h5>
-                            <button type="button" class="btn-close btn-primary" aria-label="Close" wire:click="closereviewLeaveAndAttendance" style="background-color: white; height:10px;width:10px;">
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <h6 style="color:#778899;font-size:14px;">Leave Requests</h6>
-                            <div class="d-flex flex-row">
-                                @if($count > 3)
-                                @for ($i = 3; $i <= $count; $i++) <?php
-                                                                    $leaveRequest = $this->leaveApplied[$i]['leaveRequest'] ?? null;
-                                                                    if ($leaveRequest && $leaveRequest->employee) {
-                                                                        $firstName = $leaveRequest->employee->first_name;
-                                                                        $lastName = $leaveRequest->employee->last_name;
-                                                                        $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
-                                                                    ?> <div class=" d-flex flex-column mr-3">
+
+            @if($ismanager)
+            <div class="col-md-3 mb-4 ">
+                <div class="home-hover">
+                    <div class="reviews">
+                        <div class="homeCard1">
+                            <div class="home-heading d-flex justify-content-between px-3 py-2">
+                                <div class="rounded pt-1">
+                                    <p style="font-size:12px;color:#778899;font-weight:500;"> Review</p>
+                                </div>
+                                <div>
+                                    <a href="/employees-review" style="font-size:16px; "><img src="/images/up-arrow.png" alt="" style="width:20px;height:27px;"></a>
+                                </div>
+                            </div>
+                            @if(($this->count) > 0)
+                            <div class="notify d-flex justify-content-between  px-3">
+                                <p style="color: black; font-size: 12px; font-weight: 500;">
+                                    {{$count}} <br>
+                                    <span style="color: #778899; font-size:11px; font-weight: 500;">Things to review</span>
+                                </p>
+                                <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg" alt="" style="height: 40px; width: 40px;">
+                            </div>
+                            <div class="leave-display d-flex align-items-center border-top p-3 gap-1">
+                                @php
+                                function getRandomColor() {
+                                $colors = ['#FFD1DC', '#B0E57C', '#ADD8E6', '#E6E6FA', '#FFB6C1'];
+                                return $colors[array_rand($colors)];
+                                }
+                                @endphp
+                                @for ($i = 0; $i < min($count, 3); $i++) <?php
+                                                                            $leaveRequest = $this->leaveApplied[$i]['leaveRequest'] ?? null;
+                                                                            if ($leaveRequest && $leaveRequest->employee) {
+                                                                                $firstName = $leaveRequest->employee->first_name;
+                                                                                $lastName = $leaveRequest->employee->last_name;
+                                                                                $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
+                                                                            ?> <div class="circle-container d-flex flex-column mr-3">
                                     <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
                                         <span>{{ $initials }}</span>
                                     </div>
-                                    <span style="display: block;font-size:10px;color:#778899;">Leave</span>
+                                    <span class="leaveText">Leave</span>
                             </div>
 
                         <?php
-                                                                    }
+                                                                            }
                         ?>
                         @endfor
+                        @if ($count > 3)
+                        <div class=" remainContent d-flex flex-column align-items-center" wire:click="reviewLeaveAndAttendance">
+                            <span>+{{ $count - 3}}</span>
+                            <span class="remaining">More</span>
+                        </div>
                         @endif
                         </div>
-                        <h6 style="color:#778899;font-size:14px;">Attendance Requests</h6>
-                        <div class="d-flex flex-row">
-                            @for ($i = 0; $i <= $countofregularisations; $i++) <?php
-                                                                                // Fetch the regularisation at the current index
-                                                                                $regularisation = $this->regularisations[$i] ?? null;
-                                                                                if ($regularisation && $regularisation->employee) {
-                                                                                    $firstName = $regularisation->employee->first_name;
-                                                                                    $lastName = $regularisation->employee->last_name;
-                                                                                    $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
-                                                                                ?> <div class=" d-flex flex-column mr-3">
-                                <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
-                                    <span>{{$initials}}</span>
-                                </div>
-                                <span style="display: block;font-size:10px;color:#778899;text-align:center;overflow: hidden; text-overflow: ellipsis;max-width:30px;white-space:nowrap;">Attendance Regularisation</span>
+                        @else
+                        <div class="d-flex flex-column justify-content-center align-items-center">
+                            <img src="/images/not_found.png" alt="Image Description" style="width: 7em;">
+                            <p class="mb-2 homeText">
+                                Hurrah! You've nothing to review.
+                            </p>
                         </div>
-
-                    <?php
-                                                                                }
-                    ?>
-                    @endfor
+                        @endif
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
+        @if($showReviewLeaveAndAttendance)
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Review</b></h5>
+                        <button type="button" class="btn-close btn-primary" aria-label="Close" wire:click="closereviewLeaveAndAttendance" style="background-color: white; height:10px;width:10px;">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6 style="color:#778899;font-size:14px;">Leave Requests</h6>
+                        <div class="d-flex flex-row">
+                            @if($count > 3)
+                            @for ($i = 3; $i <= $count; $i++) <?php
+                                                                $leaveRequest = $this->leaveApplied[$i]['leaveRequest'] ?? null;
+                                                                if ($leaveRequest && $leaveRequest->employee) {
+                                                                    $firstName = $leaveRequest->employee->first_name;
+                                                                    $lastName = $leaveRequest->employee->last_name;
+                                                                    $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
+                                                                ?> <div class=" d-flex flex-column mr-3">
+                                <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                    <span>{{ $initials }}</span>
+                                </div>
+                                <span style="display: block;font-size:10px;color:#778899;">Leave</span>
+                        </div>
+
+                    <?php
+                                                                }
+                    ?>
+                    @endfor
+                    @endif
+                    </div>
+                    <h6 style="color:#778899;font-size:14px;">Attendance Requests</h6>
+                    <div class="d-flex flex-row">
+                        @for ($i = 0; $i <= $countofregularisations; $i++) <?php
+                                                                            // Fetch the regularisation at the current index
+                                                                            $regularisation = $this->regularisations[$i] ?? null;
+                                                                            if ($regularisation && $regularisation->employee) {
+                                                                                $firstName = $regularisation->employee->first_name;
+                                                                                $lastName = $regularisation->employee->last_name;
+                                                                                $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
+                                                                            ?> <div class=" d-flex flex-column mr-3">
+                            <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}" data-toggle="tooltip" data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                <span>{{$initials}}</span>
+                            </div>
+                            <span style="display: block;font-size:10px;color:#778899;text-align:center;overflow: hidden; text-overflow: ellipsis;max-width:30px;white-space:nowrap;">Attendance Regularisation</span>
+                    </div>
+
+                <?php
+                                                                            }
+                ?>
+                @endfor
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal-backdrop fade show blurred-backdrop"></div>
 @endif
 @endif
 
 <div class="col-md-3 mb-4 ">
-    <div class="upholidays-card">
-        <div class="upholidays-card-details">
-            <div class="row m-0">
-                <div class="col-4 p-0">
-                    <img src="/images/calendar-up.png" alt="Image Description" style="width: 2.7em;">
-                </div>
-                <div class="col-8 p-0">
-                    <p class="upholidays-text-title">
-                        Upcoming Holidays
+    <div class="payslip-card" style="height: 195px;">
+        <p class="payslip-card-title">Upcoming Holidays</p>
+        @if($calendarData->isEmpty())
+        <p class="payslip-small-desc">Uh oh! No holidays to show.</p>
+        @else
+        @php
+        $count = 0;
+        @endphp
+
+        <div class="row m-0">
+            <div class="col-7 p-0">
+                @foreach($calendarData as $entry)
+                @if(!empty($entry->festivals))
+                <div>
+                    <p class="payslip-small-desc" style="color: #677A8E; font-size: 11px;margin-bottom:10px; ">
+                        <span style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }} <span style="font-size: 10px; font-weight: normal;">{{ date('l', strtotime($entry->date)) }}</span></span>
+                        <br>
+                        <span style="font-size: 11px; font-weight: normal;">{{ ucfirst($entry->festivals) }}</span>
                     </p>
                 </div>
+                @php
+                $count++;
+                @endphp
+                @endif
+
+                @if($count >= 3)
+                @break
+                @endif
+                @endforeach
             </div>
-
-            <!-- <p class="upholidays-text-body">Here are the details of the card</p> -->
-            @if($calendarData->isEmpty())
-            <p class="upholidays-text-body">Uh oh! No holidays to show.</p>
-            @else
-            @php
-            $count = 0;
-            @endphp
-
-            <div class="row m-0">
-                <div class="col-12 p-0">
-                    @foreach($calendarData as $entry)
-                    @if(!empty($entry->festivals))
-                    <div>
-                        <p style="color: #677A8E; font-size: 11px;margin-bottom:10px; ">
-                            <span style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }} <span style="font-size: 10px; font-weight: normal;">{{ date('l', strtotime($entry->date)) }}</span></span>
-                            <br>
-                            <span style="font-size: 11px; font-weight: normal;">{{ ucfirst($entry->festivals) }}</span>
-                        </p>
-                    </div>
-                    @php
-                    $count++;
-                    @endphp
-                    @endif
-
-                    @if($count >= 3)
-                    @break
-                    @endif
-                    @endforeach
-                </div>
-            </div>
-
-
-            @endif
         </div>
-        <a href="/holiday-calender">
-            <button class="upholidays-card-button">More info</button>
+
+
+        @endif
+        <a href="/holiday-calendar">
+            <div class="payslip-go-corner">
+                <div class="payslip-go-arrow">→</div>
+            </div>
         </a>
     </div>
 </div>
 
 <div class="col-md-3 mb-4 ">
-    <div class="upholidays-card">
-        <div class="upholidays-card-details">
-            <div class="row m-0">
-                <div class="col-4 p-0">
-                    <img src="/images/deadline.png" alt="Image Description" style="width: 2.7em;">
-                </div>
-                <div class="col-8 p-0">
-                    <p class="upholidays-text-title">
-                        Time Sheet
-                    </p>
-                </div>
-            </div>
-            <p class="upholidays-text-body">Submit your time sheet for this week.</p>
-        </div>
+    <div class="payslip-card" style="height: 195px;">
+        <p class="payslip-card-title">Time Sheet</p>
+        <p class="payslip-small-desc">
+            Submit your time sheet for this week.
+        </p>
         <a href="/time-sheet">
-            <button class="upholidays-card-button">Submit</button>
+            <div class="payslip-go-corner">
+                <div class="payslip-go-arrow">→</div>
+            </div>
         </a>
     </div>
 </div>
 
 <div class="col-md-3 mb-4 ">
-    <div class="upholidays-card">
-        <div class="upholidays-card-details">
-            <div class="row m-0">
-                <div class="col-4 p-0">
-                    <img src="/images/sunbed.png" alt="Image Description" style="width: 2.7em;">
-                </div>
-                <div class="col-8 p-0">
-                    <p class="upholidays-text-title">
-                        Apply for a Leave
-                    </p>
-                </div>
-            </div>
-            <!-- <p class="upholidays-text-title">Apply for a Leave</p> -->
-            <p class="upholidays-text-body">Kindly click on the "Apply" button below to submit your leave application.</p>
-        </div>
+    <div class="payslip-card" style="height: 195px;">
+        <p class="payslip-card-title">Apply for a Leave</p>
+        <p class="payslip-small-desc">
+            Kindly click on the Arrow button to submit your leave application.
+        </p>
         <a href="/leave-page">
-            <button class="upholidays-card-button">Apply</button>
+            <div class="payslip-go-corner">
+                <div class="payslip-go-arrow">→</div>
+            </div>
         </a>
     </div>
+
 </div>
 
 @if($ismanager)
@@ -742,11 +711,15 @@
         </div>
     </div>
 
-    <div class="cookieCard">
-        <p class="cookieHeading">POI</p>
-        <p class="cookieDescription">Hold on! You can submit your Proof of Investments (POI) once released.</p>
+    <div class="payslip-card mb-3">
+        <p class="payslip-card-title">POI</p>
+        <p class="payslip-small-desc">
+            Hold on! You can submit your Proof of Investments (POI) once released.
+        </p>
         <a href="#">
-            <button class="acceptButton">View</button>
+            <div class="payslip-go-corner">
+                <div class="payslip-go-arrow">→</div>
+            </div>
         </a>
     </div>
 </div>
@@ -828,11 +801,15 @@ $taskCount = $taskRecords->count();
         </div>
     </div>
 
-    <div class="cookieCard">
-        <p class="cookieHeading">IT Declaration</p>
-        <p class="cookieDescription">Hurrah! Considered your IT declaration for Apr 2023.</p>
+    <div class="payslip-card mb-3">
+        <p class="payslip-card-title">IT Declaration</p>
+        <p class="payslip-small-desc">
+            Hurrah! Considered your IT declaration for Apr 2023.
+        </p>
         <a href="/formdeclaration">
-            <button class="acceptButton">View</button>
+            <div class="payslip-go-corner">
+                <div class="payslip-go-arrow">→</div>
+            </div>
         </a>
     </div>
 
@@ -882,9 +859,6 @@ $taskCount = $taskRecords->count();
 
 </div>
 </div>
-
-
-</body>
 
 </div>
 <script>
