@@ -43,4 +43,3 @@ return new class extends Migration
         Schema::dropIfExists('time_sheets');
     }
 };
-e

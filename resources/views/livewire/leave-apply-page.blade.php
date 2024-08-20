@@ -7,6 +7,7 @@
         </button>
     </div>
     @endif
+
     <div class="applyContainer bg-white">
         @if($showinfoMessage)
         <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex gap-2 align-items-center">
@@ -25,9 +26,9 @@
             <div class="row d-flex align-items-center">
                 <div class="col-md-7">
                     <div class="form-group ">
-                        <label for="leaveType">Leave Type <span class="requiredMark">*</span> </label> <br>
+                        <label for="leave_type">Leave Type <span class="requiredMark">*</span> </label> <br>
                         <div class="custom-select-wrapper" style="width: 50%;">
-                            <select id="leaveType" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leaveType">
+                            <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leave_type">
                                 <option value="default">Select Type</option>
                                 <option value="Casual Leave">Casual Leave</option>
                                 @if($showCasualLeaveProbation)
@@ -181,8 +182,8 @@
             <div class="row d-flex mt-2">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="fromDate">From Date <span class="requiredMark">*</span> </label>
-                        <input id="fromDate" type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" id="fromDate" name="fromDate" wire:change="handleFieldUpdate('from_date')">
+                        <label for="from_date">From Date <span class="requiredMark">*</span> </label>
+                        <input id="from_date" type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" name="from_date" wire:change="handleFieldUpdate('from_date')">
                         @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
@@ -278,11 +279,11 @@
                             <div class="col-md-10 m-0">
                                 <div class="input-group">
                                     <input
-                                        wire:model="filter"
+                                    wire:model="searchQuery"
                                         id="searchInput"
                                         type="text"
                                         class="form-control placeholder-small"
-                                        placeholder="Search for Emp.Name or ID"
+                                        placeholder="Search...."
                                         aria-label="Search"
                                         aria-describedby="basic-addon1"
                                         style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;">
@@ -290,7 +291,7 @@
                                         <button
                                             type="button"
                                             class="search-btn"
-                                            wire:click="searchManager">
+                                            wire:click="getFilteredManagers">
                                             <i style="color:#fff;margin-left:10px;" class="fas fa-search"></i>
                                         </button>
                                     </div>
@@ -298,7 +299,7 @@
                             </div>
 
                             <div class="col-md-2 m-0 p-0">
-                                <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
+                                <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #ccc;border:#ccc;height:33px;width:33px;">
                                     <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i>
                                     </span>
                                 </button>
@@ -368,7 +369,7 @@
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
                         <div class="col-md-10" style="margin: 0;padding:0 2px;">
                             <div class="input-group">
-                                <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
                                     <button type="button" wire:click="searchCCRecipients" class="search-btn">
                                         <i style="margin-left: 10px;" class="fas fa-search"></i>
@@ -378,7 +379,7 @@
                         </div>
 
                         <div class="col-md-2 m-0 p-0">
-                            <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
+                            <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #ccc;border:#ccc;height:33px;width:33px;">
                                 <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i></span>
                             </button>
                         </div>
@@ -438,10 +439,10 @@
             </div>
             <div class="form-group mt-3">
                 <label for="file">Attachments</label> <br>
-                <input id="file" type="file" wire:model="file_paths" wire:loading.attr="disabled" multiple style="font-size: 12px;" />
+                <input id="file" type="file" wire:model="file_paths" wire:loading.attr="disabled" multiple style="font-size: 12px;" /> <br>
                 @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror
+                <span class="normalTextValue mt-2" style="font-weight: normal;">File type : jpg,png</span>
             </div>
-
 
             <div class="buttons-leave">
                 <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
