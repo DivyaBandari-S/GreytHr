@@ -18,7 +18,7 @@
 
             $('span', drp).html(startDate.format('DD/MM/YYYY') + ' &rarr; ' + endDate.format('DD/MM/YYYY'));
         ">
-        <i class="fa fa-calendar"></i>&nbsp;
-        <span style="font-size: 0.75rem;"></span> <i class="fa fa-caret-down"></i>
+        <i class="fa fa-calendar" style="margin-right: 10px;"></i>&nbsp;
+        <span style="font-size: 0.75rem;  margin-right: 5px;"></span> <i class="fa fa-caret-down"></i>
     </div>
 </div>
