@@ -18,6 +18,7 @@
     --normal-font-size: 0.75rem;
     --sub-headings-font-size: 0.8rem;
     --main-headings-font-size: 1rem;
+    --nav-headings-font-size: 0.95rem;
 }
 .input-group input:focus {
     outline: none; /* Remove the default blue outline */
@@ -5393,7 +5394,7 @@ option {
     cursor: pointer;
   }
   .page-title{
-    color: var(--main-heading-color); 
+    color: var(--main-heading-color);
     width: -webkit-fill-available; 
   }
   .title-page{
@@ -5401,5 +5402,5 @@ option {
     font-weight: 500;
     color: var(--main-heading-color);
     justify-content: center; 
-    font-size: var(--main-headings-font-size);
+    font-size: var(--nav-headings-font-size);
   }
