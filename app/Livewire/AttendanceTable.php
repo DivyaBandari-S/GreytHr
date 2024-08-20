@@ -34,6 +34,8 @@ class AttendanceTable extends Component
 
     public $employeeDetails;
     public string $end;
+
+    public $legend=false;
     public $showSR = false;
 
     protected $listeners = [
@@ -48,6 +50,10 @@ class AttendanceTable extends Component
         $this->start = Carbon::now()->year($this->year)->firstOfMonth()->format('Y-m-d');
         $this->end = Carbon::now()->year($this->year)->lastOfMonth()->format('Y-m-d');
         $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->select('emp_id','first_name','last_name')->first();
+    }
+    public function openlegend()
+    {
+        $this->legend=!$this->legend;
     }
     public function update($start, $end) 
     {

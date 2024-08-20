@@ -1681,7 +1681,7 @@ color: #fff;
                     @endif
                 </div>
 
-                <button class="accordion"style="content: {{ $legend ? '\2796' : '\02795' }}"wire:click="openlegend">Legends</button>
+                <button class="accordion"wire:click="openlegend">Legends</button>
                 <div class="panel"style="display: {{ $legend ? 'block' : 'none' }};">
                     <div class="row m-0 mt-3 mb-3">
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
