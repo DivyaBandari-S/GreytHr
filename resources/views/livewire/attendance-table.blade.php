@@ -535,7 +535,6 @@ width: 170px; */
             height: 100px;           /* Adjust height as needed */
             padding: 20px;           /* Optional padding for content spacing */
             border: 1px solid #ddd;  /* Optional border for visual distinction */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
             box-sizing: border-box;  /* Ensure padding and border are included in width and height */
         }
 
@@ -1149,6 +1148,35 @@ width: 170px; */
             margin-right: 20px;
 
         }
+        .accordion:before {
+          
+          /* Unicode character for "plus" sign (+) */
+          font-size: 13px;
+          color: #fff;
+          float: right;
+          margin-left: 5px;
+      }
+
+      
+        .panel {
+            /* padding: 0 18px; */
+            display: none;
+            background-color: white;
+            overflow: hidden;
+            border: 1px solid #cecece;
+            font-size: 14px;
+        }
+        .accordion {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            /* Adjust the width as needed */
+            top: 100px;
+            overflow-x: auto;
+            left: 0;
+            /* Adjust the top position as needed */
+            /* Adjust the right position as needed */
+        }
 
         /* Existing styles for sidebar */
 
@@ -1215,7 +1243,7 @@ color: #fff;
         }
 
         .accordion:after {
-            content: '\02795';
+           
             /* Unicode character for "plus" sign (+) */
             font-size: 13px;
             color: #fff;
@@ -1551,7 +1579,7 @@ color: #fff;
                                 </button>
                             </td>
 
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">No&nbsp;attention&nbsp;required</td>
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;">No&nbsp;attention&nbsp;required</td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">
                                 @if($totalWorkedMinutes<$standardWorkingMinutes&&!empty($record['last_out_time'])&&$isWeekend==false&&$holidayNote==false&&$isPresent==true)
                                    @php
@@ -1800,19 +1828,160 @@ color: #fff;
     </div>
     <div class="custom-container">
         <div class="row">
-           <div class="col"style="white-space:nowrap;">Present:{{$presentCount}}</div>
-           <div class="col"style="white-space:nowrap;">Leave:0</div>
-           <div class="col"style="white-space:nowrap;">Holiday:{{$holidaycountforcontainer}}</div>
-           <div class="col"style="white-space:nowrap;">Rest Day:0</div>
-           <div class="col"style="white-space:nowrap;">Absent:{{$absentCount}}</div>
-           <div class="col"style="white-space:nowrap;">On Duty:0</div>
-           <div class="col"style="white-space:nowrap;">Shutdown:0</div>
-           <div class="col"style="white-space:nowrap;">Off Day:{{$offCount}}</div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#edfaed;color:#778899;text-align:center;font-size:12px;">Present:<span style="font-weight:600;"> {{$presentCount}}</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color:rgb(252, 242, 255);color:#778899;text-align:center;font-size:12px;">Leave:<span style="font-weight:600;"> 0</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:12px;">Holiday:<span style="font-weight:600;"> {{$holidaycountforcontainer}}</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:12px;">Rest Day:<span style="font-weight:600;"> 0</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:12px;">Absent:<span style="font-weight:600;"> {{$absentCount}}</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color: #fff7eb;color:#778899;text-align:center;font-size:12px;">On Duty:<span style="font-weight:600;"> 0</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color: rgba(252, 217, 151,1);color:#778899;text-align:center;font-size:12px;">Shutdown:<span style="font-weight:600;"> 0</span></div>
+           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:12px;">Off Day:<span style="font-weight:600;"> {{$offCount}}</span></div>
         </div>
-        <div class="row">
-            <div class="col"style="white-space:nowrap;">Restricted Holiday:0</div>
-            <div class="col"style="white-space:nowrap;">Status Unknown:0</div>
+        <div class="row justify-content-center">
+            <div class="col-auto p-1 m-2"style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:12px;">Restricted Holiday:<span style="font-weight:600;"> 0</span></div>
+            <div class="col-auto p-1 m-2"style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:12px;">Status Unknown:<span style="font-weight:600;"> 0</span></div>
         </div>
     </div>
-    
+    <button class="accordion"wire:click="openlegend">Legends</button>
+                <div class="panel"style="display: {{ $legend ? 'block' : 'none' }};">
+                    <div class="row m-0 mt-3 mb-3">
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon presentIcon">P</span>
+                            </p>
+                            <p class="legendtext m-0">Present</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon absentIcon">A</span>
+                            </p>
+                            <p class="legendtext m-0">Absent</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon offDayIcon">O</span>
+                            </p>
+                            <p class="legendtext m-0">Off Day</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon offDayIcon">R</span>
+                            </p>
+                            <p class="legendtext m-0">Rest Day</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon leaveIcon">L</span>
+                            </p>
+                            <p class="legendtext m-0">Leave</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon onDutyIcon">OD</span>
+                            </p>
+                            <p class="legendtext m-0">On Duty</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon holidayIcon">H</span>
+                            </p>
+                            <p class="legendtext m-0">Holiday</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon deductionIcon">&nbsp;&nbsp;</span>
+                            </p>
+                            <p class="legendtext m-0" style="word-break: break-all;"> Deduction</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon alertForDeIcon">&nbsp;&nbsp;</span>
+                            </p>
+                            <p class="legendtext m-0">Allert for Deduction</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon absentIcon">?</span>
+                            </p>
+                            <p class="legendtext m-0">Status Unknown</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <i class="far fa-clock"></i>
+                            </p>
+                            <p class="legendtext m-0">Overtime</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                                <i class="far fa-edit"></i>
+                            </p>
+                            <p class="legendtext m-0">Override</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                            <div class="down-arrow-ign-attendance-info"></div>
+                            </p>
+                            <p class="legendtext m-0">Ignored</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                            <div class="down-arrow-gra"></div>
+                            </p>
+                            <p class="legendtext m-0">Grace</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="me-2 mb-0">
+                            <div class="down-arrow-reg"></div>
+                            </p>
+                            <p class="legendtext m-0">Regularized</p>
+                        </div>
+                    </div>
+                    <div class="row m-0 mb-3">
+                        <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Day Type</h6>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-mug-hot"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">Rest Day</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-tv"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">Off Day</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-umbrella"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">Holiday</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-calendar-day"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">Half Day</p>
+                        </div>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-battery-empty"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">IT Maintanance</p>
+                        </div>
+                    </div>
+                    <div class="row m-0 mb-3">
+                        <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Leave Type</h6>
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                            <p class="mb-0">
+                                <i class="fas fa-mug-hot"></i>
+                            </p>
+                            <p class="m-1 attendance-legend-text">Rest Day</p>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
 </div>
