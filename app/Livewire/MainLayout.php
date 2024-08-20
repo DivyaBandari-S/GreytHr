@@ -14,7 +14,7 @@ class MainLayout extends Component
 
     public function mount(){
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->loginEmployeeProfile = EmployeeDetails::where('emp_id',$employeeId)->select('emp_id', 'first_name', 'last_name','image')->first();
+        $this->loginEmployeeProfile = EmployeeDetails::where('emp_id',$employeeId)->select('emp_id', 'first_name', 'last_name','image','gender')->first();
     }
     public function handleLogout()
     {
