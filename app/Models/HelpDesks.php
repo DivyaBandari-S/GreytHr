@@ -10,7 +10,7 @@ class HelpDesks extends Model
 {
     use HasFactory;
     protected $fillable=[
-        'emp_id', 'category', 'subject', 'description', 'file_path', 'cc_to', 'priority','status','mail','mobile','distributor_name','selected_equipment'
+        'emp_id', 'category', 'subject', 'description', 'file_path','mime_type','file_name', 'cc_to', 'priority','status','mail','mobile','distributor_name','selected_equipment'
      ];
     public function emp()
     {
@@ -29,7 +29,6 @@ class HelpDesks extends Model
     {
         return $this->file_path ? 'data:image/jpeg;base64,' . base64_encode($this->file_path) : null;
     }
-    
-    
+
+
 }
-    

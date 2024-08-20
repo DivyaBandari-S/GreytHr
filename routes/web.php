@@ -108,7 +108,7 @@ use App\Models\Message;
 use App\Models\SalaryRevision;
 use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
-
+use App\Models\HelpDesks;
 Route::group(['middleware' => 'checkAuth'], function () {
 
     Route::get('/emplogin', EmpLogin::class)->name('emplogin');
@@ -439,3 +439,12 @@ Route::get('/salary/{emp_id}', function ($emp_id) {
         'remarks' => $empSalary->remarks,
     ]);
 });
+
+Route::get('/file/{id}', function ($id) {
+    $file = HelpDesks::findOrFail($id);
+
+    return Response::make($file->file_path, 200, [
+        'Content-Type' => $file->mime_type,
+        'Content-Disposition' => (strpos($file->mime_type, 'image') === false ? 'attachment' : 'inline') . '; filename="' . $file->file_name . '"',
+    ]);
+})->name('file.show');
