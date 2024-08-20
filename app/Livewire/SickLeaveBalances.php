@@ -109,7 +109,7 @@ class SickLeaveBalances extends Component
             ->where('leave_type', 'Sick Leave')
             ->get();
             
-            // Now $employeeLeaveBalances contains all the rows from employee_leave_balances 
+            // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
             // where emp_id matches and leave_type is "Sick Leave"
             $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
             ->where('leave_type', 'Sick Leave')
