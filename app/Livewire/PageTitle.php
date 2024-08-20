@@ -46,7 +46,7 @@ class PageTitle extends Component
     {
         $routeTitleMap = [
             'home' => 'Home',
-            'feeds' => 'Feeds',
+            'Feeds' => 'Feeds',
             'people' => 'People',
             'profile.info' => 'Employee Information',
             'itdeclaration' => 'It Declaration',
@@ -54,7 +54,12 @@ class PageTitle extends Component
             'leave-history' => 'Leave - View Details',
             'leave-pending' =>'Leave - View Details',
             'approved-details' => 'Review - Leave',
-            'leave-page' => 'Leave Apply',
+            'leave-form-page' => 'Leave Apply',
+            'leave-balance' => 'Leave Balances',
+            'employee-swipes-data' => 'Employee Swipes',
+            'attendance-muster-data' => 'Attendance Muster',
+            'shift-roaster-data' => 'Shift Roaster',
+            'employee' => 'Connect',
             
         ];
         // Use the mapped title or fallback to the original route name

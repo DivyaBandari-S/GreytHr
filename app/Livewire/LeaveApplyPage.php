@@ -282,7 +282,7 @@ class LeaveApplyPage extends Component
                 return redirect()->back()->withInput();
             }
 
-            // Check for overlapping leave
+            // Assuming $from_session and $to_session are the session indicators (e.g., 'first' or 'second')
             $overlappingLeave = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where(function ($query) {
                     $query->where(function ($q) {
@@ -297,9 +297,38 @@ class LeaveApplyPage extends Component
                     });
                 })
                 ->whereIn('status', ['approved', 'pending'])
-                ->exists();
+                ->get(); // Use get() to retrieve all relevant leave requests
 
-            if ($overlappingLeave) {
+            $conflict = false;
+
+            if($overlappingLeave){
+                foreach ($overlappingLeave as $leave) {
+                    if ($this->from_date == $leave->from_date && $this->to_date == $leave->to_date) {
+                        dd($this->from_date);
+                        if ($this->from_session == $leave->from_session && $this->to_session == $leave->to_session) {
+                            // Exact same leave request
+                            $conflict = true;
+                            break;
+                        }
+                    } else {
+                        // Allow applying for different sessions
+                        if ($this->from_date == $leave->from_date && $this->to_date == $leave->to_date) {
+                            if ($this->from_session != $leave->from_session && $this->to_session != $leave->to_session) {
+                                dd('bj');
+                                // Exact same leave request
+                                $conflict = false;
+                            }
+                        }
+                            else {
+                            // Other cases where leave dates or sessions overlap
+                            $conflict = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if ($conflict) {
                 $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
                 $this->showerrorMessage = true;
                 return;

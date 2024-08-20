@@ -270,7 +270,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
 
     //Feeds Module
-    Route::get('/Feeds', Feeds::class);
+    Route::get('/Feeds', Feeds::class)->name('Feeds');
     Route::get('/events', Activities::class);
     Route::get('/everyone', Everyone::class);
 
