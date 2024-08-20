@@ -52,15 +52,16 @@ class WhoIsInChart extends Component
 
     public $employees4;
 
-    public $shifts;
+    public $shiftsforAttendance;
     public $search = '';
     public $results = [];
     public function mount()
     {
         $this->currentDate = Carbon::now()->format('Y-m-d');
-        $this->shifts = EmployeeDetails::select('shift_type', 'shift_start_time', 'shift_end_time')
+        $this->shiftsforAttendance = EmployeeDetails::select('shift_type', 'shift_start_time', 'shift_end_time')
                         ->distinct()
                         ->get();
+                 
         
 
 
@@ -277,6 +278,7 @@ class WhoIsInChart extends Component
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                ->where('employee_status','active')
                 ->get()->toArray();
             $data = [
                 ['List of Absent Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],

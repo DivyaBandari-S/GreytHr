@@ -106,6 +106,8 @@ class Attendance extends Component
 
     public $avgWorkingHrsForModalTitle;
     public $legend=true;
+
+    public $isNextMonth=0;
     public $record;
 
     public $dateToCheck;
@@ -865,7 +867,7 @@ class Attendance extends Component
             $averageMinutes = $totalMinutesWorked / $daysWithRecords;
             $averageHours = floor($averageMinutes / 60);
             $averageRemainingMinutes = $averageMinutes % 60;
-    
+            
             $this->averageFormattedTime = sprintf('%02d:%02d', $averageHours, $averageRemainingMinutes);
     
             // Return or use the average formatted time
@@ -1156,6 +1158,7 @@ class Attendance extends Component
             $date = Carbon::create($this->year, $this->month, 1)->addMonth();
             $this->year = $date->year;
             $this->month = $date->month;
+            $this->isNextMonth=1;
             $this->generateCalendar();
             $this->changeDate = 1;
             $this->dateClicked($date->toDateString());
