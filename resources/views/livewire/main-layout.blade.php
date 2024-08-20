@@ -154,7 +154,13 @@
                     @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
                     <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="">
                     @else
+                    @if($loginEmployeeProfile->gender=='Male')
+                    <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="">
+                    @elseif($loginEmployeeProfile->gender=='Female')
+                    <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="">
+                    @else
                     <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="">
+                    @endif
                     @endif
                 </div>
                 <ul class="profile-link">
