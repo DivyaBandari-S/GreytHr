@@ -76,7 +76,7 @@ class EmployeeLeaveBalances extends Model
                     // Check if the corresponding dates fall within the requested year
                     $fromDate = isset($fromDates[$index]) ? new \DateTime($fromDates[$index]) : null;
                     $toDate = isset($toDates[$index]) ? new \DateTime($toDates[$index]) : null;
-    
+
                     if ($fromDate && $toDate) {
                         $fromYear = $fromDate->format('Y');
                         $toYear = $toDate->format('Y');

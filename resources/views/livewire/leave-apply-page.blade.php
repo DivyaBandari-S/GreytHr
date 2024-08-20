@@ -8,7 +8,7 @@
     </div>
     @endif
 
-    <div class="applyContainer bg-white">
+    <div class="applyContainer bg-white position-relative">
         @if($showinfoMessage)
         <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex gap-2 align-items-center">
             <p class="mb-0" style="font-size:10px;">Leave is earned by an employee and granted by the employer to take time off work. The employee is free to
@@ -99,7 +99,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['casualProbationLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 10;">
+                            <div class="error-message" >
                                 <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
@@ -112,7 +112,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['casualLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 10;">
+                            <div class="error-message" >
                                 <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
@@ -124,7 +124,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['sickLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 10;">
+                            <div class="error-message" >
                                 <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
@@ -136,8 +136,8 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['maternityLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 10;">
-                                <span class="Insufficient">Insufficient leave balance</span>
+                            <div class="error-message" >
+                                <div class="alert-danger Insufficient">Insufficient leave balance</div>
                             </div>
                             @php
                             $insufficientBalance = true; @endphp
@@ -148,7 +148,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['paternityLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 10;">
+                            <div class="error-message" >
                                 <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
@@ -160,7 +160,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['marriageLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" style="position: absolute;  left: 10;">
+                            <div class="error-message" >
                                 <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php

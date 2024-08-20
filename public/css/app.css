@@ -18,7 +18,7 @@
     --normal-font-size: 0.75rem;
     --sub-headings-font-size: 0.8rem;
     --main-headings-font-size: 1rem;
-    --nav-headings-font-size: 0.95rem;
+    --nav-headings-font-size: 0.925rem;
 }
 .input-group input:focus {
     outline: none; /* Remove the default blue outline */
@@ -2875,6 +2875,16 @@ input[type="radio"] {
     color: var(--requiredAlert);
     font-weight: normal;
     font-size: var(--normal-font-size);
+    border-radius: 5px;
+    left: 0;
+    right: 0;
+    width: 35%;
+    margin: 0 auto;
+    top: 10%;
+    padding: 10px;
+    background: 
+    #f4cccc;
+    position: absolute;
 }
 .LeaveCancelTable {
     width: 100%;
@@ -4431,7 +4441,7 @@ select .yearSelect {
 }
 .alert-close{
     font-size: var(--normal-font-size);
-    background-color: none !important;
+    background: none !important;
     border: none;
 }
 /* end of styles */
