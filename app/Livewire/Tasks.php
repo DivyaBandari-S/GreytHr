@@ -258,7 +258,7 @@ class Tasks extends Component
         $this->showRecipients = true;
         $this->selectedPerson = $this->peoples->where('emp_id', $personId)->first();
         $this->selectedPersonClients = ClientsEmployee::whereNotNull('emp_id')->where('emp_id', $this->selectedPerson->emp_id)->get();
-        $this->selectedPeopleName = $this->selectedPerson->first_name . ' #(' . $this->selectedPerson->emp_id . ')';
+        $this->selectedPeopleName = $this->selectedPerson->first_name . ' ' . $this->selectedPerson->last_name . ' #(' . $this->selectedPerson->emp_id . ')';
         $this->assignee = $this->selectedPeopleName;
 
 

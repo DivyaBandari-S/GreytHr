@@ -8,7 +8,6 @@
         {{ session('error') }}
     </div>
     @endif
-
     <script>
         // Auto dismiss after 5 seconds
         setTimeout(function() {
@@ -73,100 +72,116 @@
                     </table>
                 </div>
                 <!-- inputs fields -->
-                @if($showApplyingTo)
-                <div class="form-group mt-3" style="margin-top: 10px;">
-                    <div style="display:flex; flex-direction:row;">
-                        <span class="normalTextValue" style="cursor: pointer;">
-                            <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
-                            Applying To
-                        </span>
-                    </div>
-                </div>
-                @endif
-                @if($show_reporting)
-                <div class="form-group mt-3">
-                    <span class="normalTextValue">Applying To</span>
-                </div>
-                <div class="reporting mb-2" wire:ignore.self>
-                    @if($managerDetails)
-                    <div class="employee-profile-image-container">
-                        @if($managerDetails['image'])
-                        <img height="40" width="40" src="{{ asset('storage/' . $managerDetails['image']) }}" style="border-radius:50%;">
-                        @else
-                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
-                        @endif
-                    </div>
-                    <div class="center p-0 m-0">
-                        <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($managerDetails['report_to'])) }}</p>
-                        <p class="mb-0" style="color:#778899; font-size:10px;margin-bottom:0;" id="managerIdText">
-                            <span class="remaining">#{{ $managerDetails['manager_id'] }}</span>
-                        </p>
-                    </div>
-                    @else
-                    <div class="employee-profile-image-container">
-                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
-                    </div>
-                    <div class="center p-0 m-0">
-                        <p class="mb-0" style="font-size:10px;margin-bottom:0;">N/A</p>
-                        <p class="mb-0" style="font-size:10px;margin-bottom:0;">#(N/A)</p>
+                <div>
+                    @if($showApplyingTo)
+                    <div class="form-group mt-3">
+                        <div class="d-flex " wire:click="applyingTo">
+                            <span class="normalTextValue" style="cursor: pointer;">
+                                <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
+                                Applying To
+                            </span>
+                        </div>
                     </div>
                     @endif
-                    <div class="downArrow" wire:click="toggleApplyingto">
-                        <i class="fas fa-chevron-down" style="cursor:pointer"></i>
+                    <!-- Your Blade file -->
+                    @if($show_reporting)
+                    <div class="form-group mt-3">
+                        <span class="normalTextValue"> Applying To</span>
                     </div>
-                </div>
-                @endif
+                    <div class="reporting mb-2">
+                        @if($selectedManagerDetails)
+                        @if($selectedManagerDetails->image)
+                        <div class="employee-profile-image-container">
+                            <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedManagerDetails->image)}}" style="border-radius:50%;">
+                        </div>
+                        @else
+                        <div class="employee-profile-image-container">
+                            <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                        </div>
+                        @endif
+                        <div class="center p-0 m-0">
+                            <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($selectedManagerDetails->first_name)) }} {{ ucwords(strtolower($selectedManagerDetails->last_name)) }}</p>
+                            <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#{{$selectedManagerDetails->emp_id}}</span></p>
+                        </div>
+                        @else
+                        <div class="center p-0 m-0">
+                            <p class="mb-0" style="font-size:10px;">N/A</p>
+                            <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText">#(N/A)</p>
+                        </div>
+                        @endif
+                        <div class="downArrow" wire:click="toggleApplyingto">
+                            <i class="fas fa-chevron-down" style="cursor:pointer"></i>
+                        </div>
+                    </div>
+                    @endif
 
-                @if($showApplyingToContainer)
-                <div class="searchContainer">
-                    <!-- Content for the search container -->
-                    <div class="row" style="padding: 0 15px; margin-bottom: 10px;">
-                        <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
-                            <div class="col-md-10" style="margin: 0px; padding: 0px">
-                                <div class="input-group">
-                                    <input wire:model="filter" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
-                                    <div class="input-group-append searchBtnBg d-flex align-items-center">
-                                        <button type="button" wire:click="searchEmployees" class="search-btn">
-                                            <i style="margin-right: 5px;" class="fa fa-search"></i>
-                                        </button>
+
+                    @if($showApplyingToContainer)
+                    <div class="searchContainer">
+                        <!-- Content for the search container -->
+                        <div class="row mb-2 py-0 ">
+                            <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
+                                <div class="col-md-10 m-0">
+                                    <div class="input-group">
+                                        <input
+                                            wire:model="searchQuery"
+                                            id="searchInput"
+                                            type="text"
+                                            class="form-control placeholder-small"
+                                            placeholder="Search...."
+                                            aria-label="Search"
+                                            aria-describedby="basic-addon1"
+                                            style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;">
+                                        <div class="input-group-append searchBtnBg d-flex align-items-center">
+                                            <button
+                                                type="button"
+                                                class="search-btn"
+                                                wire:click="getFilteredManagers">
+                                                <i style="color:#fff;margin-left:10px;" class="fas fa-search"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-2 m-0 p-0">
-                                <button wire:click="toggleApplyingto" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
-                                    <span aria-hidden="true" style="color: white; font-size: 24px;">×</span>
-                                </button>
+                                <div class="col-md-2 m-0 p-0">
+                                    <button wire:click="toggleApplyingto" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #ccc;border:#ccc;height:33px;width:33px;">
+                                        <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i>
+                                        </span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Your Blade file -->
-                    <div class="scrollApplyingTO">
-                        @if(!empty($managerFullName))
-                        @foreach($managerFullName as $employee)
-                        <div class="d-flex gap-4 align-items-center" style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif" wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
-                            @if($employee['image'])
-                            <div class="employee-profile-image-container">
-                                <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius:50%;">
+
+                        <!-- Your Blade file -->
+                        <div class="scrollApplyingTO">
+                            @if(!empty($managers))
+                            @foreach($managers as $employee)
+                            <div class="d-flex gap-4 align-items-center"
+                                style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif"
+                                wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
+                                @if($employee['image'])
+                                <div class="employee-profile-image-container">
+                                    <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius:50%;">
+                                </div>
+                                @else
+                                <div class="employee-profile-image-container">
+                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                </div>
+                                @endif
+                                <div class="center d-flex flex-column mt-2 mb-2">
+                                    <span class="ellipsis mb-0">{{ $employee['full_name'] }}</span>
+                                    <span class="mb-0 normalTextValue" style="font-size:10px;"> #{{ $employee['emp_id'] }} </span>
+                                </div>
                             </div>
+                            @endforeach
                             @else
-                            <div class="employee-profile-image-container">
-                                <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
-                            </div>
+                            <p class="mb-0 normalTextValue m-auto text-center">No managers found.</p>
                             @endif
-                            <div class="center d-flex flex-column mt-2 mb-2">
-                                <span class="ellipsis mb-0" value="{{ $employee['full_name'] }}">{{ $employee['full_name'] }}</span>
-                                <span class="mb-0" style="color:#778899; font-size:10px;margin-bottom:0;" value="{{ $employee['full_name'] }}"> #{{ $employee['emp_id'] }} </span>
-                            </div>
                         </div>
-                        @endforeach
-                        @else
-                        <p class="normalTextValue mb-0 text-center">No managers found.</p>
-                        @endif
-
                     </div>
+                    @endif
+                    @error('applying_to') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
-                @endif
                 <div class="form-group mt-3">
                     <span class="normalTextValue">
                         CC To
@@ -174,7 +189,7 @@
                     <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
                         <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
                             <div class="icon-container">
-                                <i class="fas fa-plus" style="color: #778899;"></i>
+                                <i class="fa fa-plus" style="color: #778899;"></i>
                             </div>
                         </a>
                         <!-- Blade Template: your-component.blade.php -->
@@ -196,21 +211,21 @@
 
                     @if($showCcRecipents)
                     <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
-                        <div class="row m-0 p-0 d-flex align-items-center justify-content-between" style="padding: 0 ; margin:0;">
-                            <div class="col-md-10" style="margin: 0px; padding: 0px">
+                        <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
+                            <div class="col-md-10" style="margin: 0;padding:0 2px;">
                                 <div class="input-group">
-                                    <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                    <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button type="button" wire:click="searchCCRecipients" class="search-btn">
-                                            <i style="margin-right: 5px;" class="fas fa-search"></i>
+                                            <i style="margin-left: 10px;" class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-md-2 m-0 p-0">
-                                <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79);height:33px;width:33px;">
-                                    <span aria-hidden="true" style="color: white; font-size: 24px;"><i class="fas fa-times"></i></span>
+                                <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #ccc;border:#ccc;height:33px;width:33px;">
+                                    <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i></span>
                                 </button>
                             </div>
                         </div>
@@ -220,15 +235,24 @@
                             <div wire:key="{{ $employee['emp_id'] }}">
                                 <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
                                     <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
-
-                                    @if($employee['image'])
+                                    @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
                                     <div class="employee-profile-image-container">
-                                        <img height="35px" width="35px" src="{{ asset('storage/' . $employee['image']) }}" style="border-radius: 50%;">
+                                        <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius: 50%;">
+                                    </div>
+                                    @else
+                                    @if($employee['gender'] === "Male")
+                                    <div class="employee-profile-image-container">
+                                        <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="33" width="33">
+                                    </div>
+                                    @elseif($employee['gender'] === "Female")
+                                    <div class="employee-profile-image-container">
+                                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="33" width="33">
                                     </div>
                                     @else
                                     <div class="employee-profile-image-container">
-                                        <img src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px" alt="Default Image">
+                                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px">
                                     </div>
+                                    @endif
                                     @endif
 
                                     <div class="center mb-2 mt-2">

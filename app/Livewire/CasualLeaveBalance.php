@@ -13,12 +13,13 @@ use Illuminate\Support\Facades\DB;
 
 class CasualLeaveBalance extends Component
 {
-    public $leaveData;
+    public $leaveData,$year,$currentYear;
     public $employeeLeaveBalances;
     public $employeeleaveavlid;
     public $totalSickDays = 0;
     public $employeeDetails;
     public $Availablebalance,$leaveGrantedData;
+
 
     // public function mount(){
     //     $totalSickDays = 0;
@@ -99,19 +100,28 @@ class CasualLeaveBalance extends Component
         return (int) str_replace('Session ', '', $session);
     }
 
+    public function changeYear($year)
+    {
+
+        return redirect()->to("/casualleavebalance?year={$year}");
+    }
+
     public function render()
     {
-        $currentYear = date('Y');
+        $this->currentYear = date('Y');
+         $this->year= request()->query('year') ?? date('Y');
 
         // $this->yearDropDown();
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
         $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
-        ->whereRaw('CURDATE() BETWEEN from_date AND to_date')
+        ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+        ->whereYear('to_date', '>=', $this->year)
         ->get();
 
         $this->employeeLeaveBalances =EmployeeLeaveBalances::where('emp_id', $employeeId)
-         ->whereRaw('CURDATE() BETWEEN from_date AND to_date')
+        ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+        ->whereYear('to_date', '>=', $this->year)
             ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Casual Leave\"')) AS casual_leave")
             ->pluck('casual_leave')
             ->first();
@@ -120,6 +130,8 @@ class CasualLeaveBalance extends Component
         // where emp_id matches and leave_type is "Sick Leave"
         $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
             ->where('leave_type', 'Casual Leave')
+            ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+            ->whereYear('to_date', '>=', $this->year)
             ->where('status', 'approved')
             ->get();
 
@@ -149,14 +161,15 @@ class CasualLeaveBalance extends Component
 
         $currentMonth = date('n');
         $currentYear = date('Y');
-        
+
         $startingMonth = 1; // January
 
         $grantedLeavesByMonth = [];
         $availedLeavesByMonth = [];
 
             $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->whereRaw('CURDATE() BETWEEN from_date AND to_date')
+            ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+            ->whereYear('to_date', '>=', $this->year)
             ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Casual Leave\"')) AS casual_leave")
             ->pluck('casual_leave')
             ->first();

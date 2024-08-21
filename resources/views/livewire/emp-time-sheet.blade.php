@@ -1,9 +1,5 @@
 <div class="container">
     <style>
-        .timesheetContainer {
-            width: 90%;
-        }
-
         .totalHoursContainer {
             background-color: #f7fafc;
             border: 1px solid #ddd;
@@ -84,7 +80,6 @@
             padding: 5px;
             border: none;
             background: transparent;
-            width: 100%;
             box-sizing: border-box;
         }
 
@@ -94,7 +89,6 @@
             height: 26px;
             border: none;
             background: transparent;
-            width: 100%;
             box-sizing: border-box;
         }
 
@@ -108,54 +102,6 @@
             border: 1px solid red;
         }
 
-        .error-message {
-            color: red;
-            font-size: 0.5rem;
-            width: 50px;
-        }
-
-
-
-        .hours-header {
-            width: 5%;
-        }
-
-        .date-header,
-        .day-header,
-        .client-header {
-            width: 10%
-        }
-
-        .client-header {
-            width: 10%
-        }
-
-        .project-header {
-            width: 13%
-        }
-
-        .tasks-header {
-            width: 40%;
-        }
-
-        .remarks-header {
-            width: 17%;
-        }
-
-        .input-label {
-            font-weight: 500;
-            font-size: 0.8rem;
-            margin-right: 0.25rem;
-            color: #778899;
-        }
-
-        .inputValue {
-            font-size: 0.7rem;
-            color: #000;
-            font-weight: normal;
-            margin: 0;
-        }
-
         .even-td {
             height: 100%;
             background-color: #e0f7fa;
@@ -167,95 +113,216 @@
             background-color: #b2ebf2;
             color: #333;
         }
+
+        /* Base Styles */
+        .timesheetContainer {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            /* Adjusted for better spacing */
+        }
+
+        .input-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #778899;
+            margin-bottom: 0.5rem;
+        }
+
+        .inputValue {
+            margin-left: 0.5rem;
+            font-size: 0.8rem;
+            color: #000;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.8rem;
+        }
+
+        /* Flexbox Alignment */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .input-label {
+                font-size: 0.8rem;
+            }
+
+            .inputValue {
+                font-size: 0.8rem;
+            }
+
+            .error-message {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .input-label {
+                font-size: 0.75rem;
+            }
+
+            .inputValue {
+                font-size: 0.75rem;
+            }
+
+            .error-message {
+                font-size: 0.75rem;
+            }
+
+            .col-md-6,
+            .col-md-3 {
+                padding: 0;
+                /* Adjusts padding for medium screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .input-label {
+                font-size: 0.7rem;
+            }
+
+            .inputValue {
+                font-size: 0.7rem;
+            }
+
+            .error-message {
+                font-size: 0.7rem;
+            }
+
+            .col-12 {
+                margin-bottom: 1rem;
+            }
+
+            .row {
+                gap: 0.5rem;
+            }
+
+            .d-flex {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .input-label {
+                font-size: 0.65rem;
+            }
+
+            .inputValue {
+                font-size: 0.65rem;
+            }
+
+            .error-message {
+                font-size: 0.65rem;
+            }
+
+            .timesheetContainer {
+                padding: 0.5rem;
+            }
+
+            .col-12 {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
     </style>
-    <div class="timesheetContainer mt-2 bg-white p-4 m-auto" style="width:92%;">
+
+
+    <div class="timesheetContainer mt-2 bg-white p-2 mx-auto">
         <div class="row m-0 p-0">
-            <div class="col-md-5 d-flex align-items-center">
-                <label for="emp_id" class="input-label mb-0">Employee :</label>
+            <!-- Employee Information -->
+            <div class="col-12 col-md-5 d-flex flex-column flex-md-row align-items-start align-items-md-center  p-0 m-0">
+                <label for="emp_id" class="input-label mb-2 mb-md-0">Employee :</label>
                 @if ($employeeName)
-                <label class="inputValue mb-0">{{ ucwords(strtolower($employeeName->first_name )) }} {{ ucwords(strtolower($employeeName->last_name )) }} </label>
-                <label class="inputValue mb-0">(#{{ $employeeName->emp_id }}) </label>
+                <div class="d-flex flex-column flex-md-row">
+                    <span class="inputValue mb-1 mb-md-0">{{ ucwords(strtolower($employeeName->first_name)) }} {{ ucwords(strtolower($employeeName->last_name)) }}</span>
+                    <span class="inputValue">(#{{ $employeeName->emp_id }})</span>
+                </div>
                 @endif
             </div>
-            <div class="col-md-4 d-flex align-items-center">
+
+            <!-- Start Date -->
+            <div class="col-12 col-md-3 d-flex flex-column flex-md-row align-items-start align-items-md-center p-0 m-0">
+            <label for="start_date" class="input-label mb-2 mb-md-0">Start Date :</label>
+                
                 @php
                 use Carbon\Carbon;
                 $default_start_date = now()->startOfWeek(Carbon::MONDAY)->format('Y-m-d');
                 @endphp
-                @if($defaultTimesheetEntry === "")
-                <div style="display: flex; align-items: center;">
-                    <label for="start_date" class="input-label mb-0">Start Date :</label>
-                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" name="default_start_date" id="start_date" class="inputValue mb-0 border rounded py-1 px-2 outline-none" value="{{ old('default_start_date', $default_start_date) }}" wire:model="start_date_string">
+                <div class="d-flex flex-column flex-md-row align-items-start">
+                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" name="default_start_date" id="start_date" class="inputValue border rounded py-1 px-2 outline-none" value="{{ old('default_start_date', $default_start_date) }}" wire:model="start_date_string">
                     <input type="hidden" id="formatted_default_start_date" value="{{ \Carbon\Carbon::parse($default_start_date)->format('d-m-Y') }}">
                 </div>
-                @elseif($defaultTimesheetEntry === "ts")
-                <div style="display: flex; align-items: center;">
-                    <label for="start_date" class="input-label mb-0">Start Date :</label>
-                    <input max="{{ now()->format('Y-m-d') }}" type="date" wire:change="addTask" wire:model="start_date_string" id="start_date" class="inputValue mb-0 border rounded py-1 px-2 outline-none">
-                    <input type="hidden" id="formatted_start_date" value="{{ \Carbon\Carbon::parse($start_date_string)->format('d-m-Y') }}">
-                </div>
-                @endif
                 @error('start_date_string')
-                <span class="error-message" style="color: #e53e3e; font-size: 0.8rem; margin-top: 0.25rem; display: block;">
-                    {{ $message }}
-                </span>
+                <span class="error-message mt-2">{{ $message }}</span>
                 @enderror
             </div>
-            <div class="col-md-3 d-flex align-items-center">
-                <div class="d-flex align-items-center">
-                    <label for="time_sheet_type" class="input-label mb-0">Time Sheet Type :</label>
-                    <div class="d-flex align-items-center">
-                        <label class="d-flex align-items-center mb-0" style="font-size: 0.8rem;">
+
+            <!-- Time Sheet Type -->
+            <div class="col-12 col-md-3 d-flex flex-column flex-md-row align-items-start align-items-md-center  p-0 m-0">
+                <div class="d-flex flex-column flex-md-row align-items-start">
+                    <label for="time_sheet_type" class="input-label mb-2 mb-md-0">Time Sheet Type :</label>
+                    <div class="d-flex align-items-start">
+                        <label class="d-flex align-items-center mb-0">
                             <div wire:change="addTask" wire:model="time_sheet_type" name="time_sheet_type" value="weekly" class="inputValue mb-0"> Weekly</div>
                         </label>
                     </div>
                 </div>
                 @error('time_sheet_type')
-                <span class="error-message" style="color: #e53e3e; font-size: 0.8rem; margin-top: 0.25rem; display: block;">
-                    {{ $message }}
-                </span>
+                <span class="error-message mt-2">{{ $message }}</span>
                 @enderror
             </div>
         </div>
     </div>
+
+
     @if (session()->has('message'))
-    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+
+    <div id="success-message" class="container" style="width:100%;max-width:{{ count($client_names) > 0 ? '100%' : '100%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div style="margin: 0.2rem;padding:0.25rem; background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
             {{ session('message') }}
         </div>
     </div>
     @elseif (session()->has('message-e'))
-    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div id="success-message" class="container" style="width:100%;max-width:{{ count($client_names) > 0 ? '100%' : '100%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div style="margin: 0.2rem;padding:0.25rem;  background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
             {{ session('message-e') }}
         </div>
     </div>
     @elseif (session()->has('message-u'))
-    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div id="success-message" class="container" style="width:100%;max-width:{{ count($client_names) > 0 ? '100%' : '100%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div style="margin: 0.2rem;padding:0.25rem;  background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
             Time sheet updated successfully!
         </div>
     </div>
     @elseif (session()->has('message-s'))
-    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div id="success-message" class="container" style="width:100%;max-width:{{ count($client_names) > 0 ? '100%' : '100%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div style="margin: 0.2rem;padding:0.25rem;  background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
             Time sheet saved successfully!
         </div>
     </div>
     @elseif (session()->has('message-us'))
-    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div id="success-message" class="container" style="width:100%;max-width:{{ count($client_names) > 0 ? '100%' : '100%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div style="margin: 0.2rem;padding:0.25rem;  background-color: #f0fff4; border: 1px solid #68d391;color: #38a169; border-radius: 0.25rem;text-align:center" class="success-message">
             Time sheet status has been updated to "Submitted".
         </div>
     </div>
     @elseif (session()->has('error-dr'))
-    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div id="success-message" class="container" style="width:100%;max-width:{{ count($client_names) > 0 ? '100%' : '100%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div style="margin: 0.2rem;padding:0.25rem; background-color: #FFF6F0; border: 1px solid red;color: #A15038; border-radius: 0.25rem;text-align:center" class="success-message">
             Time sheet filling is not yet complete, you cannot submit at this time.
         </div>
     </div>
     @elseif(session()->has('message-aets'))
-    <div id="success-message" class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div id="success-message" class="container" style="width:100%;max-width:{{ count($client_names) > 0 ? '100%' : '100%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div style="margin: 0.2rem;padding:0.25rem; background-color: #FFF6F0; border: 1px solid red;color: #A15038; border-radius: 0.25rem;text-align:center" class="success-message">
             Time sheet already exists for the selected date range.
         </div>
@@ -272,7 +339,7 @@
         });
     </script>
     @if($defaultTimesheetEntry=="")
-    <div class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="container" style="width:100%;max-width:{{ count($client_names) > 0 ? '100%' : '100%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div class="subTotalExceed">
             @php
             $subTotalExceed = false;
@@ -295,6 +362,7 @@
             </div>
             @endforeach
         </div>
+
         <form wire:submit.prevent="defaultSubmit">
             <div style="text-align: end; ">
                 <a class="btn btn-export" wire:click="exportCSV">
@@ -304,7 +372,7 @@
                     <i class="fas fa-file-excel"></i> Export Excel
                 </a>
             </div>
-            <div class="task-table-container">
+            <div class="table-responsive">
                 <table class="task-table">
                     <thead>
                         <tr>
@@ -423,10 +491,10 @@
                             <td class="tasks-header py-0">
                                 @if(count($taskData['clients']) >= 1)
                                 @foreach($default_date_and_day_with_tasks[$index]['tasks'] as $taskIndex => $taskDescription)
-                                <textarea style="text-align: left;margin-left:5px;width:98%" wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="defaultSaveTimeSheet" title="Enter tasks" @error('default_date_and_day_with_tasks.'.$index.'.tasks.'.$taskIndex) class="error" @enderror></textarea><br>
+                                <textarea style="text-align: left;margin-left:5px" wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="defaultSaveTimeSheet" title="Enter tasks" @error('default_date_and_day_with_tasks.'.$index.'.tasks.'.$taskIndex) class="error" @enderror></textarea><br>
                                 @endforeach
                                 @else
-                                <textarea style="text-align: left;margin-left:5px;width:98%" wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks" wire:change="defaultSaveTimeSheet" title="Enter tasks" @error('default_date_and_day_with_tasks.'.$index.'.tasks') class="error" @enderror></textarea><br>
+                                <textarea style="text-align: left;margin-left:5px" wire:model="default_date_and_day_with_tasks.{{ $index }}.tasks" wire:change="defaultSaveTimeSheet" title="Enter tasks" @error('default_date_and_day_with_tasks.'.$index.'.tasks') class="error" @enderror></textarea><br>
                                 @endif
                             </td>
                         </tr>
@@ -462,7 +530,7 @@
 
     </div>
     @elseif($defaultTimesheetEntry=="ts")
-    <div class="container" style="width:92%;max-width:{{ count($client_names) > 0 ? '92%' : '92%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="container" style="width:100%;max-width:{{ count($client_names) > 0 ? '100%' : '100%' }};padding: 0.6rem; background-color: #fff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div class="subTotalExceed">
             @php
             $subTotalExceed = false;
@@ -498,7 +566,7 @@
                     <i class="fas fa-file-excel"></i> Export Excel
                 </a>
             </div>
-            <div class="task-table-container">
+            <div class="table-responsive">
                 <table class="task-table">
                     <thead>
                         <tr>
@@ -620,10 +688,10 @@
                             <td class="tasks-header py-0">
                                 @if(count($client_names) >= 1)
                                 @foreach($date_and_day_with_tasks[$index]['tasks'] as $taskIndex => $taskDescription)
-                                <textarea style="text-align: left;margin-left:5px;width:98%" wire:model="date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="saveTimeSheet" title="Enter tasks" @error('date_and_day_with_tasks.'.$index.'.tasks.'.$taskIndex) class="error" @enderror></textarea><br>
+                                <textarea style="text-align: left;margin-left:5px" wire:model="date_and_day_with_tasks.{{ $index }}.tasks.{{ $taskIndex }}" wire:change="saveTimeSheet" title="Enter tasks" @error('date_and_day_with_tasks.'.$index.'.tasks.'.$taskIndex) class="error" @enderror></textarea><br>
                                 @endforeach
                                 @else
-                                <textarea style="text-align: left;margin-left:5px;width:98%" wire:model="date_and_day_with_tasks.{{ $index }}.tasks" wire:change="saveTimeSheet" title="Enter tasks" @error('date_and_day_with_tasks.'.$index.'.tasks') class="error" @enderror></textarea><br>
+                                <textarea style="text-align: left;margin-left:5px" wire:model="date_and_day_with_tasks.{{ $index }}.tasks" wire:change="saveTimeSheet" title="Enter tasks" @error('date_and_day_with_tasks.'.$index.'.tasks') class="error" @enderror></textarea><br>
                                 @endif
                             </td>
                         </tr>
@@ -848,4 +916,4 @@
             </div>
         </div>
     </div>
-</div>
+</div>a

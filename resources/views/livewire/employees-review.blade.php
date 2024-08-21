@@ -558,7 +558,7 @@
                                     </div>
                                     <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['casualProbationLeaveBalance'] }}</span>
                                     <!-- Loss of Pay -->
-                                    @elsif($leaveRequest['approvedLeaveRequest']->leave_type === 'Loss Of Pay')
+                                    @elsif($leaveRequest['approvedLeaveRequest']->leave_type === 'Loss Of Pay' && isset($leaveRequest['leaveBalances']['lossOfPayBalance']))
                                     <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
                                         <span style="font-size: 10px; color: #890000;font-weight:500;">LOP</span>
                                     </div>
