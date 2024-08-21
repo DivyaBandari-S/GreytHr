@@ -10,7 +10,7 @@
                 startDate: startDate,
                 endDate: endDate,
                  minDate: moment().subtract(5, 'years'), 
-                 maxDate: moment().add(5, 'years'), 
+                 maxDate: moment().add(5, 'years'),
             }, function(s, e) {
                 $('span', this.element).html(s.format('DD/MM/YYYY') + ' &rarr; ' + e.format('DD/MM/YYYY'));
                 $wire.dispatch('update', [s.format('YYYY-MM-DD'), e.format('YYYY-MM-DD')]);
@@ -18,7 +18,7 @@
 
             $('span', drp).html(startDate.format('DD/MM/YYYY') + ' &rarr; ' + endDate.format('DD/MM/YYYY'));
         ">
-        <i class="fa fa-calendar" style="margin-right: 10px;"></i>&nbsp;
+        <i class="fa fa-calendar" style="margin-right: 8px;"></i>&nbsp;
         <span style="font-size: 0.75rem;  margin-right: 5px;"></span> <i class="fa fa-caret-down"></i>
     </div>
 </div>

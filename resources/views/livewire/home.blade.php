@@ -160,14 +160,19 @@
                             <p style="font-size:12px;">{{$currentDate}}</p>
                             <p style="margin-top: 10px; color: #778899; font-size: 11px;">
                                 @php
-                                $EmployeeStartshiftTime=$employeeShiftDetails->shift_start_time;
-                                $EmployeeEndshiftTime=$employeeShiftDetails->shift_end_time;
-                                // Create DateTime objects
-                                $startShiftTime = new DateTime($EmployeeStartshiftTime);
-                                $endShiftTime = new DateTime($EmployeeEndshiftTime);
-                                // Format the times
-                                $formattedStartShiftTime = $startShiftTime->format('h:i a');
-                                $formattedEndShiftTime = $endShiftTime->format('H:i a');
+                                // Fetch shift times
+                                $EmployeeStartshiftTime = $employeeShiftDetails->shift_start_time;
+                                $EmployeeEndshiftTime = $employeeShiftDetails->shift_end_time;
+
+                                // Default times
+                                $defaultStartShiftTime = '10:00 am';
+                                $defaultEndShiftTime = '7:00 pm';
+
+                                // Format the times if they are not null
+                                $formattedStartShiftTime = $EmployeeStartshiftTime ? (new DateTime($EmployeeStartshiftTime))->format('h:i a') : $defaultStartShiftTime;
+                                $formattedEndShiftTime = $EmployeeEndshiftTime ? (new DateTime($EmployeeEndshiftTime))->format('h:i a') : $defaultEndShiftTime;
+
+
                                 @endphp
                                 {{$currentDay}} | {{$formattedStartShiftTime}} to {{$formattedEndShiftTime}}
                             </p>
@@ -396,9 +401,9 @@
     <div class="payslip-card" style="height: 195px;">
         <p class="payslip-card-title">Apply for a Leave</p>
         <p class="payslip-small-desc">
-            Kindly click on the Arrow button to submit your leave application.
+            Kindly click on the Arrow button to apply a leave.
         </p>
-        <a href="/leave-page">
+        <a href="/leave-form-page">
             <div class="payslip-go-corner">
                 <div class="payslip-go-arrow">→</div>
             </div>

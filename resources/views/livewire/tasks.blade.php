@@ -30,7 +30,7 @@
         }
 
         .task-date-range-picker {
-            width: 240px;
+            width: 245px;
             margin-left: -20px;
         }
 

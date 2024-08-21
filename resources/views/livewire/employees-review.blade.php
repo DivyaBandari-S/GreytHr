@@ -405,7 +405,7 @@
             $isManager = DB::table('employee_details')->where('manager_id', $employeeId)->exists();
             @endphp
             @if($isManager)
-            <div class="closed-leaves-container px-2" style="width:100%; max-height:400px; overflow-y:auto; margin:50px auto;">
+            <div class="closed-leaves-container px-2" style="width:100%; max-height:400px; overflow-y:auto; margin:20px auto;">
                 @if(!empty($approvedLeaveApplicationsList))
                 @foreach($approvedLeaveApplicationsList as $leaveRequest)
                 <div class="accordion rounded mb-3">
