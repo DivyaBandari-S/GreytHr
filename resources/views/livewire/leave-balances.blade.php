@@ -425,9 +425,9 @@
                         <h5 style="font-size:16px;">{{ $casualProbationLeaveBalance }}</h5>
                         <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                         @if($casualProbationLeavePerYear > 0)
-                        <a href="/casualprobationleavebalance" style="font-size:12px;">View Details</a>
+                        <a href="/casualprobationleavebalance?year={{$currentYear}}" style="font-size:12px;">View Details</a>
                         @endif
-                    </div>
+                    </div>  
                     <div class="px-3 py-2">
                     <div class="tube-container">
                         <p style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
