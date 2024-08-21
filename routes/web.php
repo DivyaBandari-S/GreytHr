@@ -112,6 +112,10 @@ use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\HelpDesks;
 use App\Models\Task;
+
+use App\Models\EmpSalary;
+use Illuminate\Support\Facades\Artisan;
+
 Route::group(['middleware' => 'checkAuth'], function () {
 
     Route::get('/emplogin', EmpLogin::class)->name('emplogin');
@@ -389,7 +393,6 @@ Route::get('/ytdpayslip', function () {
 
 
 
-use App\Models\EmpSalary;
 
 Route::get('/encode/{value}', function ($value) {
     // Determine the number of decimal places
@@ -444,4 +447,15 @@ Route::get('/salary/{emp_id}', function ($emp_id) {
         'effective_date' => $empSalary->effective_date,
         'remarks' => $empSalary->remarks,
     ]);
+});
+
+Route::get('/clear', function () {
+    Artisan::call('optimize:clear');
+    Artisan::call('optimize');
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+
+    return 'Cache, config, route, and view caches cleared!';
 });
