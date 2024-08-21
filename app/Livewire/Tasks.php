@@ -29,7 +29,7 @@ class Tasks extends Component
     public $emp_id;
     public $task_name;
     public $assignee;
-    public $priority = "";
+    public $priority = "Low";
     public $due_date;
     public $tags;
     public $followers;
@@ -64,7 +64,7 @@ class Tasks extends Component
     public function toggleAccordion($recordId)
     {
         if (in_array($recordId, $this->openAccordions)) {
-            $this->openAccordions = array_filter($this->openAccordions, function($id) use ($recordId) {
+            $this->openAccordions = array_filter($this->openAccordions, function ($id) use ($recordId) {
                 return $id !== $recordId;
             });
         } else {
@@ -104,11 +104,11 @@ class Tasks extends Component
     public function searchActiveTasks()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $query = Task::where(function($query) use ($employeeId) {
+        $query = Task::where(function ($query) use ($employeeId) {
             $query->where('emp_id', $employeeId)
-                  ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
+                ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
         })
-        ->where('status', 'Open');
+            ->where('status', 'Open');
 
 
         if ($this->start && $this->end) {
@@ -119,13 +119,13 @@ class Tasks extends Component
         if ($this->search) {
             $query->where(function ($query) {
                 $query->where('assignee', 'like', '%' . $this->search . '%')
-                      ->orWhere('followers', 'like', '%' . $this->search . '%')
-                      ->orWhereHas('emp', function ($query) {
-                          $query->where('first_name', 'like', '%' . $this->search . '%')
-                                ->orWhere('last_name', 'like', '%' . $this->search . '%');
-                      })
-                      ->orWhere('task_name', 'like', '%' . $this->search . '%')
-                      ->orWhere('emp_id', 'like', '%' . $this->search . '%');
+                    ->orWhere('followers', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('emp', function ($query) {
+                        $query->where('first_name', 'like', '%' . $this->search . '%')
+                            ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                    })
+                    ->orWhere('task_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('emp_id', 'like', '%' . $this->search . '%');
             });
         }
 
@@ -137,11 +137,11 @@ class Tasks extends Component
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
 
-        $query = Task::where(function($query) use ($employeeId) {
+        $query = Task::where(function ($query) use ($employeeId) {
             $query->where('emp_id', $employeeId)
-                  ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
+                ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
         })
-         ->where('status', 'Completed');
+            ->where('status', 'Completed');
 
 
         if ($this->start && $this->end) {
@@ -152,13 +152,13 @@ class Tasks extends Component
         if ($this->closedSearch) {
             $query->where(function ($query) {
                 $query->where('assignee', 'like', '%' . $this->closedSearch . '%')
-                      ->orWhere('followers', 'like', '%' . $this->closedSearch . '%')
-                      ->orWhereHas('emp', function ($query) {
-                          $query->where('first_name', 'like', '%' . $this->closedSearch . '%')
-                                ->orWhere('last_name', 'like', '%' . $this->closedSearch . '%');
-                      })
-                      ->orWhere('task_name', 'like', '%' . $this->closedSearch . '%')
-                      ->orWhere('emp_id', 'like', '%' . $this->closedSearch . '%');
+                    ->orWhere('followers', 'like', '%' . $this->closedSearch . '%')
+                    ->orWhereHas('emp', function ($query) {
+                        $query->where('first_name', 'like', '%' . $this->closedSearch . '%')
+                            ->orWhere('last_name', 'like', '%' . $this->closedSearch . '%');
+                    })
+                    ->orWhere('task_name', 'like', '%' . $this->closedSearch . '%')
+                    ->orWhere('emp_id', 'like', '%' . $this->closedSearch . '%');
             });
         }
 
@@ -204,7 +204,8 @@ class Tasks extends Component
 
     protected $listeners = [
         'update',
-        'updateStart', 'updateEnd'
+        'updateStart',
+        'updateEnd'
     ];
 
     public function update($start, $end)
@@ -258,7 +259,7 @@ class Tasks extends Component
         $this->showRecipients = true;
         $this->selectedPerson = $this->peoples->where('emp_id', $personId)->first();
         $this->selectedPersonClients = ClientsEmployee::whereNotNull('emp_id')->where('emp_id', $this->selectedPerson->emp_id)->get();
-        $this->selectedPeopleName = $this->selectedPerson->first_name . ' #(' . $this->selectedPerson->emp_id . ')';
+        $this->selectedPeopleName = $this->selectedPerson->first_name . ' ' . $this->selectedPerson->last_name . ' #(' . $this->selectedPerson->emp_id . ')';
         $this->assignee = $this->selectedPeopleName;
 
 
@@ -279,20 +280,39 @@ class Tasks extends Component
     }
     public $showFollowers = false;
     public $selectedPeopleForFollowers = [];
-    public function selectPersonForFollowers($personId)
+    public function togglePersonSelection($personId)
     {
-        $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
 
-        if ($selectedPerson) {
-            if (in_array($personId, $this->selectedPeopleForFollowers)) {
-                $this->selectedPeopleNamesForFollowers[] = $selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')';
-            } else {
-                $this->selectedPeopleNamesForFollowers = array_diff($this->selectedPeopleNamesForFollowers, [$selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')']);
-            }
+        if (in_array($personId, $this->selectedPeopleForFollowers)) {
 
-            $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
-            $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
+            $this->selectedPeopleForFollowers = array_diff($this->selectedPeopleForFollowers, [$personId]);
+        } else {
+
+            $this->selectedPeopleForFollowers[] = $personId;
         }
+
+        $this->updateFollowers();
+    }
+    public function updateCheckbox($personId)
+    {
+
+        if (in_array($personId, $this->selectedPeopleForFollowers)) {
+            $this->selectedPeopleForFollowers = array_diff($this->selectedPeopleForFollowers, [$personId]);
+        } else {
+            $this->selectedPeopleForFollowers[] = $personId;
+        }
+
+        $this->updateFollowers();
+    }
+    public function updateFollowers()
+    {
+        $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
+            $selectedPerson = $this->peoples->where('emp_id', $id)->first();
+            return $selectedPerson ? $selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')' : '';
+        }, $this->selectedPeopleForFollowers);
+
+        $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
+        $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
     }
     public function openForTasks($taskId)
     {
@@ -305,7 +325,6 @@ class Tasks extends Component
         session()->flash('showAlert', true);
 
         return redirect()->to('/tasks');
-
     }
 
     public function closeForTasks($taskId)
@@ -313,15 +332,16 @@ class Tasks extends Component
         $task = Task::find($taskId);
 
         if ($task) {
-            $task->update(['status' => 'Open',
-        'reopened_date' => now()]);
+            $task->update([
+                'status' => 'Open',
+                'reopened_date' => now()
+            ]);
         }
-        
+
         session()->flash('message', 'Task has been Re-Opened.');
         session()->flash('showAlert', true);
 
         return redirect()->to('/tasks');
-
     }
 
     public function autoValidate()
@@ -332,7 +352,6 @@ class Tasks extends Component
                     'due_date' => 'required',
                     'assignee' => 'required',
                     'task_name' => 'required',
-                    'priority' => 'required|in:High,Medium,Low',
                 ]);
             } else {
                 $this->validate([
@@ -341,7 +360,6 @@ class Tasks extends Component
                     'project_name' => 'required',
                     'assignee' => 'required',
                     'task_name' => 'required',
-                    'priority' => 'required|in:High,Medium,Low',
                 ]);
             }
         }
@@ -351,98 +369,95 @@ class Tasks extends Component
     public function submit()
     {
         try {
-        $this->validate_tasks = true;
-        $this->autoValidate();
-      
+            $this->validate_tasks = true;
+            $this->autoValidate();
+
             // Validate and store the uploaded file
             $this->validate([
                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
             ]);
-       $fileContent=null;
-       $mimeType = null;
-       $fileName = null;
+            $fileContent = null;
+            $mimeType = null;
+            $fileName = null;
+
+            // Store the file as binary data
+            if ($this->file_path) {
 
 
-        // Store the file as binary data
-        if ($this->file_path) {
-    
-          
-        $fileContent = file_get_contents($this->file_path->getRealPath());
-        if ($fileContent === false) {
-            Log::error('Failed to read the uploaded file.', [
-                'file_path' => $this->file_path->getRealPath(),
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    session()->flash('error', 'Failed to read the uploaded file.');
+                    return;
+                }
+
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    session()->flash('error', 'File size exceeds the allowed limit.');
+                    return;
+                }
+
+
+                $mimeType = $this->file_path->getMimeType();
+                $fileName = $this->file_path->getClientOriginalName();
+            }
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+
+            Task::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+                'task_name' => $this->task_name,
+                'assignee' => $this->assignee,
+                'client_id' => $this->client_id ?? "",
+                'project_name' => $this->project_name,
+                'priority' => $this->priority,
+                'due_date' => $this->due_date,
+                'tags' => $this->tags,
+                'followers' => $this->followers,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path' => $fileContent,
+                'file_name' => $fileName,
+                'mime_type' => $mimeType,
+                'status' => "Open",
             ]);
-            session()->flash('error', 'Failed to read the uploaded file.');
-            return;
+     
+
+            preg_match('/\((.*?)\)/', $this->assignee, $matches);
+            $extracted = isset($matches[1]) ? $matches[1] : $this->assignee;
+
+
+            if ($extracted != $this->employeeDetails->emp_id) {
+
+                Notification::create([
+                    'emp_id' => $this->employeeDetails->emp_id,
+                    'notification_type' => 'task',
+                    'task_name' => $this->task_name,
+                    'assignee' => $this->assignee,
+                ]);
+            }
+
+            $this->reset();
+            session()->flash('message', 'Task created successfully!');
+            session()->flash('showAlert', true);
+            return redirect()->to('/tasks');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->setErrorBag($e->validator->getMessageBag());
+        } catch (\Exception $e) {
+            Log::error('Error creating request: ' . $e->getMessage(), [
+                'employee_id' => $employeeId,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+            ]);
+            session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
-
-        // Check if the file content is too large
-        if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-            session()->flash('error', 'File size exceeds the allowed limit.');
-            return;
-        }
-
-
-        $mimeType = $this->file_path->getMimeType();
-        $fileName = $this->file_path->getClientOriginalName();
     }
-   
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-
-        Task::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-            'task_name' => $this->task_name,
-            'assignee' => $this->assignee,
-            'client_id' => $this->client_id ?? "",
-            'project_name' => $this->project_name,
-            'priority' => $this->priority,
-            'due_date' => $this->due_date,
-            'tags' => $this->tags,
-            'followers' => $this->followers,
-            'subject' => $this->subject,
-            'description' => $this->description,
-            'file_path' => $fileContent, 
-            'file_name' => $fileName,
-            'mime_type' => $mimeType,
-            'status' => "Open",
-        ]);
-
-        preg_match('/\((.*?)\)/',$this->assignee , $matches);
-        $extracted = isset($matches[1]) ? $matches[1] : $this->assignee;
-
-      
-        if($extracted!=$this->employeeDetails->emp_id){
-
-        Notification::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-            'notification_type' => 'task',
-            'task_name' => $this->task_name,
-            'assignee' => $this->assignee,
-        ]);
-    
-    }
-
-        $this->reset();
-        session()->flash('message', 'Task created successfully!');
-        session()->flash('showAlert', true);
-        return redirect()->to('/tasks');
-        
-    }
-    catch (\Illuminate\Validation\ValidationException $e) {
-        $this->setErrorBag($e->validator->getMessageBag());
-    } catch (\Exception $e) {
-        Log::error('Error creating request: ' . $e->getMessage(), [
-            'employee_id' => $employeeId,
-            'subject' => $this->subject,
-            'description' => $this->description,
-            'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
-        ]);
-        session()->flash('error', 'An error occurred while creating the request. Please try again.');
-    }
-}
 
     public $client_id, $project_name, $image_path;
 
@@ -456,7 +471,7 @@ class Tasks extends Component
     public $viewrecord;
     public function showViewFile($recordId)
     {
-        $this->$recordId=$recordId;
+        $this->$recordId = $recordId;
         $this->viewrecord = Task::find($recordId);
         $this->showViewFileDialog = true;
     }
@@ -545,7 +560,6 @@ class Tasks extends Component
         $this->showModal = false;
         session()->flash('message', 'Comment added successfully.');
         $this->showAlert = true;
-
     }
     public function updatedNewComment($value)
     {
@@ -594,11 +608,11 @@ class Tasks extends Component
     {
         if ($this->viewrecord && !empty($this->viewrecord->file_path)) {
             $fileData = $this->viewrecord->file_path;
-    
+
             // Determine the MIME type and file extension based on the data URL prefix
             $mimeType = 'application/octet-stream'; // Fallback MIME type
             $fileExtension = 'bin'; // Fallback file extension
-    
+
             // Check the file's magic number or content to determine MIME type and file extension
             if (strpos($fileData, "\xFF\xD8\xFF") === 0) {
                 $mimeType = 'image/jpeg';
@@ -612,7 +626,7 @@ class Tasks extends Component
             } else {
                 return abort(415, 'Unsupported Media Type');
             }
-    
+
             $fileName = 'image-' . $this->viewrecord->id . '.' . $fileExtension;
             return response()->stream(
                 function () use ($fileData) {
@@ -625,10 +639,10 @@ class Tasks extends Component
                 ]
             );
         }
-    
+
         return abort(404, 'Image not found');
     }
-   
+
     public function render()
     {
 
@@ -644,11 +658,11 @@ class Tasks extends Component
             ->orderBy('last_name')
             ->get();
 
-            if ($this->activeTab === 'open') {
-                $this->searchActiveTasks();
-            } elseif ($this->activeTab === 'completed') {
-                $this->searchCompletedTasks();
-            }
+        if ($this->activeTab === 'open') {
+            $this->searchActiveTasks();
+        } elseif ($this->activeTab === 'completed') {
+            $this->searchCompletedTasks();
+        }
 
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
 

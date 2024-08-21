@@ -726,14 +726,14 @@
                                     <div class="row ">
                                         <div class="col-md-4">
                                             <label for="priority"
-                                                style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Priority*</label>
+                                                style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Priority</label>
                                         </div>
                                         <div class="col-md-8 mt-1">
                                             <div id="priority"
                                                 style="display: flex; align-items: center; margin-top: 0px;">
                                                 <div class="priority-option" style="margin-left: 0px; padding: 0;">
                                                     <input type="radio" id="low-priority" name="priority"
-                                                        wire:change="autoValidate" wire:model="priority"
+                                                       wire:model="priority"
                                                         value="Low">
                                                     <span
                                                         style="font-size: 0.75rem;color:#778899; padding: 0;margin-left:5px"
@@ -741,7 +741,7 @@
                                                 </div>
                                                 <div class="priority-option" style="margin-left: 20px; padding: 0;">
                                                     <input type="radio" id="medium-priority" name="priority"
-                                                        wire:change="autoValidate" wire:model="priority"
+                                                        wire:model="priority"
                                                         value="Medium">
                                                     <span
                                                         style="font-size: 0.75rem;color:#778899; padding: 0;margin-left:5px"
@@ -749,7 +749,7 @@
                                                 </div>
                                                 <div class="priority-option" style="margin-left: 20px; padding: 0;">
                                                     <input type="radio" id="high-priority" name="priority"
-                                                        wire:change="autoValidate" wire:model="priority"
+                                                        wire:model="priority"
                                                         value="High">
                                                     <span
                                                         style="font-size: 0.75rem;color:#778899; padding: 0;margin-left:5px"
@@ -759,10 +759,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @error('priority')
-                                    <span class="text-danger">Priority is
-                                        required</span>
-                                @enderror
+                               
                                 <!-- Due Date -->
                                 <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
                                     <div class="col">
@@ -839,15 +836,16 @@
                                             </div>
                                         @else
                                             @foreach ($peopleData as $people)
-                                                <div wire:model="cc_to"
-                                                    wire:click="selectPersonForFollowers('{{ $people->emp_id }}')"
+                                                <div wire:model="cc_to" wire:click="togglePersonSelection('{{ $people->emp_id }}')"
                                                     class="container"
                                                     style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
                                                     <div class="row align-items-center">
                                                         <div class="col-auto">
                                                             <input type="checkbox"
                                                                 wire:model="selectedPeopleForFollowers"
-                                                                value="{{ $people->emp_id }}">
+                                                                  wire:change="updateCheckbox('{{ $people->emp_id }}')"
+                                                                value="{{ $people->emp_id }}"
+                                                                id="checkbox-{{ $people->emp_id }}">
                                                         </div>
                                                         <div class="col-auto">
                                                             @if (!empty($people->image) && $people->image !== 'null')
