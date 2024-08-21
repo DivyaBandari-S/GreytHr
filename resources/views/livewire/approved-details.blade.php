@@ -112,7 +112,7 @@
                                     <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;">{{ $this->leaveBalances['casualLeaveBalance'] }}</span>
 
                                     <!-- Casual Leave  Probation-->
-
+                                    @if($leaveRequest->leave_type === 'Casual Leave Probation' && isset($leaveBalances['casualProbationLeaveBalance']))
                                     <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e7fae7; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
 
                                         <span style="font-size: 10px; color: #50327c;font-weight:500;">CLP</span>
@@ -123,7 +123,7 @@
 
                                     <!-- Loss of Pay -->
 
-                                    @if($leaveRequest->leave_type === 'Loss of Pay' && isset($leaveBalances['lossOfPayBalance']))
+                                    @elseif($leaveRequest->leave_type === 'Loss Of Pay' && isset($leaveBalances['lossOfPayBalance']))
 
                                     <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
 
@@ -163,8 +163,6 @@
 
                                     <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $this->leaveBalances['maternityLeaveBalance'] }}</span>
 
-
-
                                     @endif
 
                                 </div>
@@ -188,7 +186,9 @@
                                         <span class="custom-label">Applied to</span>
                                         <span class="custom-label">Reason</span>
                                         <span class="custom-label">Contact</span>
+                                        @if(!empty($leaveRequest->cc_to))
                                         <span class="custom-label">CC to</span>
+                                        @endif
                                     </div>
 
                                     <div class="custom-grid-item">
@@ -248,12 +248,14 @@
                             <div>
                                 <h5 class="normalText text-start">
                                     @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
-                                    Withdrawn <br><span class="normalText text-start">by</span>
+                                    Withdrawn
+
+                                    <span class="normalText text-start">by</span> <br>
                                     <span class="normalTextValue text-start">
                                         {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
                                     </span>
-                                    @elseif(strtoupper($leaveRequest->status) == 'PENDING')
-                                    <span class="normalTextValue text-start"> Pending <br> with</span>
+                                    @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
+                                    <span class="normalTextValue text-start"> Approved <br> by</span>
                                     @if(!empty($leaveRequest['applying_to']))
                                     @foreach($leaveRequest['applying_to'] as $applyingTo)
                                     <span class="normalText text-start">
