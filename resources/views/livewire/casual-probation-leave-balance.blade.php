@@ -96,15 +96,15 @@
             <div class="col-md-5 ">
                 <div class="buttons-container d-flex gap-3 justify-content-end mt-2 p-0 ">
                     <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
-                    <select class="dropdown bg-white rounded " wire:model="selectedYear" wire:change="yearDropDown" style="margin-right:5px;">
+                    <select class="dropdown bg-white rounded " wire:change='changeYear($event.target.value)'  wire:model='year'    style="margin-right:5px;">
                         <?php
                         // Get the current year
                         $currentYear = date('Y');
                         // Generate options for current year, previous year, and next year
                         $options = [$currentYear - 2, $currentYear - 1, $currentYear, $currentYear + 1];
                         ?>
-                        @foreach($options as $year)
-                        <option value="{{ $year }}">{{ $year }}</option>
+                        @foreach($options as $pre_year)
+                        <option  value="{{ $pre_year }}">{{ $pre_year }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -115,7 +115,11 @@
                     <div class="card" style="height: 100%;">
                         <div class="card-body" style="height: 100%;">
                             <h6 class="card-title">Information</h6>
+                            @if($year <= $currentYear)
+                            <p class="card-text">No information found</p>
+                            @else
                             <p class="card-text">HR will add the leaves</p>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -135,9 +139,9 @@
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Granted</div>
-                            @foreach ($employeeLeaveBalances as $leaveBalance)
-                            <div class="info-value">{{ $leaveBalance->leave_balance }}</div>
-                            @endforeach
+
+                            <div class="info-value">{{ $employeeLeaveBalances }}</div>
+
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Availed</div>
@@ -150,7 +154,7 @@
                 <div class="row m-0 p-0">
                     <div class=" p-2 bg-white border">
                         <div class="col-md-10">
-                            <canvas id="sickLeaveChart" style="background-color: transparent;width:300px;height:200px;"></canvas>
+                            <canvas id="casualLeaveProbChart" style="background-color: transparent;width:300px;height:200px;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -180,14 +184,14 @@
                                     <td>{{ $balance->reason }}</td>
                                 </tr>
                                 @endforeach
-                                @foreach($employeeLeaveBalances as $index => $balance)
+                                @foreach($leaveGrantedData as $index => $balance)
                                 <tr>
                                     <td>{{ $balance->status }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
-                                    <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
-                                    <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
-                                    <td>{{ $balance->leave_balance }}</td>
-                                    <td>Annual Grant for the Period</td>
+                                    <td>{{ date('d M Y', ($balance->from_date)) }}</td>
+                                    <td>{{ date('d M Y', ($balance->to_date)) }}</td>
+                                    <td>{{ $employeeLeaveBalances }}</td>
+                                    <td>Annual Grant for the present year</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -200,10 +204,22 @@
     </div>
 </div>
 <script>
-    var ctx = document.getElementById('sickLeaveChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: <?php echo json_encode($chartData); ?>,
-        options: <?php echo json_encode($chartOptions); ?>
+    // Ensure that Chart.js is properly loaded
+    document.addEventListener("DOMContentLoaded", function() {
+        // Convert PHP variables to JavaScript
+        var chartData = @json($chartData);
+        var chartOptions = @json($chartOptions);
+
+        // Get the context of the canvas element
+        var ctx = document.getElementById('casualLeaveProbChart').getContext('2d');
+
+        // Create the chart
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: chartOptions
+        });
+
+        console.log(chartData);
     });
 </script>
