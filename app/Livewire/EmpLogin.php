@@ -51,8 +51,8 @@ class EmpLogin extends Component
     public $error = '';
     public $verify_error = '';
     public $pass_change_error = '';
-    public $showAlert= false;
-    public $alertMessage='';
+    public $showAlert = false;
+    public $alertMessage = '';
     protected $rules = [
         'form.emp_id' => 'required',
         'form.password' => 'required',
@@ -121,8 +121,10 @@ class EmpLogin extends Component
             // $this->showLoader = true;
 
             if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
+                session(['post_login' => true]);
                 return redirect('/');
             } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
+                session(['post_login' => true]);
                 return redirect('/');
             } elseif (Auth::guard('hr')->attempt(['hr_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/home-dashboard');
@@ -134,14 +136,13 @@ class EmpLogin extends Component
                 return redirect('/financePage');
             } elseif (Auth::guard('it')->attempt(['it_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/ithomepage');
-            }
-            elseif (Auth::guard('admins')->attempt(['ad_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
+            } elseif (Auth::guard('admins')->attempt(['ad_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/adminPage');
             }
             // elseif (Auth::guard('admins')->attempt(['admin_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
             //     return redirect('/adminPage');
             // }
-             elseif (Auth::guard('it')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
+            elseif (Auth::guard('it')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 return redirect('/ithomepage');
             } else {
                 $this->error = "Invalid ID or Password. Please try again.";
@@ -410,16 +411,17 @@ class EmpLogin extends Component
         }
     }
 
-    public function hideAlert(){
-        $this->showAlert=false;
+    public function hideAlert()
+    {
+        $this->showAlert = false;
     }
 
 
     public function render()
     {
-        if (Session::has('success')){
-            $this->showAlert=true;
-            $this->alertMessage=Session::get('success');
+        if (Session::has('success')) {
+            $this->showAlert = true;
+            $this->alertMessage = Session::get('success');
         }
 
         return view('livewire.emp-login');

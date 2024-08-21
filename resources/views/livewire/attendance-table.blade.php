@@ -928,6 +928,12 @@ width: 170px; */
             border: 2px solid transparent;
             /* Initial border color (transparent) */
         }
+        .accordion-icon {
+            font-size: 13px;
+            color: #fff;
+            float: right;
+            margin-left: 5px;
+}
 
         .toggle-box-attendance-info i.fas.fa-bars:hover {
             color: rgb(2, 17, 79);
@@ -1842,7 +1848,15 @@ color: #fff;
             <div class="col-auto p-1 m-2"style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:12px;">Status Unknown:<span style="font-weight:600;"> 0</span></div>
         </div>
     </div>
-    <button class="accordion"wire:click="openlegend">Legends</button>
+    <button class="accordion"wire:click="openlegend">Legends
+    <span class="accordion-icon">
+                            @if($legend)
+                                &#x2796; <!-- Unicode for minus sign -->
+                            @else
+                                &#x2795; <!-- Unicode for plus sign -->
+                            @endif
+                    </span>
+    </button>
                 <div class="panel"style="display: {{ $legend ? 'block' : 'none' }};">
                     <div class="row m-0 mt-3 mb-3">
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">

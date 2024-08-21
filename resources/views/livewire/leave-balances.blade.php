@@ -362,7 +362,7 @@
                         <h5 style="font-size:16px;">{{$casualLeaveBalance}}</h5>
                         <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                         @if($casualLeavePerYear)
-                        <a href="/casualleavebalance" style="font-size:12px;">View Details</a>
+                        <a href="/casualleavebalance?year={{ $currentYear }}" style="font-size:12px;">View Details</a>
                         @endif
                     </div>
                     <div class="px-3 py-2">
@@ -393,7 +393,7 @@
                         <h5 style="font-size:16px;">{{ $sickLeaveBalance }}</h5>
                         <p class="mb-0" style="margin-top:-13px;font-size:11px;color:#778899;"><span class="remaining">Balance</span></p>
                         @if($sickLeavePerYear > 0)
-                        <a href="/sickleavebalance" style="font-size:12px;">View Details</a>
+                        <a href="/sickleavebalance?year={{$currentYear}}" style="font-size:12px;">View Details</a>
                         @endif
                     </div>
                     <div class="px-3 py-2">
@@ -410,7 +410,8 @@
                     </div>
                 </div>
             </div>
-            @if($differenceInMonths !== null && $differenceInMonths < 6) <div class="col-md-4 mb-2">
+            @if( $casualProbationLeavePerYear > 0)
+            <div class="col-md-4 mb-2">
                 <div class="leave-bal mb-2 bg-white rounded  ">
                     <div class="balance d-flex flex-row justify-content-between">
                         <div class="field">
@@ -440,7 +441,7 @@
                     </div>
                     </div>
                 </div>
-        </div>
+            </div>
         @endif
         <div class="col-md-4 mb-2">
             <div class="leave-bal mb-2 bg-white rounded  ">
