@@ -101,7 +101,6 @@ use App\Livewire\LeaveBalancesChart;
 use App\Livewire\OrganisationChart;
 use App\Livewire\ReportManagement;
 use App\Livewire\ReviewPendingRegularisation;
-use App\Livewire\Session\SessionTimeout;
 use App\Livewire\ShiftRoaster;
 use App\Livewire\SickLeaveBalances;
 use App\Livewire\Test;
@@ -112,9 +111,6 @@ use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\HelpDesks;
 use App\Models\Task;
-
-use App\Models\EmpSalary;
-use Illuminate\Support\Facades\Artisan;
 
 Route::group(['middleware' => 'checkAuth'], function () {
 
@@ -247,9 +243,7 @@ Route::middleware(['auth:admins', 'handleSession'])->group(function () {
 });
 
 
-
 Route::middleware(['auth:emp', 'handleSession'])->group(function () {
-    Route::get('/session-timeout', SessionTimeout::class)->name('session-timeout');
     Route::get('/google-redirect', [GoogleDriveController::class, 'auth'])
         ->name('google-redirect');
     Route::get('/google-callback', [GoogleDriveController::class, 'callback'])
@@ -393,6 +387,8 @@ Route::get('/ytdpayslip', function () {
 
 
 
+use App\Models\EmpSalary;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/encode/{value}', function ($value) {
     // Determine the number of decimal places
@@ -448,6 +444,24 @@ Route::get('/salary/{emp_id}', function ($emp_id) {
         'remarks' => $empSalary->remarks,
     ]);
 });
+
+Route::get('/file/{id}', function ($id) {
+    $file = HelpDesks::findOrFail($id);
+
+    return Response::make($file->file_path, 200, [
+        'Content-Type' => $file->mime_type,
+        'Content-Disposition' => (strpos($file->mime_type, 'image') === false ? 'attachment' : 'inline') . '; filename="' . $file->file_name . '"',
+    ]);
+})->name('file.show');
+
+Route::get('/taskfile/{id}', function ($id) {
+    $file = Task::findOrFail($id);
+
+    return Response::make($file->file_path, 200, [
+        'Content-Type' => $file->mime_type,
+        'Content-Disposition' => (strpos($file->mime_type, 'image') === false ? 'attachment' : 'inline') . '; filename="' . $file->file_name . '"',
+    ]);
+})->name('files.showTask');
 
 Route::get('/clear', function () {
     Artisan::call('optimize:clear');
