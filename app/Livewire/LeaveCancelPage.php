@@ -25,6 +25,7 @@ class LeaveCancelPage extends Component
     public $loginEmpManagerId;
     public $loginEmpManager;
     public $loginEmpManagerProfile;
+    public $leave_cancel_reason;
     public $managerFullName;
     public $employeeDetails = [];
     public $leaveRequestDetails;
@@ -202,11 +203,12 @@ class LeaveCancelPage extends Component
             // Find the leave request by ID
             $leaveRequest = LeaveRequest::findOrFail($this->selectedLeaveRequestId);
 
-            // Update all fields. This assumes you have a form or input that provides all the necessary fields.
+            // Update all fields, including the new leave_cancel_reason
             $leaveRequest->update([
                 'category_type' => 'Leave Cancel',
                 'status' => 'approved',
                 'cancel_status' => 'Pending Leave Cancel',
+                'leave_cancel_reason' => $this->leave_cancel_reason, // Add this line
             ]);
 
             session()->flash('message', 'Applied request for leave cancel successfully.');

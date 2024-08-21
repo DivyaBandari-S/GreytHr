@@ -273,9 +273,9 @@
                     @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group mt-3">
-                    <label for="reason">Reason for Leave</label>
-                    <textarea id="reason" class="form-control placeholder-small" wire:model="reason" id="reason" name="reason" placeholder="Enter Reason" rows="4"></textarea>
-                    @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
+                    <label for="leave_cancel_reason">Reason for Leave Cancel</label>
+                    <textarea id="leave_cancel_reason" class="form-control placeholder-small" wire:model="leave_cancel_reason"  name="leave_cancel_reason" placeholder="Enter Reason" rows="4"></textarea>
+                    @error('leave_cancel_reason') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="cancelButtons d-flex align-items-center gap-2 justify-content-center mt-4">
                     <button type="submit" class="submit-btn">Submit</button>
