@@ -360,6 +360,98 @@ class Catalog extends Component
         $this->selectedPeopleNames = [];
         $this->cc_to = '';
     }
+    public function DistributorRequest(){
+    
+        try {
+            // dd($this->file_path);
+            $messages = [
+                'subject.required' => 'Business Justification is required',
+                'distributor_name' => 'Distributor name is required',
+                'description' => 'Specific Information is required',
+               
+            ];
+    
+            $this->validate([
+                'distributor_name' => 'required|string',
+                'subject' => 'required|string|max:255',
+                'description' => 'required|string',
+                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+             
+              
+            ],$messages);
+                   // Initialize variables for file content
+        $fileContent = null;
+        $mimeType = null;
+        $fileName = null;
+
+
+            // dd($this->file_path);
+              // Use a separate variable for file content
+            if ($this->file_path) {
+                // Validate and store the uploaded file
+                $validatedFile = $this->validate([
+                    'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
+                ]);
+            }
+
+            // Store the file as binary data
+
+            $fileContent = file_get_contents($this->file_path->getRealPath());
+            if ($fileContent === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                session()->flash('error', 'Failed to read the uploaded file.');
+                return;
+            }
+
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                session()->flash('error', 'File size exceeds the allowed limit.');
+                return;
+            }
+
+
+            $mimeType = $this->file_path->getMimeType();
+        $fileName = $this->file_path->getClientOriginalName();
+        
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+            HelpDesks::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+                'category' => $this->category,
+                'distributor_name' => $this->distributor_name,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path' => $fileContent, // Store the binary file data
+                'file_name' => $fileName,
+                'mime_type' => $mimeType,
+                'cc_to' => $this->cc_to ?? '-',
+             
+                'mail' => 'N/A',
+                'mobile' => 'N/A',
+                'distributor_name' => 'N/A',
+            ]);
+
+            session()->flash('message', 'Request created successfully.');
+            $this->reset();
+            return redirect()->to('/HelpDesk');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->setErrorBag($e->validator->getMessageBag());
+        } catch (\Exception $e) {
+            Log::error('Error creating request: ' . $e->getMessage(), [
+                'employee_id' => $employeeId,
+                'category' => $this->category,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+            ]);
+            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+        }
+    }
+
 
 
     public function Devops()
@@ -382,33 +474,36 @@ class Catalog extends Component
         try {
 
 
+            $validatedData = $this->validate($this->rules);
+
             $fileContent = null; // Use a separate variable for file content
             if ($this->file_path) {
                 // Validate and store the uploaded file
                 $validatedFile = $this->validate([
                     'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
                 ]);
-    
-                // Store the file as binary data
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-    
-                if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    session()->flash('error', 'Failed to read the uploaded file.');
-                    return;
-                }
-    
-                // Check if the file content is too large
-                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    session()->flash('error', 'File size exceeds the allowed limit.');
-                    return;
-                }
+
+
+            // Store the file as binary data
+            $fileContent = file_get_contents($this->file_path->getRealPath());
+
+            if ($fileContent === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                session()->flash('error', 'Failed to read the uploaded file.');
+                return;
             }
+
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                session()->flash('error', 'File size exceeds the allowed limit.');
+                return;
+            }
+        }
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'mail' => $this->mail,
@@ -435,52 +530,55 @@ class Catalog extends Component
     public function Request()
     {
 
-        $messages=[
-            'subject.required' => 'Business Justification is required',
-        
-            'description' => 'Specific Information is required',
-            'mail.required' => ' Email  is required.',
-            'mail.email' => ' Email must be a valid email address.',
-           
-        ];
-        $this->validate([
-            'subject' => 'required|string|max:255',
-            'mail' => 'required|email|unique:help_desks',
-            'description' => 'required|string',
-          
-        ],$messages);
+     
       
         try {
+            $messages=[
+                'subject.required' => 'Business Justification is required',
+            
+                'description' => 'Specific Information is required',
+                'mail.required' => ' Email  is required.',
+                'mail.email' => ' Email must be a valid email address.',
+               
+            ];
+            $this->validate([
+                'subject' => 'required|string|max:255',
+                'mail' => 'required|email|unique:help_desks',
+                'description' => 'required|string',
+              
+            ],$messages);
 
-
-            $fileContent = null; // Use a separate variable for file content
-            if ($this->file_path) {
-                // Validate and store the uploaded file
-                $validatedFile = $this->validate([
-                    'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
-                ]);
-    
-                // Store the file as binary data
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-    
-                if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    session()->flash('error', 'Failed to read the uploaded file.');
-                    return;
-                }
-    
-                // Check if the file content is too large
-                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    session()->flash('error', 'File size exceeds the allowed limit.');
-                    return;
-                }
-            }
-
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
+            $validatedData = $this->validate($this->rules);
+            $filePath=null;
+            $fileName=null;
+                        $fileContent = null; // Use a separate variable for file content
+                           // Store the file as binary data
+                    if ($this->file_path) {
+                
+                      
+                        $fileContent = file_get_contents($this->file_path->getRealPath());
+                        if ($fileContent === false) {
+                            Log::error('Failed to read the uploaded file.', [
+                                'file_path' => $this->file_path->getRealPath(),
+                            ]);
+                            session()->flash('error', 'Failed to read the uploaded file.');
+                            return;
+                        }
+                
+                        // Check if the file content is too large
+                        if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                            session()->flash('error', 'File size exceeds the allowed limit.');
+                            return;
+                        }
+                
+                
+                        $mimeType = $this->file_path->getMimeType();
+                        $fileName = $this->file_path->getClientOriginalName();
+                    }
+                   
+                        $employeeId = auth()->guard('emp')->user()->emp_id;
+                        
+                        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'mail' => $this->mail,
@@ -493,73 +591,6 @@ class Catalog extends Component
                 'distributor_name' => 'N/A',
             ]);
      
-
-            session()->flash('message', 'Request created successfully.');
-            $this->reset();
-            return redirect()->to('/HelpDesk');
-        } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
-        }
-    }
-
-    public function DistributorRequest()
-    {
-        $messages = [
-            'subject.required' => 'Business Justification is required',
-            'distributor_name' => 'Distributor name is required',
-            'description' => 'Specific Information is required',
-           
-        ];
-
-        $this->validate([
-            'distributor_name' => 'required|string',
-            'subject' => 'required|string|max:255',
-            'description' => 'required|string',
-          
-        ],$messages);
-        try {
-
-
-            $fileContent = null; // Use a separate variable for file content
-            if ($this->file_path) {
-                // Validate and store the uploaded file
-                $validatedFile = $this->validate([
-                    'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
-                ]);
-    
-                // Store the file as binary data
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-    
-                if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    session()->flash('error', 'Failed to read the uploaded file.');
-                    return;
-                }
-    
-                // Check if the file content is too large
-                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    session()->flash('error', 'File size exceeds the allowed limit.');
-                    return;
-                }
-            }
-
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-            HelpDesks::create([
-                'emp_id' => $this->employeeDetails->emp_id,
-                'distributor_name' => $this->distributor_name,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path' =>  $fileContent ?? '-',
-                'cc_to' => $this->cc_to ?? '-',
-                'category' => $this->category,
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
-            ]);
 
             session()->flash('message', 'Request created successfully.');
             $this->reset();
@@ -583,42 +614,43 @@ class Catalog extends Component
             'subject' => 'required|string',
             'description' => 'required|string',
             'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
+            'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
         ],$messages);
 
         try {
      
-            // Handle file upload
+                $fileName = null;
+        $mimeType = null;
             $fileContent = null; // Use a separate variable for file content
             if ($this->file_path) {
                 // Validate and store the uploaded file
                 $validatedFile = $this->validate([
                     'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
                 ]);
-    
-                // Store the file as binary data
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-    
-                if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    session()->flash('error', 'Failed to read the uploaded file.');
-                    return;
-                }
-    
-                // Check if the file content is too large
-                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    session()->flash('error', 'File size exceeds the allowed limit.');
-                    return;
-                }
+
+
+            // Store the file as binary data
+            $fileContent = file_get_contents($this->file_path->getRealPath());
+
+            if ($fileContent === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                session()->flash('error', 'Failed to read the uploaded file.');
+                return;
             }
 
-            // Get the employee details
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                session()->flash('error', 'File size exceeds the allowed limit.');
+                return;
+            }
+        }
+        $mimeType = $this->file_path->getMimeType();
+        $fileName = $this->file_path->getClientOriginalName();
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-            // Create the HelpDesk request
-
          
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
@@ -626,7 +658,8 @@ class Catalog extends Component
                 'description' => $this->description,
                 'file_path' => $fileContent ?? '-',
                 'cc_to' => $this->cc_to ?? '-',
-               
+               'file_name' => $fileName,
+                'mime_type' => $mimeType,
                 'category' => $this->category ?? '-',
                 'mail' => 'N/A',
                 'mobile' => 'N/A',

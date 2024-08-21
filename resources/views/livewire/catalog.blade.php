@@ -69,7 +69,7 @@
                                                     </div>
                                                     <hr style="border: 1px solid #ccc;margin: 10px 0;">
 
-                                                    <form wire:submit.prevent="DistributorRequest">
+                                                    <form wire:submit.prevent="DistributorRequest" >
 
                                                         <div class="form-group mt-2">
                                                             <label for="contactDetails">Provide the Name of Distribution List<span style="color:red">*</span></label>
@@ -191,18 +191,18 @@
 
                                                         </div>
                                                         <div class="row mt-2">
-                            <div class="col">
-                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
-                                    <i class="fa fa-paperclip"></i> Attach Image
-                                </label>
+                                <div class="col">
+                                    <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                        <i class="fa fa-paperclip"></i> Attach Image
+                                    </label>
+                                </div>
+                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
-                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
 
-                        <div>
-                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                            <div>
+                                <input type="file" wire:model="file_path" id="file_path" class="form-control">
 
-                        </div>
+                            </div>
                 
 
                                                     </form>
@@ -255,7 +255,7 @@
                                                         </div>
                                                     </div>
                                                     <hr style="border: 1px solid #ccc;margin: 10px 0;">
-                                                    <form wire:submit.prevent="submit">
+                                                    <form wire:submit.prevent="submit" enctype="multipart/form-data">
 
 
                                                         <div class="form-group mt-2" >

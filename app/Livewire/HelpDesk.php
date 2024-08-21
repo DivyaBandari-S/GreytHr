@@ -515,13 +515,12 @@ class HelpDesk extends Component
         try {
             // dd($this->file_path);
             $validatedData = $this->validate($this->rules);
+            
             // dd($this->file_path);
               // Use a separate variable for file content
             if ($this->file_path) {
                 // Validate and store the uploaded file
-                $validatedFile = $this->validate([
-                    'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
-                ]);
+           
             }
 
             // Store the file as binary data
@@ -543,7 +542,8 @@ class HelpDesk extends Component
 
 
             $mimeType = $this->file_path->getMimeType();
-            $fileName = $this->file_path->getClientOriginalName();
+        $fileName = $this->file_path->getClientOriginalName();
+        
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();

@@ -529,7 +529,7 @@
                             </div>
                             <div class="w-90" style="border-top: 1px solid #E8E5E4; margin: 10px;"></div>
                             <div class="row" style="display: flex;">
-                        <div class="col-md-3" style="display: flex;">
+                        <div class="col-md-5" style="display: flex;">
                             <form wire:submit.prevent="createemoji('{{ $data['employee']->emp_id }}')">
                                 @csrf
                                 <div class="emoji-container">
@@ -659,11 +659,11 @@
 
 
 
-                        <div class="col-md-8 p-0">
+                        <div class="col-md-7 p-0">
                             <form wire:submit.prevent="add_comment('{{ $data['employee']->emp_id }}')">
                                 @csrf
                                 <div class="row m-0">
-                                    <div class="col-md-3 mb-2">
+                                    <div class="col-md-5 mb-2">
                                         <div style="display: flex; align-items: center;">
                                             <span>
                                                 <i class="comment-icon">💬</i>
@@ -677,10 +677,10 @@
 
                                     <div class="col-md-8 p-0 mb-2" style="margin-left:10px">
                                         <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;" style="margin-left:-20px">
-                                            <div class="col-md-8">
+                                            <div class="col-md-9">
                                                 <textarea wire:model="newComment" placeholder="Post comment something here" style="font-size:10px" name="comment" class="form-control"></textarea>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                                 <input type="submit" class="btn btn-primary" style="text-align: center; line-height: 10px; font-size:12px;margin-left:-10px;background-color:rgb(2, 17, 79);" value="comment" wire:target="add_comment">
                                             </div>
                                         </div>
@@ -1017,12 +1017,12 @@
 
                                     </div>
 
-                                    <div class="col-md-8 p-0 mb-2" style="margin-left:10px">
+                                    <div class="col-md-9 p-0 mb-2" style="margin-left:10px">
                                         <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;" style="margin-left:-20px">
-                                            <div class="col-md-8">
+                                            <div class="col-md-9">
                                                 <textarea wire:model="newComment" placeholder="Post comment something here" style="font-size:10px" name="comment" class="form-control"></textarea>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                                 <input type="submit" class="btn btn-primary" style="text-align: center; line-height: 10px; font-size:12px;margin-left:-10px;background-color:rgb(2, 17, 79);" value="comment" wire:target="add_comment">
                                             </div>
                                         </div>
