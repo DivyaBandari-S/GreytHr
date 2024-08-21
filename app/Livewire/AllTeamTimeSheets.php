@@ -18,10 +18,23 @@ class AllTeamTimeSheets extends Component
     public $emp_id = '';
     public $start_date = '';
     public $end_date = '';
-    public $time_sheet_type="weekly";
+    public $time_sheet_type = "weekly";
     public $manager_approval = 'pending';
     public $hr_approval = '';
     public $submission_status = '';
+
+    // In your Livewire component class
+    public $openAccordionIndex = null; // Store the currently open accordion index
+
+    public function toggleAccordion($index)
+    {
+        if ($this->openAccordionIndex === $index) {
+            $this->openAccordionIndex = null; // Close the currently open item if clicked again
+        } else {
+            $this->openAccordionIndex = $index; // Open the new item
+        }
+    }
+
 
     public function teamTimeSheetsFilter()
     {
@@ -90,20 +103,12 @@ class AllTeamTimeSheets extends Component
         $this->initialTeamTimeSheets = TimeSheet::with('employee')
             ->orderBy('start_date', 'desc')
             ->whereIn('emp_id', $managedEmployees)
-            ->whereRaw('DATEDIFF(end_date, start_date) != 7')
+            ->whereRaw('DATEDIFF(end_date, start_date) = 6')
             ->where(function ($query) {
-                $query->where('approval_status_for_manager', 'pending')
-                    ->orWhere('approval_status_for_manager', 'approved')
-                    ->orWhere('approval_status_for_manager', 'rejected')
-                    ->orWhere('approval_status_for_manager', 're-submit');
+                $query->where('approval_status_for_manager', '=', 'pending');
             })
             ->get();
-
-        // Apply filters
-        $this->teamTimeSheetsFilter();
-
-        // Set the final team time sheets
-        $this->teamTimeSheets = $this->filteredTeamTimeSheets ?: $this->initialTeamTimeSheets;
+        $this->teamTimeSheets = $this->filteredTeamTimeSheets ?? $this->initialTeamTimeSheets;
 
         return view('livewire.all-team-time-sheets');
     }

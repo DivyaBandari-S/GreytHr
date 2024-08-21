@@ -25,7 +25,7 @@
         <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
             <div class="row d-flex align-items-center">
                 <div class="col-md-7">
-                    <div class="form-group ">
+                    <div class="form-group">
                         <label for="leave_type">Leave Type <span class="requiredMark">*</span> </label> <br>
                         <div class="custom-select-wrapper" style="width: 50%;">
                             <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leave_type">
@@ -86,8 +86,11 @@
                             <span class="normalTextValue">Number of Days :</span>
                             @if($showNumberOfDays)
                             <span id="numberOfDays" class="sickLeaveBalance">
-                                <!-- Display the calculated number of days -->
+                                @if($from_date && $to_date && $from_session && $to_session)
                                 {{ $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session) }}
+                                @else
+                                0
+                                @endif
                             </span>
                             <!-- Add a condition to check if the number of days exceeds the leave balance -->
                             @if(!empty($leaveBalances))
@@ -99,7 +102,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['casualProbationLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" >
+                            <div class="error-message">
                                 <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
@@ -112,7 +115,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['casualLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" >
+                            <div class="error-message">
                                 <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
@@ -124,7 +127,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['sickLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" >
+                            <div class="error-message">
                                 <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
@@ -136,7 +139,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['maternityLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" >
+                            <div class="error-message">
                                 <div class="alert-danger Insufficient">Insufficient leave balance</div>
                             </div>
                             @php
@@ -148,7 +151,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['paternityLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" >
+                            <div class="error-message">
                                 <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
@@ -160,7 +163,7 @@
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > $leaveBalances['marriageLeaveBalance'])
                             <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message" >
+                            <div class="error-message">
                                 <span class="Insufficient">Insufficient leave balance</span>
                             </div>
                             @php
@@ -188,18 +191,19 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group ">
+                    @if($showSessionDropdown)
+                    <div class="form-group">
                         <label for="fromSession">Session</label> <br>
                         <div class="custom-select-wrapper">
                             <select id="fromSession" class="form-control outline-none rounded placeholder-small" wire:model="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="fromSession" wire:change="handleFieldUpdate('from_session')">
-                                <option value="" disabled>Select a session</option> <!-- Placeholder option -->
+                                <option value="">Select a session</option> <!-- Placeholder option -->
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
                             @error('from_session') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
-
                     </div>
+                    @endif
                 </div>
             </div>
             <div class=" row d-flex mt-3">
@@ -211,19 +215,19 @@
                     </div>
                 </div>
                 <div class="col-md-6">
+                    @if($showSessionDropdown)
                     <div class="form-group ">
                         <label for="to_session">Session</label> <br>
                         <div class="custom-select-wrapper">
                             <select id="to_session" class="form-control outline-none rounded placeholder-small" wire:model="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="toSession" wire:change="handleFieldUpdate('to_session')">
-                                <option value="" disabled>Select a session</option> <!-- Placeholder option -->
+                                <option value="">Select a session</option> <!-- Placeholder option -->
                                 <option value="Session 2">Session 2</option>
-
                                 <option value="Session 1">Session 1</option>
                             </select>
-                            @error('from_session') <span class="text-danger">{{ $message }}</span> @enderror
+                            @error('to_session') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
-
                     </div>
+                    @endif
                 </div>
             </div>
 
@@ -279,7 +283,7 @@
                             <div class="col-md-10 m-0">
                                 <div class="input-group">
                                     <input
-                                    wire:model="searchQuery"
+                                        wire:model="searchQuery"
                                         id="searchInput"
                                         type="text"
                                         class="form-control placeholder-small"

@@ -133,7 +133,7 @@
                     @endif
                     <tr class="data-row" data-index="{{ $index }}">
                         <td class="accordion-icon">
-                            <a href="#" class="toggle-icon" data-index="{{ $index }}">
+                            <a href="#" wire:click.prevent="toggleAccordion({{ $index }})" class="toggle-icon {{ $openAccordionIndex === $index ? 'open' : '' }}" data-index="{{ $index }}">
                                 <i class="fas fa-plus"></i>
                             </a>
                         </td>
@@ -175,7 +175,7 @@
                     </tr>
 
                     <!-- Details Row -->
-                    <tr class="detail-row" id="details-{{ $index }}">
+                    <tr class="detail-row {{ $openAccordionIndex === $index ? 'open' : '' }}" id="details-{{ $index }}">
                         <td colspan="11">
                             <table>
                                 <thead>
@@ -669,29 +669,6 @@
 </div>
 
 <script>
-    // Modify event listener for better mobile compatibility
-    document.querySelectorAll('.toggle-icon').forEach(function(icon) {
-        icon.addEventListener('click', function(event) {
-            event.preventDefault();
-            var index = this.getAttribute('data-index');
-            var detailRow = document.getElementById('details-' + index);
-
-            if (detailRow.classList.contains('open')) {
-                detailRow.classList.remove('open');
-                this.classList.remove('open');
-            } else {
-                document.querySelectorAll('.detail-row').forEach(function(row) {
-                    row.classList.remove('open');
-                });
-                document.querySelectorAll('.toggle-icon').forEach(function(icon) {
-                    icon.classList.remove('open');
-                });
-                detailRow.classList.add('open');
-                this.classList.add('open');
-            }
-        });
-    });
-
     document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
             var message = document.getElementById('success-message');
