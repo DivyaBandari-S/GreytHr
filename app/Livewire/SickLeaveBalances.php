@@ -15,7 +15,7 @@ class SickLeaveBalances extends Component
     public $employeeLeaveBalances;
     public $employeeleaveavlid;
     public $totalSickDays = 0;
-    public $Availablebalance, $employeeDetails;
+    public $Availablebalance, $employeeDetails, $leaveGrantedData;
 
 
     ///calculate number of days
@@ -63,17 +63,15 @@ class SickLeaveBalances extends Component
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
                 }
-            }elseif(self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)){
+            } elseif (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 1; // Add half a day
                 }
-            }
-            else {
+            } else {
                 $totalDays += (self::getSessionNumber($toSession) - self::getSessionNumber($fromSession) + 1) * 0.5;
             }
 
             return (float) $totalDays;
-
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
@@ -101,22 +99,34 @@ class SickLeaveBalances extends Component
     }
     public function render()
     {
-        try{
+        try {
+
+
+
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            
-            $this->employeeLeaveBalances= EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->where('leave_type', 'Sick Leave')
-            ->get();
-            
+            $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                ->whereRaw('CURDATE() BETWEEN from_date AND to_date')
+                ->get();
+
+
+            $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                ->whereRaw('CURDATE() BETWEEN from_date AND to_date')
+                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Sick Leave\"')) AS sick_leave")
+                ->pluck('sick_leave')
+                ->first();
+
+
+
             // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
             // where emp_id matches and leave_type is "Sick Leave"
             $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_type', 'Sick Leave')
-            ->where('status', 'approved')
-            ->get();
+                ->where('leave_type', 'Sick Leave')
+                ->where('status', 'approved')
+                ->get();
 
-            
+
             foreach ($this->employeeleaveavlid as $leaveRequest) {
                 //$leaveType = $leaveRequest->leave_type;
                 $days = self::calculateNumberOfDays(
@@ -128,10 +138,11 @@ class SickLeaveBalances extends Component
                 $this->totalSickDays += intval($days);
                 // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
             }
-            foreach ($this->employeeLeaveBalances as $employeeLeaveBalance) {
-                $this->Availablebalance = $employeeLeaveBalance->leave_balance - $this->totalSickDays;
-                // Do something with $this->Availablebalance
-            }
+            // foreach ($this->employeeLeaveBalances as $employeeLeaveBalance) {
+            //     $this->Availablebalance = $employeeLeaveBalance->leave_balance - $this->totalSickDays;
+
+            // }
+            $this->Availablebalance = $this->employeeLeaveBalances - $this->totalSickDays;
 
 
             $currentMonth = date('n');
@@ -141,10 +152,10 @@ class SickLeaveBalances extends Component
             $grantedLeavesByMonth = [];
             $availedLeavesByMonth = [];
             $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('leave_type', 'Sick Leave')
-                ->whereYear('from_date', $currentYear)
-                ->sum('leave_balance');
-
+                ->whereRaw('CURDATE() BETWEEN from_date AND to_date')
+                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Sick Leave\"')) AS sick_leave")
+                ->pluck('sick_leave')
+                ->first();
             for ($month = $startingMonth; $month <= $currentMonth; $month++) {
                 // Fetch availed leaves count for this month
                 $availedLeavesCount = LeaveRequest::where('emp_id', $employeeId)
@@ -153,7 +164,7 @@ class SickLeaveBalances extends Component
                     ->whereYear('from_date', $currentYear)
                     ->whereMonth('from_date', $month)
                     ->count();
-                
+
                 // Adjust granted leaves count by subtracting availed leaves count
                 $grantedLeavesCount -= $availedLeavesCount;
 
@@ -164,6 +175,7 @@ class SickLeaveBalances extends Component
                 $grantedLeavesByMonth[] = $grantedLeavesCount;
                 $availedLeavesByMonth[] = $availedLeavesCount;
             }
+
             $chartData = [
                 'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 'datasets' => [
@@ -184,28 +196,28 @@ class SickLeaveBalances extends Component
                 ]
             ];
 
-                $chartOptions = [
-                    'scales' => [
-                        'yAxes' => [[
-                            'ticks' => [
-                                'beginAtZero' => true,
-                                'min' => 0,
-                                'max' => 10,
-                                'stepSize' => 2 // Adjust the step size to show values at intervals of 2
-                            ],
-                            'gridLines' => [
-                                'display' => false // Remove grid lines from the y-axis
-                            ]
-                        ]],
-                        'xAxes' => [[
-                            'gridLines' => [
-                                'display' => false // Remove grid lines from the x-axis
-                            ]
-                        ]]
+            $chartOptions = [
+                'scales' => [
+                    'y' => [
+                        'ticks' => [
+                            'beginAtZero' => true,
+                            'min' => 0,
+                            'max' => 10,
+                            'stepSize' => 2 // Adjust the step size to show values at intervals of 2
+                        ],
+                        'grid' => [
+                            'display' => false // Remove grid lines from the y-axis
+                        ]
                     ],
-                    'maintainAspectRatio' => false, // Allow chart to be resized
-                    'responsive' => true // Make chart responsive
-                ];
+                    'x' => [
+                        'grid' => [
+                            'display' => false // Remove grid lines from the x-axis
+                        ]
+                    ]
+                ],
+                'maintainAspectRatio' => false, // Allow chart to be resized
+                'responsive' => true // Make chart responsive
+            ];
             return view('livewire.sick-leave-balances', [
                 'employeeLeaveBalances' => $this->employeeLeaveBalances,
                 'employeeleaveavlid' => $this->employeeleaveavlid,
@@ -214,11 +226,9 @@ class SickLeaveBalances extends Component
                 'chartData' => $chartData,
                 'chartOptions' => $chartOptions // Pass chart options to the view
             ]);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Error in Sick Leave Balance render method: ' . $e->getMessage());
             return view('livewire.sick-leave-balances');
         }
     }
-
 }

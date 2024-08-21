@@ -4,7 +4,7 @@
       <div class="alert alert-success w-50 position-absolute m-auto p-2" style="font-size: 12px; right: 25%;" id="success-alert">
          {{ session('message') }}
          <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">X</span>
+            <span>X</span>
          </button>
       </div>
       <script>
@@ -18,7 +18,7 @@
       <div class="alert alert-danger position-absolute p-1" style="font-size: 12px; right: 25%;" id="error-alert">
          {{ session('error') }}
          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">X</span>
+            <span >X</span>
          </button>
       </div>
       <script>
@@ -136,10 +136,10 @@
          @endif
          @elseif($activeSection === 'pendingButton')
          @if ($showAlert)
-         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.2s="hideAlert" style="font-size: 12px; right: 25%;" id="success-alert">
+         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.20s="hideAlert" style="font-size: 12px; right: 25%;" id="success-alert">
             {{ session('cancelMessage') }}
             <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close" wire:click="hideAlert">
-               <span aria-hidden="true">X</span>
+               <span>X</span>
             </button>
          </div>
          @endif
@@ -192,7 +192,7 @@
                               @php
                               $applyingToArray = json_decode($leaveRequest->applying_to, true);
                               @endphp
-                              <span class="accordionContentSpanValue">
+                              <span class="accordionContentSpanValue" title="{{ ucwords(strtolower($applyingToArray[0]['report_to'])) ?? 'No report_to available' }}">
                                  {{ ucwords(strtolower($applyingToArray[0]['report_to'])) ?? 'No report_to available' }}
                               </span>
 
@@ -232,7 +232,7 @@
 
                         <div class="content pt-1 px-4">
 
-                           <span style="color: #778899; font-size: 12px; font-weight: 500;">Duration:</span>
+                           <span class="normalTextValue">Duration:</span>
 
                            <span style="font-size: 11px;">
 
@@ -252,7 +252,7 @@
 
                         <div class="content pb-1 px-4">
 
-                           <span style="color: #778899; font-size: 12px; font-weight: 500;">Reason:</span>
+                           <span class="normalTextValue">Reason:</span>
 
                            <span style="font-size: 11px;">{{ ucfirst( $leaveRequest->reason) }}</span>
 
@@ -264,9 +264,9 @@
 
                            <div class="content px-2">
 
-                              <span style="color: #778899; font-size: 12px; font-weight: 500;">Applied on:</span>
+                              <span class="normalTextValue">Applied on:</span>
 
-                              <span style="color: #333; font-size:12px; font-weight: 500;">{{ $leaveRequest->created_at->format('d M, Y') }}</span>
+                              <span class="normalText">{{ $leaveRequest->created_at->format('d M, Y') }}</span>
 
                            </div>
 
@@ -318,25 +318,25 @@
 
                            <div class="col accordion-content">
 
-                              <span style="color: #778899; font-size:12px; font-weight: 500;">Category</span>
+                              <span class="normalTextValue">Category</span>
 
-                              <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest->category_type}}</span>
-
-                           </div>
-
-                           <div class="col accordion-content">
-
-                              <span style="color: #778899; font-size:12px; font-weight: 500;">Leave Type</span>
-
-                              <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest->leave_type}}</span>
+                              <span class="normalText">{{ $leaveRequest->category_type}}</span>
 
                            </div>
 
                            <div class="col accordion-content">
 
-                              <span style="color: #778899; font-size:12px; font-weight: 500;">No. of Days</span>
+                              <span class="normalTextValue">Leave Type</span>
 
-                              <span style="color: #36454F; font-size: 12px; font-weight: 500;">
+                              <span class="normalText">{{ $leaveRequest->leave_type}}</span>
+
+                           </div>
+
+                           <div class="col accordion-content">
+
+                              <span class="normalTextValue">No. of Days</span>
+
+                              <span class="normalText">
 
                                  {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}
 

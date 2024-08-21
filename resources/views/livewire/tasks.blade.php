@@ -30,7 +30,7 @@
         }
 
         .task-date-range-picker {
-            width: 240px;
+            width: 245px;
             margin-left: -20px;
         }
 
@@ -45,6 +45,7 @@
             font-size: var(--main-headings-font-size);
             font-weight: 500;
         }
+  
     </style>
 
     <div class="container"
@@ -127,28 +128,32 @@
                 </form>
             </div>
             <div class="card-body"
-                style="background-color:white;width:100%;border-radius:5px;max-height:400px;overflow-y:auto;overflow-x:hidden;margin-top: 10px;">
+                style="background-color:white;width:100%;border-radius:5px;max-height:400px;overflow-y:auto;overflow-y:auto;margin-top: 10px;">
 
-                <div class="table-responsive">
+                <div class="table-cresponsive">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr style="background-color: rgb(2, 17, 79); color: white;">
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 7%">
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%; min-width: 80px;">
                                     <i class="fa fa-angle-down" style="color: white; padding-left: 8px;"></i>
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 14%">Task Name
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 120px;">Task Id
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 16%">Assigned By
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">Task Name
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 13%">Assignee
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 170px;">Assigned By
+                                </th>
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">Assignee
                                 </th>
 
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 14%">Assigned
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">Assigned
                                     Date
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 14%">Due Date
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">Due Date
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 22%">Actions
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">Re-Opened Date
+                                </th>
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 15%; min-width: 200px;">Actions
                                 </th>
                             </tr>
                         </thead>
@@ -165,37 +170,50 @@
                                 @foreach ($searchData as $index => $record)
                                     @if ($record->status == 'Open')
                                         <tr>
-                                            <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;cursor: pointer;">
+                                            <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%; min-width: 80px;cursor: pointer;">
                                                 <div class="arrow-btn" wire:click="toggleAccordion('{{ $record->id }}')">
                                                     <i class="{{ in_array($record->id, $openAccordions) ? 'fa fa-angle-up' : 'fa fa-angle-down' }}"></i>
                                                 </div>
                                             </td>
+                                            <td
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start;width: 15%; min-width: 120px;">
+                                                T-{{ ($record->id) }}
+                                            </td>
 
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 14%">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start;width: 15%; min-width: 150px;">
                                                 {{ ucfirst($record->task_name) }}
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 16%">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start;width: 15%; min-width: 170px;">
                                                 {{ ucwords(strtolower($record->emp->first_name)) }}
                                                 {{ ucwords(strtolower($record->emp->last_name)) }}
 
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none;font-size: 0.75rem; text-align: start; width: 13%">
+                                                style="padding: 10px; border:none;font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">
 
                                                 {{ ucfirst($record->assignee) }}
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 14%">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">
                                                 {{ \Carbon\Carbon::parse($record->created_at)->format('d M, Y') }}
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 14%;">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">
                                                 {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 22%">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 15%; min-width: 150px;">
+                                                @if($record->reopened_date)
+                                                    {{ \Carbon\Carbon::parse($record->reopened_date)->format('d M, Y') }}
+                                                @else
+                                                <span>-</span>
+
+                                                @endif
+                                            </td>
+                                            <td
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 15%; min-width: 200px;">
                                                 @foreach ($record->comments ?? [] as $comment)
                                                     {{ $comment->comment }}
                                                 @endforeach
@@ -207,10 +225,14 @@
                                                 <button wire:click="openForTasks('{{ $record->id }}')"
                                                     style="border:1px solid rgb(2, 17, 79);width:80px; padding: 5px 0.75rem;"
                                                     class="cancel-btn">Close</button>
+                                                    {{-- <div class="d-flex justify-content-center" style="gap:10px;">
+                                                        <i class="fa-solid fa-comment chat-icon" title="Comment" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" data-toggle="modal"  data-target="#exampleModalCenter"></i>
+                                                    <i class="fa-solid fa-circle-xmark chat-icon"title="Close" wire:click="openForTasks('{{ $record->id }}')"></i>
+                                                    </div> --}}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="8" class="m-0 p-0"
+                                            <td colspan="9" class="m-0 p-0"
                                                 style="background-color: #fff; padding: 0; margin: 0;">
                                                 <div class="accordion-content mt-0"
                                                 style="display: {{ in_array($record->id, $openAccordions) ? 'block' : 'none' }}; padding: 0 10px; margin-bottom: 20px;">
@@ -259,13 +281,29 @@
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 30%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    @if (!empty($record->file_path) && $record->file_path !== 'null')
+                                                                    {{-- @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         <a href="#"
                                                                             wire:click="showViewFile('{{ $record->id }}')"
                                                                             style="text-decoration: none; color: #007BFF;">View
                                                                             File</a>
                                                                     @else
                                                                         N/A
+                                                                    @endif --}}
+                                                                    @if (!empty($record->file_path) && $record->file_path !== 'null')
+                                                                    @if(strpos($record->mime_type, 'image') !== false)
+                                                                    <a href="#" wire:click.prevent="showViewFile('{{ $record->id }}')"
+                                                                        style="text-decoration: none; color: #007BFF;">
+                                                                        View Image
+                                                                    </a>
+                                                                    @else
+                                                                    <a href="{{ route('files.showTask', $record->id) }}" download="{{ $record->file_name }}"  style="margin-top: 10px;">
+                                                                        Download file
+                                                                    </a>
+                                        
+                                                                    @endif
+                                                                    @else
+                                                                    {{-- Show this message if no file is attached --}}
+                                                                    <p style="color: gray;">N/A</p>
                                                                     @endif
                                                                 </td>
 
@@ -314,31 +352,33 @@
                 </form>
             </div>
             <div class="card-body"
-                style="background-color:white;width:100%;border-radius:5px;max-height:300px;overflow-y:auto;overflow-x:hidden;margin-top: 10px;">
+                style="background-color:white;width:100%;border-radius:5px;max-height:300px;overflow-y:auto;overflow-x:auto;margin-top: 10px;">
 
                 <div class="table-responsive">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr style="background-color: rgb(2, 17, 79); color: white;">
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 7%;">
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 7%;min-width: 80px;">
                                     <i class="fa fa-angle-down" style="color: white; padding-left: 8px;"></i>
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Task Name
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 8%;min-width: 120px;">Task Id
+                                </th>
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%;min-width: 150px;">Task Name
                                 </th>
 
 
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Assigned By
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">Assigned By
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Assignee
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">Assignee
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Assigned
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">Assigned
                                     Date</th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Due Date
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">Due Date
                                 </th>
 
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%">Closed
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">Closed
                                     Date</th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 23%">Actions
+                                <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 20%;min-width: 200px;">Actions
                                 </th>
                             </tr>
                         </thead>
@@ -356,41 +396,45 @@
                                     @if ($record->status == 'Completed')
                                         <tr>
                         
-                                            <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;cursor: pointer;">
+                                            <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;min-width: 80px;cursor: pointer;">
                                                 <div class="arrow-btn" wire:click="toggleAccordion('{{ $record->id }}')">
                                                     <i class="{{ in_array($record->id, $openAccordions) ? 'fa fa-angle-up' : 'fa fa-angle-down' }}"></i>
                                                 </div>
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
+                                            style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 8%;min-width: 120px;">
+                                            T-{{($record->id) }}
+                                        </td>
+                                            <td
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
                                                 {{ ucfirst($record->task_name) }}
                                             </td>
 
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
                                                 {{ ucwords(strtolower($record->emp->first_name)) }}
                                                 {{ ucwords(strtolower($record->emp->last_name)) }}
                                             </td>
 
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
                                                 {{ ucfirst($record->assignee) }}
                                             </td>
 
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
                                                 {{ \Carbon\Carbon::parse($record->created_at)->format('d M, Y') }}
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%; color: {{ \Carbon\Carbon::parse($record->updated_at)->startOfDay()->gt(\Carbon\Carbon::parse($record->due_date)->startOfDay())? 'red': 'inherit' }};">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px; color: {{ \Carbon\Carbon::parse($record->updated_at)->startOfDay()->gt(\Carbon\Carbon::parse($record->due_date)->startOfDay())? 'red': 'inherit' }};">
                                                 {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
                                                 {{ \Carbon\Carbon::parse($record->updated_at)->format('d M, Y') }}
                                             </td>
                                             <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 23%">
+                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 20%;min-width: 200px;">
                                                 @foreach ($record->comments ?? [] as $comment)
                                                     {{ $comment->comment }}
                                                 @endforeach
@@ -452,13 +496,29 @@
                                                                 </td>
                                                                 <td
                                                                     style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
-                                                                    @if (!empty($record->file_path) && $record->file_path !== 'null')
+                                                                    {{-- @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         <a href="#"
                                                                             wire:click="showViewFile('{{ $record->id }}')"
                                                                             style="text-decoration: none; color: #007BFF;">View
                                                                             File</a>
                                                                     @else
                                                                         N/A
+                                                                    @endif --}}
+                                                                    @if (!empty($record->file_path) && $record->file_path !== 'null')
+                                                                    @if(strpos($record->mime_type, 'image') !== false)
+                                                                    <a href="#" wire:click.prevent="showViewFile('{{ $record->id }}')"
+                                                                        style="text-decoration: none; color: #007BFF;">
+                                                                        View Image
+                                                                    </a>
+                                                                    @else
+                                                                    <a href="{{ route('files.showTask', $record->id) }}" download="{{ $record->file_name }}"  style="margin-top: 10px;">
+                                                                        Download file
+                                                                    </a>
+                                        
+                                                                    @endif
+                                                                    @else
+                                                                    {{-- Show this message if no file is attached --}}
+                                                                    <p style="color: gray;">N/A</p>
                                                                     @endif
                                                                 </td>
                                                             </tr>
@@ -851,20 +911,31 @@
                                 <div id="flash-message-container" style="display: none;" class="alert alert-success"
                                     role="alert"></div>
                                 <div class="row">
-                                    <div class="col">
+                                    {{-- <div class="col">
                                         <label for="fileInput"
                                             style="cursor: pointer; font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">
                                             Attach Image
                                         </label>
+                                    </div> --}}
+                                    <div class="col">
+                                        <label for="fileInput" style="cursor: pointer; font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">
+                                            <i class="fa fa-paperclip"></i> Attach Image
+                                        </label>
                                     </div>
+                                    @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
+                                
+                            <div>
+                                <input type="file" style="font-size: 0.75rem;" wire:model="file_path" id="file_path" wire:change="autoValidate" class="form-control" onchange="handleImageChange()">
+
+                            </div>
 
 
-                                <input wire:change="autoValidate" style="font-size: 0.75rem;" wire:model="image"
-                                    type="file" accept="image/*" onchange="handleImageChange()">
+                                {{-- <input wire:change="autoValidate" style="font-size: 0.75rem;" wire:model="image"
+                                    type="file" accept="image/*" onchange="handleImageChange()"> --}}
 
                                 <div style="text-align: center;margin-bottom:10px">
-                                    <button style="margin-top: 5px;" wire:click="submit" class="submit-btn"
+                                    <button style="margin-top: 20px;" wire:click="submit" class="submit-btn"
                                         type="button" name="link">Save
                                     </button>
                                 </div>
@@ -1005,7 +1076,7 @@
 
     function handleImageChange() {
         // Display a flash message
-        showFlashMessage('Image uploaded successfully!');
+        showFlashMessage('File uploaded successfully!');
     }
 
     function showFlashMessage(message) {

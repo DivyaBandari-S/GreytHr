@@ -1,6 +1,6 @@
 <div>
     @if(session()->has('error'))
-    <div class="alert alert-danger">
+    <div class="alert alert-danger w-50">
         {{ session('error') }}
     </div>
     @endif
@@ -347,7 +347,7 @@
                                         <td colspan="3">
                                             <div class="leave-trans" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                                 <img src="/images/pending.png" alt="Pending Image" style=" margin: 0 auto;">
-                                                <span style="font-size: 0.75rem; font-weight: 500; color:#778899;">No Employees are on leave</span>
+                                                <span class="">No Employees are on leave</span>
                                             </div>
                                         </td>
                                     </tr>

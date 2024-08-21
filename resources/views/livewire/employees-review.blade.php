@@ -405,7 +405,7 @@
             $isManager = DB::table('employee_details')->where('manager_id', $employeeId)->exists();
             @endphp
             @if($isManager)
-            <div class="closed-leaves-container px-2" style="width:100%; max-height:400px; overflow-y:auto; margin:10px auto;">
+            <div class="closed-leaves-container px-2" style="width:100%; max-height:400px; overflow-y:auto; margin:20px auto;">
                 @if(!empty($approvedLeaveApplicationsList))
                 @foreach($approvedLeaveApplicationsList as $leaveRequest)
                 <div class="accordion rounded mb-3">
@@ -414,10 +414,16 @@
                             <!-- Display leave details here based on $leaveRequest -->
                             <div class="col accordion-content">
                                 <div class="accordion-profile" style="display:flex; gap:7px; margin:auto 0;align-items:center;justify-content:center;">
-                                    @if(isset($leaveRequest['approvedLeaveRequest']->image))
-                                    <img src="{{ asset('storage/' . $leaveRequest['approvedLeaveRequest']->image) }}" alt="" style="background:#f3f3f3;border:1px solid #ccc;width: 40px; height: 40px; border-radius: 50%;">
+                                    @if(isset($leaveRequest['approvedLeaveRequest']->image) && $leaveRequest['approvedLeaveRequest']->image !== 'null')
+                                    <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['approvedLeaveRequest']->image)}}" style="border-radius: 50%;">
                                     @else
-                                    <img src="https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars.png" alt="Default User Image" style="background:#f3f3f3;border:1px solid #ccc;width: 40px; height: 40px; border-radius: 50%;">
+                                    @if($leaveRequest['approvedLeaveRequest']->gender === 'Female')
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @elseif($leaveRequest['approvedLeaveRequest']->gender === 'Male')
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @else
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @endif
                                     @endif
                                     <div>
                                         @if(isset($leaveRequest['approvedLeaveRequest']->first_name))
@@ -442,7 +448,7 @@
                                 </div>
                             </div>
                             <div class="col accordion-content">
-                                <span class="category-type-hide" >Category</span>
+                                <span class="category-type-hide">Category</span>
                                 <span class="leave-type-hide" title="{{ $leaveRequest['approvedLeaveRequest']->category_type }}">{{ $leaveRequest['approvedLeaveRequest']->category_type }}</span>
                             </div>
 
