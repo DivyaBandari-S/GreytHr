@@ -18,7 +18,7 @@
                         @if($this->greetingText)
                         <p class="morning-city">{{$greetingText}}</p>
                         @endif
-                        <p class="morning-city">Welcome, {{ ucwords(strtolower($loginEmployee->first_name)) }}{{ ucwords(strtolower($loginEmployee->last_name)) }}</p>
+                        <p class="morning-city">Welcome, {{ ucwords(strtolower($loginEmployee->first_name)) }} {{ ucwords(strtolower($loginEmployee->last_name)) }}</p>
                     </div>
 
                     <div class="col-6 p-0">
