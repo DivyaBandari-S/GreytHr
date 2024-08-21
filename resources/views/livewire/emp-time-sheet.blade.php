@@ -295,7 +295,6 @@
             </div>
             @endforeach
         </div>
-
         <form wire:submit.prevent="defaultSubmit">
             <div style="text-align: end; ">
                 <a class="btn btn-export" wire:click="exportCSV">

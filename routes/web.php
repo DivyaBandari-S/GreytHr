@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\AllTeamTimeSheets;
 use App\Livewire\LeaveFormPage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -110,6 +111,7 @@ use App\Models\SalaryRevision;
 use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\HelpDesks;
+use App\Models\Task;
 Route::group(['middleware' => 'checkAuth'], function () {
 
     Route::get('/emplogin', EmpLogin::class)->name('emplogin');
@@ -270,6 +272,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/review-pending-regularation/{id}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
     Route::get('/time-sheet', EmpTimeSheet::class)->name('time-sheet');
+    Route::get('/team-time-sheets', AllTeamTimeSheets::class)->name('team-time-sheets');
 
 
     //Feeds Module

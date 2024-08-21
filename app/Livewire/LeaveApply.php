@@ -549,7 +549,7 @@ class LeaveApply extends Component
                     });
                 })
                 ->whereIn('status', ['approved', 'pending'])
-                ->exists();
+                ->get();
 
             if ($overlappingLeave) {
                 $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';

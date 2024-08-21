@@ -81,8 +81,6 @@ class LeaveBalances extends Component
         }
     }
 
-
-
     //in this method will get leave balance for each type
     public function mount()
     {

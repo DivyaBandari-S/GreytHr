@@ -12,7 +12,13 @@
     --main-heading-color: #3b4452;
         /* use main heading along with font-weight-500 */;
     --requiredAlert: red;
-    --label-color: #7f8fa4;
+    --label-color: #778899;
+    --sub-heading-color: #778899
+        /* use sub heading along with font-weight-500 */;
+    --normal-font-size: 0.75rem;
+    --sub-headings-font-size: 0.8rem;
+    --main-headings-font-size: 1rem;
+    --nav-headings-font-size: 0.925rem;
 }
 
 /* Staring of auth checking module (Kumar Asapu)*/
@@ -2790,6 +2796,73 @@ input[type="radio"] {
     justify-content: center;
     align-items: center;
 }
+.sickLeaveBalance {
+    font-size: var(--normal-font-size);
+    font-weight: 500;
+    color: var(--main-heading-color);
+    margin-left: 5px;
+}
+.Insufficient {
+    color: var(--requiredAlert);
+    font-weight: normal;
+    font-size: var(--normal-font-size);
+    border-radius: 5px;
+    left: 0;
+    right: 0;
+    width: 35%;
+    margin: 0 auto;
+    top: 10%;
+    padding: 10px;
+    background:
+    #f4cccc;
+    position: absolute;
+}
+.LeaveCancelTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.LeaveCancelTable th,
+.LeaveCancelTable td {
+    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* Define specific widths for columns */
+.LeaveCancelTable th:first-child,
+.LeaveCancelTable td:first-child {
+    width: 10%;
+    /* First column takes 10% */
+}
+
+.LeaveCancelTable th:last-child,
+.LeaveCancelTable td:last-child {
+    width: 30%;
+}
+
+/* Divide remaining width equally among other columns */
+.LeaveCancelTable th:not(:first-child):not(:last-child),
+.LeaveCancelTable td:not(:first-child):not(:last-child) {
+    width: calc((100% - 40%) / 4);
+}
+
+.LeaveCancelTable th {
+    background-color: rgb(2, 17, 79);
+    color: #fff !important;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+@media screen and (max-width: 768px) {
+    .LeaveCancelTable {
+        table-layout: auto;
+    }
+}
+l
+
 /* end of leave apply */
 
 /* //leave-history styles */
@@ -4275,7 +4348,7 @@ select .yearSelect {
 }
 .alert-close{
     font-size: var(--normal-font-size);
-    background-color: none !important;
+    background: none !important;
     border: none;
 }
 /* end of styles */
@@ -5571,13 +5644,13 @@ option {
     cursor: pointer;
   }
   .page-title{
-    color: var(--main-heading-color); 
-    width: -webkit-fill-available; 
+    color: var(--main-heading-color);
+    width: -webkit-fill-available;
   }
   .title-page{
     margin-left: -10px;
     font-weight: 500;
     color: var(--main-heading-color);
-    justify-content: center; 
-    font-size: var(--main-headings-font-size);
+    justify-content: center;
+    font-size: var(--nav-headings-font-size);
   }

@@ -29,7 +29,13 @@
                                 @if(isset($leaveRequest['leaveRequest']->image) && $leaveRequest['leaveRequest']->image !== 'null')
                                 <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['leaveRequest']->image)}}" style="border-radius: 50%;">
                                 @else
+                                @if($leaveRequest['leaveRequest']->gender === 'Female')
                                 <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                @elseif($leaveRequest['leaveRequest']->gender === 'Male')
+                                <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                @else
+                                <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                @endif
                                 @endif
                                 <div>
                                     @if(isset($leaveRequest['leaveRequest']->first_name))

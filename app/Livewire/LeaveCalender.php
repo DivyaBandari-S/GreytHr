@@ -637,7 +637,7 @@ class LeaveCalender extends Component
 
             $companyDetails = EmployeeDetails::join('companies', 'employee_details.company_id', '=', 'companies.company_id')
                 ->where('employee_details.emp_id', $userId)
-                ->select('companies.company_address1', 'companies.company_address2')
+                ->select('companies.company_present_address', 'companies.company_perminent_address')
                 ->first();
 
             if ($companyDetails) {

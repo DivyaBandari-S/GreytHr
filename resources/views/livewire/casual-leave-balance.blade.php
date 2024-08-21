@@ -2,7 +2,7 @@
     <style>
         .custom-table-wrapper {
             position: relative;
-            max-height: 100px;
+            /* max-height: 100px; */
             overflow-y: auto;
             border-collapse: collapse;
         }
@@ -85,13 +85,11 @@
         @endif
         <div class="row m-0 p-0">
             <div class="col-7 p-0 m-0 mb-2 ">
-                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                    <ol class="breadcrumb d-flex align-items-center " style="font-size: 14px;background:none;font-weight:500;">
-                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('leave-balance') }}">Leave Balances</a></li>
-                        <li class="breadcrumb-item active" aria-current="page" style="color: #000;">Casual Leave</li>
-                    </ol>
-                </nav>
+                <ol class="breadcrumb d-flex align-items-center ">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('leave-balance') }}">Leave Balance</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Casual Leave</li>
+                </ol>
             </div>
             <div class="col-md-5 ">
                 <div class="buttons-container d-flex gap-3 justify-content-end mt-2 p-0 ">
@@ -135,9 +133,9 @@
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Granted</div>
-                            @foreach ($employeeLeaveBalances as $leaveBalance)
-                            <div class="info-value">{{ $leaveBalance->leave_balance}}</div>
-                            @endforeach
+
+                            <div class="info-value">{{ $employeeLeaveBalances}}</div>
+
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Availed</div>
@@ -150,7 +148,8 @@
                 <div class="row m-0 p-0">
                     <div class=" p-2 bg-white border">
                         <div class="col-md-10">
-                            <canvas id="sickLeaveChart" style="background-color: transparent;width:300px;height:200px;"></canvas>
+                            <canvas id="casualLeaveChart" style="background-color: transparent;width:300px;height:200px;">
+                            </canvas>
                         </div>
                     </div>
                 </div>
@@ -158,7 +157,7 @@
             <div class="row p-0 m-0">
                 <div class="col-md-12 mt-4">
                     <div class="custom-table-wrapper bg-white border rounded ">
-                        <table class="balance-table table-striped table-sm">
+                        <table class="balance-table table-striped ">
                             <thead class="thead">
                                 <tr>
                                     <th style="width:13.66%; padding: 5px 7px;">Transaction Type</th>
@@ -180,16 +179,17 @@
                                     <td>{{ $balance->reason }}</td>
                                 </tr>
                                 @endforeach
-                                @foreach($employeeLeaveBalances as $index => $balance)
+                                @foreach($leaveGrantedData as $index => $balance)
                                 <tr>
                                     <td>{{ $balance->status }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
-                                    <td>{{ $balance->leave_balance }}</td>
-                                    <td>Annual Grant for the Period</td>
+                                    <td>{{ $employeeLeaveBalances }}</td>
+                                    <td>Annual Grant for the present year </td>
                                 </tr>
                                 @endforeach
+
                             </tbody>
                         </table>
                     </div>
@@ -200,10 +200,32 @@
     </div>
 </div>
 <script>
+    // Ensure that Chart.js is properly loaded
+    document.addEventListener("DOMContentLoaded", function() {
+        // Convert PHP variables to JavaScript
+        var chartData = @json($chartData);
+        var chartOptions = @json($chartOptions);
+
+        // Get the context of the canvas element
+        var ctx = document.getElementById('casualLeaveChart').getContext('2d');
+
+        // Create the chart
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: chartOptions
+        });
+
+        console.log(chartData);
+    });
+</script>
+
+<!-- <script>
     var ctx = document.getElementById('sickLeaveChart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
-        data: <?php echo json_encode($chartData); ?>,
-        options: <?php echo json_encode($chartOptions); ?>
+        data:  json_encode($chartData),
+        options: json_encode($chartOptions)
     });
-</script>
+    console.log(json_encode($chartData));
+</script> -->
