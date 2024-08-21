@@ -35,4 +35,3 @@ class Task extends Model
         return $this->belongsTo(Client::class, 'client_id', 'client_id');
     }
 }
-c

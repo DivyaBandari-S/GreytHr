@@ -410,7 +410,7 @@
                     </div>
                 </div>
             </div>
-            @if( $casualProbationLeavePerYear >0)
+            @if( $casualProbationLeavePerYear > 0)
             <div class="col-md-4 mb-2">
                 <div class="leave-bal mb-2 bg-white rounded  ">
                     <div class="balance d-flex flex-row justify-content-between">
