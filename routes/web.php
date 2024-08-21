@@ -111,6 +111,7 @@ use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\HelpDesks;
 use App\Models\Task;
+
 Route::group(['middleware' => 'checkAuth'], function () {
 
     Route::get('/emplogin', EmpLogin::class)->name('emplogin');
@@ -238,7 +239,7 @@ Route::middleware(['auth:it', 'handleSession'])->group(function () {
 });
 
 Route::middleware(['auth:admins', 'handleSession'])->group(function () {
-Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
+    Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
 });
 
 
@@ -311,8 +312,8 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
             'Content-Disposition' => 'attachment; filename="' . basename($message->file_path) . '"',
         ]);
     })->name('download.file');
-// In web.php
-Route::get('/download-image', [HelpDesk::class, 'downloadImage'])->name('downloadImage');
+    // In web.php
+    Route::get('/download-image', [HelpDesk::class, 'downloadImage'])->name('downloadImage');
 
 
 
@@ -387,6 +388,7 @@ Route::get('/ytdpayslip', function () {
 
 
 use App\Models\EmpSalary;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/encode/{value}', function ($value) {
     // Determine the number of decimal places
@@ -460,3 +462,14 @@ Route::get('/taskfile/{id}', function ($id) {
         'Content-Disposition' => (strpos($file->mime_type, 'image') === false ? 'attachment' : 'inline') . '; filename="' . $file->file_name . '"',
     ]);
 })->name('files.showTask');
+
+Route::get('/clear', function () {
+    Artisan::call('optimize:clear');
+    Artisan::call('optimize');
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+
+    return 'Cache, config, route, and view caches cleared!';
+});
