@@ -86,8 +86,11 @@
                             <span class="normalTextValue">Number of Days :</span>
                             @if($showNumberOfDays)
                             <span id="numberOfDays" class="sickLeaveBalance">
-                                <!-- Display the calculated number of days -->
+                                @if($from_date && $to_date && $from_session && $to_session)
                                 {{ $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session) }}
+                                @else
+                                0
+                                @endif
                             </span>
                             <!-- Add a condition to check if the number of days exceeds the leave balance -->
                             @if(!empty($leaveBalances))
@@ -212,7 +215,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                @if($showSessionDropdown)
+                    @if($showSessionDropdown)
                     <div class="form-group ">
                         <label for="to_session">Session</label> <br>
                         <div class="custom-select-wrapper">

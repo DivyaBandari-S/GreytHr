@@ -19,8 +19,8 @@ class LeaveApplyPage extends Component
     public $searchQuery = '';
     public $emp_id;
     public $from_date;
-    public $from_session = 'Session 1';
-    public $to_session = 'Session 2';
+    public $from_session ='Session 1';
+    public $to_session ='Session 2' ;
     public $to_date;
     public $applying_to;
     public $contact_details;
@@ -256,7 +256,6 @@ class LeaveApplyPage extends Component
 
         try {
             $this->selectLeave();
-
             // Check for weekend
             if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
                 $this->errorMessage = 'Looks like its already your non-working day. Please pick different date(s) to apply.';
@@ -539,6 +538,8 @@ class LeaveApplyPage extends Component
                     $this->leaveBalances = [];
                     break;
             }
+            $this->showNumberOfDays = true;
+
         } catch (\Exception $e) {
             // Log the error
             Log::error("Error selecting leave: " . $e->getMessage());

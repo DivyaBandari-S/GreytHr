@@ -12,7 +12,7 @@
     </div>
     <div class="content">
         <div class="row m-0 p-0 mb-3">
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <div class="row m-0" style="border-radius: 10px; background-color: #02114f;">
                     <div class="col-6 p-0 ps-3 pt-4">
                         @if($this->greetingText)
