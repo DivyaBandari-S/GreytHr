@@ -5405,7 +5405,7 @@ option {
   }
   .page-title{
     color: var(--main-heading-color);
-    width: -webkit-fill-available; 
+    width: -webkit-fill-available;
   }
   .title-page{
     margin-left: -10px;

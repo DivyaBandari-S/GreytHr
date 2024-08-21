@@ -32,6 +32,7 @@
                             <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                 Applied by
                             </span>
+                            <br>
                             @if(strtoupper($leaveRequest->status) == 'APPROVED')
                             <span style="color: #333;  font-size: 12px;font-weight: 500; text-transform: uppercase;">
                                 {{ $this->leaveRequest->employee->first_name }} {{ $this->leaveRequest->employee->last_name }}
@@ -65,18 +66,18 @@
                         <div class="view-container m-0 p-0">
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
-                                    <span class="normalTextValue">From date</span>
+                                    <span class="normalTextValue">From date</span> <br>
                                     <span class="normalText" style="font-weight:600;"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
-                                    <span class="normalTextValue">To date</span>
+                                    <span class="normalTextValue">To date</span> <br>
                                     <span class="normalText" style="font-weight:600;">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
                             </div>
                             <div class="box" style="display:flex; text-align:center; padding:5px;">
                                 <div class="field p-2">
-                                    <span class="normalTextValue">No. of days</span>
+                                    <span class="normalTextValue">No. of days</span> <br>
                                     <span class="normalText" style=" font-weight: 600;"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
                                 </div>
                             </div>
