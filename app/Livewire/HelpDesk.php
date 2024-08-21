@@ -53,6 +53,7 @@ class HelpDesk extends Component
     public $selectedPeopleNames = [];
     public $employeeDetails;
     public $showDialog = false;
+    public $fileContent,$file_name,$mime_type;
 
     public $showDialogFinance = false;
     public $record;
@@ -64,7 +65,7 @@ class HelpDesk extends Component
         'category' => 'required|string',
         'subject' => 'required|string',
         'description' => 'required|string',
-        //  'image' => 'nullable|image|max:2048'
+        'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,csv,xls,xlsx|max:40960', // Adjust max size as needed
         'priority' => 'required|in:High,Medium,Low',
 
     ];
@@ -77,8 +78,8 @@ class HelpDesk extends Component
         'priority.in' => 'Priority must be one of: High, Medium, Low.',
         'image.image' => 'File must be an image.',
         'image.max' => 'Image size must not exceed 2MB.',
-        'file_path.mimes' => 'File must be a document of type: pdf, xls, xlsx, doc, docx, txt, ppt, pptx, gif, jpg, jpeg, png.',
-        'file_path.max' => 'Document size must not exceed 2MB.',
+        'file_path.mimes' => 'File must be a document of type: pdf, xls, xlsx, doc, docx, jpg, jpeg, png.',
+        'file_path.max' => 'Document size must not exceed 40 MB.',
     ];
     public function open()
     {
@@ -513,21 +514,24 @@ class HelpDesk extends Component
     public function submitHR()
     {
         try {
-            // dd($this->file_path);
-            $validatedData = $this->validate($this->rules);
-            // dd($this->file_path);
-              // Use a separate variable for file content
-            if ($this->file_path) {
-                // Validate and store the uploaded file
-                $validatedFile = $this->validate([
-                    'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
-                ]);
-            }
 
+           $this->validate($this->rules);
+
+
+
+            if ($this->file_path) {
+
+                $this->fileContent = file_get_contents($this->file_path->getRealPath());
+                $this->mime_type = $this->file_path->getMimeType();
+                $this->file_name = $this->file_path->getClientOriginalName();
+                // Validate and store the uploaded file
+
+
+            }
             // Store the file as binary data
 
-            $fileContent = file_get_contents($this->file_path->getRealPath());
-            if ($fileContent === false) {
+
+            if (  $this->fileContent  === false) {
                 Log::error('Failed to read the uploaded file.', [
                     'file_path' => $this->file_path->getRealPath(),
                 ]);
@@ -536,14 +540,13 @@ class HelpDesk extends Component
             }
 
             // Check if the file content is too large
-            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+            if (strlen(  $this->fileContent ) > 16777215) { // 16MB for MEDIUMBLOB
                 session()->flash('error', 'File size exceeds the allowed limit.');
                 return;
             }
 
 
-            $mimeType = $this->file_path->getMimeType();
-            $fileName = $this->file_path->getClientOriginalName();
+
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -553,9 +556,9 @@ class HelpDesk extends Component
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' => $fileContent, // Store the binary file data
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
+                'file_path' =>   $this->fileContent , // Store the binary file data
+                'file_name' => $this->file_name,
+                'mime_type' => $this->mime_type,
                 'cc_to' => $this->cc_to ?? '-',
                 'priority' => $this->priority,
                 'mail' => 'N/A',
@@ -564,7 +567,6 @@ class HelpDesk extends Component
             ]);
 
             session()->flash('message', 'Request created successfully.');
-            $this->reset();
             return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());

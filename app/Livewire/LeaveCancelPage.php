@@ -29,11 +29,15 @@ class LeaveCancelPage extends Component
     public $employeeDetails = [];
     public $leaveRequestDetails;
     public $applyingToDetails = [];
-    public $managerDetails = [];
+    public $managerDetails;
     public $selectedManager = [];
-
+    public $employee;
     public $showApplyingToContainer = false;
     public $show_reporting = false;
+    public  $fullName;
+    public $searchQuery = '';
+    public $showCasualLeaveProbation;
+    public $empManagerDetails, $selectedManagerDetails;
     public $showApplyingTo = false;
     protected $rules = [
         'leave_type' => 'required',
@@ -63,10 +67,21 @@ class LeaveCancelPage extends Component
     {
         try {
             $this->searchTerm = '';
-            $this->filter = '';
             $this->selectedYear = Carbon::now()->format('Y');
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->employee = EmployeeDetails::where('emp_id', $employeeId)->first();
+            if ($this->employee) {
+                $managerId = $this->employee->manager_id;
+                // Fetch the logged-in employee's manager details
+                $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+                if ($managerDetails) {
+                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                    $this->loginEmpManager = $fullName;
+                    $this->selectedManagerDetails = $managerDetails;
+                }
+                // Determine if the dropdown option should be displayed
+                $this->showCasualLeaveProbation = $this->employee && !$this->employee->probation_period && !$this->employee->confirmation_date;
+            }
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in mount method: ' . $e->getMessage());
@@ -133,17 +148,18 @@ class LeaveCancelPage extends Component
         try {
             // Fetch employees based on the search term for CC To
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->ccRecipients = EmployeeDetails::where('company_id', $this->applying_to->company_id)
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->ccRecipients = EmployeeDetails::where('company_id', $applying_to->company_id)
                 ->where('emp_id', '!=', $employeeId) // Exclude the current user
                 ->where(function ($query) {
                     $query
-                        ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
                         ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
                         ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
                 })
-                ->groupBy('emp_id', 'image')
+                ->groupBy('emp_id', 'image', 'gender')
                 ->select(
                     'emp_id',
+                    'gender',
                     'image',
                     DB::raw('MIN(CONCAT(first_name, " ", last_name)) as full_name')
                 )
@@ -155,58 +171,7 @@ class LeaveCancelPage extends Component
             session()->flash('error', 'An error occurred while searching for CC recipients. Please try again later.');
         }
     }
-    public function searchEmployees()
-    {
-        try {
-            // Fetch employees based on the search term
-            $this->employeeDetails = EmployeeDetails::where('company_id', $this->applying_to->company_id)
-                ->where(function ($query) {
-                    $query
-                        ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-                })
-                ->select('manager_id')
-                ->groupBy('manager_id')
-                ->distinct()
-                ->get();
-            $managers = [];
-            foreach ($this->employeeDetails as $employee) {
-                if ($employee->manager_id) {
-                    // Retrieve employee details based on manager_id
-                    $managerDetails = EmployeeDetails::where('emp_id', $employee->manager_id)->get();
-                    // Check if employee details exist and concatenate first name and last name
-                    if ($managerDetails) {
-                        $fullName = ucwords(strtolower($managerDetails->first_name)) . ' ' . ucwords(strtolower($employeeDetails->last_name));
-                        $managers[] = [
-                            'emp_id' => $managerDetails->emp_id,
-                            'image' => $managerDetails->image,
-                            'full_name' => $fullName
-                        ];
-                    }
-                }
-            }
 
-            // Apply filtering based on $filter
-            if (!empty($this->filter)) {
-                $managers = array_filter($managers, function ($manager) {
-                    return stripos($manager['full_name'], $this->filter) !== false;
-                });
-            }
-
-            // Sort the managers by full name
-            usort($managers, function ($a, $b) {
-                return strcmp($a['full_name'], $b['full_name']);
-            });
-
-            $this->managerFullName = $managers;
-        } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in searchEmployees method: ' . $e->getMessage());
-            // Display a friendly error message to the user
-            session()->flash('error', 'An error occurred while searching for employees. Please try again later.');
-        }
-    }
     public function toggleManager($empId)
     {
         if (!in_array($empId, $this->selectedManager)) {
@@ -223,27 +188,6 @@ class LeaveCancelPage extends Component
         }
 
         $this->showApplyingToContainer = false;
-    }
-    private function fetchManagerDetails($managerId)
-    {
-        $employeeDetails = EmployeeDetails::where('emp_id', $managerId)->first();
-
-        if ($employeeDetails) {
-            $this->loginEmpManagerProfile = $employeeDetails->image ? asset('storage/' . $employeeDetails->image) : null;
-            $this->loginEmpManager = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
-            $this->loginEmpManagerId = $employeeDetails->emp_id;
-        } else {
-            // Handle case if details are not found
-            $this->resetManagerDetails(); // Reset to default values or show N/A
-        }
-    }
-
-    // Method to reset manager details
-    private function resetManagerDetails()
-    {
-        $this->loginEmpManagerProfile = null;
-        $this->loginEmpManager = null;
-        $this->loginEmpManagerId = null;
     }
 
 
@@ -359,7 +303,6 @@ class LeaveCancelPage extends Component
     public function applyingTo($leaveRequestId)
     {
         $leaveRequest = LeaveRequest::find($leaveRequestId);
-
         if ($leaveRequest) {
             $this->selectedLeaveRequestId = $leaveRequestId;
             $this->leaveRequestDetails = $leaveRequest;
@@ -387,7 +330,59 @@ class LeaveCancelPage extends Component
 
     public function render()
     {
+        $this->selectedYear = Carbon::now()->format('Y');
+        $this->loginEmpManager = null;
+        $this->selectedManager = $this->selectedManager ?? [];
+        $managers = collect();
         $employeeId = auth()->guard('emp')->user()->emp_id;
+        try {
+            // Fetch details for the current employee
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            if ($applying_to) {
+                $managerId = $applying_to->manager_id;
+                // Fetch the logged-in employee's manager details
+                $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+                if ($managerDetails) {
+                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                    $this->loginEmpManager = $fullName;
+                    $this->empManagerDetails = $managerDetails;
+
+                    // Add the logged-in manager to the collection
+                    $managers->push([
+                        'full_name' => $fullName,
+                        'emp_id' => $managerDetails->emp_id,
+                        'gender' => $managerDetails->gender,
+                        'image' => $managerDetails->image,
+                    ]);
+                }
+            }
+
+            // Fetch employees with job roles CTO and Chairman
+            $jobRoles = ['CTO', 'Chairman'];
+            $filteredManagers = EmployeeDetails::whereIn('job_role', $jobRoles)
+                ->where(function ($query) {
+                    // Apply search functionality
+                    if ($this->searchQuery) {
+                        $query->whereRaw('CONCAT(first_name, " ", last_name) LIKE ?', ["%{$this->searchQuery}%"]);
+                    }
+                })
+                ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
+
+            // Add the filtered managers to the collection
+            $managers = $managers->merge(
+                $filteredManagers->map(function ($manager) {
+                    $fullName = ucfirst(strtolower($manager->first_name)) . ' ' . ucfirst(strtolower($manager->last_name));
+                    return [
+                        'full_name' => $fullName,
+                        'emp_id' => $manager->emp_id,
+                        'gender' => $manager->gender,
+                        'image' => $manager->image,
+                    ];
+                })
+            );
+        } catch (\Exception $e) {
+            Log::error('Error fetching employee or manager details: ' . $e->getMessage());
+        }
         $this->cancelLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where('status', 'approved')
             ->where('from_date', '>=', now()->subMonths(2))
@@ -396,7 +391,12 @@ class LeaveCancelPage extends Component
             ->get();
         return view('livewire.leave-cancel-page', [
             'cancelLeaveRequests' => $this->cancelLeaveRequests,
-            'managerFullName' => $this->managerFullName
+            'empManagerDetails' => $this->empManagerDetails,
+            'selectedManagerDetails' => $this->selectedManagerDetails,
+            'loginEmpManager' => $this->loginEmpManager,
+            'managers' => $managers,
+            'ccRecipients' => $this->ccRecipients,
+            'showCasualLeaveProbation' => $this->showCasualLeaveProbation
         ]);
     }
 }

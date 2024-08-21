@@ -25,6 +25,7 @@ return new class extends Migration
             $table->json('cc_to')->nullable();
             $table->string('status')->default('Pending');
             $table->string('cancel_status')->default('Pending');
+            $table->string('leave_cancel_reason')->nullable();
             $table->string('contact_details');
             $table->text('reason');
             $table->boolean('is_read')->default(false);

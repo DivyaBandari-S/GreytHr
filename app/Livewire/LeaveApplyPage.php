@@ -478,6 +478,16 @@ class LeaveApplyPage extends Component
         }
     }
 
+    public $showSessionDropdown = true; // Default value
+
+    public function updatedLeaveType($value)
+    {
+        if ($value === 'Maternity Leave' || $value === 'Paternity Leave') {
+            $this->showSessionDropdown = false;
+        } else {
+            $this->showSessionDropdown = true;
+        }
+    }
     public function selectLeave()
     {
         try {
@@ -752,9 +762,9 @@ class LeaveApplyPage extends Component
             'showCasualLeaveProbation' => $this->showCasualLeaveProbation
         ]);
     }
-        // Add a method to update the search query
-        public function getFilteredManagers()
-        {
-            $this->render(); // Re-render to apply the search filter
-        }
+    // Add a method to update the search query
+    public function getFilteredManagers()
+    {
+        $this->render(); // Re-render to apply the search filter
+    }
 }
