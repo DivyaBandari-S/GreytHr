@@ -1431,3 +1431,87 @@ Cookie: XSRF-TOKEN=LvGasQe2Slf9FMaM1PM1OubDzXe4jwPoKdk9EIUC; laravel_session=zFQ
 
 
 "}} 
+[2024-08-21 16:44:36] local.INFO: emp ID set: XSS-0476  
+[2024-08-21 16:44:36] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InNXR3FuM0MzNTBsY1pueXYzanlCeVE9PSIsInZhbHVlIjoiby9wN3J0MEhyODExU0xydEV3a1Jyam93SnltbXVOcCtneFYybTVZdVRodGV5OWZDY2txYXI0TS9Iem4yL3l4Kzh2c3g3T2UvOXJhMG5Ia0VFYmtqVWF0NEtmaGlCcEVjaHlLNTRORURnSG9OU01MT3ZKOVEzQ0hXK1A5Unp0dTYiLCJtYWMiOiIzODVjNTNlYmFlNGVmYmQyMzQ0ZmQzMDc0MzY5NDVmN2NlMGJlMTBiZDI3ZjA2ZmQ5NGZlNGMzMzY4ZGMxYjQ2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Ik9Cc2k4UEt6UC9sT3NVS1Z6YVBoOVE9PSIsInZhbHVlIjoib2lJNko0QVlJYWtpaUY0QUxYT3Y5VnJRa3hla21rM21ibzMxa0xVN05ZYzl0S09KcFV5ZlpucnNsak1NOGFLeGlkY0lUalJ0UWFuUTdOVXROWlU5VGFSbEFreGxIUXVpTDVqVlYxWWFxVkJtQUV0d1VXQk9DS1MwSU5FS01MSkciLCJtYWMiOiJjYjNlZTk1Y2VmMDM1MGQ0ODExOGU0ZDQyM2E3ODQ1MjdjOGM3Yjk0M2U1YTAwMjA2OTQ2ZDVmYTNkYTRlNmMzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=LvGasQe2Slf9FMaM1PM1OubDzXe4jwPoKdk9EIUC; laravel_session=zFQUjnvOoygaHJ7ZdWnW1Atz7wWKINivelJGEYq5
+
+
+
+"}} 
+[2024-08-21 16:44:42] local.DEBUG: Privilege Access Request  
+[2024-08-21 16:44:42] local.DEBUG:   
+[2024-08-21 16:47:33] local.INFO: emp ID set: XSS-0476  
+[2024-08-21 16:47:33] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /HelpDesk HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IndKMWJxTERpSExSa290VTJJMDlrM0E9PSIsInZhbHVlIjoiY08xK1pqbnpyYldCNXVacjZ4Y0ZKR1pKd3hob1Z3Y0RPVnFSNWt5bVZmUWlFYWZlRDlxZmx5Mks3T2thNzJWa3pCdVozbmFNMnI3YXE5RnBoZGM1V2tQZzNKSEcranhVV2hyNFhGb3IzeGQxclhZd2NEM01PVGt3Ykt1dXVTNm4iLCJtYWMiOiI5MzhmNjFlNDAzMmNmMjMyOGVmMTM4NDkzZGNmZWE0YjdmOGE5ZTc2MzNhMWRlNjk5YjQzNzA2NjllZmRiMmUzIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlBSZWJ6OUViWlBRbGg2Szc4S2RTZ0E9PSIsInZhbHVlIjoiZ0lpTlJlWWpjVzUrOU9QQTRiRUczc0kvRXhZNXJVNGdaYXZJUndId2tOSXFhY2VQMlp3OUdlQlVEUkFVSzdEb1B0WkJxNXpJc2Z3M0JwTWZMQ08zcTQvK1dDdklXUEY2TEpVYUZkM2lBOXNIbkhRT2FGRThHQU13S2hrdUxYUGQiLCJtYWMiOiJjNTJlZTFlM2Q3ODU1OTYyNGY0NjM5NTk4Y2NkZjljNDQyNjZmMzcyNDM1NmU5NjNhYzlmYWI4NzE3OTcxMWQ2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=LvGasQe2Slf9FMaM1PM1OubDzXe4jwPoKdk9EIUC; laravel_session=zFQUjnvOoygaHJ7ZdWnW1Atz7wWKINivelJGEYq5
+
+
+
+"}} 
+[2024-08-21 16:47:41] local.DEBUG: Security Access Request  
+[2024-08-21 16:47:41] local.DEBUG:   
