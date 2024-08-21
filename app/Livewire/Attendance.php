@@ -83,6 +83,7 @@ class Attendance extends Component
     public $view_student_emp_id;
     public $view_employee_swipe_time;
     public $currentDate2recordexists;
+   
 
     public $defaultfaCalendar = 1;
     public $dateclicked;
@@ -884,7 +885,9 @@ class Attendance extends Component
     }
     public function opentoggleButton()
     {
+       
        $this->toggleButton=!$this->toggleButton;
+       
      
     }
     public function calculateTotalDays()
@@ -1238,7 +1241,11 @@ class Attendance extends Component
             $this->dynamicDate = now()->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeIdForRegularisation = auth()->guard('emp')->user()->emp_id;
-            $this->swiperecord = SwipeRecord::where('emp_id', $employeeId)->where('is_regularised', 1)->get();
+            $this->swiperecord = SwipeRecord::where('swipe_records.emp_id', $employeeId)
+                                ->where('is_regularised', 1)
+                                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+                                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+                                ->get();
             $currentDate = Carbon::now()->format('Y-m-d');
             $holiday = HolidayCalendar::all();
             $today = Carbon::today();
@@ -1247,6 +1254,7 @@ class Attendance extends Component
                 ->whereDate('swipe_records.created_at', $today)
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
                 ->get();
+
             $this->holiday = HolidayCalendar::all();
             $this->leaveApplies = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
 

@@ -459,7 +459,12 @@ width: 170px; */
             background-color: #fff;
             cursor: pointer;
         }
-
+        .accordion-icon {
+            font-size: 13px;
+            color: #fff;
+            float: right;
+            margin-left: 5px;
+}
         .accordion-body {
             background-color: #fff;
             padding: 0;
@@ -1067,7 +1072,7 @@ width: 170px; */
         }
 
         .arrow-button::after {
-            content: "\25B6";
+           
             /* Unicode character for right-pointing triangle (arrow) */
             font-size: 18px;
 
@@ -1220,7 +1225,7 @@ color: #fff;
         }
 
         .accordion:before {
-            content: '\02795';
+            
             /* Unicode character for "plus" sign (+) */
             font-size: 13px;
             color: #fff;
@@ -1692,7 +1697,15 @@ color: #fff;
                     @endif
                 </div>
 
-                <button class="accordion"wire:click="openlegend">Legends</button>
+                <button class="accordion"wire:click="openlegend">Legends
+                    <span class="accordion-icon">
+                            @if($legend)
+                                &#x2796; <!-- Unicode for minus sign -->
+                            @else
+                                &#x2795; <!-- Unicode for plus sign -->
+                            @endif
+                    </span>
+                </button>
                 <div class="panel"style="display: {{ $legend ? 'block' : 'none' }};">
                     <div class="row m-0 mt-3 mb-3">
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
@@ -2078,7 +2091,12 @@ color: #fff;
                 @if($defaultfaCalendar==1)
                 <div class="container6">
                     <h3 style="margin-left:20px;color: #7f8fa4;font-size:14px;margin-top:15px;align-items:center;">Swipe Details</h3>
-                    <div class="arrow-button" style="float:right;margin-top:-30px;margin-right:20px;" wire:click="opentoggleButton">
+                    <div class="arrow-button" style="float:right;margin-top:-30px;margin-right:20px;cursor:pointer;" wire:click="opentoggleButton">
+                            @if($toggleButton)
+                                <span>&#x25BC;</span> <!-- Unicode for right-pointing triangle -->
+                            @else
+                                <span>&#x25B6;</span> <!-- Unicode for other triangle -->
+                            @endif
                     </div>
 
                     <div class="container-body" style="margin-top:2px;height:auto;border-top:1px solid #ccc;display: {{ $toggleButton ? 'block' : 'none' }};">
@@ -2155,7 +2173,9 @@ color: #fff;
                                     <div class="row m-0 mt-3">
 
                                         @if ($data->isNotEmpty())
-                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($data[0]->first_name)) }} {{ ucwords(strtolower($data[0]->last_name)) }}</span></div>
+                                              <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($data[0]->first_name)) }} {{ ucwords(strtolower($data[0]->last_name)) }}</span></div>
+                                        @else
+                                              <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($swiperecord->first_name)) }} {{ ucwords(strtolower($swiperecord->last_name)) }}</span></div>
                                         @endif
                                         <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br /><span style="color: #000000;">{{ $swiperecord->emp_id }}</span></div>
 
