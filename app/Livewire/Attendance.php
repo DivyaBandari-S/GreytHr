@@ -1246,6 +1246,7 @@ class Attendance extends Component
                                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
                                 ->get();
+                              
             $currentDate = Carbon::now()->format('Y-m-d');
             $holiday = HolidayCalendar::all();
             $today = Carbon::today();
