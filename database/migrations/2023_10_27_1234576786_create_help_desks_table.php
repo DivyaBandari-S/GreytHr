@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('category');
             $table->string('mail');
             $table->string('distributor_name');
+            $table->string('selected_equipment')->nullable();
             $table->string('mobile');
             $table->string('subject');
             $table->text('description');
