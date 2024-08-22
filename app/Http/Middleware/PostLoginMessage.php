@@ -42,6 +42,7 @@ class PostLoginMessage
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Loading...</title>
+                <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
                 <style>
                     body, html {
                         height: 100%;
@@ -50,6 +51,7 @@ class PostLoginMessage
                         justify-content: center;
                         align-items: center;
                         background-color: #f8f9fa;
+                        font-family: 'Montserrat', sans-serif;
                     }
                     #message {
                         font-size: 24px;
@@ -105,6 +107,8 @@ class PostLoginMessage
             </html>
             HTML;
 
+
+
             return new Response($html, 200);
         } catch (\Exception $e) {
             // Handle the exception (e.g., log the error and show a default message)
@@ -116,6 +120,7 @@ class PostLoginMessage
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Error</title>
+                <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
                 <style>
                     body, html {
                         height: 100%;
@@ -124,6 +129,7 @@ class PostLoginMessage
                         justify-content: center;
                         align-items: center;
                         background-color: #f8f9fa;
+                        font-family: 'Montserrat', sans-serif;
                     }
                     #message {
                         font-size: 24px;
@@ -149,6 +155,7 @@ class PostLoginMessage
             </body>
             </html>
             HTML;
+
 
             return new Response($html, 500);
         }
