@@ -11,7 +11,18 @@
             max-height: 800px;
         }
 
+        .custom-scrollbar-for-right-side-container {
+            overflow-y: scroll;
+            overflow-x: hidden;
+            padding-right: 10px;
+            max-height: 800px;
+        }
         .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            margin-right: 15px;
+
+        }
+        .custom-scrollbar-for-right-side-container::-webkit-scrollbar {
             width: 5px;
             margin-right: 15px;
 
@@ -21,11 +32,17 @@
             background-color: #888;
             margin-left: 15px;
         }
+        .custom-scrollbar-for-right-side-container::-webkit-scrollbar-thumb {
+            background-color: #888;
+            margin-left: 15px;
+        }
 
         .custom-scrollbar::-webkit-scrollbar-track {
             background-color: #f1f1f1;
         }
-
+        .custom-scrollbar-for-right-side-container::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
         .my-button-attendance-info {
             padding: 5px 10px;
             border: none;
@@ -1850,7 +1867,7 @@ color: #fff;
             @livewire('attendance-table')
 
             @endif
-            <div class="col-md-5 custom-scrollbar">
+            <div class="col-md-5 custom-scrollbar-for-right-side-container">
                 @if($defaultfaCalendar==1)
                 <div class="container1" style="background-color:white;">
                     <!-- Content goes here -->
@@ -2170,11 +2187,9 @@ color: #fff;
                                     @if($swiperecord)
                                     <div class="row m-0 mt-3">
 
-                                        @if ($data->isNotEmpty())
-                                              <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($data[0]->first_name)) }} {{ ucwords(strtolower($data[0]->last_name)) }}</span></div>
-                                        @else
-                                              <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($swiperecord->first_name)) }} {{ ucwords(strtolower($swiperecord->last_name)) }}</span></div>
-                                        @endif
+                                        
+                                              <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}</span></div>
+                                      
                                         <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br /><span style="color: #000000;">{{ $swiperecord->emp_id }}</span></div>
 
                                     </div>
