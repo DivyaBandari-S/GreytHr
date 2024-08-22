@@ -4,7 +4,7 @@
         {{ session('emp_error') }}
     </div>
     @endif
-    <div class="row  p-0" style="margin:0 10px;">
+    <div class="row  p-0">
 
 
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
@@ -30,12 +30,12 @@
             @if ($employeeDetails)
 
             {{-- Personal Tab --}}
-            <div class="row p-0 " id="personalDetails" style=" margin:20px auto;">
+            <div class="row p-0 gx-0" id="personalDetails" style=" margin:20px 0px;">
                 <div class="col">
-                    <div class="row" style="border-radius: 5px; height: 270px; width: 100%; background-color: white; margin-bottom: 20px;">
-                        <div style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px;">
+                    <div class="row p-3 gx-0" style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
+                        <div style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px;margin-bottom: 20px;">
                             PROFILE</div>
-                        <div class="col">
+                        <div class="col-12 col-md-4">
                             @if($image)
                             <div class="employee-profile-image-container" style="margin-left: 15px;">
                                 <img height="80" src="{{ $image->temporaryUrl() }}" class="employee-profile-image">
@@ -86,7 +86,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px;">
                                 Name
                             </div>
@@ -118,7 +118,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6 col-md-4">
                             <div style="font-size: 11px;  color: #778899; margin-left: 15px">
                                 Company E-mail
                             </div>
@@ -132,7 +132,7 @@
                         </div>
                     </div>
 
-                    <div class="row" style="border-radius: 5px; height: 270px; width: 100%; background-color: white;margin-bottom: 20px;">
+                    <div class="row p-3 gx-0" style="border-radius: 5px;  width: 100%; background-color: white;margin-bottom: 20px;">
                         <div style="margin-top: 2%;margin-left:15px;margin-bottom:20px;color:#778899;font-weight:500;font-size:13px;">
                             PERSONAL</div>
                         <div class="col">
@@ -284,8 +284,8 @@
                         </div>
                     </div>
 
-                    <div class="row" style="border-radius: 5px; height: 200px; width: 100%; background-color: white; margin-bottom: 20px;">
-                        <div style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px;">
+                    <div class="row p-3 gx-0" style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
+                        <div style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px; margin-bottom: 10px;">
                             ADDRESS</div>
                         <div class="col">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
@@ -352,8 +352,8 @@
                         </div>
                     </div>
 
-                    <div class="row" style="border-radius: 5px; height: 100px; width: 100%; background-color: white; margin-bottom: 20px;">
-                        <div style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px;">
+                    <div class="row p-3 gx-0" style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
+                        <div style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px; margin-bottom: 10px;">
                             EDUCATION</div>
                         <div class="col" style="margin-left: 15px; font-size: 12px">
                             <div style="font-size: 12px; color: #778899; margin-left: 15px">
@@ -366,9 +366,9 @@
 
             {{-- Accounts & Statements --}}
 
-            <div class="row" style="margin:20px auto;border-radius: 5px;display: none;" id="accountDetails">
+            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px;display: none;" id="accountDetails">
                 <div class="col">
-                    <div class="row" style="border-radius: 5px; height: 150px; width: 100%; background-color: white; margin-bottom: 20px;">
+                    <div class="row p-3 gx-0" style="border-radius: 5px;  width: 100%; background-color: white; margin-bottom: 20px;">
                         <div style="margin-top: 2%;margin-left:15px;color:#778899;font-size:12px;font-weight:500;">
                             BANK ACCOUNT</div>
                         <div class="col" style="margin-top: 5px;">
@@ -434,8 +434,8 @@
                         </div>
                     </div>
 
-                    <div class="row" style="border-radius: 5px; height: 100px; width: 100%; background-color: white;margin-bottom: 20px;">
-                        <div style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899;">
+                    <div class="row p-3 gx-0" style="border-radius: 5px;  width: 100%; background-color: white;margin-bottom: 20px;">
+                        <div style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
                             PF AMOUNT</div>
                         <div class="col">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
@@ -464,8 +464,8 @@
                         </div>
                     </div>
 
-                    <div class="row" style="border-radius: 5px; height: 100px; width: 100%; background-color: white; margin-bottom: 20px;">
-                        <div style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899;">
+                    <div class="row p-3 gx-0" style="border-radius: 5px;  width: 100%; background-color: white; margin-bottom: 20px;">
+                        <div style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
                             OTHERS IDS</div>
                         <div class="col">
                             <div style="margin-left: 15px; font-size: 12px">
@@ -485,12 +485,12 @@
 
 
             <div style="margin:20px auto;border-radius: 5px;display: none;" id="familyDetails">
-                <div class="row" style="border-radius: 5px; height: 200px; width: 100%; background-color: white; margin-bottom: 20px;">
+                <div class="row p-0 gx-0" style="border-radius: 5px;  width: 100%; background-color: white; margin-bottom: 20px;">
                     <!-- Header -->
                     <div style="margin-top: 2%; margin-left: 17px; font-size: 12px; font-weight: 500;color:#778899;">FATHER
                         DETAILS</div>
-                    <div class="row">
-                        <div class="col-3">
+                    <div class="row p-3 gx-0">
+                        <div class="col-12 col-md-3">
                             @if (($employeeDetails->empParentDetails) && !empty(optional($employeeDetails->empParentDetails)->father_image) && optional($employeeDetails->empParentDetails)->father_image !== 'null')
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100"
                                 src="{{ 'data:image/jpeg;base64,' . base64_encode(optional($employeeDetails->empParentDetails)->father_image) }}">
@@ -502,7 +502,7 @@
                             @endif
                             {{-- <img style="border-radius: 5px;" height="150" width="150" src="{{ optional($employeeDetails->empParentDetails)->father_image ?: 'path/to/default/image.jpg' }}" alt=""> --}}
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-md-3">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Father Name</div>
                             <div style="font-size: 12px">
                                 @php
@@ -541,7 +541,7 @@
                             </div>
                         </div>
 
-                        <div class="col-2">
+                        <div class="col-6 col-md-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Date of Birth</div>
                             <div style="font-size: 12px">
                                 @if (optional($employeeDetails->empParentDetails)->father_dob)
@@ -561,7 +561,7 @@
                             </div>
                         </div>
 
-                        <div class="col-2">
+                        <div class="col-6 col-md-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Blood Group</div>
                             <div style="font-size: 12px">
                                 @if (optional($employeeDetails->empParentDetails)->father_blood_group)
@@ -580,7 +580,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-2">
+                        <div class="col-6 col-md-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Religion</div>
                             <div style="font-size: 12px; word-wrap: break-word;">
                                 @if (optional($employeeDetails->empParentDetails)->father_religion)
@@ -600,12 +600,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" style="border-radius: 5px; height: 200px; width: 100%; background-color: white; margin-bottom: 20px;">
+                <div class="row p-0 gx-0" style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
                     <!-- Header -->
                     <div style="margin-top: 2%; margin-left: 17px; font-size: 12px; font-weight: 500;color:#778899;">MOTHER
                         DETAILS</div>
-                    <div class="row">
-                        <div class="col-3">
+                    <div class="row p-3 gx-0">
+                        <div class="col-12 col-md-3">
                             @if (($employeeDetails->empParentDetails) && !empty(optional($employeeDetails->empParentDetails)->mother_image) && optional($employeeDetails->empParentDetails)->mother_image !== 'null')
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100"
                                 src="{{ 'data:image/jpeg;base64,' . base64_encode(optional($employeeDetails->empParentDetails)->mother_image) }}">
@@ -616,7 +616,7 @@
                             @endif
                             {{-- <img style="border-radius: 5px;" height="150" width="150" src="{{ optional($employeeDetails->empParentDetails)->mother_image ?: 'path/to/default/image.jpg' }}" alt=""> --}}
                         </div>
-                        <div class="col-3">
+                        <div class="col-6 col-md-3">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Mother Name</div>
                             <div style="font-size: 12px">
                                 @php
@@ -658,7 +658,7 @@
                             </div>
                         </div>
 
-                        <div class="col-2">
+                        <div class="col-6 col-md-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Date of Birth</div>
                             <div style="font-size: 12px">
                                 @if (optional($employeeDetails->empParentDetails)->mother_dob)
@@ -677,7 +677,7 @@
                             </div>
                         </div>
 
-                        <div class="col-2">
+                        <div class="col-6 col-md-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Blood Group</div>
                             <div style="font-size: 12px">
                                 @if (optional($employeeDetails->empParentDetails)->mother_blood_group)
@@ -695,7 +695,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-2">
+                        <div class="col-6 col-md-2">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Religion</div>
                             <div style="font-size: 12px; word-wrap: break-word;">
                                 @if (optional($employeeDetails->empParentDetails)->mother_religion)
@@ -719,15 +719,15 @@
 
 
             {{-- Employment & Job --}}
-            <div class="row" style="margin:20px auto;border-radius: 5px;display: none;" id="employeeJobDetails">
+            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px;display: none;" id="employeeJobDetails">
                 <div class="col">
-                    <div class="row" style="border-radius: 5px; height: 250px; width: 100%; background-color: white; margin-bottom: 20px;">
-                        <div class="row mt-2">
-                            <div class="col">
-                                <div style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899;">
+                    <div class="row p-3 gx-0" style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
+                        <div class="row mt-2 p-0 gx-0">
+                            <div class="col-6 col-md-6">
+                                <div style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
                                     CURRENT POSITION </div>
                             </div>
-                            <div class="col">
+                            <div class="col-6 col-md-6">
                                 <div style="margin-top: 2%; font-size: 11px; color: blue; margin-left: 25px">
                                     Resign
                                 </div>
@@ -741,11 +741,11 @@
                         )->first();
                         @endphp
 
-                        <div class="col">
+                        <div class="col-6 col-md-3">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px;">
                                 Reporting To
                             </div>
-                            <div style="margin-left: 15px; font-size: 12px;">
+                            <div style="margin-left: 15px; font-size: 12px; margin-bottom: 10px;">
                                 @if ($manager)
                                 {{ ucwords(strtolower($manager->first_name)) }}
                                 {{ ucwords(strtolower($manager->last_name)) }}
@@ -754,7 +754,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6  col-md-3">
                             @php
                             // Fetch the department name directly in Blade
                             $department = \App\Models\EmpDepartment::where(
@@ -774,7 +774,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6  col-md-3">
                             @php
                             // Fetch the department name directly in Blade
                             $subDepartment = \App\Models\EmpSubDepartments::where(
@@ -794,7 +794,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6  col-md-3">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 Designation
                             </div>
@@ -843,10 +843,10 @@
 
             {{-- Assets --}}
 
-            <div class="row" style="margin:20px auto;border-radius: 5px;display: none;" id="assetsDetails">
+            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px;display: none;" id="assetsDetails">
                 <div class="col">
-                    <div class="row" style="border-radius: 5px; height: 200px; width: 100%; background-color: white; margin-bottom: 20px;">
-                        <div style="margin-top: 2%;margin-left:15px;font-size:13px;font-weight:500;color:#778899;">
+                    <div class="row p-3 gx-0" style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
+                        <div style="margin-top: 2%;margin-left:15px;font-size:13px;font-weight:500;color:#778899;margin-bottom: 10px;">
                             ACESS CARD DETAILS</div>
                         <div class="col">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
@@ -877,8 +877,8 @@
                         </div>
                     </div>
 
-                    <div class="row" style="border-radius: 5px; height: 100px; width: 100%; background-color: white; margin-bottom: 20px;">
-                        <div style="margin-top: 2%;margin-left:15px;color:#778899;font-size:13px;font-weight:500;">
+                    <div class="row p-3 gx-0" style="border-radius: 5px; height: 100px; width: 100%; background-color: white; margin-bottom: 20px;">
+                        <div style="margin-top: 2%;margin-left:15px;color:#778899;font-size:13px;font-weight:500;margin-bottom: 10px;">
                             ASSETS</div>
                         <div class="col">
                             <div style="font-size: 12px; color: black; margin-left: 15px">
