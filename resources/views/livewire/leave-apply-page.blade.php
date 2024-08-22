@@ -83,7 +83,7 @@
 
                         </div>
                         <div class="form-group mb-0">
-                            <span class="normalTextValue">Number of Days :</span>
+                            <span class="normalTextValue">Applying For :</span>
                             @if($showNumberOfDays)
                             <span id="numberOfDays" class="sickLeaveBalance">
                                 @if($from_date && $to_date && $from_session && $to_session)
