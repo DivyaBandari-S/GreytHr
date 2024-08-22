@@ -1,4 +1,4 @@
-<div>
+<div style="position: relative;">
     <div class="msg-container">
         @if ($showAlert)
             <div id="alert-container" class="d-flex justify-content-center alert-container " wire:poll.20s="hideAlert"
