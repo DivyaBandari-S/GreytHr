@@ -457,6 +457,15 @@ Route::get('/file/{id}', function ($id) {
         'Content-Disposition' => (strpos($file->mime_type, 'image') === false ? 'attachment' : 'inline') . '; filename="' . $file->file_name . '"',
     ]);
 })->name('file.show');
+Route::get('/file/{id}', function ($id) {
+    $file = Message::findOrFail($id);
+
+    return Response::make($file->file_path, 200, [
+        'Content-Type' => $file->mime_type,
+        'Content-Disposition' => (strpos($file->mime_type, 'image') === false ? 'attachment' : 'inline') . '; filename="' . $file->file_name . '"',
+    ]);
+})->name('file.show');
+
 
 Route::get('/taskfile/{id}', function ($id) {
     $file = Task::findOrFail($id);
