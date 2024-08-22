@@ -28,7 +28,7 @@
                         <div class="morning-cardContainer w-100">
                             <div class="morning-card w-100">
 
-                                <p class="morning-weather">PARTILY CLOUDY</p>
+                                <p class="morning-weather">PARTLY CLOUDY</p>
                                 <svg class="morning-weather" version="1.1" id="Layer_1" x="0px" y="0px"
                                     width="50px" height="50px" viewBox="0 0 100 100" xml:space="preserve">
                                     <image id="image0" width="100" height="100" x="0" y="0"
@@ -377,12 +377,12 @@
                         @endphp
 
                         <div class="row m-0">
-                            <div class="col-7 p-0">
+                            <div class="col-12l p-0">
                                 @foreach ($calendarData as $entry)
                                     @if (!empty($entry->festivals))
                                         <div>
-                                            <p class="payslip-small-desc"
-                                                style="color: #677A8E; font-size: 11px;margin-bottom:10px; ">
+                                            <p class="payslip-small-desc mb-2"
+                                                >
                                                 <span
                                                     style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }}
                                                     <span

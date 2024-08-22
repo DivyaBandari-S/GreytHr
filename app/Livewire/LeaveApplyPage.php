@@ -19,8 +19,8 @@ class LeaveApplyPage extends Component
     public $searchQuery = '';
     public $emp_id;
     public $from_date;
-    public $from_session ='Session 1';
-    public $to_session ='Session 2' ;
+    public $from_session = 'Session 1';
+    public $to_session = 'Session 2';
     public $to_date;
     public $applying_to;
     public $contact_details;
@@ -255,21 +255,27 @@ class LeaveApplyPage extends Component
         $this->validate();
 
         try {
-            $this->selectLeave();
-            // Check for weekend
+            // Check for weekends
             if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
-                $this->errorMessage = 'Looks like its already your non-working day. Please pick different date(s) to apply.';
-                $this->showerrorMessage = true;
-                return redirect()->back()->withInput();
-            }
-            // Check for weekend
-            if ($this->isWeekend($this->from_date) && $this->isWeekend($this->to_date)) {
                 $this->errorMessage = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
                 $this->showerrorMessage = true;
                 return redirect()->back()->withInput();
             }
 
-            // Assuming $from_session and $to_session are the session indicators (e.g., 'first' or 'second')
+            // Validate date range
+            if ($this->to_date < $this->from_date) {
+                $this->errorMessage = 'To date must be greater than or equal to from date.';
+                $this->showerrorMessage = true;
+                return redirect()->back()->withInput();
+            }
+
+            if ($this->from_date == $this->to_date && $this->from_session > $this->to_session) {
+                $this->errorMessage = 'To session must be greater than or equal to from session.';
+                $this->showerrorMessage = true;
+                return redirect()->back()->withInput();
+            }
+
+            // Check for overlapping leave requests
             $overlappingLeave = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where(function ($query) {
                     $query->where(function ($q) {
@@ -284,80 +290,47 @@ class LeaveApplyPage extends Component
                     });
                 })
                 ->whereIn('status', ['approved', 'pending'])
-                ->get(); // Use get() to retrieve all relevant leave requests
+                ->get();
 
-            $conflict = false;
-            if ($overlappingLeave) {
-                foreach ($overlappingLeave as $leave) {
-                    $carbonFromDate = $leave->from_date->format('Y-m-d');
-                    $carbonToDate = $leave->to_date->format('Y-m-d');
-                    if ($this->from_date == $carbonFromDate && $this->to_date == $carbonToDate) {
+            foreach ($overlappingLeave as $leave) {
+                $carbonFromDate = $leave->from_date->format('Y-m-d');
+                $carbonToDate = $leave->to_date->format('Y-m-d');
+                if ($this->from_date == $carbonFromDate && $this->to_date == $carbonToDate) {
+                    if ($this->from_session == $leave->from_session) {
+                        $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+                        $this->showerrorMessage = true;
+                        return redirect()->back()->withInput();
+                    }else{
                         if ($this->from_session == $leave->from_session) {
-                            $conflict = true;
-                            break;
+                            if($this->to_session !== $leave->to_session){
+                                $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+                                $this->showerrorMessage = true;
+                                return redirect()->back()->withInput();
+                            }
                         }
                     }
                 }
             }
 
-            if ($conflict) {
-                $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
-                $this->showerrorMessage = true;
-                return;
-            }
-
-
-
-            // Validate from_date to to_date
-            if ($this->to_date < $this->from_date) {
-                $this->errorMessage = 'To date must be greater than or equal to from date.';
-                $this->showerrorMessage = true;
-                return redirect()->back()->withInput();
-            }
-
-            // Validate from_date to to_date
-            if ($this->from_date == $this->to_date) {
-                if ($this->from_session > $this->to_session) {
-                    $this->errorMessage = 'To date must be greater than or equal to from date.';
-                    $this->showerrorMessage = true;
-                    return redirect()->back()->withInput();
-                }
-            }
-
-            // Check for holidays in the selected date range
-            $holidays = HolidayCalendar::where(function ($query) {
-                $query->whereBetween('date', [$this->from_date, $this->to_date])
-                    ->orWhere(function ($q) {
-                        $q->where('date', '>=', $this->from_date)
-                            ->where('date', '<=', $this->to_date);
-                    });
-            })->get();
-
+            // Check for holidays
+            $holidays = HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date])->get();
             if ($holidays->isNotEmpty()) {
                 $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
                 $this->showerrorMessage = true;
                 return redirect()->back()->withInput();
             }
 
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            // Prepare CC and Manager details
             $ccToDetails = [];
-
             foreach ($this->selectedCCEmployees as $selectedEmployeeId) {
-                // Check if the employee ID already exists in ccToDetails
-                $existingIds = array_column($ccToDetails, 'emp_id');
-
-                if (!in_array($selectedEmployeeId, $existingIds)) {
-                    // Fetch additional details from EmployeeDetails table
+                if (!in_array($selectedEmployeeId, array_column($ccToDetails, 'emp_id'))) {
                     $employeeDetails = EmployeeDetails::where('emp_id', $selectedEmployeeId)->first();
-
-                    // Concatenate first_name and last_name to get the full name
-                    $fullName = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
-
-                    $ccToDetails[] = [
-                        'emp_id' => $selectedEmployeeId,
-                        'full_name' => $fullName,
-                    ];
+                    if ($employeeDetails) {
+                        $ccToDetails[] = [
+                            'emp_id' => $selectedEmployeeId,
+                            'full_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+                        ];
+                    }
                 }
             }
 
@@ -371,34 +344,31 @@ class LeaveApplyPage extends Component
                     ];
                 }
             } else {
-                $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+                $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
                 $defualtManager = $employeeDetails->manager_id;
-                // Handle default values if no employee is selected
                 $applyingToDetails[] = [
                     'manager_id' => $defualtManager,
                     'report_to' => $this->loginEmpManager,
                     'image' => $this->loginEmpManagerProfile,
                 ];
             }
-            // Validate the incoming request for multiple files
+
+            // Validate file uploads
             $this->validate([
-                'file_paths.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024', // 1024 kilobytes = 1 megabyte per file
+                'file_paths.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
             ]);
 
-            // Initialize an array to store file data
+            // Store files
             $fileDataArray = [];
-
-            // Check if files were uploaded
             if ($this->file_paths) {
                 foreach ($this->file_paths as $file) {
-                    // Read the file contents and encode it
                     $fileDataArray[] = base64_encode(file_get_contents($file->getRealPath()));
                 }
             }
 
             // Create the leave request
             $this->createdLeaveRequest = LeaveRequest::create([
-                'emp_id' => $employeeId,
+                'emp_id' => auth()->guard('emp')->user()->emp_id,
                 'leave_type' => $this->leave_type,
                 'category_type' => 'Leave',
                 'from_date' => $this->from_date,
@@ -412,8 +382,9 @@ class LeaveApplyPage extends Component
                 'reason' => $this->reason,
             ]);
 
+            // Notify
             Notification::create([
-                'emp_id' => $employeeId,
+                'emp_id' => auth()->guard('emp')->user()->emp_id,
                 'notification_type' => 'leave',
                 'leave_type' => $this->leave_type,
                 'leave_reason' => $this->reason,
@@ -423,33 +394,15 @@ class LeaveApplyPage extends Component
 
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
 
-            if ($this->createdLeaveRequest && $this->createdLeaveRequest->emp_id) {
-                session()->flash('message', 'Leave application submitted successfully!');
-                return redirect()->to('/leave-form-page');
-            } else {
-                logger('Error creating LeaveRequest', ['emp_id' => $employeeId]);
-                session()->flash('error', 'Error submitting leave application. Please try again.');
-                return redirect()->to('/leave-form-page');
-            }
+            session()->flash('message', 'Leave application submitted successfully!');
+            return redirect()->to('/leave-form-page');
         } catch (\Exception $e) {
-            if ($e instanceof \Illuminate\Database\QueryException) {
-                Log::error("Database error: " . $e->getMessage());
-                session()->flash('error', 'Database error occurred. Please try again later.');
-            } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
-                session()->flash('error', 'Please upload an image.');
-            } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
-                Log::error("Network error: " . $e->getMessage());
-                session()->flash('error', 'Network error occurred. Please try again later.');
-            } elseif ($e instanceof \PDOException) {
-                Log::error("Database connection error: " . $e->getMessage());
-                session()->flash('error', 'Database connection error. Please try again later.');
-            } else {
-                Log::error("General error: " . $e->getMessage());
-                session()->flash('error', 'Failed to submit leave application. Please try again later.');
-            }
+            Log::error("Error: " . $e->getMessage());
+            session()->flash('error', 'Failed to submit leave application. Please try again later.');
             return redirect()->to('/leave-form-page');
         }
     }
+
     public function handleFieldUpdate($field)
     {
         try {
@@ -539,7 +492,6 @@ class LeaveApplyPage extends Component
                     break;
             }
             $this->showNumberOfDays = true;
-
         } catch (\Exception $e) {
             // Log the error
             Log::error("Error selecting leave: " . $e->getMessage());
