@@ -83,11 +83,11 @@
                                 <span class="sickLeaveBalance">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
                                 @endif
                             </div>
-                            @endif
+                            @endifv
 
                         </div>
                         <div class="form-group mb-0">
-                            <span class="normalTextValue">Number of Days :</span>
+                            <span class="normalTextValue">Applying for :</span>
                             @if($showNumberOfDays)
                             <span id="numberOfDays" class="sickLeaveBalance">
                                 <!-- Display the calculated number of days -->
