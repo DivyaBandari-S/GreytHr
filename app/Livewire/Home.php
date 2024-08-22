@@ -607,7 +607,6 @@ public $isDay;
             // Limit to the first 3 unique holidays
             $this->calendarData = $validHolidays->unique('id')->take(3);
             $this->holidayCount = $this->calendarData;
-
             $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
 

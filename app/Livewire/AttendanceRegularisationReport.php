@@ -140,7 +140,6 @@ class AttendanceRegularisationReport extends Component
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
         $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','employee_status')->get();
-      
         $employeeIds = $this->employees->pluck('emp_id')->toArray();
         if ($this->selectedStatus == 'applied') {
             if ($this->fromDate && $this->toDate) {
