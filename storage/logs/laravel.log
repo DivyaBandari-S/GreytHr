@@ -1,0 +1,596 @@
+[2024-08-21 17:30:38] local.INFO: Session has timed out  
+[2024-08-21 17:30:50] local.INFO: Stored session ID:   
+[2024-08-21 17:30:50] local.INFO: Existing session ID: None  
+[2024-08-21 17:30:50] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"n9JS2aGqdfETtHHgLti2aPVdL6aWUsdACWs2oIz1","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 17:30:50] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkdoYjFXSFF6VXFuamJjRWRheG9oNUE9PSIsInZhbHVlIjoiWU9JZzFJVURvTThVODhWeE1nMUdYYXdMSkxxSys4N0t3bm0zTnpQaW1FMGxDbkxGTmVIY0cxd0pwaHJsdGZ2SHJDWEpDWGZJakoxTXkzNnRIdVRyd3JxVlRWTDU2NEthM05rT1AzbTc0Z3BLRFpkenl3ZUVNOW9UK1lIMEtZeTciLCJtYWMiOiJkZmRiNjY5OTEwN2E2MDA2MTdhN2FmODA2YzY4ZWMyZjQ2M2RjY2JmM2M0YzYxODRhMDk2NzA3OWFkMWU1ZmZmIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImdseVR3NjVscXNqTklBczg1NDkyZ3c9PSIsInZhbHVlIjoiNTZ2OFBXOE5nTVorYmtYT0YyMFlQSTg0UTZNS1kvQlRiWVFkcC9NeTJmaHpMVlNVL29aVmJIcE5EeXVNYmlUejlLMllCSFFHV1QvOTMzaWhGUjVyVUZJSlJPSXk3eHZuVUNES2VNeWlLaDF6cnN6b1hrdGR4MUdKQmJuWmFnWE4iLCJtYWMiOiJmNjVmMWJmMDZlMjhiOGM4YjRkYTBmZTZiMDZmMjM1OTM4Mzk2ZTgzZmY2MzE2MTczZDI1ZWJiZTkxYWY3ZDVjIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=3H7smHGDqixalX0UhcieDsD7tvMWiBFfYKPDtCwK; laravel_session=n9JS2aGqdfETtHHgLti2aPVdL6aWUsdACWs2oIz1
+
+
+
+"}} 
+[2024-08-21 17:30:59] local.INFO: Stored session ID: n9JS2aGqdfETtHHgLti2aPVdL6aWUsdACWs2oIz1  
+[2024-08-21 17:30:59] local.INFO: Existing session ID: None  
+[2024-08-21 17:30:59] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"n9JS2aGqdfETtHHgLti2aPVdL6aWUsdACWs2oIz1","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 17:30:59] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Attendance HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IllYcEp4a3d3RWhjbi8yM25DdHB3SEE9PSIsInZhbHVlIjoiU0ZlVXRZRndjOE9Wcm5ZNmZEQ0NoaU52NllCTG9LaUgycUhaNHFPSldwbi9DVmhMZ3padWpqZWZJWlJwRU5YOVYvUGtFTUJ4YTY4aUNtV3NBTWxNR1MyK2ZiUEFZa014akp2aXBNcmpJLzI5anZSQ0RTYXc0VGM1YjFQSkZjUHQiLCJtYWMiOiJjYmEzZmFjOTI2Y2EwM2MyNjNjOGVlMjYxMjM4YTE0NmY2MDU4MmE5ZjMzMmMzZjk3MTVlMTRiM2JhMzUyYWMwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlBvQXJ3bm5NWkxDY01KemNsSHdkQ1E9PSIsInZhbHVlIjoiZ0ZjbUpSSlBZY0lzeU50b3I0OUFqZklBa2NqQ3QrYXpLNjRpYWRDZDl2WDFSRU9kWmRRNWhXc3VqWk1hTVBkbFdmZm1adzcwRDViNnZSMzk0UTl3Vnl2R2ZOckpyaGhnVnBPR0JUUFdKOW1BdFVjM1VXMlRMWGZ0cVRBN3JYNFgiLCJtYWMiOiI5NTliMDExN2M5ZTdkNjQ3OWYwNzRlNmEzMDE5YWI0NzZkNjRmM2ViNDBmMDMwYjA1NjQ1MTFjOTk0NDNkNDI3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=3H7smHGDqixalX0UhcieDsD7tvMWiBFfYKPDtCwK; laravel_session=n9JS2aGqdfETtHHgLti2aPVdL6aWUsdACWs2oIz1
+
+
+
+"}} 
+[2024-08-21 17:31:00] local.ERROR: Error in updateModalTitle method: A non-numeric value encountered  
+[2024-08-21 17:32:35] local.INFO: Session has timed out  
+[2024-08-21 17:32:45] local.ERROR: Attempt to read property "first_name" on null {"exception":"[object] (ErrorException(code: 0): Attempt to read property \"first_name\" on null at C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\PostLoginMessage.php:25)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Attempt to read...', 'C:\\\\xampp\\\\htdocs...', 25)
+#1 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\PostLoginMessage.php(25): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'Attempt to read...', 'C:\\\\xampp\\\\htdocs...', 25)
+#2 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\PostLoginMessage.php(16): App\\Http\\Middleware\\PostLoginMessage->generatePostLoginResponse()
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\PostLoginMessage->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#41 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#43 {main}
+"} 
+[2024-08-21 17:32:47] local.INFO: Stored session ID:   
+[2024-08-21 17:32:47] local.INFO: Existing session ID: None  
+[2024-08-21 17:32:47] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"irHzBLtRzxZUO94ddkR9D1BeM8S6CSkG5y8oqyu9","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 17:32:47] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjBJR3hkY0FmaThwL25QTFBjTXI2OGc9PSIsInZhbHVlIjoiWUN4L2lkMDFacmI0MHl3WmsvSWQvdFlJVTlXaGRMdUN4U0ZaSFR0NlUwaTRTd1BjU2JYMmFiUFpsVTdzemc4dEx1YXRaMDNJcUtxeU1qYkN6UEtTL3JaelA0WW42RkhYYTB1NWEyQWhWMVFYT0t2NlNlWVMzU3Y5cEZyQzVteVAiLCJtYWMiOiJiZGQ4MTJmYmZmMWI1NjdjZWJjOGNiNzkwYmFjZTMyNGM2YTAyZjQ1NmNhZGY2ZGY4OTlkMGRlM2Q0MjQ5NjgyIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InNQcGVkR00yczBHcUNXYkpxWGhpNkE9PSIsInZhbHVlIjoib2Z6L0ZDVHUzNU5iNkRJS2g1amdhQ3g1ZTJkQUdIUjdYUFdDMGZFNytIY2h4RkFsOWg4RUxtUHN2ZEZ1a2xMa095S2lzdlBOYXhEQUh6OGVuSzRQOWQ5STcwS0pFWHRxVWtsRjdSbkZMMTlOVmlEUVQ4THloQlp1ZmVjVnFQNUoiLCJtYWMiOiIyYjU2NDI3ZGExYzM1NWY0MDMxODhkY2U0OGQ1N2VlZTllMDQ4NTc0MWY5N2E1ZTIxODYzMTYyMzk0Njc3N2M5IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/emplogin
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=VJvv0WiXkP9GwhWn2n29oSzyAggLj5dM1JGuQY1M; laravel_session=irHzBLtRzxZUO94ddkR9D1BeM8S6CSkG5y8oqyu9
+
+
+
+"}} 
+[2024-08-21 17:32:57] local.INFO: Stored session ID: irHzBLtRzxZUO94ddkR9D1BeM8S6CSkG5y8oqyu9  
+[2024-08-21 17:32:57] local.INFO: Existing session ID: None  
+[2024-08-21 17:32:57] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"irHzBLtRzxZUO94ddkR9D1BeM8S6CSkG5y8oqyu9","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 17:32:57] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Attendance HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ii9wUEtQMnBRSHR2bHdOMzY0aXFsb3c9PSIsInZhbHVlIjoiN2dTSlUrY014aXRJMzVxdVViSy9HR1dmcUx0bEJyRXpyeUdqeDJ5WXRUT215cFlZRGtZd2JtZnlUbEJkSDFJeUNkNlprZFBmbk1qS3Q2dGN6djBCbWloa2k5OXFBeFVlZkxBUFlTZjhDTUVKYmRnSG0yMzZSZTBaZUNXbFd3dGUiLCJtYWMiOiJhOTVlNmY0ZGIyZGVjYmVjYmY0ZTZhNGUwMDhiZjlmYWU5MGZmNGMyZTU0OTgzY2JlNzUxZThmZTBhNDMyMGIyIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Ik9DQ1V5UFRmYVh3VDVxc21GTC9VS2c9PSIsInZhbHVlIjoicW12NXJGd3ViUG1uZkEyQ1VOU05VUjJocTB6QWpsa2IrR25ZT2VJdGhQSHNXTzNkSXg5Vjd6eXBFVFo5bXUwaTVWcGpwMDFWOVZUZkd6R0EyTXNaMU51MW5OOU80MDVmYzVQaUZPRlNac05TU09OdC90a2YwZlZ0R3U2ckdDYTkiLCJtYWMiOiIwNTM0NTY0ZjcyZWU0YTZhNWMzNjUyNWE3YWQ0MGNhY2M1NWVkOWVmMGQ3NjdlN2ZiMzA4ZTk0OGZjZTQ3ODAzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=VJvv0WiXkP9GwhWn2n29oSzyAggLj5dM1JGuQY1M; laravel_session=irHzBLtRzxZUO94ddkR9D1BeM8S6CSkG5y8oqyu9
+
+
+
+"}} 
+[2024-08-21 17:32:58] local.ERROR: Error in updateModalTitle method: A non-numeric value encountered  
+[2024-08-21 17:35:39] local.INFO: Session has timed out  
+[2024-08-21 17:35:54] local.INFO: Stored session ID:   
+[2024-08-21 17:35:54] local.INFO: Existing session ID: None  
+[2024-08-21 17:35:54] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"dGu6s5R1n4P3kem3qFzYHFc3P41BQp8G0BIEBYpg","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 17:35:54] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkxYNzk0NVhQaVN4T25JZXh4L1lwTWc9PSIsInZhbHVlIjoiVU9pdjZJU1JEUmFIam40aWVGQlY3UTMweXZOb2d2dU9wYk9obGk4OVFyeks0Uk83Z2VRSTZHZmI2ZmpOMWZTMEQ1ZW1UWWNkNnNwQ2tsRkVRYm5icDNKMDhrMG5TenNSWnYzMFgxSTl6bWhRKzE0ZjdFUzRvWGFxTldFcHp1NWwiLCJtYWMiOiI2NDZkOGM5MmI4NTY2YmMwODc4NWQ2MjQwMzIxYTIwNjc3MDRhNDVhODkzYThlNWU1YzFlOWFjOGEwZjNkNDhkIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IldNajh5WElFMTJrSFltR0dBL3pDVGc9PSIsInZhbHVlIjoiTE5ibDJxUjc3OEJjNWgyU1lpVjdGeldyTitUN1BSMzZQcGZiMlZ2QjNCRlgxcVdjOGlBSDhWeEJMR1FvMGMzRThLampMTDdKeEZieHMwZDFlQndiZDNBUDcwcjhJcmh3U0xTSXpNV3NQSG1IYVE0ZUQyeUJDbjVkNFArUk5KTVkiLCJtYWMiOiI3YzlhMTU1NGUzOTA1YWE5N2U3YmZjZmRhMmJhNTllNWVmYjNhZjE5Y2IwMTc5MjgyYzFlZmVkM2VkNWZhODg0IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=ER56RbM9EtLwcFjRcJ7ctysVEPqnBpdMkUjT7w2b; laravel_session=dGu6s5R1n4P3kem3qFzYHFc3P41BQp8G0BIEBYpg
+
+
+
+"}} 
+[2024-08-21 17:35:58] local.INFO: Stored session ID: dGu6s5R1n4P3kem3qFzYHFc3P41BQp8G0BIEBYpg  
+[2024-08-21 17:35:58] local.INFO: Existing session ID: None  
+[2024-08-21 17:35:58] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"dGu6s5R1n4P3kem3qFzYHFc3P41BQp8G0BIEBYpg","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 17:35:58] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IklvVW9wWFp3QUZ5Nko4RHEyYTMvdEE9PSIsInZhbHVlIjoia1J6ZzdXSExFMGRjbE95d2FZVXRtQkN6WGFsK1RNRjNMczNGREpuMXVBSzhmeWJXcEhpM1Rub2xYcmVjNnNKYlptR25VUlFrNmd3aVNQbnV0VVo2VDUwa3BsRy9DZ2ZuYnBZNnNhTU1VM3M3U1BsSC9aa0c0S1p3ZUNkVGZaRW4iLCJtYWMiOiI3YjQzYjQ2Y2Q3ODYzNjlkYzI5ZGFlYmYwYzZlNmE0NTYzMzkyZjA5YmIxNDU3ZjkyMzljZDExMzNmMzMyZDU3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IktSellpNk82Y2w2ai9wRFJNa1NqSHc9PSIsInZhbHVlIjoiQklCam9uZFZubUpoQ05NSENKazlyRXhXZk9iRlNvbS96N0tyR28rK3kzQVFRNHlBTU9XRXJHTjNmc0hxdFZ6WUZWZFhaaXJ0bnhSMDhLYm1VSy9WeDcvY0dqUFhyS3Q0WHZyQ2pRaDd0OUtjTUZGU1hkcnBjMDRoL3grZFp0ZHEiLCJtYWMiOiI0YmNkYTNjMzUxZDA0ZjVkNjk4ZWZlZjI0YmFjMzQzOWVkMGI5MGIyYzJhNDgyZjZjOTk4MTc2ZTljYzQ4ZjdiIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=ER56RbM9EtLwcFjRcJ7ctysVEPqnBpdMkUjT7w2b; laravel_session=dGu6s5R1n4P3kem3qFzYHFc3P41BQp8G0BIEBYpg
+
+
+
+"}} 
+[2024-08-21 17:36:36] local.INFO: Session has timed out  
+[2024-08-21 17:36:48] local.INFO: Stored session ID:   
+[2024-08-21 17:36:48] local.INFO: Existing session ID: None  
+[2024-08-21 17:36:48] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"BhCKFx4Ij9xlaXwtQ8jQu96r1LHrKyFeZwx6reG9","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 17:36:48] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IitUeVhtRk1xckFNWStkL2ZXNjVOanc9PSIsInZhbHVlIjoiVGdqYWNuTEk5dDJ4dm1ZbERPbHRQQjVNWEM2OFdCekI5ZmNIaHgvc3NCSXJzM3VjRDkycHdlN3RDbDUzalhKbXJOVjVJVW1FdnpsbmdsTng1L2NTbHQzaDA4ejRyUUpmRFF0TmlpMlE2eDRFSCt2TEdUb0ZGTExWVm5KZFRTS2oiLCJtYWMiOiI2ZGJhOTg0MTQ2ZTA2NmUwYzc1NmJmYmZhNzFkMGVkNjVjMWJjYTM4MWJhODY2NjI4MjcwNjIzMTA5MzJiZjFiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjcxY3dmWk9ZcDRqcDF0RkNVbkR6UWc9PSIsInZhbHVlIjoiTTZqZE1lVy9JNmNKRm1SYkIzNjN6RTNoMGJ2bThDQ3d1WkRWcmNQMldoeEsyd29tNnFPOVBKa1pldDltSWZ5Q2UxYlVqclJqbHZaWGJ5WExqaW9OeHZYQkhTNjA5TWlRVEt6d2hCZmo3dmdwWGd4K3FXSmZ3dkNGS1Rkb3FJZmQiLCJtYWMiOiIzNTY2MTJiYzI4M2I5MzViZTMwYzU3MWEwMTIyNTI2YTQ0Mzc0N2E0NDMyZDg1MTMzN2QyMTc1ODVlNzQ0MTc2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=gQQThz0gUp6aO9dpbiNfZugscBE3e85P15DeIm6b; laravel_session=BhCKFx4Ij9xlaXwtQ8jQu96r1LHrKyFeZwx6reG9
+
+
+
+"}} 
+[2024-08-21 17:36:55] local.INFO: Stored session ID: BhCKFx4Ij9xlaXwtQ8jQu96r1LHrKyFeZwx6reG9  
+[2024-08-21 17:36:55] local.INFO: Existing session ID: None  
+[2024-08-21 17:36:55] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"BhCKFx4Ij9xlaXwtQ8jQu96r1LHrKyFeZwx6reG9","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 17:36:55] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Attendance HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImI4RGFRUlFXdDQ1WVJRak5EUWk4NVE9PSIsInZhbHVlIjoiYzhGdVk1QXdIcXFMMGlOSVFBQkE3UGxpeTFiaWFpQ3I0M1dubHRFeVFFSTV4V1lNTW5jckM3WUt2eXo4TkdLckw1QU53ajgwaVEydmsxalRMUE5rU1RTQXRZYXdaRTFscFpkbkhKbkRlQlVobk5yTU1ON0lDeG40WTM1T0FkUmYiLCJtYWMiOiJjZmQ0OTM3NDY4MmM3NWFkODY5NGFmZWM4OTAxZjNhMmI1YzAyYWRmNGEyZTQyZDI3YWNkNTRlMDE2NGJlZjA3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImhVejhZUFZqc2lqQTVOR1ZpMUNqanc9PSIsInZhbHVlIjoiRFZvU2pzRmpDRHdJQ2lteDk5bkx1UkhlUnVyOUtpMklXSjlrMDgyYzhmVHZvREI3WlcyeG10Qzg2SGV3TWM4VUhlek94TmZBT2hIcHczc2VMM3huODVlMzRnOVdsNjYvRU5YamNabitCaEgzZmZLbjg2NU01WWMrZFBqTFRNT1MiLCJtYWMiOiIxZWM3M2EwYTRjN2NhZWJjNTViMWJlZmIwNDdmYWZmNWE0NTU0M2MyZjI1NWE2MzE2YTA4ODc1MGMxNDA3NDU3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=gQQThz0gUp6aO9dpbiNfZugscBE3e85P15DeIm6b; laravel_session=BhCKFx4Ij9xlaXwtQ8jQu96r1LHrKyFeZwx6reG9
+
+
+
+"}} 
+[2024-08-21 17:36:56] local.ERROR: Error in updateModalTitle method: A non-numeric value encountered  
+[2024-08-21 18:03:45] local.INFO: Session has timed out  
+[2024-08-21 18:05:19] local.INFO: Session has timed out  
+[2024-08-21 18:05:26] local.INFO: Session has timed out  
+[2024-08-21 18:05:36] local.INFO: Stored session ID:   
+[2024-08-21 18:05:36] local.INFO: Existing session ID: None  
+[2024-08-21 18:05:36] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3sGWUh2D1oqn5wNjevJSAS4FdNYRv5KMN0eNdQdh","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 18:05:36] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InB6MUpvaEJjTkcwTUxYb3BhRFJsb1E9PSIsInZhbHVlIjoiWXhKZzFseUdxNkdySGorcU1CYURybnc3RUpxRXY1a3RRbFlINktJZytoYzE3MUIzV1VoTmlIR3kza3Erbnd6YmJKVmd4OFFzcExuSWx6RytKZEszUzdqRU15RVVHUnhEc256LzJucWl0WlQzMURtKzNIa0xqRmk4Q21CL2xZdnkiLCJtYWMiOiJkMmI5MzE1Y2YyNjZkMGQ5NTEyYjNmZWIzYWE5Y2JjNTA2MmZhNjJiYjlhYjQ1ODFmN2IxNjkyZjg5NDU4YjljIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlV2ZUNsT1RjS1lPb1lZUER1NWZGeWc9PSIsInZhbHVlIjoiU1FNK3BaNEJhSTBRT2ZjZTlTNktXcVk3bGZoREVNZTdZa20zdktpS2x3V2lYTWsxWXljZnJRbXlGRFpNZEZZQWQ0SmNnY3dXYklwNkxwTk9meCtPMW01WTl3VFRuZWlqbjFBNEozNExOM3RsSG9qZmovOVZJWE1sSHhnVlJ0SysiLCJtYWMiOiJiZDhjY2NjMWNkMTM3NmNhYTE3ZGYwZTU1MzAzY2FiMjg0ZGZlOTQ2Y2Q3OTJmNWEzMWQzNjExMWY0MWY3NTNhIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=S8A9z50fzQuPQVj1ndIFpdwhxMLsrhIMlwL4iylQ; laravel_session=3sGWUh2D1oqn5wNjevJSAS4FdNYRv5KMN0eNdQdh
+
+
+
+"}} 
+[2024-08-21 18:05:42] local.INFO: Stored session ID: 3sGWUh2D1oqn5wNjevJSAS4FdNYRv5KMN0eNdQdh  
+[2024-08-21 18:05:42] local.INFO: Existing session ID: None  
+[2024-08-21 18:05:42] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3sGWUh2D1oqn5wNjevJSAS4FdNYRv5KMN0eNdQdh","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 18:05:42] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Attendance HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InQyV3dUVjYvanpscmZlLzM2ZUZ6bVE9PSIsInZhbHVlIjoiL2hlQlBtVDlTaW9YQ2pvcjYzdEFJaUsxczAvYXZLbWFVT1l4b0FaaUVlbEJLSXdZQnZReGxjRkp5UmJSSGZaaWRxMUR6QldMT0N0ZjFhWEc1aXhOaEQ2Y29ScS9CMndvdEV2bitJWGxHTitkUjdSc1FuMmxHQkI2SThoL3BXU1IiLCJtYWMiOiJiZjVmZGQ1ZTk4MWUzNmIzMDRjZTY4NzY5YzUwMDU2MTZkZWUzOWFlZTNiYjZmOTFiNTIyZDU2YjQxNjBjZDA4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlVnR0tzKzJBcXpvd21Ycm9IUEhZTVE9PSIsInZhbHVlIjoiNGFTOWZ1Sml5NW9lMHB6L3hodnJiSXdQYXJ1c21MTzVpMFlxU1pRQlNSN3R3Y2VDWVp3b0FNRDZaV1I2Y01VRnRFMGlmVTJ3ejk0VXZiSFlJZWI4R3dDMmluVTRJdWZ2R2R2cGh6TWx2MjFaQStIRXFlaTlqS3BwTUN0VlkxUkwiLCJtYWMiOiI5OTUzMTRmMmI2YTljNmVlZGMyMWE1NWRjZGYyNGYwMmJjNTI5ZDEzZDVhYmMxNGZkZDU5NGJjNjQ5OGEzNTNiIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0
+
+Cookie: XSRF-TOKEN=S8A9z50fzQuPQVj1ndIFpdwhxMLsrhIMlwL4iylQ; laravel_session=3sGWUh2D1oqn5wNjevJSAS4FdNYRv5KMN0eNdQdh
+
+
+
+"}} 
+[2024-08-21 18:05:42] local.ERROR: Error in updateModalTitle method: A non-numeric value encountered  
+[2024-08-21 18:11:32] local.INFO: Session has timed out  
+[2024-08-21 18:11:41] local.INFO: Stored session ID:   
+[2024-08-21 18:11:41] local.INFO: Existing session ID: None  
+[2024-08-21 18:11:41] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"TvVJ2PDCUXDzTDYM53RAoFu2GE34a0xJM1fkJyDM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 18:11:41] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjgvQjQ3WVRvREgyK01PaXBmNGd5dEE9PSIsInZhbHVlIjoiczZhN1h2TVd0dHNTOURXMTZtcXNVZXhlQTVqVGQ1cy81ZVMxMlplZCttM1dtNXNzQ2xYTWR2Y3hFdDM5a2hhYjZOT3JWWG9VMUtQTCt4dUEzN0s0M05yTFVDc0JLQUFFZ0ZFbjQ1Y1Fqc1EwbW1oZjFNbHZuZnNYdHliUC9wQ2IiLCJtYWMiOiJmYzk3ZDNlNmI5MjJmYzIyNjI3YThhNjM5MmI3ZDBlM2JmZGI1OWQ4YjM2MzAwYzI1N2U5MDkyYzFhNTJjNDRkIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Imd5dUJXMDd0aDhPVkVLQzg0S1RQYnc9PSIsInZhbHVlIjoiMWh6WVZaaDF0NzFOY1NMdW1CZjFRN0VQRFB2NXkzWVhHV3BZamRScTNiNlhIUWl6WldyU05XcmdwN0RQT2V6SVc1dWFSSlpYb05OZi9GZWdlMjMrWTZvY0crT01mazBQWkJ5ak5xM1YwQ3l4NHE5M0FYN2dIb3lTSTBkMWNOK1MiLCJtYWMiOiI3OGJhMDAyZmVlOWUzNTc3NTMwOGZlNDM0MzBhN2I1ZmZhZThkMzlkZjQwNTY0YTYwZjNlOTcxNjM5NDYzMjVhIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=sGdBWoNrrVMlmgW23Qa0rAyOGCVWZRuJRobzTLOk; laravel_session=TvVJ2PDCUXDzTDYM53RAoFu2GE34a0xJM1fkJyDM
+
+
+
+"}} 
+[2024-08-21 18:12:00] local.INFO: Session has timed out  
+[2024-08-21 18:12:10] local.INFO: Stored session ID:   
+[2024-08-21 18:12:10] local.INFO: Existing session ID: None  
+[2024-08-21 18:12:10] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"CrgtMcoofDyFuK4UcMpgVj4NRsam6Sgt2ONu5Dy7","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 18:12:10] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ilg4eFZZVzZMT1YrcnQ3VVo5c1ljYXc9PSIsInZhbHVlIjoibDF4cnJZTXVkZEMwYWxWOG9WV1dYb3lmRzZ1K2Jhem81emMyM05BMlhJdjJUZ1dta1JVc3l2blFqUjBvZEY1eGpXQ05ha1Q2emN1cXpHby9XMmVyb3JzcFhPTkxmcWdlaVI2aGhRZ3FUL3Y0UWhqZUFNSy9pZS94RUM3Q3FzdnMiLCJtYWMiOiI0ZDA4YjI4OTVkODUzZDQ1MDMzOWYxNjAzZDZhNzBkNzA1NDEwYWI4OTQxNjMwMGY5OWE2ODMxMjBiODA4YmMxIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InhSVWx5OVUrRVFtMHJJNnFxV2ZsU2c9PSIsInZhbHVlIjoiU2RBdk9kdStHZjdwcEN5aUhWYnJuRmFoU2NoTFBRVUJsQXk4YVpRWWNVV0lwelF1OUpFT1lpT1NISkk4VlkrYmY0cWNaT1pwcFRBVG9zc3dEaE5DQUdiMXpxMDE1cEdhNlFxZFVnR2hxN25pZ2wzQTRNZnZSdTNvSHZIRUZ0OTIiLCJtYWMiOiJjMDM4ZTljNjk0ZTQ3OTQ1Y2RjYjg1MjFlMDQ0Nzk3M2FhYTA2OTI2M2EyM2M4NTFjNmVjYzdjZGY1YzA3ZmE1IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=TFThHF49lrwmqV1kRCB11T4h8rnxyvBtDTR85ftP; laravel_session=CrgtMcoofDyFuK4UcMpgVj4NRsam6Sgt2ONu5Dy7
+
+
+
+"}} 
+[2024-08-21 18:12:15] local.INFO: Stored session ID: CrgtMcoofDyFuK4UcMpgVj4NRsam6Sgt2ONu5Dy7  
+[2024-08-21 18:12:15] local.INFO: Existing session ID: None  
+[2024-08-21 18:12:15] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"CrgtMcoofDyFuK4UcMpgVj4NRsam6Sgt2ONu5Dy7","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-21 18:12:15] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Attendance HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ims5M3IyRnN0bWhpSWJQSGxxZnBMNkE9PSIsInZhbHVlIjoicFhOTjNrVC9FdzFSNTBmWnVlY0hBTzJ2MnExQ3NTcTdEMmVKTDJqbnNzc1pQZE1hSW9ablpBd0FzKysyT2hzWXRsdnNieVcxb21oS0o3MkxZSFV4QyttRFdzYVBEc3lhTVIrRm9XcnNldE9JT3o5WEF0YnNBZERNeVl3cDd1ZEwiLCJtYWMiOiI5MGI4NjAzODE1M2FmNjgyYjIzMGY1OTcyM2NiYzY2NzA3YzA3Mzc1ZDk4Y2VjYmU5ZTBmMDM0ZGM4MTUyMTVmIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InRRN3ArZGd6bTFZTVZoL05iU1EyUkE9PSIsInZhbHVlIjoiWG4yTWp0UXZuL0VhY294b2JQYTVacmtuOGQ1T3cvT1Z4VVI4eDlhQnljdFJkZEdiUDBDYVA1NEE0dE02RjZLclJGdy9tV1ZPQzNiL1NwZnlvbXl3VytJWVp0TTd0VmdGVUJvVFpwL2VyRzczYW5LT3d1Vkk5V3ZJWXcvemRTQkMiLCJtYWMiOiI5NGEyMWZjZDAyMWMwMzljYTgyYzU1ZGVjNzg0Y2NkMjJkNzc5MzQ4OTY3OGVkYjNhZTJkYmRjOGMwNTJkMWJlIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=TFThHF49lrwmqV1kRCB11T4h8rnxyvBtDTR85ftP; laravel_session=CrgtMcoofDyFuK4UcMpgVj4NRsam6Sgt2ONu5Dy7
+
+
+
+"}} 
+[2024-08-21 18:12:16] local.ERROR: Error in updateModalTitle method: A non-numeric value encountered  
+[2024-08-22 10:42:47] local.INFO: Session has timed out  

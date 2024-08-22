@@ -286,13 +286,11 @@ width: 170px; */
         }
         .info-button
         {
-            background-color:rgb(2,17,79); 
-            border: 2px solid rgb(2,17,79); 
-            color: white; 
-            border-radius: 5px;
-            font-size:10px;
-            padding:2px;
-            
+            font-size:12px;
+            background-color:transparent;
+            color:#24a7f8;
+            border:none;
+            text-decoration:underline;
 
         }
 
@@ -1852,7 +1850,7 @@ color: #fff;
             @livewire('attendance-table')
 
             @endif
-            <div class="col-md-5">
+            <div class="col-md-5 custom-scrollbar">
                 @if($defaultfaCalendar==1)
                 <div class="container1" style="background-color:white;">
                     <!-- Content goes here -->
@@ -1989,7 +1987,7 @@ color: #fff;
                                     <td>-</td>
                                     @if($swipeRecordExists==true)
                                     <td>
-                                        <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="checkDateInRegularisationEntries('{{$CurrentDate}}')">
+                                        <button type="button" class="info-button"wire:click="checkDateInRegularisationEntries('{{$CurrentDate}}')">
                                             Info
                                         </button>
                                         @if($showRegularisationDialog==true)
@@ -2131,7 +2129,7 @@ color: #fff;
                                        </td>
                                        <td>-</td>
  
-                                       <td><button class="info-button"wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
+                                       <td><button class="info-button" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
  
                                    </tr>
                                    @if (($index + 1) % 2 == 0)
