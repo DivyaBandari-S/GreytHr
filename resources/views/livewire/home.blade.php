@@ -388,12 +388,12 @@
                         @endphp
 
                         <div class="row m-0">
-                            <div class="col-7 p-0">
+                            <div class="col-12 p-0">
                                 @foreach ($calendarData as $entry)
                                     @if (!empty($entry->festivals))
                                         <div>
-                                            <p class="payslip-small-desc"
-                                                style="color: #677A8E; font-size: 11px;margin-bottom:10px; ">
+                                            <p class="payslip-small-desc mb-2"
+                                                >
                                                 <span
                                                     style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }}
                                                     <span
@@ -408,7 +408,7 @@
                                         @endphp
                                     @endif
 
-                                    @if ($count >= 3)
+                                    @if ($count >= 2)
                                     @break
                                 @endif
                             @endforeach
@@ -484,7 +484,7 @@
                                         }
                                     @endphp
                                     @if ($CountAbsentEmployees > 0)
-                                        @for ($i = 0; $i < min($CountAbsentEmployees, 4); $i++)
+                                        @for ($i = 0; $i < min($CountAbsentEmployees, 5); $i++)
                                             @if (isset($AbsentEmployees[$i]))
                                                 @php
                                                     $employee = $AbsentEmployees[$i];
@@ -505,11 +505,11 @@
                                             @endif
                                         @endfor
                                     @else
-                                        <p style="font-size:12px;color:orange">No employees are absent today</p>
+                                        <p style="font-size:12px;color:#778899;">No employees are absent today</p>
                                     @endif
                                     @if ($CountAbsentEmployees > 5)
-                                        <div class="remainContent d-flex flex-column align-items-center mt-2">
-                                            <span>+{{ $CountAbsentEmployees - 9 }}</span>
+                                        <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openAbsentEmployees">
+                                            <span>+{{ $CountAbsentEmployees - 5 }}</span>
                                             <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
                                     @endif
@@ -552,11 +552,11 @@
                                             @endif
                                         @endfor
                                     @else
-                                        <p style="font-size:12px;color:orange">No employees arrived late today</p>
+                                        <p style="font-size:12px;color:#778899;">No employees arrived late today</p>
                                     @endif
-                                    @if ($CountLateSwipes > 9)
-                                        <div class="remainContent d-flex flex-column align-items-center mt-2">
-                                            <span>+{{ $CountLateSwipes - 9 }}</span>
+                                    @if ($CountLateSwipes > 5)
+                                        <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openLateEmployees">
+                                            <span>+{{ $CountLateSwipes - 5 }}</span>
                                             <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
                                     @endif
@@ -569,7 +569,7 @@
                                 <p class="section-name mt-1">
                                     On Time ({{ $CountEarlySwipes }})
                                 </p>
-                                <div class="team-leave d-flex flex-row mr gap-3">
+                                <div class="team-leave d-flex flex-row mr gap-2">
                                     @php
                                         function getRandomEarlyColor()
                                         {
@@ -585,7 +585,7 @@
                                         }
                                     @endphp
                                     @if ($CountEarlySwipes)
-                                        @for ($i = 0; $i < min($CountEarlySwipes, 9); $i++)
+                                        @for ($i = 0; $i < min($CountEarlySwipes, 5); $i++)
                                             @if (isset($EarlySwipes[$i]))
                                                 @php
                                                     $employee = $EarlySwipes[$i];
@@ -611,11 +611,11 @@
                                             @endif
                                         @endfor
                                     @else
-                                        <p style="font-size:12px;color:orange">No employees arrived early today</p>
+                                        <p style="font-size:12px;color:#778899;">No employees arrived early today</p>
                                     @endif
-                                    @if ($CountEarlySwipes > 9)
-                                        <div class="remainContent d-flex flex-column align-items-center mt-2">
-                                            <span>+{{ $CountEarlySwipes - 9 }}</span>
+                                    @if ($CountEarlySwipes > 5)
+                                        <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openEarlyEmployees">
+                                            <span>+{{ $CountEarlySwipes - 5 }}</span>
                                             <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
                                     @endif

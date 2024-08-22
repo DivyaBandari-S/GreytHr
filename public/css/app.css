@@ -4929,12 +4929,10 @@ option {
     font-size: 38.5px;
     margin: 0px;
     font-weight: 600;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin-bottom: 20px;
 }
 .privacyContent {
     margin: 10px 0px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 20px;
     color: var(--main-heading-color);
@@ -4948,7 +4946,6 @@ option {
     margin: 25px 0px;
     color: #4d4d4d;
     font-size: 24.5px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 600;
 }
 .privacyLabelContent {
@@ -4967,14 +4964,14 @@ option {
   }
 
   .payslip-small-desc {
-    font-size: 1em;
+    font-size: 0.8em;
     font-weight: 400;
     line-height: 1.5em;
     color: #452c2c;
   }
 
   .payslip-small-desc {
-    font-size: 1em;
+    font-size: 0.8em;
   }
 
   .payslip-go-corner {
@@ -5011,7 +5008,6 @@ option {
     z-index: 0;
     overflow: hidden;
     background: linear-gradient(to bottom, #c3e6ec, #a7d1d9);
-    font-family: Arial, Helvetica, sans-serif;
   }
 
   .payslip-card:before {

@@ -1,9 +1,13 @@
 <div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="script.js"></script>
 
-    <div class="chat-container " wire:poll>
-        <div class="people-list" id="people-list" style=" border: 2px solid silver;border-radius:5px;">
+    <div class="chat-container" wire:poll >
+        
+<div class="col" style="display:flex">
+<div class="col-md-4">
+<div class="people-list" id="people-list" style=" border: 2px solid silver;border-radius:5px;">
             <div class="row justify-content-center" style="margin: 0;">
             </div>
 
@@ -21,7 +25,7 @@
           
 
                 <ul class="p-2 grid w-full space-y-2" style="list-style: none; padding: 0;">
-                    <div class="c" style="contain: content; margin-left:20px;overflow-y: auto; height: 420px;">
+                    <div class="c" style="contain: content;overflow-y: auto; height: 420px;">
                         @if ($conversations)
 
 
@@ -30,27 +34,29 @@
         $receiver = $conversation->getReceiver();
     @endphp
                         <li id="conversation-{{ $conversation->id }}" wire:key="{{ $conversation->id }}" class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2 {{ $conversation->id == $selectedConversation?->emp_id ? 'bg-gray-100/70' : '' }}" style="margin-bottom: 10px;height:70px;width:90%; ">
+                        
+                
+              
                         @php
         $receiver = $conversation->getReceiver();
         // Get the image URL using the accessor
         $imageUrl = $receiver->image_url; 
+        
 
-        // Check if the image URL is null and set a default image if needed
-        if (empty($imageUrl)) {
-            if ($receiver->gender === 'Male') {
-                $imageUrl = 'https://www.kindpng.com/picc/m/252-2524695_dummy-profile-image-jpg-hd-png-download.png'; // Default male image
-            } elseif ($receiver->gender === 'Female') {
-                $imageUrl = 'https://th.bing.com/th/id/OIP.16PsNaosyhVxpn3hmvC46AHaHa?w=199&h=199&c=7&r=0&o=5&dpr=1.5&pid=1.7'; // Default female image
-            } else {
-                $imageUrl = 'https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain'; // Default image for unspecified gender
-            }
-        }
     @endphp
+         @if(($receiver->image) && $receiver->image !== 'null')
+                        <img style="border-radius: 50%; " height="40" width="40" src="{{ $receiver->image_url }}" alt="Employee Image">
+                        @else
+                        @if($receiver && $receiver->gender == "Male")
+                        <img style="border-radius: 50%; " height="40" width="40" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
+                        @elseif($receiver && $receiver->gender == "Female")
+                        <img style="border-radius: 50%; " height="40" width="40" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
+                        @else
+                        <img style="border-radius: 50%; " height="40" width="40" src="{{asset("images/user.jpg")}}" alt="Default Image">
+                        @endif
+                        @endif
+                      
 
-    <img style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;" 
-        src="{{ $imageUrl }}" 
-        class="card-img-top" 
-        alt="">
 
 
                             <aside class="grid grid-cols-12 w-full">
@@ -107,9 +113,14 @@
                 </ul>
             </main>
         </div>
-        <hr>
+        </div>
 
-        <div class="chat" style="background-image: url('https://i.pinimg.com/originals/39/cf/bc/39cfbc81276720ddf5003854e42c2769.jpg');">
+    
+
+   
+        <hr>
+        <div class="col-md-11">
+        <div class="chat" style="background-image: url('https://i.pinimg.com/originals/39/cf/bc/39cfbc81276720ddf5003854e42c2769.jpg');height:auto">
 
             <div class="chat-header clearfix" style="border-radius:5px;border:2px solid silver;background-image: url('https://th.bing.com/th/id/OIP.D5JnKq5hq9D54giN_liHTQHaHa?w=163&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7');height:80px">
             @if ($selectedConversation->getReceiver() && $selectedConversation->getReceiver()->employeeDetails)
@@ -130,7 +141,7 @@
         alt="Default Profile Image"
     >
 @endif
-
+    
                 <div class="chat-about">
                     <div class="chat-with mt-1">
                         <div class="d-flex align-items-center">
@@ -152,7 +163,7 @@
 
             </div>
 
-            <div class="chat-history" id="messageList">
+            <div class="chat-history" id="messageList" style="overflow-y: auto; ">
                 <ul>
                     <li class="message clearfix" id="conversation">
                         <!-- end chat-header -->
@@ -169,31 +180,25 @@
                                             <p class="message-content" style="font-size:10px">{{ $message->body }}
                                             </p>
                                             @if ($message->file_path)
-    {{-- Check if the file path is an image --}}
-    @if ($message->isImage())
-        <img src="{{ $message->isImage() }}"
-            alt="Attached Image" style="max-width: 100px; border-radius: 5px;">
-    @elseif (Str::endsWith($message->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx']))
-        {{-- Display a button for PDF or document files --}}
-        <button class="message-content"
-            style="font-size: 10px; background: white; border: 1px solid silver; border-radius: 4px; display: flex;">
-            <a href="{{ route('download.file', $message->id) }}" target="_blank">
-                <span style="font-size: 30px; margin-top: 10px; color: black">&#8595;</span>
-                {{ basename($message->file_path) }}
-            </a>
-        </button>
+    @if (strpos($message->mime_type, 'image') !== false)
+        <!-- Directly display the image without the container -->
+        <a href="{{ route('file.show', $message->id) }}" style="text-decoration: none; color: #007BFF;">
+            <img src="{{ $message->image_url }}" alt="Attached Image" style="max-width: 100%; border-radius: 5px; display: block; margin: 0 auto; height: 100px; width: 100px;">
+        </a>
     @else
-        {{-- Generic download link for other file types --}}
-        <button class="message-content"
-            style="font-size: 10px; background: white; border: 1px solid silver; border-radius: 4px; display: flex;">
-            <a href="{{ route('download.file', $message->id) }}" target="_blank">
-                <span style="font-size: 30px; margin-top: 10px; color: black">&#8595;</span>
-                {{ basename($message->file_path) }}
+        <!-- Display other files within the container -->
+        <div class="file-container" style="background-color: white; padding: 10px; border-radius: 8px; border: 1px solid #ddd; max-width: 500px; margin: auto;height:40px">
+            <a href="{{ route('file.show', $message->id) }}" download="{{ $message->file_name }}" style="display: flex; align-items: center; text-decoration: none; color: #007BFF;">
+                <span style="font-size: 30px; color: black; margin-right: 10px;">&#8595;</span>
+                <span style="font-size:12px">{{ basename($message->file_name) }}</span>
             </a>
-        </button>
+        </div>
     @endif
 @endif
 
+
+
+                                      
 
                                         </div>
                                         {{-- Display message time and status --}}
@@ -244,18 +249,18 @@
             <form wire:submit.prevent="sendMessage" method="POST" enctype="multipart/form-data" id="messageForm">
                 @csrf
 
-                <div class="card-footer">
+                <div class="card-footer" >
 
-                    <div class="input-group">
+                    <div class="input-group" style="width:89%">
                         <!-- Attachment -->
                         <div class="row" style="width:100%;">
-                            @if ($attachment && !$body)
+                            @if ($file_path && !$body)
                             <div class="container attachment-container" style="width:100%;height:60px">
-                                @if (Str::startsWith($attachment->getMimeType(), 'image/'))
-                                <img src="{{ $attachment->temporaryUrl() }}" alt="Selected Image" class="attachment-image" style="height: 50px; width: 100%;">
+                                @if (Str::startsWith($file_path->getMimeType(), 'image/'))
+                                <img src="{{ $file_path->temporaryUrl() }}" alt="Selected Image" class="attachment-image" style="height: 50px; width: 100%;">
                                 @else
                                 <i class="fas fa-file attachment-icon"></i>
-                                {{ $attachment->getClientOriginalName() }}
+                                {{ $file_path->getClientOriginalName() }}
                                 @endif
 
                             </div>
@@ -264,17 +269,17 @@
                         <div class="input-group-prepend">
                             <label class="btn btn-secondary attach-btn">
                                 <i class="fas fa-paperclip"></i>
-                                <input type="file" accept="image/*, .pdf, .doc, .docx" wire:model="attachment" style="display: none;width:100%;height:auto;">
+                                <input type="file" accept="image/*, .pdf, .doc, .docx" wire:model="file_path" style="display: none;width:100%;height:auto;">
                             </label>
                         </div>
 
                         <!-- Message body -->
 
-                        <textarea name="message-to-send" id="messageInput" placeholder="Type your message..." wire:model="body" class="form-control message-input"></textarea>
+                        <textarea name="message-to-send" id="messageInput" placeholder="Type your message..." wire:model="body" class="form-control message-input" style="width:80%"></textarea>
 
                         <!-- Send button -->
                         <div class="input-group-append">
-                            @if ($attachment || $body)
+                            @if ($file_path || $body)
                             <button id="sendMessageButton" type="submit" class="btn btn send-btn" style="background-color: rgb(2, 17, 79);color:white">
                                 <i class="fas fa-location-arrow"></i> Send
                             </button>
@@ -297,7 +302,7 @@
 
         </div>
 
-
+</div>
 
         <!-- end chat-history -->
 
@@ -580,7 +585,7 @@
     }
 
     .people-list {
-        width: 400px;
+    
         justify-content: start;
     }
 

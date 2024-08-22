@@ -18,7 +18,7 @@
       <div class="alert alert-danger position-absolute p-1" style="font-size: 12px; right: 25%;" id="error-alert">
          {{ session('error') }}
          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span >X</span>
+            <span>X</span>
          </button>
       </div>
       <script>
@@ -347,9 +347,26 @@
 
 
                            <!-- Add other details based on your leave request structure -->
+                           @if($leaveRequest->category_type == 'Leave Cancel')
+                           <div class="col accordion-content">
 
+                              @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
 
+                              <span class="accordionContentSpanValue" style="color:#32CD32 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
+                              @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
+
+                              <span class="accordionContentSpanValue" style="color:#FF0000 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                              @else
+
+                              <span class="accordionContentSpanValue" style="color:#778899 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                              @endif
+
+                           </div>
+
+                           @else
                            <div class="col accordion-content">
 
                               @if(strtoupper($leaveRequest->status) == 'APPROVED')
@@ -367,6 +384,7 @@
                               @endif
 
                            </div>
+                           @endif
 
                            <div class="arrow-btn">
                               <i class="fa fa-chevron-down"></i>

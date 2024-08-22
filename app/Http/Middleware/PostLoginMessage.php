@@ -54,8 +54,9 @@ class PostLoginMessage
                         font-family: 'Montserrat', sans-serif;
                     }
                     #message {
-                        font-size: 24px;
-                        color: #333;
+                        font-size: 1.25em;
+                        color: #3b4452;
+                        font-weight:500;
                         text-align: center;
                     }
                     .name {
