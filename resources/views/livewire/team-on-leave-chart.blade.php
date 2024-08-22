@@ -9,8 +9,7 @@
         </select>
     </div>
 
-
-    <div style="width:97%;display:flex; flex-direction:column;margin:0 auto;border:1px solid #ccc;">
+    <div style="width:100%;display:flex; flex-direction:column;margin:0 auto;border:1px solid #ccc;">
         <!-- Other HTML content -->
         <div style="display:flex; flex-direction:row; background:white;padding:10px 15px; border-bottom:1px solid #ccc; gap:10px;">
             <p style="color:#778899; font-weight:500;">Duration Selected:</p>
@@ -18,7 +17,7 @@
         </div>
 
 
-        <canvas id="barChart" height="250" style="background: white;padding:10px 15px;"></canvas>
+        <canvas id="barChart" height="300"  class="team_on_leave-bar-chart" ></canvas>
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
@@ -72,22 +71,21 @@
     </div>
 
     <div class="mt-3">
-        <h5 style="color:#778899">Leave Applications</h5>
+        <h6 style="color:#778899">Leave Applications</h6>
 
 
         @if(empty($leaveApplications))
 
         <p>No leave applications for the selected duration.</p>
         @else
-        <div style="display: flex;">
-
-            <div style="padding:10px 15px; width:80%; margin:0;">
+        <div class="row" >
+            <div class="col-md-6" style="padding:10px 15px;  margin:0;">
                 <label for="search" style="color:#778899; font-weight:500;">Search Employee:</label>
-                <input style="height:30px" type="text" id="search" wire:model='search' wire:input="updateSearch($event.target.value)" placeholder="Enter first or last name">
+                <input style="height:30px; width:130px" type="text" id="search" wire:model='search' wire:input="updateSearch($event.target.value)" placeholder="Enter Name or Id">
             </div>
-            <div style="padding:10px 15px; width:80%; margin:0;">
+            <div class="col-md-6" style="padding:10px 15px;  margin:0;">
                 <label for="leaveTypeFilter" style="color:#778899; font-weight:500;">Select Leave Type:</label>
-                <select style="height:30px" id="leaveTypeFilter" wire:model="leaveTypeFilter" wire:change=updateLeaveTypeFilter($event.target.value)>
+                <select style="height:30px;width:130px" id="leaveTypeFilter" wire:model="leaveTypeFilter" wire:change=updateLeaveTypeFilter($event.target.value)>
                     <option value="">All</option>
                     @foreach($this->leaveTypes as $leaveType)
                     <option value="{{ $leaveType }}">{{ $leaveType }}</option>
