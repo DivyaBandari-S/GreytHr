@@ -34,6 +34,8 @@ class Home extends Component
     public $currentDate;
     public $swipes;
     public $showSalary = false;
+
+    public $whoisinTitle='';
     public $currentDay;
     public $absent_employees_count;
     public $showAlertDialog = false;
@@ -198,6 +200,7 @@ class Home extends Component
     {
         $this->showReviewLeaveAndAttendance = true;
     }
+ 
     public function closereviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = false;
@@ -207,12 +210,19 @@ class Home extends Component
         $this->showMessage = false;
     }
 
+    public function openEarlyEmployees()
+    {
+        $this->whoisinTitle='On Time Employees';
+        $this->showAllEarlyEmployees = true;
+    }
     public function openLateEmployees()
     {
+        $this->whoisinTitle='Late Arrival Employees';
         $this->showAllLateEmployees = true;
     }
     public function closeAllAbsentEmployees()
     {
+        $this->whoisinTitle='';
         $this->showAllAbsentEmployees = false;
     }
     public function open()
@@ -276,18 +286,23 @@ class Home extends Component
     }
     public function showEarlyEmployees()
     {
+        $this->whoisinTitle='On Time';
         $this->showAllEarlyEmployees = true;
     }
     public function closeAllEarlyEmployees()
     {
+        $this->whoisinTitle='';
         $this->showAllEarlyEmployees = false;
     }
     public function openAbsentEmployees()
     {
+        $this->whoisinTitle='Not Yet In';
         $this->showAllAbsentEmployees = true;
+       
     }
     public function closeAllLateEmployees()
     {
+        $this->whoisinTitle='';
         $this->showAllLateEmployees = false;
     }
     public function render()
