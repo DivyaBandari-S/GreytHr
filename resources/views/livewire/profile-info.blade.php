@@ -122,7 +122,7 @@
                             <div style="font-size: 11px;  color: #778899; margin-left: 15px">
                                 Company E-mail
                             </div>
-                            <div style="margin-left: 15px; font-size: 12px;color:#000;">
+                            <div style="margin-left: 15px; font-size: 12px;color:#000;word-wrap: break-word;">
                                 @if ($employeeDetails->email)
                                 {{ $employeeDetails->email }}
                                 @else
@@ -135,7 +135,7 @@
                     <div class="row p-3 gx-0" style="border-radius: 5px;  width: 100%; background-color: white;margin-bottom: 20px;">
                         <div style="margin-top: 2%;margin-left:15px;margin-bottom:20px;color:#778899;font-weight:500;font-size:13px;">
                             PERSONAL</div>
-                        <div class="col">
+                        <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px;">
                                 Blood Group
                             </div>
@@ -183,7 +183,7 @@
                             </div>
 
                         </div>
-                        <div class="col">
+                        <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 Date Of Birth
                             </div>
@@ -216,7 +216,7 @@
 
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 Nationality
                             </div>
@@ -287,7 +287,7 @@
                     <div class="row p-3 gx-0" style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
                         <div style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px; margin-bottom: 10px;">
                             ADDRESS</div>
-                        <div class="col">
+                        <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 Permanent Address
                             </div>
@@ -311,7 +311,7 @@
                                 {{ ucwords(strtolower($employeeDetails->last_name)) }}
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 Present Address
                             </div>
@@ -338,7 +338,7 @@
 
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6 col-md-4">
                             <div style="font-size: 11px;  color: #778899; margin-left: 15px">
                                 Email
                             </div>
@@ -371,7 +371,7 @@
                     <div class="row p-3 gx-0" style="border-radius: 5px;  width: 100%; background-color: white; margin-bottom: 20px;">
                         <div style="margin-top: 2%;margin-left:15px;color:#778899;font-size:12px;font-weight:500;">
                             BANK ACCOUNT</div>
-                        <div class="col" style="margin-top: 5px;">
+                        <div class="col-6 col-md-4" style="margin-top: 5px;">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 Bank Name
                             </div>
@@ -395,7 +395,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px;">
                                 Bank Account Number
                             </div>
@@ -419,7 +419,7 @@
 
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 Bank Branch
                             </div>
@@ -437,7 +437,7 @@
                     <div class="row p-3 gx-0" style="border-radius: 5px;  width: 100%; background-color: white;margin-bottom: 20px;">
                         <div style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
                             PF AMOUNT</div>
-                        <div class="col">
+                        <div class="col-6">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 PF Number
                             </div>
@@ -450,7 +450,7 @@
 
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 UAN
                             </div>
@@ -467,12 +467,12 @@
                     <div class="row p-3 gx-0" style="border-radius: 5px;  width: 100%; background-color: white; margin-bottom: 20px;">
                         <div style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
                             OTHERS IDS</div>
-                        <div class="col">
+                        <div class="col-6">
                             <div style="margin-left: 15px; font-size: 12px">
                                 ___
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6">
                             <div style="color: red; margin-left: 15px; font-size: 12px">
                                 Unverified
                             </div>
@@ -848,7 +848,7 @@
                     <div class="row p-3 gx-0" style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
                         <div style="margin-top: 2%;margin-left:15px;font-size:13px;font-weight:500;color:#778899;margin-bottom: 10px;">
                             ACESS CARD DETAILS</div>
-                        <div class="col">
+                        <div class="col-6">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 Card No
                             </div>
@@ -867,7 +867,7 @@
                                 No Data Found
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-6">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
                                 Validity
                             </div>
