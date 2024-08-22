@@ -377,7 +377,7 @@
                         @endphp
 
                         <div class="row m-0">
-                            <div class="col-12l p-0">
+                            <div class="col-12 p-0">
                                 @foreach ($calendarData as $entry)
                                     @if (!empty($entry->festivals))
                                         <div>
@@ -397,7 +397,7 @@
                                         @endphp
                                     @endif
 
-                                    @if ($count >= 3)
+                                    @if ($count >= 2)
                                     @break
                                 @endif
                             @endforeach
