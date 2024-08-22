@@ -11,7 +11,18 @@
             max-height: 800px;
         }
 
+        .custom-scrollbar-for-right-side-container {
+            overflow-y: scroll;
+            overflow-x: hidden;
+            padding-right: 10px;
+            max-height: 800px;
+        }
         .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            margin-right: 15px;
+
+        }
+        .custom-scrollbar-for-right-side-container::-webkit-scrollbar {
             width: 5px;
             margin-right: 15px;
 
@@ -21,11 +32,17 @@
             background-color: #888;
             margin-left: 15px;
         }
+        .custom-scrollbar-for-right-side-container::-webkit-scrollbar-track {
+            background-color: #888;
+            margin-left: 15px;
+        }
 
         .custom-scrollbar::-webkit-scrollbar-track {
             background-color: #f1f1f1;
         }
-
+        .custom-scrollbar-for-right-side-container::-webkit-scrollbar-thumb {
+            background-color: #f1f1f1;
+        }
         .my-button-attendance-info {
             padding: 5px 10px;
             border: none;
@@ -286,13 +303,11 @@ width: 170px; */
         }
         .info-button
         {
-            background-color:rgb(2,17,79); 
-            border: 2px solid rgb(2,17,79); 
-            color: white; 
-            border-radius: 5px;
-            font-size:10px;
-            padding:2px;
-            
+            font-size:12px;
+            background-color:transparent;
+            color:#24a7f8;
+            border:none;
+            text-decoration:underline;
 
         }
 
@@ -1578,7 +1593,7 @@ color: #fff;
 
         <div class="row m-0 p-0">
             @if($defaultfaCalendar==1)
-            <div class="col-md-7 m-0 p-1 custom-scrollbar">
+            <div class="col-md-7 m-0 p-1 custom-scrollbar"style="height: 600px;">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="calendar-heading-container">
                         <button wire:click="beforeMonth" class="nav-btn">&lt; Prev</button>
@@ -1852,7 +1867,7 @@ color: #fff;
             @livewire('attendance-table')
 
             @endif
-            <div class="col-md-5">
+            <div class="col-md-5 custom-scrollbar-for-right-side-container"style="height: 600px;">
                 @if($defaultfaCalendar==1)
                 <div class="container1" style="background-color:white;">
                     <!-- Content goes here -->
@@ -1989,7 +2004,7 @@ color: #fff;
                                     <td>-</td>
                                     @if($swipeRecordExists==true)
                                     <td>
-                                        <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="checkDateInRegularisationEntries('{{$CurrentDate}}')">
+                                        <button type="button" class="info-button"wire:click="checkDateInRegularisationEntries('{{$CurrentDate}}')">
                                             Info
                                         </button>
                                         @if($showRegularisationDialog==true)
@@ -2131,7 +2146,7 @@ color: #fff;
                                        </td>
                                        <td>-</td>
  
-                                       <td><button class="info-button"wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
+                                       <td><button class="info-button" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
  
                                    </tr>
                                    @if (($index + 1) % 2 == 0)
@@ -2172,11 +2187,9 @@ color: #fff;
                                     @if($swiperecord)
                                     <div class="row m-0 mt-3">
 
-                                        @if ($data->isNotEmpty())
-                                              <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($data[0]->first_name)) }} {{ ucwords(strtolower($data[0]->last_name)) }}</span></div>
-                                        @else
-                                              <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($swiperecord->first_name)) }} {{ ucwords(strtolower($swiperecord->last_name)) }}</span></div>
-                                        @endif
+                                        
+                                              <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}</span></div>
+                                      
                                         <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br /><span style="color: #000000;">{{ $swiperecord->emp_id }}</span></div>
 
                                     </div>
