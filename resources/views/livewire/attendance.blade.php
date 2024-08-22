@@ -1384,6 +1384,7 @@ color: #fff;
         .attendance-period-header {
             font-weight: 500;
         }
+       
     </style>
     @php
     $flag=0;
@@ -1402,8 +1403,8 @@ color: #fff;
 
 
 
-        <div class="row m-0 d-flex justify-content-center" style="text-align: center;">
-            <div class="col-md-4">
+        <div class="row m-0 d-flex justify-content-center text-center">
+            <div class="col-12 col-md-4">
                 <div class="row m-0 topMsg-attendance-info d-flex align-items-center">
 
                     <div class="col-8 p-0">
@@ -1580,11 +1581,6 @@ color: #fff;
 
 
         @php
-
-        $presentCount = 0;
-        $offCount = 0;
-        $absentCount=0;
-        $holidayCount = 0;
         $Regularised=false;
         @endphp
 
@@ -1593,7 +1589,7 @@ color: #fff;
 
         <div class="row m-0 p-0">
             @if($defaultfaCalendar==1)
-            <div class="col-md-7 m-0 p-1 custom-scrollbar"style="height: 600px;">
+            <div class="col-12 col-md-7 m-0 p-1 calendar custom-scrollbar"style="height: 600px;">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="calendar-heading-container">
                         <button wire:click="beforeMonth" class="nav-btn">&lt; Prev</button>
@@ -1602,7 +1598,7 @@ color: #fff;
                     </div>
                 </div>
                 <!-- Calendar -->
-                <div>
+                <div class="table-responsive">
                     <table class="table-1 table-bordered">
                         <thead class="calender-header bg-white">
                             <tr>
@@ -1905,7 +1901,7 @@ color: #fff;
                     <div class="text-muted" style="margin-left:20px;font-weight: 400;font-size: 12px;">Processed On</div>
                     @endif
                     <div class="horizontal-line1-attendance-info"></div>
-                    <div style=" overflow-x: auto; max-width: 100%;">
+                    <div class="table-responsive"style=" overflow-x: auto; max-width: 100%;">
                         <table>
                             <thead>
                                 <tr>

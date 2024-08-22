@@ -4,28 +4,6 @@
             margin-right: 62px;
         }
 
-        .custom-scrollbar {
-            overflow-y: scroll;
-            overflow-x: hidden;
-            padding-right: 10px;
-            max-height: 600px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 5px;
-            margin-right: 15px;
-
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #888;
-            margin-left: 15px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background-color: #f1f1f1;
-        }
-
         .my-button-attendance-info {
             padding: 5px 10px;
             border: none;
