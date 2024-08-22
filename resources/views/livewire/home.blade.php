@@ -17,14 +17,14 @@
         <div class="row m-0 p-0 mb-3">
             <div class="col-md-6 mb-3">
                 <div class="row m-0" style="border-radius: 10px; background-color: #02114f;">
-                    <div class="col-6 p-0 ps-3 pt-4">
+                    <div class="col-7 p-0 ps-3 pt-4">
                         @if ($this->greetingText)
                             <p class="morning-city">{{ $greetingText }}</p>
                         @endif
                         <p class="morning-city">Welcome, {{ ucwords(strtolower($loginEmployee->first_name)) }} {{ ucwords(strtolower($loginEmployee->last_name)) }}</p>
                     </div>
 
-                    <div class="col-6 p-0">
+                    <div class="col-5 p-0">
                         <div class="morning-cardContainer w-100">
                             <div class="morning-card w-100">
 
