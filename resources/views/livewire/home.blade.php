@@ -1,7 +1,7 @@
 <div style="position:relative;">
     <div class="msg-container">
         @if ($showAlert)
-        <div id="alert-container" class="d-flex justify-content-center alert-container mb-3" wire:poll.10s="hideAlert"
+        <div id="alert-container" class="d-flex justify-content-center alert-container mb-3" wire:poll.1s="hideAlert"
             style="position: absolute; top: 3%; z-index: 10; width: 100%;">
             <!-- wire:poll.5s="hideAlert" -->
             <p class="alert alert-success" role="alert"
@@ -178,17 +178,17 @@
                                 <p id="current-time" style="margin: auto 0;"></p>
                             </div>
                             <script>
-                            function updateTime() {
-                                const currentTimeElement = document.getElementById('current-time');
-                                const now = new Date();
-                                const hours = String(now.getHours()).padStart(2, '0');
-                                const minutes = String(now.getMinutes()).padStart(2, '0');
-                                const seconds = String(now.getSeconds()).padStart(2, '0');
-                                const currentTime = `${hours} : ${minutes} : ${seconds}`;
-                                currentTimeElement.textContent = currentTime;
-                            }
-                            updateTime();
-                            setInterval(updateTime, 1000);
+                                function updateTime() {
+                                    const currentTimeElement = document.getElementById('current-time');
+                                    const now = new Date();
+                                    const hours = String(now.getHours()).padStart(2, '0');
+                                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                                    const currentTime = `${hours} : ${minutes} : ${seconds}`;
+                                    currentTimeElement.textContent = currentTime;
+                                }
+                                updateTime();
+                                setInterval(updateTime, 1000);
                             </script>
                             <div class="A"
                                 style="display: flex;flex-direction:row;justify-content:space-between; align-items:center;margin-top:2em">
@@ -215,12 +215,12 @@
 
             @if($ismanager)
             <div class="col-md-3 mb-4 ">
-            <div class="payslip-card" style="height: 195px;">
-                <p class="payslip-card-title">Review</p>
-                <!-- <p class="payslip-small-desc">
+                <div class="payslip-card" style="height: 195px;">
+                    <p class="payslip-card-title">Review</p>
+                    <!-- <p class="payslip-small-desc">
                     Submit your time sheet for this week.
                 </p> -->
-                @if(($this->count) > 0)
+                    @if(($this->count) > 0)
                     <div class="notify d-flex justify-content-between">
                         <p class="payslip-small-desc" style="font-size: 12px; font-weight: 500;">
                             {{$count}} <br>
@@ -242,28 +242,28 @@
                                                                         $firstName = $leaveRequest->employee->first_name;
                                                                         $lastName = $leaveRequest->employee->last_name;
                                                                         $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
-                                                                    ?> 
-                                <div class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center">
-                                    <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}"
-                                        data-toggle="tooltip" data-placement="top"
-                                        title="{{ $firstName }} {{ $lastName }}">
-                                        <span>{{ $initials }}</span>
-                                    </div>
-                                    <span class="leaveText">Leave</span>
-                                </div>
-
-                        <?php
-                    }
-                    ?>
-                        @endfor
-                        @if ($count > 3)
-                            <div class="payslip-small-desc remainContent d-flex flex-column align-items-center"
-                                wire:click="reviewLeaveAndAttendance">
-                                <span>+{{ $count - 3}}</span>
-                                <span class="remaining">More</span>
+                                                                    ?>
+                            <div class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center">
+                            <div class="thisCircle d-flex" style="border: 2px solid {{getRandomColor() }}"
+                                data-toggle="tooltip" data-placement="top"
+                                title="{{ $firstName }} {{ $lastName }}">
+                                <span>{{ $initials }}</span>
                             </div>
-                        @endif
+                            <span class="leaveText">Leave</span>
                     </div>
+
+                <?php
+                                                                    }
+                ?>
+                @endfor
+                @if ($count > 3)
+                <div class="payslip-small-desc remainContent d-flex flex-column align-items-center"
+                    wire:click="reviewLeaveAndAttendance">
+                    <span>+{{ $count - 3}}</span>
+                    <span class="remaining">More</span>
+                </div>
+                @endif
+                </div>
                 @else
                 <div class="d-flex flex-column justify-content-center align-items-center">
                     <p class="payslip-small-desc mb-2 homeText">
@@ -277,7 +277,7 @@
                     </div>
                 </a>
             </div>
-                
+
         </div>
         @if($showReviewLeaveAndAttendance)
         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
@@ -308,11 +308,11 @@
                                 <span style="display: block;font-size:10px;color:#778899;">Leave</span>
                         </div>
 
-                        <?php
+                    <?php
                                                                 }
                     ?>
-                        @endfor
-                        @endif
+                    @endfor
+                    @endif
                     </div>
                     <h6 style="color:#778899;font-size:14px;">Attendance Requests</h6>
                     <div class="d-flex flex-row">
@@ -333,10 +333,10 @@
                                 Regularisation</span>
                     </div>
 
-                    <?php
+                <?php
                                                                             }
                 ?>
-                    @endfor
+                @endfor
                 </div>
             </div>
             <div class="modal-footer">
@@ -596,16 +596,16 @@
                             <span>{{$initials}}</span>
                     </div>
 
-                    <?php
+                <?php
                                                                         }
                 ?>
-                    @endfor
-                    @if ($teamCount > 4)
-                    <div class="remainContent d-flex mt-3 flex-column align-items-center">
-                        <span>+{{ $teamCount - 4 }}</span>
-                        <p class="mb-0" style="margin-top:-5px;">More</p>
-                    </div>
-                    @endif
+                @endfor
+                @if ($teamCount > 4)
+                <div class="remainContent d-flex mt-3 flex-column align-items-center">
+                    <span>+{{ $teamCount - 4 }}</span>
+                    <p class="mb-0" style="margin-top:-5px;">More</p>
+                </div>
+                @endif
                 </div>
 
                 <div class="mt-4">
@@ -689,7 +689,8 @@
                     <p style="font-size:11px;margin-bottom:10px;">Gross Pay</p>
                 </div>
                 <p style="font-size:12px;">
-                    {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalAllowance(), 2) : '*********' }}</p>
+                    {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalAllowance(), 2) : '*********' }}
+                </p>
             </div>
             <div class="net-salary">
                 <div style="display:flex;gap:10px;">
@@ -775,85 +776,69 @@
     </div>
 </div>
 
-
-@php
-$employeeId = auth()->guard('emp')->user()->emp_id;
-$totalTasksAssignedBy = \App\Models\Task::with('emp')
-->where(function ($query) use ($employeeId) {
-$query->where('assignee', 'LIKE', "%($employeeId)%"); // Check if assignee contains employee ID
-})
-->select('emp_id')
-->get();
-$totalTasksCountAssignedBy = $totalTasksAssignedBy->count();
-
-$totalTasksAssignedTo = \App\Models\Task::with('emp')
-->where('emp_id', $employeeId)
-->select('emp_id')
-->get();
-$totalTasksCountAssignedTo = $totalTasksAssignedTo->count();
-$totalTasksCount = $totalTasksCountAssignedTo + $totalTasksCountAssignedBy ;
-// Fetch task records with emp_id
-$taskRecords = \App\Models\Task::with('emp')
-->where(function ($query) use ($employeeId) {
-$query->where('assignee', 'LIKE', "%($employeeId)%"); // Check if assignee contains employee ID
-})
-->whereDate('created_at', now()->toDateString()) // Filter tasks created today
-->select('emp_id')
-->get();
-
-// Extract unique emp_ids
-$empIds = $taskRecords->pluck('emp_id')->unique()->toArray();
-
-// Fetch employee details based on emp_ids
-$employeeDetails = \App\Models\EmployeeDetails::whereIn('emp_id', $empIds)->get();
-
-// Create a string to hold first and last names
-$employeeNames = $employeeDetails->map(function ($employee) {
-return $employee->first_name . ' ' . $employee->last_name;
-})->implode(', ');
-
-// Count the number of records
-$taskCount = $taskRecords->count();
-@endphp
 <div class="col-md-4 mb-4 ">
 
     <div class="payslip-card mb-3">
-        <p class="payslip-card-title">Track</p>
-        <!-- <p class="small-desc">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat
-        veritatis nobis saepe itaque rerum nostrum aliquid obcaecati odio
-        officia deleniti. Expedita iste et illum, quaerat pariatur consequatur
-        eum nihil itaque!
-      </p> -->
-        @if($totalTasksCount)
-        <p class="payslip-small-desc"> Total tasks: {{ $totalTasksCount }}</p>
-        @else
-        <p class="payslip-small-desc"> Total tasks: 0</p>
-        @endif
-        @php
-        $countAssignedByOpen = $totalTasksAssignedBy->where('status', 'Open')->count();
-        $countAssignedToOpen = $totalTasksAssignedTo->where('status', 'Open')->count();
-        @endphp
 
-        @if ($countAssignedByOpen > 0 && $countAssignedToOpen > 0)
-        pending tasks {{ $countAssignedByOpen + $countAssignedToOpen }}
-        @endif
-        @if($taskCount > 0)
-        <p data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Task Requests: {{ ucwords(strtolower($employeeNames)) }}" class="payslip-small-desc">New tasks:
-            {{ $taskCount }}</p>
-        @else
-
-        <p class="payslip-small-desc">All good! You've nothing new to track.</p>
-
-        @endif
+        <div>
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="payslip-card-title">Overview</h5>
+                <div>
+                    <select class="form-select custom-select-width"
+                        wire:change="$set('filterPeriod', $event.target.value)">
+                        <option value="this_month" selected>This month</option>
+                        <option value="last_month">Last month</option>
+                        <option value="this_year">This year</option>
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+                <div>
+                    @if ($totalTasksCount)
+                    <p class="track-text"> Total Tasks: <span
+                            class="track-count">{{ $totalTasksCount }}</span> </p>
+                    @else
+                    <p class="track-text"> Total Tasks: <span class="track-count">0</span></p>
+                    @endif
+                </div>
 
 
-        <div class="payslip-go-corner">
-            <div class="payslip-go-arrow">→</div>
+                {{-- @if ($countAssignedByOpen > 0 && $countAssignedToOpen > 0)
+                            pending tasks {{ $countAssignedByOpen + $countAssignedToOpen }}
+                @endif --}}
+                <div>
+                    @if ($taskCount > 0)
+                    <p data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="Task Requests: {{ ucwords(strtolower($employeeNames)) }}"
+                        class="track-text">New Tasks: <span
+                            class="track-count">{{ $taskCount }}</span></p>
+                    @endif
+                </div>
+
+                {{-- <p class="payslip-card-title">Task Overview</p> --}}
+            </div>
+
+            <div class="row text-center mt-3">
+                <div class="col-4">
+                    <h3 class="text-primary mb-1 track-text">{{ $TaskAssignedToCount }}</h3>
+                    <p class="mb-0 track-text">Tasks Assigned</p>
+                </div>
+                <div class="col-4">
+                    <h3 class="text-success mb-1 track-text">{{ $TasksCompletedCount }}</h3>
+                    <p class="mb-0 track-text">Tasks Completed</p>
+                </div>
+                <div class="col-4">
+                    <h3 class="text-warning mb-1 track-text">{{ $TasksInProgressCount }}</h3>
+                    <p class="mb-0 track-text">Tasks In Progress</p>
+                </div>
+            </div>
         </div>
+        <a href="/tasks">
+            <div class="payslip-go-corner">
+                <div class="payslip-go-arrow">→</div>
+            </div>
+        </a>
     </div>
-
     <div class="payslip-card mb-3">
         <p class="payslip-card-title">IT Declaration</p>
         <p class="payslip-small-desc">
@@ -900,9 +885,11 @@ $taskCount = $taskRecords->count();
                     @foreach ($swipeDetails as $swipe)
                     <tr style="border:1px solid #ccc;">
                         <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">
-                            {{ $swipe->swipe_time }}</td>
+                            {{ $swipe->swipe_time }}
+                        </td>
                         <td style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">
-                            {{ $swipe->in_or_out }}</td>
+                            {{ $swipe->in_or_out }}
+                        </td>
                     </tr>
                     @endforeach
                     @else
@@ -924,79 +911,79 @@ $taskCount = $taskRecords->count();
 
 </div>
 <script>
-// Function to check if an element is in the viewport
-function isElementInViewport(el) {
-    var rect = el.getBoundingClientRect();
-    return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-}
+    // Function to check if an element is in the viewport
+    function isElementInViewport(el) {
+        var rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
 
-// Function to check for elements to fade in
-function checkFadeIn() {
-    // alert("scroll");
-    const fadeInSection = document.querySelectorAll('.');
-    fadeInSection.forEach((element) => {
-        if (isElementInViewport(element)) {
-            element.classList.add('fade-in');
-        }
+    // Function to check for elements to fade in
+    function checkFadeIn() {
+        // alert("scroll");
+        const fadeInSection = document.querySelectorAll('.');
+        fadeInSection.forEach((element) => {
+            if (isElementInViewport(element)) {
+                element.classList.add('fade-in');
+            }
+        });
+    }
+
+    // Initial check on page load
+    window.addEventListener('load', checkFadeIn);
+    var combinedData = {
+        datasets: [{
+                data: [{
+                        {
+                            !empty($salaries) ? $salaries - > calculateTotalAllowance() : 0
+                        }
+                    },
+                    2, // Placeholder value for the second dataset
+                ],
+                backgroundColor: [
+                    '#000000', // Color for Gross Pay
+                ],
+            },
+            {
+                data: [{
+                        {
+                            !empty($salaries) && method_exists($salaries, 'calculateTotalDeductions') ?
+                                $salaries - > calculateTotalDeductions() : 0
+                        }
+                    },
+                    {
+                        {
+                            !empty($salaries) && method_exists($salaries, 'calculateTotalAllowance') ?
+                                $salaries - > calculateTotalAllowance() - $salaries - >
+                                calculateTotalDeductions() : 0
+                        }
+                    },
+                ],
+                backgroundColor: [
+                    '#B9E3C6', // Color for Deductions
+                    '#1C9372', // Color for Net Pay
+                ],
+            },
+        ],
+    };
+
+    var outerCtx = document.getElementById('combinedPieChart').getContext('2d');
+
+    var combinedPieChart = new Chart(outerCtx, {
+        type: 'doughnut',
+        data: combinedData,
+        options: {
+            cutout: '60%', // Adjust the cutout to control the size of the outer circle
+            legend: {
+                display: false,
+            },
+            tooltips: {
+                enabled: false,
+            },
+        },
     });
-}
-
-// Initial check on page load
-window.addEventListener('load', checkFadeIn);
-var combinedData = {
-    datasets: [{
-            data: [{
-                    {
-                        !empty($salaries) ? $salaries - > calculateTotalAllowance() : 0
-                    }
-                },
-                2, // Placeholder value for the second dataset
-            ],
-            backgroundColor: [
-                '#000000', // Color for Gross Pay
-            ],
-        },
-        {
-            data: [{
-                    {
-                        !empty($salaries) && method_exists($salaries, 'calculateTotalDeductions') ?
-                            $salaries - > calculateTotalDeductions() : 0
-                    }
-                },
-                {
-                    {
-                        !empty($salaries) && method_exists($salaries, 'calculateTotalAllowance') ?
-                            $salaries - > calculateTotalAllowance() - $salaries - >
-                            calculateTotalDeductions() : 0
-                    }
-                },
-            ],
-            backgroundColor: [
-                '#B9E3C6', // Color for Deductions
-                '#1C9372', // Color for Net Pay
-            ],
-        },
-    ],
-};
-
-var outerCtx = document.getElementById('combinedPieChart').getContext('2d');
-
-var combinedPieChart = new Chart(outerCtx, {
-    type: 'doughnut',
-    data: combinedData,
-    options: {
-        cutout: '60%', // Adjust the cutout to control the size of the outer circle
-        legend: {
-            display: false,
-        },
-        tooltips: {
-            enabled: false,
-        },
-    },
-});
 </script>
