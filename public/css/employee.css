@@ -640,6 +640,9 @@ main .btn-send:hover {
 /* CONTENT */
 
 @media screen and (max-width: 768px) {
+	.brandLogoDiv div img {
+		display: none
+	}
 	#content {
 		position: relative;
 		width: calc(100% - 60px);

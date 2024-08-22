@@ -108,7 +108,7 @@
 
     <div class="row m-0 p-0">
 
-        <div class="sidenav col-md-3 col-lg-2" style="min-height: 30rem;">
+        <div class="sidenav col-md-3 col-lg-2">
             <div>
                 <ul class="nav flex-column side-page-nav">
                     <label class="emp-side-page-nav-item-group">LEAVE</label>
@@ -380,7 +380,6 @@
 
 
             @else
-
             <div class="row p-0 m-0 mt-3" style="display:flex; justify-content: end;">
 
                 <!-- <div class="col-3 emp-input-with-icon">
@@ -396,9 +395,7 @@
                         <button wire:click="searchPendingLeave" id="searchButton" style="border:none;outline:none;background:#fff;border-radius:5px;padding:1px 10px;"><i class="fas fa-search" style="width:7px;height:7px;"></i></button>
                     </div>
                 </div>
-
             </div>
-
 
             @php
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -603,17 +600,16 @@
             </div>
             @else
             <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
-                <img src="/images/pending.png" alt="Pending Image" style="width:55%; margin:0 auto;">
+                <img src="/images/pending.png" alt="Pending Image" style="width:50%; margin:0 auto;">
                 <p style="color:#969ea9; font-size:12px; font-weight:400; ">Hey, you have no leave records to view
                 </p>
             </div>
             @endif
             <!-- if loginid is a normal employee they can view their leave history -->
             @else
-            <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
-                <img src="/images/pending.png" alt="Pending Image" style="width:55%; margin:0 auto;">
-                <p style="color:#969ea9; font-size:12px; font-weight:400; ">Hey, you have no leave records to view
-                </p>
+            <div class="leave-pending">
+                <img src="/images/pending.png" alt="Pending Image" style="width:50%; margin:0 auto;">
+                <p style="color:#969ea9; font-size:12px; font-weight:400; ">There are no records of any leave transaction to Review</p>
             </div>
 
             @endif

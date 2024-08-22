@@ -86,8 +86,11 @@
                             <span class="normalTextValue">Number of Days :</span>
                             @if($showNumberOfDays)
                             <span id="numberOfDays" class="sickLeaveBalance">
-                                <!-- Display the calculated number of days -->
+                                @if($from_date && $to_date && $from_session && $to_session)
                                 {{ $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session) }}
+                                @else
+                                0
+                                @endif
                             </span>
                             <!-- Add a condition to check if the number of days exceeds the leave balance -->
                             @if(!empty($leaveBalances))
@@ -212,7 +215,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                @if($showSessionDropdown)
+                    @if($showSessionDropdown)
                     <div class="form-group ">
                         <label for="to_session">Session</label> <br>
                         <div class="custom-select-wrapper">
@@ -246,14 +249,24 @@
                 </div>
                 <div class="reporting mb-2">
                     @if($selectedManagerDetails)
-                    @if($selectedManagerDetails->image)
+                    @if($selectedManagerDetails->image && $selectedManagerDetails->image !=='null')
                     <div class="employee-profile-image-container">
                         <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedManagerDetails->image)}}" style="border-radius:50%;">
+                    </div>
+                    @else
+                    @if($selectedManagerDetails->gender=='Female')
+                    <div class="employee-profile-image-container">
+                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                    </div>
+                    @elseif($selectedManagerDetails->gender=='Male')
+                    <div class="employee-profile-image-container">
+                        <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
                     @else
                     <div class="employee-profile-image-container">
                         <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
+                    @endif
                     @endif
                     <div class="center p-0 m-0">
                         <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($selectedManagerDetails->first_name)) }} {{ ucwords(strtolower($selectedManagerDetails->last_name)) }}</p>
@@ -315,14 +328,24 @@
                         <div class="d-flex gap-4 align-items-center"
                             style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif"
                             wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
-                            @if($employee['image'])
+                            @if($employee['image'] && $employee['image'] !== 'null' )
                             <div class="employee-profile-image-container">
                                 <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius:50%;">
+                            </div>
+                            @else
+                            @if($employee['gender'] == 'Female')
+                            <div class="employee-profile-image-container">
+                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                            </div>
+                            @elseif($employee['gender'] == 'Male')
+                            <div class="employee-profile-image-container">
+                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
                             </div>
                             @else
                             <div class="employee-profile-image-container">
                                 <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
                             </div>
+                            @endif
                             @endif
                             <div class="center d-flex flex-column mt-2 mb-2">
                                 <span class="ellipsis mb-0">{{ $employee['full_name'] }}</span>

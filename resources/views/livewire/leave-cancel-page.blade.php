@@ -1,27 +1,14 @@
 <div>
     @if (session()->has('message'))
-    <div id="successMessage" class="alert alert-success">
+    <div id="successMessage" class="alert alert-success text-align-center" wire:poll.5s="hideAlert">
         {{ session('message') }}
     </div>
     @elseif (session()->has('error'))
-    <div id="errorMessage" class="alert alert-danger">
+    <div id="errorMessage" class="alert alert-danger text-align-center" wire:poll.5s="hideAlert">
         {{ session('error') }}
     </div>
     @endif
-    <script>
-        // Auto dismiss after 5 seconds
-        setTimeout(function() {
-            const successMessage = document.getElementById('successMessage');
-            const errorMessage = document.getElementById('errorMessage');
 
-            if (successMessage) {
-                successMessage.style.display = 'none';
-            }
-            if (errorMessage) {
-                errorMessage.style.display = 'none';
-            }
-        }, 5000); // 5000 milliseconds = 5 seconds
-    </script>
     <div class="applyContainer">
         @if($LeaveShowinfoMessage)
         <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
@@ -273,13 +260,13 @@
                     @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group mt-3">
-                    <label for="reason">Reason for Leave</label>
-                    <textarea id="reason" class="form-control placeholder-small" wire:model="reason" id="reason" name="reason" placeholder="Enter Reason" rows="4"></textarea>
-                    @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
+                    <label for="leave_cancel_reason">Reason for Leave Cancel</label>
+                    <textarea id="leave_cancel_reason" class="form-control placeholder-small" wire:model="leave_cancel_reason"  name="leave_cancel_reason" placeholder="Enter Reason" rows="4"></textarea>
+                    @error('leave_cancel_reason') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="cancelButtons d-flex align-items-center gap-2 justify-content-center mt-4">
                     <button type="submit" class="submit-btn">Submit</button>
-                    <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
+                    <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);" wire:click="cancel">Cancel</button>
                 </div>
             </div>
         </form>

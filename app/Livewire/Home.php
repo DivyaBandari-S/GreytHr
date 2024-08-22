@@ -40,6 +40,12 @@ class Home extends Component
     public $signIn = true;
     public $swipeDetails;
     public $calendarData;
+    public $TaskAssignedToCount;
+    public $TasksCompletedCount;
+    public $TasksInProgressCount;
+    public $totalTasksCount;
+    public $taskCount;
+    public $employeeNames;
     public $employeeDetails;
     public $employee;
     public $salaries;
@@ -199,6 +205,10 @@ class Home extends Component
     public function hideMessage()
     {
         $this->showMessage = false;
+    }
+    public function hideAlert()
+    {
+        $this->showAlert = false;
     }
 
     public function openLateEmployees()
@@ -583,7 +593,7 @@ class Home extends Component
             $this->grossPay = $sal->calculateTotalAllowance();
             $this->deductions = $sal->calculateTotalDeductions();
             $this->netPay = $this->grossPay - $this->deductions;
-
+            $this->calculateTaskData();
 
             // Pass the data to the view and return the view instance
             return view('livewire.home', [
@@ -606,7 +616,14 @@ class Home extends Component
                 'LateSwipes' => $swipes_late,
                 'CountLateSwipes' => $swipes_late1,
                 'swipeDataOfEmployee' => $this->swipeDataOfEmployee,
+               'TaskAssignedToCount' => $this->TaskAssignedToCount,
+        'TasksCompletedCount' => $this->TasksCompletedCount,
+        'TasksInProgressCount' => $this->TasksInProgressCount,
+        'totalTasksCount' => $this->totalTasksCount,
+        'taskCount' => $this->taskCount,
+        'employeeNames' => $this->employeeNames,
             ]);
+           
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
             Log::error('Database Error: ' . $e->getMessage());
@@ -617,4 +634,99 @@ class Home extends Component
             session()->flash('error', 'An unexpected error occurred. Please try again later.');
         }
     }
+    public $filterPeriod ='this_month';
+    public function getStartDate()
+{
+    switch ($this->filterPeriod) {
+        case 'last_month':
+            return now()->subMonth()->startOfMonth();
+        case 'this_year':
+            return now()->startOfYear();
+        default:
+            return now()->startOfMonth();
+    }
+}
+public function getEndDate()
+{
+    switch ($this->filterPeriod) {
+        case 'last_month':
+            return now()->subMonth()->endOfMonth();
+        case 'this_year':
+            return now()->endOfYear();
+        default:
+            return now()->endOfMonth();
+    }
+}
+public function updatedFilterPeriod($value)
+{
+ 
+    $this->calculateTaskData();
+}
+public function calculateTaskData()
+{
+    $employeeId = auth()->guard('emp')->user()->emp_id;
+
+    $startDate = $this->getStartDate();
+    $endDate = $this->getEndDate();
+
+    $totalTasksAssignedBy = \App\Models\Task::with('emp')
+        ->where(function ($query) use ($employeeId) {
+            $query->where('assignee', 'LIKE', "%($employeeId)%");
+        })
+        ->select('emp_id')
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->get();
+
+    $totalTasksCountAssignedBy = $totalTasksAssignedBy->count();
+
+    $totalTasksAssignedTo = \App\Models\Task::with('emp')
+        ->where('emp_id', $employeeId)
+        ->where(function ($query) use ($employeeId) {
+            $query->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) != ?", [$employeeId])
+                ->orWhere('assignee', 'NOT LIKE', "%#($employeeId)%");
+        })
+        ->select('emp_id')
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->get();
+
+    $tasksSummary = \App\Models\Task::with('emp')
+        ->selectRaw("
+            COUNT(*) AS total_tasks_assigned_to,
+            COALESCE(SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END), 0) AS tasks_completed_count,
+            COALESCE(SUM(CASE WHEN status = 'Open' THEN 1 ELSE 0 END), 0) AS tasks_in_progress_count
+        ")
+        ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) = ?", [$employeeId])
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->first();
+
+    $this->TaskAssignedToCount = $tasksSummary->total_tasks_assigned_to;
+    $this->TasksCompletedCount = $tasksSummary->tasks_completed_count;
+    $this->TasksInProgressCount = $tasksSummary->tasks_in_progress_count;
+
+    $totalTasksCountAssignedTo = $totalTasksAssignedTo->count();
+    $this->totalTasksCount = $totalTasksCountAssignedTo + $totalTasksCountAssignedBy;
+
+    $taskRecords = \App\Models\Task::with('emp')
+        ->where(function ($query) use ($employeeId) {
+            $query->where('assignee', 'LIKE', "%($employeeId)%");
+        })
+        ->whereDate('created_at', now()->toDateString())
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->select('emp_id')
+        ->get();
+
+    $empIds = $taskRecords->pluck('emp_id')->unique()->toArray();
+
+    $employeeDetails = \App\Models\EmployeeDetails::whereIn('emp_id', $empIds)->get();
+
+    $this->employeeNames = $employeeDetails
+        ->map(function ($employee) {
+            return $employee->first_name . ' ' . $employee->last_name;
+        })
+        ->implode(', ');
+
+    $this->taskCount = $taskRecords->count();
+}
+
+
 }
