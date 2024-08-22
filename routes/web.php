@@ -284,7 +284,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     //Helpdesk module
 
-    Route::get('/HelpDesk', HelpDesk::class)->name('helpdesk');
+    Route::get('/HelpDesk', HelpDesk::class)->name('HelpDesk');
 
     Route::get('/catalog', Catalog::class)->name('catalog');
 
@@ -367,6 +367,10 @@ Route::get('/your-download-route', function () {
 Route::get('/downloadform', function () {
     return view('downloadform');
 });
+Route::get('/chat-box', function () {
+    return view('chat-box');
+});
+
 
 Route::get('/attune-reports', function () {
     return view('mail-content_view');

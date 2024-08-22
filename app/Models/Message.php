@@ -13,6 +13,8 @@ class Message extends Model
     protected $fillable=[
         'body',
         'file_path',
+        'file_name',
+        'mime_type',
         'sender_id',
         'receiver_id',
         'chating_id',
@@ -45,7 +47,7 @@ class Message extends Model
 
     public function getImageUrlAttribute()
     {
-        return 'data:image/jpeg;base64,' . base64_encode($this->attributes['image']);
+        return 'data:image/jpeg;base64,' . base64_encode($this->attributes['file_path']);
     }
     public function employeeDetails()
 {

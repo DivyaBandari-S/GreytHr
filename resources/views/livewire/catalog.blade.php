@@ -255,7 +255,7 @@
                                                         </div>
                                                     </div>
                                                     <hr style="border: 1px solid #ccc;margin: 10px 0;">
-                                                    <form wire:submit.prevent="submit" enctype="multipart/form-data">
+                                                    <form wire:submit.prevent="submit" >
 
 
                                                         <div class="form-group mt-2" >
