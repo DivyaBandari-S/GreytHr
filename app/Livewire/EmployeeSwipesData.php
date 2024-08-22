@@ -191,6 +191,11 @@ class EmployeeSwipesData extends Component
         $this->searching=1;
        
     }
+    public function checkDates()
+    {
+        $this->startDate=$this->startDate;
+        $this->endDate=$this->endDate;
+    }
     public function render()
 {
     try {
