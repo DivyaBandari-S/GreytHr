@@ -11,6 +11,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 // use Hashids;
 use Vinkla\Hashids\Facades\Hashids;
 class ChatBox extends Component
@@ -194,7 +195,7 @@ class ChatBox extends Component
         // Store the file as binary data if provided
         if ($this->file_path) {
             $fileContent = file_get_contents($this->file_path->getRealPath());
-            
+
             if ($fileContent === false) {
                 Log::error('Failed to read the uploaded file.', [
                     'file_path' => $this->file_path->getRealPath(),
@@ -202,7 +203,7 @@ class ChatBox extends Component
                 session()->flash('error', 'Failed to read the uploaded file.');
                 return;
             }
-    
+
             // Check if the file content is too large
             if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
                 session()->flash('error', 'File size exceeds the allowed limit.');
