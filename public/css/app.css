@@ -959,6 +959,24 @@ button.close-button {
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
+.content-who-is-in
+{
+    display:flex; 
+    flex-direction:row;
+    justify-content:space-between;
+    padding:0; 
+    border-top:1px solid #52afe9;
+}
+@media (max-width: 1185px) {
+    .content-who-is-in {
+        display:flex; 
+        flex-direction:column;
+        justify-content:space-between;
+        padding:0; 
+        border-top:1px solid #52afe9;
+        width: 100%;
+    }
+}
 .cancel-btn:hover
         {
             background-color: rgb(2, 17, 79);
@@ -1417,11 +1435,52 @@ input[type="date"]::before {
 }
 /*Ending of submodule:who is in(Pranita Priyadarshi)*/
 /*Starting of submodule:employee swipes(Pranita Priyadarshi)*/
+
 .container-employee-swipes {
     display: flex;
     justify-content: space-between;
 }
-
+.employee-swipes-fields {
+    display:flex; 
+    flex-direction:row;
+   
+ 
+}
+@media screen and (max-width: 600px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+}
+@media screen and (max-width: 600px) {
+    .dropdown-container1-employee-swipes-for-download-and-filter
+    {
+        display: flex;
+        flex-direction: row;
+    }
+}
+@media screen and (max-width: 800px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+}
+@media screen and (max-width: 800px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+}
+@media screen and (max-width:800px) {
+    .button2{
+       
+    border: 1px solid #ddd;
+    height: 30px;
+    background-color: #fff;
+    color: #666;
+    border-radius:2px;
+    }
+}
 .container-employee-swipes-right {
     background-color: #fff;
     height: 100vh;
@@ -1548,6 +1607,7 @@ td {
     height: 30px;
     background-color: #fff;
     color: #666;
+    border-radius:2px;
 }
 
 .dropdown-btn1::after {
