@@ -25,6 +25,7 @@ class LeaveCancelPage extends Component
     public $loginEmpManagerId;
     public $loginEmpManager;
     public $loginEmpManagerProfile;
+    public $leave_cancel_reason;
     public $managerFullName;
     public $employeeDetails = [];
     public $leaveRequestDetails;
@@ -194,13 +195,22 @@ class LeaveCancelPage extends Component
     public function markAsLeaveCancel()
     {
         try {
+            // Check if a leave request ID is set
+            if (empty($this->selectedLeaveRequestId)) {
+                throw new \Exception('No leave request selected.');
+            }
+
             // Find the leave request by ID
             $leaveRequest = LeaveRequest::findOrFail($this->selectedLeaveRequestId);
-            // Update the leave request status and category
-            $leaveRequest->category_type = 'Leave Cancel';
-            $leaveRequest->status = 'approved';
-            $leaveRequest->cancel_status = 'Pending Leave Cancel';
-            $leaveRequest->save();
+
+            // Update all fields, including the new leave_cancel_reason
+            $leaveRequest->update([
+                'category_type' => 'Leave Cancel',
+                'status' => 'approved',
+                'cancel_status' => 'Pending Leave Cancel',
+                'leave_cancel_reason' => $this->leave_cancel_reason, // Add this line
+            ]);
+
             session()->flash('message', 'Applied request for leave cancel successfully.');
             $this->reset(); // Reset component state
         } catch (\Exception $e) {
@@ -208,6 +218,7 @@ class LeaveCancelPage extends Component
             Log::error('Error marking leave request as cancel: ' . $e->getMessage());
         }
     }
+
 
     public function toggleInfo()
     {
@@ -306,13 +317,7 @@ class LeaveCancelPage extends Component
         if ($leaveRequest) {
             $this->selectedLeaveRequestId = $leaveRequestId;
             $this->leaveRequestDetails = $leaveRequest;
-
-            // Decode JSON data from 'applying_to'
-            $this->applyingToDetails = json_decode($leaveRequest->applying_to, true);
-
-            // Extract manager details
-            $this->managerDetails = !empty($this->applyingToDetails[0]) ? $this->applyingToDetails[0] : null;
-
+            $this->markAsLeaveCancel();
             $this->showApplyingToContainer = false;
             $this->show_reporting = true;
             $this->showApplyingTo = false;

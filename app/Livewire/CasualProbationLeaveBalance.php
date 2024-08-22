@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class CasualProbationLeaveBalance extends Component
 {
-    public $leaveData;
+    public $leaveData, $year, $currentYear, $leaveGrantedData;
     public $employeeLeaveBalances;
     public $employeeleaveavlid;
     public $totalSickDays = 0;
@@ -63,17 +63,15 @@ class CasualProbationLeaveBalance extends Component
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
                 }
-            }elseif(self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)){
+            } elseif (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 1; // Add half a day
                 }
-            }
-            else {
+            } else {
                 $totalDays += (self::getSessionNumber($toSession) - self::getSessionNumber($fromSession) + 1) * 0.5;
             }
 
             return (float) $totalDays;
-
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
@@ -99,25 +97,44 @@ class CasualProbationLeaveBalance extends Component
             $this->addError('session', 'An error occurred. Please try again later.');
         }
     }
+    public function changeYear($year)
+    {
+
+        return redirect()->to("/casualprobationleavebalance?year={$year}");
+    }
+
     public function render()
     {
-        try{
-            $this->yearDropDown();
+        try {
+
+            $this->currentYear = date('Y');
+            $this->year = request()->query('year') ?? date('Y');
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            
-            $this->employeeLeaveBalances= EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->where('leave_type', 'Casual Leave Probation')
-            ->get();
-            
-            // Now $employeeLeaveBalances contains all the rows from employee_leave_balances 
+            $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+                ->whereYear('to_date', '>=', $this->year)
+                ->get();
+
+
+            $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+                ->whereYear('to_date', '>=', $this->year)
+                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Casual Leave Probation\"')) AS casual_leave_probation")
+                ->pluck('casual_leave_probation')
+                ->first();
+
+
+            // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
             // where emp_id matches and leave_type is "Sick Leave"
             $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_type', 'Casual Leave Probation')
-            ->where('status', 'approved')
-            ->get();
+                ->where('leave_type', 'Casual Leave Probation')
+                ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+                ->whereYear('to_date', '>=', $this->year)
+                ->where('status', 'approved')
+                ->get();
 
-            
             foreach ($this->employeeleaveavlid as $leaveRequest) {
                 //$leaveType = $leaveRequest->leave_type;
                 $days = self::calculateNumberOfDays(
@@ -126,13 +143,20 @@ class CasualProbationLeaveBalance extends Component
                     $leaveRequest->to_date,
                     $leaveRequest->to_session
                 );
+
                 $this->totalSickDays += intval($days);
+
                 // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
             }
-            foreach ($this->employeeLeaveBalances as $employeeLeaveBalance) {
-                $this->Availablebalance = $employeeLeaveBalance->leave_balance - $this->totalSickDays;
-                // Do something with $this->Availablebalance
-            }
+            // foreach ($this->employeeLeaveBalances as $employeeLeaveBalance) {
+            //     $this->Availablebalance = $employeeLeaveBalance->leave_balance - $this->totalSickDays;
+
+            // }
+
+            $this->Availablebalance = $this->employeeLeaveBalances - $this->totalSickDays;
+
+
+
 
 
             $currentMonth = date('n');
@@ -142,9 +166,11 @@ class CasualProbationLeaveBalance extends Component
             $grantedLeavesByMonth = [];
             $availedLeavesByMonth = [];
             $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('leave_type', 'Casual Leave Probation')
-                ->whereYear('from_date', $currentYear)
-                ->sum('leave_balance');
+            ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+            ->whereYear('to_date', '>=', $this->year)
+            ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Casual Leave Probation\"')) AS casual_leave_prob")
+            ->pluck('casual_leave_prob')
+            ->first();
 
             for ($month = $startingMonth; $month <= $currentMonth; $month++) {
                 // Fetch availed leaves count for this month
@@ -154,7 +180,7 @@ class CasualProbationLeaveBalance extends Component
                     ->whereYear('from_date', $currentYear)
                     ->whereMonth('from_date', $month)
                     ->count();
-                
+
                 // Adjust granted leaves count by subtracting availed leaves count
                 $grantedLeavesCount -= $availedLeavesCount;
 
@@ -165,6 +191,7 @@ class CasualProbationLeaveBalance extends Component
                 $grantedLeavesByMonth[] = $grantedLeavesCount;
                 $availedLeavesByMonth[] = $availedLeavesCount;
             }
+
             $chartData = [
                 'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 'datasets' => [
@@ -185,28 +212,28 @@ class CasualProbationLeaveBalance extends Component
                 ]
             ];
 
-                $chartOptions = [
-                    'scales' => [
-                        'yAxes' => [[
-                            'ticks' => [
-                                'beginAtZero' => true,
-                                'min' => 0,
-                                'max' => 10,
-                                'stepSize' => 2 // Adjust the step size to show values at intervals of 2
-                            ],
-                            'gridLines' => [
-                                'display' => false // Remove grid lines from the y-axis
-                            ]
-                        ]],
-                        'xAxes' => [[
-                            'gridLines' => [
-                                'display' => false // Remove grid lines from the x-axis
-                            ]
-                        ]]
+            $chartOptions = [
+                'scales' => [
+                    'y' => [
+                        'ticks' => [
+                            'beginAtZero' => true,
+                            'min' => 0,
+                            'max' => 10,
+                            'stepSize' => 2 // Adjust the step size to show values at intervals of 2
+                        ],
+                        'grid' => [
+                            'display' => false // Remove grid lines from the y-axis
+                        ]
                     ],
-                    'maintainAspectRatio' => false, // Allow chart to be resized
-                    'responsive' => true // Make chart responsive
-                ];
+                    'x' => [
+                        'grid' => [
+                            'display' => false // Remove grid lines from the x-axis
+                        ]
+                    ]
+                ],
+                'maintainAspectRatio' => false, // Allow chart to be resized
+                'responsive' => true // Make chart responsive
+            ];
             return view('livewire.casual-probation-leave-balance', [
                 'employeeLeaveBalances' => $this->employeeLeaveBalances,
                 'employeeleaveavlid' => $this->employeeleaveavlid,
@@ -215,8 +242,7 @@ class CasualProbationLeaveBalance extends Component
                 'chartData' => $chartData,
                 'chartOptions' => $chartOptions // Pass chart options to the view
             ]);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Error in Casual Leave Probation Balance render method: ' . $e->getMessage());
             return view('livewire.casual-probation-leave-balance');
         }

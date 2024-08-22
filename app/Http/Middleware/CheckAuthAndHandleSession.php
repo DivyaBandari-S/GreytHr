@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class CheckAuthAndHandleSession
 {
-    protected $timeout = 15 * 1; // 15 minutes timeout in seconds
+    protected $timeout = 15 * 60;   // 15 minutes timeout in seconds
 
     /**
      * Handle an incoming request.
