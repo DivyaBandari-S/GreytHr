@@ -21,6 +21,8 @@ class LeaveCancelPage extends Component
     public $searchTerm = '';
     public $filter = '';
     public $applying_to;
+    public $selectedCcTo = [];
+    public $cc_to;
     public $selectedYear;
     public $loginEmpManagerId;
     public $loginEmpManager;
@@ -28,6 +30,7 @@ class LeaveCancelPage extends Component
     public $leave_cancel_reason;
     public $managerFullName;
     public $employeeDetails = [];
+    public $selectedPeople = [];
     public $leaveRequestDetails;
     public $applyingToDetails = [];
     public $managerDetails;
@@ -40,6 +43,7 @@ class LeaveCancelPage extends Component
     public $showCasualLeaveProbation;
     public $empManagerDetails, $selectedManagerDetails;
     public $showApplyingTo = false;
+    public $showAlert = false;
     protected $rules = [
         'leave_type' => 'required',
         'from_date' => 'required|date',
@@ -175,22 +179,87 @@ class LeaveCancelPage extends Component
 
     public function toggleManager($empId)
     {
-        if (!in_array($empId, $this->selectedManager)) {
-            $this->selectedManager = [$empId];
+        if ($empId) {
             $this->fetchManagerDetails($empId);
+        } else {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+            if ($applying_to) {
+                $managerId = $applying_to->manager_id;
 
-            // Update the database with the selected manager ID for the particular leave request
-            // Assuming you have a leave request ID and a LeaveRequest model
-            $leaveRequest = LeaveRequest::find($this->leaveRequestId); // Make sure $this->leaveRequestId is set
-            if ($leaveRequest) {
-                $leaveRequest->manager_id = $empId;
-                $leaveRequest->save();
+                // Fetch the logged-in employee's manager details
+                $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+                if ($managerDetails) {
+                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                    $this->loginEmpManager = $fullName;
+                    $this->empManagerDetails = $managerDetails;
+                }
             }
+            $this->selectedManager = [$empId];
+            $this->showApplyingToContainer = false;
         }
-
-        $this->showApplyingToContainer = false;
+    }
+    // Method to fetch manager details
+    private function fetchManagerDetails($empId)
+    {
+        $employeeDetails = EmployeeDetails::where('emp_id', $empId)->first();
+        if ($employeeDetails) {
+            $fullName = ucfirst(strtolower($employeeDetails->first_name)) . ' ' . ucfirst(strtolower($employeeDetails->last_name));
+            $this->loginEmpManager = $fullName;
+            $this->selectedManagerDetails = $employeeDetails;
+        } else {
+            $this->resetManagerDetails();
+        }
     }
 
+    private function resetManagerDetails()
+    {
+        $this->empManagerDetails = null;
+    }
+
+    public function toggleSelection($empId)
+    {
+        if (isset($this->selectedPeople[$empId])) {
+            unset($this->selectedPeople[$empId]);
+        } else {
+            $this->selectedPeople[$empId] = true;
+        }
+        $this->searchCCRecipients();
+        $this->fetchEmployeeDetails();
+    }
+    public function handleCheckboxChange($empId)
+    {
+        if (isset($this->selectedPeople[$empId])) {
+            // If the checkbox is unchecked, remove from CC
+            $this->removeFromCcTo($empId);
+        } else {
+            // If the checkbox is checked, add to CC
+            $this->selectedPeople[$empId] = true;
+        }
+    }
+    public function removeFromCcTo($empId)
+    {
+        // Remove the employee from selectedCcTo array
+        $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($empId) {
+            return $recipient['emp_id'] != $empId;
+        }));
+
+        // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
+        $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
+
+        // Toggle selection state in selectedPeople
+        unset($this->selectedPeople[$empId]);
+        $this->showCcRecipents = true;
+        // Fetch updated employee details
+        $this->fetchEmployeeDetails();
+        $this->searchCCRecipients();
+    }
+
+
+    public function hideAlert()
+    {
+        $this->showAlert = false;
+    }
 
     public function markAsLeaveCancel()
     {
@@ -203,21 +272,67 @@ class LeaveCancelPage extends Component
             // Find the leave request by ID
             $leaveRequest = LeaveRequest::findOrFail($this->selectedLeaveRequestId);
 
-            // Update all fields, including the new leave_cancel_reason
-            $leaveRequest->update([
+            // Get the employee ID and details
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->first();
+            // Prepare ccToDetails
+            $ccToDetails = [];
+            foreach ($this->selectedCCEmployees as $selectedEmployeeId) {
+                // Check if the employee ID already exists in ccToDetails
+                $existingIds = array_column($ccToDetails, 'emp_id');
+                if (!in_array($selectedEmployeeId, $existingIds)) {
+                    // Fetch additional details from EmployeeDetails table
+                    $employeeDetails = EmployeeDetails::where('emp_id', $selectedEmployeeId)->first();
+                    if ($employeeDetails) {
+                        // Concatenate first_name and last_name to get the full name
+                        $fullName = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
+                        $ccToDetails[] = [
+                            'emp_id' => $selectedEmployeeId,
+                            'full_name' => $fullName,
+                        ];
+                    }
+                }
+            }
+
+            // Prepare applyingToDetails
+            $applyingToDetails = [];
+            if ($this->selectedManagerDetails) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $this->selectedManagerDetails->emp_id)->first();
+                if ($employeeDetails) {
+                    $applyingToDetails[] = [
+                        'manager_id' => $employeeDetails->emp_id,
+                        'report_to' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+                    ];
+                }
+            } else {
+                $employeeDetails = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->first();
+                $defaultManager = $employeeDetails->manager_id;
+                // Handle default values if no employee is selected
+                $applyingToDetails[] = [
+                    'manager_id' => $defaultManager,
+                    'report_to' => $this->loginEmpManager,
+                    'image' => $this->loginEmpManagerProfile,
+                ];
+            }
+
+            // Update the leave request
+      $leaveRequest->update([
                 'category_type' => 'Leave Cancel',
                 'status' => 'approved',
                 'cancel_status' => 'Pending Leave Cancel',
-                'leave_cancel_reason' => $this->leave_cancel_reason, // Add this line
+                'leave_cancel_reason' => $this->leave_cancel_reason,
+                'applying_to' => json_encode($applyingToDetails), // Assuming applyingto is a JSON field
+                'cc_to' => json_encode($ccToDetails), // Assuming ccto is a JSON field
             ]);
-
             session()->flash('message', 'Applied request for leave cancel successfully.');
+            $this->showAlert = true;
             $this->reset(); // Reset component state
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to mark leave request as cancel. Please try again.');
+            $this->showAlert = true;
             Log::error('Error marking leave request as cancel: ' . $e->getMessage());
         }
     }
+
 
 
     public function toggleInfo()
@@ -317,7 +432,6 @@ class LeaveCancelPage extends Component
         if ($leaveRequest) {
             $this->selectedLeaveRequestId = $leaveRequestId;
             $this->leaveRequestDetails = $leaveRequest;
-            $this->markAsLeaveCancel();
             $this->showApplyingToContainer = false;
             $this->show_reporting = true;
             $this->showApplyingTo = false;
@@ -332,7 +446,17 @@ class LeaveCancelPage extends Component
     {
         $this->showApplyingToContainer = !$this->showApplyingToContainer;
     }
-
+    public function cancel()
+    {
+        // Reset the state
+        $this->selectedLeaveRequestId = null;
+        $this->leaveRequestDetails = null;
+        $this->showApplyingToContainer = false;
+        $this->show_reporting = false;
+        $this->showApplyingTo = true;
+        $this->selectedCCEmployees = [];
+        $this->leave_cancel_reason = null;
+    }
     public function render()
     {
         $this->selectedYear = Carbon::now()->format('Y');

@@ -687,6 +687,10 @@ class LeaveApplyPage extends Component
         $this->cc_to = null;
         $this->applying_to = null;
         $this->showNumberOfDays = false;
+        $this->showApplyingToContainer = false;
+        $this->show_reporting = false;
+        $this->showApplyingTo = true;
+        $this->selectedCCEmployees = [];
     }
 
     public $managerDetails, $fullName;

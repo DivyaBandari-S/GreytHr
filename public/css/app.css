@@ -2566,8 +2566,11 @@ input[type="radio"] {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 60px auto;
     border: 1px solid #ccc;
-    padding: 20px;
+    width: 80%;
     gap: 10px;
 }
 .accordionContentSpan {
