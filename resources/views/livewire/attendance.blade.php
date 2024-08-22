@@ -32,7 +32,7 @@
             background-color: #888;
             margin-left: 15px;
         }
-        .custom-scrollbar-for-right-side-container::-webkit-scrollbar-thumb {
+        .custom-scrollbar-for-right-side-container::-webkit-scrollbar-track {
             background-color: #888;
             margin-left: 15px;
         }
@@ -40,7 +40,7 @@
         .custom-scrollbar::-webkit-scrollbar-track {
             background-color: #f1f1f1;
         }
-        .custom-scrollbar-for-right-side-container::-webkit-scrollbar-track {
+        .custom-scrollbar-for-right-side-container::-webkit-scrollbar-thumb {
             background-color: #f1f1f1;
         }
         .my-button-attendance-info {
@@ -1593,7 +1593,7 @@ color: #fff;
 
         <div class="row m-0 p-0">
             @if($defaultfaCalendar==1)
-            <div class="col-md-7 m-0 p-1 custom-scrollbar">
+            <div class="col-md-7 m-0 p-1 custom-scrollbar"style="height: 600px;">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="calendar-heading-container">
                         <button wire:click="beforeMonth" class="nav-btn">&lt; Prev</button>
@@ -1867,7 +1867,7 @@ color: #fff;
             @livewire('attendance-table')
 
             @endif
-            <div class="col-md-5 custom-scrollbar-for-right-side-container">
+            <div class="col-md-5 custom-scrollbar-for-right-side-container"style="height: 600px;">
                 @if($defaultfaCalendar==1)
                 <div class="container1" style="background-color:white;">
                     <!-- Content goes here -->
