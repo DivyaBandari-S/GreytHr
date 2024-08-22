@@ -3148,7 +3148,7 @@ l
     border-radius: 50%;
     color: #778899;
     font-weight: 500;
-    background-color: #fff;
+    background-color: #f7f3f3eb;
     font-size: var(--normal-font-size);
 }
 .remainContent {
@@ -5016,8 +5016,8 @@ option {
 /* From Uiverse.io by alexruix */
  /* From Uiverse.io by SouravBandyopadhyay */
 .payslip-card-title {
-    color: #262626;
-    font-size: 1em;
+    color: var(--main-heading-color);
+    font-size: 0.8em;
     line-height: normal;
     font-weight: 700;
     margin-bottom: 0.5em;

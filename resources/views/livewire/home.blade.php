@@ -30,7 +30,7 @@
                         <div class="morning-cardContainer w-100">
                             <div class="morning-card w-100">
 
-                                <p class="morning-weather">PARTILY CLOUDY</p>
+                                <p class="morning-weather">PARTLY CLOUDY</p>
                                 <svg class="morning-weather" version="1.1" id="Layer_1" x="0px" y="0px" width="50px"
                                     height="50px" viewBox="0 0 100 100" xml:space="preserve">
                                     <image id="image0" width="100" height="100" x="0" y="0"
@@ -150,8 +150,8 @@
             <div class="col-md-3 mb-4 ">
                 <div class="">
                     <div class="homeCard4">
-                        <div style="color: black; padding:10px 15px;">
-                            <p style="font-size:12px;" class="fw-bold">{{$currentDate}}</p>
+                        <div class="p-3">
+                            <p class="payslip-card-title ">{{$currentDate}}</p>
                             <p style="margin-top: 10px; font-size: 11px;">
                                 @php
                                 // Fetch shift times
@@ -170,9 +170,9 @@
 
 
                                 @endphp
-                                {{$currentDay}} | {{$formattedStartShiftTime}} to {{$formattedEndShiftTime}}
+                                {{substr($currentDay, 0, 3)}} | {{$formattedStartShiftTime}} to {{$formattedEndShiftTime}}
                             </p>
-                            <div style="font-size: 14px; display: flex;margin-top:2em;">
+                            <div class="d-flex" style="font-size: 14px;margin-top:2em;">
                                 <img src="/images/stopwatch.png" class="me-4" alt="Image Description"
                                     style="width: 2.7em;">
                                 <p id="current-time" style="margin: auto 0;"></p>
@@ -266,7 +266,6 @@
                     </div>
                 @else
                 <div class="d-flex flex-column justify-content-center align-items-center">
-                    <img src="/images/not_found.png" alt="Image Description" style="width: 7em;">
                     <p class="payslip-small-desc mb-2 homeText">
                         Hurrah! You've nothing to review.
                     </p>
@@ -366,7 +365,7 @@
                 @foreach($calendarData as $entry)
                 @if(!empty($entry->festivals))
                 <div>
-                    <p class="payslip-small-desc mt-3" style=" font-size:0.8rem;">
+                    <p class="payslip-small-desc mt-3" style=" font-size:0.75rem;">
                         <span style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }} <span
                                 style="font-size: 10px; font-weight: normal;">{{ date('l', strtotime($entry->date)) }}</span></span>
                         <br>
