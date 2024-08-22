@@ -11,6 +11,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 // use Hashids;
 use Vinkla\Hashids\Facades\Hashids;
 class ChatBox extends Component
@@ -19,6 +20,7 @@ class ChatBox extends Component
     public $selectedConversation;
 
     public $body = '';
+    public $fileContent;
     public $loadedMessages;
     public $attachment;
     public $searchTerm;
@@ -179,61 +181,87 @@ class ChatBox extends Component
 
     public function sendMessage()
     {
+        // Validate input data
         $this->validate([
             'body' => 'required|string|max:255',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960',
+            'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960',
         ]);
+    
+        // Initialize variables
+        $fileContent = null;
+        $mimeType = null;
+        $fileName = null;
+    
+        // Store the file as binary data if provided
+        if ($this->file_path) {
+            $fileContent = file_get_contents($this->file_path->getRealPath());
 
-        $fileBinary = null;
-        if ($this->attachment) {
-            // Get the file contents as binary data
-            $fileBinary = file_get_contents($this->attachment->getRealPath());
+            if ($fileContent === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                session()->flash('error', 'Failed to read the uploaded file.');
+                return;
+            }
+
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                session()->flash('error', 'File size exceeds the allowed limit.');
+                return;
+            }
+    
+            $mimeType = $this->file_path->getMimeType();
+            $fileName = $this->file_path->getClientOriginalName();
         }
-
+    
+        // Create the message record
         $createdMessage = Message::create([
             'chating_id' => $this->selectedConversation->id,
             'sender_id' => auth()->user()->emp_id,
             'receiver_id' => optional($this->selectedConversation->getReceiver())->emp_id,
-            'file_path' => $fileBinary,  // Store the binary data in the database
+            'file_path' => $fileContent,  // Store the binary data in the database
             'body' => $this->body,
+            'file_name' => $fileName,
+            'mime_type' => $mimeType,
         ]);
-        if(auth()->user()->emp_id !=optional($this->selectedConversation->getReceiver())->emp_id){
-
+    
+        // Create a notification if the receiver is different from the sender
+        if (auth()->user()->emp_id != optional($this->selectedConversation->getReceiver())->emp_id) {
             Notification::create([
                 'chatting_id' => $this->selectedConversation->id,
-                'notification_type'=>'message',
+                'notification_type' => 'message',
                 'emp_id' => auth()->user()->emp_id,
                 'receiver_id' => optional($this->selectedConversation->getReceiver())->emp_id,
                 'body' => $this->body,
             ]);
         }
-
-
-
-        $this->reset('body', 'attachment');
-
-        #scroll to bottom
+    
+        // Reset input fields
+        $this->reset('body', 'file_path'); // Reset file_path if that’s what you meant
+    
+        // Scroll to bottom of the chat
         $this->dispatch('scroll-bottom');
-
-        #push the message
+    
+        // Push the message to the list
         $this->loadedMessages->push($createdMessage);
-
-        #update conversation model
+    
+        // Update the conversation model
         $this->selectedConversation->updated_at = now();
         $this->selectedConversation->save();
-
-        #refresh chatlist
+    
+        // Refresh the chat list
         $this->dispatch('chat.chat-list', 'refresh');
-
-        #broadcast
+    
+        // Broadcast the message
         $this->selectedConversation->getReceiver()
             ->notify(new MessageSent(
-                Auth()->user(),
+                auth()->user(),
                 $createdMessage,
                 $this->selectedConversation,
                 $this->selectedConversation->getReceiver()->id
             ));
     }
+    
         public function mount()
     {
 
