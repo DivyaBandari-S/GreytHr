@@ -247,9 +247,11 @@ class LeaveApplyPage extends Component
         $this->fetchEmployeeDetails();
         $this->searchCCRecipients();
     }
-
-
-
+    public $showCCEmployees = false;
+    public function openModal()
+    {
+        $this->showCCEmployees = !$this->showCCEmployees;
+    }
     public function leaveApply()
     {
         $this->validate();
