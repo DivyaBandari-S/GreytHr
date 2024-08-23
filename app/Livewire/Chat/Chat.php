@@ -35,7 +35,6 @@ class Chat extends Component
                 // Handle case where the conversation is not found
                 session()->flash('connection error');
             }
-
             // Mark messages belonging to receiver as read
             Message::where('chating_id', $this->selectedConversation->id)
                 ->where('receiver_id', auth()->user()->emp_id)

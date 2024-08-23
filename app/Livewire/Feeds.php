@@ -112,7 +112,10 @@ class Feeds extends Component
     }
 
 
-
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
 
     public function mount()
     {
@@ -465,7 +468,7 @@ public function loadaddComments()
             $attachmentPath = $this->attachment->store('attachments', 'public');
             $post->update(['attachment' => $attachmentPath]);
         }
-    
+  
         // Reset form fields and display success message
         $this->reset(['category', 'description', 'attachment']);
         $this->message = 'Post created successfully!';
