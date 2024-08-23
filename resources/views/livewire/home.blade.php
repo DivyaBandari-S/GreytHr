@@ -22,14 +22,13 @@
                         <p class="morning-city">{{$greetingText}}</p>
                         @endif
                         <p class="morning-city">Welcome,
-                            {{ ucwords(strtolower($loginEmployee->first_name)) }}{{ ucwords(strtolower($loginEmployee->last_name)) }}
+                            {{ ucwords(strtolower($loginEmployee->first_name)) }} {{ ucwords(strtolower($loginEmployee->last_name)) }}
                         </p>
                     </div>
 
                     <div class="col-6 p-0">
                         <div class="morning-cardContainer w-100">
                             <div class="morning-card w-100">
-
                                 <p class="morning-weather">PARTLY CLOUDY</p>
                                 <svg class="morning-weather" version="1.1" id="Layer_1" x="0px" y="0px" width="50px"
                                     height="50px" viewBox="0 0 100 100" xml:space="preserve">
