@@ -36,7 +36,7 @@
     max-height: calc(80vh); /* 50vh minus the height of header and footer */
     object-fit: contain; /* Ensures the image scales correctly */
 }
-.viewfile {
+.view-file {
             color: var(--main-heading-color);
             font-size: var(--main-headings-font-size);
             font-weight: 500;
