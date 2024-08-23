@@ -31,6 +31,7 @@ class LeaveHistory extends Component
     public $employeeDetails = [];
     public $leaveRequest;
     public $selectedYear;
+    public $showViewImageDialog = false;
 
     public function mount($leaveRequestId)
     {
@@ -47,6 +48,62 @@ class LeaveHistory extends Component
             $this->leaveRequest = null;
         }
     }
+    public function downloadImage()
+    {
+        $fileDataArray = is_string($this->leaveRequest->file_paths)
+            ? json_decode($this->leaveRequest->file_paths, true)
+            : $this->leaveRequest->file_paths;
+
+        // Filter images
+        $images = array_filter(
+            $fileDataArray,
+            fn($fileData) => strpos($fileData['mime_type'], 'image') !== false,
+        );
+
+        // Create a zip file for the images
+        $zipFileName = 'images.zip';
+        $zip = new \ZipArchive();
+        $zip->open(storage_path($zipFileName), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+        foreach ($images as $image) {
+            $base64File = $image['data'];
+            $mimeType = $image['mime_type'];
+            $extension = explode('/', $mimeType)[1];
+            $imageName = uniqid() . '.' . $extension;
+
+            $zip->addFromString($imageName, base64_decode($base64File));
+        }
+
+        $zip->close();
+
+        // Return the zip file as a download
+        return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
+    }
+    public $showViewFileDialog = false; // Toggle modal visibility
+    public $files = []; // Store files array
+    public $selectedFile; // Store the selected file's data
+
+
+    public function closeViewFile()
+    {
+        $this->showViewFileDialog = false;
+    }
+    public function showViewFile()
+    {
+      
+        $this->showViewFileDialog = true;
+    }
+
+    public function showViewImage()
+    {
+      
+        $this->showViewImageDialog = true;
+    }
+    public function closeViewImage()
+    {
+        $this->showViewImageDialog = false;
+    }
+    
 
     //used to calculate number of days for leave
     public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
