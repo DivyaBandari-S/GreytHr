@@ -106,7 +106,10 @@ class Home extends Component
     public $winddirection;
     public $isDay;
     public $weatherCode;
-    public function     mount()
+    public $city;
+    public $country;
+    public $postal_code;
+    public function mount()
     {
         $this->fetchWeather();
         // Get the current month and year
@@ -761,10 +764,14 @@ class Home extends Component
     {
         try {
             // Get the IP address and determine location
-            $ip = request()->ip();
+           $ip = request()->ip();
+           //    $ip='125.62.213.30';
             $location = GeoIP::getLocation($ip);
             $lat = $location['lat'];
             $lon = $location['lon'];
+            $this->country = $location['country'];
+            $this->city = $location['city'];
+            $this->postal_code = $location['postal_code'];
 
             // Get the base API URL from the .env file
             $apiUrl = env('WEATHER_API_URL');
