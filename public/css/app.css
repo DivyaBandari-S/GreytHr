@@ -24,7 +24,10 @@
     outline: none; /* Remove the default blue outline */
     box-shadow: none; /* Remove any shadow effect */
 }
-
+.modal-title{
+    font-size: var(--sub-headings-font-size);
+    color: #fff;
+}
 
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
@@ -198,8 +201,8 @@
     border-radius: 10px;
 }
 .homeCard4 {
-    border: 1px solid #0000ff;
-    background-color: #f5f5ff;
+    /* border: 1px solid #0000ff; */
+    background-color: #b0d8df;
     border-radius: 10px;
 }
 .homeCard5 {
@@ -959,6 +962,24 @@ button.close-button {
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
+.content-who-is-in
+{
+    display:flex; 
+    flex-direction:row;
+    justify-content:space-between;
+    padding:0; 
+    border-top:1px solid #52afe9;
+}
+@media (max-width: 1185px) {
+    .content-who-is-in {
+        display:flex; 
+        flex-direction:column;
+        justify-content:space-between;
+        padding:0; 
+        border-top:1px solid #52afe9;
+        width: 100%;
+    }
+}
 .cancel-btn:hover
         {
             background-color: rgb(2, 17, 79);
@@ -1417,11 +1438,52 @@ input[type="date"]::before {
 }
 /*Ending of submodule:who is in(Pranita Priyadarshi)*/
 /*Starting of submodule:employee swipes(Pranita Priyadarshi)*/
+
 .container-employee-swipes {
     display: flex;
     justify-content: space-between;
 }
-
+.employee-swipes-fields {
+    display:flex; 
+    flex-direction:row;
+   
+ 
+}
+@media screen and (max-width: 600px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+}
+@media screen and (max-width: 600px) {
+    .dropdown-container1-employee-swipes-for-download-and-filter
+    {
+        display: flex;
+        flex-direction: row;
+    }
+}
+@media screen and (max-width: 800px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+}
+@media screen and (max-width: 800px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+}
+@media screen and (max-width:800px) {
+    .button2{
+       
+    border: 1px solid #ddd;
+    height: 30px;
+    background-color: #fff;
+    color: #666;
+    border-radius:2px;
+    }
+}
 .container-employee-swipes-right {
     background-color: #fff;
     height: 100vh;
@@ -1548,6 +1610,7 @@ td {
     height: 30px;
     background-color: #fff;
     color: #666;
+    border-radius:2px;
 }
 
 .dropdown-btn1::after {
@@ -2566,11 +2629,8 @@ input[type="radio"] {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin: 60px auto;
     border: 1px solid #ccc;
-    width: 80%;
+    padding: 20px;
     gap: 10px;
 }
 .accordionContentSpan {
@@ -3091,7 +3151,7 @@ l
     border-radius: 50%;
     color: #778899;
     font-weight: 500;
-    background-color: #fff;
+    background-color: #f7f3f3eb;
     font-size: var(--normal-font-size);
 }
 .remainContent {
@@ -3106,7 +3166,7 @@ l
 }
 .leaveText {
     font-size: 10px;
-    color: #778899;
+    /* color: #778899; */
 }
 .v-line {
     height: 100px;
@@ -4929,10 +4989,12 @@ option {
     font-size: 38.5px;
     margin: 0px;
     font-weight: 600;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin-bottom: 20px;
 }
 .privacyContent {
     margin: 10px 0px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 20px;
     color: var(--main-heading-color);
@@ -4946,6 +5008,7 @@ option {
     margin: 25px 0px;
     color: #4d4d4d;
     font-size: 24.5px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 600;
 }
 .privacyLabelContent {
@@ -4956,22 +5019,21 @@ option {
 /* From Uiverse.io by alexruix */
  /* From Uiverse.io by SouravBandyopadhyay */
 .payslip-card-title {
-    color: #262626;
-    font-size: 1em;
+    color: var(--main-heading-color);
+    font-size: 0.8em;
     line-height: normal;
     font-weight: 700;
     margin-bottom: 0.5em;
   }
 
   .payslip-small-desc {
-    font-size: 0.8em;
     font-weight: 400;
     line-height: 1.5em;
     color: #452c2c;
   }
 
   .payslip-small-desc {
-    font-size: 0.8em;
+    font-size: var(--normal-font-size);
   }
 
   .payslip-go-corner {
@@ -5008,6 +5070,7 @@ option {
     z-index: 0;
     overflow: hidden;
     background: linear-gradient(to bottom, #c3e6ec, #a7d1d9);
+    font-family: Arial, Helvetica, sans-serif;
   }
 
   .payslip-card:before {
@@ -5017,8 +5080,8 @@ option {
     top: -16px;
     right: -16px;
     background: linear-gradient(135deg, #364a60, #384c6c);
-    height: 32px;
-    width: 32px;
+    height: 33px;
+    width: 41px;
     border-radius: 32px;
     transform: scale(1);
     transform-origin: 50% 50%;
@@ -5269,53 +5332,96 @@ option {
   } */
 
   .page-title {
+
     color: var(--main-heading-color);
+
     width: -webkit-fill-available;
+
 }
+
 .settings-profile-image{
-    border-radius: 50%; 
+
+    border-radius: 50%;
+
     height: 90px;
+
     width: 90px;
+
   }
+
   .chat-icon{
+
     font-size: 17px;
+
     color: var(--dark);
+
     cursor: pointer;
+
   }
+
   .page-title{
+
     color: var(--main-heading-color);
+
     width: -webkit-fill-available;
+
   }
+
   .title-page{
+
     margin-left: -10px;
+
     font-weight: 500;
+
     color: var(--main-heading-color);
-    justify-content: center; 
+
+    justify-content: center;
+
     font-size: var(--nav-headings-font-size);
+
   }
+
   .custom-select-width {
-    width: 120px; 
-    padding: 5px; 
-    font-size: var(--sub-headings-font-size); 
+
+    width: 120px;
+
+    padding: 5px;
+
+    font-size: var(--sub-headings-font-size);
+
 }
+
 .custom-select-width select {
-    padding: 5px 10px; 
-    font-size: var(--sub-headings-font-size); 
+    padding: 5px 10px;
+    font-size: var(--sub-headings-font-size);
 }
+
 .track-text{
     font-size: var(--sub-headings-font-size);
 }
+
 .payslip-card:hover .track-text {
+
     transition: all 0.5s ease-out;
+
     color: #ffffff;
+
   }
+
   .track-count{
+
     font-size: var(--sub-headings-font-size);
+
     font-weight: 500;
+
     padding-left: 5px;
+
   }
+
   .payslip-card:hover .track-count{
     transition: all 0.5s ease-out;
     color: #ffffff;
+
   }
+
 

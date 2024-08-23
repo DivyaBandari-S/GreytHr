@@ -32,7 +32,7 @@
                                 <option value="default">Select Type</option>
                                 <option value="Casual Leave">Casual Leave</option>
                                 @if($showCasualLeaveProbation)
-                                <option value="Casual Leave Probation">Casual Leave Probation</option>
+                                <aoption value="Casual Leave Probation">Casual Leave Probation</aoption>
                                 @endif
                                 <option value="Loss of Pay">Loss of Pay</option>
                                 <option value="Marriage Leave">Marriage Leave</option>
@@ -83,7 +83,7 @@
 
                         </div>
                         <div class="form-group mb-0">
-                            <span class="normalTextValue">Number of Days :</span>
+                            <span class="normalTextValue">Applying For :</span>
                             @if($showNumberOfDays)
                             <span id="numberOfDays" class="sickLeaveBalance">
                                 @if($from_date && $to_date && $from_session && $to_session)
@@ -375,16 +375,57 @@
                     <span class="addText" wire:click="openCcRecipientsContainer">Add</span>
 
                     @if(count($selectedCCEmployees) > 0)
-                    <ul class=" d-flex align-items-center mb-0" style="list-style-type: none;gap:10px;">
-                        @foreach($selectedCCEmployees as $recipient)
+                    @php
+                    $employeesCollection = collect($selectedCCEmployees);
+                    $visibleEmployees = $employeesCollection->take(3);
+                    $hiddenEmployees = $employeesCollection->slice(3);
+                    @endphp
+
+                    <ul class="d-flex align-items-center mb-0" style="list-style-type: none; gap:10px;">
+                        @foreach($visibleEmployees as $recipient)
                         <li>
-                            <div class="px-2 py-1 d-flex justify-content-between align-items-center" style=" border-radius: 25px; border: 2px solid #adb7c1;" title="{{ ucwords(strtolower( $recipient['first_name'])) }} {{ ucwords(strtolower( $recipient['last_name'])) }}">
-                                <span style="text-transform: uppercase; color: #adb7c1;font-size:12px;">{{ $recipient['initials'] }}</span>
-                                <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer;color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
+                            <div class="px-2 py-1 d-flex justify-content-between align-items-center" style="border-radius: 25px; border: 2px solid #adb7c1; gap:10px;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
+                                <span style="color: #778899; font-size:12px;">{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}</span>
+                                <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer; color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
                             </div>
                         </li>
                         @endforeach
+
+                        @if(count($selectedCCEmployees) > 3)
+                        <li>
+                            <span type="button" wire:click="openModal" class="normalText">View More</span>
+                        </li>
+                        @endif
                     </ul>
+
+                    <!-- Popup Modal -->
+                    @if($showCCEmployees)
+                    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                                    <h5 class="modal-title" style="color:white;">More Recipients</h5>
+                                    <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
+                                        wire:click="openModal" style="background-color: white; height:10px;width:10px;">
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="d-flex align-items-center mb-0" style="list-style-type: none; gap:10px;">
+                                        @foreach($hiddenEmployees as $recipient)
+                                        <li>
+                                            <div class="px-2 py-1 d-flex justify-content-between align-items-center" style="border-radius: 25px; border: 2px solid #adb7c1; gap:10px;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
+                                                <span style="color: #778899; font-size:12px;">{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}</span>
+                                                <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer; color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
+                                            </div>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-backdrop fade show"></div>
+                    @endif
                     @endif
                 </div>
 
