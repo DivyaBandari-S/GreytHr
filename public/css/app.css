@@ -26,9 +26,47 @@
 }
 .modal-title{
     font-size: var(--sub-headings-font-size);
-    color: #fff;
+    color: #fff !important;
+}
+.custom-modal-dialog.custom-modal-lg {
+    height: 70vh; /* Adjust this value to control the modal height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center the modal vertically */
 }
 
+.custom-modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%; /* Ensure modal content takes full width of the dialog */
+}
+
+.custom-modal-header, .custom-modal-footer {
+    flex-shrink: 0;
+}
+
+.custom-modal-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.swiper-container {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: auto;
+    max-height: calc(80vh); /* 50vh minus the height of header and footer */
+    object-fit: contain; /* Ensures the image scales correctly */
+}
+.modal-header{
+    background-color: rgb(2, 17, 79); height: 50px;
+}
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
     background-color: white;
