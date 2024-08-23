@@ -30,18 +30,27 @@
                             <div class="morning-card w-100">
                                 <!-- Weather Image -->
                                 <div class="morning-weather-image">
-                                    @if ($weatherCondition == 'Clear sky')
-                                        <img src="{{ asset('images/sun.png') }}" alt="Sunny" />
-                                    @elseif($weatherCondition == 'partlycloudy')
+                                    @if ($weatherCode == 0)
+                                        <img src="{{ asset('images/sun.png') }}" alt="Clear sky" />
+                                    @elseif(in_array($weatherCode, [1, 2]))
                                         <img src="{{ asset('images/partly-cloudy.png') }}" alt="Partly Cloudy" />
-                                    @elseif($weatherCondition == 'cloudy')
-                                        <img src="{{ asset('images/cloudy.png') }}" alt="Cloudy" />
-                                    @elseif($weatherCondition == 'rain')
+                                    @elseif($weatherCode == 3)
+                                        <img src="{{ asset('images/cloudy.png') }}" alt="Overcast" />
+                                    @elseif(in_array($weatherCode, [51, 53, 55, 61, 63, 65, 80, 81, 82]))
                                         <img src="{{ asset('images/rain.png') }}" alt="Rainy" />
+                                    @elseif(in_array($weatherCode, [95, 96, 99]))
+                                        <img src="{{ asset('images/thunderstorm.png') }}" alt="Thunderstorm" />
+                                    @elseif(in_array($weatherCode, [71, 73, 75, 77, 85, 86]))
+                                        <img src="{{ asset('images/snow.png') }}" alt="Snow" />
+                                    @elseif(in_array($weatherCode, [45, 48]))
+                                        <img src="{{ asset('images/fog.png') }}" alt="Fog" />
+                                    @elseif(in_array($weatherCode, [56, 57, 66, 67]))
+                                        <img src="{{ asset('images/freezing-rain.png') }}" alt="Freezing Rain" />
                                     @else
                                         <img src="{{ asset('images/default.png') }}" alt="Weather" />
                                     @endif
                                 </div>
+
 
                                 <!-- Weather Data -->
                                 <p class="morning-weather">{{ $weatherCondition }}</p>
@@ -392,8 +401,7 @@
                                 @foreach ($calendarData as $entry)
                                     @if (!empty($entry->festivals))
                                         <div>
-                                            <p class="payslip-small-desc mb-2"
-                                                >
+                                            <p class="payslip-small-desc mb-2">
                                                 <span
                                                     style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }}
                                                     <span
@@ -508,7 +516,8 @@
                                         <p style="font-size:12px;color:#778899;">No employees are absent today</p>
                                     @endif
                                     @if ($CountAbsentEmployees > 5)
-                                        <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openAbsentEmployees">
+                                        <div
+                                            class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openAbsentEmployees">
                                             <span>+{{ $CountAbsentEmployees - 5 }}</span>
                                             <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
@@ -552,10 +561,12 @@
                                             @endif
                                         @endfor
                                     @else
-                                        <p style="font-size:12px;color:#778899;">No employees arrived late today</p>
+                                        <p style="font-size:12px;color:#778899;">No employees arrived late today
+                                        </p>
                                     @endif
                                     @if ($CountLateSwipes > 5)
-                                        <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openLateEmployees">
+                                        <div
+                                            class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openLateEmployees">
                                             <span>+{{ $CountLateSwipes - 5 }}</span>
                                             <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
@@ -611,10 +622,12 @@
                                             @endif
                                         @endfor
                                     @else
-                                        <p style="font-size:12px;color:#778899;">No employees arrived early today</p>
+                                        <p style="font-size:12px;color:#778899;">No employees arrived early today
+                                        </p>
                                     @endif
                                     @if ($CountEarlySwipes > 5)
-                                        <div class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openEarlyEmployees">
+                                        <div
+                                            class="remainContent d-flex flex-column align-items-center mt-2"wire:click="openEarlyEmployees">
                                             <span>+{{ $CountEarlySwipes - 5 }}</span>
                                             <p class="mb-0" style="margin-top:-5px;">More</p>
                                         </div>
