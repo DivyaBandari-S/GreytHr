@@ -27,29 +27,20 @@ class CleanupLivewireTempFiles
         $tempDir = storage_path('app/livewire-tmp');
 
         if (File::exists($tempDir)) {  // Check if the directory exists
-
             $files = File::files($tempDir);
 
             if (!empty($files)) {  // Check if there are any files in the directory
-
                 foreach ($files as $file) {
-
                     $fileCreationTime = \Carbon\Carbon::createFromTimestamp($file->getCTime());
-
                     if (now()->diffInMinutes($fileCreationTime) > 60) {
-
-                        Log::info('Deleting old Livewire temp file:', ['file' => $file->getRealPath()]);
-
                         File::delete($file);
                     }
                 }
-            } else {
-
-                Log::info('No files found in the Livewire temp directory.');
             }
         } else {
 
             Log::info('Livewire temp directory does not exist.');
         }
     }
+
 }

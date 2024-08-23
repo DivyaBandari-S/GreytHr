@@ -299,7 +299,6 @@ class LeaveApplyPage extends Component
                     $carbonFromDate = $leave->from_date->format('Y-m-d');
                     $carbonToDate = $leave->to_date->format('Y-m-d');
                     if ($this->from_date == $carbonFromDate && $this->to_date == $carbonToDate) {
-                        dd('true');
                         if ($this->from_session == $leave->from_session) {
                             $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
                             $this->showerrorMessage = true;
@@ -373,18 +372,25 @@ class LeaveApplyPage extends Component
                 ];
             }
 
-            // Validate file uploads
             $this->validate([
-                'file_paths.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
+                'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
             ]);
 
             // Store files
             $fileDataArray = [];
             if ($this->file_paths) {
                 foreach ($this->file_paths as $file) {
-                    $fileDataArray[] = base64_encode(file_get_contents($file->getRealPath()));
+                    $fileContent = file_get_contents($file->getRealPath());
+                    $mimeType = $file->getMimeType();
+                    $base64File = base64_encode($fileContent);
+                    $fileDataArray[] = [
+                        'data' => $base64File,
+                        'mime_type' => $mimeType,
+                        'original_name' => $file->getClientOriginalName(),
+                    ];
                 }
             }
+
 
             // Create the leave request
             $this->createdLeaveRequest = LeaveRequest::create([
