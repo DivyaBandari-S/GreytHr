@@ -183,16 +183,57 @@
                         <span class="addText" wire:click="openCcRecipientsContainer">Add</span>
 
                         @if(count($selectedCCEmployees) > 0)
-                        <ul class=" d-flex align-items-center mb-0" style="list-style-type: none;gap:10px;">
-                            @foreach($selectedCCEmployees as $recipient)
+                        @php
+                        $employeesCollection = collect($selectedCCEmployees);
+                        $visibleEmployees = $employeesCollection->take(3);
+                        $hiddenEmployees = $employeesCollection->slice(3);
+                        @endphp
+
+                        <ul class="d-flex align-items-center mb-0" style="list-style-type: none; gap:10px;">
+                            @foreach($visibleEmployees as $recipient)
                             <li>
-                                <div class="px-2 py-1 d-flex justify-content-between align-items-center" style=" border-radius: 25px; border: 2px solid #adb7c1;" title="{{ ucwords(strtolower( $recipient['first_name'])) }} {{ ucwords(strtolower( $recipient['last_name'])) }}">
-                                    <span style="text-transform: uppercase; color: #adb7c1;font-size:12px;">{{ $recipient['initials'] }}</span>
-                                    <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer;color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
+                                <div class="px-2 py-1 d-flex justify-content-between align-items-center" style="border-radius: 25px; border: 2px solid #adb7c1; gap:10px;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
+                                    <span style="color: #778899; font-size:12px;">{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}</span>
+                                    <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer; color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
                                 </div>
                             </li>
                             @endforeach
+
+                            @if(count($selectedCCEmployees) > 3)
+                            <li>
+                                <span type="button" wire:click="openModal" class="normalText">View More</span>
+                            </li>
+                            @endif
                         </ul>
+
+                        <!-- Popup Modal -->
+                        @if($showCCEmployees)
+                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" style="color:white;">More Recipients</h5>
+                                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
+                                            wire:click="openModal" style="background-color: white; height:10px;width:10px;">
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="d-flex align-items-center mb-0" style="list-style-type: none; gap:10px;">
+                                            @foreach($hiddenEmployees as $recipient)
+                                            <li>
+                                                <div class="px-2 py-1 d-flex justify-content-between align-items-center" style="border-radius: 25px; border: 2px solid #adb7c1; gap:10px;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
+                                                    <span style="color: #778899; font-size:12px;">{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}</span>
+                                                    <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer; color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
+                                                </div>
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-backdrop fade show"></div>
+                        @endif
                         @endif
                     </div>
 
@@ -261,7 +302,7 @@
                 </div>
                 <div class="form-group mt-3">
                     <label for="leave_cancel_reason">Reason for Leave Cancel</label>
-                    <textarea id="leave_cancel_reason" class="form-control placeholder-small" wire:model="leave_cancel_reason"  name="leave_cancel_reason" placeholder="Enter Reason" rows="4"></textarea>
+                    <textarea id="leave_cancel_reason" class="form-control placeholder-small" wire:model="leave_cancel_reason" name="leave_cancel_reason" placeholder="Enter Reason" rows="4"></textarea>
                     @error('leave_cancel_reason') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="cancelButtons d-flex align-items-center gap-2 justify-content-center mt-4">

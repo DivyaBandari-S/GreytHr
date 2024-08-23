@@ -247,9 +247,11 @@ class LeaveApplyPage extends Component
         $this->fetchEmployeeDetails();
         $this->searchCCRecipients();
     }
-
-
-
+    public $showCCEmployees = false;
+    public function openModal()
+    {
+        $this->showCCEmployees = !$this->showCCEmployees;
+    }
     public function leaveApply()
     {
         $this->validate();
@@ -292,54 +294,65 @@ class LeaveApplyPage extends Component
                 ->whereIn('status', ['approved', 'pending'])
                 ->get();
 
-            foreach ($overlappingLeave as $leave) {
-                $carbonFromDate = $leave->from_date->format('Y-m-d');
-                $carbonToDate = $leave->to_date->format('Y-m-d');
-                if ($this->from_date == $carbonFromDate && $this->to_date == $carbonToDate) {
-                    if ($this->from_session == $leave->from_session) {
-                        $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
-                        $this->showerrorMessage = true;
-                        return redirect()->back()->withInput();
-                    }else{
-                        if ($this->from_session !== $leave->from_session) {
-                            if($this->to_session !== $leave->to_session){
-                                $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
-                                $this->showerrorMessage = true;
-                                return redirect()->back()->withInput();
-                            }else{
-                                if($this->to_session == $leave->to_session){
+            if ($overlappingLeave) {
+                foreach ($overlappingLeave as $leave) {
+                    $carbonFromDate = $leave->from_date->format('Y-m-d');
+                    $carbonToDate = $leave->to_date->format('Y-m-d');
+                    if ($this->from_date == $carbonFromDate && $this->to_date == $carbonToDate) {
+                        if ($this->from_session == $leave->from_session) {
+                            $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+                            $this->showerrorMessage = true;
+                            return redirect()->back()->withInput();
+                        } else {
+                            if ($this->from_session !== $leave->from_session) {
+                                if ($this->to_session !== $leave->to_session) {
                                     $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
                                     $this->showerrorMessage = true;
                                     return redirect()->back()->withInput();
+                                } else {
+                                    if ($this->to_session == $leave->to_session) {
+                                        $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+                                        $this->showerrorMessage = true;
+                                        return redirect()->back()->withInput();
+                                    }
                                 }
+                            }
+                        }
+                    } else {
+                        // Check if the leave dates overlap
+                        if ($this->from_date <= $carbonFromDate && $this->from_date >= $carbonToDate) {
+                            // Check if the session overlap
+                            if ($this->from_session <= $leave->to_session && $this->to_session >= $leave->from_session) {
+                                $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+                                $this->showerrorMessage = true;
+                                return redirect()->back()->withInput();
                             }
                         }
                     }
                 }
-            }
 
-            // Check for holidays
-            $holidays = HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date])->get();
-            if ($holidays->isNotEmpty()) {
-                $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
-                $this->showerrorMessage = true;
-                return redirect()->back()->withInput();
-            }
+                // Check for holidays
+                $holidays = HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date])->get();
+                if ($holidays->isNotEmpty()) {
+                    $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
+                    $this->showerrorMessage = true;
+                    return redirect()->back()->withInput();
+                }
 
-            // Prepare CC and Manager details
-            $ccToDetails = [];
-            foreach ($this->selectedCCEmployees as $selectedEmployeeId) {
-                if (!in_array($selectedEmployeeId, array_column($ccToDetails, 'emp_id'))) {
-                    $employeeDetails = EmployeeDetails::where('emp_id', $selectedEmployeeId)->first();
-                    if ($employeeDetails) {
-                        $ccToDetails[] = [
-                            'emp_id' => $selectedEmployeeId,
-                            'full_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
-                        ];
+                // Prepare CC and Manager details
+                $ccToDetails = [];
+                foreach ($this->selectedCCEmployees as $selectedEmployeeId) {
+                    if (!in_array($selectedEmployeeId, array_column($ccToDetails, 'emp_id'))) {
+                        $employeeDetails = EmployeeDetails::where('emp_id', $selectedEmployeeId)->first();
+                        if ($employeeDetails) {
+                            $ccToDetails[] = [
+                                'emp_id' => $selectedEmployeeId,
+                                'full_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+                            ];
+                        }
                     }
                 }
             }
-
             $applyingToDetails = [];
             if ($this->selectedManagerDetails) {
                 $employeeDetails = EmployeeDetails::where('emp_id', $this->selectedManagerDetails->emp_id)->first();
@@ -359,18 +372,25 @@ class LeaveApplyPage extends Component
                 ];
             }
 
-            // Validate file uploads
             $this->validate([
-                'file_paths.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
+                'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
             ]);
 
             // Store files
             $fileDataArray = [];
             if ($this->file_paths) {
                 foreach ($this->file_paths as $file) {
-                    $fileDataArray[] = base64_encode(file_get_contents($file->getRealPath()));
+                    $fileContent = file_get_contents($file->getRealPath());
+                    $mimeType = $file->getMimeType();
+                    $base64File = base64_encode($fileContent);
+                    $fileDataArray[] = [
+                        'data' => $base64File,
+                        'mime_type' => $mimeType,
+                        'original_name' => $file->getClientOriginalName(),
+                    ];
                 }
             }
+
 
             // Create the leave request
             $this->createdLeaveRequest = LeaveRequest::create([

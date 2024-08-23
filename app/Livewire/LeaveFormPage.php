@@ -117,11 +117,16 @@ class LeaveFormPage extends Component
                 // Check and decode file paths if not null
                 if ($leaveRequest->file_paths) {
                     $fileDataArray = json_decode($leaveRequest->file_paths, true);
+                
                     foreach ($fileDataArray as &$fileData) {
-                        $fileData = base64_decode($fileData); // Decode base64 data
+                        if (isset($fileData['data'])) {
+                            $fileData['data'] = base64_decode($fileData['data']);
+                        }
                     }
-                    $leaveRequest->file_paths = $fileDataArray; // Optionally set the decoded data
+                
+                    $leaveRequest->file_paths = $fileDataArray;
                 }
+                
             }
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message

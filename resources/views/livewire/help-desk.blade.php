@@ -143,7 +143,7 @@
                             </div>
 
                             <div>
-                                <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                <input type="file" wire:model="file_path"  class="form-control">
 
                             </div>
 

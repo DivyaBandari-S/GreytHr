@@ -446,6 +446,11 @@ class LeaveCancelPage extends Component
     {
         $this->showApplyingToContainer = !$this->showApplyingToContainer;
     }
+    public $showCCEmployees = false;
+    public function openModal()
+    {
+        $this->showCCEmployees = !$this->showCCEmployees;
+    }
     public function cancel()
     {
         // Reset the state
