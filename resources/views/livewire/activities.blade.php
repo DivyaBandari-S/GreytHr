@@ -246,35 +246,35 @@
 </div>
 
 
-                <div class="w-full visible mt-1" style="margin-top: 20px;display:block">
-                    <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
-                        <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Location</span>
-                        <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')" style="margin-top:-5px;color:#3b4452;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg2" style="color:#3b4452;margin-top:-5px">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </span>
-                    </div>
-                    <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color:#3b4452; text-align: left; padding-left: 0; display: none;">
-                        <ul  class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
-                            <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">India</b>
-                           
-                            @if (Auth::guard('hr')->check())
+<div class="w-full visible mt-1" style="margin-top: 20px;display:block">
+                            <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
+                                <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Location</span>
+                                <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')" style="margin-top:-5px;color:#3b4452;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg2" style="color:#3b4452;margin-top:-5px">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color:#3b4452; text-align: left; padding-left: 0; display: none;">
+                                <ul class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
+                                    <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">India</b>
+
+                                    @if (Auth::guard('hr')->check())
 
                                     <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
-@endif 
-                         
-@if (Auth::guard('hr')->check())
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
+                                    @endif
+
+                                    @if (Auth::guard('hr')->check())
 
                                     <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Doddaballapur</a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Doddaballapur</a>
-@endif 
-                            @if (Auth::guard('hr')->check())
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Doddaballapur</a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
                                     <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
 
@@ -282,62 +282,153 @@
                                     <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
 
                                     @endif
+                                    
+                                    @if (Auth::guard('hr')->check())
+
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hoskote</a>
+
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hoskote</a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hoskote</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hoskote</a>
+@endif
                                     @if (Auth::guard('hr')->check())
 
                                     <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hyderabad</a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Hyderabad</a>
-@endif      
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Hyderabad</a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
-@if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
-
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
-@endif      
- 
-@if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mandya
+</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
-@endif      
-@if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
-
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight:700">USA</a>
-@endif      
-@if (Auth::guard('hr')->check())
-
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">California</a>
-
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">California</a>
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mandya
+</a>
 @endif
 @if (Auth::guard('hr')->check())
 
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">New York</a>
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mangalore
+</a>
 
 @elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">New York</a>
-@endif      
- 
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mangalore
+</a>
+@endif
 @if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mumbai
+</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mumbai
+</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mysore
+</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mysore
+</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Pune
+</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Pune
+</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Sirsi
+</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Sirsi
+</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Thumkur
+</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Thumkur
+</a>
+@endif
+                                    @if (Auth::guard('hr')->check())
+
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
+
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
+                                    @endif
+
+                                    @if (Auth::guard('hr')->check())
+
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
+
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Udaipur</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Udaipur</a>
+@endif
+@if (Auth::guard('hr')->check())
+
+<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Vijayawada</a>
+
+@elseif (Auth::guard('emp')->check())
+<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Vijayawada</a>
+@endif
+                                    @if (Auth::guard('hr')->check())
+
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
+
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight:700">USA</a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
+
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">California</a>
+
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">California</a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
+
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">New York</a>
+
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">New York</a>
+                                    @endif
+
+                                    @if (Auth::guard('hr')->check())
 
                                     <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
-@endif                 
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
+                                    @endif
 
-                        </ul>
-                    </div>
-                </div>
+                                </ul>
+                            </div>
+                        </div>
                 <div class="w-full visible mt-1" style="margin-top: 20px;display:block">
 <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
     <span class="text-xs leading-4" style="font-weight: bold; color: grey;">Department</span>

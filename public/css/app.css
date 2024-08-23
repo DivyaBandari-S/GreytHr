@@ -24,7 +24,10 @@
     outline: none; /* Remove the default blue outline */
     box-shadow: none; /* Remove any shadow effect */
 }
-
+.modal-title{
+    font-size: var(--sub-headings-font-size);
+    color: #fff;
+}
 
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
