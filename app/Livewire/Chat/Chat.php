@@ -22,7 +22,6 @@ class Chat extends Component
             // $hashids = new Hashids('default-salt', 50); // Initialize with the same salt and minimum length
             // Decode the query string
             $decodedIds = Hashids::decode($query);
-
             if (empty($decodedIds)) {
                 session()->flash('connection error');
                 // Handle case where the decoding returns an empty array
@@ -30,7 +29,6 @@ class Chat extends Component
 
             // Fetch the conversation using the decoded ID
             $this->selectedConversation = Chating::find($decodedIds[0]);
-
             if (!$this->selectedConversation) {
                 // Handle case where the conversation is not found
                 session()->flash('connection error');
