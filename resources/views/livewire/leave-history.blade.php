@@ -267,7 +267,6 @@
                                         </div>
                                         <div class="modal-backdrop fade show blurred-backdrop"></div>
                                         @endif
-
                                         <!-- Trigger Links -->
                                         @if (!empty($images) && count($images) > 1)
                                         <a href="#" wire:click.prevent="showViewImage"
