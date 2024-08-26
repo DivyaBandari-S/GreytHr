@@ -50,8 +50,8 @@
     <div class="row m-0 p-0  mt-4" >
         <div class="col-md-9 mb-4" >
            <div class="bg-white border rounded" style="height: 100vh;">
-             <div class="table-responsive bg-white rounded p-0 m-0" style="width:100%;">
-                <table class="employee-swipes-table  bg-white " >
+             <div class="bg-white rounded p-0 m-0">
+                <table class="employee-swipes-table  bg-white" >
                     <thead>
                         <tr>
                             <th>Employee&nbsp;Name</th>
@@ -152,7 +152,7 @@
             @endif
            </div>
         </div>
-        <div class="col-md-3 m-0 p-0 bg-white rounded border " style="height: 100vh;">
+        <div class="col-md-3 p-0 bg-white rounded border">
                 <div class="green-section-employee-swipes p-2">
                  <img src="https://cdn-icons-png.flaticon.com/512/2055/2055568.png"
                             class="container-employee-swipes-right-image">
