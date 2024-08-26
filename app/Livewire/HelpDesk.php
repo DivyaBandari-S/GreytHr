@@ -509,54 +509,66 @@ class HelpDesk extends Component
         $this->showViewFileDialog = false;
     }
 
-
-
+    public function updatedFilePath()
+    {
+        if ($this->file_path) {
+            // Debugging information
+            Log::info('File uploaded successfully.', [
+                'file_name' => $this->file_path->getClientOriginalName(),
+                'file_size' => $this->file_path->getSize(),
+                'file_mime_type' => $this->file_path->getMimeType(),
+            ]);
+        }
+    }
+    
+    
     public function submitHR()
     {
         try {
-
-           $this->validate($this->rules);
-
-
-
-            if ($this->file_path) {
-
-                $this->fileContent = file_get_contents($this->file_path->getRealPath());
-                $this->mime_type = $this->file_path->getMimeType();
-                $this->file_name = $this->file_path->getClientOriginalName();
-                // Validate and store the uploaded file
-
-
-            }
-            // Store the file as binary data
-
-
-            if (  $this->fileContent  === false) {
-                Log::error('Failed to read the uploaded file.', [
-                    'file_path' => $this->file_path->getRealPath(),
+            // Validate if the file path is set and the file is valid
+            $validatedData = $this->validate($this->rules);
+            if (!$this->file_path || !$this->file_path->isValid()) {
+                Log::error('Invalid file upload.', [
+                    'file_path' => $this->file_path,
+                    'file_error' => $this->file_path ? $this->file_path->getErrorMessage() : null,
                 ]);
+                session()->flash('error', 'Invalid file upload.');
+                return;
+            }
+    
+            // Read the file content
+            $this->fileContent = file_get_contents($this->file_path->getRealPath());
+            if ($this->fileContent === false) {
+                Log::error('Failed to read the uploaded file.', ['file_path' => $this->file_path->getRealPath()]);
                 session()->flash('error', 'Failed to read the uploaded file.');
                 return;
             }
-
-            // Check if the file content is too large
-            if (strlen(  $this->fileContent ) > 16777215) { // 16MB for MEDIUMBLOB
+    
+            // Get file metadata
+            $this->mime_type = $this->file_path->getMimeType();
+            $this->file_name = $this->file_path->getClientOriginalName();
+    
+            // Check file size (16MB for MEDIUMBLOB)
+            if (strlen($this->fileContent) > 16777215) {
                 session()->flash('error', 'File size exceeds the allowed limit.');
                 return;
             }
-
-
-
-
+    
+            // Get employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
+            if (!$this->employeeDetails) {
+                session()->flash('error', 'Employee details not found.');
+                return;
+            }
+    
+            // Store data in HelpDesks model
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' =>   $this->fileContent , // Store the binary file data
+                'file_path' => $this->fileContent, // Store the binary file data
                 'file_name' => $this->file_name,
                 'mime_type' => $this->mime_type,
                 'cc_to' => $this->cc_to ?? '-',
@@ -565,22 +577,20 @@ class HelpDesk extends Component
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
             ]);
-
+    
             session()->flash('message', 'Request created successfully.');
             return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $employeeId,
-                'category' => $this->category,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'file_path' => $this->file_path ? $this->file_path->getRealPath() : null,
             ]);
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
     }
+    
+    
 
     public function downloadFile($id)
     {

@@ -53,26 +53,35 @@
 
 
             </div>
-            <div class="d-flex flex-row justify-content-end mt-2">
+            <div class="d-flex flex-column flex-md-row justify-content-end mt-2">
+    <div class="mx-2 my-1 my-md-0">
+        <button 
+            onclick="location.href='/catalog'" 
+            class="btn btn-primary"
+            style="font-size:12px; background-color:rgb(2, 17, 79); color:white; border-radius:5px; padding:4px 10px; width: 100px;">
+            IT Request
+        </button>
+    </div>
 
+    <div class="mx-2 my-1 my-md-0">
+        <button 
+            wire:click="openFinance" 
+            class="btn btn-primary"
+            style="font-size:12px; background-color:rgb(2, 17, 79); color:white; border-radius:5px; padding:4px 10px; width: 130px;">
+            Finance Request
+        </button>
+    </div>
 
+    <div class="mx-2 my-1 my-md-0">
+        <button 
+            wire:click="open" 
+            class="btn btn-primary"
+            style="font-size:12px; background-color:rgb(2, 17, 79); color:white; border-radius:5px; padding:4px 10px; width: 100px;">
+            HR Request
+        </button>
+    </div>
+</div>
 
-
-                <div class="mx-2 ">
-                    <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> IT Request </button>
-                </div>
-
-                <div class="mx-2 ">
-                    <button wire:click="openFinance" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> Finance Request </button>
-                </div>
-                <div class="mx-2 ">
-                    <button wire:click="open" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> HR Request </button>
-                </div>
-
-                <div>
-
-                </div>
-            </div>
 
             @if($showDialog)
             <div class="modal" tabindex="-1" role="dialog" style="display: block;overflow-y:auto;">
@@ -482,25 +491,26 @@
 
             @if ($activeTab == "active")
             <div class="row">
-                <div class="col-md-3">
-                    <div class="input-group people-input-group-container">
-                        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                        <div class="input-group-append">
-                            <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
-                                <i class="fa fa-search people-search-icon"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-control">
-                        <option value="">Select Request</option>
-                        @foreach($requestCategories as $request => $categories)
-                        <option value="{{ $request }}">{{ $request }}</option>
-                        @endforeach
-                    </select>
-                </div>
+    <div class="col-12 col-md-6 col-lg-3 mb-2 mb-lg-0">
+        <div class="input-group people-input-group-container">
+            <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+            <div class="input-group-append">
+                <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
+                    <i class="fa fa-search people-search-icon"></i>
+                </button>
             </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3">
+        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-control">
+            <option value="">Select Request</option>
+            @foreach($requestCategories as $request => $categories)
+            <option value="{{ $request }}">{{ $request }}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+
 
 
 
@@ -650,25 +660,26 @@
 
             @if ($activeTab == "closed")
             <div class="row">
-                <div class="col-md-3">
-                    <div class="input-group people-input-group-container">
-                        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                        <div class="input-group-append">
-                            <button wire:click="searchClosedHelpDesk" class="submit-btn" type="button">
-                                <i class="fa fa-search people-search-icon"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <select wire:model="selectedCategory" wire:change="searchClosedHelpDesk" class="form-control">
-                        <option value="">Select Request</option>
-                        @foreach($requestCategories as $request => $categories)
-                        <option value="{{ $request }}">{{ $request }}</option>
-                        @endforeach
-                    </select>
-                </div>
+    <div class="col-12 col-md-6 col-lg-3 mb-2 mb-lg-0">
+        <div class="input-group people-input-group-container">
+            <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+            <div class="input-group-append">
+                <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
+                    <i class="fa fa-search people-search-icon"></i>
+                </button>
             </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3">
+        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-control">
+            <option value="">Select Request</option>
+            @foreach($requestCategories as $request => $categories)
+            <option value="{{ $request }}">{{ $request }}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+
             <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
 
                 <table style="width: 100%; border-collapse: collapse;">
@@ -793,25 +804,26 @@
 
             @if ($activeTab == "pending")
             <div class="row">
-                <div class="col-md-3">
-                    <div class="input-group people-input-group-container">
-                        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                        <div class="input-group-append">
-                            <button wire:click="searchPendingHelpDesk" class="submit-btn" type="button">
-                                <i class="fa fa-search people-search-icon"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <select wire:model="selectedCategory" wire:change="searchPendingHelpDesk" class="form-control">
-                        <option value="">Select Request</option>
-                        @foreach($requestCategories as $request => $categories)
-                        <option value="{{ $request }}">{{ $request }}</option>
-                        @endforeach
-                    </select>
-                </div>
+    <div class="col-12 col-md-6 col-lg-3 mb-2 mb-lg-0">
+        <div class="input-group people-input-group-container">
+            <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+            <div class="input-group-append">
+                <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
+                    <i class="fa fa-search people-search-icon"></i>
+                </button>
             </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3">
+        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-control">
+            <option value="">Select Request</option>
+            @foreach($requestCategories as $request => $categories)
+            <option value="{{ $request }}">{{ $request }}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+
             <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
 
                 <table style="width: 100%; border-collapse: collapse;">
