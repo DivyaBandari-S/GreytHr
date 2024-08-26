@@ -88,7 +88,7 @@
                 <ol class="breadcrumb d-flex align-items-center ">
                     <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('leave-balance') }}">Leave Balance</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Casual Leave</li>
+                    <li class="breadcrumb-item cactive" aria-current="page">Casual Leave</li>
                 </ol>
             </div>
             <div class="col-md-5 ">
