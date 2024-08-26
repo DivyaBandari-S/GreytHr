@@ -294,7 +294,7 @@ class ViewPendingDetails extends Component
                     // Update status to 'approved'v
                     $leaveRequest->cancel_status = 'rejected';
                     $leaveRequest->save();
-                    $leaveRequest->toucvh();
+                    $leaveRequest->touch();
                     session()->flash('message', 'Leave cancel application approved successfully.');
                     $this->fetchPendingLeaveApplications();
                 }

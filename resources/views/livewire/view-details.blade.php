@@ -38,8 +38,10 @@
                             </span>
                             @endforeach
                             @endif
+                            <span class="normalText">
+                                {{ $leaveRequest->updated_at }}
+                            </span>
                         </div>
-
                         <div>
                             <span>
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
