@@ -21,9 +21,8 @@
                         @if ($this->greetingText)
                             <p class="morning-city">{{ $greetingText }}</p>
                         @endif
-                        <p class="morning-city">Welcome<br>
-                            {{ ucwords(strtolower($loginEmployee->first_name)) }}
-                            &nbsp;{{ ucwords(strtolower($loginEmployee->last_name)) }}
+                        <p class="morning-city">Welcome,
+                            {{ ucwords(strtolower($loginEmployee->first_name)) }}{{ ucwords(strtolower($loginEmployee->last_name)) }}
                         </p>
                     </div>
 
@@ -875,10 +874,11 @@ eum nihil itaque!
                     <div class="d-flex justify-content-between mt-3">
                         <div>
                             @if ($totalTasksCount)
-                                <p class="track-text"> Total Tasks: <span
+                                <p class="payslip-small-desc track-text"> Total Tasks: <span
                                         class="track-count">{{ $totalTasksCount }}</span> </p>
                             @else
-                                <p class="track-text"> Total Tasks: <span class="track-count">0</span></p>
+                                <p class="payslip-small-desc track-text"> Total Tasks: <span
+                                        class="track-count">0</span></p>
                             @endif
                         </div>
 
@@ -890,7 +890,7 @@ eum nihil itaque!
                             @if ($taskCount > 0)
                                 <p data-bs-toggle="tooltip" data-bs-placement="top"
                                     title="Task Requests: {{ ucwords(strtolower($employeeNames)) }}"
-                                    class="track-text">New Tasks: <span
+                                    class="payslip-small-desc track-text">New Tasks: <span
                                         class="track-count">{{ $taskCount }}</span></p>
                             @endif
                         </div>
@@ -901,15 +901,15 @@ eum nihil itaque!
                     <div class="row text-center mt-3">
                         <div class="col-4">
                             <h3 class="text-primary mb-1 track-text">{{ $TaskAssignedToCount }}</h3>
-                            <p class="mb-0 track-text">Tasks Assigned</p>
+                            <p class="payslip-small-desc mb-0 track-text">Tasks Assigned</p>
                         </div>
                         <div class="col-4">
                             <h3 class="text-success mb-1 track-text">{{ $TasksCompletedCount }}</h3>
-                            <p class="mb-0 track-text">Tasks Completed</p>
+                            <p class="payslip-small-desc mb-0 track-text">Tasks Completed</p>
                         </div>
                         <div class="col-4">
                             <h3 class="text-warning mb-1 track-text">{{ $TasksInProgressCount }}</h3>
-                            <p class="mb-0 track-text">Tasks In Progress</p>
+                            <p class="payslip-small-desc mb-0 track-text">Tasks In Progress</p>
                         </div>
                     </div>
                 </div>
