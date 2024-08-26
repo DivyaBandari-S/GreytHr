@@ -764,8 +764,8 @@ class Home extends Component
     {
         try {
             // Get the IP address and determine location
-            // $ip = request()->ip();
-            $ip = '125.62.213.30';
+            $ip = request()->ip();
+            // $ip = '125.62.213.30';
             $location = GeoIP::getLocation($ip);
             $lat = $location['lat'];
             $lon = $location['lon'];
