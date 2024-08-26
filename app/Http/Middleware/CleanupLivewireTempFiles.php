@@ -21,9 +21,7 @@ class CleanupLivewireTempFiles
         return $next($request);
     }
     protected function cleanupOldLivewireTempFiles()
-
     {
-
         $tempDir = storage_path('app/livewire-tmp');
 
         if (File::exists($tempDir)) {  // Check if the directory exists
@@ -37,9 +35,6 @@ class CleanupLivewireTempFiles
                     }
                 }
             }
-        } else {
-
-            Log::info('Livewire temp directory does not exist.');
         }
     }
 
