@@ -61,7 +61,7 @@ class LeaveBalances extends Component
     public $beforePreviousYear;
     public $percentageCasual;
     public $percentageSick;
-    public $percentageCasualProbation,$differenceInMonths;
+    public $percentageCasualProbation, $differenceInMonths;
     public $showModal = false;
     public $dateErrorMessage;
 
@@ -97,7 +97,6 @@ class LeaveBalances extends Component
                 $currentDate = Carbon::now();
 
                 $this->differenceInMonths = $hireDate->diffInMonths($currentDate);
-
             } else {
                 $this->differenceInMonths = null;
             }
@@ -120,7 +119,6 @@ class LeaveBalances extends Component
                 $this->totalSickDays = $leaveBalances['totalSickDays'];
                 $this->totalCasualLeaveProbationDays = $leaveBalances['totalCasualLeaveProbationDays'];
                 $this->totalLossOfPayDays = $leaveBalances['totalLossOfPayDays'];
-
                 // Calculate leave balances
                 $this->sickLeaveBalance = $this->sickLeavePerYear - $this->totalSickDays;
                 $this->casualLeaveBalance = $this->casualLeavePerYear - $this->totalCasualDays;
@@ -187,11 +185,13 @@ class LeaveBalances extends Component
         }
         $this->leaveTransactions = $query->get();
     }
-    public function showPopupModal() {
-        $this->showModal=true;
+    public function showPopupModal()
+    {
+        $this->showModal = true;
     }
-    public function closeModal() {
-        $this->showModal=false;
+    public function closeModal()
+    {
+        $this->showModal = false;
     }
 
 
@@ -298,49 +298,28 @@ class LeaveBalances extends Component
 
 
     //calcalate number of days for leave
-    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
-            // Check if the start and end sessions are different on the same day
-            if ($startDate->isSameDay($endDate) && $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 0.5;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
+
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
             }
+
             // Check if the start and end sessions are different on the same day
-            if (
-
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
-            ) {
-
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 0.5;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
-            }
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
-            ) {
-
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+            if ($startDate->isSameDay($endDate)) {
+                if (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
                     return 1;
+                } elseif (self::getSessionNumber($fromSession) == self::getSessionNumber($toSession)) {
+                    return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
+
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
@@ -364,6 +343,8 @@ class LeaveBalances extends Component
                 // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
+                } else {
+                    $totalDays += 0.5;
                 }
             } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
                 if ($this->getSessionNumber($fromSession) !== 1) {
@@ -372,10 +353,16 @@ class LeaveBalances extends Component
             } else {
                 $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
             }
+
             return $totalDays;
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
+    }
+
+    private function getSessionNumber($session)
+    {
+        return (int) str_replace('Session ', '', $session);
     }
 
     //method to use dynamic years in a dropdown
@@ -399,10 +386,6 @@ class LeaveBalances extends Component
         return $this->selectedYear === $year;
     }
 
-    private function getSessionNumber($session)
-    {
-        return (int) str_replace('Session ', '', $session);
-    }
     public function generatePdf()
     {
         $this->validate();
@@ -447,7 +430,6 @@ class LeaveBalances extends Component
                     'rejected' => 'Rejected',
                     'approved' => 'Approved'
                 ];
-
                 if (array_key_exists($this->transactionType, $transactionTypes)) {
                     $query->where('status', $transactionTypes[$this->transactionType]);
                 }
@@ -455,14 +437,14 @@ class LeaveBalances extends Component
             ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
             ->get()
             ->map(function ($leaveRequest) {
-                $leaveRequest->days = $leaveRequest->calculateLeaveDays( $leaveRequest->from_date,
-                $leaveRequest->from_session,
-                $leaveRequest->to_date,
-                $leaveRequest->to_session);
+                $leaveRequest->days = $leaveRequest->calculateLeaveDays(
+                    $leaveRequest->from_date,
+                    $leaveRequest->from_session,
+                    $leaveRequest->to_date,
+                    $leaveRequest->to_session
+                );
                 return $leaveRequest;
             });
-
-
 
         // Generate PDF using the fetched data
         $pdf = Pdf::loadView('pdf_template', [
@@ -471,12 +453,11 @@ class LeaveBalances extends Component
             'fromDate' => $this->fromDateModal,
             'toDate' => $this->toDateModal,
         ]);
-        $this->showModal=false;
+        $this->showModal = false;
 
         // Return the PDF as a downloadable response
-        return response()->streamDownload(function() use($pdf){
+        return response()->streamDownload(function () use ($pdf) {
             echo $pdf->stream();
         }, 'leave_transactions.pdf');
     }
-   
 }

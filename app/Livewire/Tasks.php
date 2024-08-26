@@ -486,7 +486,6 @@ class Tasks extends Component
 
         $this->showDialog = false;
         $this->validate_tasks = false;
-        return redirect('/tasks');
     }
 
     public function filter()

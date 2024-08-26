@@ -221,7 +221,6 @@ class ViewPendingDetails extends Component
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
-
             // Check if status is already approved
             if ($leaveRequest->status === 'approved') {
                 session()->flash('message', 'Leave application is already approved.');
@@ -230,8 +229,8 @@ class ViewPendingDetails extends Component
                 if ($daysSinceCreation > 3 || $leaveRequest->status !== 'approved') {
                     // Update status to 'approved'
                     $leaveRequest->status = 'approved';
+                    $leaveRequest->updated_at = now(); // Update timestamps
                     $leaveRequest->save();
-                    $leaveRequest->touch(); // Update timestamps
                     session()->flash('message', 'Leave application approved successfully.');
                     $this->fetchPendingLeaveApplications();
                 }
@@ -249,7 +248,6 @@ class ViewPendingDetails extends Component
         try {
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
-
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
@@ -263,8 +261,8 @@ class ViewPendingDetails extends Component
                     // Update status to 'approved'
                     $leaveRequest->cancel_status = 'approved';
                     $leaveRequest->status = 'rejected';
+                    $leaveRequest->updated_at = now();
                     $leaveRequest->save();
-                    $leaveRequest->touch();
                     session()->flash('message', 'Leave cancel application approved successfully.');
                     $this->fetchPendingLeaveApplications();
                 }
@@ -293,8 +291,8 @@ class ViewPendingDetails extends Component
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
                     // Update status to 'approved'v
                     $leaveRequest->cancel_status = 'rejected';
+                    $leaveRequest->updated_at = now();
                     $leaveRequest->save();
-                    $leaveRequest->toucvh();
                     session()->flash('message', 'Leave cancel application approved successfully.');
                     $this->fetchPendingLeaveApplications();
                 }
@@ -315,10 +313,9 @@ class ViewPendingDetails extends Component
             // Update status to 'rejected'
             $leaveRequest->status = 'rejected';
             $leaveRequest->save();
-            $leaveRequest->touch();
+            $leaveRequest->updated_at = now();
             session()->flash('message', 'Leave application rejected.');
             $this->fetchPendingLeaveApplications();
-            return redirect()->route('review', ['tab' => 'leave']);
         } catch (\Exception $e) {
             // Log the error
             Log::error($e);

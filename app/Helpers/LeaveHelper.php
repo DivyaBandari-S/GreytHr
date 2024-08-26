@@ -13,19 +13,23 @@ class LeaveHelper
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
 
-            // Check if the start and end sessions are different on the same day
-            if (
-                $startDate->isSameDay($endDate) &&
-                self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)
-            ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+            }
+
+            if ($startDate->isSameDay($endDate) ){
+                if(self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)){
+
                     return 1;
-                } else {
-                    // If either start or end date is a weekend, return 0
+                }elseif(self::getSessionNumber($fromSession) == self::getSessionNumber($toSession)){
+                    return 0.5;
+                }else{
                     return 0;
                 }
             }
+
+
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
@@ -33,7 +37,6 @@ class LeaveHelper
                 if ($startDate->isWeekday()) {
                     $totalDays += 1;
                 }
-
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -50,22 +53,23 @@ class LeaveHelper
                 // If start and end sessions are the same, check if the session is not 1
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
+                } else {
+                    $totalDays += 0.5;
                 }
-            }elseif(self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)){
+            } elseif (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 1; // Add half a day
                 }
-            }
-            else {
+            } else {
                 $totalDays += (self::getSessionNumber($toSession) - self::getSessionNumber($fromSession) + 1) * 0.5;
             }
 
-            return (float) $totalDays;
-
+            return $totalDays;
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
     }
+
 
     private static function getSessionNumber($session)
     {
@@ -80,7 +84,6 @@ class LeaveHelper
             ->where('status', 'approved')
             ->whereIn('leave_type', ['Casual Leave Probation', 'Loss Of Pay', 'Sick Leave', 'Casual Leave', 'Maternity Leave', 'Marriage Leave', 'Petarnity Leave'])
             ->get();
-
         $totalCasualDays = 0;
         $totalCasualLeaveProbationDays = 0;
         $totalSickDays = 0;
@@ -98,32 +101,32 @@ class LeaveHelper
                 $leaveRequest->to_date,
                 $leaveRequest->to_session
             );
+
             // Accumulate days based on leave type
             switch ($leaveType) {
                 case 'Casual Leave':
-                    $totalCasualDays += intval($days);
+                    $totalCasualDays += $days;
                     break;
                 case 'Sick Leave':
-                    $totalSickDays += intval($days);
+                    $totalSickDays += $days;
                     break;
                 case 'Loss Of Pay':
-                    $totalLossOfPayDays += intval($days);
+                    $totalLossOfPayDays += $days;
                     break;
                 case 'Casual Leave Probation':
-                    $totalCasualLeaveProbationDays += intval($days);
+                    $totalCasualLeaveProbationDays += $days;
                     break;
                 case 'Maternity Leave':
-                    $totalMaternityDays += intval($days);
+                    $totalMaternityDays += $days;
                     break;
                 case 'Marriage Leave':
-                    $totalMarriageDays += intval($days);
+                    $totalMarriageDays += $days;
                     break;
                 case 'Petarnity Leave':
-                    $totalPaternityDays += intval($days);
+                    $totalPaternityDays += $days;
                     break;
             }
         }
-
         return [
             'totalCasualDays' => $totalCasualDays,
             'totalCasualLeaveProbationDays' => $totalCasualLeaveProbationDays,
@@ -134,5 +137,4 @@ class LeaveHelper
             'totalPaternityDays' => $totalPaternityDays,
         ];
     }
-
 }

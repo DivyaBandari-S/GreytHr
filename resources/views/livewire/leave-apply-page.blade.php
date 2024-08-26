@@ -196,7 +196,6 @@
                         <label for="fromSession">Session</label> <br>
                         <div class="custom-select-wrapper">
                             <select id="fromSession" class="form-control outline-none rounded placeholder-small" wire:model="from_session" wire:keydown.debounce.500ms="validateField('from_session')" name="fromSession" wire:change="handleFieldUpdate('from_session')">
-                                <option value="">Select a session</option> <!-- Placeholder option -->
                                 <option value="Session 1">Session 1</option>
                                 <option value="Session 2">Session 2</option>
                             </select>
@@ -220,9 +219,8 @@
                         <label for="to_session">Session</label> <br>
                         <div class="custom-select-wrapper">
                             <select id="to_session" class="form-control outline-none rounded placeholder-small" wire:model="to_session" wire:keydown.debounce.500ms="validateField('to_session')" name="toSession" wire:change="handleFieldUpdate('to_session')">
-                                <option value="">Select a session</option> <!-- Placeholder option -->
-                                <option value="Session 2">Session 2</option>
                                 <option value="Session 1">Session 1</option>
+                                <option value="Session 2">Session 2</option>
                             </select>
                             @error('to_session') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
