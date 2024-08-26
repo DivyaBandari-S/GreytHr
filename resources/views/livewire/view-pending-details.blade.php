@@ -9,7 +9,7 @@
                             {{ $count }}
                         </span>
                     </span>
-                    @endife
+                    @endif
                 </div>
                 <div class="search-container d-flex align-items-end justify-content-end p-1">
                     <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Enter employee name" class="border outline-none rounded">

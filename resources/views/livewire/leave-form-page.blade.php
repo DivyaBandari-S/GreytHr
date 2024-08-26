@@ -40,7 +40,7 @@
                <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
             </li>
             <li class="custom-item m-0 p-0 flex-grow-1">
-               <a href="#" style="border-top-right-radius:5px; border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
+               <a href="#" style="border-topl-right-radius:5px; border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
             </li>
          </ul>
       </div>

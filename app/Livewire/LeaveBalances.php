@@ -430,7 +430,6 @@ class LeaveBalances extends Component
                     'rejected' => 'Rejected',
                     'approved' => 'Approved'
                 ];
-
                 if (array_key_exists($this->transactionType, $transactionTypes)) {
                     $query->where('status', $transactionTypes[$this->transactionType]);
                 }
@@ -446,8 +445,6 @@ class LeaveBalances extends Component
                 );
                 return $leaveRequest;
             });
-
-
 
         // Generate PDF using the fetched data
         $pdf = Pdf::loadView('pdf_template', [
