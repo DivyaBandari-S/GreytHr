@@ -403,7 +403,7 @@
                     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
-                                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                                <div class="modal-header" >
                                     <h5 class="modal-title" style="color:white;">More Recipients</h5>
                                     <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
                                         wire:click="openModal" style="background-color: white; height:10px;width:10px;">
@@ -506,7 +506,7 @@
                 <label for="file">Attachments</label> <br>
                 <input id="file" type="file" wire:model="file_paths" wire:loading.attr="disabled" multiple style="font-size: 12px;" /> <br>
                 @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror
-                <span class="normalTextValue mt-2" style="font-weight: normal;">File type : jpg,png</span>
+                <span class="normalTextValue mt-2" style="font-weight: normal;">File type : xls,csv,xlsx,pdf,jpeg,png,jpg,gif</span>
             </div>
 
             <div class="buttons-leave">

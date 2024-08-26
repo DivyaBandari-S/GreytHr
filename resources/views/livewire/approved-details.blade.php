@@ -45,6 +45,7 @@
                         </div>
 
                         <div>
+                            @if($leaveRequest->category_type == 'Leave')
                             <span style="color: #32CD32; font-size: 12px; font-weight: 500; text-transform:uppercase;">
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
@@ -60,6 +61,23 @@
 
                                 @endif
                             </span>
+                            @else
+                            <span style="color: #32CD32; font-size: 12px; font-weight: 500; text-transform:uppercase;">
+                                @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
+
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#FF0000;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @else
+
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#778899;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @endif
+                            </span>
+                            @endif
                         </div>
                     </div>
                     <div class="middle-container">
@@ -246,10 +264,10 @@
                     <div class="mt-4 d-flex flex-column" style="gap: 70px;">
                         <div class="group">
                             <div>
+                                @if($leaveRequest->category_type == 'Leave')
                                 <h5 class="normalText text-start">
                                     @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                                     Withdrawn
-
                                     <span class="normalText text-start">by</span> <br>
                                     <span class="normalTextValue text-start">
                                         {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
@@ -269,6 +287,30 @@
                                     @endif
                                     <br>
                                 </h5>
+                                @else
+                                <h5 class="normalText text-start">
+                                    @if(strtoupper($leaveRequest->cancel_status) == 'WITHDRAWN')
+                                    Withdrawn
+                                    <span class="normalText text-start">by</span> <br>
+                                    <span class="normalTextValue text-start">
+                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
+                                    </span>
+                                    @elseif(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+                                    <span class="normalTextValue text-start"> Approved <br> by</span>
+                                    @if(!empty($leaveRequest['applying_to']))
+                                    @foreach($leaveRequest['applying_to'] as $applyingTo)
+                                    <span class="normalText text-start">
+                                        {{ ucwords(strtolower($applyingTo['report_to'] ))}}
+                                    </span>
+                                    @endforeach
+                                    @endif
+                                    @else
+                                    Rejected by
+                                    <span class="normalText"> {{ ucwords(strtolower($applyingTo['report_to'] ))}}</span>
+                                    @endif
+                                    <br>
+                                </h5>
+                                @endif
                             </div>
 
                         </div>

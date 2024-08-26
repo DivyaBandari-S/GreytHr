@@ -299,7 +299,6 @@ class LeaveApplyPage extends Component
                     $carbonFromDate = $leave->from_date->format('Y-m-d');
                     $carbonToDate = $leave->to_date->format('Y-m-d');
                     if ($this->from_date == $carbonFromDate && $this->to_date == $carbonToDate) {
-                        dd('true');
                         if ($this->from_session == $leave->from_session) {
                             $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
                             $this->showerrorMessage = true;

@@ -190,8 +190,8 @@
                                 <tr>
                                     <td>{{ $balance->status }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
-                                    <td>{{ date('d M Y', ($balance->from_date)) }}</td>
-                                    <td>{{ date('d M Y', ($balance->to_date)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
+                                    <td>{{ date('d M Y',strtotime($balance->to_date)) }}</td>
                                     <td>{{ $employeeLeaveBalances }}</td>
                                     <td>Annual Grant for the present year </td>
                                 </tr>
