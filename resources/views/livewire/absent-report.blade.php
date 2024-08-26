@@ -32,15 +32,13 @@
             @endforeach
         </table>
         
-        <div class="modal-footer mt-2"
-                            style="background-color: rgb(2, 17, 79); display: flex;justify-content: space-around;;">
-                            <button type="button"
-                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;">Options</button>
-                            <button type="button"
-                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
+        <div class="mt-2" style="background-color: rgb(2, 17, 79); display: flex;justify-content: center; padding: 10px; gap: 15px;">
+        
+                            <button type="button" class="submit-btn" style="background-color: white; color: rgb(2, 17, 79);"
+
                                 wire:click="downloadAbsentReportInExcel">Run</button>
-                            <button type="button" data-dismiss="modal"
-                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
+                            <button type="button" data-dismiss="modal" class="cancel-btn1"
+
                                 wire:click='resetFields'>Clear</button>
 
                         </div>

@@ -57,6 +57,12 @@ class AttendanceMusterReport extends Component
             $this->selectedEmployees[] = $empId;
         }
     }
+    public function resetFields()
+    {
+        $this->fromDate='';
+        $this->toDate='';
+        $this->selectedEmployees=[];
+    }
     public function timeToMinutes($time)
     {
         list($hours, $minutes) = explode(':', $time);
@@ -267,9 +273,9 @@ class AttendanceMusterReport extends Component
                             $status2, // Replace with actual session data
                             $inTime, // Replace with actual in time
                             $outTime, // Replace with actual out time
-                            '10:00 Am To 07:00 Pm', // Replace with actual shift name
-                            '10 : 00', // Replace with actual shift in time
-                            '19 : 00', // Replace with actual shift out time
+                            $emp->shift_type, // Replace with actual shift name
+                            $emp->shift_start_time, // Replace with actual shift in time
+                            $emp->shift_end_time, // Replace with actual shift out time
                             $lateInHrs, // Replace with actual late in hours
                             $earlyOutHrs, // Replace with actual early out hours
                             $formattedWorkHrs, // Replace with actual work hours

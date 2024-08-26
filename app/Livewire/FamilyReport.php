@@ -201,21 +201,21 @@ foreach ($employees2 as $employee) {
          
             foreach ($children as $child) {
            
-               if($child['gender']=='female')
+               if($child['gender']=='female'||$child['gender']=='Female'||$child['gender']=='FEMALE')
                {
                 $childrenData = [
                     $employee['emp_id'],
                     $employee['first_name'] . ' ' . $employee['last_name'],
-                    \Carbon\Carbon::parse( $employee['hire_date'])->format('jS F Y'),
-                    $employee['company_name'],
-                    $employee['job_title'],
+                    isset($employee['hire_date']) ? \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y') : 'NA',
+                    isset($employee['company_id']) ? Company::where('company_id', $employee['company_id'])->value('company_name') :'NA',
+                    isset($employee['job_role']) ? $employee['job_role']:'NA',
                     $child['name'],
                     'daughter',
-                   \Carbon\Carbon::parse( $child['dob'])->format('jS F Y'),
-                    $child['gender'],
-                    isset($child['blood_group']) ?? $child['blood_group'] ?? 'NA', // Assuming blood group is not available for children
-                    isset($child['nationality']) ?? $child['nationality'] ?? 'NA', // Assuming nationality is not available for children
-                    ''  // Assuming occupation is not applicable for children
+                    isset($child['dob']) ? \Carbon\Carbon::parse( $child['dob'])->format('jS F Y'):'NA',
+                    isset($child['gender'])? $child['gender']:'NA',
+                    isset($child['blood_group']) ? $child['blood_group'] : 'NA', // Assuming blood group is not available for children
+                    isset($child['nationality']) ? $child['nationality'] : 'NA', // Assuming nationality is not available for children
+                    'NA'  // Assuming occupation is not applicable for children
                 ];
                }
                else
@@ -223,16 +223,16 @@ foreach ($employees2 as $employee) {
                         $childrenData = [
                             $employee['emp_id'],
                             $employee['first_name'] . ' ' . $employee['last_name'],
-                            \Carbon\Carbon::parse( $employee['hire_date'])->format('jS F Y'),
-                            $employee['company_name'],
-                            $employee['job_title'],
+                            isset($employee['hire_date']) ? \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y') : 'NA',
+                            isset($employee['company_id']) ? Company::where('company_id', $employee['company_id'])->value('company_name') :'NA',
+                            isset($employee['job_role']) ? $employee['job_role']:'NA',
                             $child['name'],
                             'son',
-                            \Carbon\Carbon::parse( $child['dob'] )->format('jS F Y'),
-                            $child['gender'],
-                            $child['blood-group'] ?? 'NA', // Assuming blood group is not available for children
-                            $child['nationality'] ?? 'NA', // Assuming nationality is not available for children
-                            ''  // Assuming occupation is not applicable for children
+                            isset($child['dob'] ) ? \Carbon\Carbon::parse( $child['dob'] )->format('jS F Y'):'NA',
+                            isset($child['gender']) ? $child['gender']:'NA',
+                            isset($child['blood_group']) ?  $child['blood_group'] :'NA', // Assuming blood group is not available for children
+                            isset($child['nationality']) ? $child['nationality']:'NA', // Assuming nationality is not available for children
+                            'NA'  // Assuming occupation is not applicable for children
                         ];
             }
                 // Add the child's details row to the rows array
@@ -248,6 +248,11 @@ foreach ($employees2 as $employee) {
         return response()->download($filePath, 'family_reports.xlsx');
 
       }
+    }
+    public function resetFields()
+    {
+        $this->EmployeeId=[];
+        $this->search='';
     }
     public function searchfilter()
     {

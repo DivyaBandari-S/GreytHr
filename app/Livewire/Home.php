@@ -511,7 +511,7 @@ class Home extends Component
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
                 ->where('employee_status', 'active')
                 ->get();
-
+            
             $arrayofabsentemployees = $this->absent_employees->toArray();
 
             $this->absent_employees_count = EmployeeDetails::where('manager_id', $loggedInEmpId)
@@ -556,7 +556,7 @@ class Home extends Component
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
                 ->where('employee_details.employee_status', 'active')
                 ->get();
-
+            
             $swipes_late1 = $swipes_late->count();
 
             $this->swipeDetails = DB::table('swipe_records')
