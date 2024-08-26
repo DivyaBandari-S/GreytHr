@@ -52,10 +52,16 @@ class AttendenceMasterDataNew extends Component
 
     public $todayyear;
 
+    
+    public $legend=false;
     public function mount()
     {
         $this->todayyear = date('Y');
         
+    }
+    public function openlegend()
+    {
+        $this->legend=!$this->legend;
     }
     //This method will update the selected year from the dropdown
     public function updateselectedYear()

@@ -296,7 +296,6 @@
         }
 
         .panel {
-            display: none;
             background-color: white;
             overflow: hidden;
             border: 1px solid #cecece;
@@ -304,7 +303,7 @@
         }
 
         .accordion:after {
-            content: '\02795';
+            
             font-size: 13px;
             color: #fff;
             float: right;
@@ -350,6 +349,12 @@
         .deductionIcon {
             background-color: #fcd2ca;
         }
+        .accordion-icon {
+            font-size: 13px;
+            color: #fff;
+            float: right;
+            margin-left: 5px;
+}
 
         .down-arrow-reg {
             width: 0;
@@ -395,7 +400,7 @@
         <div class="search-bar" style="margin-left:30px;">
             <input type="text" wire:model="search" placeholder="Search..." wire:change="searchfilter">
         </div>
-        <div class="col" style="text-align:end;">
+        <div class="attendance-muster-download-and-dropdown col" style="text-align:end;">
             <button class="btn btn-primary" wire:click="downloadExcel">
                 <i class="fa fa-download" aria-hidden="true"></i>
             </button>
@@ -415,8 +420,16 @@
     <div class="col-md-12">
 
 
-        <button class="accordion">Legend</button>
-        <div class="panel">
+        <button class="accordion"wire:click="openlegend">Legend
+        <span class="accordion-icon">
+                            @if($legend)
+                                &#x2796; <!-- Unicode for minus sign -->
+                            @else
+                                &#x2795; <!-- Unicode for plus sign -->
+                            @endif
+                    </span>
+        </button>
+        <div class="panel"style="display: {{ $legend ? 'block' : 'none' }};">
             <div class="row m-0 mt-3 mb-3">
                 <div class="col-md-3 mb-2 pe-0" style="display: flex">
                     <p class="me-2 mb-0">
@@ -854,22 +867,5 @@
         });
     });
 </script>
-<script>
-    var acc = document.getElementsByClassName("accordion");
-    var i;
 
-    for (i = 0; i < acc.length; i++) {
-        acc[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var panel = this.nextElementSibling;
-            if (panel.style.display === "block") {
-                panel.style.display = "none";
-            } else {
-                panel.style.display = "block";
-            }
-        });
-    }
-
-    // September 2023
-</script>
 </div>

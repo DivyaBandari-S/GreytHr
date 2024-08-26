@@ -4,45 +4,13 @@
             margin-right: 62px;
         }
 
-        .custom-scrollbar {
-            overflow-y: scroll;
-            overflow-x: hidden;
-            padding-right: 10px;
-            max-height: 800px;
-        }
+      
 
-        .custom-scrollbar-for-right-side-container {
-            overflow-y: scroll;
-            overflow-x: hidden;
-            padding-right: 10px;
-            max-height: 800px;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 5px;
-            margin-right: 15px;
+        
+        
+        
 
-        }
-        .custom-scrollbar-for-right-side-container::-webkit-scrollbar {
-            width: 5px;
-            margin-right: 15px;
-
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #888;
-            margin-left: 15px;
-        }
-        .custom-scrollbar-for-right-side-container::-webkit-scrollbar-track {
-            background-color: #888;
-            margin-left: 15px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background-color: #f1f1f1;
-        }
-        .custom-scrollbar-for-right-side-container::-webkit-scrollbar-thumb {
-            background-color: #f1f1f1;
-        }
+       
         .my-button-attendance-info {
             padding: 5px 10px;
             border: none;
@@ -1849,7 +1817,7 @@ color: #fff;
                             <p class="mb-0">
                                 <i class="fas fa-mug-hot"></i>
                             </p>
-                            <p class="m-1 attendance-legend-text">Rest Day</p>
+                            <p class="m-1 attendance-legend-text">Sick Leave</p>
                         </div>
 
 

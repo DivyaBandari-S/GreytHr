@@ -38,7 +38,7 @@ class Home extends Component
     public $swipes;
     public $showSalary = false;
 
-    public $whoisinTitle = '';
+    public $whoisinTitle='';
     public $currentDay;
     public $absent_employees_count;
     public $showAlertDialog = false;
@@ -102,13 +102,9 @@ class Home extends Component
     public $minTemperature;
     public $maxTemperature;
     public $error;
-    public $windspeed;
-    public $winddirection;
-    public $isDay;
-    public $weatherCode;
-    public $city;
-    public $country;
-    public $postal_code;
+  public $windspeed;
+public $winddirection;
+public $isDay;
     public function mount()
     {
         $this->fetchWeather();
@@ -233,17 +229,17 @@ class Home extends Component
 
     public function openEarlyEmployees()
     {
-        $this->whoisinTitle = 'On Time Employees';
+        $this->whoisinTitle='On Time Employees';
         $this->showAllEarlyEmployees = true;
     }
     public function openLateEmployees()
     {
-        $this->whoisinTitle = 'Late Arrival Employees';
+        $this->whoisinTitle='Late Arrival Employees';
         $this->showAllLateEmployees = true;
     }
     public function closeAllAbsentEmployees()
     {
-        $this->whoisinTitle = '';
+        $this->whoisinTitle='';
         $this->showAllAbsentEmployees = false;
     }
     public function open()
@@ -307,22 +303,23 @@ class Home extends Component
     }
     public function showEarlyEmployees()
     {
-        $this->whoisinTitle = 'On Time';
+        $this->whoisinTitle='On Time';
         $this->showAllEarlyEmployees = true;
     }
     public function closeAllEarlyEmployees()
     {
-        $this->whoisinTitle = '';
+        $this->whoisinTitle='';
         $this->showAllEarlyEmployees = false;
     }
     public function openAbsentEmployees()
     {
-        $this->whoisinTitle = 'Not Yet In';
+        $this->whoisinTitle='Not Yet In';
         $this->showAllAbsentEmployees = true;
+
     }
     public function closeAllLateEmployees()
     {
-        $this->whoisinTitle = '';
+        $this->whoisinTitle='';
         $this->showAllLateEmployees = false;
     }
     public function render()
@@ -765,13 +762,9 @@ class Home extends Component
         try {
             // Get the IP address and determine location
             $ip = request()->ip();
-            // $ip = '125.62.213.30';
             $location = GeoIP::getLocation($ip);
             $lat = $location['lat'];
             $lon = $location['lon'];
-            $this->country = $location['country'];
-            $this->city = $location['city'];
-            $this->postal_code = $location['postal_code'];
 
             // Get the base API URL from the .env file
             $apiUrl = env('WEATHER_API_URL');
@@ -798,8 +791,7 @@ class Home extends Component
                 // Extract weather data from the response
                 $currentWeather = $data['current_weather'] ?? [];
 
-                // $this->weatherCondition = $this->mapWeatherCodeToCondition($currentWeather['weathercode'] ?? 'Unknown');
-                $this->weatherCode = $currentWeather['weathercode'] ?? 'Unknown';
+                $this->weatherCondition = $this->mapWeatherCodeToCondition($currentWeather['weathercode'] ?? 'Unknown');
                 $this->temperature = $currentWeather['temperature'] ?? 'Unknown';
                 $this->windspeed = $currentWeather['windspeed'] ?? 'Unknown';
                 $this->winddirection = $currentWeather['winddirection'] ?? 'Unknown';
@@ -825,38 +817,20 @@ class Home extends Component
 
     private function mapWeatherCodeToCondition($code)
     {
-        // Map weather code to weather condition
+        // Map weather code to weather condition (you can customize this)
         $weatherCodes = [
-            0  => 'Clear sky',
-            1  => 'Mainly clear',
-            2  => 'Partly cloudy',
-            3  => 'Overcast',
-            45 => 'Fog',
-            48 => 'Depositing rime fog',
-            51 => 'Drizzle: Light intensity',
-            53 => 'Drizzle: Moderate intensity',
-            55 => 'Drizzle: Dense intensity',
-            56 => 'Freezing Drizzle: Light intensity',
-            57 => 'Freezing Drizzle: Dense intensity',
-            61 => 'Rain: Slight intensity',
-            63 => 'Rain: Moderate intensity',
-            65 => 'Rain: Heavy intensity',
-            66 => 'Freezing Rain: Light intensity',
-            67 => 'Freezing Rain: Heavy intensity',
-            71 => 'Snowfall: Slight intensity',
-            73 => 'Snowfall: Moderate intensity',
-            75 => 'Snowfall: Heavy intensity',
-            77 => 'Snow grains',
-            80 => 'Rain showers: Slight intensity',
-            81 => 'Rain showers: Moderate intensity',
-            82 => 'Rain showers: Violent intensity',
-            85 => 'Snow showers: Slight intensity',
-            86 => 'Snow showers: Heavy intensity',
-            95 => 'Thunderstorm: Slight or moderate',
-            96 => 'Thunderstorm with slight hail',
-            99 => 'Thunderstorm with heavy hail',
+            0 => 'Clear sky',
+            1 => 'Mainly clear',
+            2 => 'Partly cloudy',
+            3 => 'Overcast',
+            4 => 'Fog',
+            5 => 'Drizzle',
+            6 => 'Rain',
+            7 => 'Snow',
+            8 => 'Thunderstorm',
+            // Add more mappings as needed
         ];
 
-        return $weatherCodes[$code] ?? '';
+        return $weatherCodes[$code] ?? 'Unknown';
     }
 }

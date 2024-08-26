@@ -24,8 +24,49 @@
     outline: none; /* Remove the default blue outline */
     box-shadow: none; /* Remove any shadow effect */
 }
+.modal-title{
+    font-size: var(--sub-headings-font-size);
+    color: #fff !important;
+}
+.custom-modal-dialog.custom-modal-lg {
+    height: 70vh; /* Adjust this value to control the modal height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center the modal vertically */
+}
 
+.custom-modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%; /* Ensure modal content takes full width of the dialog */
+}
 
+.custom-modal-header, .custom-modal-footer {
+    flex-shrink: 0;
+}
+
+.custom-modal-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.swiper-container {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: auto;
+    max-height: calc(80vh); /* 50vh minus the height of header and footer */
+    object-fit: contain; /* Ensures the image scales correctly */
+}
+.modal-header{
+    background-color: rgb(2, 17, 79); height: 50px;
+}
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
     background-color: white;
@@ -241,7 +282,7 @@
 .section-name {
     color: #677a8e;
     font-weight: 500;
-    font-size: 12px !important;
+    font-size: 11px;
 }
 
 .team-Notify {
@@ -958,7 +999,63 @@ button.close-button {
 /* end of app.blade */
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
+/*Starting of attendance SubModule:Attendance Info(Pranita Priyadarshi)*/
+.custom-scrollbar {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 10px;
+    max-height: 800px;
+}
+.custom-scrollbar-for-right-side-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 10px;
+    max-height: 800px;
+}
+.custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    margin-right: 15px;
+
+}
+.custom-scrollbar-for-right-side-container::-webkit-scrollbar {
+    width: 5px;
+    margin-right: 15px;
+
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #888;
+    margin-left: 15px;
+}
+.custom-scrollbar-for-right-side-container::-webkit-scrollbar-track {
+    background-color:transparent;
+    margin-left: 15px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+.custom-scrollbar-for-right-side-container::-webkit-scrollbar-thumb {
+    background-color: #f1f1f1;
+}
+/*Ending of attendance SubModule:Attendance Info(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
+.content-who-is-in
+{
+    display:flex; 
+    flex-direction:row;
+    justify-content:space-between;
+    padding:0; 
+    border-top:1px solid #52afe9;
+}
+@media (max-width: 1185px) {
+    .content-who-is-in {
+        display:flex; 
+        flex-direction:column;
+        justify-content:space-between;
+        padding:0; 
+        border-top:1px solid #52afe9;
+        width: 100%;
+    }
+}
 .cancel-btn:hover
         {
             background-color: rgb(2, 17, 79);
@@ -1302,6 +1399,14 @@ input[type="date"]::before {
 
 .form-group-who-is-in {
     margin-right: 10px;
+    
+}
+@media screen {
+    .form-group-who-is-in {
+        margin-right: 80px;
+        margin-top:90px;
+        
+    }
 }
 .form-group label {
     font-size: var(--normal-font-size);
@@ -1417,11 +1522,67 @@ input[type="date"]::before {
 }
 /*Ending of submodule:who is in(Pranita Priyadarshi)*/
 /*Starting of submodule:employee swipes(Pranita Priyadarshi)*/
+.swipe-details-with-device-employee-swipes-data
+{
+    height: 60vh;
+}
+@media screen {
+    .swipe-details-with-device-employee-swipes-data
+     {
+            height: 250vh;
+     }
+}
 .container-employee-swipes {
     display: flex;
     justify-content: space-between;
 }
-
+.employee-swipes-fields {
+    display:flex; 
+    flex-direction:row;
+   
+ 
+}
+.dropdown-container1-employee-swipes-for-download-and-filter
+    {
+        display: flex;
+        flex-direction: row;
+        margin-top:-5px;
+    }
+@media screen and (max-width: 600px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+}
+@media screen and (max-width: 600px) {
+    .dropdown-container1-employee-swipes-for-download-and-filter
+    {
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media screen and (max-width: 800px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+}
+@media screen and (max-width: 800px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+}
+@media screen and (max-width:800px) {
+    .button2{
+       
+    border: 1px solid #ddd;
+    height: 30px;
+    background-color: #fff;
+    color: #666;
+    border-radius:2px;
+    }
+}
 .container-employee-swipes-right {
     background-color: #fff;
     height: 100vh;
@@ -1479,8 +1640,9 @@ input[type="date"]::before {
 .employee-swipes-table table {
     border-collapse: collapse;
     margin: 0;
-    padding: 0;
+    padding: 10px;
     width: 100%;
+    overflow-x: hidden;
 }
 
 .employee-swipes-table thead {
@@ -1490,7 +1652,7 @@ input[type="date"]::before {
 
 .employee-swipes-table th,
 td {
-    padding: 10px;
+    padding: 15px;
     /* width: 100%; */
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -1548,6 +1710,7 @@ td {
     height: 30px;
     background-color: #fff;
     color: #666;
+    border-radius:2px;
 }
 
 .dropdown-btn1::after {
@@ -1774,8 +1937,27 @@ td {
 .Attendance-attendance-muster .table tbody tr td:last-child {
     border-right: none;
 }
+.attendance-muster-download-and-dropdown
+{
+    text-align: end;
+}
+@media screen {
+    .attendance-muster-download-and-dropdown{
+        margin-top: 30px;
+        text-align: end;
+    }
+}
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
-
+/*starting of attendance submodule:shift roster(Pranita Priyadarshi)*/
+.shift-roster-download-and-dropdown{
+    text-align: end;
+}
+@media screen {
+    .shift-roster-download-and-dropdown{
+        margin-top:70px;
+    }
+}
+/*ending of attendance submodule:shift roster(Pranita Priyadarshi)*/
 /* start of feeds(Archana) */
 .emoji-drawer {
     display: grid;
@@ -3088,7 +3270,7 @@ l
     border-radius: 50%;
     color: #778899;
     font-weight: 500;
-    background-color: #fff;
+    background-color: #f7f3f3eb;
     font-size: var(--normal-font-size);
 }
 .remainContent {
@@ -4956,22 +5138,21 @@ option {
 /* From Uiverse.io by alexruix */
  /* From Uiverse.io by SouravBandyopadhyay */
 .payslip-card-title {
-    color: #262626;
-    font-size: 1em;
+    color: var(--main-heading-color);
+    font-size: 0.8em;
     line-height: normal;
     font-weight: 700;
     margin-bottom: 0.5em;
   }
 
   .payslip-small-desc {
-    font-size: 1em;
     font-weight: 400;
     line-height: 1.5em;
     color: #452c2c;
   }
 
   .payslip-small-desc {
-    font-size: 14px;
+    font-size: var(--normal-font-size);
   }
 
   .payslip-go-corner {
@@ -5024,20 +5205,6 @@ option {
     transform: scale(1);
     transform-origin: 50% 50%;
     transition: transform 0.35s ease-out;
-  }
-  .skyMornImg {
-    width: 5.2em;
-    border-radius: 10px;
-  }
-  .locationGlobe {
-    color: #fff;
-    font-weight: 500;
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-  }
-  .track-text {
-    font-size: 12px !important;
   }
 
   .payslip-card:hover:before {
@@ -5243,7 +5410,7 @@ option {
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    padding: 0px 10px;
+    padding: 0px 20px;
     gap: 4px;
   }
 
@@ -5284,7 +5451,96 @@ option {
   } */
 
   .page-title {
+
     color: var(--main-heading-color);
+
     width: -webkit-fill-available;
+
 }
+
+.settings-profile-image{
+
+    border-radius: 50%;
+
+    height: 90px;
+
+    width: 90px;
+
+  }
+
+  .chat-icon{
+
+    font-size: 17px;
+
+    color: var(--dark);
+
+    cursor: pointer;
+
+  }
+
+  .page-title{
+
+    color: var(--main-heading-color);
+
+    width: -webkit-fill-available;
+
+  }
+
+  .title-page{
+
+    margin-left: -10px;
+
+    font-weight: 500;
+
+    color: var(--main-heading-color);
+
+    justify-content: center;
+
+    font-size: var(--nav-headings-font-size);
+
+  }
+
+  .custom-select-width {
+
+    width: 120px;
+
+    padding: 5px;
+
+    font-size: var(--sub-headings-font-size);
+
+}
+
+.custom-select-width select {
+    padding: 5px 10px;
+    font-size: var(--sub-headings-font-size);
+}
+
+.track-text{
+    font-size: var(--sub-headings-font-size);
+}
+
+.payslip-card:hover .track-text {
+
+    transition: all 0.5s ease-out;
+
+    color: #ffffff;
+
+  }
+
+  .track-count{
+
+    font-size: var(--sub-headings-font-size);
+
+    font-weight: 500;
+
+    padding-left: 5px;
+
+  }
+
+  .payslip-card:hover .track-count{
+    transition: all 0.5s ease-out;
+    color: #ffffff;
+
+  }
+
 
