@@ -274,7 +274,7 @@
     </div>
   </div>
   <div class="col-md-3">
-    <div class="container5-who-is-in" style="margin-left:-20px;">
+    <div class="container5-who-is-in">
       <div class="heading-who-is-in">
         <h3>On&nbsp;Time&nbsp;({{ str_pad($onTime, 2, '0', STR_PAD_LEFT) }})</h3>
 
@@ -323,7 +323,7 @@
     </div>
   </div>
   <div class="col-md-3">
-    <div class="container5-who-is-in" style="margin-left:-20px;">
+    <div class="container5-who-is-in">
       <div class="heading-who-is-in">
         <h3>On&nbsp;Leave&nbsp;({{ str_pad($ApprovedLeaveRequestsCount, 2, '0', STR_PAD_LEFT) }})</h3>
 

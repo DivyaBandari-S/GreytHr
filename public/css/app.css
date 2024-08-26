@@ -958,6 +958,44 @@ button.close-button {
 /* end of app.blade */
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
+/*Starting of attendance SubModule:Attendance Info(Pranita Priyadarshi)*/
+.custom-scrollbar {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 10px;
+    max-height: 800px;
+}
+.custom-scrollbar-for-right-side-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 10px;
+    max-height: 800px;
+}
+.custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    margin-right: 15px;
+
+}
+.custom-scrollbar-for-right-side-container::-webkit-scrollbar {
+    width: 5px;
+    margin-right: 15px;
+
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #888;
+    margin-left: 15px;
+}
+.custom-scrollbar-for-right-side-container::-webkit-scrollbar-track {
+    background-color:transparent;
+    margin-left: 15px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+.custom-scrollbar-for-right-side-container::-webkit-scrollbar-thumb {
+    background-color: #f1f1f1;
+}
+/*Ending of attendance SubModule:Attendance Info(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
 .cancel-btn:hover
         {
@@ -1302,6 +1340,14 @@ input[type="date"]::before {
 
 .form-group-who-is-in {
     margin-right: 10px;
+    
+}
+@media screen {
+    .form-group-who-is-in {
+        margin-right: 80px;
+        margin-top:90px;
+        
+    }
 }
 .form-group label {
     font-size: var(--normal-font-size);
@@ -1417,9 +1463,61 @@ input[type="date"]::before {
 }
 /*Ending of submodule:who is in(Pranita Priyadarshi)*/
 /*Starting of submodule:employee swipes(Pranita Priyadarshi)*/
+
+.swipe-details-with-device-employee-swipes-data
+{
+    height: 60vh;
+}
+@media screen {
+    .swipe-details-with-device-employee-swipes-data
+     {
+            height: 250vh;
+     }
+}
+
 .container-employee-swipes {
     display: flex;
     justify-content: space-between;
+}
+
+.employee-swipes-fields {
+    display:flex; 
+    flex-direction:row;
+   
+ 
+}
+.dropdown-container1-employee-swipes-for-download-and-filter
+    {
+        display: flex;
+        flex-direction: row;
+        margin-top:-5px;
+    }
+@media screen and (max-width: 600px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+}
+@media screen and (max-width: 600px) {
+    .dropdown-container1-employee-swipes-for-download-and-filter
+    {
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media screen and (max-width: 800px) {
+    .employee-swipes-fields {
+        display:flex; 
+        flex-direction:column;
+        }
+     .button2{
+       
+    border: 1px solid #ddd;
+    height: 30px;
+    background-color: #fff;
+    color: #666;
+    border-radius:2px;
+    }
 }
 
 .container-employee-swipes-right {
@@ -1479,8 +1577,9 @@ input[type="date"]::before {
 .employee-swipes-table table {
     border-collapse: collapse;
     margin: 0;
-    padding: 0;
+    padding: 10px;
     width: 100%;
+    overflow-x: hidden;
 }
 
 .employee-swipes-table thead {
@@ -1490,7 +1589,7 @@ input[type="date"]::before {
 
 .employee-swipes-table th,
 td {
-    padding: 10px;
+    padding: 15px;
     /* width: 100%; */
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -1774,8 +1873,27 @@ td {
 .Attendance-attendance-muster .table tbody tr td:last-child {
     border-right: none;
 }
+.attendance-muster-download-and-dropdown
+{
+    text-align: end;
+}
+@media screen {
+    .attendance-muster-download-and-dropdown{
+        margin-top: 30px;
+        text-align: end;
+    }
+}
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
-
+/*starting of attendance submodule:shift roster(Pranita Priyadarshi)*/
+.shift-roster-download-and-dropdown{
+    text-align: end;
+}
+@media screen {
+    .shift-roster-download-and-dropdown{
+        margin-top:70px;
+    }
+}
+/*ending of attendance submodule:shift roster(Pranita Priyadarshi)*/
 /* start of feeds(Archana) */
 .emoji-drawer {
     display: grid;
