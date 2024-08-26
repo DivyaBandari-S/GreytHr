@@ -73,7 +73,7 @@
 
                                                         <div class="form-group mt-2">
                                                             <label for="contactDetails">Provide the Name of Distribution List<span style="color:red">*</span></label>
-                                                            <input wire:model.lazy="distributor_name" type="text" class="form-control">
+                                                            <input wire:model.lazy="distributor_name"  wire:keydown.debounce.500ms="validateField('form.distributor_name')"type="text" class="form-control">
                                                             @error('distributor_name') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
@@ -260,7 +260,7 @@
 
                                                         <div class="form-group mt-2" >
                                                             <label for="selectedEquipment "   >Select Equipment<span style="color:red">*</span></label>
-                                                            <select wire:model.lazy="selected_equipment" class="form-control" style="font-size: 12px;">
+                                                            <select wire:model.lazy="selected_equipment"  wire:keydown.debounce.500ms="validateField('form.selected_equipment')" class="form-control" style="font-size: 12px;">
                                                                 <option value="keyboard">Select Equipment</option>
                                                                 <option value="keyboard">Keyboard</option>
                                                                 <option value="mouse">Mouse</option>
@@ -276,13 +276,13 @@
 
                                                         <div class="form-group mt-2">
                                                             <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
-                                                            <input wire:model.lazy="subject" type="text" class="form-control">
+                                                            <input wire:model.lazy="subject" wire:keydown.debounce.500ms="validateField('form.subject')" type="text" class="form-control">
                                                             @error('subject') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
                                                         <div class="form-group mt-2">
                                                             <label for="reason">Specific Information<span style="color:red">*</span></label>
-                                                            <textarea wire:model="description" class="form-control"></textarea>
+                                                            <textarea wire:model="description"  wire:keydown.debounce.500ms="validateField('form.description')" class="form-control"></textarea>
                                                             @error('description') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>

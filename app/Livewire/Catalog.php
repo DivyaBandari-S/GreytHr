@@ -86,13 +86,12 @@ class Catalog extends Component
     public $AddRequestaceessDialog = false;
     public $justification;
     public $information;
+
     protected $rules = [
-        'subject' => 'required|string|max:255',
-        'mail' => 'required|email|unique:help_desks',
-        'mobile' => 'required|string|max:15',
-        'description' => 'required|string',
-        'mail' => 'required|email|unique:help_desks',
-        'mobile' => 'required|string|max:15',
+    'subject' => 'required|string',
+                 'description' => 'required|string',
+                 'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
+                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
      
 
     ];
@@ -107,15 +106,27 @@ class Catalog extends Component
        
 
     ];
+
+    
+    public function validateFormB()
+    {
+        $this->validate($this->rulesFormB, $this->messagesFormB);
+    }
+
     public function mount()
 {
     $this->selected_equipment = '';  // Initialize with a default value if needed
 }
 
+
     public function updated($propertyName)
-    {
-        $this->validateOnly($propertyName);
+{
+  
+    if (array_key_exists($propertyName, $this->rules)) {
+        $this->validateOnly($propertyName, $this->rules, $this->messages);
     }
+}
+
     public function ItRequest()
     {
         $this->ItRequestaceessDialog = true; // Open the Medical (Sec 80D) modal
@@ -542,7 +553,7 @@ if ($this->file_path) {
                 'mail.email' => ' Email must be a valid email address.',
                
             ];
-            $this->validate([
+            $this->autovalidate([
                 'subject' => 'required|string|max:255',
                 'mail' => 'required|email|unique:help_desks',
                 'description' => 'required|string',
@@ -603,7 +614,7 @@ if ($this->file_path) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $employeeId,
+                'employee_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
@@ -616,17 +627,9 @@ if ($this->file_path) {
     public function submit()
     {
         try {
-            $messages=[
-                'subject' =>'Business Justification is required',
-                'description'=>'Specific Information is required',
-                  'selected_equipment'=>'Selected equipment is required'
-             ];
-             $this->validate([
-                 'subject' => 'required|string',
-                 'description' => 'required|string',
-                 'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
-                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
-             ],$messages);
+            $this->validate();
+     
+      
      
 
              $fileContent=null;
@@ -683,7 +686,7 @@ if ($this->file_path) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $employeeId,
+                'employee_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,

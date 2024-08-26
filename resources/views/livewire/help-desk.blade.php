@@ -104,7 +104,7 @@
                             <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category <span style="color:red">*</span></label>
                             <div class="input" type="" class="form-control placeholder-small">
                                 <div style="position: relative;">
-                                    <select wire:model.lazy="category" id="category" style="font-size: 12px;" class="form-control placeholder-small">
+                                    <select wire:model.lazy="category"  wire:keydown.debounce.500ms="validateField('form.category')" id="category" style="font-size: 12px;" class="form-control placeholder-small">
                                         <option style="color: #778899; " value="">Select Category</option>
                                         <optgroup label="HR">
                                             <option value="Employee Information">Employee Information</option>
@@ -131,13 +131,13 @@
 
                             <div class="form-group mt-2">
                                 <label for="subject" style="color: #778899; font-weight: 500; font-size: 12px;">Subject <span style="color: red;">*</span></label>
-                                <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
+                                <input type="text" wire:model.lazy="subject"  wire:keydown.debounce.500ms="validateField('form.subject')" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
                                 @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="form-group mt-2">
                                 <label for="description" style="color: #778899; font-weight: 500; font-size: 12px;">Description <span style="color: red;">*</span></label>
-                                <textarea wire:model.lazy="description" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
+                                <textarea wire:model.lazy="description"  wire:keydown.debounce.500ms="validateField('form.description')" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
 
                                 @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
@@ -162,7 +162,7 @@
                                 <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
                                 <div class="input" class="form-control placeholder-small">
                                     <div style="position: relative;">
-                                        <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                        <select name="priority" id="priority" wire:model.lazy="priority" wire:keydown.debounce.500ms="validateField('form.priority')" style="font-size: 12px; " class="form-control placeholder-small">
                                             <option st="color: gray;" value="">Select Priority</option>
                                             <option value="High">High</option>
                                             <option value="Low">Low</option>
@@ -306,7 +306,7 @@
                             <label for="category" style="color:#778899;font-weight:500;font-size:12px;font-family: Arial, sans-serif;">Category <span style="color:red">*</span></label>
                             <div class="input" type="" class="form-control placeholder-small">
                                 <div style="position: relative;">
-                                    <select wire:model.lazy="category" id="category" style="font-size: 12px;" class="form-control placeholder-small">
+                                    <select wire:model.lazy="category"  wire:keydown.debounce.500ms="validateField('form.category')" id="category" style="font-size: 12px;" class="form-control placeholder-small">
                                         <option style="color: #778899; " value="">Select Category</option>
                                         <optgroup label="Finance">
                                             <option value="Income Tax">Income Tax</option>
@@ -329,12 +329,12 @@
 
                             <div class="form-group mt-2">
                                 <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject<span style="color:red">*</span></label>
-                                <input type="text" wire:model.lazy="subject" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
+                                <input type="text" wire:model.lazy="subject"  wire:keydown.debounce.500ms="validateField('form.subject')" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
                                 @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                             <div class="form-group mt-2">
                                 <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description<span style="color:red">*</span></label>
-                                <textarea wire:model.lazy="description" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
+                                <textarea wire:model.lazy="description"  wire:keydown.debounce.500ms="validateField('form.description')" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
                                 @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                             <div class="row mt-2">
@@ -356,7 +356,7 @@
                                         <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
                                         <div class="input" class="form-control placeholder-small">
                                             <div style="position: relative;">
-                                                <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                                <select name="priority" id="priority" wire:model.lazy="priority"  wire:keydown.debounce.500ms="validateField('form.priority')" style="font-size: 12px; " class="form-control placeholder-small">
                                                     <option style="color: gray;" value="">Select Priority</option>
                                                     <option value="High">High</option>
                                                     <option value="Low">Low</option>
