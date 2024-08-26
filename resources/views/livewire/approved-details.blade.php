@@ -261,7 +261,7 @@
                         <div class="v-line"></div>
                         <div class=cirlce></div>
                     </div>
-                    <div class="mt-4 d-flex flex-column" style="gap: 70px;">
+                    <div class="mt-4 d-flex flex-column" style="gap: 50px;">
                         <div class="group">
                             <div>
                                 @if($leaveRequest->category_type == 'Leave')
@@ -270,20 +270,26 @@
                                     Withdrawn
                                     <span class="normalText text-start">by</span> <br>
                                     <span class="normalTextValue text-start">
-                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
+                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }} <br>
+                                        <span class="normalTextValue" style="font-size:0.65rem;"> {{  $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
                                     </span>
                                     @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
                                     <span class="normalTextValue text-start"> Approved <br> by</span>
                                     @if(!empty($leaveRequest['applying_to']))
                                     @foreach($leaveRequest['applying_to'] as $applyingTo)
                                     <span class="normalText text-start">
-                                        {{ ucwords(strtolower($applyingTo['report_to'] ))}}
+                                        {{ ucwords(strtolower($applyingTo['report_to'] ))}} <br>
+                                     <span class="normalTextValue" style="font-size:0.65rem;"> {{  $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
                                     </span>
+
                                     @endforeach
                                     @endif
                                     @else
-                                    Rejected by
-                                    <span class="normalText"> {{ ucwords(strtolower($applyingTo['report_to'] ))}}</span>
+                                    Rejected by <br>
+                                    <span class="normalText"> {{ ucwords(strtolower($applyingTo['report_to'] ))}} <br>
+                                    <span class="normalTextValue" style="font-size:0.65rem;"> {{  $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
+
+                                    </span>
                                     @endif
                                     <br>
                                 </h5>
@@ -293,20 +299,25 @@
                                     Withdrawn
                                     <span class="normalText text-start">by</span> <br>
                                     <span class="normalTextValue text-start">
-                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
+                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }} <br>
+                                        <span class="normalTextValue" style="font-size:0.65rem;"> {{  $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
                                     </span>
                                     @elseif(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
                                     <span class="normalTextValue text-start"> Approved <br> by</span>
                                     @if(!empty($leaveRequest['applying_to']))
                                     @foreach($leaveRequest['applying_to'] as $applyingTo)
                                     <span class="normalText text-start">
-                                        {{ ucwords(strtolower($applyingTo['report_to'] ))}}
+                                        {{ ucwords(strtolower($applyingTo['report_to'] ))}} <br>
+                                     <span class="normalTextValue" style="font-size:0.65rem;"> {{  $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
                                     </span>
+
                                     @endforeach
                                     @endif
                                     @else
-                                    Rejected by
-                                    <span class="normalText"> {{ ucwords(strtolower($applyingTo['report_to'] ))}}</span>
+                                    Rejected by <br>
+                                    <span class="normalText"> {{ ucwords(strtolower($applyingTo['report_to'] ))}} <br>
+                                    <span class="normalTextValue" style="font-size:0.65rem;"> {{  $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
+                                    </span>
                                     @endif
                                     <br>
                                 </h5>
@@ -318,7 +329,7 @@
                             <div class="d-flex flex-column">
                                 <h5 class="mb-0 normalText text-start">Submitted
                                 </h5>
-                                <span class="normalTextValue text-start" style="font-size:0.625rem;">{{ $leaveRequest->created_at->format('d M, Y g:i A') }}</span>
+                                <span class="normalTextValue text-start" style="font-size:0.625rem;">{{ $leaveRequest->created_at->format('d M, Y g:i a') }}</span>
                             </div>
                         </div>
                     </div>
