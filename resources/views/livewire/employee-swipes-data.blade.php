@@ -1,58 +1,57 @@
 <div>
 <body>
 <div>
-    <div style="display:flex;flex-direction:row;">
-    <div class="dropdown-container1-employee-swipes">
-        <label for="start_date"style="color: #666;font-size:12px;">Start Date<span style="color: red;">*</span>:</label><br/>
-        <input type="date"style="font-size: 12px;" id="start_date" wire:model="startDate"wire:change="checkDates">
-    </div>
-    <div class="dropdown-container1-employee-swipes">
-        <label for="end_date"style="color: #666;font-size:12px;">End Date<span style="color: red;">*</span>:</label><br/>
-        <input type="date" style="font-size: 12px;"id="end_date" wire:model="endDate"wire:change="checkDates">
-          
-    </div>
-     <div class="dropdown-container1-employee-swipes">
-          <label for="dateType"style="color: #666;font-size:12px;">Date Type<span style="color: red;">*</span>:</label><br/>
-          <button class="dropdown-btn1"style="font-size: 12px;">Swipe Date</button>
-          <div class="dropdown-content1-employee-swipes">
+        <div class="employee-swipes-fields">
+            <div class="dropdown-container1-employee-swipes">
+                <label for="start_date"style="color: #666;font-size:12px;">Start Date<span style="color: red;">*</span>:</label><br/>
+                <input type="date"style="font-size: 12px;" id="start_date" wire:model="startDate"wire:change="checkDates">
+            </div>
+            <div class="dropdown-container1-employee-swipes">
+                <label for="end_date"style="color: #666;font-size:12px;">End Date<span style="color: red;">*</span>:</label><br/>
+                <input type="date" style="font-size: 12px;"id="end_date" wire:model="endDate"wire:change="checkDates">
+            </div>
+            <div class="dropdown-container1-employee-swipes">
+                <label for="dateType"style="color: #666;font-size:12px;">Date Type<span style="color: red;">*</span>:</label><br/>
+                <button class="dropdown-btn1"style="font-size: 12px;">Swipe Date</button>
+                <div class="dropdown-content1-employee-swipes">
 
-          </div>
-     </div>
+                </div>
+            </div>
+            <div class="dropdown-container1-employee-swipes">
+                    <label for="dateType"style="color: #666;font-size:12px;">Employee Search</label><br/>
+                
+                    <div class="search-input-employee-swipes">
+                            <div class="search-container"style="position: relative;">
+                                    <i class="fa fa-search search-icon-employee-swipes" aria-hidden="true"style="cursor:pointer;"wire:click="searchEmployee"></i>
+                                    <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
 
-     <div class="dropdown-container1-employee-swipes">
-             <label for="dateType"style="color: #666;font-size:12px;">Employee Search</label><br/>
-          
-             <div class="search-input-employee-swipes">
-             <div class="search-container"style="position: relative;">
-                       <i class="fa fa-search search-icon-employee-swipes" aria-hidden="true"style="cursor:pointer;"wire:click="searchEmployee"></i>
-                       <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
+                            </div>
+                        
+                    </div>
+            </div>
+                <div class="dropdown-container1-employee-swipes-for-download-and-filter">
+                        <div class="dropdown-container1-employee-swipes">
 
-              </div>
-                   
-             </div>
-    </div>
-    <div class="dropdown-container1-employee-swipes">
+                            <button type="button" class="button2" data-toggle="modal" data-target="#exampleModalCenter">
+                                <i class="fa-solid fa-download"wire:click="downloadFileforSwipes"></i>
+                            </button>
+                            
+                        </div>
+                        <div class="dropdown-container1-employee-swipes">
 
-        <button type="button" class="button2" data-toggle="modal" data-target="#exampleModalCenter"style="margin-top:30px;border-radius:2px;">
-             <i class="fa-solid fa-download"wire:click="downloadFileforSwipes"></i>
-        </button>
-           
-    </div>
-    <div class="dropdown-container1-employee-swipes">
-
-            <button type="button" class="button2" data-toggle="modal" data-target="#exampleModalCenter"style="margin-top:30px;border-radius:2px;">
-                 <i class="fa-icon fas fa-filter"style="color:#666"></i>
-            </button>
-               
-        </div>  
-      
-</div>
+                                <button type="button" class="button2" data-toggle="modal" data-target="#exampleModalCenter"style="margin-top:30px;border-radius:2px;">
+                                    <i class="fa-icon fas fa-filter"style="color:#666"></i>
+                                </button>
+                                
+                        </div>  
+                </div>
+        </div>
 
     <div class="row m-0 p-0  mt-4" >
         <div class="col-md-9 mb-4" >
            <div class="bg-white border rounded" style="height: 100vh;">
-             <div class="table-responsive bg-white rounded p-0 m-0" style="width:100%;">
-                <table class="employee-swipes-table  bg-white " >
+             <div class="bg-white rounded p-0 m-0">
+                <table class="employee-swipes-table  bg-white" >
                     <thead>
                         <tr>
                             <th>Employee&nbsp;Name</th>
@@ -153,7 +152,7 @@
             @endif
            </div>
         </div>
-        <div class="col-md-3 m-0 p-0 bg-white rounded border " style="height: 100vh;">
+        <div class="col-md-3 p-0 bg-white rounded border">
                 <div class="green-section-employee-swipes p-2">
                  <img src="https://cdn-icons-png.flaticon.com/512/2055/2055568.png"
                             class="container-employee-swipes-right-image">

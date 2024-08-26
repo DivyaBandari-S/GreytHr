@@ -180,7 +180,12 @@
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
-                                    <td>{{ $totalSickDays }}</td>
+                                    <td>
+                                        @php
+                                        $days = $this->calculateNumberOfDays($balance->from_date, $balance->from_session, $balance->to_date, $balance->to_session);
+                                        @endphp
+                                        {{ $days }}
+                                    </td>
                                     <td>{{ $balance->reason }}</td>
                                 </tr>
                                 @endforeach
@@ -188,8 +193,8 @@
                                 <tr>
                                     <td>{{ $balance->status }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
-                                    <td>{{ date('d M Y', ($balance->from_date)) }}</td>
-                                    <td>{{ date('d M Y', ($balance->to_date)) }}</td>
+                                    <td>{{ date('d M Y',strtotime($balance->from_date)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
                                     <td>{{ $employeeLeaveBalances }}</td>
                                     <td>Annual Grant for the present year</td>
                                 </tr>

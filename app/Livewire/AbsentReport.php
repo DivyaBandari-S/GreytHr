@@ -13,6 +13,8 @@ use Spatie\SimpleExcel\SimpleExcelWriter;
 class AbsentReport extends Component
 {
     public $employees1;
+
+    public $employees;
     public $fromDate;
     public $toDate;
     public $loggedInEmpId;
@@ -21,6 +23,10 @@ class AbsentReport extends Component
 
     public $showAbsentReportDialog = true;
     public $approvedLeaveRequests;
+
+    public $selectedEmployees = [];
+
+    protected $listeners = ['employeeSelected'];
     public function mount()
     {
         $this->loggedInEmpId = Auth::guard('emp')->user()->emp_id;
@@ -99,15 +105,23 @@ class AbsentReport extends Component
         SimpleExcelWriter::create($filePath)->addRows($data);
         return response()->download($filePath, 'absent_employees.xlsx');
     }
-
+    public function employeeSelected($empId)
+    {
+        if (in_array($empId, $this->selectedEmployees)) {
+            $this->selectedEmployees = array_diff($this->selectedEmployees, [$empId]);
+        } else {
+            $this->selectedEmployees[] = $empId;
+        }
+        
+    }
     public function render()
     {
 
 
-        $employees = EmployeeDetails::where('manager_id', $this->loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+        $this->employees = EmployeeDetails::where('manager_id', $this->loggedInEmpId)->select('emp_id', 'first_name', 'last_name','employee_status')->get();
         $this->approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->where('leave_applications.status', 'approved')
-            ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+            ->whereIn('leave_applications.emp_id', $this->employees->pluck('emp_id'))
             ->whereDate('from_date', '<=', $this->currentDate)
             ->whereDate('to_date', '>=', $this->currentDate)
             ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])

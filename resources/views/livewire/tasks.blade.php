@@ -554,7 +554,8 @@
                             <div class="task-container">
                                 <!-- Task Name -->
                                 <div class="form-group" style="margin-bottom: 10px;">
-                                    <label for="task_name" style="font-size: 13px; color: #778899;">Task Name*</label>
+                                    <label for="task_name" style="font-size: 13px; color: #778899;">Task Name<span
+                                        style="color: var(--requiredAlert);">*</span></label>
                                     <input type="text" wire:model.debounce.0ms="task_name"
                                         wire:input="autoValidate" class="placeholder-small"
                                         placeholder="Enter task name"
@@ -569,7 +570,8 @@
                                 <div class="form-group"
                                     style="color:grey;font-size:0.75rem;cursor:pointer; margin-bottom: 10px;">
                                     <label for="assignee"
-                                        style="font-size: 13px;color:#778899; margin-bottom: 10px;">Assignee*</label>
+                                        style="font-size: 13px;color:#778899; margin-bottom: 10px;">Assignee<span
+                                        style="color: var(--requiredAlert);">*</span></label>
                                     <br>
                                     <i wire:click="forAssignee"  wire:change="autoValidate" class="fa fa-user icon" id="profile-icon"></i>
                                     @if ($showRecipients)
@@ -675,7 +677,8 @@
                                         @else
                                             <div style="margin-bottom: 10px;">
                                                 <label style="font-size: 13px;color:#778899" for="clientSelect">Select
-                                                    Client*</label>
+                                                    Client<span
+                                                    style="color: var(--requiredAlert);">*</span></label>
                                                 <select wire:change="showProjects"
                                                     style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"
                                                     id="clientSelect" wire:model="client_id">
@@ -699,7 +702,8 @@
                                         @else
                                             <div style="margin-bottom: 10px;">
                                                 <label style="font-size: 13px;color:#778899" for="clientSelect">Select
-                                                    Project*</label>
+                                                    Project<span
+                                                    style="color: var(--requiredAlert);">*</span></label>
                                                 <select wire:change="autoValidate"
                                                     style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"
                                                     id="clientSelect" wire:model="project_name">
@@ -766,7 +770,8 @@
                                         <div class="form-group">
                                             <label class="form-label"
                                                 style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Due
-                                                Date*</label>
+                                                Date<span
+                                                style="color: var(--requiredAlert);">*</span></label>
                                             <br>
                                             <input wire:change="autoValidate" type="date" wire:model="due_date"
                                                 class="placeholder-small"

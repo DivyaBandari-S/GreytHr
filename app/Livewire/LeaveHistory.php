@@ -31,6 +31,7 @@ class LeaveHistory extends Component
     public $employeeDetails = [];
     public $leaveRequest;
     public $selectedYear;
+    public $showViewImageDialog = false;
 
     public function mount($leaveRequestId)
     {
@@ -47,51 +48,86 @@ class LeaveHistory extends Component
             $this->leaveRequest = null;
         }
     }
+    public function downloadImage()
+    {
+        $fileDataArray = is_string($this->leaveRequest->file_paths)
+            ? json_decode($this->leaveRequest->file_paths, true)
+            : $this->leaveRequest->file_paths;
+
+        // Filter images
+        $images = array_filter(
+            $fileDataArray,
+            fn($fileData) => strpos($fileData['mime_type'], 'image') !== false,
+        );
+
+        // Create a zip file for the images
+        $zipFileName = 'images.zip';
+        $zip = new \ZipArchive();
+        $zip->open(storage_path($zipFileName), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+        foreach ($images as $image) {
+            $base64File = $image['data'];
+            $mimeType = $image['mime_type'];
+            $extension = explode('/', $mimeType)[1];
+            $imageName = uniqid() . '.' . $extension;
+
+            $zip->addFromString($imageName, base64_decode($base64File));
+        }
+
+        $zip->close();
+
+        // Return the zip file as a download
+        return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
+    }
+    public $showViewFileDialog = false; // Toggle modal visibility
+    public $files = []; // Store files array
+    public $selectedFile; // Store the selected file's data
+
+
+    public function closeViewFile()
+    {
+        $this->showViewFileDialog = false;
+    }
+    public function showViewFile()
+    {
+      
+        $this->showViewFileDialog = true;
+    }
+
+    public function showViewImage()
+    {
+      
+        $this->showViewImageDialog = true;
+    }
+    public function closeViewImage()
+    {
+        $this->showViewImageDialog = false;
+    }
+    
 
     //used to calculate number of days for leave
-    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
-            // Check if the start and end sessions are different on the same day
-            if ($startDate->isSameDay($endDate) && $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 0.5;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
+
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
             }
+
             // Check if the start and end sessions are different on the same day
-            if (
-
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
-            ) {
-
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 0.5;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
-            }
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
-            ) {
-
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+            if ($startDate->isSameDay($endDate)) {
+                if (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
                     return 1;
+                } elseif (self::getSessionNumber($fromSession) == self::getSessionNumber($toSession)) {
+                    return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
+
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
@@ -99,7 +135,6 @@ class LeaveHistory extends Component
                 if ($startDate->isWeekday()) {
                     $totalDays += 1;
                 }
-
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -131,12 +166,6 @@ class LeaveHistory extends Component
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
-    }
-
-    //to count the sessions of leave applied
-    private function getSessionNumber($session)
-    {
-        return (int) str_replace('Session ', '', $session);
     }
 
     public function render()

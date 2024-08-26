@@ -88,15 +88,15 @@
                 <ol class="breadcrumb d-flex align-items-center ">
                     <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('leave-balance') }}">Leave Balance</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Casual Leave</li>
+                    <li class="breadcrumb-item cactive" aria-current="page">Casual Leave</li>
                 </ol>
             </div>
             <div class="col-md-5 ">
                 <div class="buttons-container d-flex gap-3 justify-content-end mt-2 p-0 ">
                     @if($year==$currentYear)
-                    <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
+                    <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-form-page'">Apply</button>
                     @endif
-                    <select class="dropdown bg-white rounded " wire:change='changeYear($event.target.value)'  wire:model='year'    style="margin-right:5px;">
+                    <select class="dropdown bg-white rounded " wire:change='changeYear($event.target.value)' wire:model='year' style="margin-right:5px;">
                         <?php
                         // Get the current year
                         $currentYear = date('Y');
@@ -104,7 +104,7 @@
                         $options = [$currentYear - 2, $currentYear - 1, $currentYear, $currentYear + 1];
                         ?>
                         @foreach($options as $pre_year)
-                        <option  value="{{ $pre_year }}">{{ $pre_year }}</option>
+                        <option value="{{ $pre_year }}">{{ $pre_year }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -116,11 +116,11 @@
                         <div class="card-body" style="height: 100%;">
                             <h6 class="card-title">Information</h6>
                             @if($year <= $currentYear)
-                            <p class="card-text">No information found</p>
-                            @else
+                                <p class="card-text">No information found</p>
+                                @else
 
-                            <p class="card-text">HR will add the leaves</p>
-                            @endif
+                                <p class="card-text">HR will add the leaves</p>
+                                @endif
                         </div>
                     </div>
                 </div>
@@ -182,7 +182,12 @@
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
-                                    <td>{{ $totalSickDays }}</td>
+                                    <td>
+                                        @php
+                                        $days = $this->calculateNumberOfDays($balance->from_date, $balance->from_session, $balance->to_date, $balance->to_session);
+                                        @endphp
+                                        {{ $days }}
+                                    </td>
                                     <td>{{ $balance->reason }}</td>
                                 </tr>
                                 @endforeach
@@ -190,8 +195,8 @@
                                 <tr>
                                     <td>{{ $balance->status }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
-                                    <td>{{ date('d M Y', ($balance->from_date)) }}</td>
-                                    <td>{{ date('d M Y', ($balance->to_date)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
+                                    <td>{{ date('d M Y',strtotime($balance->to_date)) }}</td>
                                     <td>{{ $employeeLeaveBalances }}</td>
                                     <td>Annual Grant for the present year </td>
                                 </tr>

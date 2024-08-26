@@ -27,6 +27,8 @@ return new class extends Migration
             //delete actions
             $table->timestamp('receiver_deleted_at')->nullable();
             $table->timestamp('sender_deleted_at')->nullable();
+            $table->string('file_name')->nullable();
+            $table->string('mime_type')->nullable();
             $table->binary('file_path')->nullable();
             $table->text('body')->nullable();
             $table->timestamps();

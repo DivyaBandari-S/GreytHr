@@ -22,8 +22,6 @@ class EmployeeLeaveBalances extends Model
     // Cast attributes to JSON
     protected $casts = [
         'leave_type' => 'array',
-        'from_date' => 'array',
-        'to_date' => 'array',
         'leave_balance' => 'array',
     ];
     protected static function boot()
@@ -33,8 +31,6 @@ class EmployeeLeaveBalances extends Model
         static::creating(function ($model) {
             $model->leave_type = $model->leave_type ?: [];
             $model->leave_balance = $model->leave_balance ?: [];
-            $model->from_date = $model->from_date ?: [];
-            $model->to_date = $model->to_date ?: [];
         });
     }
     /**
@@ -55,11 +51,13 @@ class EmployeeLeaveBalances extends Model
      */
     public static function getLeaveBalancePerYear($employeeId, $leaveType, $year)
     {
+        
         // Retrieve the record for the specific employee and year
         $balance = self::where('emp_id', $employeeId)
             ->whereYear('from_date', '<=', $year) // Ensure the year is within the range
             ->whereYear('to_date', '>=', $year)
             ->first();
+
 
         if ($balance) {
             // Decode the JSON leave_balance column

@@ -28,6 +28,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Jenssegers\Agent\Agent;
 use Throwable;
+use Torann\GeoIP\Facades\GeoIP;
+use Illuminate\Support\Facades\Http;
+
 
 class Home extends Component
 {
@@ -35,7 +38,7 @@ class Home extends Component
     public $swipes;
     public $showSalary = false;
 
-    public $whoisinTitle='';
+    public $whoisinTitle = '';
     public $currentDay;
     public $absent_employees_count;
     public $showAlertDialog = false;
@@ -66,7 +69,7 @@ class Home extends Component
     public $showAllLateEmployees = false;
 
     public $employee_details;
-    public $showAllEarlyEmployees=false;
+    public $showAllEarlyEmployees = false;
     public $grossPay;
     public $deductions;
     public $netPay;
@@ -93,8 +96,22 @@ class Home extends Component
     public $showMessage = true;
     public $showAlert = false;
     public $swipeDataOfEmployee;
+
+    public $weatherCondition;
+    public $temperature;
+    public $minTemperature;
+    public $maxTemperature;
+    public $error;
+    public $windspeed;
+    public $winddirection;
+    public $isDay;
+    public $weatherCode;
+    public $city;
+    public $country;
+    public $postal_code;
     public function mount()
     {
+        $this->fetchWeather();
         // Get the current month and year
         // $currentDate = Carbon::today();
         // $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
@@ -162,7 +179,7 @@ class Home extends Component
         //     ->get();
 
         $currentHour = date('G');
-     
+
         if ($currentHour >= 4 && $currentHour < 12) {
             $this->greetingImage = 'morning.jpeg';
             $this->greetingText = 'Good Morning';
@@ -200,7 +217,7 @@ class Home extends Component
     {
         $this->showReviewLeaveAndAttendance = true;
     }
- 
+
     public function closereviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = false;
@@ -216,17 +233,17 @@ class Home extends Component
 
     public function openEarlyEmployees()
     {
-        $this->whoisinTitle='On Time Employees';
+        $this->whoisinTitle = 'On Time Employees';
         $this->showAllEarlyEmployees = true;
     }
     public function openLateEmployees()
     {
-        $this->whoisinTitle='Late Arrival Employees';
+        $this->whoisinTitle = 'Late Arrival Employees';
         $this->showAllLateEmployees = true;
     }
     public function closeAllAbsentEmployees()
     {
-        $this->whoisinTitle='';
+        $this->whoisinTitle = '';
         $this->showAllAbsentEmployees = false;
     }
     public function open()
@@ -290,23 +307,22 @@ class Home extends Component
     }
     public function showEarlyEmployees()
     {
-        $this->whoisinTitle='On Time';
+        $this->whoisinTitle = 'On Time';
         $this->showAllEarlyEmployees = true;
     }
     public function closeAllEarlyEmployees()
     {
-        $this->whoisinTitle='';
+        $this->whoisinTitle = '';
         $this->showAllEarlyEmployees = false;
     }
     public function openAbsentEmployees()
     {
-        $this->whoisinTitle='Not Yet In';
+        $this->whoisinTitle = 'Not Yet In';
         $this->showAllAbsentEmployees = true;
-       
     }
     public function closeAllLateEmployees()
     {
-        $this->whoisinTitle='';
+        $this->whoisinTitle = '';
         $this->showAllLateEmployees = false;
     }
     public function render()
@@ -594,7 +610,6 @@ class Home extends Component
             // Limit to the first 3 unique holidays
             $this->calendarData = $validHolidays->unique('id')->take(3);
             $this->holidayCount = $this->calendarData;
-
             $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
 
@@ -631,14 +646,13 @@ class Home extends Component
                 'LateSwipes' => $swipes_late,
                 'CountLateSwipes' => $swipes_late1,
                 'swipeDataOfEmployee' => $this->swipeDataOfEmployee,
-               'TaskAssignedToCount' => $this->TaskAssignedToCount,
-        'TasksCompletedCount' => $this->TasksCompletedCount,
-        'TasksInProgressCount' => $this->TasksInProgressCount,
-        'totalTasksCount' => $this->totalTasksCount,
-        'taskCount' => $this->taskCount,
-        'employeeNames' => $this->employeeNames,
+                'TaskAssignedToCount' => $this->TaskAssignedToCount,
+                'TasksCompletedCount' => $this->TasksCompletedCount,
+                'TasksInProgressCount' => $this->TasksInProgressCount,
+                'totalTasksCount' => $this->totalTasksCount,
+                'taskCount' => $this->taskCount,
+                'employeeNames' => $this->employeeNames,
             ]);
-           
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
             Log::error('Database Error: ' . $e->getMessage());
@@ -649,99 +663,199 @@ class Home extends Component
             session()->flash('error', 'An unexpected error occurred. Please try again later.');
         }
     }
-    public $filterPeriod ='this_month';
+    public $filterPeriod = 'this_month';
     public function getStartDate()
-{
-    switch ($this->filterPeriod) {
-        case 'last_month':
-            return now()->subMonth()->startOfMonth();
-        case 'this_year':
-            return now()->startOfYear();
-        default:
-            return now()->startOfMonth();
+    {
+        switch ($this->filterPeriod) {
+            case 'last_month':
+                return now()->subMonth()->startOfMonth();
+            case 'this_year':
+                return now()->startOfYear();
+            default:
+                return now()->startOfMonth();
+        }
     }
-}
-public function getEndDate()
-{
-    switch ($this->filterPeriod) {
-        case 'last_month':
-            return now()->subMonth()->endOfMonth();
-        case 'this_year':
-            return now()->endOfYear();
-        default:
-            return now()->endOfMonth();
+    public function getEndDate()
+    {
+        switch ($this->filterPeriod) {
+            case 'last_month':
+                return now()->subMonth()->endOfMonth();
+            case 'this_year':
+                return now()->endOfYear();
+            default:
+                return now()->endOfMonth();
+        }
     }
-}
-public function updatedFilterPeriod($value)
-{
- 
-    $this->calculateTaskData();
-}
-public function calculateTaskData()
-{
-    $employeeId = auth()->guard('emp')->user()->emp_id;
+    public function updatedFilterPeriod($value)
+    {
 
-    $startDate = $this->getStartDate();
-    $endDate = $this->getEndDate();
+        $this->calculateTaskData();
+    }
+    public function calculateTaskData()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
 
-    $totalTasksAssignedBy = \App\Models\Task::with('emp')
-        ->where(function ($query) use ($employeeId) {
-            $query->where('assignee', 'LIKE', "%($employeeId)%");
-        })
-        ->select('emp_id')
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->get();
+        $startDate = $this->getStartDate();
+        $endDate = $this->getEndDate();
 
-    $totalTasksCountAssignedBy = $totalTasksAssignedBy->count();
+        $totalTasksAssignedBy = \App\Models\Task::with('emp')
+            ->where(function ($query) use ($employeeId) {
+                $query->where('assignee', 'LIKE', "%($employeeId)%");
+            })
+            ->select('emp_id')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
 
-    $totalTasksAssignedTo = \App\Models\Task::with('emp')
-        ->where('emp_id', $employeeId)
-        ->where(function ($query) use ($employeeId) {
-            $query->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) != ?", [$employeeId])
-                ->orWhere('assignee', 'NOT LIKE', "%#($employeeId)%");
-        })
-        ->select('emp_id')
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->get();
+        $totalTasksCountAssignedBy = $totalTasksAssignedBy->count();
 
-    $tasksSummary = \App\Models\Task::with('emp')
-        ->selectRaw("
+        $totalTasksAssignedTo = \App\Models\Task::with('emp')
+            ->where('emp_id', $employeeId)
+            ->where(function ($query) use ($employeeId) {
+                $query->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) != ?", [$employeeId])
+                    ->orWhere('assignee', 'NOT LIKE', "%#($employeeId)%");
+            })
+            ->select('emp_id')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
+
+        $tasksSummary = \App\Models\Task::with('emp')
+            ->selectRaw("
             COUNT(*) AS total_tasks_assigned_to,
             COALESCE(SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END), 0) AS tasks_completed_count,
             COALESCE(SUM(CASE WHEN status = 'Open' THEN 1 ELSE 0 END), 0) AS tasks_in_progress_count
         ")
-        ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) = ?", [$employeeId])
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->first();
+            ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) = ?", [$employeeId])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->first();
 
-    $this->TaskAssignedToCount = $tasksSummary->total_tasks_assigned_to;
-    $this->TasksCompletedCount = $tasksSummary->tasks_completed_count;
-    $this->TasksInProgressCount = $tasksSummary->tasks_in_progress_count;
+        $this->TaskAssignedToCount = $tasksSummary->total_tasks_assigned_to;
+        $this->TasksCompletedCount = $tasksSummary->tasks_completed_count;
+        $this->TasksInProgressCount = $tasksSummary->tasks_in_progress_count;
 
-    $totalTasksCountAssignedTo = $totalTasksAssignedTo->count();
-    $this->totalTasksCount = $totalTasksCountAssignedTo + $totalTasksCountAssignedBy;
+        $totalTasksCountAssignedTo = $totalTasksAssignedTo->count();
+        $this->totalTasksCount = $totalTasksCountAssignedTo + $totalTasksCountAssignedBy;
 
-    $taskRecords = \App\Models\Task::with('emp')
-        ->where(function ($query) use ($employeeId) {
-            $query->where('assignee', 'LIKE', "%($employeeId)%");
-        })
-        ->whereDate('created_at', now()->toDateString())
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->select('emp_id')
-        ->get();
+        $taskRecords = \App\Models\Task::with('emp')
+            ->where(function ($query) use ($employeeId) {
+                $query->where('assignee', 'LIKE', "%($employeeId)%");
+            })
+            ->whereDate('created_at', now()->toDateString())
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->select('emp_id')
+            ->get();
 
-    $empIds = $taskRecords->pluck('emp_id')->unique()->toArray();
+        $empIds = $taskRecords->pluck('emp_id')->unique()->toArray();
 
-    $employeeDetails = \App\Models\EmployeeDetails::whereIn('emp_id', $empIds)->get();
+        $employeeDetails = \App\Models\EmployeeDetails::whereIn('emp_id', $empIds)->get();
 
-    $this->employeeNames = $employeeDetails
-        ->map(function ($employee) {
-            return $employee->first_name . ' ' . $employee->last_name;
-        })
-        ->implode(', ');
+        $this->employeeNames = $employeeDetails
+            ->map(function ($employee) {
+                return $employee->first_name . ' ' . $employee->last_name;
+            })
+            ->implode(', ');
 
-    $this->taskCount = $taskRecords->count();
-}
+        $this->taskCount = $taskRecords->count();
+    }
 
 
+
+    // Livewire component method
+    public function fetchWeather()
+    {
+        try {
+            // Get the IP address and determine location
+            $ip = request()->ip();
+            $location = GeoIP::getLocation($ip);
+            $lat = $location['lat'];
+            $lon = $location['lon'];
+            $this->country = $location['country'];
+            $this->city = $location['city'];
+            $this->postal_code = $location['postal_code'];
+
+            // Get the base API URL from the .env file
+            $apiUrl = env('WEATHER_API_URL');
+
+            // Prepare the request URL with dynamic latitude and longitude
+            $requestUrl = $apiUrl . '?latitude=' . $lat . '&longitude=' . $lon . '&current_weather=true';
+
+            // Log request URL for debugging
+            Log::info("Request URL: $requestUrl");
+
+            $response = Http::get($requestUrl);
+
+            // Log response for debugging
+            Log::info('API Response:', $response->json() ?? []);
+            Log::info('API Response Status Code:', ['status' => $response->status()]);
+            Log::info('API Response Headers:', ['headers' => $response->headers()]);
+            Log::info('API Response Body:', ['body' => $response->body()]);
+
+            // Check if the request was successful
+            if ($response->successful()) {
+                // Decode the JSON response
+                $data = $response->json();
+
+                // Extract weather data from the response
+                $currentWeather = $data['current_weather'] ?? [];
+
+                // $this->weatherCondition = $this->mapWeatherCodeToCondition($currentWeather['weathercode'] ?? 'Unknown');
+                $this->weatherCode = $currentWeather['weathercode'] ?? 'Unknown';
+                $this->temperature = $currentWeather['temperature'] ?? 'Unknown';
+                $this->windspeed = $currentWeather['windspeed'] ?? 'Unknown';
+                $this->winddirection = $currentWeather['winddirection'] ?? 'Unknown';
+                $this->isDay = $currentWeather['is_day'] ? 'Day' : 'Night';
+            } else {
+                // Log the error response
+                Log::error('API Error:', ['status' => $response->status(), 'body' => $response->body()]);
+                $this->weatherCondition = 'Unable to fetch weather data';
+                $this->temperature = 'Unknown';
+                $this->windspeed = 'Unknown';
+                $this->winddirection = 'Unknown';
+                $this->isDay = 'Unknown';
+            }
+        } catch (\Exception $e) {
+            Log::error("Exception: ", ['message' => $e->getMessage()]);
+            $this->weatherCondition = 'An error occurred';
+            $this->temperature = 'Unknown';
+            $this->windspeed = 'Unknown';
+            $this->winddirection = 'Unknown';
+            $this->isDay = 'Unknown';
+        }
+    }
+
+    private function mapWeatherCodeToCondition($code)
+    {
+        // Map weather code to weather condition
+        $weatherCodes = [
+            0  => 'Clear sky',
+            1  => 'Mainly clear',
+            2  => 'Partly cloudy',
+            3  => 'Overcast',
+            45 => 'Fog',
+            48 => 'Depositing rime fog',
+            51 => 'Drizzle: Light intensity',
+            53 => 'Drizzle: Moderate intensity',
+            55 => 'Drizzle: Dense intensity',
+            56 => 'Freezing Drizzle: Light intensity',
+            57 => 'Freezing Drizzle: Dense intensity',
+            61 => 'Rain: Slight intensity',
+            63 => 'Rain: Moderate intensity',
+            65 => 'Rain: Heavy intensity',
+            66 => 'Freezing Rain: Light intensity',
+            67 => 'Freezing Rain: Heavy intensity',
+            71 => 'Snowfall: Slight intensity',
+            73 => 'Snowfall: Moderate intensity',
+            75 => 'Snowfall: Heavy intensity',
+            77 => 'Snow grains',
+            80 => 'Rain showers: Slight intensity',
+            81 => 'Rain showers: Moderate intensity',
+            82 => 'Rain showers: Violent intensity',
+            85 => 'Snow showers: Slight intensity',
+            86 => 'Snow showers: Heavy intensity',
+            95 => 'Thunderstorm: Slight or moderate',
+            96 => 'Thunderstorm with slight hail',
+            99 => 'Thunderstorm with heavy hail',
+        ];
+
+        return $weatherCodes[$code] ?? '';
+    }
 }

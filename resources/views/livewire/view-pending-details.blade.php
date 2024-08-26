@@ -211,7 +211,7 @@
                             @if($leaveRequest['leaveRequest']->category_type === 'Leave')
                             <button class="approveBtn" wire:click="approveLeave({{ $loop->index }})">Approve</button>
                             @else
-                            <button class="approveBtn" wire:click="approveLeaveCancel({{ $loop->index }})" title="Approve Request For Leave Cancel">Leave Cancel</button>
+                            <button class="approveBtn" wire:click="approveLeaveCancel({{ $loop->index }})" title="Approve Request For Leave Cancel">Approve</button>
                             @endif
                         </div>
                     </div>

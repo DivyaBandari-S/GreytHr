@@ -1,5 +1,5 @@
 <div class=" m-0 p-0">
-  
+
   @php
   $notyetin=0;
   $lateArrival=0;
@@ -121,7 +121,7 @@
       <p style="text-align:center;font-size:14px;">Employees Information for <span style="font-weight: 500; ">{{\Carbon\Carbon::parse($currentDate)->format('jS F Y')}}</span></p>
     </div>
 
-    <div class="content" style="display:flex; flex-direction:row;justify-content:space-between;padding:0; border-top:1px solid #52afe9;">
+    <div class="content-who-is-in">
       <div class="col-md-3 field-for-employee-who-is-in">
         <div class="percentage-who-is-in" style="font-weight: 500;font-size:14px;">{{number_format($CalculateAbsentees,2)}}%</div>
 
@@ -274,7 +274,7 @@
     </div>
   </div>
   <div class="col-md-3">
-    <div class="container5-who-is-in" style="margin-left:-20px;">
+    <div class="container5-who-is-in">
       <div class="heading-who-is-in">
         <h3>On&nbsp;Time&nbsp;({{ str_pad($onTime, 2, '0', STR_PAD_LEFT) }})</h3>
 
@@ -323,7 +323,7 @@
     </div>
   </div>
   <div class="col-md-3">
-    <div class="container5-who-is-in" style="margin-left:-20px;">
+    <div class="container5-who-is-in">
       <div class="heading-who-is-in">
         <h3>On&nbsp;Leave&nbsp;({{ str_pad($ApprovedLeaveRequestsCount, 2, '0', STR_PAD_LEFT) }})</h3>
 

@@ -151,17 +151,17 @@
             </div>
             <span class="divider"></span>
             <div class="profile">
-                <div class="d-flex brandLogoDiv" onclick="openProfile()">
+                <div class="d-flex brandLogoDiv" >
                     @livewire('company-logo')
                     @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
-                    <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="">
+                    <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="" onclick="openProfile()">
                     @else
                     @if($loginEmployeeProfile->gender=='Male')
-                    <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="">
+                    <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="" onclick="openProfile()">
                     @elseif($loginEmployeeProfile->gender=='Female')
-                    <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="">
+                    <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="" onclick="openProfile()">
                     @else
-                    <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="">
+                    <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="" onclick="openProfile()">
                     @endif
                     @endif
                 </div>

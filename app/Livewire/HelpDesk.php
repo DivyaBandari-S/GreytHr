@@ -525,12 +525,23 @@ class HelpDesk extends Component
     public function submitHR()
     {
         try {
-            // Validate if the file path is set and the file is valid
-            $validatedData = $this->validate($this->rules);
-            if (!$this->file_path || !$this->file_path->isValid()) {
-                Log::error('Invalid file upload.', [
-                    'file_path' => $this->file_path,
-                    'file_error' => $this->file_path ? $this->file_path->getErrorMessage() : null,
+            $fileContent = null;
+            $mime_type = null;
+            $file_name = null;
+
+           $this->validate($this->rules);
+            if ($this->file_path) {
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                $mime_type = $this->file_path->getMimeType();
+                $file_name = $this->file_path->getClientOriginalName();
+                // Validate and store the uploaded file
+            }
+            // Store the file as binary data
+
+
+            if (  $fileContent  === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
                 ]);
                 session()->flash('error', 'Invalid file upload.');
                 return;
@@ -543,18 +554,13 @@ class HelpDesk extends Component
                 session()->flash('error', 'Failed to read the uploaded file.');
                 return;
             }
-    
-            // Get file metadata
-            $this->mime_type = $this->file_path->getMimeType();
-            $this->file_name = $this->file_path->getClientOriginalName();
-    
-            // Check file size (16MB for MEDIUMBLOB)
-            if (strlen($this->fileContent) > 16777215) {
+
+            // Check if the file content is too large
+            if (strlen(  $fileContent ) > 16777215) { // 16MB for MEDIUMBLOB
                 session()->flash('error', 'File size exceeds the allowed limit.');
                 return;
             }
-    
-            // Get employee details
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             if (!$this->employeeDetails) {
@@ -568,9 +574,9 @@ class HelpDesk extends Component
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' => $this->fileContent, // Store the binary file data
-                'file_name' => $this->file_name,
-                'mime_type' => $this->mime_type,
+                'file_path' =>   $fileContent , // Store the binary file data
+                'file_name' => $file_name,
+                'mime_type' => $mime_type,
                 'cc_to' => $this->cc_to ?? '-',
                 'priority' => $this->priority,
                 'mail' => 'N/A',
@@ -584,7 +590,10 @@ class HelpDesk extends Component
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage(), [
-                'file_path' => $this->file_path ? $this->file_path->getRealPath() : null,
+                'category' => $this->category,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
             ]);
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
@@ -736,3 +745,4 @@ class HelpDesk extends Component
         ]);
     }
 }
+
