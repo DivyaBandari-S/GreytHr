@@ -18,7 +18,7 @@ class CasualLeaveBalance extends Component
     public $employeeleaveavlid;
     public $totalSickDays = 0;
     public $employeeDetails;
-    public $Availablebalance,$leaveGrantedData;
+    public $Availablebalance,$leaveGrantedData,$availedLeavesCount;
 
 
     // public function mount(){
@@ -36,25 +36,28 @@ class CasualLeaveBalance extends Component
     // }
 
     ///calculate number of days
-    public static function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
 
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+            }
+
             // Check if the start and end sessions are different on the same day
-            if (
-                $startDate->isSameDay($endDate) &&
-                self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)
-            ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+            if ($startDate->isSameDay($endDate)) {
+                if (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
                     return 1;
+                } elseif (self::getSessionNumber($fromSession) == self::getSessionNumber($toSession)) {
+                    return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
+
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
@@ -62,37 +65,39 @@ class CasualLeaveBalance extends Component
                 if ($startDate->isWeekday()) {
                     $totalDays += 1;
                 }
-
                 // Move to the next day
                 $startDate->addDay();
             }
 
             // Deduct weekends based on the session numbers
-            if (self::getSessionNumber($fromSession) > 1) {
-                $totalDays -= self::getSessionNumber($fromSession) - 1; // Deduct days for the starting session
+            if ($this->getSessionNumber($fromSession) > 1) {
+                $totalDays -= $this->getSessionNumber($fromSession) - 1; // Deduct days for the starting session
             }
-            if (self::getSessionNumber($toSession) < 2) {
-                $totalDays -= 2 - self::getSessionNumber($toSession); // Deduct days for the ending session
+            if ($this->getSessionNumber($toSession) < 2) {
+                $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
             }
             // Adjust for half days
-            if (self::getSessionNumber($fromSession) === self::getSessionNumber($toSession)) {
+            if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
                 // If start and end sessions are the same, check if the session is not 1
-                if (self::getSessionNumber($fromSession) !== 1) {
+                if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
+                } else {
+                    $totalDays += 0.5;
                 }
-            } elseif (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
-                if (self::getSessionNumber($fromSession) !== 1) {
+            } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
+                if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 1; // Add half a day
                 }
             } else {
-                $totalDays += (self::getSessionNumber($toSession) - self::getSessionNumber($fromSession) + 1) * 0.5;
+                $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
             }
 
-            return (float) $totalDays;
+            return $totalDays;
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
     }
+
 
     private static function getSessionNumber($session)
     {
@@ -134,6 +139,7 @@ class CasualLeaveBalance extends Component
             ->whereYear('to_date', '>=', $this->year)
             ->where('status', 'approved')
             ->get();
+            // dd(  $this->employeeleaveavlid);
 
 
 
@@ -148,7 +154,8 @@ class CasualLeaveBalance extends Component
                 $leaveRequest->to_date,
                 $leaveRequest->to_session
             );
-            $this->totalSickDays += intval($days);
+            $this->totalSickDays += $days;
+
 
             // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
         }
@@ -178,22 +185,35 @@ class CasualLeaveBalance extends Component
 
         for ($month = $startingMonth; $month <= $currentMonth; $month++) {
             // Fetch availed leaves count for this month
-            $availedLeavesCount = LeaveRequest::where('emp_id', $employeeId)
+            $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', 'Casual Leave')
                 ->where('status', 'approved')
                 ->whereYear('from_date', $currentYear)
                 ->whereMonth('from_date', $month)
-                ->count();
+                ->get();
+                foreach ($availedLeavesRequests as $availedleaveRequest) {
+                    //$leaveType = $leaveRequest->leave_type;
+                    $days = self::calculateNumberOfDays(
+                        $availedleaveRequest->from_date,
+                        $availedleaveRequest->from_session,
+                        $availedleaveRequest->to_date,
+                        $availedleaveRequest->to_session
+                    );
+                    $this->availedLeavesCount += $days;
+
+
+                    // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
+                }
 
             // Adjust granted leaves count by subtracting availed leaves count
-            $grantedLeavesCount -= $availedLeavesCount;
+            $grantedLeavesCount -= $this->availedLeavesCount;
 
             // Ensure granted leaves count is non-negative
             $grantedLeavesCount = max(0, $grantedLeavesCount);
 
             // Store the granted leaves count and availed leaves count in their respective arrays
             $grantedLeavesByMonth[] = $grantedLeavesCount;
-            $availedLeavesByMonth[] = $availedLeavesCount;
+            $availedLeavesByMonth[] = $this->availedLeavesCount;
         }
 
         $chartData = [

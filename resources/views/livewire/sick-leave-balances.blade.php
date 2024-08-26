@@ -97,7 +97,7 @@
                 <div class="buttons-container d-flex gap-3 justify-content-end mt-2 p-0 ">
 
                     @if($year == $currentYear)
-                    <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
+                    <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-form-page'">Apply</button>
                     @endif
 
                     <select class="dropdown bg-white rounded " wire:change='changeYear($event.target.value)'  wire:model='year' style="margin-right:5px;">
@@ -184,7 +184,12 @@
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
-                                    <td>{{ $totalSickDays }}</td>
+                                    <td>
+                                        @php
+                                        $days = $this->calculateNumberOfDays($balance->from_date, $balance->from_session, $balance->to_date, $balance->to_session);
+                                        @endphp
+                                        {{ $days }}
+                                    </td>
                                     <td>{{ $balance->reason }}</td>
                                 </tr>
                                 @endforeach
