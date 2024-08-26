@@ -193,21 +193,19 @@
                             <td>{{ $employeeDetails->emp_id }}</td>
                             <td>{{ ucwords(strtolower($employeeDetails->first_name)) }}
                                 {{ ucwords(strtolower($employeeDetails->last_name)) }}</td>
-                            <td>
-                         
-                                    {{ is_numeric(trim($transaction['casual_leave_balance'], '"')) ? intval(trim($transaction['casual_leave_balance'], '"')) : 0 }}
-                             
+                                <td>
+                                    {{ $transaction['casual_leave_balance'] ?? 'N/A' }}
+                                </td>
+                                <td>
+                                    {{ $transaction['casual_leave_probation_balance'] ?? 'N/A' }}
+                                </td>
+                                <td>
+                                    {{ $transaction['loss_of_pay_balance'] ?? 'N/A' }}
+                                </td>
+                                <td>
+                                    {{ $transaction['sick_leave_balance'] ?? 'N/A' }}
+                                </td>
                                 
-                            </td>
-                            <td>
-                                {{ is_numeric(trim($transaction['casual_leave_probation_balance'], '"')) ? intval(trim($transaction['casual_leave_probation_balance'], '"')) : 0 }}
-                            </td>
-                            <td>
-                                {{ is_numeric(trim($transaction['loss_of_pay_balance'], '"')) ? intval(trim($transaction['loss_of_pay_balance'], '"')) : 0 }}
-                            </td>
-                            <td>
-                                {{ is_numeric(trim($transaction['sick_leave_balance'], '"')) ? intval(trim($transaction['sick_leave_balance'], '"')) : 0 }}
-                            </td>
                         </tr>
                     @endforeach
               
