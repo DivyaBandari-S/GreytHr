@@ -31,7 +31,10 @@
             
             <tr style="border:1px solid #ccc;">
                 
-                <td style="width:50%;font-size: 10px; color:  <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{ucwords(strtolower($emp->first_name))}} {{ucwords(strtolower($emp->last_name))}}</td>
+                <td style="width:50%;font-size: 10px; color:  <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">
+                <input type="checkbox" wire:model="selectedEmployees" wire:click="$emit('employeeSelected', {{$emp->emp_id}})" name="employee_checkbox[]" value="{{$emp->emp_id}}">
+                {{ucwords(strtolower($emp->first_name))}} {{ucwords(strtolower($emp->last_name))}}</td>
+              
                 <td style="width:50%;font-size: 10px; color:  <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">{{$emp->emp_id}}</td>
                
             </tr>
@@ -41,15 +44,11 @@
 
         </table>
        
-        <div class="modal-footer mt-2"
-                            style="background-color: rgb(2, 17, 79); display: flex;justify-content: space-around;;">
-                            <button type="button"
-                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;">Options</button>
-                            <button type="button"
-                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
+        <div class="mt-2" style="background-color: rgb(2, 17, 79); display: flex;justify-content: center; padding: 10px; gap: 15px;">
+                            
+                            <button type="button" class="submit-btn" style="background-color: white; color: rgb(2, 17, 79);"
                                 wire:click="downloadAttendanceRegularisationReportInExcel">Run</button>
-                            <button type="button" data-dismiss="modal"
-                                style="background-color: white; height:30px;width:4.875rem;border-radius:5px;border:none;font-size: 0.785rem;"
+                            <button type="button" data-dismiss="modal" class="cancel-btn1"
                                 wire:click='resetFields'>Clear</button>
 
                         </div>
