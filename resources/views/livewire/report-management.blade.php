@@ -420,7 +420,8 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Date</label>
+                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Date<span
+                                            style="color: var(--requiredAlert);">*</span></label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <input type="date" id="to-date" wire:model="toDate"
@@ -461,13 +462,14 @@
                                     <div class="col-4">
                                         <label for="to-date"
                                             style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Employee
-                                            Type</label>
+                                            Type<span
+                                            style="color: var(--requiredAlert);">*</span></label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <select id="employeeType" wire:model="employeeType"
                                             wire:change="updateEmployeeType" wire:model.lazy="employeeType"
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="">Select Employee Type</option>
+                                            <option value="" disabled>Select Employee Type </option>
                                             <option value="active">Current Employees</option>
                                             <option value="past">Past Employees</option>
 
@@ -675,7 +677,8 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <div class="date-container">
-                                            <label class="required-field label-style">Date</label>
+                                            <label class="required-field label-style">Date<span
+                                                style="color: var(--requiredAlert);">*</span></label>
                                             <div>
                                                 <input type="date" wire:model="toDate" wire:change="updateToDate"
                                                     wire:model.lazy="toDate"
@@ -786,7 +789,8 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="from-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">From</label>
+                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">From<span
+                                            style="color: var(--requiredAlert);">*</span></label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <input type="date" id="from-date" wire:model="fromDate"
@@ -802,7 +806,8 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">To</label>
+                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">To<span
+                                            style="color: var(--requiredAlert);">*</span></label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <input type="date" id="to-date" wire:model="toDate"
@@ -862,13 +867,14 @@
                                     <div class="col-4">
                                         <label for="to-date"
                                             style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Employee
-                                            Type</label>
+                                            Type<span
+                                            style="color: var(--requiredAlert);">*</span></label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <select id="employeeType" wire:model="employeeType"
                                             wire:change="updateEmployeeType" wire:model.lazy="employeeType"
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="">Select Employee Type</option>
+                                            <option value="" disabled>Select Employee Type</option>
                                             <option value="active">Current Employees</option>
                                             <option value="past">Past Employees</option>
 

@@ -55,11 +55,13 @@ class EmployeeLeaveBalances extends Model
      */
     public static function getLeaveBalancePerYear($employeeId, $leaveType, $year)
     {
+        
         // Retrieve the record for the specific employee and year
         $balance = self::where('emp_id', $employeeId)
             ->whereYear('from_date', '<=', $year) // Ensure the year is within the range
             ->whereYear('to_date', '>=', $year)
             ->first();
+
 
         if ($balance) {
             // Decode the JSON leave_balance column
