@@ -373,7 +373,7 @@
 
         </div>
 
-        <div class="col-md-4" style="text-align: end">
+        <div class="shift-roster-download-and-dropdown col-md-4">
             <button class="btn btn-primary" wire:click="downloadExcel">
                 <i class="fa fa-download" aria-hidden="true"></i>
             </button>

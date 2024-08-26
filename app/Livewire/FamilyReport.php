@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Models\Company;
 use App\Models\EmployeeDetails;
 use App\Models\EmpParentDetails;
+use App\Models\EmpPersonalInfo;
 use App\Models\EmpSpouseDetails;
 use App\Models\ParentDetail;
 use Illuminate\Support\Facades\Auth;
@@ -75,23 +77,26 @@ class FamilyReport extends Component
  
         ];
         $rows=$data;
+    
 foreach ($employees2 as $employee) {
     // Default data row for the employee
+    
     $selfData = [
         $employee['emp_id'],
         $employee['first_name'] . ' ' . $employee['last_name'],
-        \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y'),
-        $employee['company_name'],
-        $employee['job_title'],
+        isset($employee['hire_date']) ? \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y') : 'NA',
+        isset($employee['company_id']) ? Company::where('company_id', $employee['company_id'])->value('company_name') :'NA'
+        ,
+        isset($employee['job_role'])? $employee['job_role']:'NA',
         $employee['first_name'] . ' ' . $employee['last_name'],
         'self',
-        \Carbon\Carbon::parse($employee['date_of_birth'])->format('jS F Y'),
-        $employee['gender'],
-        $employee['blood_group'],
-        $employee['nationality'],
+        isset($employee['date_of_birth'])? EmpPersonalInfo::where('emp_id',$employee['emp_id'])->value('date_of_birth'):'NA',
+        isset($employee['gender'])? $employee['gender']:'NA',
+        isset($employee['blood_group']) ? EmpPersonalInfo::where('emp_id',$employee['emp_id'])->value('blood_group'):'NA',
+        isset($employee['nationality'])? EmpPersonalInfo::where('emp_id',$employee['emp_id'])->value('nationality'):'NA',
         ' '
     ];
- 
+    
     // Add the employee's own data row to the rows array
     $rows[] = $selfData;
  
@@ -109,9 +114,9 @@ foreach ($employees2 as $employee) {
             $motherData = [
                 $employee['emp_id'],
                 $employee['first_name'] . ' ' . $employee['last_name'],
-                \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y'),
-                $employee['company_name'],
-                $employee['job_title'],
+                isset($employee['hire_date']) ? \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y') : 'NA',
+                isset($employee['company_id']) ? Company::where('company_id', $employee['company_id'])->value('company_name') :'NA',
+                isset($employee['job_role']) ? $employee['job_role']:'NA',
                 $parentdetails->mother_first_name . ' ' . $parentdetails->mother_last_name,
                 'mother',
                 \Carbon\Carbon::parse($parentdetails->mother_dob)->format('jS F Y'),
@@ -123,9 +128,9 @@ foreach ($employees2 as $employee) {
             $fatherData = [
                 $employee['emp_id'],
                 $employee['first_name'] . ' ' . $employee['last_name'],
-                \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y'),
-                $employee['company_name'],
-                $employee['job_title'],
+                isset($employee['hire_date']) ? \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y') : 'NA',
+                isset($employee['company_id']) ? Company::where('company_id', $employee['company_id'])->value('company_name') :'NA',
+                isset($employee['job_role']) ? $employee['job_role']:'NA',
                 $parentdetails->father_first_name . ' ' . $parentdetails->father_last_name,
                 'Father',
                 \Carbon\Carbon::parse($parentdetails->father_dob)->format('jS F Y'),
@@ -149,9 +154,9 @@ foreach ($employees2 as $employee) {
                     $spouseData = [
                         $employee['emp_id'],
                         $employee['first_name'] . ' ' . $employee['last_name'],
-                        \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y'),
-                        $employee['company_name'],
-                        $employee['job_title'],
+                        isset($employee['hire_date']) ? \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y') : 'NA',
+                        isset($employee['company_id']) ? Company::where('company_id', $employee['company_id'])->value('company_name') :'NA',
+                        isset($employee['job_role']) ? $employee['job_role']:'NA',
                         $spouseDetails->name,
                         'wife',
                         \Carbon\Carbon::parse($spouseDetails->dob)->format('jS F Y'),
@@ -166,9 +171,9 @@ foreach ($employees2 as $employee) {
                     $spouseData = [
                         $employee['emp_id'],
                         $employee['first_name'] . ' ' . $employee['last_name'],
-                        \Carbon\Carbon::parse( $employee['hire_date'])->format('jS F Y'),
-                        $employee['company_name'],
-                        $employee['job_title'],
+                        isset($employee['hire_date']) ? \Carbon\Carbon::parse($employee['hire_date'])->format('jS F Y') : 'NA',
+                        isset($employee['company_id']) ? Company::where('company_id', $employee['company_id'])->value('company_name') :'NA',
+                        isset($employee['job_role']) ? $employee['job_role']:'NA',
                         $spouseDetails->name,
                         'Husband',
                         \Carbon\Carbon::parse( $spouseDetails->dob)->format('jS F Y'),
@@ -208,8 +213,8 @@ foreach ($employees2 as $employee) {
                     'daughter',
                    \Carbon\Carbon::parse( $child['dob'])->format('jS F Y'),
                     $child['gender'],
-                    $child['blood-group'] ?? 'NA', // Assuming blood group is not available for children
-                    $child['nationality'] ?? 'NA', // Assuming nationality is not available for children
+                    isset($child['blood_group']) ?? $child['blood_group'] ?? 'NA', // Assuming blood group is not available for children
+                    isset($child['nationality']) ?? $child['nationality'] ?? 'NA', // Assuming nationality is not available for children
                     ''  // Assuming occupation is not applicable for children
                 ];
                }

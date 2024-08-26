@@ -197,7 +197,13 @@
                         <td>{{ $transaction['emp_id'] }}</td>
                         <td>{{ ucwords(strtolower($transaction['first_name'])) }}
                             {{ ucwords(strtolower($transaction['last_name'])) }}</td>
-                        <td>{{ \Carbon\Carbon::parse($transaction['hire_date'])->format('d M Y') }}</td>
+                        <td>
+                            @if (!empty($transaction['hire_date']))
+                                {{ \Carbon\Carbon::parse($transaction['hire_date'])->format('d M Y') }}
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td>{{ $transaction['leave_type'] }}</td>
                         @php
                             $jobTitle = $transaction['job_role'] ?? 'N/A'; // Default to 'N/A' if job_role is not set
