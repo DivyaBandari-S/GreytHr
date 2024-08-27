@@ -874,9 +874,9 @@ eum nihil itaque!
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <div>
-                            @if ($totalTasksCount)
+                            @if ($TaskAssignedToCount)
                                 <p class="track-text"> Total Tasks: <span
-                                        class="track-count">{{ $totalTasksCount }}</span> </p>
+                                        class="track-count">{{ $TaskAssignedToCount }}</span> </p>
                             @else
                                 <p class="track-text"> Total Tasks: <span class="track-count">0</span></p>
                             @endif

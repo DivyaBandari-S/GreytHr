@@ -86,9 +86,9 @@ class Settings extends Component
                     'first_name' => '',
                     'last_name' => '',
                     'gender' => '',
-                    'email' => '',
-                    'mobile_number' => '',
-                    'alternate_mobile_number' => '',
+                    'email' => null,
+                    'mobile_number' => null,
+                    'alternate_mobile_number' => null,
                 ]);
             }
             $this->editingBiography = false;
@@ -143,9 +143,9 @@ class Settings extends Component
                     'first_name' => '',
                     'last_name' => '',
                     'gender' => '',
-                    'email' => '',
-                    'mobile_number' => '',
-                    'alternate_mobile_number' => '',
+                    'email' => null,
+                    'mobile_number' => null,
+                    'alternate_mobile_number' => null,
                 ]);
                 
             }
@@ -195,9 +195,9 @@ class Settings extends Component
                     'first_name' => '',
                     'last_name' => '',
                     'gender' => '',
-                    'email' => '',
-                    'mobile_number' => '',
-                    'alternate_mobile_number' => '',
+                    'email' => null,
+                    'mobile_number' => null,
+                    'alternate_mobile_number' => null,
                 ]);
             }
     
