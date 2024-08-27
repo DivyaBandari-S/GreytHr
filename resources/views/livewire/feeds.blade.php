@@ -1,5 +1,5 @@
 <div>
-  
+
     @if( $employeeDetails->isEmpty())
     <p>No employee details found.</p>
 
@@ -15,7 +15,7 @@
         <div class="col-md-12  mt-3" style="height:60px;margin-top:10px">
 
             <div class="row bg-white rounded border d-flex" style="height:80px; ">
-                <div  style="display:flex; flex-direction:row;">
+                <div style="display:flex; flex-direction:row;">
 
 
                     <div class=" mt-3" style="height:60px">
@@ -43,7 +43,7 @@
                         <p>User is not authenticated.</p>
                         @endif
                     </div>
-                    <div   style="color:#3b4452; display:flex;flex-direction:column;justify-content:center;margin-left:10px">
+                    <div style="color:#3b4452; display:flex;flex-direction:column;justify-content:center;margin-left:10px">
                         @if(auth()->guard('emp')->check())
                         <span class="text-base">Hey {{ ucwords(strtolower(auth()->guard('emp')->user()->first_name)) }} {{ ucwords(strtolower(auth()->guard('emp')->user()->last_name)) }}</span>
                         @elseif(auth()->guard('hr')->check())
@@ -55,7 +55,7 @@
                         <div class="text-xs" style="color:#3b4452;">Ready to dive in?</div>
                     </div>
                     <div style="margin-left:auto; display:flex;align-items:center">
-                    <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20  p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;width:130px">
+                        <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20  p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;width:130px">
                             <div class="w-6 h-6 rounded bg-purple-200">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
                                     <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
@@ -72,7 +72,7 @@
                 <div class=" mt-2 bg-white d-flex align-items-center ">
 
                     <div style="display:flex;margin-left:auto">
-                       
+
 
                         @if($showFeedsDialog)
                         <div class="modal" tabindex="-1" role="dialog" style="display: block; color: #3b4452; font-family: Montserrat, sans-serif;">
@@ -153,7 +153,7 @@
                 </div>
             </div>
             <!-- Additional row -->
-            <div class="row mt-2 d-flex" >
+            <div class="row mt-2 d-flex">
 
                 <div class="col-md-4 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:fit-content">
 
@@ -200,7 +200,7 @@
 
 
                     <hr style="width: 100%;border-bottom: 1px solid grey;">
-                    <div >
+                    <div>
                         <div class="row" style="max-height:auto">
                             <div class="col " style="margin: 0px;">
                                 <div class="input-group">
@@ -289,7 +289,7 @@
                                     <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
 
                                     @endif
-                                    
+
                                     @if (Auth::guard('hr')->check())
 
                                     <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hoskote</a>
@@ -307,67 +307,67 @@
                                     @endif
                                     @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mandya
-</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mandya
+                                    </a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mandya
-</a>
-@endif
-@if (Auth::guard('hr')->check())
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mandya
+                                    </a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mangalore
-</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mangalore
+                                    </a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mangalore
-</a>
-@endif
-@if (Auth::guard('hr')->check())
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mangalore
+                                    </a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mumbai
-</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mumbai
+                                    </a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mumbai
-</a>
-@endif
-@if (Auth::guard('hr')->check())
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mumbai
+                                    </a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mysore
-</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mysore
+                                    </a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mysore
-</a>
-@endif
-@if (Auth::guard('hr')->check())
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mysore
+                                    </a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Pune
-</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Pune
+                                    </a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Pune
-</a>
-@endif
-@if (Auth::guard('hr')->check())
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Pune
+                                    </a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Sirsi
-</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Sirsi
+                                    </a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Sirsi
-</a>
-@endif
-@if (Auth::guard('hr')->check())
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Sirsi
+                                    </a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Thumkur
-</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Thumkur
+                                    </a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Thumkur
-</a>
-@endif
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Thumkur
+                                    </a>
+                                    @endif
                                     @if (Auth::guard('hr')->check())
 
                                     <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
@@ -385,18 +385,18 @@
                                     @endif
                                     @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Udaipur</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Udaipur</a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Udaipur</a>
-@endif
-@if (Auth::guard('hr')->check())
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Udaipur</a>
+                                    @endif
+                                    @if (Auth::guard('hr')->check())
 
-<a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Vijayawada</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Vijayawada</a>
 
-@elseif (Auth::guard('emp')->check())
-<a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Vijayawada</a>
-@endif
+                                    @elseif (Auth::guard('emp')->check())
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Vijayawada</a>
+                                    @endif
                                     @if (Auth::guard('hr')->check())
 
                                     <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
@@ -729,7 +729,7 @@
                                                             <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
 
                                                         </div>
-                                                 
+
 
                                         </form>
                                     </div>
@@ -741,63 +741,63 @@
 
 
                             <div class="col-md-7 p-0">
-                            <div class="col-md-7 mb-2">
-            <div style="display: flex; align-items: center;">
-                <span>
-                    <i class="comment-icon">💬</i>
-                </span>
-                <span style="margin-left: 5px;">
-                    <a href="#" onclick="comment({{ $index }})" style="font-size: 10px;">Comment</a>
-                </span>
-            </div>
-        </div>
-  
-  
+                                <div class="col-md-7 mb-2">
+                                    <div style="display: flex; align-items: center;">
+                                        <span>
+                                            <i class="comment-icon">💬</i>
+                                        </span>
+                                        <span style="margin-left: 5px;">
+                                            <a href="#" onclick="comment({{ $index }})" style="font-size: 10px;">Comment</a>
+                                        </span>
+                                    </div>
+                                </div>
+
+
 
 
                             </div>
                             <div class="col-md-10">
-        <form wire:submit.prevent="add_comment('{{ $data['employee']->emp_id }}')">
-    @csrf
-    <div class="row m-0">
+                                <form wire:submit.prevent="add_comment('{{ $data['employee']->emp_id }}')">
+                                    @csrf
+                                    <div class="row m-0">
 
 
-        <div class="col-md-12 p-0 mb-2" style="margin-left:2px;">
-            <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;">
-            
-                <div class="col-md-1">
-   @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
-                        @else
-                        @if($employeeDetails && $employeeDetails->gender == "Male")
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
-                        @elseif($employeeDetails && $employeeDetails->gender == "Female")
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
-                        @else
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
-                        @endif
-                        @endif
-                   
+                                        <div class="col-md-12 p-0 mb-2" style="margin-left:2px;">
+                                            <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;">
 
-                </div>
-                <div class="col-md-11" style="position: relative;">
-                    <textarea 
-                        wire:model="newComment" 
-                        placeholder="Post your comments here.." 
-                        name="comment" 
-                        class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none" 
-                        style="overflow: hidden; height: 60px;margin-left:30px">
+                                                <div class="col-md-1">
+                                                    @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
+                                                    <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
+                                                    @else
+                                                    @if($employeeDetails && $employeeDetails->gender == "Male")
+                                                    <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
+                                                    @elseif($employeeDetails && $employeeDetails->gender == "Female")
+                                                    <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
+                                                    @else
+                                                    <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
+                                                    @endif
+                                                    @endif
+
+
+                                                </div>
+                                                <div class="col-md-11" style="position: relative;">
+                                                    <textarea
+                                                        wire:model="newComment"
+                                                        placeholder="Post your comments here.."
+                                                        name="comment"
+                                                        class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none"
+                                                        style="overflow: hidden; height: 60px;margin-left:30px">
                     </textarea>
-                    <input 
-                        type="submit" 
-                        class=" addcomment" 
-                        value="Comment" wire:target="add_comment">
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
-        </div>
+                                                    <input
+                                                        type="submit"
+                                                        class=" addcomment"
+                                                        value="Comment" wire:target="add_comment">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                             <div class="row m-0">
                                 @php
                                 $currentCardComments = $comments->where('card_id', $data['employee']->emp_id)->sortByDesc('created_at');
@@ -1095,7 +1095,7 @@
 
 
                                                 </div>
-                                         
+
 
                                 </form>
                             </div>
@@ -1107,63 +1107,63 @@
 
 
                     <div class="col-md-7 p-0">
-                            <div class="col-md-7 mb-2">
-            <div style="display: flex; align-items: center;">
-                <span>
-                    <i class="comment-icon">💬</i>
-                </span>
-                <span style="margin-left: 5px;">
-                    <a href="#" onclick="comment({{ $index }})" style="font-size: 10px;">Comment</a>
-                </span>
-            </div>
-        </div>
-  
-  
-
-
+                        <div class="col-md-7 mb-2">
+                            <div style="display: flex; align-items: center;">
+                                <span>
+                                    <i class="comment-icon">💬</i>
+                                </span>
+                                <span style="margin-left: 5px;">
+                                    <a href="#" onclick="comment({{ $index }})" style="font-size: 10px;">Comment</a>
+                                </span>
                             </div>
-                            <div class="col-md-10">
-        <form wire:submit.prevent="add_comment('{{ $data['employee']->emp_id }}')">
-    @csrf
-    <div class="row m-0">
+                        </div>
 
 
-        <div class="col-md-12 p-0 mb-2" style="margin-left:2px;">
-            <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;">
-            
-                <div class="col-md-1">
-   @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
-                        @else
-                        @if($employeeDetails && $employeeDetails->gender == "Male")
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
-                        @elseif($employeeDetails && $employeeDetails->gender == "Female")
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
-                        @else
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
-                        @endif
-                        @endif
-                   
 
-                </div>
-                <div class="col-md-11" style="position: relative;">
-                    <textarea 
-                        wire:model="newComment" 
-                        placeholder="Post your comments here.." 
-                        name="comment" 
-                        class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none" 
-                        style="overflow: hidden; height: 60px;margin-left:30px">
+
+                    </div>
+                    <div class="col-md-10">
+                        <form wire:submit.prevent="add_comment('{{ $data['employee']->emp_id }}')">
+                            @csrf
+                            <div class="row m-0">
+
+
+                                <div class="col-md-12 p-0 mb-2" style="margin-left:2px;">
+                                    <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;">
+
+                                        <div class="col-md-1">
+                                            @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
+                                            <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
+                                            @else
+                                            @if($employeeDetails && $employeeDetails->gender == "Male")
+                                            <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
+                                            @elseif($employeeDetails && $employeeDetails->gender == "Female")
+                                            <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
+                                            @else
+                                            <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
+                                            @endif
+                                            @endif
+
+
+                                        </div>
+                                        <div class="col-md-11" style="position: relative;">
+                                            <textarea
+                                                wire:model="newComment"
+                                                placeholder="Post your comments here.."
+                                                name="comment"
+                                                class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none"
+                                                style="overflow: hidden; height: 60px;margin-left:30px">
                     </textarea>
-                    <input 
-                        type="submit" 
-                        class=" addcomment" 
-                        value="Comment" wire:target="add_comment">
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
-        </div>
+                                            <input
+                                                type="submit"
+                                                class=" addcomment"
+                                                value="Comment" wire:target="add_comment">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
 
 
                 </div>
@@ -1485,60 +1485,60 @@
                 </div>
             </div>
             <div class="col-md-7 p-0">
-                            <div class="col-md-7 mb-2">
-            <div style="display: flex; align-items: center;">
-                <span>
-                    <i class="comment-icon">💬</i>
-                </span>
-                <span style="margin-left: 5px;">
-                    <a href="#" onclick="comment({{ $index }})" style="font-size: 10px;">Comment</a>
-                </span>
-            </div>
-        </div>
-  
+                <div class="col-md-7 mb-2">
+                    <div style="display: flex; align-items: center;">
+                        <span>
+                            <i class="comment-icon">💬</i>
+                        </span>
+                        <span style="margin-left: 5px;">
+                            <a href="#" onclick="comment({{ $index }})" style="font-size: 10px;">Comment</a>
+                        </span>
+                    </div>
                 </div>
+
+            </div>
             <div class="col-md-10">
-        <form wire:submit.prevent="createcomment('{{ $data['employee']->emp_id }}')">
-    @csrf
-    <div class="row m-0">
+                <form wire:submit.prevent="createcomment('{{ $data['employee']->emp_id }}')">
+                    @csrf
+                    <div class="row m-0">
 
 
-        <div class="col-md-12 p-0 mb-2" style="margin-left:2px;">
-            <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;">
-            
-                <div class="col-md-1">
-   @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
-                        @else
-                        @if($employeeDetails && $employeeDetails->gender == "Male")
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
-                        @elseif($employeeDetails && $employeeDetails->gender == "Female")
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
-                        @else
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
-                        @endif
-                        @endif
-                   
+                        <div class="col-md-12 p-0 mb-2" style="margin-left:2px;">
+                            <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;">
 
-                </div>
-                <div class="col-md-11" style="position: relative;">
-                    <textarea 
-                        wire:model="newComment" 
-                        placeholder="Post your comments here.." 
-                        name="comment" 
-                        class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none" 
-                        style="overflow: hidden; height: 60px;margin-left:30px">
+                                <div class="col-md-1">
+                                    @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
+                                    <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
+                                    @else
+                                    @if($employeeDetails && $employeeDetails->gender == "Male")
+                                    <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
+                                    @elseif($employeeDetails && $employeeDetails->gender == "Female")
+                                    <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
+                                    @else
+                                    <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
+                                    @endif
+                                    @endif
+
+
+                                </div>
+                                <div class="col-md-11" style="position: relative;">
+                                    <textarea
+                                        wire:model="newComment"
+                                        placeholder="Post your comments here.."
+                                        name="comment"
+                                        class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none"
+                                        style="overflow: hidden; height: 60px;margin-left:30px">
                     </textarea>
-                    <input 
-                        type="submit" 
-                        class=" addcomment" 
-                        value="Comment" wire:target="addcomment">
-                </div>
+                                    <input
+                                        type="submit"
+                                        class=" addcomment"
+                                        value="Comment" wire:target="addcomment">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </div>
-    </div>
-</form>
-        </div>
 
 
 
@@ -1867,7 +1867,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 
 
     <div class="col-md-7 p-0">
-                            <div class="col-md-7 mb-2">
+        <div class="col-md-7 mb-2">
             <div style="display: flex; align-items: center;">
                 <span>
                     <i class="comment-icon">💬</i>
@@ -1877,56 +1877,56 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
                 </span>
             </div>
         </div>
-  
-  
 
 
-                            </div>
-                            <div class="col-md-10">
+
+
+    </div>
+    <div class="col-md-10">
         <form wire:submit.prevent="createcomment('{{ $data['employee']->emp_id }}')">
-    @csrf
-    <div class="row m-0">
+            @csrf
+            <div class="row m-0">
 
 
-        <div class="col-md-12 p-0 mb-2" style="margin-left:2px;">
-            <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;">
-            
-                <div class="col-md-1">
-   @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
-                        @else
-                        @if($employeeDetails && $employeeDetails->gender == "Male")
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
-                        @elseif($employeeDetails && $employeeDetails->gender == "Female")
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
-                        @else
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
-                        @endif
-                        @endif
-                   
+                <div class="col-md-12 p-0 mb-2" style="margin-left:2px;">
+                    <div class="replyDiv row m-0" id="replyDiv_{{ $index }}" style="display: none;">
 
-                </div>
-                <div class="col-md-11" style="position: relative;">
-                    <textarea 
-                        wire:model="newComment" 
-                        placeholder="Post your comments here.." 
-                        name="comment" 
-                        class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none" 
-                        style="overflow: hidden; height: 60px;margin-left:30px">
+                        <div class="col-md-1">
+                            @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
+                            <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
+                            @else
+                            @if($employeeDetails && $employeeDetails->gender == "Male")
+                            <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
+                            @elseif($employeeDetails && $employeeDetails->gender == "Female")
+                            <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
+                            @else
+                            <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
+                            @endif
+                            @endif
+
+
+                        </div>
+                        <div class="col-md-11" style="position: relative;">
+                            <textarea
+                                wire:model="newComment"
+                                placeholder="Post your comments here.."
+                                name="comment"
+                                class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none"
+                                style="overflow: hidden; height: 60px;margin-left:30px">
                     </textarea>
-                    <input 
-                        type="submit" 
-                        class=" addcomment" 
-                        value="Comment" wire:target="addcomment">
+                            <input
+                                type="submit"
+                                class=" addcomment"
+                                value="Comment" wire:target="addcomment">
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-</form>
-        </div>
 
 
-                </div>
+</div>
 
 
 <div class="row m-0">
