@@ -56,7 +56,7 @@ class LeaveRequest extends Model
                 if ($startDate->isWeekend() || $endDate->isWeekend()) {
                     return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
                 }
-    
+
                 // Check if the start and end sessions are different on the same day
                 if ($startDate->isSameDay($endDate)) {
                     if (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
@@ -78,7 +78,7 @@ class LeaveRequest extends Model
                     // Move to the next day
                     $startDate->addDay();
                 }
-    
+
                 // Deduct weekends based on the session numbers
                 if ($this->getSessionNumber($fromSession) > 1) {
                     $totalDays -= $this->getSessionNumber($fromSession) - 1; // Deduct days for the starting session
