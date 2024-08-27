@@ -123,14 +123,12 @@
                                         <span class="custom-label">CC to</span>
                                         @endif
                                     </div>
-
                                     <div class="custom-grid-item">
-                                        @if(!empty($leaveRequest['applying_to']))
+                                        @if (!empty($leaveRequest['applying_to']) && is_array($applyingTo) && isset($applyingTo['report_to']))
                                         <span class="custom-value">{{ ucwords(strtolower($applyingTo['report_to'])) }}</span>
                                         @else
                                         <span class="custom-value">-</span>
                                         @endif
-
                                         <span class="custom-value">{{ ucfirst($leaveRequest->reason) }}</span>
                                         <span class="custom-value">{{ ucfirst($leaveRequest->contact_details) }}</span>
 
@@ -173,7 +171,7 @@
                         <div class="v-line"></div>
                         <div class=cirlce></div>
                     </div>
-                    <div class="mt-4 d-flex flex-column" style="gap: 70px;">
+                    <div class="mt-4 d-flex flex-column" style="gap: 50px;">
                         <div class="group">
                             <div>
                                 <h5 class="normalText text-start">
@@ -182,7 +180,8 @@
 
                                     <span class="normalText text-start">by</span> <br>
                                     <span class="normalTextValue text-start">
-                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
+                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }} <br>
+                                        {{ $leaveRequest->updated_at->format('d M, Y g:i a') }}
                                     </span>
                                     @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
                                     <span class="normalTextValue text-start"> Approved <br> by</span>
@@ -206,7 +205,7 @@
                             <div class="d-flex flex-column">
                                 <h5 class="mb-0 normalText text-start">Submitted
                                 </h5>
-                                <span class="normalTextValue text-start" style="font-size:0.625rem;">{{ $leaveRequest->created_at->format('d M, Y g:i A') }}</span>
+                                <span class="normalTextValue text-start" style="font-size:0.625rem;">{{ $leaveRequest->created_at->format('d M, Y g:i a') }}</span>
                             </div>
                         </div>
                     </div>

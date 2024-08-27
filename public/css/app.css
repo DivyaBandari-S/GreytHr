@@ -4764,7 +4764,7 @@ option {
 }
 
 .logout-icon-container:hover i {
-    color: orange;
+    color: rgb(2, 17, 79);
 }
 
 .logout-icon-container:hover .tooltip {
