@@ -219,8 +219,9 @@ class LeaveFormPage extends Component
 
             // Update status to 'Withdrawn'
             $leaveRequest->status = 'Withdrawn';
+            $leaveRequest->updated_at = now();
             $leaveRequest->save();
-            $leaveRequest->touch();
+
             $this->hasPendingLeave();
             session()->flash('cancelMessage', 'Leave application Withdrawn.');
             $this->showAlert = true;
