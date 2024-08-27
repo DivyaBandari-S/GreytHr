@@ -183,6 +183,7 @@ class Settings extends Component
     {
         try {
 
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $empPersonalInfo = EmpPersonalInfo::where('emp_id', $employeeId)->first();
             if ($empPersonalInfo) {;
@@ -298,12 +299,12 @@ class Settings extends Component
         ],
         'confirmNewPassword' => 'required|same:newPassword',  // Confirms that confirmNewPassword matches newPassword
     ];
+
     protected $additionalRules = [
         'facebook' => 'nullable|url|max:255',
         'twitter' => 'nullable|url|max:255',
         'linkedIn' => 'nullable|url|max:255',
     ];
-
 
 
 
@@ -333,7 +334,6 @@ class Settings extends Component
 
             // Update the password
             $this->employeeDetails->password = Hash::make($this->newPassword);
-
             $this->employeeDetails->save();
 
 
@@ -345,6 +345,7 @@ class Settings extends Component
             Log::error('Error in changePassword method: ' . $e->getMessage());
         }
     }
+
 
 
     public function fetchLoginHistory()
@@ -375,9 +376,6 @@ class Settings extends Component
             ->orderBy('created_at', 'desc')
             ->get(['ip_address', 'user_agent', 'location', 'created_at']);
     }
-
-
-
     public function render()
     {
         try {
