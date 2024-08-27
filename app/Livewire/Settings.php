@@ -50,13 +50,16 @@ class Settings extends Component
     public $confirmNewPassword;
     public $passwordChanged = false;
     public $error = '';
-
+    public $loginHistory;
+    public $lastLogin;
+    public $lastLoginFailure;
+    public $lastPasswordChanged;
     public function editBiography()
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::with(['empPersonalInfo'])
-            ->where('emp_id', $employeeId)->first();
+                ->where('emp_id', $employeeId)->first();
             $this->biography = $this->employeeDetails->empPersonalInfo->biography ?? '';
             $this->editingBiography = true;
         } catch (\Exception $e) {
@@ -101,9 +104,9 @@ class Settings extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-          
+
             $this->employeeDetails = EmployeeDetails::with(['empPersonalInfo'])
-            ->where('emp_id', $employeeId)->first();
+                ->where('emp_id', $employeeId)->first();
             $this->facebook = $this->employeeDetails->empPersonalInfo->facebook ?? '';
             $this->twitter = $this->employeeDetails->empPersonalInfo->twitter ?? '';
             $this->linkedIn = $this->employeeDetails->empPersonalInfo->linked_in ?? '';
@@ -127,14 +130,13 @@ class Settings extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $empPersonalInfo = EmpPersonalInfo::where('emp_id', $employeeId)->first();
             if ($empPersonalInfo) {
-            
+
                 $empPersonalInfo->facebook = $this->facebook;
                 $empPersonalInfo->twitter = $this->twitter;
                 $empPersonalInfo->linked_in = $this->linkedIn;
                 $empPersonalInfo->save();
-            
             } else {
-               
+
                 $empPersonalInfo = EmpPersonalInfo::create([
                     'emp_id' => $employeeId,
                     'facebook' => $this->facebook,
@@ -147,10 +149,8 @@ class Settings extends Component
                     'mobile_number' => '',
                     'alternate_mobile_number' => '',
                 ]);
-                
             }
             $this->editingSocialMedia = false;
-           
         } catch (\Exception $e) {
             Log::error('Error in saveSocialMedia method: ' . $e->getMessage());
         }
@@ -159,11 +159,11 @@ class Settings extends Component
     public function editProfile()
     {
         try {
-   
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
-          
+
             $this->employeeDetails = EmployeeDetails::with(['empPersonalInfo'])
-            ->where('emp_id', $employeeId)->first();
+                ->where('emp_id', $employeeId)->first();
             $this->nickName = $this->employeeDetails->empPersonalInfo->nick_name ?? '';
             $this->wishMeOn = $this->employeeDetails->empPersonalInfo->date_of_birth ?? '';
             $this->editingNickName = true;
@@ -180,7 +180,7 @@ class Settings extends Component
     public function saveProfile()
     {
         try {
-         
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $empPersonalInfo = EmpPersonalInfo::where('emp_id', $employeeId)->first();
             if ($empPersonalInfo) {
@@ -200,15 +200,14 @@ class Settings extends Component
                     'alternate_mobile_number' => '',
                 ]);
             }
-    
+
             $this->editingNickName = false;
-    
         } catch (\Exception $e) {
             Log::error('Error in saveProfile method: ' . $e->getMessage());
         }
     }
-    
-    
+
+
 
 
     public function editTimeZone()
@@ -235,16 +234,16 @@ class Settings extends Component
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            
+
             $this->employeeDetails->time_zone = $this->selectedTimeZone;
             $this->employeeDetails->save();
-            
+
             $this->editingTimeZone = false;
         } catch (\Exception $e) {
             Log::error('Error in saveTimeZone method: ' . $e->getMessage());
         }
     }
-    
+
 
     public $showAlertDialog = false;
     public $showDialog = false;
@@ -284,10 +283,20 @@ class Settings extends Component
     }
 
     protected $rules = [
-        'oldPassword' => 'required',
-        'newPassword' => 'required|min:8',
-        'confirmNewPassword' => 'required|same:newPassword',
+        'oldPassword' => 'required|current_password',  // Validates that oldPassword is the user's current password
+        'newPassword' => [
+            'required',
+            'string',
+            'min:8',               // At least 8 characters
+            'regex:/[A-Z]/',       // Must contain at least one uppercase letter
+            'regex:/[a-z]/',       // Must contain at least one lowercase letter
+            'regex:/[0-9]/',       // Must contain at least one digit
+            'regex:/[@$!%*#?&]/',  // Must contain at least one special character
+            'different:oldPassword', // Must be different from oldPassword
+        ],
+        'confirmNewPassword' => 'required|same:newPassword',  // Confirms that confirmNewPassword matches newPassword
     ];
+
 
     public function updated($propertyName)
     {
@@ -310,6 +319,7 @@ class Settings extends Component
 
             // Update the password
             $this->employeeDetails->password = Hash::make($this->newPassword);
+
             $this->employeeDetails->save();
 
 
@@ -322,12 +332,44 @@ class Settings extends Component
         }
     }
 
+
+    public function fetchLoginHistory()
+    {
+        $userId = Auth::user()->id;
+
+        // Fetch last login, last login failure, and last password changed dates
+        $this->lastLogin = DB::table('sessions')
+            ->where('user_id', $userId)
+            // ->where('type', 'login')
+            ->orderBy('created_at', 'desc')
+            ->value('created_at');
+
+        $this->lastLoginFailure = DB::table('sessions')
+            ->where('user_id', $userId)
+            // ->where('type', 'failure')
+            ->orderBy('created_at', 'desc')
+            ->value('created_at');
+
+        $this->lastPasswordChanged = DB::table('password_resets')
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->value('created_at');
+
+        // Fetch login history
+        $this->loginHistory = DB::table('sessions')
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get(['ip_address', 'user_agent', 'location', 'created_at']);
+    }
+
+
+
     public function render()
     {
         try {
             $this->timeZones = timezone_identifiers_list();
             $this->employees = EmployeeDetails::with(['empPersonalInfo', 'empDepartment'])
-            ->where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
+                ->where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
             return view('livewire.settings', ['employees' => $this->employees]);
         } catch (\Exception $e) {
             Log::error('Error in render method: ' . $e->getMessage());
