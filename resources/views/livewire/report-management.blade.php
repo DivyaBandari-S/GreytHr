@@ -316,7 +316,7 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="to-date" style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Leave
-                                            Type <span style="color: var(--requiredAlert);">*</span></label>
+                                            Type </label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <select id="leaveType" wire:model="leaveType" wire:change="updateLeaveType"
@@ -333,10 +333,7 @@
 
                                             <!-- Add other leave types as needed -->
                                         </select>
-                                        @error('leaveType')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
+                                      
                                     </div>
                                 </div>
 
@@ -344,22 +341,17 @@
                                     <div class="col-4">
                                         <label for="to-date"
                                             style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Employee
-                                            Type <span style="color: var(--requiredAlert);">*</span></label>
+                                            Type </label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <select id="employeeType" wire:model="employeeType"
-                                            wire:change="updateEmployeeType" wire:model.lazy="employeeType"
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="">Select Employee Type</option>
-                                            <option value="active">Current Employees</option>
+                                            <option value="active" selected>Current Employees</option>
                                             <option value="past">Past Employees</option>
 
                                             <!-- Add other employee types as needed -->
                                         </select>
-                                        @error('employeeType')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
+                                      
                                     </div>
                                 </div>
 
@@ -425,7 +417,7 @@
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <input type="date" id="to-date" wire:model="toDate"
-                                            wire:change="updateToDate" wire:model.lazy="toDate"
+                                            wire:change="updateToDate" 
                                             style="font-size: 0.785rem; color: var(--label-color);width:45%">
                                         @error('toDate')
                                             <span class="error"
@@ -440,8 +432,7 @@
                                             Type</label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="leaveType" wire:model="leaveType" wire:change="updateLeaveType"
-                                            wire:model.lazy="leaveType"
+                                        <select id="leaveType" wire:model="leaveType"
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
                                             <option value="all">All Leaves</option>
                                             <option value="lop">Loss Of Pay</option>
@@ -462,15 +453,12 @@
                                     <div class="col-4">
                                         <label for="to-date"
                                             style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Employee
-                                            Type<span
-                                            style="color: var(--requiredAlert);">*</span></label>
+                                            Type</label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <select id="employeeType" wire:model="employeeType"
-                                            wire:change="updateEmployeeType" wire:model.lazy="employeeType"
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="" disabled>Select Employee Type </option>
-                                            <option value="active">Current Employees</option>
+                                            <option value="active" selected>Current Employees</option>
                                             <option value="past">Past Employees</option>
 
                                             <!-- Add other employee types as needed -->
@@ -853,10 +841,11 @@
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <select id="transactionType" wire:model="transactionType"
-                                            wire:change="updateTransactionType" wire:model.lazy="transactionType"
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
                                             <option value="all">All</option>
                                             <option value="availed">Availed</option>
+                                            <option value="withdrawn">Withdrawn</option>
+                                            <option value="rejected">Rejected</option>
                                         </select>
                                         {{-- @error('transactionType') <span class="error"
                                         style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span> @enderror --}}
@@ -867,23 +856,21 @@
                                     <div class="col-4">
                                         <label for="to-date"
                                             style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Employee
-                                            Type<span
-                                            style="color: var(--requiredAlert);">*</span></label>
+                                            Type</label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="employeeType" wire:model="employeeType"
-                                            wire:change="updateEmployeeType" wire:model.lazy="employeeType"
+                                        <select id="employeeType"  wire:model="employeeType"
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="" disabled>Select Employee Type</option>
-                                            <option value="active">Current Employees</option>
+                                            <option value="active" selected>Current Employees</option>
                                             <option value="past">Past Employees</option>
+                                           
 
                                             <!-- Add other employee types as needed -->
                                         </select>
-                                        @error('employeeType')
+                                        {{-- @error('employeeType')
                                             <span class="error"
                                                 style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
+                                        @enderror --}}
                                     </div>
                                 </div>
 

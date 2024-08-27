@@ -1815,7 +1815,7 @@ color: #fff;
                         <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Leave Type</h6>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="mb-0">
-                                <i class="fas fa-mug-hot"></i>
+                                <span class="legendsIcon sickleaveIcon">SL</span>
                             </p>
                             <p class="m-1 attendance-legend-text">Sick Leave</p>
                         </div>

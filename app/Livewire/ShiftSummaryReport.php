@@ -149,7 +149,7 @@ class ShiftSummaryReport extends Component
            }
           else
           {
-            $employees1 = EmployeeDetails::whereIn('emp_id', $this->shiftSummary)->select('emp_id', 'first_name', 'last_name')->get();
+            $employees1 = EmployeeDetails::whereIn('emp_id', $this->shiftSummary)->select('emp_id', 'first_name', 'last_name','shift_type')->get();
             $datesAndWeeknames = $this->getDatesAndWeeknames();
             foreach ($datesAndWeeknames as $daw) {
                 if ($daw['weekname'] == 'Sat' || $daw['weekname'] == 'Sun') {
@@ -161,10 +161,11 @@ class ShiftSummaryReport extends Component
              $this->totalDayCount = $this->offDayCount + $this->workingDayCount;
              $data = [
                     ['Shift Summary Report from' . Carbon::parse($this->fromDate)->format('jS F, Y') . 'to' . Carbon::parse($this->toDate)->format('jS F, Y')],
-                    ['Employee ID', 'Name', 'Total Days', 'Work Days', 'Off Day', '10:00 Am to 07:00 Pm'],
+                    ['Employee ID', 'Name', 'Total Days', 'Work Days', 'Off Day', 'Shift Scheme'],
 
              ];
              foreach ($employees1 as $s1) {
+                    
                     $data[] = [$s1['emp_id'], $s1['first_name'] . ' ' . $s1['last_name'], $this->totalDayCount, $this->workingDayCount, $this->offDayCount, $this->workingDayCount];
              }
 
@@ -177,6 +178,13 @@ class ShiftSummaryReport extends Component
             Log::error('Error updating selected year: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while updating the selected year. Please try again.');
         }
+    }
+    public function resetFields()
+    {
+        $this->shiftSummary=[];
+        $this->fromDate='';
+        $this->toDate='';
+        $this->search='';
     }
     public function render()
     {

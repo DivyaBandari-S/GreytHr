@@ -524,7 +524,6 @@ class HelpDesk extends Component
             $fileContent = null;
             $mime_type = null;
             $file_name = null;
-
            $this->validate($this->rules);
             if ($this->file_path) {
                 $fileContent = file_get_contents($this->file_path->getRealPath());

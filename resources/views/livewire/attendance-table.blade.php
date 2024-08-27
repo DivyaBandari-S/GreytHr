@@ -1260,7 +1260,10 @@ color: #fff;
         .leaveIcon {
             background-color: #fcf2ff;
         }
-
+        .sickleaveIcon
+        {
+            background-color: transparent;
+        }
         .onDutyIcon {
             background-color: #fff7eb;
         }
@@ -1964,10 +1967,10 @@ color: #fff;
                     <div class="row m-0 mb-3">
                         <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Leave Type</h6>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mb-0">
-                                <i class="fas fa-mug-hot"></i>
+                            <p class="me-2 mb-0">
+                                <span class="legendsIcon sickleaveIcon">SL</span>
                             </p>
-                            <p class="m-1 attendance-legend-text">Rest Day</p>
+                            <p class="legendtext m-0">Sick Leave</p>
                         </div>
 
 
