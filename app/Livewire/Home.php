@@ -125,13 +125,14 @@ class Home extends Component
         $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
 
         // Get data from SQL Server for the normalized user ID
-        $dataSqlServer = DB::connection('sqlsrv')
-            ->table($tableName)
-            ->select('UserId', 'logDate', 'Direction')
-            ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
-            ->whereDate('logDate', $today) // Filter for today's date
-            ->orderBy('logDate')
-            ->get();
+        // $dataSqlServer = DB::connection('sqlsrv')
+        //     ->table($tableName)
+        //     ->select('UserId', 'logDate', 'Direction')
+        //     ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
+        //     ->whereDate('logDate', $today) // Filter for today's date
+        //     ->orderBy('logDate')
+        //     ->get();
+
         // dd($dataSqlServer);
 
         // // Get data from MySQL
