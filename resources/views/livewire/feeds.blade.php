@@ -1,33 +1,5 @@
 <div>
-    <style>
-     .comment-box {
-    position: relative;
-    padding-top: 10px; /* Adjust based on button height */
-    padding-left: 10px;
-}
-
-.addcomment {
-    position: absolute;
-    bottom: 15px; /* Move up by increasing this value */
-    right: 5px; /* Adjust based on padding and design */
-    font-size: 12px;
-    color: rgb(2, 17, 79);
-    border: none;
-    border-radius: 4px;
-    margin-top: -5px; /* Adjust as needed */
-    cursor: pointer;
-    padding: 5px 10px;
-    background-color: transparent; /* If you want the background to be transparent */
-}
-
-
-
-.replyDiv {
-    margin-top: 10px;
-}
-
-
-    </style>
+  
     @if( $employeeDetails->isEmpty())
     <p>No employee details found.</p>
 
@@ -181,9 +153,9 @@
                 </div>
             </div>
             <!-- Additional row -->
-            <div class="row mt-2 d-flex" style="overflow-x: hidden;">
+            <div class="row mt-2 d-flex" >
 
-                <div class="col-md-4 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:auto;overflow-x: hidden;">
+                <div class="col-md-4 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:fit-content">
 
                     <p style="font-weight: 500;font-size:13px;color:#47515b;">Filters</p>
                     <hr style="width: 100%;border-bottom: 1px solid grey;">
@@ -228,8 +200,8 @@
 
 
                     <hr style="width: 100%;border-bottom: 1px solid grey;">
-                    <div style="overflow-y:auto;max-height:300px;overflow-x: hidden;">
-                        <div class="row">
+                    <div >
+                        <div class="row" style="max-height:auto">
                             <div class="col " style="margin: 0px;">
                                 <div class="input-group">
                                     <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
@@ -249,7 +221,7 @@
                                 </span>
                             </div>
                             <div id="dropdownContent1" style="display: none;">
-                                <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;">
+                                <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;overflow-y:auto;max-height:200px;overflow-x: hidden;">
                                     <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">All Feeds</a>
                                     @if (Auth::guard('hr')->check())
                                     <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
@@ -281,7 +253,7 @@
                         </div>
 
 
-                        <div class="w-full visible mt-1" style="margin-top: 20px;display:block">
+                        <div class="w-full visible mt-1" style="margin-top: 20px;display:block;">
                             <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
                                 <span class="text-xs leading-4 " style="font-weight: bold;color:grey">Location</span>
                                 <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')" style="margin-top:-5px;color:#3b4452;">
@@ -290,7 +262,7 @@
                                     </svg>
                                 </span>
                             </div>
-                            <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color:#3b4452; text-align: left; padding-left: 0; display: none;">
+                            <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color:#3b4452; text-align: left; padding-left: 0; display: none;overflow-y:auto;max-height:200px;overflow-x: hidden;">
                                 <ul class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
                                     <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">India</b>
 
@@ -459,7 +431,7 @@
                             </div>
                         </div>
                         <div class="w-full visible mt-1" style="margin-top: 20px;display:block">
-                            <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;">
+                            <div class="cus-button" style="display: flex; justify-content: space-between; width: 100%; padding: 0.5rem;overflow-y:auto;max-height:fit-content;overflow-x: hidden">
                                 <span class="text-xs leading-4" style="font-weight: bold; color: grey;">Department</span>
                                 <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')" style="margin-top:-5px;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color:#3b4452;">
