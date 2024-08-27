@@ -390,20 +390,20 @@
                     <div class="row m-0" style="margin-top: 10px;">
                         <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
                             <input
-                                style="font-size:12px" type="text" class="form-control" wire:model.lazy="facebook"
-                                placeholder="Facebook">
+                                style="font-size:12px" type="text" class="form-control custom-placeholder" wire:model.lazy="facebook"
+                                placeholder="Enter Facebook Url">
                             @error('facebook') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
                             <input
-                                style="font-size:12px" type="text" class="form-control" wire:model.lazy="twitter"
-                                placeholder="Twitter">
+                                style="font-size:12px" type="text" class="form-control custom-placeholder" wire:model.lazy="twitter"
+                                placeholder="Enter Twitter Url">
                             @error('twitter') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
                             <input
-                                style="font-size:12px" type="text" class="form-control" wire:model.lazy="linkedIn"
-                                placeholder="LinkedIn">
+                                style="font-size:12px" type="text" class="form-control custom-placeholder" wire:model.lazy="linkedIn"
+                                placeholder="Enter LinkedIn Url">
                             @error('linkedIn') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
