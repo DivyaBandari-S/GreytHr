@@ -323,12 +323,13 @@
                                             wire:model.lazy="leaveType"
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
                                             <option value="all">All Leaves</option>
-                                            <option value="Loss Of Pay">Loss Of Pay</option>
+                                            <option value="lop">Loss Of Pay</option>
                                             <option value="casual_leave">Casual Leave</option>
                                             <option value="earned_leave">Earned Leave</option>
-                                            <option value="Sick Leave">Sick Leave</option>
-                                            <option value="paternity">Paternity Leave</option>
-                                            <option value="Casual Leave Probation">Casul Leave Probation</option>
+                                            <option value="sick">Sick Leave</option>
+                                            <option value="petarnity">Paternity Leave</option>
+                                            <option value="maternity">Maternity Leave</option>
+                                            <option value="casual_leave_probation">Casul Leave Probation</option>
                                             <option value="marriage_leave">Marriage Leave</option>
 
                                             <!-- Add other leave types as needed -->
