@@ -801,7 +801,7 @@ public function leaveBalanceAsOnADayReport()
     public static function getLeaveBalances($employeeId, $selectedYear)
     {
         try {
-            
+          
             // $selectedYear = now()->year;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $selectedYear);
@@ -814,7 +814,7 @@ public function leaveBalanceAsOnADayReport()
             }
 
             // Get the logged-in employee's approved leave days for all leave types
-            $approvedLeaveDays = LeaveHelper::getApprovedLeaveDays($employeeId);
+            $approvedLeaveDays = LeaveHelper::getApprovedLeaveDaysOnSelectedDay($employeeId, $selectedYear);
 
             // Calculate leave balances
             $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];

@@ -137,4 +137,66 @@ class LeaveHelper
             'totalPaternityDays' => $totalPaternityDays,
         ];
     }
+
+    public static function getApprovedLeaveDaysOnSelectedDay($employeeId, $selectedYear)
+    {
+        // Fetch approved leave requests
+        $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
+            ->where('status', 'approved')
+            ->whereIn('leave_type', ['Casual Leave Probation', 'Loss Of Pay', 'Sick Leave', 'Casual Leave', 'Maternity Leave', 'Marriage Leave', 'Petarnity Leave'])
+            ->whereDate('to_date', '>=', $selectedYear)
+            ->get();
+        $totalCasualDays = 0;
+        $totalCasualLeaveProbationDays = 0;
+        $totalSickDays = 0;
+        $totalLossOfPayDays = 0;
+        $totalMaternityDays = 0;
+        $totalMarriageDays = 0;
+        $totalPaternityDays = 0;
+
+        // Calculate the total number of days based on sessions for each approved leave request
+        foreach ($approvedLeaveRequests as $leaveRequest) {
+            $leaveType = $leaveRequest->leave_type;
+            $days = self::calculateNumberOfDays(
+                $leaveRequest->from_date,
+                $leaveRequest->from_session,
+                $leaveRequest->to_date,
+                $leaveRequest->to_session
+            );
+
+            // Accumulate days based on leave type
+            switch ($leaveType) {
+                case 'Casual Leave':
+                    $totalCasualDays += $days;
+                    break;
+                case 'Sick Leave':
+                    $totalSickDays += $days;
+                    break;
+                case 'Loss Of Pay':
+                    $totalLossOfPayDays += $days;
+                    break;
+                case 'Casual Leave Probation':
+                    $totalCasualLeaveProbationDays += $days;
+                    break;
+                case 'Maternity Leave':
+                    $totalMaternityDays += $days;
+                    break;
+                case 'Marriage Leave':
+                    $totalMarriageDays += $days;
+                    break;
+                case 'Petarnity Leave':
+                    $totalPaternityDays += $days;
+                    break;
+            }
+        }
+        return [
+            'totalCasualDays' => $totalCasualDays,
+            'totalCasualLeaveProbationDays' => $totalCasualLeaveProbationDays,
+            'totalSickDays' => $totalSickDays,
+            'totalLossOfPayDays' => $totalLossOfPayDays,
+            'totalMaternityDays' => $totalMaternityDays,
+            'totalMarriageDays' => $totalMarriageDays,
+            'totalPaternityDays' => $totalPaternityDays,
+        ];
+    }
 }

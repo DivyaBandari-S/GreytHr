@@ -118,10 +118,12 @@ class Settings extends Component
     {
         $this->editingSocialMedia = false;
     }
+  
 
 
     public function saveSocialMedia()
     {
+        $this->validate($this->additionalRules);
         try {
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -181,17 +183,18 @@ class Settings extends Component
     {
         try {
          
+         
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $empPersonalInfo = EmpPersonalInfo::where('emp_id', $employeeId)->first();
-            if ($empPersonalInfo) {
-                $empPersonalInfo->nick_name = $this->nickName;
-                $empPersonalInfo->date_of_birth = $this->wishMeOn;
+            if ($empPersonalInfo) {;
+                $empPersonalInfo->nick_name = !empty($this->nickName) ? $this->nickName : null;
+                $empPersonalInfo->date_of_birth = !empty($this->wishMeOn) ? $this->wishMeOn : null;
                 $empPersonalInfo->save();
             } else {
                 $empPersonalInfo = EmpPersonalInfo::create([
                     'emp_id' => $employeeId,
-                    'nick_name' => $this->nickName,
-                    'date_of_birth' => $this->wishMeOn,
+                    'nick_name' => !empty($this->nickName) ? $this->nickName : null, // Handle empty nick_name
+                    'date_of_birth' => !empty($this->wishMeOn) ? $this->wishMeOn : null, // Handle empty date_of_birth
                     'first_name' => '',
                     'last_name' => '',
                     'gender' => '',
@@ -288,10 +291,22 @@ class Settings extends Component
         'newPassword' => 'required|min:8',
         'confirmNewPassword' => 'required|same:newPassword',
     ];
+    protected $additionalRules = [
+        'facebook' => 'nullable|url|max:255',
+        'twitter' => 'nullable|url|max:255',
+        'linkedIn' => 'nullable|url|max:255',
+    ];
+
+
+
 
     public function updated($propertyName)
     {
-        $this->validateOnly($propertyName);
+        if (in_array($propertyName, array_keys($this->rules))) {
+            $this->validateOnly($propertyName);
+        } elseif (in_array($propertyName, array_keys($this->additionalRules))) {
+            $this->validateOnly($propertyName, $this->additionalRules);
+        }
     }
 
     public function changePassword()
