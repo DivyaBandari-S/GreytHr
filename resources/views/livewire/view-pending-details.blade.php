@@ -22,9 +22,9 @@
         <div class="approved-leave-container mt-1 px-1" style="border-radius: 5px; ">
             <div class="accordion rounded mb-4 p-0">
                 <div class="accordion-heading rounded m-0 p-0" onclick="toggleAccordion(this)">
-                    <div class="accordion-title rounded m-0 p-1">
+                    <div class="accordion-title rounded m-0 p-1" >
                         <!-- Display leave details here based on $leaveRequest -->
-                        <div class="col accordion-content d-flex align-items-center">
+                        <div class="col accordion-content d-flex align-items-center" >
                             <div class="accordion-profile" style="display:flex; gap:7px; margin:auto 0;align-items:center;justify-content:center;">
                                 @if(isset($leaveRequest['leaveRequest']->image) && $leaveRequest['leaveRequest']->image !== 'null')
                                 <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['leaveRequest']->image)}}" style="border-radius: 50%;">
@@ -211,7 +211,7 @@
                             @if($leaveRequest['leaveRequest']->category_type === 'Leave')
                             <button class="approveBtn" wire:click="approveLeave({{ $loop->index }})">Approve</button>
                             @else
-                            <button class="approveBtn" wire:click="approveLeaveCancel({{ $loop->index }})" title="Approve Request For Leave Cancel">Leave Cancel</button>
+                            <button class="approveBtn" wire:click="approveLeaveCancel({{ $loop->index }})" title="Approve Request For Leave Cancel">Approve</button>
                             @endif
                         </div>
                     </div>

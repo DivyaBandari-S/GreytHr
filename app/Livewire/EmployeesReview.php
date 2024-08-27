@@ -224,7 +224,8 @@ class EmployeesReview extends Component
 
             // Execute the query
             $this->leaveApplications = $query->get();
-            $this->count = $this->leaveApplications->count();
+            $this->count = count($this->leaveApplications);
+
         } catch (\Exception $e) {
             Log::error('Error in getPendingLeaveRequest method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while processing your request. Please try again later.');

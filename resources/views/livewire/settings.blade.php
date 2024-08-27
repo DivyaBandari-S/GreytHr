@@ -1,4 +1,9 @@
 <div>
+    <style>
+        .custom-placeholder::placeholder {
+    font-size: 12px; /* Adjust this value as needed */
+}
+    </style>
     @if (session()->has('emp_error'))
         <div class="alert alert-danger">
             {{ session('emp_error') }}
@@ -259,7 +264,7 @@
                         <div class="col-md-4 mb-3" style="color: #778899;font-size: 12px">
                             Wish Me On
                         </div>
-                        <div class="col-md-4 mb-3" style="text-align: end; font-size:  12px">
+                        <div class="col-md-4 mb-3" style="text-align: end; font-size:  12px; cursor: pointer;">
                             @if ($editingNickName)
                                 <!-- <i wire:click="editProfile" class="fas fa-edit"></i> -->
                                 <i wire:click="cancelProfile" class="fas fa-times me-3"></i>
@@ -272,7 +277,7 @@
                     @if ($editingNickName)
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-4 mb-3">
-                                <input style="font-size:12px" type="text" class="form-control"
+                                <input style="font-size:12px" type="text" class="form-control custom-placeholder"
                                     wire:model="nickName" placeholder="Enter Nick Name">
                             </div>
                             <div class="col-md-4 mb-3">
@@ -298,7 +303,7 @@
                 <div class="container">
                     <div class="row m-0" style="font-size: 12px;">
                         <div class="col-md-6 mb-3" style="color:#778899;"><strong>Time Zone</strong></div>
-                        <div class="col-md-6 mb-3" style="text-align: end">
+                        <div class="col-md-6 mb-3" style="text-align: end; cursor: pointer;">
                             @if ($editingTimeZone)
                                 <!-- <i wire:click="editTimeZone" class="fas fa-edit"></i> -->
                                 <i wire:click="cancelTimeZone" class="fas fa-times me-3"></i>
@@ -330,7 +335,7 @@
                 <div class="container">
                     <div class="row m-0" style="font-size: 12px;">
                         <div class="col-md-6 mb-3" style="color:#778899;"><strong>Biography</strong></div>
-                        <div class="col-md-6 mb-3" style="text-align: end">
+                        <div class="col-md-6 mb-3" style="text-align: end;  cursor: pointer;">
                             @if ($editingBiography)
                                 <!-- <i wire:click="editBiography" class="fas fa-edit"></i> -->
                                 <i wire:click="cancelBiography" class="fas fa-times me-3"></i>
@@ -353,9 +358,10 @@
                     @else
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-12 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->empPersonalInfo 
-                                    ? ucwords(strtolower($employee->empPersonalInfo->biography ?? '-'))
+                                {{ $employee->empPersonalInfo && !empty($employee->empPersonalInfo->biography) 
+                                    ? ucwords(strtolower($employee->empPersonalInfo->biography)) 
                                     : '-' }}
+                                
                                 </div>
                         </div>
                     @endif
@@ -364,7 +370,7 @@
                 <div class="container">
                     <div class="row m-0" style="font-size: 12px;">
                         <div class="col-md-6 mb-3" style="color:#778899;"><strong>Social Media</strong></div>
-                        <div class="col-md-6 mb-3" style="text-align: end">
+                        <div class="col-md-6 mb-3" style="text-align: end; cursor: pointer;">
                             @if ($editingSocialMedia)
                                 <!-- <i wire:click="editSocialMedia" class="fas fa-edit"></i> -->
                                 <i wire:click="cancelSocialMedia" class="fas fa-times me-3"></i>
@@ -381,28 +387,35 @@
                         <div class="col-md-4 mb-3" style="font-size: 12px;">LinkedIn</div>
                     </div>
                     @if ($editingSocialMedia)
-                        <div class="row m-0" style="margin-top: 10px;">
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;"> <input
-                                    style="font-size:12px" type="text" class="form-control" wire:model="facebook"
-                                    placeholder="FaceBook">
-                            </div>
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;"> <input
-                                    style="font-size:12px" type="text" class="form-control" wire:model="twitter"
-                                    placeholder="Twitter">
-                            </div>
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;"> <input
-                                    style="font-size:12px" type="text" class="form-control" wire:model="linkedIn"
-                                    placeholder="LinkedIn">
-                            </div>
+                    <div class="row m-0" style="margin-top: 10px;">
+                        <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
+                            <input
+                                style="font-size:12px" type="text" class="form-control custom-placeholder" wire:model.lazy="facebook"
+                                placeholder="Enter Facebook Url">
+                            @error('facebook') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
+                        <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
+                            <input
+                                style="font-size:12px" type="text" class="form-control custom-placeholder" wire:model.lazy="twitter"
+                                placeholder="Enter Twitter Url">
+                            @error('twitter') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
+                            <input
+                                style="font-size:12px" type="text" class="form-control custom-placeholder" wire:model.lazy="linkedIn"
+                                placeholder="Enter LinkedIn Url">
+                            @error('linkedIn') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    
                     @else
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->empPersonalInfo->facebook ?? '-' }}</div>
+                                {{ !empty($employee->empPersonalInfo->facebook) ? $employee->empPersonalInfo->facebook : '-' }}</div>
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->empPersonalInfo->twitter ?? '-' }}</div>
+                                {{ !empty($employee->empPersonalInfo->twitter) ? $employee->empPersonalInfo->twitter : '-' }}</div>
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->empPersonalInfo->linked_in ?? '-' }}</div>
+                                {{ !empty($employee->empPersonalInfo->linked_in) ? $employee->empPersonalInfo->linked_in : '-' }}</div>
                         </div>
                     @endif
                 </div>

@@ -59,8 +59,31 @@ class LeaveHistory extends Component
             $fileDataArray,
             fn($fileData) => strpos($fileData['mime_type'], 'image') !== false,
         );
+            // If only one image, provide direct download
+    if (count($images) === 1) {
+        $image = reset($images); // Get the single image
+        $base64File = $image['data'];
+        $mimeType = $image['mime_type'];
+        $originalName = $image['original_name'];
+ 
+        // Decode base64 content
+        $fileContent = base64_decode($base64File);
+ 
+        // Return the image directly
+        return response()->stream(
+            function () use ($fileContent) {
+                echo $fileContent;
+            },
+            200,
+            [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'attachment; filename="' . $originalName . '"',
+            ]
+        );
+    }
 
         // Create a zip file for the images
+        if (count($images) > 1) {
         $zipFileName = 'images.zip';
         $zip = new \ZipArchive();
         $zip->open(storage_path($zipFileName), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
@@ -79,6 +102,9 @@ class LeaveHistory extends Component
         // Return the zip file as a download
         return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
     }
+      // If no images, return an appropriate response
+      return response()->json(['message' => 'No images found'], 404);
+}
     public $showViewFileDialog = false; // Toggle modal visibility
     public $files = []; // Store files array
     public $selectedFile; // Store the selected file's data
@@ -106,49 +132,28 @@ class LeaveHistory extends Component
     
 
     //used to calculate number of days for leave
-    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
-            // Check if the start and end sessions are different on the same day
-            if ($startDate->isSameDay($endDate) && $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 0.5;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
+
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
             }
+
             // Check if the start and end sessions are different on the same day
-            if (
-
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
-            ) {
-
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 0.5;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
-            }
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
-            ) {
-
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+            if ($startDate->isSameDay($endDate)) {
+                if (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
                     return 1;
+                } elseif (self::getSessionNumber($fromSession) == self::getSessionNumber($toSession)) {
+                    return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
+
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
@@ -156,7 +161,6 @@ class LeaveHistory extends Component
                 if ($startDate->isWeekday()) {
                     $totalDays += 1;
                 }
-
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -189,10 +193,9 @@ class LeaveHistory extends Component
             return 'Error: ' . $e->getMessage();
         }
     }
-
-    //to count the sessions of leave applied
     private function getSessionNumber($session)
     {
+        // You might need to customize this based on your actual session values
         return (int) str_replace('Session ', '', $session);
     }
 

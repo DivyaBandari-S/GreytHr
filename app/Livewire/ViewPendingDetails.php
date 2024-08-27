@@ -133,33 +133,24 @@ class ViewPendingDetails extends Component
     }
 
     //calcilate number of days in a leave application
-    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
+
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+            }
+
             // Check if the start and end sessions are different on the same day
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
-            ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+            if ($startDate->isSameDay($endDate)) {
+                if ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
+                    return 1;
+                } elseif ($this->getSessionNumber($fromSession) == $this->getSessionNumber($toSession)) {
                     return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
-            }
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
-            ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 1;
-                } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
@@ -171,7 +162,6 @@ class ViewPendingDetails extends Component
                 if ($startDate->isWeekday()) {
                     $totalDays += 1;
                 }
-
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -188,6 +178,8 @@ class ViewPendingDetails extends Component
                 // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
+                } else {
+                    $totalDays += 0.5;
                 }
             } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
                 if ($this->getSessionNumber($fromSession) !== 1) {
@@ -211,6 +203,7 @@ class ViewPendingDetails extends Component
     }
 
 
+
     //This method used to approve leave application by manager
     public function approveLeave($index)
     {
@@ -221,7 +214,6 @@ class ViewPendingDetails extends Component
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
-
             // Check if status is already approved
             if ($leaveRequest->status === 'approved') {
                 session()->flash('message', 'Leave application is already approved.');
@@ -230,8 +222,8 @@ class ViewPendingDetails extends Component
                 if ($daysSinceCreation > 3 || $leaveRequest->status !== 'approved') {
                     // Update status to 'approved'
                     $leaveRequest->status = 'approved';
+                    $leaveRequest->updated_at = now(); // Update timestamps
                     $leaveRequest->save();
-                    $leaveRequest->touch(); // Update timestamps
                     session()->flash('message', 'Leave application approved successfully.');
                     $this->fetchPendingLeaveApplications();
                 }
@@ -249,7 +241,6 @@ class ViewPendingDetails extends Component
         try {
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
-
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
@@ -263,8 +254,8 @@ class ViewPendingDetails extends Component
                     // Update status to 'approved'
                     $leaveRequest->cancel_status = 'approved';
                     $leaveRequest->status = 'rejected';
+                    $leaveRequest->updated_at = now();
                     $leaveRequest->save();
-                    $leaveRequest->touch();
                     session()->flash('message', 'Leave cancel application approved successfully.');
                     $this->fetchPendingLeaveApplications();
                 }
@@ -293,8 +284,8 @@ class ViewPendingDetails extends Component
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
                     // Update status to 'approved'v
                     $leaveRequest->cancel_status = 'rejected';
+                    $leaveRequest->updated_at = now();
                     $leaveRequest->save();
-                    $leaveRequest->toucvh();
                     session()->flash('message', 'Leave cancel application approved successfully.');
                     $this->fetchPendingLeaveApplications();
                 }
@@ -315,10 +306,9 @@ class ViewPendingDetails extends Component
             // Update status to 'rejected'
             $leaveRequest->status = 'rejected';
             $leaveRequest->save();
-            $leaveRequest->touch();
+            $leaveRequest->updated_at = now();
             session()->flash('message', 'Leave application rejected.');
             $this->fetchPendingLeaveApplications();
-            return redirect()->route('review', ['tab' => 'leave']);
         } catch (\Exception $e) {
             // Log the error
             Log::error($e);

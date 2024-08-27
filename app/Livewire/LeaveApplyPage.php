@@ -103,6 +103,7 @@ class LeaveApplyPage extends Component
             // Determine if the dropdown option should be displayed
             $this->showCasualLeaveProbation = $this->employee && !$this->employee->probation_period && !$this->employee->confirmation_date;
         }
+
     }
 
     public function updated($propertyName)
@@ -255,11 +256,20 @@ class LeaveApplyPage extends Component
     public function leaveApply()
     {
         $this->validate();
-
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $checkJoinDate  = EmployeeDetails::where('emp_id', $employeeId)->first();
         try {
             // Check for weekends
             if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
                 $this->errorMessage = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
+                $this->showerrorMessage = true;
+                return redirect()->back()->withInput();
+            }
+
+            //validate fromdate for joining date
+            if ($this->from_date < $checkJoinDate->hire_date) {
+                dd('fghj');
+                $this->errorMessage = 'To date must be greater than or equal to from date.';
                 $this->showerrorMessage = true;
                 return redirect()->back()->withInput();
             }
@@ -326,6 +336,14 @@ class LeaveApplyPage extends Component
                                 $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
                                 $this->showerrorMessage = true;
                                 return redirect()->back()->withInput();
+                            }
+                        }else{
+                            if ($this->from_date <= $carbonToDate && $this->to_date >= $carbonToDate) {
+                                if ($this->from_session <= $leave->to_session && $this->to_session >= $leave->from_session) {
+                                    $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+                                    $this->showerrorMessage = true;
+                                    return redirect()->back()->withInput();
+                                }
                             }
                         }
                     }

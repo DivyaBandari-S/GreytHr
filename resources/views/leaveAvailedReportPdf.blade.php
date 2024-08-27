@@ -100,9 +100,19 @@
         th,
         td {
             border: 1.5px solid #808080;
-            padding: 8px;
+            padding: 5px;
             text-align: left;
+            width: auto;
         }
+        .approver-column {
+            font-size: 0.8rem; /* Slightly smaller font size */
+    white-space: normal; /* Allow text wrapping */
+    word-wrap: break-word;
+}
+
+th.approver-column, td.approver-column {
+    width: 15%; /* Adjust percentage as necessary */
+}
 
         td {
             font-size: 0.825rem;
@@ -130,7 +140,9 @@
                                 Rangareddy, <br> Telangana, 500032</p>
                         </span>
                     </h2>
-                    <h3>Leave Balance As On {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
+                    <h3>Leave Availed Transactions Between
+                        {{ \Carbon\Carbon::parse($fromDate)->format('d M Y') }} to
+                        {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
                 </div>
                 <!-- payglogo -->
             @elseif($employeeDetails->company_id === 'PAYG-12345')
@@ -143,7 +155,9 @@
                                 Rangareddy, <br> Telangana, 500032</p>
                         </span>
                     </h2>
-                    <h3>Leave Balance As On {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
+                    <h3>Leave Availed Transactions Between
+                        {{ \Carbon\Carbon::parse($fromDate)->format('d M Y') }} to
+                        {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
                 </div>
                 <!-- attune golabal logo -->
             @elseif($employeeDetails->company_id === 'AGS-12345')
@@ -156,7 +170,9 @@
                                 Rangareddy, <br> Telangana, 500032</p>
                         </span>
                     </h2>
-                    <h3>Leave Balance As On {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
+                    <h3>Leave Availed Transactions Between
+                        {{ \Carbon\Carbon::parse($fromDate)->format('d M Y') }} to
+                        {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
                 </div>
             @endif
         </div>
@@ -170,10 +186,14 @@
                 <th>Name </th>
                 <th>Manager No</th>
                 <th>Manager Name</th>
-                <th>Casual Leave</th>
-                <th>Casual Leave Probation</th>
-                <th>Loss Of Pay</th>
-                <th>Sick Leave</th>
+                <th>Leave Type</th>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th>Days</th>
+                <th>Reason</th>
+                <th>Applied Date</th>
+                <th>Approved Date</th>
+                <th class="approver-column">Approver</th>
             </tr>
         </thead>
         <tbody>
@@ -183,8 +203,8 @@
                         style="text-align: center;  font-weight:600;   font-size:15px ;">No data found</td>
                 </tr>
             @else
-                @foreach ($leaveTransactions as $transaction)
-               
+                @foreach ($leaveTransactions as $leaveTransaction)
+                    @foreach ($leaveTransaction['details'] as $transaction)
                         <tr>
                             <td>{{ $loop->index + 1 }}</td>
                             <td>{{ $transaction['emp_id'] }}</td>
@@ -193,26 +213,23 @@
                             <td>{{ $employeeDetails->emp_id }}</td>
                             <td>{{ ucwords(strtolower($employeeDetails->first_name)) }}
                                 {{ ucwords(strtolower($employeeDetails->last_name)) }}</td>
-                                <td>
-                                    {{ $transaction['casual_leave_balance'] ?? 'N/A' }}
-                                </td>
-                                <td>
-                                    {{ $transaction['casual_leave_probation_balance'] ?? 'N/A' }}
-                                </td>
-                                <td>
-                                    {{ $transaction['loss_of_pay_balance'] ?? 'N/A' }}
-                                </td>
-                                <td>
-                                    {{ $transaction['sick_leave_balance'] ?? 'N/A' }}
-                                </td>
-                                
+                            <td>{{ $transaction['leave_type'] }}</td>
+                          
+
+                            <td>{{ \Carbon\Carbon::parse($transaction['leave_from_date'])->format('d M Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($transaction['leave_to_date'])->format('d M Y') }}</td>
+                            <td>{{ $transaction['leave_days'] }}</td>
+                            <td>{{ ucwords(strtolower($transaction['reason'])) }}</td>
+                            <td>{{ \Carbon\Carbon::parse($transaction['created_at'])->format('d M Y H:i') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($transaction['updated_at'])->format('d M Y H:i') }}</td>
+                            <td class="approver-column">{{ ucwords(strtolower($employeeDetails->first_name)) }}
+                                {{ ucwords(strtolower($employeeDetails->last_name)) }}</td>
                         </tr>
                     @endforeach
-              
+                @endforeach
 
             @endif
         </tbody>
-
     </table>
 </body>
 

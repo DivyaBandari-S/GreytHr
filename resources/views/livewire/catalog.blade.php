@@ -49,175 +49,137 @@
                                         <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="AddRequest" style="font-size: 10px;">Add Members to Distribution List</p>
                                     </div>
                                     @if($AddRequestaceessDialog)
-                                    <div class="modal" tabindex="-1" role="dialog" style="{{ $showModal ? 'display: block;' : 'display: none;' }}">
-                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">New Distribution List</h1>
-
-                                                </div>
-
-                                                <div class="modal-body">
-
-                                                    <div class="row m-0">
-                                                        <div class="col-4 m-auto">
-                                                            <img src="https://snow.payg.in/89294c29871c7510279786a50cbb35b5.iix?t=medium" style="height:4em">
-                                                        </div>
-                                                        <div class="col-8 m-auto">
-                                                            <p style="font-size:15px;">Use this Catalogue Item to raise New Request for Adding a New Distribution List</p>
-                                                        </div>
-                                                    </div>
-                                                    <hr style="border: 1px solid #ccc;margin: 10px 0;">
-
-                                                    <form wire:submit.prevent="DistributorRequest" >
-
-                                                        <div class="form-group mt-2">
-                                                            <label for="contactDetails">Provide the Name of Distribution List<span style="color:red">*</span></label>
-                                                            <input wire:model.lazy="distributor_name" type="text" class="form-control">
-                                                            @error('distributor_name') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-
-
-
-                                                        <div class="form-group mt-2">
-                                                            <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
-                                                            <input wire:model.lazy="subject" type="text" class="form-control">
-                                                            @error('subject') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="reason">Specific Information<span style="color:red">*</span></label>
-                                                            <textarea wire:model.lazy="description" class="form-control"></textarea>
-                                                            @error('description') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-                                                        <div class="row mt-2" style="margin-left:-10px">
-                                                            <div class="row">
-                                                                <div class="form-group ">
-
-                                                                    <div class="form-group  m-0 p-0">
-                                                                        <label for="cc_to" > Members to be Added :<span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
-
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group  m-0">
-                                                                    <div class="form-group  p-0">
-                                                                        <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79);color:white">
-                                                                            <i class="fa fa-plus me-3"></i>
-                                                                            Add
-                                                                        </button>
-                                                                    </div>
-
-                                                                    @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
-                                                                </div>
-                                                            </div>
-                                                            @if($isNames)
-    <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-    <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
-    <input 
-        wire:model="searchTerm" 
-        style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" 
-        type="text" 
-        class="form-control" 
-        placeholder="Search for Emp.Name or ID" 
-        aria-label="Search" 
-        aria-describedby="basic-addon1"
-    >
-    <div class="input-group-append" style="display: flex; align-items: center;">
-        <button 
-            wire:click="filter" 
-            style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;" 
-            class="btn" 
-            type="button"
-        >
-            <i style="text-align: center;" class="fa fa-search"></i>
-        </button>
-
-        <button 
-            wire:click="closePeoples"  
-            type="button" 
-            class="close rounded px-1 py-0" 
-            aria-label="Close" 
-            style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;"
-        >
-            <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
-        </button>
-    </div>
-</div>
-        @if ($peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: white; font-size:12px">
-                No People Found
-            </div>
-        @else
-            @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+    <div class="modal" tabindex="-1" role="dialog" style="{{ $showModal ? 'display: block;' : 'display: none;' }}">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">New Distribution List</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="row m-0">
+                        <div class="col-4 m-auto">
+                            <img src="https://snow.payg.in/89294c29871c7510279786a50cbb35b5.iix?t=medium" style="height:4em">
                         </div>
-                        <div class="col-auto">
-                        @if (!empty($people->image) && $people->image !== 'null')
-                        <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
-                    @else
-                        <!-- If image is not available, check the gender and show default images -->
-
-                            @php
-                                // Debugging step to check gender
-                                $gender = $people->gender ?? null;
-                            @endphp
-                            @if ($gender === 'Male')
-                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                            @elseif($gender === 'Female')
-                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                          
-                        @else
-                            <!-- Fallback if emp is not available -->
-                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                        @endif
-                    @endif
-                        </div>
-                        <div class="col">
-                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                        <div class="col-8 m-auto">
+                            <p style="font-size:15px;">Use this Catalogue Item to raise New Request for Adding a New Distribution List</p>
                         </div>
                     </div>
-                </label>
-            @endforeach
-        @endif
-    </div>
-@endif
+                    <hr style="border: 1px solid #ccc; margin: 10px 0;">
 
-                                                        </div>
-                                                        <div class="row mt-2">
-                                <div class="col">
-                                    <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
-                                        <i class="fa fa-paperclip"></i> Attach Image
-                                    </label>
+                    <form wire:submit.prevent="DistributorRequest">
+                        <div class="form-group mt-2">
+                            <label for="distributor_name">Provide the Name of Distribution List<span style="color:red">*</span></label>
+                            <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('form.distributor_name')"  type="text" class="form-control" id="distributor_name">
+                            @error('distributor_name') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label for="subject">Business Justification<span style="color:red">*</span></label>
+                            <input   wire:model.lazy="subject" wire:keydown.debounce.500ms="validateField('form.subject')"  type="text" class="form-control" id="subject">
+                            @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label for="description">Specific Information<span style="color:red">*</span></label>
+                            <textarea wire:model.lazy="description" wire:keydown.debounce.500ms="validateField('form.description')" class="form-control" id="description"></textarea>
+                            @error('description') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="row mt-2" style="margin-left: -10px;">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="form-group m-0 p-0">
+                                        <label for="cc_to">Members to be Added: <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+                                    </div>
                                 </div>
-                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                <div class="form-group m-0">
+                                    <div class="form-group p-0">
+                                        <button type="button" class="btn btn" wire:click="NamesSearch" style="background-color: rgb(2, 17, 79); color: white;">
+                                            <i class="fa fa-plus me-3"></i>
+                                            Add
+                                        </button>
+                                    </div>
+                                    @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
                             </div>
+                            @if($isNames)
+                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
+                                    <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
+                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                                        <div class="input-group-append" style="display: flex; align-items: center;">
+                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;" class="btn" type="button">
+                                                <i style="text-align: center;" class="fa fa-search"></i>
+                                            </button>
 
-                            <div>
-                                <input type="file" wire:model="file_path" id="file_path" class="form-control">
-
-                            </div>
-                
-
-                                                    </form>
-                                                </div>
-                                                <div class="modal-footer justify-content-center">
-                                                    <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-                                                <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
-                                                    <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
-            </div>
-                                                </div>
-                                            </div>
+                                            <button wire:click="closePeoples" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
+                                                <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
+
+                                    @if ($peopleData->isEmpty())
+                                        <div class="container" style="text-align: center; color: white; font-size:12px">
+                                            No People Found
+                                        </div>
+                                    @else
+                                        @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
+                                            <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                        <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        @if (!empty($people->image) && $people->image !== 'null')
+                                                            <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                        @else
+                                                            @php $gender = $people->gender ?? null; @endphp
+                                                            @if ($gender === 'Male')
+                                                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                                                            @elseif($gender === 'Female')
+                                                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                                                            @else
+                                                                <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                                                            @endif
+                                                        @endif
+                                                    </div>
+                                                    <div class="col">
+                                                        <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                                                        <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        @endforeach
                                     @endif
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col">
+                                <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
+                                    <i class="fa fa-paperclip"></i> Attach Image
+                                </label>
+                            </div>
+                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
+                        <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
+                        <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
+@endif
+
 
                                 </div>
 
@@ -260,7 +222,7 @@
 
                                                         <div class="form-group mt-2" >
                                                             <label for="selectedEquipment "   >Select Equipment<span style="color:red">*</span></label>
-                                                            <select wire:model.lazy="selected_equipment" class="form-control" style="font-size: 12px;">
+                                                            <select wire:model.lazy="selected_equipment" wire:keydown.debounce.500ms="validateField('selected_equipment')" class="form-control" style="font-size: 12px;">
                                                                 <option value="keyboard">Select Equipment</option>
                                                                 <option value="keyboard">Keyboard</option>
                                                                 <option value="mouse">Mouse</option>
@@ -276,13 +238,13 @@
 
                                                         <div class="form-group mt-2">
                                                             <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
-                                                            <input wire:model.lazy="subject" type="text" class="form-control">
+                                                            <input wire:model.lazy="subject"   wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
                                                             @error('subject') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
                                                         <div class="form-group mt-2">
                                                             <label for="reason">Specific Information<span style="color:red">*</span></label>
-                                                            <textarea wire:model="description" class="form-control"></textarea>
+                                                            <textarea wire:model="description"  wire:keydown.debounce.500ms="validateField('description')" class="form-control"></textarea>
                                                             @error('description') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
@@ -452,20 +414,20 @@
 
                                                         <div class="form-group mt-2">
                                                             <label for="contactDetails">Provide the Name of Mailbox<span style="color:red">*</span></label>
-                                                            <input wire:model.lazy="mail" type="text" class="form-control">
+                                                            <input wire:model.lazy="mail"  wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control">
                                                             @error('mail') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
 
                                                         <div class="form-group mt-2">
                                                             <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
-                                                            <input wire:model.lazy="subject" type="text" class="form-control">
+                                                            <input wire:model.lazy="subject"  wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
                                                             @error('subject') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
                                                         <div class="form-group mt-2">
                                                             <label for="reason">Specific Information<span style="color:red">*</span></label>
-                                                            <textarea wire:model.lazy="description" class="form-control"></textarea>
+                                                            <textarea wire:model.lazy="description"  wire:keydown.debounce.500ms="validateField('description')" class="form-control"></textarea>
                                                             @error('description') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
@@ -637,25 +599,25 @@
                                                            
     <div class="form-group col-md-6 mt-2">
         <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
-        <input wire:model="mobile" type="text" class="form-control">
+        <input wire:model="mobile"  wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control">
         @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
     </div>
     <div class="form-group col-md-6 mt-2" style="margin-left:5px">
         <label for="contactDetails">Email<span style="color:red">*</span></label>
-        <input wire:model="mail" type="text" class="form-control">
+        <input wire:model="mail"  wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control">
         @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
     </div>
 
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span  style="color:red">*</span></label>
-                                                                <input wire:model="subject" type="text" class="form-control">
+                                                                <input wire:model="subject"  wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
                                                                 @error('subject') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="reason">Specific Information<span  style="color:red">*</span></label>
-                                                                <textarea wire:model="description" class="form-control"></textarea>
+                                                                <textarea wire:model="description"  wire:keydown.debounce.500ms="validateField('description')" class="form-control"></textarea>
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
@@ -820,26 +782,26 @@
                                                             <div style="display:flex">
                                                                 <div class="form-group col-md-6 mt-2">
                                                                     <label for="contactDetails">Mobile Number<span  style="color:red">*</span></label>
-                                                                    <input wire:model="mobile" type="text" class="form-control">
+                                                                    <input wire:model="mobile"  wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                                 <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email<span  style="color:red">*</span></label>
-                                                                    <input wire:model="mail" type="text" class="form-control">
+                                                                    <input wire:model="mail"  wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span  style="color:red">*</span></label>
-                                                                <input wire:model="subject" type="text" class="form-control">
+                                                                <input wire:model="subject"  wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
                                                                 @error('subject') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="reason">Specific Information<span  style="color:red">*</span></label>
-                                                                <textarea wire:model="description" class="form-control"></textarea>
+                                                                <textarea wire:model="description"  wire:keydown.debounce.500ms="validateField('description')" class="form-control"></textarea>
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
@@ -1007,7 +969,7 @@
 
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Provide the Name of Distribution List<span style="color:red">*</span></label>
-                                                                <input wire:model.lazy="distributor_name" type="text" class="form-control">
+                                                                <input wire:model.lazy="distributor_name"  wire:keydown.debounce.500ms="validateField('distributor_name')" type="text" class="form-control">
                                                                 @error('distributor_name') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
@@ -1016,13 +978,13 @@
 
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
-                                                                <input wire:model.lazy="subject" type="text" class="form-control">
+                                                                <input wire:model.lazy="subject"   wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
                                                                 @error('subject') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="reason">Specific Information<span style="color:red">*</span></label>
-                                                                <textarea wire:model.lazy="description" class="form-control"></textarea>
+                                                                <textarea wire:model.lazy="description"  wire:keydown.debounce.500ms="validateField('description')" class="form-control"></textarea>
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
@@ -1195,26 +1157,26 @@
                                                             <div style="display:flex">
                                                                 <div class="form-group col-md-6 mt-2">
                                                                     <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mobile" type="text" class="form-control">
+                                                                    <input wire:model.lazy="mobile"  wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control">
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                                 <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email<span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mail" type="text" class="form-control">
+                                                                    <input wire:model.lazy="mail"  wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control">
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span>
                                                                     @enderror
                                                                 </div>
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
-                                                                <input wire:model.lazy="subject" type="text" class="form-control">
+                                                                <input wire:model.lazy="subject"  wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
                                                                 @error('subject') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="reason">Specific Information<span style="color:red">*</span></label>
-                                                                <textarea wire:model.lazy="description" class="form-control"></textarea>
+                                                                <textarea wire:model.lazy="description"  wire:keydown.debounce.500ms="validateField('description')" class="form-control"></textarea>
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>

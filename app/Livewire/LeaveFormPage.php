@@ -91,6 +91,7 @@ class LeaveFormPage extends Component
             $leaveRequest->formatted_from_date = Carbon::parse($leaveRequest->from_date)->format('d-m-Y');
             $leaveRequest->formatted_to_date = Carbon::parse($leaveRequest->to_date)->format('d-m-Y');
         }
+        $this->hasPendingLeave();
     }
 
 
@@ -138,39 +139,27 @@ class LeaveFormPage extends Component
 
 
     //used to calculate number of days
-    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
-
             $startDate = Carbon::parse($fromDate);
-
             $endDate = Carbon::parse($toDate);
+
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+            }
+
             // Check if the start and end sessions are different on the same day
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
-            ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+            if ($startDate->isSameDay($endDate)) {
+                if ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
+                    return 1;
+                } elseif ($this->getSessionNumber($fromSession) == $this->getSessionNumber($toSession)) {
                     return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
-            ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 1;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
-            }
-
 
             $totalDays = 0;
 
@@ -195,6 +184,8 @@ class LeaveFormPage extends Component
                 // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
+                } else {
+                    $totalDays += 0.5;
                 }
             } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
                 if ($this->getSessionNumber($fromSession) !== 1) {
@@ -209,7 +200,6 @@ class LeaveFormPage extends Component
             return 'Error: ' . $e->getMessage();
         }
     }
-
 
     private function getSessionNumber($session)
     {
@@ -230,8 +220,9 @@ class LeaveFormPage extends Component
 
             // Update status to 'Withdrawn'
             $leaveRequest->status = 'Withdrawn';
+            $leaveRequest->updated_at = now();
             $leaveRequest->save();
-            $leaveRequest->touch();
+
             $this->hasPendingLeave();
             session()->flash('cancelMessage', 'Leave application Withdrawn.');
             $this->showAlert = true;

@@ -27,6 +27,7 @@
                                 Pending with
                                 @endif
                             </span>
+                            <br>
                             @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                             <span class="normalText">
                                 {{ ucwords(strtoupper($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtoupper($this->leaveRequest->employee->last_name)) }}
@@ -39,7 +40,6 @@
                             @endforeach
                             @endif
                         </div>
-
                         <div>
                             <span>
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
@@ -62,18 +62,18 @@
                         <div class="view-container m-0 p-0">
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
-                                    <span class="normalTextValue">From date</span>
+                                    <span class="normalTextValue">From Date</span> <br>
                                     <span class="normalText" style="font-weight:600;"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
-                                    <span class="normalTextValue">To date</span>
+                                    <span class="normalTextValue">To Date</span> <br>
                                     <span class="normalText" style="font-weight:600;">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
                             </div>
                             <div class="box" style="display:flex; text-align:center; padding:5px;">
                                 <div class="field p-2">
-                                    <span class="normalTextValue">No. of days</span>
+                                    <span class="normalTextValue">No. of days</span> <br>
                                     <span class="normalText" style=" font-weight: 600;"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
                                 </div>
                             </div>
@@ -112,6 +112,7 @@
                                     <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['casualLeaveBalance'] }}</span>
 
                                     <!-- Casual Leave Probation-->
+                                    @if($leaveRequest->leave_type === 'Casual Leave Probation')
 
                                     <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #FDEBD0  ; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
 
@@ -123,11 +124,11 @@
 
                                     <!-- Loss of Pay -->
 
-                                    @if($leaveRequest->leave_type === 'Loss of Pay')
+                                    @elseif($leaveRequest->leave_type === 'Loss Of Pay')
 
                                     <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
 
-                                        <span style="font-size:10px; color: #890000;font-weight:500;">LP</span>
+                                        <span style="font-size:10px; color: #890000;font-weight:500;">LOP</span>
 
                                     </div>
 
