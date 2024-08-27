@@ -327,6 +327,14 @@ class LeaveApplyPage extends Component
                                 $this->showerrorMessage = true;
                                 return redirect()->back()->withInput();
                             }
+                        }else{
+                            if ($this->from_date <= $carbonToDate && $this->to_date >= $carbonToDate) {
+                                if ($this->from_session <= $leave->to_session && $this->to_session >= $leave->from_session) {
+                                    $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+                                    $this->showerrorMessage = true;
+                                    return redirect()->back()->withInput();
+                                }
+                            }
                         }
                     }
                 }

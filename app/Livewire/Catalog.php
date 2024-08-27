@@ -93,7 +93,6 @@ class Catalog extends Component
         'description' => 'required|string',
         'mail' => 'required|email|unique:help_desks',
         'mobile' => 'required|string|max:15',
-     
 
     ];
     protected $messages = [
