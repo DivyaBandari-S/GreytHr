@@ -12,6 +12,7 @@ use App\Models\EmployeeLeaveBalances;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\LeaveHelper;
 
 class ReportManagement extends Component
 {
@@ -20,13 +21,17 @@ class ReportManagement extends Component
     public $searching = 0;
 
     public $sno;
-    public $employeeType="";
-    public $leaveType;
+    public $employeeType='active';
+    public $leaveType='all';
     public $search;
     public $fromDate;
     public $sortBy;
     public $toDate;
     public $hireDate;
+    public $sickLeavePerYear;
+    public $casualLeavePerYear;
+    public $casualProbationLeavePerYear;
+    public $lossOfPayPerYear;
 
     public $notFound;
 
@@ -52,9 +57,10 @@ class ReportManagement extends Component
         $this->sortBy = $this->sortBy;
     }
 
-    public function  updateEmployeeType()
+    public function  updateEmployeeType($event)
     {
-        $this->employeeType = $this->employeeType;
+        
+        $this->employeeType=$event;
     }
 
     public function closeShiftSummaryReport()
@@ -97,7 +103,6 @@ class ReportManagement extends Component
         'fromDate' => 'required|date',
         'toDate' => 'required|date|after_or_equal:fromDate',
         'leaveType' => 'required',
-        'employeeType' => 'required',
     ];
     public function updated($propertyName)
     {
@@ -109,8 +114,6 @@ class ReportManagement extends Component
     {
         $this->fromDate = null;
         $this->toDate = null;
-        $this->leaveType = null;
-        $this->employeeType = null;
         $this->leaveBalance = [];
     }
 
@@ -119,92 +122,134 @@ class ReportManagement extends Component
         $this->validate([
             'fromDate' => 'required|date',
             'toDate' => 'required|date|after_or_equal:fromDate',
-            'leaveType' => 'required',
-            'employeeType' => 'required',
         ], [
             'fromDate.required' => 'From date is required.',
             'toDate.required' => 'To date is required.',
             'toDate.after_or_equal' => 'To date must be a date after or equal to the from date.',
-            'leaveType.required' => 'Leave type is required.',
-            'employeeType.required' => 'Employee type is required.',
         ]);
+        $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+    
+        $query = LeaveRequest::select(
+            DB::raw('DATE(from_date) as date_only'),
+            DB::raw('count(*) as total_requests'),
+            'leave_applications.emp_id',
+            'employee_details.first_name',
+            'employee_details.last_name',
+            'leave_applications.leave_type',
+            'leave_applications.from_date as leave_from_date',
+            'leave_applications.to_date as leave_to_date',
+            'leave_applications.reason',
+            'leave_applications.created_at',
+            'leave_applications.from_session',
+            'leave_applications.to_session',
+            'leave_applications.status',
+            'leave_applications.updated_at',
+        )
+        ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+        ->where('leave_applications.status', 'approved')
+        ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
+           
+            $leaveTypes = [
+                'lop' => 'Loss of Pay',
+                'casual_leave' => 'Casual Leave',
+                'sick' => 'Sick Leave',
+                'petarnity' => 'Petarnity Leave',
+                'casual_leave_probation' => 'Casual Leave Probation',
+                'maternity' => 'Maternity Leave',
+                'marriage_leave' => 'Marriage Leave',
+            ];
 
-        $companyId = Auth::user()->company_id;
-        $this->peoples = EmployeeDetails::with('starredPeople')
-            ->where('company_id', $companyId)
-            ->where('employee_status', 'active')
-            ->orderBy('first_name')
-            ->orderBy('last_name')
-            ->get();
-
-        $this->sno = 0;
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $managerDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-        $query = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->where('leave_type', $this->leaveType)
-            ->select('leave_applications.*', 'employee_details.first_name', 'employee_details.last_name')
-            ->orderBy('leave_applications.emp_id', 'asc');
-
-        if ($this->employeeType == 'past') {
+            if (array_key_exists($this->leaveType, $leaveTypes)) {
+                $query->where('leave_applications.leave_type', $leaveTypes[$this->leaveType]);
+            }
+        })
+        ->where(function ($query) use ($loggedInEmpId) {
+            $query->whereJsonContains('applying_to', [['manager_id' => $loggedInEmpId]])
+                ->orWhereJsonContains('cc_to', [['emp_id' => $loggedInEmpId]]);
+        })
+        ->where(function ($query) {
+            $query->whereBetween('from_date', [$this->fromDate, $this->toDate])
+                ->orWhereBetween('to_date', [$this->fromDate, $this->toDate])
+                ->orWhere(function ($query) {
+                    $query->where('from_date', '<=', $this->toDate)
+                        ->where('to_date', '>=', $this->fromDate);
+                });
+        });
+    
+        if ($this->employeeType == 'active') {
+            $query->where('employee_details.employee_status', $this->employeeType);
+        } else {
             $query->where(function ($query) {
                 $query->where('employee_details.employee_status', 'resigned')
                     ->orWhere('employee_details.employee_status', 'terminated');
             });
-        } else {
-            $query->where('employee_details.employee_status', $this->employeeType);
         }
-
-        // Apply date filters if set
-        if ($this->fromDate && $this->toDate) {
-            $fromDate = Carbon::parse($this->fromDate)->startOfDay();
-            $toDate = Carbon::parse($this->toDate)->endOfDay();
-            $query->whereBetween('leave_applications.from_date', [$fromDate, $toDate]);
-        }
-
-        $this->myTeam = $query->get();
-
-        $data = [
-            ['List of Employees'],
-            ['Sl No.', 'Employee No', 'Name', 'Manager No', 'Manager Name', 'Leave Type', 'From', 'To', 'Days', 'Reason', 'Applied date', 'Approved Date', 'Approver']
-        ];
-
-        foreach ($this->myTeam as $leaveAvailedRep) {
-            $fromDate = Carbon::parse($leaveAvailedRep->from_date)->format('d-m-Y');
-            $toDate = Carbon::parse($leaveAvailedRep->to_date)->format('d-m-Y');
-            $createdAt = Carbon::parse($leaveAvailedRep->created_at)->format('d-m-Y');
-            $updatedAt = Carbon::parse($leaveAvailedRep->updated_at)->format('d-m-Y');
-            $leaveDays = $leaveAvailedRep->calculateLeaveDays(
-                $leaveAvailedRep->from_date,
-                $leaveAvailedRep->from_session,
-                $leaveAvailedRep->to_date,
-                $leaveAvailedRep->to_session
-            );
-            $data[] = [
-                ++$this->sno,
-                $leaveAvailedRep->emp_id,
-                $leaveAvailedRep->first_name . ' ' . $leaveAvailedRep->last_name,
-                $managerDetails->emp_id,
-                $managerDetails->first_name . ' ' . $managerDetails->last_name,
-                $leaveAvailedRep->leave_type,
-                $fromDate,
-                $toDate,
-                $leaveDays,
-                $leaveAvailedRep->reason,
-                $createdAt,
-                $updatedAt,
-                $managerDetails->first_name . ' ' . $managerDetails->last_name
+    
+        $query = $query->groupBy(
+            'date_only',
+            'leave_applications.emp_id',
+            'employee_details.first_name',
+            'employee_details.last_name',
+            'leave_applications.leave_type',
+            'leave_applications.from_date',
+            'leave_applications.to_date',
+            'leave_applications.reason',
+            'leave_applications.created_at',
+            'leave_applications.from_session',
+            'leave_applications.to_session',
+            'leave_applications.status',
+            'leave_applications.updated_at',
+        )
+        ->orderBy('date_only', 'asc')
+        ->get();
+       
+    
+    
+        // Aggregate data by date
+        $aggregatedData = $query->groupBy('date_only')->map(function ($group) {
+            return [
+                'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
+                'details' => $group->map(function ($item) {
+                    $leaveRequest = new LeaveRequest();
+                    $leaveDays = $leaveRequest->calculateLeaveDays(
+                        $item->leave_from_date,
+                        $item->from_session,
+                        $item->leave_to_date,
+                        $item->to_session
+                    );
+                    return [
+                        'emp_id' => $item->emp_id,
+                        'first_name' => $item->first_name,
+                        'last_name' => $item->last_name,
+                        'leave_type' => $item->leave_type,
+                        'leave_from_date' => $item->leave_from_date,
+                        'leave_to_date' => $item->leave_to_date,
+                        'reason' => $item->reason,
+                        'created_at' => $item->created_at,
+                        'updated_at' => $item->updated_at,
+                        'from_session' => $item->from_session,
+                        'to_session' => $item->to_session,
+                        'leave_days' => $leaveDays,
+                        'leave_status' => $item->status,
+                    ];
+                })
             ];
-        }
+        });
+ 
+    
+        $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
+        $pdf = Pdf::loadView('leaveAvailedReportPdf', [
+            'employeeDetails' => $employeeDetails,
+            'leaveTransactions' => $aggregatedData,
+            'fromDate' => $this->fromDate,
+            'toDate' => $this->toDate,
+        ]);
+    
+        return response()->streamDownload(function() use($pdf) {
+            echo $pdf->stream();
+        }, 'leave_availed_report.pdf');
 
-        $filePath = storage_path('app/leave_availed_report.xlsx');
-        $writer = SimpleExcelWriter::create($filePath);
-
-        foreach ($data as $row) {
-            $writer->addRow($row);
-        }
-
-        return response()->download($filePath, 'leave_availed_report.xlsx');
+        
     }
 
     public $filteredEmployees;
@@ -377,65 +422,35 @@ public function leaveBalanceAsOnADayReport()
             ->whereIn('emp_id', $this->leaveBalance)
             ->select('emp_id', 'first_name', 'last_name')
             ->get();
-
-        // Fetch leave balances and join with employee details
-          // Fetch leave balances
-    $leaveBalances = EmployeeLeaveBalances::select('emp_id', 'leave_balance')
-    ->whereIn('emp_id', $this->leaveBalance)
-    ->get()
-    ->keyBy('emp_id');
-        
-        $combinedData = $employees->map(function ($employee) use ($leaveBalances) {
-            $leaveBalance = $leaveBalances->get($employee->emp_id);
-        
-            $leaveDetails = [
-                'emp_id' => $employee->emp_id,
-                'first_name' => $employee->first_name,
-                'last_name' => $employee->last_name,
-                'casual_leave_balance' => 0,
-                'casual_leave_probation_balance' => 0,
-                'loss_of_pay_balance' => 0,
-                'sick_leave_balance' => 0,
-            ];
-        
-            if ($leaveBalance) {
+          
+            $combinedData = $employees->map(function ($employee) {
+                $leaveBalances = ReportManagement::getLeaveBalances($employee->emp_id, $this->toDate);
       
-                if (is_string($leaveBalance->leave_balance)) {
-                    $decodedLeaveBalances = json_decode($leaveBalance->leave_balance, true);
-                } elseif (is_array($leaveBalance->leave_balance)) {
-                    $decodedLeaveBalances = $leaveBalance->leave_balance;
-                } else {
-                    $decodedLeaveBalances = [];
-                }
+                return [
+                    'emp_id' => $employee->emp_id,
+                    'first_name' => $employee->first_name,
+                    'last_name' => $employee->last_name,
+                    'sick_leave_balance' => $leaveBalances['sickLeaveBalance'] ?? 0,
+                    'casual_leave_balance' => $leaveBalances['casualLeaveBalance'] ?? 0,
+                    'casual_leave_probation_balance' => $leaveBalances['casualProbationLeaveBalance'] ?? 0,
+                    'loss_of_pay_balance' => $leaveBalances['lossOfPayBalance'] ?? 0,
+                ];
+            });
+   
         
-                if (is_array($decodedLeaveBalances)) {
-                    $leaveDetails['sick_leave_balance'] = $decodedLeaveBalances['Sick Leave'] ?? 0;
-                    $leaveDetails['casual_leave_balance'] = $decodedLeaveBalances['Casual Leave'] ?? 0;
-                    $leaveDetails['casual_leave_probation_balance'] = $decodedLeaveBalances['Casual Leave Probation'] ?? 0;
-                    $leaveDetails['loss_of_pay_balance'] = $decodedLeaveBalances['Loss Of Pay'] ?? 0;
-                }
-            }
+            $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
+
+            $pdf = Pdf::loadView('leaveBalanceAsOnDayReport', [
+                'employeeDetails' => $employeeDetails,
+                'leaveTransactions' => $combinedData,
+                'fromDate' => $this->fromDate,
+                'toDate' => $this->toDate,
+            ]);
         
-            return $leaveDetails;
-     
-        });
-       
-        
-
-
-        $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
-
-    $pdf = Pdf::loadView('leaveBalanceAsOnDayReport', [
-        'employeeDetails' => $employeeDetails,
-        'leaveTransactions' => $combinedData,
-        'fromDate' => $this->fromDate,
-        'toDate' => $this->toDate,
-    ]);
-
-    return response()->streamDownload(function() use ($pdf) {
-        echo $pdf->stream();
-    }, 'leave_balance_as_on_a_day.pdf');
-}
+            return response()->streamDownload(function() use ($pdf) {
+                echo $pdf->stream();
+            }, 'leave_balance_as_on_a_day.pdf');
+        }
     
 }
 
@@ -444,17 +459,14 @@ public function leaveBalanceAsOnADayReport()
    
     public function downloadLeaveTransactionReport()
     {
+  
         $this->validate([
             'fromDate' => 'required|date',
             'toDate' => 'required|date|after_or_equal:fromDate',
-            'transactionType' => 'required',
-            'employeeType' => 'required',
         ], [
             'fromDate.required' => 'From date is required.',
             'toDate.required' => 'To date is required.',
             'toDate.after_or_equal' => 'To date must be a date after or equal to the from date.',
-            'transactionType.required' => 'Leave type is required.',
-            'employeeType.required' => 'Employee type is required.',
         ]);
     
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
@@ -504,8 +516,19 @@ public function leaveBalanceAsOnADayReport()
                 });
         });
     
-        if ($this->transactionType === 'availed' || $this->transactionType === 'all') {
+        if ($this->transactionType === 'availed') {
             $query->where('leave_applications.status', 'approved');
+        }
+        if ($this->transactionType === 'rejected') {
+            $query->where('leave_applications.status', 'rejected');
+        }
+        
+        if ($this->transactionType === 'withdrawn') {
+            $query->where('leave_applications.status', 'Withdrawn');
+        }
+        
+        if ($this->transactionType === 'all') {
+            $query->whereIn('leave_applications.status', ['approved', 'rejected', 'Withdrawn']);
         }
     
         if ($this->employeeType == 'active') {
@@ -533,6 +556,7 @@ public function leaveBalanceAsOnADayReport()
         )
         ->orderBy('date_only', 'asc')
         ->get();
+       
     
        
     
@@ -583,10 +607,8 @@ public function leaveBalanceAsOnADayReport()
     {
         $this->validate([
             'toDate' => 'required|date',
-            'employeeType' => 'required',
         ], [
             'toDate.required' => 'Date is required.',
-            'employeeType.required' => 'Employee type is required.',
         ]);
     
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
@@ -709,11 +731,23 @@ public function leaveBalanceAsOnADayReport()
             echo $pdf->stream();
         }, 'negative_leave_balance_report.pdf');
     }
-
+    public $totalCasualDays;
+    public $totalSickDays;
+    public $totalLossOfPayDays;
+    public $totalCasualLeaveProbationDays;
+    public $sickLeaveBalance;
+    public $casualLeaveBalance;
+    public $casualProbationLeaveBalance;
+    public $lossOfPayBalance;
+    public $currentYear;
+    public $selectedYear;
     public function render()
     {
+       
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-
+      
+ 
+       
         $search = '';
         if ($this->searching == 1) {
             $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
@@ -760,6 +794,51 @@ public function leaveBalanceAsOnADayReport()
             $this->filteredEmployees = $this->employees;
         }
 
-        return view('livewire.report-management');
+        return view('livewire.report-management',[
+            'employeetype'=>$this->employeeType,
+        ]);
     }
+    public static function getLeaveBalances($employeeId, $selectedYear)
+    {
+        try {
+            
+            // $selectedYear = now()->year;
+            $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $selectedYear);
+            $casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $selectedYear);
+            $casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $selectedYear);
+            $lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Loss Of Pay', $selectedYear);
+
+            if (!$employeeDetails) {
+                return null;
+            }
+
+            // Get the logged-in employee's approved leave days for all leave types
+            $approvedLeaveDays = LeaveHelper::getApprovedLeaveDays($employeeId);
+
+            // Calculate leave balances
+            $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];
+            $casualLeaveBalance = $casualLeavePerYear - $approvedLeaveDays['totalCasualDays'];
+            $lossOfPayBalance = $approvedLeaveDays['totalLossOfPayDays'];
+            $casualProbationLeaveBalance = $casualProbationLeavePerYear - $approvedLeaveDays['totalCasualLeaveProbationDays'];
+
+            return [
+                'sickLeaveBalance' => $sickLeaveBalance,
+                'casualLeaveBalance' => $casualLeaveBalance,
+                'lossOfPayBalance' => $lossOfPayBalance,
+                'casualProbationLeaveBalance' => $casualProbationLeaveBalance,
+            ];
+        } catch (\Exception $e) {
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                // Handle database query exceptions
+                Log::error("Database error in getLeaveBalances(): " . $e->getMessage());
+                session()->flash('emp_error', 'Database connection error occurred. Please try again later.');
+            } else {
+                Log::error("Error in getLeaveBalances(): " . $e->getMessage());
+                session()->flash('emp_error', 'Failed to retrieve leave balances. Please try again later.');
+            }
+            return null;
+        }
+    }
+   
 }
