@@ -1848,6 +1848,35 @@ td {
 .emoji:hover {
     cursor: pointer;
 }
+.comment-box {
+    position: relative;
+    padding-top: 10px; /* Adjust based on button height */
+    padding-left: 10px;
+}
+
+.addcomment {
+    position: absolute;
+    bottom: 15px; /* Move up by increasing this value */
+    right: 5px; /* Adjust based on padding and design */
+    font-size: 12px;
+    color: rgb(2, 17, 79);
+    border: none;
+    border-radius: 4px;
+    margin-top: -5px; /* Adjust as needed */
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: transparent; /* If you want the background to be transparent */
+}
+
+
+
+.replyDiv {
+    margin-top: 10px;
+}
+.arrow-icon svg {
+    transition: transform 0.3s ease;
+}
+
 
 .search-bar {
     display: flex;

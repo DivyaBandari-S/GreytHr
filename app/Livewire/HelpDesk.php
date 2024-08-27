@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Response;
 class HelpDesk extends Component
 {
     use WithFileUploads;
-    public $selectedCategory = '';
+    public $selectedCategory = [];
     public $searchTerm = '';
     public $showViewFileDialog = false;
     public $showModal = false;
@@ -81,6 +81,13 @@ class HelpDesk extends Component
         'file_path.mimes' => 'File must be a document of type: pdf, xls, xlsx, doc, docx, jpg, jpeg, png.',
         'file_path.max' => 'Document size must not exceed 40 MB.',
     ];
+
+    public function validateField($field)
+    {
+        if (in_array($field, ['description', 'subject','category','priority',])) {
+            $this->validateOnly($field, $this->rules);
+        } 
+    }
     public function open()
     {
         $this->showDialog = true;
@@ -718,4 +725,3 @@ class HelpDesk extends Component
         ]);
     }
 }
-
