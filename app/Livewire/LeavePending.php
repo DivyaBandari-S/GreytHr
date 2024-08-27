@@ -31,6 +31,7 @@ class LeavePending extends Component
     public $employeeDetails = [];
     public $leaveRequest;
     public $selectedYear;
+    public $applyingTo;
 
     public function mount($leaveRequestId)
     {
