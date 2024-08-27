@@ -44,7 +44,8 @@
     </div>
     <div class="col-md-3" style="background-color: white; border: 1px solid #D9D9D9; border-radius: 5px; display: flex; align-items: center; flex: 1; box-sizing: border-box; height: 60px;">
         <img src="https://t4.ftcdn.net/jpg/01/16/49/93/240_F_116499398_HdQiZjmQVbw3qJs5PwmttBuAxoIyRq7Y.jpg" alt="Image Description" style="height: 30px; width: 30px; margin-left: 10px; margin-right: 5px;">
-        <p style="margin-top: 13px; margin-left: 10px; font-size: 12px;">Documents</p>
+        <p style="margin-top: 13px; margin-left: 10px; font-size: 12px;">
+        Payslips</p>
         <a class="links" href="/payslip" style="margin-left: auto; padding-right: 10px; font-size: 12px; color: black; text-decoration: none;">
             <span onmouseover="this.style.color='#33B3BC'; this.style.textDecoration='underline';" onmouseout="this.style.color='black'; this.style.textDecoration='none';">
                 View all

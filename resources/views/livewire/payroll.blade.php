@@ -1,11 +1,17 @@
 <div>
 <body>
+<ul class="breadcrumb">
+<li class="breadcrumb-item"><a href="/document">Document Center</a></li>
+<li class="breadcrumb-item active" aria-current="page">Payslips</li>
+
+</ul>
+<p style="margin-left: 40px; font-family: Open Sans, sans-serif; margin-top: 10px;font-weight:medium;font-size:16px;text-decoration:underline">Payslips</p>
+
 <div class="f" style="width:450px; background:white; border:1px solid silver; border-radius:5px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-    <p style="margin-left: 40px; font-family: Open Sans, sans-serif; margin-top: 10px;font-weight:medium;font-size:16px;text-decoration:underline">Payslips</p>
 
 <div _ngcontent-etd-c531="" class="document-body-card ng-star-inserted">
     <documents-card _ngcontent-etd-c531="" _nghost-etd-c530="" id="cat_2023" class="ng-star-inserted">
-        <div class="container-2023" style="margin-left:40px">
+        <div class="container-a" style="margin-left:40px;margin-top:20px">
             <div _ngcontent-etd-c530="" class="doc-card-title text-secondary text-4"></div>
             <div class="title-line"></div>
 

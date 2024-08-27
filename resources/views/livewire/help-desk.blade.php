@@ -53,35 +53,26 @@
 
 
             </div>
-            <div class="d-flex flex-column flex-md-row justify-content-end mt-2">
-    <div class="mx-2 my-1 my-md-0">
-        <button 
-            onclick="location.href='/catalog'" 
-            class="btn btn-primary"
-            style="font-size:12px; background-color:rgb(2, 17, 79); color:white; border-radius:5px; padding:4px 10px; width: 100px;">
-            IT Request
-        </button>
-    </div>
+            <div class="d-flex flex-row justify-content-end mt-2">
 
-    <div class="mx-2 my-1 my-md-0">
-        <button 
-            wire:click="openFinance" 
-            class="btn btn-primary"
-            style="font-size:12px; background-color:rgb(2, 17, 79); color:white; border-radius:5px; padding:4px 10px; width: 130px;">
-            Finance Request
-        </button>
-    </div>
 
-    <div class="mx-2 my-1 my-md-0">
-        <button 
-            wire:click="open" 
-            class="btn btn-primary"
-            style="font-size:12px; background-color:rgb(2, 17, 79); color:white; border-radius:5px; padding:4px 10px; width: 100px;">
-            HR Request
-        </button>
-    </div>
-</div>
 
+
+                <div class="mx-2 ">
+                    <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> IT Request </button>
+                </div>
+
+                <div class="mx-2 ">
+                    <button wire:click="openFinance" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> Finance Request </button>
+                </div>
+                <div class="mx-2 ">
+                    <button wire:click="open" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> HR Request </button>
+                </div>
+
+                <div>
+
+                </div>
+            </div>
 
             @if($showDialog)
             <div class="modal" tabindex="-1" role="dialog" style="display: block;overflow-y:auto;">
@@ -104,7 +95,7 @@
                             <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category <span style="color:red">*</span></label>
                             <div class="input" type="" class="form-control placeholder-small">
                                 <div style="position: relative;">
-                                    <select wire:model.lazy="category"  wire:keydown.debounce.500ms="validateField('form.category')" id="category" style="font-size: 12px;" class="form-control placeholder-small">
+                                    <select wire:model.lazy="category"  wire:keydown.debounce.500ms="validateField('category')" id="category" style="font-size: 12px;" class="form-control placeholder-small">
                                         <option style="color: #778899; " value="">Select Category</option>
                                         <optgroup label="HR">
                                             <option value="Employee Information">Employee Information</option>
@@ -131,13 +122,13 @@
 
                             <div class="form-group mt-2">
                                 <label for="subject" style="color: #778899; font-weight: 500; font-size: 12px;">Subject <span style="color: red;">*</span></label>
-                                <input type="text" wire:model.lazy="subject"  wire:keydown.debounce.500ms="validateField('form.subject')" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
+                                <input type="text" wire:model.lazy="subject"  wire:keydown.debounce.500ms="validateField('subject')" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
                                 @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="form-group mt-2">
                                 <label for="description" style="color: #778899; font-weight: 500; font-size: 12px;">Description <span style="color: red;">*</span></label>
-                                <textarea wire:model.lazy="description"  wire:keydown.debounce.500ms="validateField('form.description')" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
+                                <textarea wire:model.lazy="description"  wire:keydown.debounce.500ms="validateField('description')" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
 
                                 @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
@@ -162,7 +153,7 @@
                                 <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
                                 <div class="input" class="form-control placeholder-small">
                                     <div style="position: relative;">
-                                        <select name="priority" id="priority" wire:model.lazy="priority" wire:keydown.debounce.500ms="validateField('form.priority')" style="font-size: 12px; " class="form-control placeholder-small">
+                                        <select name="priority" id="priority"  wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
                                             <option st="color: gray;" value="">Select Priority</option>
                                             <option value="High">High</option>
                                             <option value="Low">Low</option>
@@ -306,7 +297,7 @@
                             <label for="category" style="color:#778899;font-weight:500;font-size:12px;font-family: Arial, sans-serif;">Category <span style="color:red">*</span></label>
                             <div class="input" type="" class="form-control placeholder-small">
                                 <div style="position: relative;">
-                                    <select wire:model.lazy="category"  wire:keydown.debounce.500ms="validateField('form.category')" id="category" style="font-size: 12px;" class="form-control placeholder-small">
+                                    <select wire:model.lazy="category"  wire:keydown.debounce.500ms="validateField('category')" id="category" style="font-size: 12px;" class="form-control placeholder-small">
                                         <option style="color: #778899; " value="">Select Category</option>
                                         <optgroup label="Finance">
                                             <option value="Income Tax">Income Tax</option>
@@ -329,12 +320,12 @@
 
                             <div class="form-group mt-2">
                                 <label for="subject" style="color:#778899;font-weight:500;font-size:12px;">Subject<span style="color:red">*</span></label>
-                                <input type="text" wire:model.lazy="subject"  wire:keydown.debounce.500ms="validateField('form.subject')" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
+                                <input type="text" wire:model.lazy="subject"  wire:keydown.debounce.500ms="validateField('subject')" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
                                 @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                             <div class="form-group mt-2">
                                 <label for="description" style="color:#778899;font-weight:500;font-size:12px;">Description<span style="color:red">*</span></label>
-                                <textarea wire:model.lazy="description"  wire:keydown.debounce.500ms="validateField('form.description')" id="description" class="form-control " placeholder="Enter description" rows="4"></textarea>
+                                <textarea wire:model.lazy="description" id="description"  wire:keydown.debounce.500ms="validateField('description')" class="form-control " placeholder="Enter description" rows="4"></textarea>
                                 @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                             <div class="row mt-2">
@@ -356,7 +347,7 @@
                                         <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
                                         <div class="input" class="form-control placeholder-small">
                                             <div style="position: relative;">
-                                                <select name="priority" id="priority" wire:model.lazy="priority"  wire:keydown.debounce.500ms="validateField('form.priority')" style="font-size: 12px; " class="form-control placeholder-small">
+                                                <select name="priority" id="priority"  wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
                                                     <option style="color: gray;" value="">Select Priority</option>
                                                     <option value="High">High</option>
                                                     <option value="Low">Low</option>
@@ -387,7 +378,7 @@
                                                 </div>
                                                 <button type="button" style="border-radius: 50%; color: #778899; border: 1px solid #778899;" class="add-button" wire:click="toggleRotation">
                                                     <div class="icon-container">
-                                                        <i class="bx bx-plus" style="back: #778899;"></i>
+                                                        <i class="fas fa-plus" style="color: #778899;"></i>
                                                     </div>
                                                 </button>
                                                 <span style="color: #778899; font-size: 12px;">Add</span>
@@ -491,26 +482,25 @@
 
             @if ($activeTab == "active")
             <div class="row">
-    <div class="col-12 col-md-6 col-lg-3 mb-2 mb-lg-0">
-        <div class="input-group people-input-group-container">
-            <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-            <div class="input-group-append">
-                <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
-                    <i class="fa fa-search people-search-icon"></i>
-                </button>
+                <div class="col-md-3">
+                    <div class="input-group people-input-group-container">
+                        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+                        <div class="input-group-append">
+                            <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
+                                <i class="fa fa-search people-search-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-control">
+                        <option value="">Select Request</option>
+                        @foreach($requestCategories as $request => $categories)
+                        <option value="{{ $request }}">{{ $request }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6 col-lg-3">
-        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-control">
-            <option value="">Select Request</option>
-            @foreach($requestCategories as $request => $categories)
-            <option value="{{ $request }}">{{ $request }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
-
 
 
 
@@ -660,26 +650,25 @@
 
             @if ($activeTab == "closed")
             <div class="row">
-    <div class="col-12 col-md-6 col-lg-3 mb-2 mb-lg-0">
-        <div class="input-group people-input-group-container">
-            <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-            <div class="input-group-append">
-                <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
-                    <i class="fa fa-search people-search-icon"></i>
-                </button>
+                <div class="col-md-3">
+                    <div class="input-group people-input-group-container">
+                        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+                        <div class="input-group-append">
+                            <button wire:click="searchClosedHelpDesk" class="submit-btn" type="button">
+                                <i class="fa fa-search people-search-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select wire:model="selectedCategory" wire:change="searchClosedHelpDesk" class="form-control">
+                        <option value="">Select Request</option>
+                        @foreach($requestCategories as $request => $categories)
+                        <option value="{{ $request }}">{{ $request }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6 col-lg-3">
-        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-control">
-            <option value="">Select Request</option>
-            @foreach($requestCategories as $request => $categories)
-            <option value="{{ $request }}">{{ $request }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
-
             <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
 
                 <table style="width: 100%; border-collapse: collapse;">
@@ -804,26 +793,25 @@
 
             @if ($activeTab == "pending")
             <div class="row">
-    <div class="col-12 col-md-6 col-lg-3 mb-2 mb-lg-0">
-        <div class="input-group people-input-group-container">
-            <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-            <div class="input-group-append">
-                <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
-                    <i class="fa fa-search people-search-icon"></i>
-                </button>
+                <div class="col-md-3">
+                    <div class="input-group people-input-group-container">
+                        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+                        <div class="input-group-append">
+                            <button wire:click="searchPendingHelpDesk" class="submit-btn" type="button">
+                                <i class="fa fa-search people-search-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select wire:model="selectedCategory" wire:change="searchPendingHelpDesk" class="form-control">
+                        <option value="">Select Request</option>
+                        @foreach($requestCategories as $request => $categories)
+                        <option value="{{ $request }}">{{ $request }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6 col-lg-3">
-        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-control">
-            <option value="">Select Request</option>
-            @foreach($requestCategories as $request => $categories)
-            <option value="{{ $request }}">{{ $request }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
-
             <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
 
                 <table style="width: 100%; border-collapse: collapse;">

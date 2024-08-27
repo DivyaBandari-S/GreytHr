@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Response;
 class HelpDesk extends Component
 {
     use WithFileUploads;
-    public $selectedCategory = '';
+    public $selectedCategory = [];
     public $searchTerm = '';
     public $showViewFileDialog = false;
     public $showModal = false;
@@ -81,6 +81,13 @@ class HelpDesk extends Component
         'file_path.mimes' => 'File must be a document of type: pdf, xls, xlsx, doc, docx, jpg, jpeg, png.',
         'file_path.max' => 'Document size must not exceed 40 MB.',
     ];
+
+    public function validateField($field)
+    {
+        if (in_array($field, ['description', 'subject','category','priority',])) {
+            $this->validateOnly($field, $this->rules);
+        } 
+    }
     public function open()
     {
         $this->showDialog = true;
@@ -509,19 +516,8 @@ class HelpDesk extends Component
         $this->showViewFileDialog = false;
     }
 
-    public function updatedFilePath()
-    {
-        if ($this->file_path) {
-            // Debugging information
-            Log::info('File uploaded successfully.', [
-                'file_name' => $this->file_path->getClientOriginalName(),
-                'file_size' => $this->file_path->getSize(),
-                'file_mime_type' => $this->file_path->getMimeType(),
-            ]);
-        }
-    }
-    
-    
+
+
     public function submitHR()
     {
         try {
@@ -543,14 +539,6 @@ class HelpDesk extends Component
                 Log::error('Failed to read the uploaded file.', [
                     'file_path' => $this->file_path->getRealPath(),
                 ]);
-                session()->flash('error', 'Invalid file upload.');
-                return;
-            }
-    
-            // Read the file content
-            $this->fileContent = file_get_contents($this->file_path->getRealPath());
-            if ($this->fileContent === false) {
-                Log::error('Failed to read the uploaded file.', ['file_path' => $this->file_path->getRealPath()]);
                 session()->flash('error', 'Failed to read the uploaded file.');
                 return;
             }
@@ -563,12 +551,7 @@ class HelpDesk extends Component
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            if (!$this->employeeDetails) {
-                session()->flash('error', 'Employee details not found.');
-                return;
-            }
-    
-            // Store data in HelpDesks model
+
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
@@ -583,7 +566,7 @@ class HelpDesk extends Component
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
             ]);
-    
+
             session()->flash('message', 'Request created successfully.');
             return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -598,8 +581,6 @@ class HelpDesk extends Component
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
     }
-    
-    
 
     public function downloadFile($id)
     {
@@ -745,4 +726,3 @@ class HelpDesk extends Component
         ]);
     }
 }
-
