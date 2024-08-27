@@ -193,6 +193,11 @@ class LeaveHistory extends Component
             return 'Error: ' . $e->getMessage();
         }
     }
+    private function getSessionNumber($session)
+    {
+        // You might need to customize this based on your actual session values
+        return (int) str_replace('Session ', '', $session);
+    }
 
     public function render()
     {

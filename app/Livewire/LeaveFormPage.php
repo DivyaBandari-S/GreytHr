@@ -91,6 +91,7 @@ class LeaveFormPage extends Component
             $leaveRequest->formatted_from_date = Carbon::parse($leaveRequest->from_date)->format('d-m-Y');
             $leaveRequest->formatted_to_date = Carbon::parse($leaveRequest->to_date)->format('d-m-Y');
         }
+        $this->hasPendingLeave();
     }
 
 

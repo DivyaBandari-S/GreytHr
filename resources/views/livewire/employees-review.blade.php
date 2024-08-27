@@ -362,7 +362,7 @@
             <!-- </div> -->
 
 
-            <div class="pending-leavves-container" style="width:100%; max-height:400px; overflow-y:auto; margin-top:50px;">
+            <div class="pending-leavves-container" style="width:100%; max-height:100vh; overflow-y:auto; margin-top:50px;">
                 @if($count > 0)
                 <div class="reviewList">
                     @livewire('view-pending-details')
