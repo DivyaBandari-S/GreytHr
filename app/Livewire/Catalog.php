@@ -88,15 +88,20 @@ class Catalog extends Component
     public $information;
     protected $rules = [
         'subject' => 'required|string|max:255',
-        'mail' => 'required|email|unique:help_desks',
+     
         'mobile' => 'required|string|max:15',
         'description' => 'required|string',
-        'mail' => 'required|email|unique:help_desks',
-        'mobile' => 'required|string|max:15',
-
+        'mail' => 'required|email',
+     
+     'distributor_name'=>'required|string|max:15',
+     'selected_equipment'=>'required',
+        'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
     ];
+  
+
     protected $messages = [
-        'distributor_name' => 'Distributor name  is required.',
+   'distributor_name' =>'Disstributor name is required',
+   'selected_equipment'=>'Selected Equipment is required ',
         'subject.required' => 'Subject  is required.',
         'mail.required' => ' Email  is required.',
         'mail.email' => ' Email must be a valid email address.',
@@ -114,6 +119,12 @@ class Catalog extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
+    }
+    public function validateField($field)
+    {
+        if (in_array($field, ['mail', 'description', 'subject','category','selected_equipment','distributor_name','mobile'])) {
+            $this->validateOnly($field, $this->rules);
+        } 
     }
     public function ItRequest()
     {
@@ -365,93 +376,83 @@ class Catalog extends Component
         $this->selectedPeopleNames = [];
         $this->cc_to = '';
     }
-    public function DistributorRequest()
-    {
-    
-        try {
-            $messages = [
-                'subject.required' => 'Business Justification is required',
-                'distributor_name' => 'Distributor name is required',
-                'description' => 'Specific Information is required',
-               
-            ];
-    
-            $this->validate([
-                'distributor_name' => 'required|string',
-                'subject' => 'required|string|max:255',
-                'description' => 'required|string',
-                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
-              
-            ],$messages);
+  public function DistributorRequest()
+{
+    $messages = [
+        'subject.required' => 'Business Justification is required',
+        'distributor_name.required' => 'Distributor name is required',
+        'description.required' => 'Specific Information is required',
+    ];
 
-        $fileContent=null;
+    $this->validate([
+        'distributor_name' => 'required|string',
+        'subject' => 'required|string|max:255',
+        'description' => 'required|string',
+        'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+    ], $messages);
+
+    try {
+        $fileContent = null;
         $mimeType = null;
         $fileName = null;
-// Store the file as binary data
-if ($this->file_path) {
 
- 
-    
+        if ($this->file_path) {
+            $fileContent = file_get_contents($this->file_path->getRealPath());
+            if ($fileContent === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                session()->flash('error', 'Failed to read the uploaded file.');
+                return;
+            }
 
-    $fileContent = file_get_contents($this->file_path->getRealPath());
-    if ($fileContent === false) {
-        Log::error('Failed to read the uploaded file.', [
-            'file_path' => $this->file_path->getRealPath(),
-        ]);
-        session()->flash('error', 'Failed to read the uploaded file.');
-        return;
-    }
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                session()->flash('error', 'File size exceeds the allowed limit.');
+                return;
+            }
 
-    // Check if the file content is too large
-    if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-        session()->flash('error', 'File size exceeds the allowed limit.');
-        return;
-    }
+            $mimeType = $this->file_path->getMimeType();
+            $fileName = $this->file_path->getClientOriginalName();
+        }
 
-    $mimeType = $this->file_path->getMimeType();
-    $fileName = $this->file_path->getClientOriginalName();
-}
-
-
-   
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
+        HelpDesks::create([
+            'emp_id' => $this->employeeDetails->emp_id,
+            'distributor_name' => $this->distributor_name,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path' => $fileContent,
+            'file_name' => $fileName,
+            'mime_type' => $mimeType,
+            'cc_to' => $this->cc_to ?? '-',
+            'category' => $this->category,
+            'mail' => 'N/A',
+            'mobile' => 'N/A',
+        ]);
 
-            HelpDesks::create([
-                'emp_id' => $this->employeeDetails->emp_id,
-                'distributor_name' => $this->distributor_name,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path' =>  $fileContent ?? '-',
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
-                'cc_to' => $this->cc_to ?? '-',
-                'category' => $this->category,
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
-            ]);
-
-            session()->flash('message', 'Request created successfully.');
-            $this->reset();
-            return redirect()->to('/HelpDesk');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->setErrorBag($e->validator->getMessageBag());
-        } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $this->employeeDetails->emp_id,
-                'category' => $this->category,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
-            ]);
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
-        }
+        session()->flash('message', 'Request created successfully.');
+        $this->reset();
+        return redirect()->to('/HelpDesk');
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        // Do not reset here, just set the error bag
+        $this->setErrorBag($e->validator->getMessageBag());
+    } catch (\Exception $e) {
+        Log::error('Error creating request: ' . $e->getMessage(), [
+            'employee_id' => $this->employeeDetails->emp_id,
+            'category' => $this->category,
+            'subject' => $this->subject,
+            'description' => $this->description,
+            'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
+        ]);
+        session()->flash('error', 'An error occurred while creating the request. Please try again.');
     }
+}
+
+    
     public function Devops()
     {
-        try {
         $messages = [
             'subject.required' => 'Business Justification is required',
             'distributor_name.required' => 'Distributor name is required',
@@ -467,6 +468,8 @@ if ($this->file_path) {
             'description' => 'required|string',
             'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
         ],$messages);
+        try {
+      
     // Store the file as binary data
      
     $fileContent=null;
@@ -504,7 +507,7 @@ if ($this->file_path) {
                 'distributor_name' => $this->distributor_name??'-',
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' =>  $fileContent ?? '-',
+                'file_path' =>  $fileContent ,
                 'file_name' => $fileName,
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
@@ -520,7 +523,7 @@ if ($this->file_path) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $employeeId,
+                'employee_id'=> $this->employeeDetails->emp_id,
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
@@ -543,7 +546,7 @@ if ($this->file_path) {
             ];
             $this->validate([
                 'subject' => 'required|string|max:255',
-                'mail' => 'required|email|unique:help_desks',
+                'mail' => 'required|email',
                 'description' => 'required|string',
                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
               
@@ -586,7 +589,7 @@ if ($this->file_path) {
                 'mail' => $this->mail,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' =>  $fileContent ?? '-',
+                'file_path' =>  $fileContent ,
                 'file_name' => $fileName,
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
@@ -602,7 +605,7 @@ if ($this->file_path) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $employeeId,
+                'employee_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
@@ -665,9 +668,9 @@ if ($this->file_path) {
             'subject' => $this->subject,
             'description' => $this->description,
             'selected_equipment' => $this->selected_equipment, // Ensure this is correctly referenced
-            'file_path' => $fileContent ?? '-',
-            'file_name' => $fileName ?? '',
-            'mime_type' => $mimeType ?? '',
+            'file_path' => $fileContent,
+            'file_name' => $fileName ,
+            'mime_type' => $mimeType,
             'cc_to' => $this->cc_to ?? '-',
             'category' => $this->category ?? '-',
             'mail' => 'N/A',
@@ -682,7 +685,7 @@ if ($this->file_path) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $employeeId,
+                'employee_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,

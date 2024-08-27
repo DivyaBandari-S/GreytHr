@@ -1,12 +1,17 @@
 <div>
 <body>
-<div class="f" style="width:450px;background:white;border:1px solid silver;border-radius:5px">
+<ul class="breadcrumb">
+<li class="breadcrumb-item"><a href="/document">Document Center</a></li>
+<li class="breadcrumb-item active" aria-current="page">Payslips</li>
 
-    <p style="margin-left: 40px; font-family: Open Sans, sans-serif; margin-top: 10px;font-weight:medium;font-size:16px;text-decoration:underline">Payslips</p>
+</ul>
+<p style="margin-left: 40px; font-family: Open Sans, sans-serif; margin-top: 10px;font-weight:medium;font-size:16px;text-decoration:underline">Payslips</p>
+
+<div class="f" style="width:450px; background:white; border:1px solid silver; border-radius:5px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
 
 <div _ngcontent-etd-c531="" class="document-body-card ng-star-inserted">
     <documents-card _ngcontent-etd-c531="" _nghost-etd-c530="" id="cat_2023" class="ng-star-inserted">
-        <div class="container-2023" style="margin-left:40px">
+        <div class="container-a" style="margin-left:40px;margin-top:20px">
             <div _ngcontent-etd-c530="" class="doc-card-title text-secondary text-4"></div>
             <div class="title-line"></div>
 
@@ -26,24 +31,37 @@
                     <div _ngcontent-etd-c530="" class="doc-card-hover ng-star-inserted">
                         <div _ngcontent-etd-c530="" class="doc-card-body">
                             <div _ngcontent-etd-c530="" class="card-left">
-                                <i _ngcontent-etd-c530="" class="fa fa-caret-right" onclick="togglePdf({{ $currentYear }}, {{ $lastMonth }})"></i>
+                            <i _ngcontent-etd-c530="" class="fa fa-caret-right" onclick="togglePdf('pdfContainer{{ $currentYear }}_{{ $lastMonth }}')" style="cursor: pointer; font-size: 20px;"></i>
+
                             </div>
                             <div _ngcontent-etd-c530="" class="card-right">
-                                <div _ngcontent-etd-c530="" class="doc-card-body-content">
-                                    <!-- Display the dynamically calculated month and year -->
-                                    <span _ngcontent-etd-c530="" class="text-black text-5 text-regular">{{ date('M Y', strtotime($currentYear . '-' . $lastMonth . '-01')) }}</span>
-                                    <span _ngcontent-etd-c530="" class="text-secondary text-regular text-6" style="margin-left: 170px; font-size: 12px;"> Last updated on {{ date('d M, Y', strtotime($currentYear . '-' . $lastMonth . '-01')) }}</span>
-                                </div>
-                                <p _ngcontent-etd-c530="" class="text-secondary text-regular text-6 card-desc">
+                            <div style="display: flex; align-items: center;">
+    <!-- Display the dynamically calculated month and year -->
+    <span class="text-black text-5 text-regular" style="font-size: 12px; display: inline-block;">
+        {{ date('M Y', strtotime($currentYear . '-' . $lastMonth . '-01')) }}
+    </span>
+    <span style="margin-left: 170px; font-size: 12px; white-space: nowrap; display: inline-block;">
+        Last updated on {{ date('d M, Y', strtotime($currentYear . '-' . $lastMonth . '-01')) }}
+    </span>
+</div>
+
+                                <p class="text-secondary text-regular text-6 card-desc" style="font-size:10px">
                                     <!-- You can customize the card description as needed -->
                                     Payroll for the month of {{ date('M Y', strtotime($currentYear . '-' . $lastMonth . '-01')) }}
                                 </p>
                             </div>
                         </div>
                     </div>
+                    <div id="pdfContainer{{ $currentYear }}_{{ $lastMonth }}" class="hey" style="width: 450px; background: white; border-radius: 5px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); width: 40%; display: none; flex: 1; align-items: center; padding: 10px; border: 1px solid transparent; transition: border-color 0.3s ease;">
+    <span id="pdfLink{{ $currentYear }}_{{ $lastMonth }}" class="text-black text-5 text-regular" style="font-size: 12px; margin-right: 10px;">
+        {{ date('M Y', strtotime($currentYear . '-' . $lastMonth . '-01')) }}.pdf
+    </span>
+    <i class="bi bi-eye" style="color: blue; font-size: 16px; margin-right: 10px;"></i> <!-- Bootstrap Icons view icon -->
+    <i class="fas fa-download" wire:click="downloadPdf" style="font-size: 16px; cursor: pointer;"></i>
+</div>
+                    </div>
                     <!-- PDF download link -->
-                    <a href="/your-download-route" id="pdfLink{{ $currentYear }}_{{ $lastMonth }}" class="pdf-download" download style="display: none;">Download PDF</a>
-                </div>
+                 
             @endfor
         </div>
     </documents-card>
@@ -57,14 +75,20 @@
 
 
 <script>
-    function togglePdf(year, containerId) {
-        var pdfLink = document.getElementById('pdfLink' + year + '_' + containerId);
-        if (pdfLink.style.display === 'none') {
-            pdfLink.style.display = 'inline-block';
-        } else {
-            pdfLink.style.display = 'none';
-        }
+function togglePdf(containerId) {
+    var container = document.getElementById(containerId);
+    var icon = document.querySelector(`.fa-caret-right[onclick="togglePdf('${containerId}')"]`);
+
+    if (container.style.display === 'none' || container.style.display === '') {
+        container.style.display = 'flex'; // Show container
+        icon.classList.remove('fa-caret-right');
+        icon.classList.add('fa-caret-down');
+    } else {
+        container.style.display = 'none'; // Hide container
+        icon.classList.remove('fa-caret-down');
+        icon.classList.add('fa-caret-right');
     }
+}
 </script>
 
 

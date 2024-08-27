@@ -103,6 +103,7 @@ class LeaveApplyPage extends Component
             // Determine if the dropdown option should be displayed
             $this->showCasualLeaveProbation = $this->employee && !$this->employee->probation_period && !$this->employee->confirmation_date;
         }
+
     }
 
     public function updated($propertyName)

@@ -2029,8 +2029,8 @@ td {
 /* Define CSS for the menu items on hover */
 .menu-item:hover {
     background-color: #e1e7f0;
-    height: 30px;
-    width: 130%;
+    height: 40px;
+    width: fit-content;
 }
 
 /* CSS for radio-wrapper */

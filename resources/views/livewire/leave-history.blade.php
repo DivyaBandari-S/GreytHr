@@ -59,13 +59,13 @@
                         <div class="view-container m-0 p-0">
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
-                                    <span class="normalTextValue">From date</span> <br>
+                                    <span class="normalTextValue">From Date</span> <br>
                                     <span class="normalText" style="font-weight:600;">
                                         {{ $leaveRequest->from_date->format('d M, Y') }}<br><span
                                             style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
-                                    <span class="normalTextValue">To date</span> <br>
+                                    <span class="normalTextValue">To Date</span> <br>
                                     <span class="normalText"
                                         style="font-weight:600;">{{ $leaveRequest->to_date->format('d M, Y') }}
                                         <br><span
@@ -96,11 +96,11 @@
                                 <span class="normalText">{{ $leaveBalances['casualLeaveBalance'] }}</span>
                                 @elseif($leaveRequest->leave_type === 'Loss Of Pay' && isset($leaveBalances['lossOfPayBalance']))
                                 <span class="normalText">{{ $leaveBalances['lossOfPayBalance'] }}</span>
-                                @elseif($leaveRequest->leave_type === 'Loss Of Pay' && isset($leaveBalances['marriageLeaveBalance']))
+                                @elseif($leaveRequest->leave_type === 'Marriage Leave' && isset($leaveBalances['marriageLeaveBalance']))
                                 <span class="normalText">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
-                                @elseif($leaveRequest->leave_type === 'Loss Of Pay' && isset($leaveBalances['maternityLeaveBalance']))
+                                @elseif($leaveRequest->leave_type === 'Maternity Leave' && isset($leaveBalances['maternityLeaveBalance']))
                                 <span class="normalText">{{ $leaveBalances['maternityLeaveBalance'] }}</span>
-                                @elseif($leaveRequest->leave_type === 'Loss Of Pay' && isset($leaveBalances['paternityLeaveBalance']))
+                                @elseif($leaveRequest->leave_type === 'Petarnity Leave' && isset($leaveBalances['paternityLeaveBalance']))
                                 <span class="normalText">{{ $leaveBalances['paternityLeaveBalance'] }}</span>
                                 @endif
                                 @endif

@@ -123,24 +123,26 @@
         <div class="chat" style="background-image: url('https://i.pinimg.com/originals/39/cf/bc/39cfbc81276720ddf5003854e42c2769.jpg');height:auto">
 
             <div class="chat-header clearfix" style="border-radius:5px;border:2px solid silver;background-image: url('https://th.bing.com/th/id/OIP.D5JnKq5hq9D54giN_liHTQHaHa?w=163&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7');height:80px">
-            @if ($selectedConversation->getReceiver() && $selectedConversation->getReceiver()->employeeDetails)
-            <img 
-    style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top: 5px;" 
-    src="{{ $imageUrl }}" 
-    class="card-img-top" 
-    alt="Profile Image"
-    onerror="this.onerror=null; this.src='{{ $defaultImageUrl }}';"
->
+            <div style="margin-top: 10px; margin-left: 10px; text-align: center;">
+    @php
+        $receiver = $selectedConversation->getReceiver();
+        // Get the image URL using the accessor
+        $imageUrl = $receiver->image_url;
+    @endphp
 
-@else
-    <!-- Optionally, display a default image if employeeDetails or image is not available -->
-    <img 
-        style="border-radius: 50%; margin-left: auto; margin-right: auto; display: block; height: 40px; width: 40px; margin-top:5px" 
-        src="https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain" 
-        class="card-img-top" 
-        alt="Default Profile Image"
-    >
-@endif
+    @if ($receiver && $receiver->image && $receiver->image !== 'null')
+        <img style="border-radius: 50%; margin-left: 10px; margin-top: 10px;" height="40" width="40" src="{{ $imageUrl }}" alt="Employee Image">
+    @else
+        @if ($receiver && $receiver->gender == "Male")
+            <img style="border-radius: 50%; margin-left: 10px; margin-top: 10px;" height="40" width="40" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+        @elseif ($receiver && $receiver->gender == "Female")
+            <img style="border-radius: 50%; margin-left: 10px; margin-top: 10px;" height="40" width="40" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+        @else
+            <img style="border-radius: 50%; margin-left: 10px; margin-top: 10px;" height="40" width="40" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+        @endif
+    @endif
+</div>
+
     
                 <div class="chat-about">
                     <div class="chat-with mt-1">
@@ -187,7 +189,7 @@
         </a>
     @else
         <!-- Display other files within the container -->
-        <div class="file-container" style="background-color: white; padding: 10px; border-radius: 8px; border: 1px solid #ddd; max-width: 500px; margin: auto;height:40px">
+        <div class="file-container" style="background-color: white; padding: 10px; border-radius: 8px; border: 1px solid #ddd; max-width: 500px; margin: auto;height:auto">
             <a href="{{ route('file.show', $message->id) }}" download="{{ $message->file_name }}" style="display: flex; align-items: center; text-decoration: none; color: #007BFF;">
                 <span style="font-size: 30px; color: black; margin-right: 10px;">&#8595;</span>
                 <span style="font-size:12px">{{ basename($message->file_name) }}</span>
