@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('first_name');
             $table->string('last_name');
-            $table->date('date_of_birth');
+            $table->date('date_of_birth')->nullable();
             $table->string('gender');
             $table->string('blood_group')->nullable();
             $table->binary('image')->nullable();
