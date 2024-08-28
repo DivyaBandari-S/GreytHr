@@ -183,7 +183,7 @@
 
                                 </div>
 
-                                <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="AddRequest">View Details</p>
+                               
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
@@ -376,7 +376,7 @@
                                     @endif
 
                                 </div>
-                                <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="ItRequest">View Details</p>
+
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
@@ -557,7 +557,7 @@
                                     @endif
 
                                 </div>
-                                <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="MailRequest">View Details</p>
+                     
                             </div>
                         </div>
 
@@ -744,7 +744,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
-                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="IdRequest">View Details</p>
+
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
@@ -932,7 +932,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
-                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;" wire:click="MmsRequest">View Details</p>
+        
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
@@ -1115,7 +1115,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
-                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="DistributionRequest">View Details</p>
+
                                 </div>
                             </div>
                         </div>
@@ -1305,7 +1305,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
-                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="LapRequest">View Details</p>
+
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
@@ -1319,7 +1319,7 @@
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;">New Mailbox Request</p>
                                         </div>
                                     </div>
-                                    <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+ 
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
@@ -1505,7 +1505,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
-                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="DevopsRequest">View Details</p>
+
                                 </div>
                             </div>
                         </div>
@@ -1531,7 +1531,7 @@
                                                 <p style="text-decoration:underline;cursor: pointer; text-align: center;">O365 Desktop License Access</p>
                                             </div>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+
                                     </div>
                                 </div>
 
@@ -1541,7 +1541,7 @@
                                         <div class="row m-0 mb-5">
                                             <p class="p-0" style="cursor: pointer; margin-bottom: 4.4em;text-decoration:underline;text-align: center;font-size:12px">Other Service Request</p>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+        
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-4">
@@ -1550,7 +1550,7 @@
                                         <div class="row m-0 mb-5">
                                             <p class="p-0" style="cursor: pointer; margin-bottom: 4.4em;text-decoration:underline;text-align: center;font-size:12px">Privilege Access Request</p>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+
                                     </div>
                                 </div>
                             </div>
@@ -1568,7 +1568,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+
                                     </div>
                                 </div>
 
@@ -1586,8 +1586,7 @@
                                                 <p style="text-decoration:underline;cursor: pointer; text-align: center;font-size:12px">Remove Members from Mailbox</p>
                                             </div>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
-                                    </div>
+                                       
                                 </div>
 
                                 <div class="col-md-4 mb-4">
@@ -1601,7 +1600,7 @@
                                                 <p style="text-decoration:underline;cursor: pointer; text-align: center;">New SIM Request</p>
                                             </div>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+
                                     </div>
                                 </div>
                             </div>
@@ -1784,7 +1783,7 @@
                                 <div class="row m-0 mb-5">
                                     <p class="p-0" style="cursor: pointer">Shifting Distribution List to Shared Mailboxt</p>
                                 </div>
-                                <a href="#" id="standCardView" style="color:blue; cursor: pointer">View Details</a>
+                              
 
                             </div>
                         </div>
