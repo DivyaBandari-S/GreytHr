@@ -6,6 +6,7 @@ use App\Models\Delegate;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
@@ -139,8 +140,7 @@ class Delegates extends Component
             return redirect()->to('/delegates');
 
         } catch (\Exception $e) {
-            \Log::error('Database error: ' . $e->getMessage());
-            dd('Database error: ' . $e->getMessage()); // Temporary debug
+            Log::error('Database error: ' . $e->getMessage());
         }
     }
 
