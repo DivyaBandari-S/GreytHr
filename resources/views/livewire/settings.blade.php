@@ -1,8 +1,9 @@
 <div>
     <style>
         .custom-placeholder::placeholder {
-    font-size: 12px; /* Adjust this value as needed */
-}
+            font-size: 12px;
+            /* Adjust this value as needed */
+        }
     </style>
     @if (session()->has('emp_error'))
         <div class="alert alert-danger">
@@ -70,9 +71,9 @@
                             <div class="col" style="font-size: 10px;"><b>Last Password Changed</b></div>
                         </div>
                         <div class="row">
-                            <div class="col" style="font-size: 10px;">{{$lastLogin}}</div>
-                            <div class="col" style="font-size: 10px;">{{$lastLoginFailure}}</div>
-                            <div class="col" style="font-size: 10px;">{{$lastPasswordChanged}}</div>
+                            <div class="col" style="font-size: 10px;">{{ $lastLogin }}</div>
+                            <div class="col" style="font-size: 10px;">{{ $lastLoginFailure }}</div>
+                            <div class="col" style="font-size: 10px;">{{ $lastPasswordChanged }}</div>
                         </div>
                         <table class="table-s" border="1" style="margin-top: 10px;width:100%">
                             <tr class="tr-s">
@@ -90,18 +91,18 @@
                             </tr>
 
                             @foreach ($loginHistory as $history)
-                            <tr class="tr-s">
-                                <td class="th-d"
-                                    style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
-                                    {{ $history->location }}</td>
-                                <td class="th-d"
-                                    style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
-                                    {{ $history->user_agent }}</td>
-                                <td class="th-d"
-                                    style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
-                                    {{ $history->ip_address }}</td>
-                            </tr>
-                        @endforeach
+                                <tr class="tr-s">
+                                    <td class="th-d"
+                                        style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                        {{ $history->location }}</td>
+                                    <td class="th-d"
+                                        style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                        {{ $history->device_type }}<br>{{ $history->user_agent }}</td>
+                                    <td class="th-d"
+                                        style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                        {{ $history->ip_address }}</td>
+                                </tr>
+                            @endforeach
                         </table>
                     </div>
                 </div>
@@ -229,8 +230,8 @@
                     <div class="col-md-5" style="margin-top: 15px;">
                         <div style="font-size:12px;color: #000;">
                             <div style="display: inline-block;width:100px;color:#778899;">Official Birthday</div> :
-                            <span
-                                style="font-weight:500; padding:0 5px;">  {{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
+                            <span style="font-weight:500; padding:0 5px;">
+                                {{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
                                     ? date('d M, Y', strtotime($employee->empPersonalInfo->date_of_birth))
                                     : '-' }}</span>
 
@@ -284,13 +285,13 @@
                     @else
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->empPersonalInfo
-                                    ? ucwords(strtolower($employee->empPersonalInfo->nick_name ?? '-'))
-                                    : '-' }}</div>
+                                {{ $employee->empPersonalInfo ? ucwords(strtolower($employee->empPersonalInfo->nick_name ?? '-')) : '-' }}
+                            </div>
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
                                 {{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
                                     ? date('d M, Y', strtotime($employee->empPersonalInfo->date_of_birth))
-                                    : '-' }}</div>
+                                    : '-' }}
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -357,7 +358,7 @@
                                     ? ucwords(strtolower($employee->empPersonalInfo->biography))
                                     : '-' }}
 
-                                </div>
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -382,35 +383,40 @@
                         <div class="col-md-4 mb-3" style="font-size: 12px;">LinkedIn</div>
                     </div>
                     @if ($editingSocialMedia)
-                    <div class="row m-0" style="margin-top: 10px;">
-                        <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                            <input
-                                style="font-size:12px" type="text" class="form-control custom-placeholder" wire:model.lazy="facebook"
-                                placeholder="Enter Facebook Url">
-                            @error('facebook') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="row m-0" style="margin-top: 10px;">
+                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
+                                <input style="font-size:12px" type="text" class="form-control custom-placeholder"
+                                    wire:model.lazy="facebook" placeholder="Enter Facebook Url">
+                                @error('facebook')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
+                                <input style="font-size:12px" type="text" class="form-control custom-placeholder"
+                                    wire:model.lazy="twitter" placeholder="Enter Twitter Url">
+                                @error('twitter')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
+                                <input style="font-size:12px" type="text" class="form-control custom-placeholder"
+                                    wire:model.lazy="linkedIn" placeholder="Enter LinkedIn Url">
+                                @error('linkedIn')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                            <input
-                                style="font-size:12px" type="text" class="form-control custom-placeholder" wire:model.lazy="twitter"
-                                placeholder="Enter Twitter Url">
-                            @error('twitter') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                            <input
-                                style="font-size:12px" type="text" class="form-control custom-placeholder" wire:model.lazy="linkedIn"
-                                placeholder="Enter LinkedIn Url">
-                            @error('linkedIn') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-
                     @else
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ !empty($employee->empPersonalInfo->facebook) ? $employee->empPersonalInfo->facebook : '-' }}</div>
+                                {{ !empty($employee->empPersonalInfo->facebook) ? $employee->empPersonalInfo->facebook : '-' }}
+                            </div>
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ !empty($employee->empPersonalInfo->twitter) ? $employee->empPersonalInfo->twitter : '-' }}</div>
+                                {{ !empty($employee->empPersonalInfo->twitter) ? $employee->empPersonalInfo->twitter : '-' }}
+                            </div>
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ !empty($employee->empPersonalInfo->linked_in) ? $employee->empPersonalInfo->linked_in : '-' }}</div>
+                                {{ !empty($employee->empPersonalInfo->linked_in) ? $employee->empPersonalInfo->linked_in : '-' }}
+                            </div>
                         </div>
                     @endif
                 </div>
