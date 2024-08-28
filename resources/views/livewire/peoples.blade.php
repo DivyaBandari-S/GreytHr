@@ -873,7 +873,7 @@
         <div class="col-12 col-md-4 bg-white people-left-side-container">
 
             <div class="input-group people-input-group-container">
-                <input wire:model="searchTerm" type="text" class="form-control people-search-input"
+                <input wire:model="searchValue" type="text" class="form-control people-search-input"
                     placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                 <div class="input-group-append">
                     <button wire:click="filterMyTeam" class="people-search-btn" type="button">
