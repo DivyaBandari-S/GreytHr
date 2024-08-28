@@ -258,6 +258,7 @@ class LeaveApplyPage extends Component
         $this->validate();
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $checkJoinDate  = EmployeeDetails::where('emp_id', $employeeId)->first();
+
         try {
             // Check for weekends
             if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
@@ -268,8 +269,7 @@ class LeaveApplyPage extends Component
 
             //validate fromdate for joining date
             if ($this->from_date < $checkJoinDate->hire_date) {
-                dd('fghj');
-                $this->errorMessage = 'To date must be greater than or equal to from date.';
+                $this->errorMessage = 'Enterd From date and To dates are less tha your Join date ';
                 $this->showerrorMessage = true;
                 return redirect()->back()->withInput();
             }
@@ -554,7 +554,7 @@ class LeaveApplyPage extends Component
 
             // Check if the start or end date is a weekend
             if ($startDate->isWeekend() || $endDate->isWeekend()) {
-                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+                return 0;
             }
 
             // Check if the start and end sessions are different on the same day
