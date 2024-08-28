@@ -65,7 +65,7 @@
                                 <span class="sickLeaveBalance">{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
                                 @elseif($leave_type == 'Loss of Pay')
                                 <!-- Loss of Pay -->
-                                <span class="sickLeaveBalance">{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                                <span class="sickLeaveBalance">&minus;&nbsp;{{($leaveBalances['lossOfPayBalance']) }}</span>
                                 @elseif($leave_type == 'Maternity Leave')
                                 <!-- Loss of Pay -->
                                 <span class="sickLeaveBalance">{{ $leaveBalances['maternityLeaveBalance'] }}</span>
@@ -286,10 +286,10 @@
                 @if($showApplyingToContainer)
                 <div class="searchContainer">
                     <!-- Content for the search container -->
-                    <div class="row mb-2 py-0 ">
+                    <div class="row mb-2 py-0 px-2">
                         <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
-                            <div class="col-md-10 m-0">
-                                <div class="input-group">
+                            <div class="col p-0 m-0">
+                                <div class="input-group" style="width:180px;">
                                     <input
                                         wire:model="searchQuery"
                                         id="searchInput"
@@ -298,7 +298,7 @@
                                         placeholder="Search...."
                                         aria-label="Search"
                                         aria-describedby="basic-addon1"
-                                        style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;">
+                                        style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:120px;">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button
                                             type="button"
@@ -310,7 +310,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2 m-0 p-0">
+                            <div class="col m-0 p-0 d-flex justify-content-end">
                                 <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #ccc;border:#ccc;height:33px;width:33px;">
                                     <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i>
                                     </span>
@@ -323,7 +323,7 @@
                     <div class="scrollApplyingTO">
                         @if(!empty($managers))
                         @foreach($managers as $employee)
-                        <div class="d-flex gap-4 align-items-center"
+                        <div class="d-flex gap-3 align-items-center"
                             style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif"
                             wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             @if($employee['image'] && $employee['image'] !== 'null' )
@@ -345,7 +345,7 @@
                             </div>
                             @endif
                             @endif
-                            <div class="center d-flex flex-column mt-2 mb-2">
+                            <div class="d-flex flex-column mt-2 mb-2">
                                 <span class="ellipsis mb-0">{{ $employee['full_name'] }}</span>
                                 <span class="mb-0 normalTextValue" style="font-size:10px;"> #{{ $employee['emp_id'] }} </span>
                             </div>
@@ -430,8 +430,8 @@
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
-                        <div class="col-md-10" style="margin: 0;padding:0 2px;">
-                            <div class="input-group">
+                        <div class="col m-0 p-0" >
+                            <div class="input-group" style="width:180px;">
                                 <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
                                     <button type="button" wire:click="searchCCRecipients" class="search-btn">
@@ -441,7 +441,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2 m-0 p-0">
+                        <div class="col m-0 p-0 d-flex justify-content-end">
                             <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #ccc;border:#ccc;height:33px;width:33px;">
                                 <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i></span>
                             </button>
@@ -473,7 +473,7 @@
                                 @endif
                                 @endif
 
-                                <div class="center mb-2 mt-2">
+                                <div class=" mb-2 mt-2">
                                     <p class="mb-0 empCcName">{{ ucwords(strtolower($employee['full_name'])) }}</p>
                                     <p class="mb-0 empIdStyle">#{{ $employee['emp_id'] }}</p>
                                 </div>

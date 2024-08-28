@@ -149,7 +149,7 @@
 
                                     </div>
 
-                                    <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $this->leaveBalances['lossOfPayBalance'] }}</span>
+                                    <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">&minus;{{ $this->leaveBalances['lossOfPayBalance'] }}</span>
 
                                     @elseif($leaveRequest->leave_type === 'Marriage Leave' && isset($leaveBalances['marriageLeaveBalance']))
 

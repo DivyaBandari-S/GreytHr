@@ -9,7 +9,7 @@
     </div>
     <div>
         <div class="nav-link" onclick="window.location.href='{{ url('/users') }}'">
-            <i class='fas fa-comment-dots chat-icon' style="cursor:pointer;"></i>
+            <i class='fas fa-comment-dots icon' style="cursor:pointer;"></i>
             @if ($chatNotificationCount > 0)
             <span class="badge">
                 {{ $chatNotificationCount }}
