@@ -393,7 +393,7 @@ class Settings extends Component
                 'ip_address',
                 'user_agent',
                 'device_type',
-                DB::raw("CONCAT_WS(', ', country, state_name, city, postal_code) as location"),
+                DB::raw("CONCAT_WS(', ', city,state_name,country,postal_code) as location"),
                 'created_at'
             ]);
         // dd($this->loginHistory);
