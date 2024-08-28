@@ -70,8 +70,8 @@
                             <div class="col" style="font-size: 10px;"><b>Last Password Changed</b></div>
                         </div>
                         <div class="row">
-                            <div class="col" style="font-size: 10px;">04 Oct 2023 14:32:00</div>
-                            <div class="col" style="font-size: 10px;">05 Apr 2023 19:12:48</div>
+                            <div class="col" style="font-size: 10px;">{{$lastLogin}}</div>
+                            <div class="col" style="font-size: 10px;">{{$lastLoginFailure}}</div>
                             <div class="col" style="font-size: 10px;">28 Jan 2023 19:00:01</div>
                         </div>
                         <table class="table-s" border="1" style="margin-top: 10px;width:100%">
@@ -85,28 +85,23 @@
                                 <th class="th-s"
                                     style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
                                     IP Address</th>
-                                <th class="th-s"
-                                    style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
-                                    Date</th>
 
 
                             </tr>
+
+                            @foreach ($loginHistory as $history)
                             <tr class="tr-s">
                                 <td class="th-d"
-                                    style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">
-                                    04 Oct, 2023 13:48:06</td>
+                                    style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                    {{ $history->location }}</td>
                                 <td class="th-d"
-                                    style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">
-                                    183.82.97.220</td>
+                                    style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                    {{ $history->user_agent }}</td>
                                 <td class="th-d"
-                                    style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">
-                                    183.82.97.220</td>
-                                <td class="th-d"
-                                    style="font-size: 10px; color: black;border: 1px solid black;padding: 8px;text-align: center;">
-                                    183.82.97.220</td>
-
-
+                                    style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                    {{ $history->ip_address }}</td>
                             </tr>
+                        @endforeach
                         </table>
                     </div>
                 </div>
@@ -289,7 +284,7 @@
                     @else
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->empPersonalInfo 
+                                {{ $employee->empPersonalInfo
                                     ? ucwords(strtolower($employee->empPersonalInfo->nick_name ?? '-'))
                                     : '-' }}</div>
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
@@ -358,10 +353,10 @@
                     @else
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-12 mb-3" style="color: black; font-size: 12px;">
-                                {{ $employee->empPersonalInfo && !empty($employee->empPersonalInfo->biography) 
-                                    ? ucwords(strtolower($employee->empPersonalInfo->biography)) 
+                                {{ $employee->empPersonalInfo && !empty($employee->empPersonalInfo->biography)
+                                    ? ucwords(strtolower($employee->empPersonalInfo->biography))
                                     : '-' }}
-                                
+
                                 </div>
                         </div>
                     @endif
@@ -407,7 +402,7 @@
                             @error('linkedIn') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
-                    
+
                     @else
                         <div class="row m-0" style="margin-top: 10px;">
                             <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">

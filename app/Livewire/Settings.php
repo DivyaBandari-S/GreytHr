@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class Settings extends Component
 {
@@ -254,6 +255,7 @@ class Settings extends Component
 
     public function loginfo()
     {
+        $this->fetchLoginHistory();
         $this->showAlertDialog = true;
     }
 
@@ -347,35 +349,43 @@ class Settings extends Component
     }
 
 
-
     public function fetchLoginHistory()
     {
-        $userId = Auth::user()->id;
-
+        $userId = Auth::user()->emp_id;
         // Fetch last login, last login failure, and last password changed dates
         $this->lastLogin = DB::table('sessions')
             ->where('user_id', $userId)
             // ->where('type', 'login')
             ->orderBy('created_at', 'desc')
             ->value('created_at');
-
+        $this->lastLogin = $this->lastLogin ? Carbon::parse($this->lastLogin)->format('d M Y H:i:s') : 'N/A';
         $this->lastLoginFailure = DB::table('sessions')
             ->where('user_id', $userId)
             // ->where('type', 'failure')
             ->orderBy('created_at', 'desc')
             ->value('created_at');
+        $this->lastLoginFailure = $this->lastLoginFailure ? Carbon::parse($this->lastLoginFailure)->format('d M Y H:i:s') : 'N/A';
 
-        $this->lastPasswordChanged = DB::table('password_resets')
-            ->where('user_id', $userId)
-            ->orderBy('created_at', 'desc')
-            ->value('created_at');
+        // $this->lastPasswordChanged = DB::table('password_resets')
+        //     ->where('user_id', $userId)
+        //     ->orderBy('created_at', 'desc')
+        //     ->value('created_at');
 
         // Fetch login history
         $this->loginHistory = DB::table('sessions')
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
-            ->get(['ip_address', 'user_agent', 'location', 'created_at']);
+            ->get([
+                'ip_address',
+                'user_agent',
+                DB::raw("CONCAT_WS(', ', country, state_name, city, postal_code) as location"),
+                'created_at'
+            ]);
+        // dd($this->loginHistory);
     }
+
+
+
     public function render()
     {
         try {
