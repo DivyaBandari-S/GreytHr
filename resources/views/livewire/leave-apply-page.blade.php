@@ -323,7 +323,7 @@
                     <div class="scrollApplyingTO">
                         @if(!empty($managers))
                         @foreach($managers as $employee)
-                        <div class="d-flex gap-4 align-items-center"
+                        <div class="d-flex gap-4 flex-column align-items-center"
                             style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif"
                             wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             @if($employee['image'] && $employee['image'] !== 'null' )

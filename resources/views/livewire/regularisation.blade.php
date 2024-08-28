@@ -748,7 +748,7 @@
 
         .active,
         .accordion:hover {
-            background-color: #ccc;
+            background-color: #fff;
         }
 
         .panel {
@@ -759,25 +759,17 @@
             transition: max-height 0.2s ease-out;
         }
 
-        .remarks-container {
-            width: 300px;
-            /* Adjust the width as needed */
-            margin: 0 auto;
-            /* Center the container horizontally */
-        }
+        
 
-        .remarks-container input[type="text"] {
-            width: 100%;
-            /* Take up the full width of the container */
-            padding: 8px;
-            /* Adjust padding as needed */
-            border: 1px solid #ccc;
-            /* Add border */
-            border-radius: 4px;
-            /* Add border radius */
-            box-sizing: border-box;
-            /* Include padding and border in the width */
-        }
+        .remarks-container {
+        width: 100%;  /* This will make the container take the full width */
+        max-width: 1200px;  /* Adjust to set a specific large width */
+        height: 210px;  /* A smaller height */
+        background-color: #fff;  /* Light background color for visibility */
+        border:1px solid #ccc;
+        padding: 20px;
+        margin: 0 auto;  /* Center the container */
+    }
 
         .calendar-dates {
             display: flex;
@@ -801,7 +793,7 @@
         }
 
         .calendar-date.current-date {
-            background-color: #24a7f8;
+            background-color: rgb(2, 17, 79);
             color: #fff;
             border-radius: 50%;
             padding: 10px;
@@ -854,8 +846,32 @@
     text-decoration: none; /* Remove underline */
    
 }
-
-
+.remarks-input {
+        width: 500px;  /* Adjust width as needed */
+        height: 50px;  /* Adjust height as needed */
+        padding: 10px;  /* Adds some inner spacing */
+        font-size: 16px;  /* Increases font size */
+    }
+.nextMonth
+{
+    background-color: rgb(2, 17, 79);
+    color: white;
+}
+.prevMonth
+{
+    background-color: rgb(2, 17, 79);
+    color: white;   
+}
+.regularisationCardheading
+{
+    background: pink;
+}
+.scrollApplyingTO
+{
+    max-height: 400px; 
+    overflow-y: auto;
+    
+}
     </style>
     <div class="container">
          <a href="/Attendance" class="submit-btn"style="text-decoration:none;">Back</a>
@@ -884,12 +900,12 @@
         <div class="col-md-5 mb-3">
             <div class="calendar-box">
                 <div class="calendar-header">
-                    <button class="btn btn-primary" wire:click="previousMonth"><i style="line-height: inherit;" class="fas fa-chevron-left"></i></button>
+                    <button class="btn prevMonth" wire:click="previousMonth"><i style="line-height: inherit;" class="fas fa-chevron-left"></i></button>
                     <p style="margin-top:7px; font-weight: 600">
 
                         {{ \Carbon\Carbon::createFromDate($this->year, $this->month, 1)->format('F Y') }}
                     </p>
-                    <button class="btn btn-primary" wire:click="nextMonth"><i style="line-height: inherit;" class="fas fa-chevron-right"></i></button>
+                    <button class="btn nextMonth" wire:click="nextMonth"><i style="line-height: inherit;" class="fas fa-chevron-right"></i></button>
                 </div>
                 <div class="calendar-weekdays">
                     <div class="weekday">Sun</div>
@@ -931,8 +947,84 @@
         <div class="col-md-7 mb-3">
             @if(count($selectedDates)>0)
             <div class="remarks-container">
-                <input type="text" placeholder="Enter Remarks" wire:model="remarks">
-            </div>
+            <div class="reporting mb-2">
+                    <div class="employee-profile-image-container">
+                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                    </div>
+                    <div class="center p-0 m-0">
+                            <p class="mb-0" style="font-size:10px;">{{$reportingmanagerfullName->first_name}}&nbsp;{{$reportingmanagerfullName->last_name}}</p>
+                            <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText">#({{$reportingmanager}})</p>
+                    </div>
+                    <div class="downArrow" wire:click="applyingTo">
+                         <i class="fas fa-chevron-{{$chevronButton ? 'up' : 'down' }}" style="cursor:pointer"></i>
+                    </div>
+                </div>
+                
+                @if($showApplyingToContainer)
+                <div class="searchContainer"style="z-index: 10;position: relative;">
+                    <!-- Content for the search container -->
+                    <div class="search-container-who-is-in" style="margin-left: auto;">
+
+                                    <div class="form-group-who-is-in">
+                                       <div class="search-input-who-is-in" style="margin-top:100px;">
+                                        <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
+                                            <div class="search-icon-who-is-in" wire:click="searchFilters">
+                                              <i class="fa fa-search" aria-hidden="true"></i>
+                                            </div>
+                                       </div>
+                                    </div>
+
+
+
+                         </div>
+
+                    <!-- Your Blade file -->
+                    <div class="scrollApplyingTO">
+                        
+                            @foreach ($heademployees as $employee)
+                                   <div class="d-flex gap-4 align-items-center">
+                                        <div class="employee-profile-image-container">
+                                            <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                        </div>
+
+                                        <div class="center d-flex flex-column mt-2 mb-2">
+                                            <span class="ellipsis mb-0">
+                                                {{ ucwords(strtolower($employee->first_name))}} {{ ucwords(strtolower($employee->last_name))}}
+                                            </span>
+                                            <span class="mb-0 normalTextValue" style="font-size:10px;"> #{{ $employee->emp_id }} </span>
+                                        </div>
+                                    </div>
+                            @endforeach
+                         
+                      
+                    
+                    </div>
+                </div>
+                @endif
+                <input type="text" placeholder="Enter Remarks" wire:model="remarks"class="remarks-input"> 
+               
+            </div>        
+                               
+
+                    
+
+                  
+
+                  
+
+                
+
+                  
+
+
+
+
+
+
+
+
+        
+           
             <div class="col-md-5">
                 <li>
                 @foreach($shift_times as $index => $regularisationEntry)
@@ -958,8 +1050,8 @@
                     
                     
                     <div>
-                        <table style="width:100%">
-                            <thead>
+                        <table class="regularisationCard" style="width:100%">
+                            <thead class="regularisationCardheading">
                                 <tr>
                                     <th style="font-weight:normal;font-size:12px;border: none;">From</th>
                                     <th style="font-weight:normal;font-size:12px;border: none;text-align:left;">To</th>
@@ -1023,8 +1115,8 @@
             </div>
             <footer style="position: fixed; bottom: 0; width: 100%;left:-20px; background-color: #fff; padding: 5px 0; text-align: center; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);">
                 <div style="display:flex; justify-content: right;">
-                    <button type="button" wire:click="storearraydates" style="color: #24a7f8; border:1px solid #24a7f8; background: #fff; border-radius:5px; padding: 10px 20px;">Submit</button>
-                    <a href="/Attendance" style="color:#24a7f8; margin-left: 20px; padding: 10px 20px;">Cancel</a>
+                    <button type="button" wire:click="storearraydates" style="color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;">Submit</button>
+                    <a href="/Attendance" style="color:rgb(2,17,79); margin-left: 20px; padding: 10px 20px;">Cancel</a>
                 </div>
             </footer>
 
@@ -1050,7 +1142,7 @@ $numberOfEntries = count($regularisationEntries);
 $firstItem = reset($regularisationEntries); // Get the first item
 $lastItem = end($regularisationEntries); // Get the last item
 @endphp
-<div class="accordion-heading rounded" onclick="toggleAccordion(this)" style="margin-top:10px;">
+<div class="accordion-heading rounded" style="margin-top:10px;">
 
     <div class="accordion-title p-2 rounded">
 
@@ -1089,14 +1181,16 @@ $lastItem = end($regularisationEntries); // Get the last item
 
         </div>
 
-        <div class="arrow-btn">
-            <i class="fa fa-angle-down"></i>
+        <div class="arrow-btn" wire:click="togglePendingAccordion({{ $pr->id }})"style="color:{{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForActive === $r->id ? '#3a9efd' : '#778899' }}">
+            <i class="fa fa-angle-{{ $openAccordionForPending === $pr->id ? 'up' : 'down' }}"style="color:{{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }}"></i>
         </div>
 
     </div>
 
 </div>
-<div class="accordion-body m-0 p-0">
+
+              
+<div class="accordion-body m-0 p-0"style="display: {{ $openAccordionForPending === $pr->id ? 'block' : 'none' }}">
 
     <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
 
@@ -1204,7 +1298,7 @@ $lastEntry = end($regularisationEntries);
 @endphp
 
 @if(($hr->status=='pending'&&$hr->is_withdraw==1)||$hr->status=='approved'||$hr->status=='rejected')
-<div class="accordion-heading rounded" onclick="toggleAccordion(this)" style="margin-top:10px;">
+<div class="accordion-heading rounded"style="margin-top:10px;">
 
     <div class="accordion-title p-2 rounded">
 
@@ -1252,14 +1346,14 @@ $lastEntry = end($regularisationEntries);
             @endif
         </div>
 
-        <div class="arrow-btn">
-            <i class="fa fa-angle-down"></i>
+        <div class="arrow-btn"wire:click="toggleHistoryAccordion({{ $hr->id }})"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForActive === $r->id ? '#3a9efd' : '#778899' }}">
+            <i class="fa fa-angle-{{ $openAccordionForHistory === $hr->id ? 'up' : 'down' }}"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}"></i>
         </div>
 
     </div>
 
 </div>
-<div class="accordion-body m-0 p-0">
+<div class="accordion-body m-0 p-0"style="display: {{ $openAccordionForHistory === $hr->id ? 'block' : 'none' }}">
 
     <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
 

@@ -258,11 +258,12 @@
                 <div class="view-container m-0 p-0">
                      <div class="first-col" style="display:flex; gap:40px;">
                             <div class="field p-2">
-                                <span style="color: #778899; font-size:11px; font-weight: 500;">Remarks</span>
-
-                                   <span style="font-size: 12px; font-weight: 600;text-align:center;">-<br></span>
-
-
+                                <span style="color: #778899; font-size:11px; font-weight: 500;">Remarks</span><br>
+                                 @if(empty($regularisationrequest->employee_remarks))
+                                     <span style="font-size: 12px; font-weight: 600;text-align:center;">-</span>
+                                 @else
+                                 <span style="font-size: 12px; font-weight: 600;text-align:center;">{{$regularisationrequest->employee_remarks}}</span>
+                                 @endif
                             </div>
 
                             <div class="vertical-line"></div>
