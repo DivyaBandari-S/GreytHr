@@ -387,6 +387,7 @@ class Settings extends Component
         // Fetch login history
         $this->loginHistory = DB::table('sessions')
             ->where('user_id', $userId)
+            ->whereDate('created_at', Carbon::today())
             ->orderBy('created_at', 'desc')
             ->get([
                 'ip_address',
