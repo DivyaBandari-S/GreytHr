@@ -62,7 +62,7 @@ class WhoIsInChart extends Component
                         ->distinct()
                         ->get();
                  
-        
+
 
 
     }

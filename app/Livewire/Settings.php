@@ -301,6 +301,19 @@ class Settings extends Component
         ],
         'confirmNewPassword' => 'required|same:newPassword',  // Confirms that confirmNewPassword matches newPassword
     ];
+    protected function messages()
+    {
+        return [
+            'oldPassword.required' => 'Please enter your current password.',
+            'newPassword.required' => 'Please enter a new password.',
+            'newPassword.string' => 'The new password must be a valid string.',
+            'newPassword.min' => 'Your password must be at least 8 characters long.',
+            'newPassword.regex' => 'Your password must contain at least one capital letter, one lowercase letter, one digit, and one special character.',
+            'newPassword.different' => 'The new password must be different from the old password.',
+            'confirmNewPassword.required' => 'Please confirm your new password.',
+            'confirmNewPassword.same' => 'The new password and confirmation do not match.',
+        ];
+    }
 
     protected $additionalRules = [
         'facebook' => 'nullable|url|max:255',
@@ -370,15 +383,17 @@ class Settings extends Component
             ->where('emp_id', $userId)
             ->orderBy('updated_at', 'desc')
             ->value('updated_at');
-        $this->lastPasswordChanged =  $this->lastPasswordChanged ? Carbon::parse( $this->lastPasswordChanged)->format('d M Y H:i:s') : 'N/A';
+        $this->lastPasswordChanged =  $this->lastPasswordChanged ? Carbon::parse($this->lastPasswordChanged)->format('d M Y H:i:s') : 'N/A';
         // Fetch login history
         $this->loginHistory = DB::table('sessions')
             ->where('user_id', $userId)
+            ->whereDate('created_at', Carbon::today())
             ->orderBy('created_at', 'desc')
             ->get([
                 'ip_address',
                 'user_agent',
-                DB::raw("CONCAT_WS(', ', country, state_name, city, postal_code) as location"),
+                'device_type',
+                DB::raw("CONCAT_WS(', ', city,state_name,country,postal_code) as location"),
                 'created_at'
             ]);
         // dd($this->loginHistory);

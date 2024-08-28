@@ -113,16 +113,16 @@ class Home extends Component
     {
         $this->fetchWeather();
         // Get the current month and year
-        $currentDate = Carbon::today();
-        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-        $month = $currentDate->format('n');
-        $year = $currentDate->format('Y');
+        // $currentDate = Carbon::today();
+        // $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        // $month = $currentDate->format('n');
+        // $year = $currentDate->format('Y');
 
-        // // Construct the table name for SQL Server
-        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        // // // Construct the table name for SQL Server
+        // $tableName = 'DeviceLogs_' . $month . '_' . $year;
 
-        $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
-        $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+        // $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+        // $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
 
         // Get data from SQL Server for the normalized user ID
         // $dataSqlServer = DB::connection('sqlsrv')
@@ -132,8 +132,22 @@ class Home extends Component
         //     ->whereDate('logDate', $today) // Filter for today's date
         //     ->orderBy('logDate')
         //     ->get();
+        // Assuming $dataSqlServer is the collection you want to split
+        // foreach ($dataSqlServer as $data) {
+        //     // Accessing individual fields
+        //     $userId = $data->UserId;
+        //     $logDate = $data->logDate;
+        //     $direction = $data->Direction;
 
-        // dd($dataSqlServer);
+        //     // Example: If you want to split the date and time from logDate
+        //     $dateTimeParts = explode(' ', $logDate);
+        //     $date = $dateTimeParts[0]; // 2024-08-28
+        //     $time = $dateTimeParts[1]; // 11:36:50.000
+
+        //     // Output or further processing
+        //     dump($userId, $date, $time, $direction);
+        // }
+
 
         // // Get data from MySQL
         // $dataMySql = DB::connection('mysql')

@@ -9,7 +9,7 @@
     
             <!-- Add your menu items here -->
         </div>
-    
+
         <!-- Content Area -->
         <div class="content" style="height:auto" >
             <div style="width: 100%;display: flex;margin: 20px auto;">
@@ -19,10 +19,10 @@
             <h1 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; font-family: 'Montserrat', sans-serif; color: #000;">
                 We've got it sorted for you!
             </h1>
-            <div class="author text-black uppercase" style="font-family: 'Open Sans', sans-serif; font-size: 16px; color: #555; line-height: 1.5;">
+            <div class="author text-black uppercase" style="font-size: 16px; color: #555; line-height: 1.5;">
                 All Documents are now in one place..
             </div>
-            <div class="author text-black uppercase" style="font-family: 'Open Sans', sans-serif; font-size: 16px; color: #555; margin-top: 10px;">
+            <div class="author text-black uppercase" style="font-size: 16px; color: #555; margin-top: 10px;">
                 You can now request a new letter if you don't find the one you were looking for..
             </div>
         </div>
@@ -103,7 +103,7 @@
                 </div>
                 <div class="B" style="height: 45px;display: flex;">
                 <div  style="display: flex; flex-direction: row; margin-left: 10px; margin-top: 10px;">
-                <p style="font-size: 14px; font-family: 'Open Sans', ">Pending:0</p>
+                <p style="font-size: 14px; ">Pending:0</p>
                 <p style="margin-left: 100px; font-size: 12px; color: #677A8E;">Declined:0</p>
             </div>
            

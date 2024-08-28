@@ -112,26 +112,10 @@
                 </a>
             </li>
             @endif
-            <!-- <li class="divider" data-text="table and forms">Table and forms</li>
-			<li><a href="#"><i class='bx bx-table icon' ></i> Tables</a></li>
-			<li>
-				<a href="#"><i class='bx bxs-notepad icon' ></i> Forms <i class='bx bx-chevron-right icon-right' ></i></a>
-				<ul class="side-dropdown">
-					<li><a href="#">Basic</a></li>
-					<li><a href="#">Select</a></li>
-					<li><a href="#">Checkbox</a></li>
-					<li><a href="#">Radio</a></li>
-				</ul>
-			</li> -->
+
         </ul>
-        <!-- <div class="ads">
-			<div class="wrapper">
-				<a href="#" class="btn-upgrade">Upgrade</a>
-				<p>Become a <span>PRO</span> member and enjoy <span>All Features</span></p>
-			</div>
-		</div> -->
     </section>
-    <!-- SIDEBAR -->
+
 
     <!-- NAVBAR -->
     <section id="content">
@@ -140,12 +124,6 @@
             <i class='fas fa-bars toggle-sidebar'></i>
             <h6 class="mx-0 my-0 page-title"> @livewire('page-title')
             </h6>
-            {{-- <form action="#">
-                <div class="input-group">
-                    <input type="text" class="form-control" aria-label="Search..." placeholder="Search...">
-                    <span class="input-group-text"><i class='fa fa-search icon'></i></span>
-                </div>
-            </form> --}}
             <div>
                 @livewire('notification')
             </div>

@@ -713,7 +713,7 @@ Submit your time sheet for this week.
             @else
             <div
                 style="display:flex;justify-content:center;flex-direction:column;align-items:center;">
-                <img src="https://i.pinimg.com/originals/52/4c/6c/524c6c3d7bd258cd165729ba9b28a9a2.png"
+                <img src="{{asset('images/no data.png')}}" name="noData" id="noData"
                     alt="Image Description" style="width: 120px; height:100px;">
                 <p class="homeText">
                     Wow! No leaves planned today.
@@ -1133,68 +1133,5 @@ eum nihil itaque!
         );
     }
 
-    // Function to check for elements to fade in
-    function checkFadeIn() {
-        // alert("scroll");
-        const fadeInSection = document.querySelectorAll('.');
-        fadeInSection.forEach((element) => {
-            if (isElementInViewport(element)) {
-                element.classList.add('fade-in');
-            }
-        });
-    }
 
-    // Initial check on page load
-    window.addEventListener('load', checkFadeIn);
-    var combinedData = {
-        datasets: [{
-                data: [{
-                        {
-                            !empty($salaries) ? $salaries - > calculateTotalAllowance() : 0
-                        }
-                    },
-                    2, // Placeholder value for the second dataset
-                ],
-                backgroundColor: [
-                    '#000000', // Color for Gross Pay
-                ],
-            },
-            {
-                data: [{
-                        {
-                            !empty($salaries) && method_exists($salaries, 'calculateTotalDeductions') ?
-                                $salaries - > calculateTotalDeductions() : 0
-                        }
-                    },
-                    {
-                        {
-                            !empty($salaries) && method_exists($salaries, 'calculateTotalAllowance') ?
-                                $salaries - > calculateTotalAllowance() - $salaries - >
-                                calculateTotalDeductions() : 0
-                        }
-                    },
-                ],
-                backgroundColor: [
-                    '#B9E3C6', // Color for Deductions
-                    '#1C9372', // Color for Net Pay
-                ],
-            },
-        ],
-    };
-
-    var outerCtx = document.getElementById('combinedPieChart').getContext('2d');
-
-    var combinedPieChart = new Chart(outerCtx, {
-        type: 'doughnut',
-        data: combinedData,
-        options: {
-            cutout: '60%', // Adjust the cutout to control the size of the outer circle
-            legend: {
-                display: false,
-            },
-            tooltips: {
-                enabled: false,
-            },
-        },
-    });
 </script>

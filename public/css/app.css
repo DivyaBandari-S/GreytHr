@@ -935,6 +935,8 @@ button.close-button {
     position: relative;
     display: inline-block;
     color: #778899;
+    width: 10%;
+    border-color: #ccc;
     /* border:1px solid #ccc; */
     background: transparent;
     outline: none;
@@ -2466,9 +2468,8 @@ input[type="radio"] {
     .form-control {
         width: 100%;
     }
-    .accordion {
-        overflow-x: auto;
-        max-width: 90%;
+    .dropdown{
+        width: 30%;
     }
 }
 .applyingFor {
@@ -3077,7 +3078,6 @@ l
     font-weight: 600;
 }
 .leaveTypeTitle {
-    color: var(--sub-heading-color);
     font-size: var(--sub-headings-font-size);
     font-weight: 500;
 }
@@ -3372,7 +3372,7 @@ l
     position: relative;
     width: 100%;
     height: 7px;
-    margin-top: 35px;
+    margin:0;
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -3389,12 +3389,40 @@ l
 }
 .balance {
     font-size: var(--normal-font-size);
-    color: #778899;
-    padding: 10px 15px;
+    color: #fff;
+    background-color: rgb(2, 17, 79);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 7px 15px;
 }
 .field {
     font-size: var(--normal-font-size);
     font-weight: 500;
+}
+
+.containerBalanceHeight {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+}
+
+.leave-bal {
+    border-radius: 10px;
+    width: 100%; /* Ensures that leave-bal takes the full width of col-md-4 */
+}
+
+.center {
+    margin: 65px auto;
+}
+.center h5{
+    color: var(--main-heading-color);
+    font-size: var(--main-headings-font-size);
+}
+.remaining{
+    color: var(--label-color);
+    font-weight: normal;
+    font-size: var(--normal-font-size);
 }
 .bal-container .row.my-3 .col-md-4 > .leave-bal {
     flex: 1;
