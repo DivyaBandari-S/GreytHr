@@ -113,22 +113,27 @@ class Home extends Component
     {
         $this->fetchWeather();
         // Get the current month and year
-        // $currentDate = Carbon::today();
-        // $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-        // $month = $currentDate->format('n');
-        // $year = $currentDate->format('Y');
+        $currentDate = Carbon::today();
+        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
 
         // // Construct the table name for SQL Server
-        // $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
 
-        // // Get data from SQL Server
+        $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+        $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+
+        // Get data from SQL Server for the normalized user ID
         // $dataSqlServer = DB::connection('sqlsrv')
         //     ->table($tableName)
         //     ->select('UserId', 'logDate', 'Direction')
+        //     ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
         //     ->whereDate('logDate', $today) // Filter for today's date
         //     ->orderBy('logDate')
         //     ->get();
-        // // dd($dataSqlServer);
+
+        // dd($dataSqlServer);
 
         // // Get data from MySQL
         // $dataMySql = DB::connection('mysql')
