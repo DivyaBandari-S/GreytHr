@@ -14,9 +14,10 @@ use App\Models\Emoji;
 use App\Models\Hr;
 use App\Models\Post;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Log;
-use Livewire\WithFileUploads;
 
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 class Activities extends Component
 {
     use WithFileUploads;
@@ -140,43 +141,90 @@ class Activities extends Component
  
     public function submit()
     {
-       
-        $this->validate($this->newCommentRules);
-      
-        $user = Auth::user();
-        $employeeDetails = $user->employeeDetails;
-        $this->employeeDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
-       
-     
-        // Check if employee details exist and hr_emp_id is not null
-        if (!$this->employeeDetails || !$this->employeeDetails->hr_emp_id) {
-            // Handle case where hr_emp_id is null or not found
-            Session::flash('error', 'Employees are not allowed to Post Feeds');
-            return;
+        $validatedData = $this->validate($this->newCommentRules);
+        try {
+            // Validate the form data
+          
+    
+            $fileContent = null;
+            $mimeType = null;
+            $fileName = null;
+
+            // Store the file as binary data
+            if ($this->file_path) {
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                $mimeType = $this->file_path->getMimeType();
+                $fileName = $this->file_path->getClientOriginalName();
+                // Validate and store the uploaded file
+            }
+            // Store the file as binary data
+
+
+            if (  $fileContent  === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                session()->flash('error', 'Failed to read the uploaded file.');
+                return;
+            }
+
+            // Check if the file content is too large
+            if (strlen(  $fileContent ) > 16777215) { // 16MB for MEDIUMBLOB
+                session()->flash('error', 'File size exceeds the allowed limit.');
+                return;
+            }
+            // Get the authenticated user
+            $user = Auth::user();
+    
+            // Get the authenticated employee ID and their details
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+    
+            // Check if the authenticated employee is a manager
+            $isManager = DB::table('employee_details')
+                ->where('manager_id', $employeeId)
+                ->exists();
+    
+            // If not a manager, prevent post creation
+            if (!$isManager) {
+                session()->flash('error', 'Employees are not allowed to post feeds.');
+                return;
+            }
+    
+            // Retrieve the HR details if applicable
+            $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
+    
+            // Create the post using the manager's emp_id
+            $post = Post::create([
+                'hr_emp_id' => $hrDetails->hr_emp_id ?? '-',
+                'manager_id' => $employeeId,
+                'category' => $this->category,
+                'description' => $this->description,
+                'file_path' => $fileContent, // Store binary data
+                'mime_type'=>$mimeType,
+                'file_name'=>$fileName,
+            ]);
+    
+            // Reset form fields and display success message
+            $this->reset(['category', 'description', 'file_path']);
+            $this->message = 'Post created successfully!';
+            $this->showFeedsDialog = false;
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors
+            $this->setErrorBag($e->validator->getMessageBag());
+        } catch (\Exception $e) {
+            // Handle general exceptions
+            Log::error('Error creating request: ' . $e->getMessage(), [
+                'employee_id' => $employeeId ?? 'N/A',
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+            ]);
+            session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
-        // Get the authenticated employee's ID
-        $hr_emp_id = Auth::user()->hr_emp_id;
-    
-        // Create the post with the provided emp_id
-        $post = Post::create([
-            'hr_emp_id' => $hr_emp_id,
-            'category' => $this->category,
-            'description' => $this->description,
-        ]);
-       
-    
-        if ($this->attachment) {
-            // Store the attachment and update the post's attachment field
-            $attachmentPath = $this->attachment->store('attachments', 'public');
-            $post->update(['attachment' => $attachmentPath]);
-        }
-    
-        // Reset form fields and display success message
-        $this->reset(['category', 'description', 'attachment']);
-        $this->message = 'Post created successfully!';
-        $this->showFeedsDialog = false;
     }
-       
+    
+    
+    
    
     public function render()
 {

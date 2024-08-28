@@ -493,13 +493,18 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-control">
-                        <option value="">Select Request</option>
-                        @foreach($requestCategories as $request => $categories)
-                        <option value="{{ $request }}">{{ $request }}</option>
-                        @endforeach
-                    </select>
-                </div>
+
+        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle" style="width:100%;height:30px;color:#3b4452">
+            <option value="" >Select Request     </option>
+      
+            @foreach($requestCategories as $request => $categories)
+                <option value="{{ $request }}">{{ $request }}</option>
+            @endforeach
+        </select>
+  
+
+</div>
+
             </div>
 
 
@@ -566,25 +571,27 @@
 
                             @if ($showImageDialog)
                             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title viewfile">View File</h5>
-                                        </div>
-                                        <div class="modal-body text-center">
-                                            @if ($imageUrl)
-                                            <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
-                                            @endif
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                            <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-backdrop fade show blurred-backdrop" style="background-color: rgba(0, 0, 0, 0.1);"></div>
-                            @endif
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title viewfile">View File</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                    @if ($imageUrl)
+                    <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+                    @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="submit-btn"
+                            wire:click.prevent="downloadImage">Download</button>
+                        <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+    
+@endif
 
 
 
@@ -661,13 +668,17 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <select wire:model="selectedCategory" wire:change="searchClosedHelpDesk" class="form-control">
-                        <option value="">Select Request</option>
-                        @foreach($requestCategories as $request => $categories)
-                        <option value="{{ $request }}">{{ $request }}</option>
-                        @endforeach
-                    </select>
-                </div>
+
+<select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle" style="width:100%;height:30px;color:#3b4452">
+    <option value="" >Select Request     </option>
+
+    @foreach($requestCategories as $request => $categories)
+        <option value="{{ $request }}">{{ $request }}</option>
+    @endforeach
+</select>
+
+
+</div>
             </div>
             <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
 
@@ -736,27 +747,28 @@
                                 @endif
 
                                 @if ($showImageDialog)
-                                <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title viewfile">View File</h5>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                                @if ($imageUrl)
-                                                <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
-                                                @endif
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                                <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-backdrop fade show blurred-backdrop" style="background-color: rgba(0, 0, 0, 0.1);"></div>
-                                @endif
-
+                            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title viewfile">View File</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                    @if ($imageUrl)
+                    <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+                    @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="submit-btn"
+                            wire:click.prevent="downloadImage">Download</button>
+                        <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+    
+@endif
                             </td>
                             <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; border-top: none;">
                                 @php
@@ -804,13 +816,17 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <select wire:model="selectedCategory" wire:change="searchPendingHelpDesk" class="form-control">
-                        <option value="">Select Request</option>
-                        @foreach($requestCategories as $request => $categories)
-                        <option value="{{ $request }}">{{ $request }}</option>
-                        @endforeach
-                    </select>
-                </div>
+
+<select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle" style="width:100%;height:30px;color:#3b4452">
+    <option value="" >Select Request     </option>
+
+    @foreach($requestCategories as $request => $categories)
+        <option value="{{ $request }}">{{ $request }}</option>
+    @endforeach
+</select>
+
+
+</div>
             </div>
             <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
 
@@ -879,26 +895,28 @@
                                 @endif
 
                                 @if ($showImageDialog)
-                                <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title viewfile">View File</h5>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                                @if ($imageUrl)
-                                                <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
-                                                @endif
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                                <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-backdrop fade show blurred-backdrop" style="background-color: rgba(0, 0, 0, 0.1);"></div>
-                                @endif
+                            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title viewfile">View File</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                    @if ($imageUrl)
+                    <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+                    @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="submit-btn"
+                            wire:click.prevent="downloadImage">Download</button>
+                        <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+    
+@endif
 
                             </td>
                             <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; border-top: none;">
