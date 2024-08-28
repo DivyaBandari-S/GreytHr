@@ -2070,12 +2070,8 @@ color: #fff;
                 @if($defaultfaCalendar==1)
                 <div class="container6">
                     <h3 style="margin-left:20px;color: #7f8fa4;font-size:14px;margin-top:15px;align-items:center;">Swipe Details</h3>
-                    <div class="arrow-button" style="float:right;margin-top:-30px;margin-right:20px;cursor:pointer;" wire:click="opentoggleButton">
-                            @if($toggleButton)
-                                <span>&#x25BC;</span> <!-- Unicode for right-pointing triangle -->
-                            @else
-                                <span>&#x25B6;</span> <!-- Unicode for other triangle -->
-                            @endif
+                    <div class="arrow-btn" style="float:right;margin-top:-30px;margin-right:20px;cursor:pointer;color:{{ $toggleButton ? '#3a9efd' : '#778899' }};border:1px solid {{ $toggleButton ? '#3a9efd' : '#778899'}}" wire:click="opentoggleButton">
+                        <i class="fa fa-angle-{{ $toggleButton ? 'down' : 'up' }}"style="color:{{ $toggleButton ? '#3a9efd' : '#778899' }}"></i>
                     </div>
 
                     <div class="container-body" style="margin-top:2px;height:auto;border-top:1px solid #ccc;display: {{ $toggleButton ? 'block' : 'none' }};">

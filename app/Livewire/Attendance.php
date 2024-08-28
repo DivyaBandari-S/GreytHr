@@ -147,6 +147,7 @@ class Attendance extends Component
     public $avgSwipeOutTime = null;
     public $totalmodalDays;
 
+    public $averageFormattedTimeForCurrentMonth;
     public $holidayCountForInsightsPeriod;
     public $weekendDays=0;
     public $daysWithRecords=0;
@@ -837,14 +838,14 @@ class Attendance extends Component
             session()->flash('error', 'An error occurred while updating the modal title. Please try again later.');
         }
     }
-    private function calculateAvgWorkingHrs($startDate,$endDate,$employeeId)
+    private function calculateAvgWorkingHrs($employeeId)
     {
-        $currentDate = Carbon::parse($startDate);
-        $endDate = Carbon::parse($endDate);
+        $currentDate = Carbon::now()->startOfMonth();
+        $endDate = Carbon::now()->endOfMonth();
         $this->averageFormattedTime='00:00';
         $standardWorkingMinutesPerDay = 9 * 60;
         $totalMinutesWorked = 0;  // Initialize total minutes worked
-        $daysWithRecords = 0;     // Initialize count of days with records
+        $daysWithRecords = 0;
         while ($currentDate->lt($endDate)) {
             $SwipeInRecord=SwipeRecord::where('emp_id',$employeeId)->whereDate('created_at',$currentDate)->where('in_or_out','IN')->first();
             $SwipeOutRecord=SwipeRecord::where('emp_id',$employeeId)->whereDate('created_at',$currentDate)->where('in_or_out','OUT')->first();
@@ -869,11 +870,12 @@ class Attendance extends Component
             $averageHours = floor($averageMinutes / 60);
             $averageRemainingMinutes = $averageMinutes % 60;
             
-            $this->averageFormattedTime = sprintf('%02d:%02d', $averageHours, $averageRemainingMinutes);
+            $this->averageFormattedTimeForCurrentMonth = sprintf('%02d:%02d', $averageHours, $averageRemainingMinutes);
     
             // Return or use the average formatted time
            
         } 
+        // $this->averageFormattedTime=$this->calculateAvgWorkHours()-$this->calculateAvgWorkHoursForPreviousMonth();
         $totalPossibleWorkingMinutes = $daysWithRecords * $standardWorkingMinutesPerDay;
 
         // Calculate the percentage of total minutes worked
@@ -1137,6 +1139,74 @@ class Attendance extends Component
             session()->flash('error', 'An error occurred while closing 1. Please try again later.');
         }
     }
+    public function calculateAvgWorkHoursForPreviousMonth()
+{
+    // Get the start and end dates of the previous month
+    $startDate = Carbon::now()->subMonth()->startOfMonth();
+   $endDate = Carbon::now()->subMonth()->endOfMonth();
+   
+    // Retrieve all SwipeRecord entries for the previous month
+    $records = SwipeRecord::whereBetween('created_at', [$startDate, $endDate])
+                           ->orderBy('swipe_time') // Ensure we order records by swipe time
+                           ->get();
+
+    // Initialize variables
+    $totalHours = 0;
+    $recordCount = 0;
+
+    // Group records by date
+    $groupedRecords = $records->groupBy(function($record) {
+        return Carbon::parse($record->swipe_time)->toDateString();
+    });
+
+    // Iterate through each group (each day)
+    foreach ($groupedRecords as $date => $dayRecords) {
+        $swipeIn = $dayRecords->where('in_or_out', 'IN')->first();
+        $swipeOut = $dayRecords->where('in_or_out', 'OUT')->last();
+
+        if ($swipeIn && $swipeOut) {
+            $swipeInTime = Carbon::parse($swipeIn->swipe_time);
+            $swipeOutTime = Carbon::parse($swipeOut->swipe_time);
+
+            // Calculate the difference in hours and add to total hours
+            $totalHours += $swipeOutTime->diffInHours($swipeInTime);
+            $recordCount++;
+        }
+    }
+
+    // Calculate average hours worked
+    $avgWorkHours = $recordCount > 0 ? $totalHours / $recordCount : 0;
+
+    return $avgWorkHours;
+}
+public function calculateAvgWorkHours()
+{
+    // Get the start and end dates of the current month
+    $startOfMonth = Carbon::now()->startOfMonth();
+    $endOfMonth = Carbon::now()->endOfMonth();
+
+    // Retrieve all SwipeRecord entries for the current month
+    $records = SwipeRecord::whereBetween('created_at', [$startOfMonth, $endOfMonth])->get();
+
+    // Initialize total hours
+    $totalHours = 0;
+    $recordCount = 0;
+
+    // Iterate through records and calculate total working hours
+    foreach ($records as $record) {
+        $swipeIn = Carbon::parse($record->swipe_in);
+        $swipeOut = Carbon::parse($record->swipe_out);
+        
+        // Calculate the difference in hours and add to total hours
+        $totalHours += $swipeOut->diffInHours($swipeIn);
+        $recordCount++;
+    }
+
+    // Calculate average hours worked
+    $avgWorkHours = $recordCount > 0 ? $totalHours / $recordCount : 0;
+
+    return $avgWorkHours;
+}
     public function beforeMonth()
     {
         try {
@@ -1174,6 +1244,7 @@ class Attendance extends Component
             session()->flash('error', 'An error occurred while navigating to the next month. Please try again later.');
         }
     }
+    
     public function öpenattendanceperiodModal()
     {
 

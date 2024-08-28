@@ -75,63 +75,74 @@ class AbsentReport extends Component
     public function downloadAbsentReportInExcel()
     {
      
-        $employees = EmployeeDetails::whereIn('emp_id', $this->selectedEmployees)->get();
-        $this->approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->where('leave_applications.status', 'approved')
-            ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-            ->whereDate('from_date', '<=', $this->currentDate)
-            ->whereDate('to_date', '>=', $this->currentDate)
-            ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
-            ->map(function ($leaveRequest) {
+        // $employees = EmployeeDetails::whereIn('emp_id', $this->selectedEmployees)->get();
+        // $this->approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+        //     ->where('leave_applications.status', 'approved')
+        //     ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+        //     ->whereDate('from_date', '<=', $this->currentDate)
+        //     ->whereDate('to_date', '>=', $this->currentDate)
+        //     ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
+        //     ->map(function ($leaveRequest) {
 
-                $fromDate = Carbon::parse($leaveRequest->from_date);
-                $toDate = Carbon::parse($leaveRequest->to_date);
+        //         $fromDate = Carbon::parse($leaveRequest->from_date);
+        //         $toDate = Carbon::parse($leaveRequest->to_date);
 
-                $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
+        //         $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
 
-                return $leaveRequest;
-            });
+        //         return $leaveRequest;
+        //     });
            
             // Fetch the swipe records with the minimum IDs
             
            
         
         
-            $query = EmployeeDetails::where('emp_id', $this->selectedEmployees)
-            ->select('emp_id', 'first_name', 'last_name', 'created_at')
-            ->whereNotIn('emp_id', function ($query) {
-                $query->select('emp_id')
-                    ->from('swipe_records')
-                    ->where('emp_id', $this->selectedEmployees)
-                    ->whereDate('created_at', '>=',$this->currentDate )
-                    ->whereDate('created_at', '<=', $this->currentDate);
-            })
-            ->whereNotIn('emp_id', $this->approvedLeaveRequests->pluck('emp_id'))->get();
+            // $query = EmployeeDetails::where('emp_id', $this->selectedEmployees)
+            // ->select('emp_id', 'first_name', 'last_name', 'created_at')
+            // ->whereNotIn('emp_id', function ($query) {
+            //     $query->select('emp_id')
+            //         ->from('swipe_records')
+            //         ->where('emp_id', $this->selectedEmployees)
+            //         ->whereDate('created_at', '>=',$this->currentDate )
+            //         ->whereDate('created_at', '<=', $this->currentDate);
+            // })
+            // ->whereNotIn('emp_id', $this->approvedLeaveRequests->pluck('emp_id'))->get();
             
-        if ($this->fromDate && $this->toDate) {
-            $query = EmployeeDetails::where('manager_id', $this->loggedInEmpId)
-                ->select('emp_id', 'first_name', 'last_name', 'created_at')
-                ->whereNotIn('emp_id', function ($query) {
-                    $query->select('emp_id')
-                        ->from('swipe_records')
-                        ->where('manager_id', $this->loggedInEmpId)
-                        ->whereDate('created_at', '>=', $this->fromDate)
-                        ->whereDate('created_at', '<=', $this->toDate);
-                })
-                ->whereNotIn('emp_id', $this->approvedLeaveRequests->pluck('emp_id'));
-        } else {
-            $query = EmployeeDetails::where('manager_id', $this->loggedInEmpId)
-                ->select('emp_id', 'first_name', 'last_name', 'created_at')
-                ->whereNotIn('emp_id', function ($query) {
-                    $query->select('emp_id')
-                        ->from('swipe_records')
-                        ->where('manager_id', $this->loggedInEmpId)
-                        ->whereDate('created_at', $this->currentDate);
-                })
-                ->whereNotIn('emp_id', $this->approvedLeaveRequests->pluck('emp_id'));
-        }
-        $employees2 = $query->get();
+        // if ($this->fromDate && $this->toDate) {
+        //     $query = EmployeeDetails::where('manager_id', $this->loggedInEmpId)
+        //         ->select('emp_id', 'first_name', 'last_name', 'created_at')
+        //         ->whereNotIn('emp_id', function ($query) {
+        //             $query->select('emp_id')
+        //                 ->from('swipe_records')
+        //                 ->where('manager_id', $this->loggedInEmpId)
+        //                 ->whereDate('created_at', '>=', $this->fromDate)
+        //                 ->whereDate('created_at', '<=', $this->toDate);
+        //         })
+        //         ->whereNotIn('emp_id', $this->approvedLeaveRequests->pluck('emp_id'));
+        // } else {
+        //     $query = EmployeeDetails::where('manager_id', $this->loggedInEmpId)
+        //         ->select('emp_id', 'first_name', 'last_name', 'created_at')
+        //         ->whereNotIn('emp_id', function ($query) {
+        //             $query->select('emp_id')
+        //                 ->from('swipe_records')
+        //                 ->where('manager_id', $this->loggedInEmpId)
+        //                 ->whereDate('created_at', $this->currentDate);
+        //         })
+        //         ->whereNotIn('emp_id', $this->approvedLeaveRequests->pluck('emp_id'));
+        // }
+        // $employees2 = $query->get();
         
+       if(empty($this->selectedEmployees))
+       {
+         return redirect()->back()->with('error', 'Select at least one employee detail');
+       }
+       if(empty($this->fromDate)&&empty($this->toDate))
+       {
+         return redirect()->back()->with('error', 'Please select fromDate and toDate');
+       }
+       else
+       {
+        $employees = EmployeeDetails::whereIn('emp_id', $this->selectedEmployees)->get();
         foreach ($employees as $employee) {
             $empId = $employee['emp_id'];
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
@@ -199,17 +210,7 @@ class AbsentReport extends Component
             }
         }
          }
-        $startDate = new DateTime($this->fromDate);
-        $endDate = new DateTime($this->toDate);
-        $endDate->modify('+1 day'); // To include the end date in the loop
-
-        $dates = []; // Initialize an array to hold the dates
-
-        while ($startDate < $endDate) {
-            $dates[] = [$startDate->format('Y-m-d')]; // Add each date as a single-element array
-            $startDate->modify('+1 day');
-        }
-        $filePath = storage_path('app/absent_employees.xlsx');
+         $filePath = storage_path('app/absent_employees.xlsx');
 
         // Create the Excel file
         $writer = SimpleExcelWriter::create($filePath);
@@ -226,6 +227,18 @@ class AbsentReport extends Component
     
         // Return the file as a download response
         return response()->download($filePath, 'absent_employees.xlsx');
+       }
+        $startDate = new DateTime($this->fromDate);
+        $endDate = new DateTime($this->toDate);
+        $endDate->modify('+1 day'); // To include the end date in the loop
+
+        $dates = []; // Initialize an array to hold the dates
+
+        while ($startDate < $endDate) {
+            $dates[] = [$startDate->format('Y-m-d')]; // Add each date as a single-element array
+            $startDate->modify('+1 day');
+        }
+        
            // Define the file path
            
     }
