@@ -5,13 +5,14 @@
 
     @else
     <div class="px-4" style="position: relative;">
+   
         @if ($message)
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            {{ $message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
+                {{ $message }}
+                    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"
+                        style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
+                </div>
+                @endif
         <div class="col-md-12  mt-3" style="height:60px;margin-top:10px">
 
             <div class="row bg-white rounded border d-flex" style="height:80px; ">
@@ -94,51 +95,51 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;margin-top:-5px"></button>
                                     </div>
                                     @endif
-
                                     <form wire:submit.prevent="submit">
-                                        <div class="modal-body" style="padding: 20px;">
-                                            <div class="form-group" style="margin-bottom: 15px;">
-                                                <label for="category" style="font-weight: 600; color: #3b4452;">You are posting in:</label>
-                                                <select wire:model.lazy="category" class="form-select" id="category" style="border: 1px solid #ccc; border-radius: 4px; padding: 5px; font-size: 0.75rem; color: #3b4452; margin-top: 5px; height: 30px;">
-                                                    <option value="">Select Category</option>
-                                                    <option value="Appreciations">Appreciations</option>
-                                                    <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
-                                                    <option value="Companynews">Company News</option>
-                                                    <option value="Events">Events</option>
-                                                    <option value="Everyone">Everyone</option>
-                                                    <option value="Hyderabad">Hyderabad</option>
-                                                    <option value="US">US</option>
-                                                </select>
-                                                @error('category') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
+    <div class="modal-body" style="padding: 20px;">
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label for="category" style="font-weight: 600; color: #3b4452;">You are posting in:</label>
+            <select wire:model.lazy="category" class="form-select" id="category" style="border: 1px solid #ccc; border-radius: 4px; padding: 5px; font-size: 0.75rem; color: #3b4452; margin-top: 5px; height: 30px;">
+                <option value="">Select Category</option>
+                <option value="Appreciations">Appreciations</option>
+                <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
+                <option value="Companynews">Company News</option>
+                <option value="Events">Events</option>
+                <option value="Everyone">Everyone</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="US">US</option>
+            </select>
+            @error('category') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
 
-                                            <div class="form-group">
-                                                <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
-                                                <textarea wire:model.lazy="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
-                                                @error('description') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
+        <div class="form-group">
+            <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
+            <textarea wire:model.lazy="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
+            @error('description') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
 
-                                            <div class="form-group" style="margin-top: 5px;">
-                                                <label for="attachment" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
-                                                <div style="text-align: start;">
-                                                    <input wire:model.lazy="attachment" type="file" accept="image/*" style="font-size: 12px; margin-top: 5px">
-                                                    @error('attachment') <span class="text-danger">{{ $message }}</span> @enderror
-                                                    <span style="font-size:12px;margin-left:10px">
-                                                        <a href="https://greythr.freshdesk.com/support/solutions/articles/1060000078626-what-are-the-guidelines-that-an-employee-needs-to-follow-when-using-greythr-engage" target="_blank">
-                                                            See Posting Guidelines
-                                                        </a>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
+        <div class="form-group" style="margin-top: 5px;">
+            <label for="file_path" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
+            <div style="text-align: start;">
+                <input wire:model="file_path"  type="file" accept="image/*" style="font-size: 12px; margin-top: 5px">
+                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                <span style="font-size:12px;margin-left:10px">
+                    <a href="https://greythr.freshdesk.com/support/solutions/articles/1060000078626-what-are-the-guidelines-that-an-employee-needs-to-follow-when-using-greythr-engage" target="_blank">
+                        See Posting Guidelines
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
 
-                                        <div class="modal-footer" style="border-top: 1px solid #ccc;">
-                                            <div class="d-flex justify-content-center" style="width: 100%;">
-                                                <button type="submit" class="submit-btn">Submit</button>
-                                                <button wire:click="closeFeeds" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79); margin-left: 10px">Cancel</button>
-                                            </div>
-                                        </div>
-                                    </form>
+    <div class="modal-footer" style="border-top: 1px solid #ccc;">
+        <div class="d-flex justify-content-center" style="width: 100%;">
+            <button type="submit" wire:click="submit" class="submit-btn">Submit</button>
+            <button wire:click="closeFeeds" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79); margin-left: 10px">Cancel</button>
+        </div>
+    </div>
+</form>
+
 
                                 </div>
                             </div>
@@ -224,29 +225,29 @@
                                 <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;overflow-y:auto;max-height:200px;overflow-x: hidden;">
                                     <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">All Feeds</a>
                                     @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
                                     @endif
                                     @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
+                                    <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
+                                    <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
                                     @endif
                                     @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
                                     @endif
                                     @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
                                     @endif
                                     @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
                                     @endif
                                 </ul>
                             </div>
