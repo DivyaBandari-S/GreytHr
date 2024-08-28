@@ -34,6 +34,9 @@ class Regularisation extends Component
     public $data1;
     public $data7;
     public $data8;
+    public $shift_start_time = '10:00'; 
+
+    public $shift_end_time = '19:00'; 
     public $manager3;
     public $selectedDates = [];
     public $employee;
@@ -64,6 +67,7 @@ class Regularisation extends Component
     public $month;
     public $currentMonth;
 
+    
     public $isdeletedArray=0;
     public $currentYear;
     public $data10;
@@ -71,10 +75,12 @@ class Regularisation extends Component
     public $defaultApply=1;
     public $currentDateTime;
    
+    public $shift_times = []; 
     public $count=0;
     public function mount()
     {
         try {
+         
             $this->year = now()->year;
             $this->month = now()->month;
             $this->getDaysInMonth($this->year, $this->month);
@@ -85,6 +91,36 @@ class Regularisation extends Component
             Log::error('Error in mount method: ' . $e->getMessage());
             // Handle the error as needed, such as displaying a message to the user
         }
+    }
+    public function submitShifts($date)
+    {
+        $this->selectedDates[] = $date;
+        $this->shift_times[]=[
+            'date' => $date,
+            'from'=>'',
+            'to'=>'',
+            'reason'=>'',
+        ];
+        foreach ($this->shift_times as $date => $times) {
+            if (preg_match('/^\d{2}:\d{2}$/', $times['from'])) {
+                [$hours, $minutes] = explode(':', $times['from']);
+                // Process hours and minutes as needed
+            } else {
+                // Handle invalid input format for start time
+            }
+
+            if (preg_match('/^\d{2}:\d{2}$/', $times['to'])) {
+                [$hours, $minutes] = explode(':', $times['to']);
+                // Process hours and minutes as needed
+            } else {
+                // Handle invalid input format for end time
+            }
+        }
+         
+    }
+    public function submitShiftsForcheck()
+    {
+        dd($this->shift_times);
     }
     //This function is used to create calendar
     public function generateCalendar()
@@ -237,9 +273,9 @@ public function nextMonth()
     public function deleteStoredArray($index)
     {
         try {
-            unset($this->regularisationEntries[$index]);
+            unset($this->shift_times[$index]);
             $this->isdeletedArray += 1;
-            $this->updatedregularisationEntries = array_values($this->regularisationEntries);
+            $this->updatedregularisationEntries = array_values($this->shift_times);
         } catch (\Exception $e) {
             // Log the error or handle it as needed
             Log::error('Error in deleteStoredArray method: ' . $e->getMessage());
@@ -253,7 +289,7 @@ public function nextMonth()
         $this->isdatesApplied = true;
         $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
         $emp_id = $employeeDetails->emp_id;
-        $regularisationEntriesJson = json_encode($this->regularisationEntries);
+        $regularisationEntriesJson = json_encode($this->shift_times);
         if ($this->isdeletedArray > 0) {
             $regularisationEntriesArray = $this->updatedregularisationEntries;
         } else {
@@ -370,6 +406,7 @@ public function historyButton()
             session()->flash('error', 'An error occurred while updating count.');
         }
     }
+    
     public function openWithdrawModal()
     {
         $this->withdrawModal=true;
