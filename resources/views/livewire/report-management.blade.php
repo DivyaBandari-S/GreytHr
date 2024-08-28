@@ -323,12 +323,13 @@
                                             wire:model.lazy="leaveType"
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
                                             <option value="all">All Leaves</option>
-                                            <option value="Loss Of Pay">Loss Of Pay</option>
+                                            <option value="lop">Loss Of Pay</option>
                                             <option value="casual_leave">Casual Leave</option>
                                             <option value="earned_leave">Earned Leave</option>
-                                            <option value="Sick Leave">Sick Leave</option>
-                                            <option value="paternity">Paternity Leave</option>
-                                            <option value="Casual Leave Probation">Casul Leave Probation</option>
+                                            <option value="sick">Sick Leave</option>
+                                            <option value="petarnity">Paternity Leave</option>
+                                            <option value="maternity">Maternity Leave</option>
+                                            <option value="casual_leave_probation">Casul Leave Probation</option>
                                             <option value="marriage_leave">Marriage Leave</option>
 
                                             <!-- Add other leave types as needed -->
@@ -366,6 +367,8 @@
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
 
                                             <option value="newest_first" selected>Employee Number (Newest First)
+                                            </option>
+                                            <option value="oldest_first">Employee Number (Oldest First)
                                             </option>
                                         </select>
                                     </div>
@@ -531,7 +534,8 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="from-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">From</label>
+                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">From<span
+                                            style="color: var(--requiredAlert);">*</span></label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <input type="date" id="from-date" wire:model="fromDate"
@@ -547,7 +551,8 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">To</label>
+                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">To<span
+                                            style="color: var(--requiredAlert);">*</span></label>
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <input type="date" id="to-date" wire:model="toDate"
@@ -575,10 +580,7 @@
                                             <option value="approved">Availed</option>
                                             <!-- Add other leave types as needed -->
                                         </select>
-                                        @error('transactionType')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
+                                      
                                     </div>
                                 </div>
 
@@ -590,18 +592,13 @@
                                     </div>
                                     <div class="col-8" style="display: flex;flex-direction: column;">
                                         <select id="employeeType" wire:model="employeeType"
-                                            wire:change="updateEmployeeType" wire:model.lazy="employeeType"
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="">Select Employee Type</option>
-                                            <option value="active">Current Employees</option>
+                                            <option value="active" selected>Current Employees</option>
                                             <option value="past">Past Employees</option>
 
                                             <!-- Add other employee types as needed -->
                                         </select>
-                                        @error('employeeType')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
+                                      
                                     </div>
                                 </div>
 
@@ -616,7 +613,7 @@
                                             style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
                                             <option value="newest_first" selected>Employee Number (Newest First)
                                             </option>
-                                            <option value="oldest_first" selected>Employee Number (oldest First)
+                                            <option value="oldest_first">Employee Number (oldest First)
                                             </option>
 
                                         </select>

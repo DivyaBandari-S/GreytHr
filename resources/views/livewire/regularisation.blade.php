@@ -272,8 +272,8 @@
         }
 
         .container1 {
-            width: 600px;
-            height: 200px;
+            width: 530px;
+            height: 195px;
             /* margin-right: 300px; */
             background-color: #FFFFFF;
             margin-top: 15px;
@@ -904,7 +904,7 @@
                     @foreach($calendar as $week)
                     <div class="calendar-week">
                         @foreach($week as $day)
-                        <div class="calendar-date {{ $day['isCurrentDate'] ? 'current-date' : '' }} {{ in_array($day['date'], $selectedDates) ? 'selected-date' : '' }}{{ $day['isCurrentMonth'] ? '' : 'other-month-date' }}{{$day['isAfterToday'] ? 'after-today' : '' }}" wire:click="selectDate('{{ $day['date'] }}')">{{ $day['day'] }}</div>
+                        <div class="calendar-date {{ $day['isCurrentDate'] ? 'current-date' : '' }} {{ in_array($day['date'], $selectedDates) ? 'selected-date' : '' }}{{ $day['isCurrentMonth'] ? '' : 'other-month-date' }}{{$day['isAfterToday'] ? 'after-today' : '' }}" wire:click="submitShifts('{{ $day['date'] }}')">{{ $day['day'] }}</div>
                         @endforeach
                     </div>
                     @endforeach
@@ -934,35 +934,36 @@
                 <input type="text" placeholder="Enter Remarks" wire:model="remarks">
             </div>
             <div class="col-md-5">
-                @foreach($regularisationEntries as $index => $regularisationEntry)
-                <div class="container1" style="background-color:white;">
-                    <div class="row m-0">
-                        <div class="col-2 pb-1 pt-1 p-0" style="border-right: 1px solid black; text-align: center;">
-                            <p class="mb-1" style="font-weight:bold;font-size:20px;">
+                <li>
+                @foreach($shift_times as $index => $regularisationEntry)
+                <div class="container1"style="background-color:white;" >
+                    <div class="row m-0"style="position:relative;">
+                    <div class="col-2 pb-0 pt-0 p-1" style="border-right: 1px solid #7f8fa4; text-align: center; padding-left: 15px; padding-right: 15px;">
+                            <p class="mb-1" style="font-weight:600;font-size:20px;color:#7f8fa4;">
                                 {{date('d', strtotime($regularisationEntry['date']))}}
                             </p>
-                            <p class="text-muted m-0" style="font-weight:600;font-size:14px;">
+                            <p class="text-muted m-0" style="font-weight:500;font-size:14px;color:#7f8fa4;">
                                 {{ date('D', strtotime($regularisationEntry['date'])) }}
                             </p>
                         </div>
                         <div class="col-5 pb-1 pt-1">
-                            <p class="text-overflow mb-1" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-weight: 600;">
-                                10:00 am to 07:00 pm</p>
+                            <p class="text-overflow mb-1" style="white-space: nowrap;font-weight: 600;text-align:center;    background: #ececec;font-size:14px;color:#7f8fa4;">
+                                10:00 am to 07:00 pm<span><i class="fas fa-caret-down"></i></span></p>
 
                         </div>
-
+                        <div style="position: absolute; top: 5px; left: 490px; cursor: pointer;font-size:20px;color:#7f8fa4;" wire:click="deleteStoredArray({{ $index }})">
+                              <i class="fa fa-times"></i>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-cross" style="position: absolute; top: 20px; right: -340px;">
-                        <i class="fas fa-times" wire:click="deleteStoredArray({{ $index }})"></i>
-                    </button>
-                    <div class="horizontal-line-attendance-info"></div>
-                    <div style=" overflow-x: auto; max-width: 100%;">
-                        <table>
+                    
+                    
+                    <div>
+                        <table style="width:100%">
                             <thead>
                                 <tr>
-                                    <th style="font-weight:normal;font-size:12px;">From</th>
-                                    <th style="font-weight:normal;font-size:12px;">To</th>
-                                    <th style="font-weight:normal;font-size:12px;">Reason</th>
+                                    <th style="font-weight:normal;font-size:12px;border: none;">From</th>
+                                    <th style="font-weight:normal;font-size:12px;border: none;text-align:left;">To</th>
+                                    <th style="font-weight:normal;font-size:12px;border: none;">Reason</th>
 
                                 </tr>
                             </thead>
@@ -971,28 +972,42 @@
 
                                 <tr>
 
-                                    <td>
+                                    <td style="border: none;">
 
-                                        <input type="text" style="width:20%" wire:model="regularisationEntries.{{ $index }}.from" required><br>
-                                        @error("regularisationEntries.$index.from") <span class="error">{{ $message }}</span>
-                                        @enderror
+                                               <input type="text" placeholder="10:00" class="time-input text-5"
+                                                wire:model.lazy="shift_times.{{ $index }}.from"
+                                                style="text-align: center;width: 70px;" maxlength="5" />
+        
+                                                <!-- <p class="text-muted">
+                                                    Entered Start Time: {{ $shift_times[$index]['from'] ?? '' }}
+                                                </p> -->
+                                    
                                     </td>
-                                    <td>
+                                    <td style="border: none;">
 
-                                        <input type="text" style="width:20%" wire:model="regularisationEntries.{{ $index }}.to" required><br>
-                                        @error("regularisationEntries.$index.to") <span class="error">{{ $message }}</span>
-                                        @enderror
+                                            <input type="text" placeholder="19:00" class="time-input text-5"
+                                            wire:model.lazy="shift_times.{{ $index }}.to"
+                                            style="text-align: center;width: 70px;" maxlength="5" />
+        
+                                            <!-- <p class="text-muted">
+                                                Entered End Time: {{ $shift_times[$index]['to'] ?? '' }}
+                                            </p> -->
                                     </td>
-                                    <td>
+                                    <td style="border: none;">
 
-                                        <input type="text" style="width:75%" wire:model="regularisationEntries.{{ $index }}.reason" required><br>
-                                        @error("regularisationEntries.$index.reason") <span class="error">{{ $message }}</span> @enderror
+                                    <input type="text" placeholder="Reason" class="reason-input text-5"
+                                        wire:model.lazy="shift_times.{{ $index }}.reason"
+                                        style="text-align: center;width: 200px;" />
+        
+                    <!-- <p class="text-muted">
+                        Reason: {{ $shift_times[$index]['reason'] ?? '' }}
+                    </p> -->
 
                                     </td>
 
 
                                 </tr>
-
+                                
 
                                 <!-- Add more rows with dashes as needed -->
                             </tbody>
@@ -1002,12 +1017,17 @@
                     </div>
                 </div>
 
-            </div>
+            </li>
+            <!-- <button wire:click="submitShiftsForcheck">test</button> -->
             @endforeach
-            <div style="display:flex;flex-direction:row;margin-left: 50px;margin-top:10px;">
-                <button type="button" wire:click="storearraydates" style="color: #24a7f8;border:1px solid #24a7f8;background: #fff;border-radius:5px;">Submit</button>
-                <a href="/Attendance" style="color:#24a7f8; margin-left: 10px;">Cancel</a>
             </div>
+            <footer style="position: fixed; bottom: 0; width: 100%;left:-20px; background-color: #fff; padding: 5px 0; text-align: center; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);">
+                <div style="display:flex; justify-content: right;">
+                    <button type="button" wire:click="storearraydates" style="color: #24a7f8; border:1px solid #24a7f8; background: #fff; border-radius:5px; padding: 10px 20px;">Submit</button>
+                    <a href="/Attendance" style="color:#24a7f8; margin-left: 20px; padding: 10px 20px;">Cancel</a>
+                </div>
+            </footer>
+
         </div>
         @else
         <div class="apply-box">

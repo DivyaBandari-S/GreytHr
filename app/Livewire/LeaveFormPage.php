@@ -91,6 +91,7 @@ class LeaveFormPage extends Component
             $leaveRequest->formatted_from_date = Carbon::parse($leaveRequest->from_date)->format('d-m-Y');
             $leaveRequest->formatted_to_date = Carbon::parse($leaveRequest->to_date)->format('d-m-Y');
         }
+        $this->hasPendingLeave();
     }
 
 
@@ -151,9 +152,9 @@ class LeaveFormPage extends Component
 
             // Check if the start and end sessions are different on the same day
             if ($startDate->isSameDay($endDate)) {
-                if (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
+                if ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
                     return 1;
-                } elseif (self::getSessionNumber($fromSession) == self::getSessionNumber($toSession)) {
+                } elseif ($this->getSessionNumber($fromSession) == $this->getSessionNumber($toSession)) {
                     return 0.5;
                 } else {
                     return 0;

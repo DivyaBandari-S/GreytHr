@@ -103,6 +103,7 @@ class LeaveApplyPage extends Component
             // Determine if the dropdown option should be displayed
             $this->showCasualLeaveProbation = $this->employee && !$this->employee->probation_period && !$this->employee->confirmation_date;
         }
+
     }
 
     public function updated($propertyName)
@@ -255,11 +256,20 @@ class LeaveApplyPage extends Component
     public function leaveApply()
     {
         $this->validate();
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $checkJoinDate  = EmployeeDetails::where('emp_id', $employeeId)->first();
 
         try {
             // Check for weekends
             if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
                 $this->errorMessage = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
+                $this->showerrorMessage = true;
+                return redirect()->back()->withInput();
+            }
+
+            //validate fromdate for joining date
+            if ($this->from_date < $checkJoinDate->hire_date) {
+                $this->errorMessage = 'Enterd From date and To dates are less tha your Join date ';
                 $this->showerrorMessage = true;
                 return redirect()->back()->withInput();
             }
@@ -544,7 +554,7 @@ class LeaveApplyPage extends Component
 
             // Check if the start or end date is a weekend
             if ($startDate->isWeekend() || $endDate->isWeekend()) {
-                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+                return 0;
             }
 
             // Check if the start and end sessions are different on the same day
@@ -628,7 +638,6 @@ class LeaveApplyPage extends Component
             $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
             if ($applying_to) {
                 $managerId = $applying_to->manager_id;
-
                 // Fetch the logged-in employee's manager details
                 $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
                 if ($managerDetails) {

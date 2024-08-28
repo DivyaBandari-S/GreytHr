@@ -86,14 +86,14 @@
         }
 
         .people-text-blue {
-            color: rgb(2, 17, 79);
+            color: #f3c20f;
         }
 
         .people-default-star-icon {
             cursor: pointer;
             font-size: 12px;
             padding-left: 6px;
-            color: rgb(2, 17, 79)
+            color: #f3c20f;
         }
 
         .people-selectedperson-container {
@@ -128,7 +128,7 @@
 
         .people-selectedperson-star-icon {
             cursor: pointer;
-            color: rgb(2, 17, 79);
+            color: #f3c20f;
             margin-bottom: 10px;
         }
 
