@@ -66,6 +66,7 @@ class WhoIsInChart extends Component
 
 
     }
+    
     //This function will help us to get the details of late arrival employees(who arrived after 10:00am) in excel sheet
     public function downloadExcelForLateArrivals()
     {
