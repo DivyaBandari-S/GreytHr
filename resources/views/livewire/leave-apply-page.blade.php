@@ -24,7 +24,7 @@
         </div>
         <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
             <div class="row d-flex align-items-center">
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="leave_type">Leave Type <span class="requiredMark">*</span> </label> <br>
                         <div class="custom-select-wrapper" style="width: 50%;">
@@ -183,14 +183,14 @@
                 </div>
             </div>
             <div class="row d-flex mt-2">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="from_date">From Date <span class="requiredMark">*</span> </label>
                         <input id="from_date" type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" name="from_date" wire:change="handleFieldUpdate('from_date')">
                         @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     @if($showSessionDropdown)
                     <div class="form-group">
                         <label for="fromSession">Session</label> <br>
@@ -206,14 +206,14 @@
                 </div>
             </div>
             <div class=" row d-flex mt-3">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="toDate">To Date <span class="requiredMark">*</span> </label>
                         <input id="toDate" type="date" wire:model.lazy="to_date" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('to_date')" name="toDate" wire:change="handleFieldUpdate('to_date')">
                         @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     @if($showSessionDropdown)
                     <div class="form-group ">
                         <label for="to_session">Session</label> <br>
