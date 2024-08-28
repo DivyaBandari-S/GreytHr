@@ -233,12 +233,16 @@
                                     @endif
 
 
-
-
+                                   
+                                    @if($regularisationrequest->status=='approved')
                                         <span style="color: #333; font-weight: 500;font-size:12px;">
                                         {{ucwords(strtolower($regularisationrequest->approved_by))}}
                                         </span>
-
+                                    @elseif($regularisationrequest->status=='rejected')
+                                        <span style="color: #333; font-weight: 500;font-size:12px;">
+                                        {{ucwords(strtolower($regularisationrequest->rejected_by))}}
+                                        </span>
+                                    @endif    
 
 
                         </div>
@@ -447,9 +451,16 @@
                        @endif
 
                 </td>
+                @if(empty($r1['reason']))
+                <td class="tooltip-container" style="width:30%; border-right: 1px solid #dcdcdc;padding: 8px;">
+                            <span class="tooltip-text" style="font-size: 12px;" >NA</span>
+                </td>
+
+                @else
                 <td class="tooltip-container" style="width:30%; border-right: 1px solid #dcdcdc;padding: 8px;">
                             <span class="tooltip-text" style="font-size: 12px;" data-tooltip="{{$r1['reason']}}">{{ ucwords(strtolower($r1['reason'])) }}</span>
                 </td>
+                @endif
         </tbody>
         @endforeach
     </table>

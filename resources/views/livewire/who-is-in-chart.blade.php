@@ -88,7 +88,7 @@
         </div>
         <!-- Collapsible Content -->
         <div class="text-center" style="margin-top: 70px;">
-          <button type="button" class="btn save-selectshift-button-who-is-in"wire:click="check">Save</button>
+          <button type="button" class="btn save-selectshift-button-who-is-in">Save</button>
         </div>
 
       </div>

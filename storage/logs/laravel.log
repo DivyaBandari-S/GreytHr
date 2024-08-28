@@ -13262,3 +13262,1334 @@ Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3Wh
 "}} 
 [2024-08-28 18:06:47] local.INFO: Request URL: ?latitude=41.31&longitude=-72.92&current_weather=true  
 [2024-08-28 18:06:47] local.ERROR: Exception:  {"message":"cURL error 3: URL rejected: No host part in the URL (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for ?latitude=41.31&longitude=-72.92&current_weather=true"} 
+[2024-08-28 18:14:41] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:14:41] local.INFO: Existing session ID: None  
+[2024-08-28 18:14:41] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:14:41] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Attendance HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjRzamNvVW9ndDE0WFFWTFdoZHFyMHc9PSIsInZhbHVlIjoiWVZuTVlRYkovQmo0V1p6VGtvNGhva0l6WGRqYUttb2VWTHExdlFZeXVCOGZjV0o0L1NWRHRlakpudHJZdzBPZG9kLzRpU1JwR0VpRFJhbWFqMUhkZ3VyRmw2UFFBSW5GNkl4QVN4N0FlWlpSUXRmbnEycU1ieURrdkx2RklQYU0iLCJtYWMiOiJiOGYzODVhNDk2YmQ0ZWRlM2FjN2Y0ODUwOTYyNDRkN2E0ZjlhODUyMDQyZjg2NDgyMTFmZGY3YjhhOGFkMzhhIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkFPaDhBQkhWRW8vWVF2T3pqNEV0K1E9PSIsInZhbHVlIjoiVkppQ21EY3dlWmFxRkN0cmx2eG9ielA2Tk5ZNmxxa3ZmVE85Vlkrbmc5RFhxWTVUeXo0YXNPVi9rUE95bjdTSUxiNk1HS2NVVlBPN2xCbjkwc3JHU2hudnkzdW10OUhCVG02YUZXcmd6emNJVkxuQzJ0TG1jcTM5ZWF5cXJ1eHoiLCJtYWMiOiI2OGUwM2M4OTNlYjQxMjdjNjhjMzMwZTdkNzU2NjNhNjc2MmU1MDUxZTMxNTdlNjVhMTk5NTU0YTNkZTlkNTdkIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:14:42] local.ERROR: Error in updateModalTitle method: A non-numeric value encountered  
+[2024-08-28 18:14:55] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:14:55] local.INFO: Existing session ID: None  
+[2024-08-28 18:14:55] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:14:55] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /regularisation HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImZPc2h4ZXNVeWFXa04wZGphd3ZIRHc9PSIsInZhbHVlIjoiVmlOOTlSalU4aWpjV2RKNW1PQm1CRDJ0ZlB1VjZjdVhRWkNWN2RJamZOMDh0eERUU3VOOVd0amphNExYNFR2b1c3VGlzL1NkUURZbjdMa1dDeUljbkV1cGdyVjg5UGY0RHc2UmxKREdaclgwZWJkTUZRYlhMWm9GN3dyU1Q1UEkiLCJtYWMiOiI2OWJmMTNjNGEyM2Q2YzE5MDkwYzRmNjg3MWYwODAzZDhlZDk1ZmM5OTNkNmJmNTU3NTA1OTE5OTY1NjkwYWFlIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IitrajlyWG1FMXFKb2p3UHI4RkE2QVE9PSIsInZhbHVlIjoiVWxucmoxUDQyNW1aUmxUb05qOFlJWEZrZkI5QmJqWUJrdGd2TGw5Qm9DVkRUWWxTVWNpSWFPeFZ0clQ2OWgyR3d5VEZpTDgwR2ZBeC90UE9WQ0ZPOTVKajJaWFdxd01ha21SVDFwUWpUS0JpMlFNYU85eWlsV0V3V3ZYdm55VGMiLCJtYWMiOiJlMmRmMmUxYmM2OWVmOTk2MzQyNzA5YzYwMzMzN2JjMzE4ODkyOTM2YTNjZTU4YjMwMDg1ZmIxYTkzOGI5Yzk0IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Attendance
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:15:48] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:15:48] local.INFO: Existing session ID: None  
+[2024-08-28 18:15:48] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:15:48] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /regularisation HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InNvQ2gwMmMrY29xN2dydVZuZGhWdUE9PSIsInZhbHVlIjoiMU43cFhDT1FqV1N1eUtEYXhVMU0rUGRqZFFOUzNyZkJwbGpSUlY5dXcvWEhtVGVBS1d1M1BBbmJ0YkpzNHNYSUhYZVlYd1hVeUR2ME5Rdkh6WC8rK2J0UVpVQnZLSldOTXZHekNjcHc5eGhMbVVlT09vbVgrSjBJSHVlcGp2S2UiLCJtYWMiOiI0MDFmNjRjNmFkMDZlYjIzMzQzNGFjYzdjNWRiMzJjYWY3NDI2NDE1ZmNlZWIyOTJlZTA1YTkyY2RmZGFjMWIwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImhmUUd5am1PMkpuQTJyenpBNW4wZEE9PSIsInZhbHVlIjoiSFNyRHV5NHFZVTkvNUwvbDVLU2xTN1lIQXNSR25pZXMwbnc3OWwrOGt6WnRrT1JsZWlQK2FZOENVUHA3bmFVRjh2bkNOelRpcEZza0JDZFloQXhPYUc5K205MlQ5SmhGUHBxbjNiSjVzS2k1cC9OMU1DSTQva3JDVXcyV1J6QzIiLCJtYWMiOiI1MDU5NTFkOTMyOGEzZjk1NzNmNDU0NGZkMWQyYjRiZDMxYjlkYTE0OWUyZmMyMDY4OWRjZjk5OTA4YWVkMGY3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Attendance
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:15:57] local.ERROR: Undefined variable $r {"view":{"view":"C:\\xampp\\htdocs\\GreytHr\\resources\\views\\livewire\\regularisation.blade.php","data":[]},"userId":"XSS-0307","exception":"[object] (Spatie\\LaravelIgnition\\Exceptions\\ViewException(code: 0): Undefined variable $r at C:\\xampp\\htdocs\\GreytHr\\resources\\views\\livewire\\regularisation.blade.php:1349)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(37): include('C:\\\\xampp\\\\htdocs...')
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(38): App\\Livewire\\Regularisation->Livewire\\Mechanisms\\ExtendBlade\\{closure}()
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->evaluatePath('C:\\\\xampp\\\\htdocs...', Array)
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(16): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(241): Illuminate\\View\\View->render(Object(Closure))
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(285): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->Livewire\\Mechanisms\\HandleComponents\\{closure}()
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(233): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->trackInRenderStack(Object(App\\Livewire\\Regularisation), Object(Closure))
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(104): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->render(Object(App\\Livewire\\Regularisation))
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\LivewireManager.php(97): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->update(Array, Array, Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleRequests\\HandleRequests.php(94): Livewire\\LivewireManager->update(Array, Array, Array)
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(46): Livewire\\Mechanisms\\HandleRequests\\HandleRequests->handleUpdate()
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(Livewire\\Mechanisms\\HandleRequests\\HandleRequests), 'handleUpdate')
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\PostLoginMessage.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\PostLoginMessage->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\CleanupLivewireTempFiles.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CleanupLivewireTempFiles->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#45 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#46 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#47 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#58 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#59 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#60 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#61 {main}
+
+[previous exception] [object] (ErrorException(code: 0): Undefined variable $r at C:\\xampp\\htdocs\\GreytHr\\storage\\framework\\views\\bafb2aca526c9db105c62c0d0725a022.php:1362)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'C:\\\\xampp\\\\htdocs...', 1362)
+#1 C:\\xampp\\htdocs\\GreytHr\\storage\\framework\\views\\bafb2aca526c9db105c62c0d0725a022.php(1362): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'Undefined varia...', 'C:\\\\xampp\\\\htdocs...', 1362)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(37): include('C:\\\\xampp\\\\htdocs...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(38): App\\Livewire\\Regularisation->Livewire\\Mechanisms\\ExtendBlade\\{closure}()
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->evaluatePath('C:\\\\xampp\\\\htdocs...', Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(16): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(241): Illuminate\\View\\View->render(Object(Closure))
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(285): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->Livewire\\Mechanisms\\HandleComponents\\{closure}()
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(233): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->trackInRenderStack(Object(App\\Livewire\\Regularisation), Object(Closure))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(104): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->render(Object(App\\Livewire\\Regularisation))
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\LivewireManager.php(97): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->update(Array, Array, Array)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleRequests\\HandleRequests.php(94): Livewire\\LivewireManager->update(Array, Array, Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(46): Livewire\\Mechanisms\\HandleRequests\\HandleRequests->handleUpdate()
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(Livewire\\Mechanisms\\HandleRequests\\HandleRequests), 'handleUpdate')
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\PostLoginMessage.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\PostLoginMessage->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\CleanupLivewireTempFiles.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#45 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CleanupLivewireTempFiles->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#46 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#47 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#60 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#61 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#62 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#63 {main}
+"} 
+[2024-08-28 18:16:49] local.ERROR: Undefined variable $r {"view":{"view":"C:\\xampp\\htdocs\\GreytHr\\resources\\views\\livewire\\regularisation.blade.php","data":[]},"userId":"XSS-0307","exception":"[object] (Spatie\\LaravelIgnition\\Exceptions\\ViewException(code: 0): Undefined variable $r at C:\\xampp\\htdocs\\GreytHr\\resources\\views\\livewire\\regularisation.blade.php:1184)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(37): include('C:\\\\xampp\\\\htdocs...')
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(38): App\\Livewire\\Regularisation->Livewire\\Mechanisms\\ExtendBlade\\{closure}()
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->evaluatePath('C:\\\\xampp\\\\htdocs...', Array)
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(16): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(241): Illuminate\\View\\View->render(Object(Closure))
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(285): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->Livewire\\Mechanisms\\HandleComponents\\{closure}()
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(233): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->trackInRenderStack(Object(App\\Livewire\\Regularisation), Object(Closure))
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(104): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->render(Object(App\\Livewire\\Regularisation))
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\LivewireManager.php(97): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->update(Array, Array, Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleRequests\\HandleRequests.php(94): Livewire\\LivewireManager->update(Array, Array, Array)
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(46): Livewire\\Mechanisms\\HandleRequests\\HandleRequests->handleUpdate()
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(Livewire\\Mechanisms\\HandleRequests\\HandleRequests), 'handleUpdate')
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\PostLoginMessage.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\PostLoginMessage->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\CleanupLivewireTempFiles.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CleanupLivewireTempFiles->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#45 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#46 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#47 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#58 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#59 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#60 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#61 {main}
+
+[previous exception] [object] (ErrorException(code: 0): Undefined variable $r at C:\\xampp\\htdocs\\GreytHr\\storage\\framework\\views\\bafb2aca526c9db105c62c0d0725a022.php:1193)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'C:\\\\xampp\\\\htdocs...', 1193)
+#1 C:\\xampp\\htdocs\\GreytHr\\storage\\framework\\views\\bafb2aca526c9db105c62c0d0725a022.php(1193): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'Undefined varia...', 'C:\\\\xampp\\\\htdocs...', 1193)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(37): include('C:\\\\xampp\\\\htdocs...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(38): App\\Livewire\\Regularisation->Livewire\\Mechanisms\\ExtendBlade\\{closure}()
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->evaluatePath('C:\\\\xampp\\\\htdocs...', Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(16): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(241): Illuminate\\View\\View->render(Object(Closure))
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(285): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->Livewire\\Mechanisms\\HandleComponents\\{closure}()
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(233): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->trackInRenderStack(Object(App\\Livewire\\Regularisation), Object(Closure))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(104): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->render(Object(App\\Livewire\\Regularisation))
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\LivewireManager.php(97): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->update(Array, Array, Array)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleRequests\\HandleRequests.php(94): Livewire\\LivewireManager->update(Array, Array, Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(46): Livewire\\Mechanisms\\HandleRequests\\HandleRequests->handleUpdate()
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(Livewire\\Mechanisms\\HandleRequests\\HandleRequests), 'handleUpdate')
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\PostLoginMessage.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\PostLoginMessage->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\CleanupLivewireTempFiles.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#45 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CleanupLivewireTempFiles->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#46 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#47 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#60 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#61 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#62 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#63 {main}
+"} 
+[2024-08-28 18:17:24] local.ERROR: Undefined variable $openAccordionForActive {"view":{"view":"C:\\xampp\\htdocs\\GreytHr\\resources\\views\\livewire\\regularisation.blade.php","data":[]},"userId":"XSS-0307","exception":"[object] (Spatie\\LaravelIgnition\\Exceptions\\ViewException(code: 0): Undefined variable $openAccordionForActive at C:\\xampp\\htdocs\\GreytHr\\resources\\views\\livewire\\regularisation.blade.php:1184)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(37): include('C:\\\\xampp\\\\htdocs...')
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(38): App\\Livewire\\Regularisation->Livewire\\Mechanisms\\ExtendBlade\\{closure}()
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->evaluatePath('C:\\\\xampp\\\\htdocs...', Array)
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(16): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(241): Illuminate\\View\\View->render(Object(Closure))
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(285): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->Livewire\\Mechanisms\\HandleComponents\\{closure}()
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(233): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->trackInRenderStack(Object(App\\Livewire\\Regularisation), Object(Closure))
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(104): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->render(Object(App\\Livewire\\Regularisation))
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\LivewireManager.php(97): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->update(Array, Array, Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleRequests\\HandleRequests.php(94): Livewire\\LivewireManager->update(Array, Array, Array)
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(46): Livewire\\Mechanisms\\HandleRequests\\HandleRequests->handleUpdate()
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(Livewire\\Mechanisms\\HandleRequests\\HandleRequests), 'handleUpdate')
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\PostLoginMessage.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\PostLoginMessage->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#42 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\CleanupLivewireTempFiles.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CleanupLivewireTempFiles->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#45 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#46 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#47 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#58 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#59 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#60 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#61 {main}
+
+[previous exception] [object] (ErrorException(code: 0): Undefined variable $openAccordionForActive at C:\\xampp\\htdocs\\GreytHr\\storage\\framework\\views\\bafb2aca526c9db105c62c0d0725a022.php:1193)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined varia...', 'C:\\\\xampp\\\\htdocs...', 1193)
+#1 C:\\xampp\\htdocs\\GreytHr\\storage\\framework\\views\\bafb2aca526c9db105c62c0d0725a022.php(1193): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'Undefined varia...', 'C:\\\\xampp\\\\htdocs...', 1193)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(37): include('C:\\\\xampp\\\\htdocs...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(38): App\\Livewire\\Regularisation->Livewire\\Mechanisms\\ExtendBlade\\{closure}()
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Engines\\CompilerEngine.php(72): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->evaluatePath('C:\\\\xampp\\\\htdocs...', Array)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine.php(16): Illuminate\\View\\Engines\\CompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(207): Livewire\\Mechanisms\\ExtendBlade\\ExtendedCompilerEngine->get('C:\\\\xampp\\\\htdocs...', Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(190): Illuminate\\View\\View->getContents()
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\View.php(159): Illuminate\\View\\View->renderContents()
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(241): Illuminate\\View\\View->render(Object(Closure))
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(285): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->Livewire\\Mechanisms\\HandleComponents\\{closure}()
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(233): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->trackInRenderStack(Object(App\\Livewire\\Regularisation), Object(Closure))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleComponents\\HandleComponents.php(104): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->render(Object(App\\Livewire\\Regularisation))
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\LivewireManager.php(97): Livewire\\Mechanisms\\HandleComponents\\HandleComponents->update(Array, Array, Array)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Mechanisms\\HandleRequests\\HandleRequests.php(94): Livewire\\LivewireManager->update(Array, Array, Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(46): Livewire\\Mechanisms\\HandleRequests\\HandleRequests->handleUpdate()
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(Livewire\\Mechanisms\\HandleRequests\\HandleRequests), 'handleUpdate')
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(205): Illuminate\\Routing\\Route->runController()
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(806): Illuminate\\Routing\\Route->run()
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))
+#20 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\PostLoginMessage.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\PostLoginMessage->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Session\\Middleware\\StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest(Object(Illuminate\\Http\\Request), Object(Illuminate\\Session\\Store), Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Session\\Middleware\\StartSession->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Cookie\\Middleware\\EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(805): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(784): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(748): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#39 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(737): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(200): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\livewire\\livewire\\src\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware.php(19): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Livewire\\Features\\SupportDisablingBackButtonCache\\DisableBackButtonCacheMiddleware->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#44 C:\\xampp\\htdocs\\GreytHr\\app\\Http\\Middleware\\CleanupLivewireTempFiles.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#45 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): App\\Http\\Middleware\\CleanupLivewireTempFiles->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#46 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#47 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#48 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#49 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#50 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#51 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#52 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(99): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#53 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#54 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#55 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#56 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#57 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#58 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#59 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#60 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#61 C:\\xampp\\htdocs\\GreytHr\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#62 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
+#63 {main}
+"} 
+[2024-08-28 18:17:59] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:17:59] local.INFO: Existing session ID: None  
+[2024-08-28 18:17:59] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:17:59] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /regularisation HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Iit6YzJPNVZmOHl2cFJLNXdzNXNwR3c9PSIsInZhbHVlIjoidGJZTzFFNmNPOWkzQ2xDS0lWZFdPeUMyaG9ON3Exam5sR01WbFMyVmlBc3dxMFc5WDZvN2k0cXV4L3MvT1RaczVGdlRwY3ZFcWo1R0xUdDB6S2NEckZ6WkxML2pwYXBrZlg0NHJFWC8venZpckcxOVdldlU1MzU1SWJ1aHZEMFUiLCJtYWMiOiJlNWQxYjVjNzU5NzEwNTQ2OGI4MDNlMGM0YzBlYjE4N2FhNGFlMTIxZTMyMjM5ODJmNWRlMjI0MDNkMjM4NmYyIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InVIcDRVdFRXY1ppb3pPYVdacElzaEE9PSIsInZhbHVlIjoiVGlBUTBULzJhTTFVUFFVT3hzQUV3NkRjR3RaUUVBRDNJelByODRKNHJEQmo0bGpDZFNVeUpSZ1lUNFVlMVgvQ1dFbi9hYWs2ZER0M2VtT3JwNnNjbEhNc2FWWmxLWStFQ3dabTViVllBYkpOK1FwMTdsbHB6by9zcis4cUZCRFYiLCJtYWMiOiIyYmNhNTMwZGYyNzRkNzlmNzU5ZWU0MTc1NTE1MzIwZmE3ZGU5MDJiMDMyNjc3ZTQ4ZTNlZTJlYzdlOGEwNjg3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Attendance
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:18:16] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:18:16] local.INFO: Existing session ID: None  
+[2024-08-28 18:18:16] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:18:16] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /regularisation-pending/31 HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ik9tWDgvd0xHN0NoQ2dKdmFBZjFqdFE9PSIsInZhbHVlIjoiVEcyZnJnVGdWSFhYU1lKeTh6T290NjFZR3pwTDJGWnFlazdNa0V4WEk0WjVUbTc0cEtQZC80cDVkT0svRlUwVFlVREtYR2xRa3dWREJoRVl0YlN1Z2taNW94ZTEvdE1VVEgwZ3FTS2lHbUNQL29iNkR4WTRIMmhCQmZHYk5yc0ciLCJtYWMiOiI1YTQ2OTJiMDE1Njc0NzUwNTk3OWRkZDdjYmI5YzM5MGRhMGI3MjhlNTg0M2VhNGYwNjc1MTYzNjVlNWU3YWNlIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IitwSUVXdnExU2RLd1ZMVDFNNVR1cUE9PSIsInZhbHVlIjoiT0pUdjlyMy95a2gxQUN4YWsrOGVlY3YyZytqaVgyNUpiU0xUa2RhRElKaEhQVmVTc3JTbFBTbGNndU8xbnhCTTNIZSthYVdUNUppbmk3RlptKzFESTQ2a0U3S1hDNXRMVjV2QTRhbWoxZ0tWTHMrT1lIdkpxaDdnMm9HTGR5d2YiLCJtYWMiOiIxNGQ3NThiYjQ5MDk4ODdiMjI2ZTEyODAwOWY1OTJmNGFmNWM0ZjQ1NjZjYzAyN2Q0ZGZmMjJhMzJhYzFmZjVmIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/regularisation
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:18:22] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:18:22] local.INFO: Existing session ID: None  
+[2024-08-28 18:18:22] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:18:22] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /regularisation HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjQzU1g3UnUzZ1JsMmt1TlZNU0FUSGc9PSIsInZhbHVlIjoibzhDNjBBd3ZNblRraElyL3FFQkdzSjVEN0NvYzRWTGlPWVBRVzFabnd4cmcrWmgxRDV6Y0hqcFNxM2tNakl3Q3pYbHFYTUQrK01vVFFhdzY2c1NvcXpGNmwzRnFWUDFtbThzRDQvZ3dDREs0ODlwWmJuMWFOQXFwMGIwYXFmN1MiLCJtYWMiOiI3OTIxMGJjYTg4OGFlYzJkMGUwZDFmMjUzZDlhZDVlZTBlZjJiNGRjODc4ZDU0OTY1MWRkODFiNWUzNGJhYWQyIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlN5S1dNZ3U4TnpPVVdTWGplMjJzb1E9PSIsInZhbHVlIjoiODFsRHR4ckhoRWt1MHVzT2IwTzdlSlpBb0s1Y3JsV0ZVNGFWdjRaL291OWN3Z2hTQkZGMmtwVDBBTGtoZlhFMHJpYWZTQkNjUlRVclRsenNCQjV2YnR5NEVXaGUwcENFZHFiK0doeUNod284UkNNOWJlMTI5Z05BeTBDcUhGbjYiLCJtYWMiOiIzYTFjYjJlMGNhOWY1M2U0OTllNGVkNmZhZjQzNjQ1YmUzZjdlZjAzMWRmYTc5MTQ5OWU1MDNkNGFjNjk1NmU0IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Attendance
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:18:37] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:18:37] local.INFO: Existing session ID: None  
+[2024-08-28 18:18:37] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:18:37] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /regularisation-pending/32 HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjBwWlRZQ2pyU1pRSUFoMEpnZzNUUGc9PSIsInZhbHVlIjoiRUdZQXBTdU9naUk0bzFCaGFqM0tyTDFGRWMzam5mWjBwUWc1U0NWdWR0bndZVkhydUdFRDRmS0FVcWIxNGZmRnZyTkZwMHVZdGFYVXE3ZzZxTzVUSk1mT2pNbmo3aFBDTjZZOEJrRUR0S2lEMUVBVlBVTUsxVit2eFp6dk5wcmoiLCJtYWMiOiIxMjA2M2ZjMTE2ZDA0MmI4MTljMTc2NGRiMzljMmNlZTY4MGRhZWE4OTEzODc3OTMyMzk1MzgwMDY2ZDZhYmEwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InJGTE9BR0l5cEZIc0RrakZBREkxVFE9PSIsInZhbHVlIjoiM3l2SUliMDkwRFRERC9ibHdRbWlLaEtGTzM1NVhFQVN0MmlCd3ovQkNRS3M0MU9WQzdJaERRei9heDhvc3IvbFRNRnBBSVZnNWNjaGd0aWVmTTM4L3VTb2pTWnNFZHpYUFZoRS8raWZ0RWxrSVliekVHVW1FS0ozZnI0QzE2ZnoiLCJtYWMiOiIwMzhmYWU3YTg2OGNmNTkwOGYxNzMxNDJhZGE5MzU5M2FkNTFkMTc3ZGQ2ZjNmNTM5MThmZDE0NTI0ZWM5NTUwIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/regularisation
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:18:44] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:18:44] local.INFO: Existing session ID: None  
+[2024-08-28 18:18:44] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:18:44] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /regularisation HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InZXY2doY1U4cjhSaVhaVjltKzlxdXc9PSIsInZhbHVlIjoibkFmWDRPT1RSditjSWE5cTBhYUxhaWlvN2YwNjBIQXB6OVJoWXU0ZWk4cnpNSFRvTlp0Zkx3eXJHYkkyVlVkb01aUE16dW1ySWptMm05Vk00ZVZWanNjZmlvRVAyN2t6alRNS2NMdi94Q2ViTmZsNWE4dW41bDd5MGwxZTgrMzMiLCJtYWMiOiI4ZDU2ZmIxYzBiOWY5MDNiMDVhNDhkZTllMzBkODJhZWIxZjQxMDI5NjcyNWFkZWIzMDA4MzUyYzlkYzJhMDU1IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImpBZnhhR2hJcXh3bGhsQzc4ZjVReHc9PSIsInZhbHVlIjoiaXArYmNLdmx5ayt4Nm55VG9neEpJbVhjSCs0QWZYNUQ4UmRJR2JubWFLSk1HcXFjVWh6TDB1WHNHQ1ArUzd0Tkt2L1NiaXY0RksyK3RtdTUrdGhGbmY3alVndGQxb1psK2tiOUI1Q2ZaQXFmM0xodStGMVFwajVacHBzRXdabHQiLCJtYWMiOiI5ZTQ1NTZhNGNmZTFkMzg1NWM0NDhkNmUwMjJkOTlmY2U1MjliNjM3MzRmZjcxZTc1MmQ2ZWEzMjIzNjYyYmE1IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Attendance
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:19:04] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:19:04] local.INFO: Existing session ID: None  
+[2024-08-28 18:19:04] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:19:04] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /regularisation-history/30 HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjBtaERkaEZ4M2VieEdZbmJpYWYyelE9PSIsInZhbHVlIjoid0s5Sm1ZcWxiSFFVRFZVM3pVcy9XakEzY21xVXJNOWlGWW9EMElDajROWDMvQnoxSHlJbExRWURiSndWNjh1Mi93QTBzS0xJd3ZqV09seG5BTDFLTnBnalhlZnczOTh1ZFYyR3hiWHJtY2t2bFRUOVF0Q0RWQ2plT2pLV3BiTzUiLCJtYWMiOiJmYWVkMWFmN2NiZjE5NGY5MmE2ZGEzYmM3M2YxZTdlOTY1Y2NmNDJlZGIyZWUyNTNkOTQyNmI4NDc0NjVkMjM2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IklBSVdxc1Q0NmFvajJKcjhsMW9aWXc9PSIsInZhbHVlIjoiVFVFM3BhbXNudFdUZzNxMUxPTm9YekFER3QxNzFCTFNzMDFqdG4vdXpBemR1TndiMmwybWJNZmV1NmtpSzg5UGF4UlVjSlhmTWpvbnl2MFNrNlNZZE1EckFmeDJQRFcvRmtiY0Y3U2dSNW9HSmpCQ0ptR0dVbiszejk1T0dlSGkiLCJtYWMiOiJjODBiNjFiODNmYjNiMTA0YmIzOTY0MjY3Nzg0NjNiOWM3NDJkMWIxMzY3MjVlMjk5NGY4ODI3OTQ5MGJkODc2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/regularisation
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:19:12] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:19:12] local.INFO: Existing session ID: None  
+[2024-08-28 18:19:12] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:19:12] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /regularisation HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjI1RGR2RXhKYk1heVI1WXFzeXp4Umc9PSIsInZhbHVlIjoiczlFSTkwa09hZjd1b2R6OWNjdnhKa0NjN09OZE9tcWkwTHc2cTZkU2pleFloNXdKdmVOVCtTYUpZbS9xR0c2bUVpRHh2QWx0NEdCdHM0QVgzdnFwZ3FueEdGUy9aa1J1cXRFNlQycmtwYTdMVUdMK3NTRDl0RzM1VGptTUE1N2UiLCJtYWMiOiJhMmIyMTc5ZTM0YzVhNDFkNWNhZTRiNTgwNjIwNTliNTUzMWRmMjg3ZDY1OGNlZWVhMDRmZDI1MmJlMDM1Nzc0IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InUxSklxRkVDR0I4ZXdSaSsxY1l2R2c9PSIsInZhbHVlIjoib1o0bTNLLzVTajVDVU4rOHR5Q0tsTlJFTmNjMitCcWVXbGRUOFpENEIvLzZDdC9GaFJGcnlMTlpSNmt5RUFYZVN5bktXWXJ3M3dUc2RacG5Sc2x4U2YxRy9zeFdBRjEydzQ0TWt5TCtRTVpyT2FjeHVLYlRFODBsVGZhekxBVk4iLCJtYWMiOiIzNDQ2ZTc2YzNjZTU1MzQxNmE3NWE5MzZhODYyZGY4N2I5MTQ5OThlZjJjZjY2OTUzOTEwMmVjN2QyMmI3MDY3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Attendance
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:19:36] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:19:36] local.INFO: Existing session ID: None  
+[2024-08-28 18:19:36] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:19:36] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /employees-review HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjVXbXFSbmYya0xVQW5nRi81UC9vdWc9PSIsInZhbHVlIjoiRTVkejQ3NDNBWENiUnBKMjZFbnNRTW94M1NSVW5TTjBjcEcyV1crOUgxK0xudnArbHFBcGJocUdzTElwT0gwYXlJUlZPSm5kTjJtOEVBWHRnZUMyZG9LN0dvbG9kRmdmV3d6bzZVUFpidnJHRm1KYmdsMzBuVGhhODFkR3ZaSVMiLCJtYWMiOiI5MjRjMzJjYzM4Zjk2ZTZhZTczN2FmYTQxYmIzNGE0OWVlMTU3MTRjNmRmODE1MjIxZjEzZjE3Y2YzNmU5YTc2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IklReUFkSUhXbEhHcjI2UWtvempsOWc9PSIsInZhbHVlIjoiWGxmOC9NcWtXSmRYS2duOWZueXlwNFpKL3pQOTRtNjNHU25pcU9xcUNOZGcxbllud28wWWtzSlVhbjlQd2E1WWt1b1dtendDTmdTUVBzZVVUYUx2eXM1SFlOVkM2Zk9SL3M5QndUNUdkVWQ2OFYvWnJlK2lTUHE3NzFaSWorbW4iLCJtYWMiOiJjNmQyZDJlODU2OWIzNjE0Mzk3ZmRmMmU4NTM3MjRiMmZjNjNlMDVjNzQyMDAwNDI4MmEwN2Y3ZDRjYjc1YWZiIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/regularisation
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:19:36] local.INFO: Tab parameter:   
+[2024-08-28 18:20:04] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:20:04] local.INFO: Existing session ID: None  
+[2024-08-28 18:20:04] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:20:04] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /review-closed-regularation/8 HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ik43REJkSjZSakYxTlVNcFNqOTdheUE9PSIsInZhbHVlIjoiRDZKMzZBWlZjTFFJOVVTbTVDR0c3WlFzemdXTmZUaFcrdHNsdEdsRDFtMUIzcTJXSzBHT0lTc1NkMTU3SG95NDlYZ1ZReTMwamd3dXUwaS8vL2c2d3pXMEl0OXBvV2paZVZCdDR2QUJpREdVOUhjTGRpL29reFp3eEk5NFkyeVEiLCJtYWMiOiIwYTU5MzhhNGNkN2U5OWJjODRiNDQxMTA2ODIwN2FiMTc5YmI5YzJjZmJjMzIzNjRhNWZkYTU3OWVkZGZlODE0IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImdraHQraWZ1cER1VlBHMDlDYWpRVGc9PSIsInZhbHVlIjoiUjhHK1ZqYXF3em4raWhobWFQSDcrdTJhYXBCYXVuSENQQ1ZmSFFUbDBzNEhqVVArbG80ajBSYjdHbU1BRjV1LzRoUXp6Q3RRSUg5QzM1UGhnV0ptQzBTS0c5NE1hMU9taEQ1ZS9VMms1RURiZTJMME1QenJNRFZTMnovRGl5ZU0iLCJtYWMiOiI1N2E5Yjc5MDgxZmZkMDdkOGQ1YjQzMmFhMjhkNTcxNjczNDAwYWUyYmQ4ZDFmZDY5ZTA1MDQzNjFjNGY0NWYxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/employees-review
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:20:21] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:20:21] local.INFO: Existing session ID: None  
+[2024-08-28 18:20:21] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:20:21] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /employees-review HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IjJ6Rm1NN3JzMEJROUlPMHhYUkJ5aVE9PSIsInZhbHVlIjoicUhYK1B4QU9FdTNzb2VFSVArcXcyQVJVbjFoTWtHanVUWk13S0FQRWZRd2ViakNFNE5pTnBCUlNBYnZhNCtVZEhmUktxWnorNG9yWWNCMVFlaXZSOE5sK3ZZVzY5V3lqYy9sSzg3RFVQWVU5bDEydy9HTGtRcjVQRGo5L2l6ZmgiLCJtYWMiOiI3MDU4ZDkxNzhmZDFhNTI0ODRjOGE1ZjU4NTBjZDFjODMwMzFmMzU2YjA1OWNmMDNkNDRjNTJlM2I0NmJjZTEwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlZIaFNTZFp1eUR5VkFkSVR3OG1pS0E9PSIsInZhbHVlIjoiUjRqeDc3UkgrS0Z2cDFzN3N3MDJ6T08xbEZ5Y1lMU3lwOWR6aTdTSjhPZDBUYWNQTXRlbkhKVWQxUWM1emFGOEg2Y0xWck5wRmRRNDdJMXN1NCt4K21SV09XSy9lWjdqWDR5MVBwaEpNTElObFZlVjF5YlpSV2hkQTk1NENtYm8iLCJtYWMiOiI2OGYzODcxMTliMWI0MjAxMzkyODhmYWI5Mjg3ZmFiYWZlYTJhYWQ5N2RmYzRhYWMzZGEzNzg0ZjljYTkzNzZiIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/regularisation
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:20:21] local.INFO: Tab parameter:   
+[2024-08-28 18:20:33] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:20:33] local.INFO: Existing session ID: None  
+[2024-08-28 18:20:33] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:20:33] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /review-closed-regularation/6 HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InVVU2pkUVV0OWVKalpsU01Qb1ZwR1E9PSIsInZhbHVlIjoiUXBHNUJsVVBDOHRwbnNlVTQrNFB4Q0tOalBadDUxR3NHWEgwRitUODlzaW5LVmhrWnB0QW50d0FKbVl6Z1ZZVXFjaW5BUVFFVFNYU2FHYkxVVmdpSDFrUWZWc1NLYzJhRHhyVmVHRlVlQkQycHU1bW5oUmJESFlkNFl5MVhneXgiLCJtYWMiOiIzYjY2OGVlOTcwMzUzODg0NzhjZWExYjMxMjcxZmQ3MzM2NjNhMDk5ZTJjZTAxMTE0YzZiYmY2M2M0NWE3NWQyIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkhDY2ZnUXlzbFF2OE9zdGxtd1RqTnc9PSIsInZhbHVlIjoiU1VpTzFHV3BMRUIwNWZqcUExeTdicDJQWFZUUmxUeGR1ME8wTi9Qczc4Y3BsMUpIdFVRNkR2bVFUOW5ydVluYllXdzZ2RVNJTEFPTzlmTlBiWmFUWFovb054SDMvNVY4QWMrb1FyclpTNWV5bDUrR09rMXgwb1BLekJVNHNsdzQiLCJtYWMiOiJhYzk4ODViMDg1NWE4ODFlNDcyNjY4MDUwZjVkMzI4MjI0MjM1ODZkOTE0MGVhYWZhZTI3NWZiOTMzOGZlZWI3IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/employees-review
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:20:38] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:20:38] local.INFO: Existing session ID: None  
+[2024-08-28 18:20:38] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:20:38] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /employees-review HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlRxZUZGUGZhTmlZZmZKc2gwdWx5bWc9PSIsInZhbHVlIjoiWk5kQTJNQWNVNm4xdUlpRkVRNlVmN2M4WURWUDUxZmdTYjhWMVhSdXFBOFBhbDFGNWdFUysxRVRLNGtCN0p6TjZyUndCNXZmYzBoS3I5RGZXK1dzM0NyOEdKZEROMTNGbWVXN3BPSFhHWkhzbVNEYmtBKzV3cE9JeTVkTk5BSDIiLCJtYWMiOiJjMjQ0YWEzYmI1MTdlYzdlZjA5YzUxZjdkYTUwNTAyMWFhODcxMzNjZTIzYTc1NjgxYWIyNWZhNWJmODAwZTFjIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImxpaXFPQjdTQmJxczJIdEJQUExFTHc9PSIsInZhbHVlIjoiNUdFNXRCaHZOZzZLc3lSYnJvdFprZi9yVHluVjFSaDVPSzFNeXk4WThiTjNYeEtQUXQ2dDArTUZhdTBEbWIvL3MzMk0rVGN4RUdEdGM5MGt0ajVaa2NBN0o5TXRyWi9iNTN4WjJWZXhCWmJLS29raGNHUFlCUUVjMW9PK1F4S2kiLCJtYWMiOiJlMmVmMjYxY2M3NDVhNjg4OGU0ZTAxNzY1MDdhZDNlZDY1OTQ2ZmY3NjJhYTdkNmMyODZiMDVhMmMyZTQxY2FlIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/regularisation
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:20:38] local.INFO: Tab parameter:   
+[2024-08-28 18:23:36] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:23:36] local.INFO: Existing session ID: None  
+[2024-08-28 18:23:36] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:23:36] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /employees-review HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkJSZjVoRkE5aXc0WkVsczVia2cvRVE9PSIsInZhbHVlIjoiQTUwa25MVEdWdXYzYll1cUpBQnlWaXFBZGZEczROMk5KMTdVbzNZclFwY0tyVVQwZnhTbThBR1FqUm84UngwRkFBSmY0SzJNNG5ENStxVEJoZisvaXBOZGVQcENYcmZRZHNFcnhjYys5aTFFS3hiT005K2lNNVhORURJY3BHVXYiLCJtYWMiOiI0NTVmMWFkMzc1NDg3ZTZmYjRkMzBhYmViNjk5OGZhNjhkMGQ4ZjU5ZWZiNTNhZmM1NTVlMmNmNjg2OGY5YjU4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Iml1SUt5b1lYSGpKOGxDOWF0ZFpHU3c9PSIsInZhbHVlIjoiYURtQnU5RitLSExlM1c1aEh5SGlPU1UwTXVZd21HcWlXTFFLSGtYTWVkTFloY0FYcVEvOVBvOGtKeG1GN0tpSUZLNDBFYm5ZNERiNEVsK2RMVmRHbnE2NG42RnBaanN1UEE3NHJ3M1NCRmtCMDRlV1drUGJDQ0xJUWQweDIrQzgiLCJtYWMiOiJjYjM4Yzg0OGQ4YTBlZDdmOGNiNzQ0NGIyM2E3MzA4MThlZmIyOWRiN2VhMDc2ODk3NWNmYzY2Njk1NzA2MGRlIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/regularisation
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:23:36] local.INFO: Tab parameter:   
+[2024-08-28 18:23:50] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:23:50] local.INFO: Existing session ID: None  
+[2024-08-28 18:23:50] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:23:50] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /review-closed-regularation/8 HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkdsWEwwVi9QQkxBUDVmSWI5ZThJMUE9PSIsInZhbHVlIjoicFc5Vmg1M3Z3QVpKbkJlem50RVNrN1E5WFdsVHBRNFRrTm5qMGdIWC9SSUFiaXp1K2hLV3pia0lKQlF4WDZXYXMxUjljc1RhSmJDR2xNMHErTXNvUWtCUkJDQVhzRXdURGFYdWZMUUMvN3Y5YTVsUXFucFBBM3BoWTJLcUl6cnUiLCJtYWMiOiI3ZGZhMjQ0MTdjNmMzZTBiODk3MzZjYjg2NDc1ZDEyMzUyMzJhZjRkMTZlNWJhNDhkNTZiNzU0YmVhZmJiMzFiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjNWSkozdnRtbFFmSjlEbG40T21SMEE9PSIsInZhbHVlIjoiQ2xhRjdjbE5YTHhtZGp6Qlg1Skg2T2dmZnRlb3JhRExiZnI5a1RHcHhNQXlabW1ud0tldzdaMXh3TjdMSDJJbkNtekdVRFdLNlhCeWtzSmVkMk10M2lMWjgvN1RIeTVoRzFNTHFxSCtIWE5mYUtLb3U4TjFLcEdjc1pZWksrTTciLCJtYWMiOiJkMDdiMzEyYjVkMWZhZTUwOTMxZTNkNThmNDU3MDIwMWIyZDE0NjdhMWQ0MmQ1ZGUzODI2OTQ0Yzc3MDllZjEzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/employees-review
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:25:37] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:25:37] local.INFO: Existing session ID: None  
+[2024-08-28 18:25:37] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:25:37] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /review-closed-regularation/8 HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InNnZUxZZzBmV3pFb1FPYVcweDhjTXc9PSIsInZhbHVlIjoiSGozYUJEMWxveVdGTWg5R3lmczdyMXRhUG9pSjBva2VRYm1XNW0ya2NTLytaV1NZbCs4MFk4THcxNmxEQTVsWEs0aGdFN0RVdTdTbXQvcndIR1dwSFhDYnRncWR0WWJLc3pOd2pOQW9XN09hUkhUTUZXeVgwVXZwN3pJL0FlUi8iLCJtYWMiOiJiYmY3MDA0YmZhNzI2YWZjZDY0Zjc3MWM4NTg3YWNiNmE5OWMyODY4OTU5OTk5MWRmZWRmMTVkODJlODczNjQzIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlIybFZKQk41TlJodmRNNXpjVTBzRFE9PSIsInZhbHVlIjoiNVNrN3o2YTNrNm8rL3htelRUcmMwalpIZm5RZXdNY3NEMmhmdytZaHlLYUszRVNwanpwZTFMMHhtOUpZOXVKemdoV0p5ZG92VnhyRWh4dFFkaFV2OWwvblpGQ2FZbVVlVFVJbnFHdklnMHhJaEEzenI3Q2ZCV3FlVUE0K2NBZzciLCJtYWMiOiIxZWEyY2NhOGIzMDA4MTNiN2JiNzQwNTM3MmIzMzc1NDRiNDZlN2ZhMjQwZDM3OWJjZTg5NGQyOWZhNGQzNzc4IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/employees-review
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:26:48] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:26:48] local.INFO: Existing session ID: None  
+[2024-08-28 18:26:48] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:26:48] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /review-closed-regularation/8 HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InNnZUxZZzBmV3pFb1FPYVcweDhjTXc9PSIsInZhbHVlIjoiSGozYUJEMWxveVdGTWg5R3lmczdyMXRhUG9pSjBva2VRYm1XNW0ya2NTLytaV1NZbCs4MFk4THcxNmxEQTVsWEs0aGdFN0RVdTdTbXQvcndIR1dwSFhDYnRncWR0WWJLc3pOd2pOQW9XN09hUkhUTUZXeVgwVXZwN3pJL0FlUi8iLCJtYWMiOiJiYmY3MDA0YmZhNzI2YWZjZDY0Zjc3MWM4NTg3YWNiNmE5OWMyODY4OTU5OTk5MWRmZWRmMTVkODJlODczNjQzIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlIybFZKQk41TlJodmRNNXpjVTBzRFE9PSIsInZhbHVlIjoiNVNrN3o2YTNrNm8rL3htelRUcmMwalpIZm5RZXdNY3NEMmhmdytZaHlLYUszRVNwanpwZTFMMHhtOUpZOXVKemdoV0p5ZG92VnhyRWh4dFFkaFV2OWwvblpGQ2FZbVVlVFVJbnFHdklnMHhJaEEzenI3Q2ZCV3FlVUE0K2NBZzciLCJtYWMiOiIxZWEyY2NhOGIzMDA4MTNiN2JiNzQwNTM3MmIzMzc1NDRiNDZlN2ZhMjQwZDM3OWJjZTg5NGQyOWZhNGQzNzc4IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/employees-review
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:26:58] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:26:58] local.INFO: Existing session ID: None  
+[2024-08-28 18:26:58] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:26:58] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /employees-review HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkFETEVJN0Vkb0dTWlhJM3hCbWFxamc9PSIsInZhbHVlIjoiL2ZudlpYTnRGS2czUFF0eVFnQUJWRnd1cTZrbGhkVzdFTGJmdXNMcHdsbGp5NE03bWdaU0p2VnhTcVRpVWNJT1E0VzZSQlJHY2x0TFlISWx1aDRiTldFdm0wa2hxcmZGSXNWZTQwYStzZE52WTE2VWJmSHMzQ1daYVlvMXFtVUkiLCJtYWMiOiJhODRmOTgyMzQ1N2VlOGY3ZWMzMThiMTlmNjgzYzU1ZmMyMWRkZWE0M2E2MGY4N2U5ZjBmYzQ0ZWU5YTA4NzZlIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IitwZURXTVdCL3doUU1ockR3dnY2b0E9PSIsInZhbHVlIjoibXRlb2VLRUxqU09CQ240ZjJSb3R5T1VJenBzRjNPY2IvemdHVVFsRzdicGhlWnJsT1ZsR01UMElwRmk0WVN5aXcydjJHOWNVdVExYk1WODUzWERQUXN2M3RsdTBzS1h5dFhzWFZwL2JBSk9pN2dIb3lFR0VCQlBFK0ErTWxqVVkiLCJtYWMiOiIzOWE4MzUyZjk3NmE0YTMyNWE0ZTgzZWQ5ZmYyODE1OGYxNDUxN2I1NjAzNDUwMDEzZjJmMTY5NmE5MWQ2MTI2IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/regularisation
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:26:58] local.INFO: Tab parameter:   
+[2024-08-28 18:27:09] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:27:09] local.INFO: Existing session ID: None  
+[2024-08-28 18:27:09] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:27:09] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /review-closed-regularation/6 HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IldpR3ZqeGJJeU5xRkQ1WmIvZ1VOdmc9PSIsInZhbHVlIjoiTDBwOHlaSnQzUjNXRnpXVDZlOFU5K2p3MXd4Q3NZNmNTMDJoNWNBUnZNZCtmWWJhelZvRWNySzNYbzhvRDFZRUZtd3llV3FRMTlZMkJuYnN6NFQySWV4TVFOQU1hYzJ3cTRtb1pNamhMMG5VWTJkUmxKVEFkWDJRYTJ5Mk52U1kiLCJtYWMiOiI5ZmI4ODY4YTQ4YWVhYjllYWI2OWE3MGNkMDQ5YjQ4MzYyYjVlOTBhMGVlMjhhZjRjN2JmMWVmOGQxMzc2OGNkIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlEydlR6TlBiSm5lK3ZTd0dqZXN2Tmc9PSIsInZhbHVlIjoiV1JjUVI4M25zUFQ3OVRSaGJWMlJTQ0pCQzNRZi9meU5lZlgvY1NRRkhQeThpYmhwMjFLSUdCL1g4bFc1b213enp0WXlQVGN3cWU1clUwSWJNZHY0SFhURGNZa1BDSHZ2cEVPeGwyeWxmUGFXZ291QVhRQ29yK0VuWDY3THE2QkoiLCJtYWMiOiIyY2Y2YzkxOGE5NjVmNjlkYmEzZGU0YjBkOGJhODk5YmM5Mjc4YTg4Njc5YzlkYzZiNTBkODI0NGNhZGMyNjdlIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/employees-review
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:27:56] local.INFO: Stored session ID: 3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM  
+[2024-08-28 18:27:56] local.INFO: Existing session ID: None  
+[2024-08-28 18:27:56] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-28 18:27:56] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /employees-review HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Inl4NFJleDZ1QnZrZGdJSFhTVUM2RHc9PSIsInZhbHVlIjoiUzh0VUY3NUhsTFZ4UEh0ejk1emhzNFBGV3pTL3kzRC9ZVWRWZ3p3YzJPc2x3QWthT0tEcHVvL0QwUjZzY1Rkd1BHTWJYZmxQam5ycE1xbmczdmh6cjF2L0lKQzByZENIc050U0RhRXliY2VMV2RhOE5RQjBTNmpDOWNRdm9DaGYiLCJtYWMiOiJlMmM4ZTI0YjdiNTc4ZDJkYjRhODkxNGEyNDY4NGQwNmEzMWZkNjViMmYxZDUzNmM0ZTdlMGU3YmFmYjQ3ZWQwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IldWcDdhL1c5K1o1SVRBRmljZkM1b3c9PSIsInZhbHVlIjoiZ0dxaWtYdmZ0WFRVZk1ITHNmYzFVQ1o1QkxGZ2lpUHNvNU9taGlscFBaMVRpNjhabG5XUHhoMlM1MkZsRnZjZXE1OHpoRnc0dVNYbFlUaWg2NEErN09IZ1RBK29kMkF2cFAza3NTSGtXUithdTRYOU5wT1NOeWxMTUx2bXkvUHQiLCJtYWMiOiJhMzcyOTcxZTI5MzVkNTYyM2YwOGEyMDEzNjczMDZkYzY4ZDk3MjYyMWE4ZjQyMGRiNWM0MDEzZjE0ZGFhMWMyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/regularisation
+
+Sec-Ch-Ua:                 \"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=YEz0nkq8rm1WJH1iaeKu8JO0YpZVVLss7izbkESi; laravel_session=3WhUxvMfwr12p2cWw4ONRfKSwpWS69qFDUADsbYM
+
+
+
+"}} 
+[2024-08-28 18:27:56] local.INFO: Tab parameter:   

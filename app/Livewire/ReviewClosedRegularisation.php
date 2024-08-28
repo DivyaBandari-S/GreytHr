@@ -31,7 +31,7 @@ class ReviewClosedRegularisation extends Component
         $this->empid = Auth::guard('emp')->user()->emp_id;
         $this->empName = EmployeeDetails::where('emp_id', $this->empid)->first();
         $this->regularisationrequest = RegularisationDates::with('employee')->find($id);
-       
+     
         $subordinateEmpId=$this->regularisationrequest->emp_id;
         $this->employeeDetails = Employeedetails::where('emp_id', $subordinateEmpId)->first();
         $this->ManagerId=$this->regularisationrequest->employee->manager_id;

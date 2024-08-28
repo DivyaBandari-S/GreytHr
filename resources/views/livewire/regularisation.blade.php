@@ -1181,7 +1181,7 @@ $lastItem = end($regularisationEntries); // Get the last item
 
         </div>
 
-        <div class="arrow-btn" wire:click="togglePendingAccordion({{ $pr->id }})"style="color:{{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForActive === $r->id ? '#3a9efd' : '#778899' }}">
+        <div class="arrow-btn" wire:click="togglePendingAccordion({{ $pr->id }})"style="color:{{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }}">
             <i class="fa fa-angle-{{ $openAccordionForPending === $pr->id ? 'up' : 'down' }}"style="color:{{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }}"></i>
         </div>
 
@@ -1346,7 +1346,7 @@ $lastEntry = end($regularisationEntries);
             @endif
         </div>
 
-        <div class="arrow-btn"wire:click="toggleHistoryAccordion({{ $hr->id }})"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForActive === $r->id ? '#3a9efd' : '#778899' }}">
+        <div class="arrow-btn"wire:click="toggleHistoryAccordion({{ $hr->id }})"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}">
             <i class="fa fa-angle-{{ $openAccordionForHistory === $hr->id ? 'up' : 'down' }}"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}"></i>
         </div>
 
