@@ -72,7 +72,7 @@
                         <div class="row">
                             <div class="col" style="font-size: 10px;">{{$lastLogin}}</div>
                             <div class="col" style="font-size: 10px;">{{$lastLoginFailure}}</div>
-                            <div class="col" style="font-size: 10px;">28 Jan 2023 19:00:01</div>
+                            <div class="col" style="font-size: 10px;">{{$lastPasswordChanged}}</div>
                         </div>
                         <table class="table-s" border="1" style="margin-top: 10px;width:100%">
                             <tr class="tr-s">

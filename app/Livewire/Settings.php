@@ -366,11 +366,11 @@ class Settings extends Component
             ->value('created_at');
         $this->lastLoginFailure = $this->lastLoginFailure ? Carbon::parse($this->lastLoginFailure)->format('d M Y H:i:s') : 'N/A';
 
-        // $this->lastPasswordChanged = DB::table('password_resets')
-        //     ->where('user_id', $userId)
-        //     ->orderBy('created_at', 'desc')
-        //     ->value('created_at');
-
+        $this->lastPasswordChanged = DB::table('employee_details')
+            ->where('emp_id', $userId)
+            ->orderBy('updated_at', 'desc')
+            ->value('updated_at');
+        $this->lastPasswordChanged =  $this->lastPasswordChanged ? Carbon::parse( $this->lastPasswordChanged)->format('d M Y H:i:s') : 'N/A';
         // Fetch login history
         $this->loginHistory = DB::table('sessions')
             ->where('user_id', $userId)
