@@ -40,7 +40,7 @@
                <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
             </li>
             <li class="custom-item m-0 p-0 flex-grow-1">
-               <a href="#" style="border-topl-right-radius:5px; border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
+               <a href="#" style="border-top-right-radius:5px; border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
             </li>
          </ul>
       </div>
@@ -144,7 +144,7 @@
          </div>
          @endif
          <div class="pending-section">
-            <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}; max-height: 370px;overflow-y: auto;">
+            <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}; max-height: 70vh;overflow-y: auto;">
                @if(empty($combinedRequests) || $combinedRequests->isEmpty())
                <div class="mt-2">
                   <div class="leave-pending rounded" style="width:80%;margin:0 auto;">
@@ -301,7 +301,7 @@
          </div>
          @elseif($activeSection === 'historyButton')
          <div class="history-section">
-            <div id="historyButton" class="row historyContent rounded mt-4" style="{{ $activeSection === 'historyButton' ? '' : 'display:none;' }}; max-height:370px;overflow-y:auto;">
+            <div id="historyButton" class="row historyContent rounded mt-4" style="{{ $activeSection === 'historyButton' ? '' : 'display:none;' }}; max-height:70vh;overflow-y:auto;">
                @if($this->leaveRequests->isNotEmpty())
 
                @foreach($this->leaveRequests->whereIn('status', ['approved', 'rejected','Withdrawn']) as $leaveRequest)

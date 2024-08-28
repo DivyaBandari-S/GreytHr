@@ -350,13 +350,18 @@ class LeaveCancelPage extends Component
     }
 
     //it will calculate number of days for leave application
-    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
-            // Check if the start and end sessions are different on the same day
 
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 0;
+            }
+
+            // Check if the start and end sessions are different on the same day
             if (
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
@@ -369,6 +374,7 @@ class LeaveCancelPage extends Component
                     return 0;
                 }
             }
+
             if (
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
