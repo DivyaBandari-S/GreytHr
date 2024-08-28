@@ -3087,7 +3087,6 @@ l
     font-weight: 600;
 }
 .leaveTypeTitle {
-    color: var(--sub-heading-color);
     font-size: var(--sub-headings-font-size);
     font-weight: 500;
 }
@@ -3399,13 +3398,35 @@ l
 }
 .balance {
     font-size: var(--normal-font-size);
-    color: #778899;
+    color: #fff;
+    background-color: rgb(2, 17, 79);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     padding: 10px 15px;
 }
 .field {
     font-size: var(--normal-font-size);
     font-weight: 500;
 }
+.leave-bal{
+    border-radius: 10px;
+}
+.containerBalanceHeight {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px; 
+}
+
+.leave-bal {
+    border-radius: 10px;
+    width: 100%; /* Ensures that leave-bal takes the full width of col-md-4 */
+}
+
+.center {
+    margin: 60px auto;
+}
+
 .bal-container .row.my-3 .col-md-4 > .leave-bal {
     flex: 1;
     border: 1px solid #cbd5e1;
