@@ -131,8 +131,9 @@
                         <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
                             <b>{{ $verified ? 'Reset Password' : 'Forgot Password' }}</b>
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="remove">
-                            <span aria-hidden="true" style="color: white;">x</span>
+                        <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            aria-label="Close" wire:click="remove"
+                            style="background-color: white; height:10px;width:10px;">
                         </button>
                     </div>
                     <div class="modal-body" style="background-color: #f0f0f0; padding: 20px;">
@@ -163,8 +164,6 @@
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="btn btn-success">Reset Password</button>
                             </div>
-
-
 
                             <!-- Success or error message for password update -->
                             @if (session()->has('passwordMessage'))
@@ -200,7 +199,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-center mt-2">
                                 <button type="submit" class="submit-btn">Verify</button>
                             </div>
 

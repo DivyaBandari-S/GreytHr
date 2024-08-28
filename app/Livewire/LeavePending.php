@@ -31,6 +31,7 @@ class LeavePending extends Component
     public $employeeDetails = [];
     public $leaveRequest;
     public $selectedYear;
+    public $applyingTo;
 
     public function mount($leaveRequestId)
     {
@@ -61,9 +62,9 @@ class LeavePending extends Component
 
             // Check if the start and end sessions are different on the same day
             if ($startDate->isSameDay($endDate)) {
-                if (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
+                if ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
                     return 1;
-                } elseif (self::getSessionNumber($fromSession) == self::getSessionNumber($toSession)) {
+                } elseif ($this->getSessionNumber($fromSession) == $this->getSessionNumber($toSession)) {
                     return 0.5;
                 } else {
                     return 0;

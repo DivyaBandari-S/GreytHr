@@ -362,7 +362,7 @@
             <!-- </div> -->
 
 
-            <div class="pending-leavves-container" style="width:100%; max-height:400px; overflow-y:auto; margin-top:50px;">
+            <div class="pending-leavves-container" style="width:100%; max-height:100vh; overflow-y:auto; margin-top:50px;">
                 @if($count > 0)
                 <div class="reviewList">
                     @livewire('view-pending-details')
@@ -402,7 +402,7 @@
             $isManager = DB::table('employee_details')->where('manager_id', $employeeId)->exists();
             @endphp
             @if($isManager)
-            <div class="closed-leaves-container px-2" style="width:100%; max-height:400px; overflow-y:auto; margin:20px auto;">
+            <div class="closed-leaves-container px-2" style="width:100%; max-height:100vh; overflow-y:auto; margin:20px auto;">
                 @if(!empty($approvedLeaveApplicationsList))
                 @foreach($approvedLeaveApplicationsList as $leaveRequest)
                 <div class="accordion rounded mb-3">

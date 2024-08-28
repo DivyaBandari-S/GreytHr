@@ -59,8 +59,31 @@ class LeaveHistory extends Component
             $fileDataArray,
             fn($fileData) => strpos($fileData['mime_type'], 'image') !== false,
         );
+            // If only one image, provide direct download
+    if (count($images) === 1) {
+        $image = reset($images); // Get the single image
+        $base64File = $image['data'];
+        $mimeType = $image['mime_type'];
+        $originalName = $image['original_name'];
+ 
+        // Decode base64 content
+        $fileContent = base64_decode($base64File);
+ 
+        // Return the image directly
+        return response()->stream(
+            function () use ($fileContent) {
+                echo $fileContent;
+            },
+            200,
+            [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'attachment; filename="' . $originalName . '"',
+            ]
+        );
+    }
 
         // Create a zip file for the images
+        if (count($images) > 1) {
         $zipFileName = 'images.zip';
         $zip = new \ZipArchive();
         $zip->open(storage_path($zipFileName), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
@@ -79,6 +102,9 @@ class LeaveHistory extends Component
         // Return the zip file as a download
         return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
     }
+      // If no images, return an appropriate response
+      return response()->json(['message' => 'No images found'], 404);
+}
     public $showViewFileDialog = false; // Toggle modal visibility
     public $files = []; // Store files array
     public $selectedFile; // Store the selected file's data
@@ -166,6 +192,11 @@ class LeaveHistory extends Component
         } catch (\Exception $e) {
             return 'Error: ' . $e->getMessage();
         }
+    }
+    private function getSessionNumber($session)
+    {
+        // You might need to customize this based on your actual session values
+        return (int) str_replace('Session ', '', $session);
     }
 
     public function render()
