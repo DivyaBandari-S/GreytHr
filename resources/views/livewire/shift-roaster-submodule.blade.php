@@ -7,7 +7,7 @@
 </head>
 <body>
     @if($showShiftRoaster)
-        <p>Shift Roaster</p>
+        <p class="mb-0">Shift Roaster</p>
     @endif
 </body>
 </html>
