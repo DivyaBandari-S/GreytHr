@@ -1204,12 +1204,17 @@ button.close-button {
     padding-right: 19.5px;
     padding-left: 19.5px;
     border-top: 1px solid #52afe9;
-}
-
-.field-for-employee-who-is-in:not(:last-child) {
     border-right: 1px solid #52afe9;
 }
 
+.field-for-employee-who-is-in{
+    border-right: 1px solid #52afe9;
+}
+
+
+.field-for-employee-who-is-in:first-child {
+    border-left: 1px solid #52afe9;
+}
 .percentage-who-is-in {
     font-size: 18px;
 }
