@@ -122,7 +122,7 @@
     </div>
 
     <div class="content-who-is-in">
-      <div class="col-md-3 field-for-employee-who-is-in">
+      <div class="col-md-5 field-for-employee-who-is-in">
         <div class="percentage-who-is-in" style="font-weight: 500;font-size:14px;">{{number_format($CalculateAbsentees,2)}}%</div>
 
         @if($employeesCount1>0)
@@ -131,7 +131,7 @@
         <div class="employee-count-who-is-in">No&nbsp;Employee(s)&nbsp;are&nbsp;Absent</div>
         @endif
       </div>
-      <div class="col-md-3 field-for-employee-who-is-in">
+      <div class="col-md-5 field-for-employee-who-is-in">
         <div class="percentage-who-is-in" style="font-weight: 500;font-size:14px;">{{number_format($CalculatePresentButLate,2)}}%</div>
         @if($LateSwipesCount>0)
         <div class="employee-count-who-is-in">{{$LateSwipesCount}}&nbsp;Employee(s)&nbsp;are&nbsp;Late&nbsp;In</div>
@@ -139,7 +139,7 @@
         <div class="employee-count-who-is-in">No&nbsp;Employee(s)&nbsp;are&nbsp;Late&nbsp;In</div>
         @endif
       </div>
-      <div class="col-md-3 field-for-employee-who-is-in">
+      <div class="col-md-5 field-for-employee-who-is-in">
         <div class="percentage-who-is-in" style="font-weight: 500;font-size:14px;">{{number_format($CalculatePresentOnTime,2)}}%</div>
         @if($EarlySwipesCount>0)
         <div class="employee-count-who-is-in">{{$EarlySwipesCount}}&nbsp;Employee(s)&nbsp;are&nbsp;On&nbsp;Time</div>
@@ -148,7 +148,7 @@
         @endif
 
       </div>
-      <div class="col-md-3 field-for-employee-who-is-in">
+      <div class="col-md-5 field-for-employee-who-is-in">
         <div class="percentage-who-is-in" style="font-weight: 500;font-size:14px;">{{number_format($CalculateApprovedLeaves,2)}}%</div>
 
         @if($ApprovedLeaveRequestsCount>0)
@@ -173,10 +173,10 @@
 
       </div>
 
-        <table class="who-is-in-table" style="margin-top:-10px">
-          <thead class="whojhgfd" >
+        <table class="who-is-in-table-for-late-employee" style="width: 100%;">
+          <thead>
             <tr>
-              <th >Employee</th>
+              <th style="padding-right:42px;">Employee</th>
               <th >Expected&nbsp;In&nbsp;Time</th>
             </tr>
           </thead>
@@ -213,13 +213,12 @@
       </div>
 
       <div>
-        <table class="who-is-in-table" style="margin-top:-10px">
+        <table class="who-is-in-table-for-late-employee" style="width:100%;">
           
           <thead>
             <tr>
-              <th>Employee</th>
-              <th>Late&nbsp;By</th>
-
+              <th style="padding-right:53px;">Employee</th>
+              <th style="padding-right:23px;">Late By</th>
             </tr>
           </thead>
           <tbody>
@@ -283,15 +282,17 @@
       </div>
 
       <div>
-        <table class="who-is-in-table" style="margin-top:-10px">
+        <!-- <table class="who-is-in-table-for-early-employee" style="width:100%;"> -->
+        <table class="who-is-in-table-for-late-employee" style="width:100%;">
         
-          <thead style="width: 100px;">
+        <thead>
             <tr>
-              <th style="width:100px">Employee</th>
-              <th>Early&nbsp;By</th>
-
+              <th style="padding-right:73px;">Employee</th>
+              <th style="padding-right:8px;">Early By</th>
             </tr>
           </thead>
+
+         
           <tbody>
              @if($onTime > 0)
             @foreach($Swipes as $s1)
@@ -332,12 +333,12 @@
       </div>
 
       <div>
-        <table class="who-is-in-table" style="margin-top:-10px">
+        <table class="who-is-in-table" >
         
           <thead>
             <tr>
-              <th>Employee</th>
-              <th>Number&nbsp;of&nbsp;days</th>
+              <th style="padding-left:10px;">Employee</th>
+              <th >Number&nbsp;of&nbsp;days</th>
             </tr>
           </thead>
           <tbody>

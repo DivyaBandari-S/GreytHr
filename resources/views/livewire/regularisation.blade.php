@@ -872,6 +872,10 @@
     overflow-y: auto;
     
 }
+.highermanager:hover
+{
+    background-color: aliceblue;
+}
     </style>
     <div class="container">
          <a href="/Attendance" class="submit-btn"style="text-decoration:none;">Back</a>
@@ -945,14 +949,14 @@
             </div>
         </div>
         <div class="col-md-7 mb-3">
-            @if(count($selectedDates)>0)
+            @if(count($selectedDates)>0&&$isdatesApplied==false)
             <div class="remarks-container">
             <div class="reporting mb-2">
                     <div class="employee-profile-image-container">
                         <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
                     <div class="center p-0 m-0">
-                            <p class="mb-0" style="font-size:10px;">{{$reportingmanagerfullName->first_name}}&nbsp;{{$reportingmanagerfullName->last_name}}</p>
+                            <p class="mb-0" style="font-size:10px;">{{ucwords(strtolower($reportingmanagerfullName->first_name))}}&nbsp;{{ucwords(strtolower($reportingmanagerfullName->last_name))}}</p>
                             <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText">#({{$reportingmanager}})</p>
                     </div>
                     <div class="downArrow" wire:click="applyingTo">
@@ -982,12 +986,12 @@
                     <div class="scrollApplyingTO">
                         
                             @foreach ($heademployees as $employee)
-                                   <div class="d-flex gap-4 align-items-center">
+                                   <div class="highermanager d-flex gap-4 mt-2 align-items-center"wire:click="togglehigherManagers('{{ $employee->emp_id }}')">
                                         <div class="employee-profile-image-container">
                                             <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
                                         </div>
 
-                                        <div class="center d-flex flex-column mt-2 mb-2">
+                                        <div class="center d-flex flex-column mt-3 mb-2">
                                             <span class="ellipsis mb-0">
                                                 {{ ucwords(strtolower($employee->first_name))}} {{ ucwords(strtolower($employee->last_name))}}
                                             </span>
@@ -1121,12 +1125,17 @@
             </footer>
 
         </div>
-        @else
+        @elseif($isdatesApplied==false)
         <div class="apply-box">
             <img src="{{ asset('images/pending.png') }}" style="margin-top:50px;" height="180" width="180">
             <p style="color: #7f8fa4;font-weight:400;font-size: 14px;">Smart! Your attendance is sorted.</p>
             <p style="color: #a3b2c7;font-weight:400;font-size: 12px;margin-top:-20px;">Still want to apply
                 regularization? Select dates(s).</p>
+        </div>
+        @else
+        <div class="apply-box">
+            <img src="{{ asset('images/date-to-start-regularizing.png') }}" style="margin-top:50px;" height="180" width="180">
+            <p style="color: #7f8fa4;font-weight:400;font-size: 14px;">Select date to start regularizing</p>
         </div>
         @endif
     </div>

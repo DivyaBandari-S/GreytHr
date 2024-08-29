@@ -2,7 +2,7 @@
     <style>
         .custom-table-wrapper {
             position: relative;
-            max-height: 100px;
+            /* max-height: 100px; */
             overflow-y: auto;
             border-collapse: collapse;
         }
@@ -96,7 +96,7 @@
             <div class="col-md-5 ">
                 <div class="buttons-container d-flex gap-3 justify-content-end mt-2 p-0 ">
                     <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
-                    <select class="dropdown bg-white rounded " wire:change='changeYear($event.target.value)'  wire:model='year'    style="margin-right:5px;">
+                    <select class="dropdown bg-white rounded " wire:change='changeYear($event.target.value)'  wire:model='year'    style="margin-right:5px;width:fit-content">
                         <?php
                         // Get the current year
                         $currentYear = date('Y');
@@ -109,7 +109,7 @@
                     </select>
                 </div>
             </div>
-            @if($Availablebalance == 0)
+            @if($employeeLeaveBalances == 0)
             <div class="row m-0 p-0">
                 <div class="col-md-12" style="max-height: 100px;">
                     <div class="card" style="height: 100%;">

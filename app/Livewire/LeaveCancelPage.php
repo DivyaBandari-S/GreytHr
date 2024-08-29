@@ -325,9 +325,8 @@ class LeaveCancelPage extends Component
             ]);
             session()->flash('message', 'Applied request for leave cancel successfully.');
             $this->showAlert = true;
-            $this->reset(); // Reset component state
         } catch (\Exception $e) {
-            session()->flash('error', 'Failed to mark leave request as cancel. Please try again.');
+            session()->flash('error', 'Failed to submit the leave cancel request. Please try again.');
             $this->showAlert = true;
             Log::error('Error marking leave request as cancel: ' . $e->getMessage());
         }
