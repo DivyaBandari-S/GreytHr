@@ -20,7 +20,8 @@ class Everyone extends Component
     public $image;
     public $posts;
 
-
+    public $showAlert = false;
+    public $file_path='';
 
     public $category;
     public $description;
@@ -101,19 +102,20 @@ class Everyone extends Component
 
 
 
-
     public function submit()
     {
-        $validatedData = $this->validate($this->newCommentRules);
+
+        $validatedData = $this->validate($this->rules);
+    
         try {
             // Validate the form data
-          
-    
+           
             $fileContent = null;
             $mimeType = null;
             $fileName = null;
-
-            // Store the file as binary data
+    
+            // Process the uploaded file
+       
             if ($this->file_path) {
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mimeType = $this->file_path->getMimeType();
@@ -136,6 +138,7 @@ class Everyone extends Component
                 session()->flash('error', 'File size exceeds the allowed limit.');
                 return;
             }
+
             // Get the authenticated user
             $user = Auth::user();
     
@@ -148,39 +151,40 @@ class Everyone extends Component
                 ->where('manager_id', $employeeId)
                 ->exists();
     
-            // If not a manager, prevent post creation
             if (!$isManager) {
-                session()->flash('error', 'Employees are not allowed to post feeds.');
-                return;
+                // Allow employee to create the post but associate it with their manager
+                $managerId = $employeeDetails->manager_id;
+                if (!$managerId) {
+                    session()->flash('error', 'No manager found for this employee. Cannot create post.');
+                    return;
+                }
+            } else {
+                $managerId = $employeeId; // If the user is a manager, they can create the post directly
             }
     
-            // Retrieve the HR details if applicable
-            $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
-    
-            // Create the post using the manager's emp_id
+            // Create the post
             $post = Post::create([
                 'hr_emp_id' => $hrDetails->hr_emp_id ?? '-',
-                'manager_id' => $employeeId,
+                'manager_id' => $managerId, // Associate the post with the manager
                 'category' => $this->category,
                 'description' => $this->description,
-                'file_path' => $fileContent, // Store binary data
-                'mime_type'=>$mimeType,
-                'file_name'=>$fileName,
+                'file_path' => $fileContent, // Store binary data in the database
+                'mime_type' => $mimeType,
+                'file_name' => $fileName,
             ]);
-    
+         
             // Reset form fields and display success message
-            $this->reset(['category', 'description', 'file_path']);
+            $this->reset(['category', 'description', ]);
             $this->message = 'Post created successfully!';
+            session()->flash('showAlert', true);
             $this->showFeedsDialog = false;
     
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Handle validation errors
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
-            // Handle general exceptions
             Log::error('Error creating request: ' . $e->getMessage(), [
                 'employee_id' => $employeeId ?? 'N/A',
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
