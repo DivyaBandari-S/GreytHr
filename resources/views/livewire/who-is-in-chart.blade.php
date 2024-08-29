@@ -173,7 +173,7 @@
 
       </div>
 
-        <table class="who-is-in-table-for-late-employee">
+        <table class="who-is-in-table-for-late-employee" style="width: 100%;">
           <thead>
             <tr>
               <th style="padding-right:42px;">Employee</th>
@@ -333,7 +333,7 @@
       </div>
 
       <div>
-        <table class="who-is-in-table" style="margin-top:-10px">
+        <table class="who-is-in-table" >
         
           <thead>
             <tr>
