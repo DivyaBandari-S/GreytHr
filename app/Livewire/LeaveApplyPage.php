@@ -301,7 +301,6 @@ class LeaveApplyPage extends Component
                             ->where('to_date', '<=', $this->to_date);
                     });
                 })
-                ->whereIn('status', ['approved', 'pending'])
                 ->get();
 
             if ($overlappingLeave) {
@@ -349,6 +348,17 @@ class LeaveApplyPage extends Component
                     }
                 }
 
+                $checkLeaveBalance = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->where('leave_type', $this->leave_type)
+                ->whereIn('status', ['approved', 'pending'])
+                ->get();
+
+                if (!$checkLeaveBalance->isEmpty()) {
+                    foreach ($checkLeaveBalance as $leaveRequest) {
+                        // Calculate the number of days for each leave request
+                        $numberOfDays = $this->calculateNumberOfDays();
+                    }
+                }
                 // Check for holidays
                 $holidays = HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date])->get();
                 if ($holidays->isNotEmpty()) {
