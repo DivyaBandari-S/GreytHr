@@ -949,7 +949,7 @@
             </div>
         </div>
         <div class="col-md-7 mb-3">
-            @if(count($selectedDates)>0)
+            @if(count($selectedDates)>0&&$isdatesApplied==false)
             <div class="remarks-container">
             <div class="reporting mb-2">
                     <div class="employee-profile-image-container">
@@ -1125,12 +1125,17 @@
             </footer>
 
         </div>
-        @else
+        @elseif($isdatesApplied==false)
         <div class="apply-box">
             <img src="{{ asset('images/pending.png') }}" style="margin-top:50px;" height="180" width="180">
             <p style="color: #7f8fa4;font-weight:400;font-size: 14px;">Smart! Your attendance is sorted.</p>
             <p style="color: #a3b2c7;font-weight:400;font-size: 12px;margin-top:-20px;">Still want to apply
                 regularization? Select dates(s).</p>
+        </div>
+        @else
+        <div class="apply-box">
+            <img src="{{ asset('images/date-to-start-regularizing.png') }}" style="margin-top:50px;" height="180" width="180">
+            <p style="color: #7f8fa4;font-weight:400;font-size: 14px;">Select date to start regularizing</p>
         </div>
         @endif
     </div>

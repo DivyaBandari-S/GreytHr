@@ -2104,7 +2104,7 @@ color: #fff;
                                                </p>
                                            </div>
                                        </td>
-                                       <td>-</td>
+                                       <td style="font-size:10px;">{{$this->city}},{{$this->country}},{{$this->postal_code}}</td>
  
                                        <td><button class="info-button" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
  
@@ -2173,7 +2173,7 @@ color: #fff;
 
 
 
-                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Location<br /><span style="color: #000000;">-</span></div>
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Location<br /><span style="color: #000000;">{{$this->city}},{{$this->country}},{{$this->postal_code}}</span></div>
 
                                     </div>
                                     @endif
