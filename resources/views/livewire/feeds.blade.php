@@ -134,7 +134,7 @@
 
     <div class="modal-footer" style="border-top: 1px solid #ccc;">
         <div class="d-flex justify-content-center" style="width: 100%;">
-            <button type="submit" wire:click="submit" class="submit-btn">Submit</button>
+            <button type="submit"  class="submit-btn">Submit</button>
             <button wire:click="closeFeeds" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79); margin-left: 10px">Cancel</button>
         </div>
     </div>

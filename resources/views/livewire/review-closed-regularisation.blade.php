@@ -233,12 +233,16 @@
                                     @endif
 
 
-
-
+                                   
+                                    @if($regularisationrequest->status=='approved')
                                         <span style="color: #333; font-weight: 500;font-size:12px;">
                                         {{ucwords(strtolower($regularisationrequest->approved_by))}}
                                         </span>
-
+                                    @elseif($regularisationrequest->status=='rejected')
+                                        <span style="color: #333; font-weight: 500;font-size:12px;">
+                                        {{ucwords(strtolower($regularisationrequest->rejected_by))}}
+                                        </span>
+                                    @endif    
 
 
                         </div>
@@ -258,11 +262,12 @@
                 <div class="view-container m-0 p-0">
                      <div class="first-col" style="display:flex; gap:40px;">
                             <div class="field p-2">
-                                <span style="color: #778899; font-size:11px; font-weight: 500;">Remarks</span>
-
-                                   <span style="font-size: 12px; font-weight: 600;text-align:center;">-<br></span>
-
-
+                                <span style="color: #778899; font-size:11px; font-weight: 500;">Remarks</span><br>
+                                 @if(empty($regularisationrequest->employee_remarks))
+                                     <span style="font-size: 12px; font-weight: 600;text-align:center;">-</span>
+                                 @else
+                                 <span style="font-size: 12px; font-weight: 600;text-align:center;">{{$regularisationrequest->employee_remarks}}</span>
+                                 @endif
                             </div>
 
                             <div class="vertical-line"></div>
@@ -446,9 +451,16 @@
                        @endif
 
                 </td>
+                @if(empty($r1['reason']))
+                <td class="tooltip-container" style="width:30%; border-right: 1px solid #dcdcdc;padding: 8px;">
+                            <span class="tooltip-text" style="font-size: 12px;" >NA</span>
+                </td>
+
+                @else
                 <td class="tooltip-container" style="width:30%; border-right: 1px solid #dcdcdc;padding: 8px;">
                             <span class="tooltip-text" style="font-size: 12px;" data-tooltip="{{$r1['reason']}}">{{ ucwords(strtolower($r1['reason'])) }}</span>
                 </td>
+                @endif
         </tbody>
         @endforeach
     </table>

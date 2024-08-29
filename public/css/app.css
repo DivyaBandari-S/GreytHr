@@ -1008,10 +1008,7 @@ button.close-button {
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
-.active .arrow-btn {
-    color: #3a9efd;
-    border: 1px solid #3a9efd;
-}
+
 .arrow-btn {
     color: #778899;
     height: 22px;
@@ -2605,15 +2602,8 @@ input[type="radio"] {
     margin-right: 10px;
 }
 
-.active .arrow-btn {
-    color: #3a9efd;
-    border: 1px solid #3a9efd;
-}
 
-.arrow-btn.active {
-    color: #3a9efd; /* Color for active state */
-    border-color: #3a9efd; /* Border color for active state */
-}
+
 .side {
     display: flex;
     flex-direction: row;
