@@ -114,7 +114,7 @@
   </div>
 
 </div>
-<div cs="mx-1 p-0">
+<div class="mx-1 p-0">
   <div class="container-box-for-employee-information-who-is-in">
     <!-- Your content goes here -->
     <div style="margin-top:5px;display:flex;align-items:center; text-align:center;justify-content:center;padding:0;">

@@ -10,7 +10,7 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-        'hr_emp_id', 'admin_emp_id', 'emp_id', 'category', 'description', 'file_path','manager_id','mime_type','file_name'
+        'hr_emp_id', 'admin_emp_id', 'emp_id', 'category', 'description', 'file_path','manager_id','mime_type','file_name','status'
     ];
 
     public function isImage()

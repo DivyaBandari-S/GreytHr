@@ -32,13 +32,17 @@ class ViewPendingDetails extends Component
     public $leaveApplications = [];
     public $selectedYear;
     public $searchQuery = '';
+    public $showAlert = false;
     public function mount()
     {
         //for year selection
         $this->selectedYear = Carbon::now()->format('Y');
         $this->fetchPendingLeaveApplications();
     }
-
+    public function hideAlert()
+    {
+        $this->showAlert = false;
+    }
     public function fetchPendingLeaveApplications($searchQuery = null)
     {
         try {
@@ -225,6 +229,7 @@ class ViewPendingDetails extends Component
                     $leaveRequest->updated_at = now(); // Update timestamps
                     $leaveRequest->save();
                     session()->flash('message', 'Leave application approved successfully.');
+                    $this->showAlert = true;
                     $this->fetchPendingLeaveApplications();
                 }
             }
@@ -257,6 +262,7 @@ class ViewPendingDetails extends Component
                     $leaveRequest->updated_at = now();
                     $leaveRequest->save();
                     session()->flash('message', 'Leave cancel application approved successfully.');
+                    $this->showAlert = true;
                     $this->fetchPendingLeaveApplications();
                 }
             }
@@ -279,6 +285,7 @@ class ViewPendingDetails extends Component
             // Check if status is already approved
             if ($leaveRequest->cancel_status === 'rejected') {
                 session()->flash('message', 'Leave application is already approved.');
+                $this->showAlert = true;
             } else {
                 // Check if days since creation is more than 3 days or status is not yet approved
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
@@ -287,6 +294,7 @@ class ViewPendingDetails extends Component
                     $leaveRequest->updated_at = now();
                     $leaveRequest->save();
                     session()->flash('message', 'Leave cancel application approved successfully.');
+                    $this->showAlert = false;
                     $this->fetchPendingLeaveApplications();
                 }
             }
@@ -308,6 +316,7 @@ class ViewPendingDetails extends Component
             $leaveRequest->save();
             $leaveRequest->updated_at = now();
             session()->flash('message', 'Leave application rejected.');
+             $this->showAlert = true;
             $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Log the error
