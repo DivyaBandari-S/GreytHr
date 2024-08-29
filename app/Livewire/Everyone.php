@@ -21,7 +21,7 @@ class Everyone extends Component
     public $posts;
 
     public $showAlert = false;
-    public $file_path='';
+    public $file_path;
 
     public $category;
     public $description;
@@ -115,7 +115,6 @@ class Everyone extends Component
             $fileName = null;
     
             // Process the uploaded file
-       
             if ($this->file_path) {
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mimeType = $this->file_path->getMimeType();
@@ -146,26 +145,25 @@ class Everyone extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
     
-            // Check if the authenticated employee is a manager
-            $isManager = DB::table('employee_details')
-                ->where('manager_id', $employeeId)
-                ->exists();
+         
     
-            if (!$isManager) {
-                // Allow employee to create the post but associate it with their manager
-                $managerId = $employeeDetails->manager_id;
-                if (!$managerId) {
-                    session()->flash('error', 'No manager found for this employee. Cannot create post.');
-                    return;
-                }
-            } else {
-                $managerId = $employeeId; // If the user is a manager, they can create the post directly
-            }
-    
+        // Check if the authenticated employee is a manager
+        $isManager = DB::table('employee_details')
+        ->where('manager_id', $employeeId)
+        ->exists();
+
+    // If not a manager, prevent post creation
+    if (!$isManager) {
+        session()->flash('error', 'Employees are not allowed to post feeds.');
+        return;
+    }
+
+    // Retrieve the HR details if applicable
+    $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
             // Create the post
             $post = Post::create([
                 'hr_emp_id' => $hrDetails->hr_emp_id ?? '-',
-                'manager_id' => $managerId, // Associate the post with the manager
+                'manager_id' =>$employeeId, // Associate the post with the manager
                 'category' => $this->category,
                 'description' => $this->description,
                 'file_path' => $fileContent, // Store binary data in the database
