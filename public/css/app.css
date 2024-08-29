@@ -1282,10 +1282,7 @@ button.close-button {
 
 .who-is-in-table {
     border-collapse: collapse;
-
-    /* Set the max height you prefer */
-
-    display: block;
+    width: 100%;
 }
 .who-is-in-table-late-employee {
     border-collapse: collapse;
