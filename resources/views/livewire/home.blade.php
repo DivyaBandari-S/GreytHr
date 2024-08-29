@@ -479,7 +479,7 @@ Submit your time sheet for this week.
 </p> -->
 
         <div class="who-is-in d-flex flex-column justify-content-start ">
-            <p class="section-name payslip-small-desc">
+            <p class="mb-2  mt-2 section-name payslip-small-desc">
                 Not Yet In ({{ $CountAbsentEmployees }})
             </p>
             <div class="team-leave d-flex flex-row gap-3">
@@ -524,7 +524,7 @@ Submit your time sheet for this week.
         <!-- /second row -->
 
         <div class="who-is-in d-flex flex-column justify-content-start ">
-            <p class="section-name mt-1 payslip-small-desc">
+            <p class="mb-2 mt-2 section-name mt-1 payslip-small-desc">
                 Late Arrival ({{ $CountLateSwipes }})
             </p>
             <div class="team-leave d-flex flex-row  gap-3">
@@ -567,7 +567,7 @@ Submit your time sheet for this week.
         <!-- /third row -->
 
         <div class="who-is-in d-flex flex-column justify-content-start">
-            <p class="section-name mt-1 payslip-small-desc">
+            <p class="mb-2 mt-2 section-name mt-1 payslip-small-desc">
                 On Time ({{ $CountEarlySwipes }})
             </p>
             <div class="team-leave d-flex flex-row gap-3">
@@ -625,10 +625,10 @@ Submit your time sheet for this week.
 <div class="col-md-3 mb-4 ">
     <div class="home-hover">
         <div class="reviews">
-            <div class="homeCard4">
+            <div class="homeCard4 p-3">
                 <div class="team-heading px-3 mt-2 d-flex justify-content-between">
                     <div>
-                        <p class="pt-1 teamOnLeave"> Team On Leave</pclass>
+                        <p class="teamOnLeave"> Team On Leave</pclass>
                     </div>
                     <div>
                         <a href="/team-on-leave-chart" style="font-size:16px; "><img
@@ -638,7 +638,7 @@ Submit your time sheet for this week.
                 </div>
                 @if ($this->teamCount > 0)
                 <div class="team-Notify px-3">
-                    <p style="color: #778899; font-size: 11px; font-weight: 500;">
+                    <p class="payslip-small-desc">
                         Today ({{ $teamCount }}) </p>
                     <div class="team-leave d-flex flex-row  gap-3">
                         @php
@@ -676,7 +676,7 @@ Submit your time sheet for this week.
                 </div>
 
                 <div class="mt-4">
-                    <p class="homeText font-weight-500 text-start">
+                    <p class="payslip-small-desc">
                         This month ({{ $upcomingLeaveApplications }}) </p>
                     @if ($upcomingLeaveRequests)
                     <div wire:ignore class="mt-2 d-flex align-items-center gap-3 mb-3">

@@ -391,7 +391,7 @@ class LeaveApplyPage extends Component
             }
 
             $this->validate([
-                'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+                'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:2048',
             ]);
 
             // Store files
@@ -408,7 +408,6 @@ class LeaveApplyPage extends Component
                     ];
                 }
             }
-
 
             // Create the leave request
             $this->createdLeaveRequest = LeaveRequest::create([

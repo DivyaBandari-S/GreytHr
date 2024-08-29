@@ -13,7 +13,7 @@
         /* use main heading along with font-weight-500 */;
     --requiredAlert: red;
     --label-color: #778899;
-    --sub-heading-color: #778899
+    --sub-heading-color:#3b4452 ;
         /* use sub heading along with font-weight-500 */;
     --normal-font-size: 0.75rem;
     --sub-headings-font-size: 0.8rem;
@@ -67,7 +67,7 @@
 }
 .custom-select-width{
     width: 120px;
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     padding: 4px;
 }
 
@@ -160,7 +160,7 @@
 }
 
 .initials {
-    color: #778899;
+    color: var(--label-color);
     font-size: 11px;
     font-weight: 500;
 }
@@ -170,17 +170,17 @@
     font-size: var(--normal-font-size);
 }
 .approvedColor {
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     font-weight: 500;
     color: #32cd32;
 }
 .rejectColor {
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     font-weight: 500;
     color: #ff0000;
 }
 .otherStatus {
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     font-weight: 500;
     color: #cf9b17;
 }
@@ -190,7 +190,7 @@
     font-size: var(--normal-font-size);
 }
 .homeText {
-    color: #778899;
+    color: var(--main-heading-color);
     text-align: center;
     font-size: var(--normal-font-size);
 }
@@ -324,6 +324,7 @@
 .quick-link {
     display: block;
     padding: 5px;
+    font-size: var(--normal-font-size);
     margin-bottom: 10px;
     color: #000;
     text-decoration: none;
@@ -378,7 +379,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     font-weight: 500;
-    color: #778899;
+    color: var(--label-color);
     padding: 5px 10px;
     font-size: 13px;
     line-height: 2;
@@ -387,7 +388,7 @@
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 5px;
-    color: #778899;
+    color: var(--label-color);
     font-weight: 500;
     font-size: 14px;
     outline: none;
@@ -404,7 +405,7 @@
     margin-bottom: 10px;
 }
 .emp-details-p {
-    color: #778899;
+    color: var(--label-color);
     font-size: var(--normal-font-size);
 }
 .emp-details-span {
@@ -601,7 +602,7 @@ button.close-button {
 }
 
 .text-gray {
-    color: #778899;
+    color: var(--label-color);
     font-size: var(--normal-font-size);
 }
 
@@ -720,7 +721,7 @@ button.close-button {
 
 .button-dl:hover {
     background-color: #f4f4f4;
-    color: #778899 !important;
+    color: var(--label-color) !important;
 }
 
 .button-dl.active {
@@ -934,7 +935,7 @@ button.close-button {
 .dropdown {
     position: relative;
     display: inline-block;
-    color: #778899;
+    color: var(--label-color);
     width: 10%;
     border-color: #ccc;
     /* border:1px solid #ccc; */
@@ -1010,7 +1011,7 @@ button.close-button {
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
 
 .arrow-btn {
-    color: #778899;
+    color: var(--label-color);
     height: 22px;
     width: 22px;
     display: flex;
@@ -1033,7 +1034,7 @@ button.close-button {
     align-items: center;
   }
   .checkbox-label-who-is-in {
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     /* Text size */
     /* Text color */
     font-weight: bold;
@@ -1136,7 +1137,7 @@ button.close-button {
 
 
   .total-employee-count-who-is-in{
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     /* Text size */
     color: #059212;
     /* Text color */
@@ -1150,9 +1151,9 @@ button.close-button {
 
   .time-range-who-is-in .start-time-who-is-in,
   .time-range-who-is-in .end-time-who-is-in {
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     /* Text size */
-    color: #778899;
+    color: var(--label-color);
     /* Text color */
     margin: 0 10px;
     /* Adjust spacing as needed */
@@ -1162,7 +1163,7 @@ button.close-button {
     /* Full width */
     height: 1px;
     /* Height of the line */
-    background-color: #778899;
+    background-color: var(--label-color);
     /* Line color */
     margin: 0 10px;
     /* Adjust spacing as needed */
@@ -1227,11 +1228,11 @@ button.close-button {
 }
 
 .heading-who-is-in i {
-    color: #778899;
+    color: var(--label-color);
 }
 
 .heading-who-is-in h3 {
-    color: #778899;
+    color: var(--label-color);
     font-size: 14px;
     font-weight: 500;
 }
@@ -1365,7 +1366,7 @@ input::placeholder {
 
 input[type="date"]::before {
     content: attr(placeholder);
-    color: #778899;
+    color: var(--label-color);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1432,7 +1433,7 @@ input[type="date"]::before {
     position: absolute;
     top: 50%;
     right: 10px;
-    color: #778899;
+    color: var(--label-color);
     transform: translateY(-50%);
     cursor: pointer;
 }
@@ -1461,7 +1462,7 @@ input[type="date"]::before {
 /* Styles for the Font Awesome icon */
 .fa-icon {
     font-size: 14px;
-    color: #778899;
+    color: var(--label-color);
     /* Add spacing between icon and text */
 }
 
@@ -1558,7 +1559,7 @@ input[type="date"]::before {
     top: 50%;
     right: 20px;
     transform: translateY(-50%);
-    color: #778899;
+    color: var(--label-color);
 }
 
 .search-icon-employee-swipes::before {
@@ -1630,7 +1631,7 @@ td {
 .green-section-employee-swipes p {
     font-size: 11px;
     margin-bottom: 0 !important;
-    color: #778899;
+    color: var(--label-color);
 }
 .record-not-found-who-is-in {
     text-align: center;
@@ -1722,7 +1723,7 @@ td {
 }
 .search-text::placeholder {
     font-size: 14px; /* Adjust the font size as needed */
-    color: #778899; /* Placeholder text color */
+    color: var(--label-color); /* Placeholder text color */
 }
 .employee-swipes-table-container {
     border-bottom: 1px solid #ccc;
@@ -1762,7 +1763,7 @@ td {
 }
 .swipe-deatils-title {
     font-size: var(--normal-font-size);
-    color: #778899;
+    color: var(--label-color);
     margin-bottom: 0;
 }
 .swipe-details-description {
@@ -1804,7 +1805,6 @@ td {
 /* Styling for the search icon */
 .search-bar-attendance-muster::after {
     content: "\f002"; /* Unicode for the search icon (font-awesome) */
-    font-family: FontAwesome; /* Use an icon font library like FontAwesome */
     font-size: 16px;
     padding: 5px;
     color: #999; /* Icon color */
@@ -1919,7 +1919,7 @@ td {
     position: absolute;
     bottom: 15px; /* Move up by increasing this value */
     right: 5px; /* Adjust based on padding and design */
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     color: rgb(2, 17, 79);
     border: none;
     border-radius: 4px;
@@ -1956,27 +1956,27 @@ td {
     outline: none;
 }
 .placeholder-small {
-    color: #778899; /* Placeholder text color */
-    font-size: 12px;
+    color: var(--label-color); /* Placeholder text color */
+    font-size:  var(--normal-font-size);
     font-family: "Montserrat", sans-serif;
     font-weight: normal;
 }
 #category::placeholder {
-    color: #778899; /* Placeholder text color */
-    font-size: 12px; /* Placeholder font size */
+    color: var(--label-color); /* Placeholder text color */
+    font-size:  var(--normal-font-size); /* Placeholder font size */
     font-family: "Montserrat", sans-serif;
     font-weight: normal;
 }
 #subject::placeholder {
-    color: #778899; /* Placeholder text color */
-    font-size: 12px; /* Placeholder font size */
+    color: var(--label-color); /* Placeholder text color */
+    font-size:  var(--normal-font-size); /* Placeholder font size */
     font-family: "Montserrat", sans-serif;
     font-weight: normal;
 }
 #description::placeholder {
     font-weight: normal;
-    color: #778899; /* Placeholder text color */
-    font-size: 12px; /* Placeholder font size */
+    color: var(--label-color); /* Placeholder text color */
+    font-size:  var(--normal-font-size); /* Placeholder font size */
     font-family: "Montserrat", sans-serif;
 }
 
@@ -2022,13 +2022,11 @@ td {
 }
 
 .font-semibold {
-    /* Font weight */
     font-weight: 600;
     /* Adjust as needed */
 }
 
 .leading-5 {
-    /* Line height */
     line-height: 1.25rem;
     /* Adjust as needed */
 }
@@ -2402,7 +2400,7 @@ input[type="radio"] {
     display: flex;
     font-weight: 500;
     text-align: center;
-    color: #778899;
+    color: var(--label-color);
     padding: 0;
     margin: 0;
     font-size: var(--normal-font-size);
@@ -2416,7 +2414,7 @@ input[type="radio"] {
 
 /* Link styles for tabs */
 .custom-nav-link {
-    color: #778899;
+    color: var(--label-color);
     padding: 8px 30px;
     text-decoration: none;
     display: block;
@@ -2446,22 +2444,22 @@ input[type="radio"] {
 }
 
 .alert-success {
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     padding: 7px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 .alert-danger {
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     padding: 7px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 .restrictedHoliday {
-    color: #778899;
-    font-size: 12px;
+    color: var(--label-color);
+    font-size:  var(--normal-font-size);
     font-weight: normal;
     text-align: center;
 }
@@ -2483,20 +2481,20 @@ input[type="radio"] {
 }
 
 .headerText {
-    color: #778899;
-    font-size: 12px;
+    color: var(--label-color);
+    font-size:  var(--normal-font-size);
     font-weight: 500;
 }
 
 .paragraphContent {
     color: var(--main-heading-color);
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     font-weight: 500;
 }
 
 .viewDetails {
     color: rgb(2, 17, 53);
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     font-weight: 500;
 }
 @media (max-width: 460px) {
@@ -2634,7 +2632,7 @@ input[type="radio"] {
 }
 
 .arrow-btn {
-    color: #778899;
+    color: var(--label-color);
     height: 22px;
     width: 22px;
     display: flex;
@@ -2663,7 +2661,7 @@ input[type="radio"] {
 }
 .side a {
     text-decoration: none !important;
-    color: #778899 !important;
+    color: var(--label-color) !important;
     font-size: 11px;
     font-weight: 500;
     padding: 5px;
@@ -2700,7 +2698,7 @@ input[type="radio"] {
     gap: 10px;
 }
 .accordionContentSpan {
-    color: #778899;
+    color: var(--label-color);
     font-size: var(--normal-font-size);
     font-weight: 500;
 }
@@ -2733,7 +2731,7 @@ input[type="radio"] {
 }
 .placeholder-small {
     font-size: 12px !important;
-    color: #778899 !important;
+    color: var(--label-color) !important;
 }
 .input-placeholder-small {
     font-size: 13px !important;
@@ -2743,7 +2741,7 @@ input[type="radio"] {
     font-size: var(--sub-headings-font-size);
 }
 #category::placeholder {
-    color: #778899; /* Placeholder text color */
+    color: var(--label-color); /* Placeholder text color */
     font-size: 10px; /* Placeholder font size */
 }
 .truncate-text {
@@ -2786,7 +2784,7 @@ input[type="radio"] {
     max-width: 110px; /* Adjust this value as needed */
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #778899;
+    color: var(--label-color);
     font-weight: 500;
     white-space: nowrap;
 }
@@ -2795,7 +2793,7 @@ input[type="radio"] {
     align-items: center;
     gap: 5px;
     font-size: var(--normal-font-size);
-    color: #778899;
+    color: var(--label-color);
     font-weight: 500;
 }
 .attach-icon {
@@ -2815,7 +2813,7 @@ input[type="radio"] {
     width: 200px;
 }
 .attachment {
-    color: #778899;
+    color: var(--label-color);
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
@@ -2961,7 +2959,7 @@ input[type="radio"] {
     height: 30px;
     width: 30px;
     background: #fff;
-    border: 1px solid #778899;
+    border: 1px solid var(--label-color);
     border-radius: 50%;
     display: flex;
     gap: 10px;
@@ -2988,7 +2986,7 @@ input[type="radio"] {
     width: 2rem;
     background: #fff;
     padding: 7px;
-    border: 1px solid #778899;
+    border: 1px solid var(--label-color);
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -3025,7 +3023,7 @@ input[type="radio"] {
 .LeaveCancelTable td {
     border-bottom: 1px solid #ccc;
     padding: 8px;
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     text-align: center;
 }
 
@@ -3119,7 +3117,7 @@ l
 
 .leave-type {
     color: #605448;
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     font-weight: 600;
 }
 .leaveTypeTitle {
@@ -3143,7 +3141,7 @@ l
     font-size: 0.875rem;
 }
 .no-holidays h6 {
-    color: #778899 !important;
+    color: var(--label-color) !important;
     font-weight: 500 !important;
 }
 .grid-container {
@@ -3158,7 +3156,7 @@ l
 }
 
 .festivals {
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
 }
 
 .group h5 {
@@ -3204,7 +3202,7 @@ l
 .cirlce {
     height: 0.75rem;
     width: 0.75rem;
-    background: #778899;
+    background: var(--label-color);
     border-radius: 50%;
 }
 .thisCircle {
@@ -3214,7 +3212,7 @@ l
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    color: #778899;
+    color: var(--label-color);
     font-weight: 500;
     background-color: #fff;
     font-size: var(--normal-font-size);
@@ -3225,24 +3223,24 @@ l
     font-size: 10px;
 }
 .teamOnLeave {
-    font-size: 12px;
-    color: #778899;
-    font-weight: 500;
+    font-size: var(--nav-headings-font-size);
+    color: var(--main-heading-color);
+    font-weight: 600;
 }
 .leaveText {
     font-size: 10px;
-    /* color: #778899; */
+    /* color: var(--label-color); */
 }
 .v-line {
     height: 100px;
     width: 0.5px;
-    background: #778899;
-    border-right: 1px solid #778899;
+    background: var(--label-color);
+    border-right: 1px solid var(--label-color);
     margin-left: 5px;
 }
 .h-line {
     height: 1px;
-    border-top: 1px solid #778899;
+    border-top: 1px solid var(--label-color);
     margin-top: 10px;
 }
 .leave {
@@ -3352,7 +3350,7 @@ l
 }
 .catalogFilter {
     cursor: pointer;
-    color: #778899;
+    color: var(--label-color);
 }
 
 .catalogFilter:hover {
@@ -3391,7 +3389,7 @@ l
     background-color: #ecf5ff;
     font-weight: normal;
     font-size: var(--normal-font-size);
-    color: #778899;
+    color: var(--label-color);
     text-align: start;
 }
 
@@ -3487,12 +3485,12 @@ l
 }
 .label-style {
     font-size: var(--normal-font-size);
-    color: #778899;
+    color: var(--label-color);
     font-weight: 500;
 }
 .placeholder-small::placeholder {
     font-size: 11px;
-    color: #778899;
+    color: var(--label-color);
 }
 
 /* end of leave balance */
@@ -3504,7 +3502,7 @@ l
     border-radius: 7px;
     background: #fff;
     overflow: hidden;
-    color: #778899;
+    color: var(--label-color);
     width: 100%;
     height: 220px;
     box-shadow: 0 2px 10px 1px rgb(0 0 0 / 38%);
@@ -3567,7 +3565,7 @@ l
     font-weight: 500;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: #778899;
+    color: var(--label-color);
 }
 
 .inner-container span {
@@ -3595,7 +3593,7 @@ l
     border-radius: 7px;
     background: #fff;
     overflow: hidden;
-    color: #778899;
+    color: var(--label-color);
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -3610,7 +3608,7 @@ l
     padding: 50px 15px;
     background: #fff;
     overflow: hidden;
-    color: #778899;
+    color: var(--label-color);
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -3788,7 +3786,7 @@ select .yearSelect {
 .nav-btn {
     background: none;
     border: none;
-    color: #778899;
+    color: var(--label-color);
     font-size: 0.795rem;
     margin-top: -6px;
     cursor: pointer;
@@ -3826,7 +3824,7 @@ select .yearSelect {
     width: 100%;
     justify-content: space-between;
     font-weight: 500;
-    color: #778899;
+    color: var(--label-color);
 }
 
 /* CSS for legend circles */
@@ -3856,7 +3854,7 @@ select .yearSelect {
     padding: 3px;
     margin-bottom: 15px;
     background-color: #fff;
-    color: #778899;
+    color: var(--label-color);
     font-size: 0.825rem;
     width: 150px;
     border: 1px solid #ccc;
@@ -3888,7 +3886,7 @@ select .yearSelect {
     outline: none;
     border: 1px solid #ccc;
     border-radius: 4px;
-    color: #778899;
+    color: var(--label-color);
     width: 220px;
 }
 
@@ -3896,7 +3894,7 @@ select .yearSelect {
     position: absolute;
     top: 50%;
     right: 10px;
-    color: #778899;
+    color: var(--label-color);
     transform: translateY(-50%);
     cursor: pointer;
 }
@@ -3937,7 +3935,7 @@ select .yearSelect {
     width: 40%;
     display: flex;
     text-align: center;
-    color: #778899;
+    color: var(--label-color);
     padding: 10px 15px;
     justify-content: center;
     border: 1px solid #ccc;
@@ -4051,7 +4049,7 @@ select .yearSelect {
     padding: 10px;
 }
 .header h6 {
-    color: #778899;
+    color: var(--label-color);
     font-weight: 500;
 }
 .locations {
@@ -4099,7 +4097,7 @@ select .yearSelect {
 .loc-dropdown p {
     font-size: 0.825rem;
     font-weight: 500;
-    color: #778899;
+    color: var(--label-color);
     margin-bottom: 0;
 }
 .btn-2 {
@@ -4111,7 +4109,7 @@ select .yearSelect {
     border: none;
 }
 .btn-3 {
-    color: #778899;
+    color: var(--label-color);
     padding: 3px 10px;
     background: #fff;
     border: 1px solid #ccc;
@@ -4139,7 +4137,7 @@ select .yearSelect {
 }
 ::placeholder {
     font-size: var(--normal-font-size); /* Adjust the font size as needed */
-    color: #778899;
+    color: var(--label-color);
 }
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
@@ -4163,7 +4161,7 @@ select .yearSelect {
 
 /* attendace muster styles by pranitha and uttej */
 .legend-text {
-    color: #778899;
+    color: var(--label-color);
     font-size: var(--normal-font-size);
 }
 /* end of attendace muster styles by pranitha and uttej */
@@ -4205,7 +4203,7 @@ select .yearSelect {
 }
 .text-time {
     font-size: 11px;
-    color: #778899;
+    color: var(--label-color);
     margin-top: 5px;
 }
 .jobOpenCard {
@@ -4253,7 +4251,7 @@ select .yearSelect {
     display: inline-block;
     cursor: pointer;
     font-size: var(--normal-font-size);
-    color: #778899;
+    color: var(--label-color);
 }
 .helpChip:hover {
     background-color: #01bde012;
@@ -4269,7 +4267,7 @@ select .yearSelect {
     margin-top: 10px;
     font-size: 13px;
     font-weight: 500;
-    color: #778899;
+    color: var(--label-color);
 }
 .card-body {
     line-height: 1.6;
@@ -4632,7 +4630,7 @@ option {
 }
 .employee-timesheet span {
     margin-bottom: 0;
-    color: #778899;
+    color: var(--label-color);
     font-size: var(--normal-font-size);
     max-width: 100%;
     overflow-x: auto;
@@ -4640,7 +4638,7 @@ option {
 }
 .employee-timesheet .week-details-heading {
     margin-bottom: 0;
-    color: #778899;
+    color: var(--label-color);
     font-size: var(--normal-font-size);
     font-weight: 500;
 }
@@ -4663,19 +4661,19 @@ option {
 
 .timesheet-table thead th {
     padding: 8px;
-    color: #778899;
+    color: var(--label-color);
     font-weight: 600;
     background-color: #f1f4f8;
     border-bottom: 2px solid #dee2e6; /* Make header border thicker */
 }
 .timesheet-table td {
     font-size: var(--normal-font-size);
-    color: #778899;
+    color: var(--label-color);
     font-weight: normal;
     border-bottom: 1px solid #dee2e6;
 }
 .time-sheet-heading {
-    color: #778899;
+    color: var(--label-color);
     font-weight: 600;
 }
 .employee-timesheet .heading-value {
@@ -4704,7 +4702,7 @@ option {
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
 }
 .offcanvasRightLabel {
-    color: #778899;
+    color: var(--label-color);
     font-size: 14px;
     font-size: 500;
     margin: 0px;
@@ -4785,7 +4783,7 @@ option {
     height: 15px;
     border-radius: 50%;
     padding: 2px;
-    border: 1px solid #778899;
+    border: 1px solid var(--label-color);
 }
 
 .notification-horizontal-line {
@@ -4895,7 +4893,7 @@ option {
 }
 .chat-emp-head {
     font-size: 10px;
-    color: #778899;
+    color: var(--label-color);
 }
 
 /* //it styles */
@@ -4987,14 +4985,14 @@ option {
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid #778899; /* Change the color as needed */
+    border-top: 5px solid var(--label-color); /* Change the color as needed */
     pointer-events: none; /* Ensure the arrow doesn't interfere with select clicks */
 }
 
 .delegate-table {
     width: 100%;
     border-collapse: collapse;
-    font-family: Montserrat, sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .delegate-header {
@@ -5052,7 +5050,7 @@ option {
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     padding: 0.375rem 0.75rem;
-    font-size: 12px;
+    font-size:  var(--normal-font-size);
     width: 100%;
     cursor: pointer;
     padding-right: 2rem; /* Space for the arrow */
@@ -5067,7 +5065,7 @@ option {
     height: 0;
     border-left: 0.4rem solid transparent; /* Width of the arrow */
     border-right: 0.4rem solid transparent; /* Width of the arrow */
-    border-top: 0.4rem solid #778899; /* Arrow color */
+    border-top: 0.4rem solid var(--label-color); /* Arrow color */
     transform: translateY(-50%);
     pointer-events: none;
 }
@@ -5082,12 +5080,10 @@ option {
     font-size: 38.5px;
     margin: 0px;
     font-weight: 600;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin-bottom: 20px;
 }
 .privacyContent {
     margin: 10px 0px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 20px;
     color: var(--main-heading-color);
@@ -5101,7 +5097,6 @@ option {
     margin: 25px 0px;
     color: #4d4d4d;
     font-size: 24.5px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 600;
 }
 .privacyLabelContent {
@@ -5112,22 +5107,21 @@ option {
 /* From Uiverse.io by alexruix */
  /* From Uiverse.io by SouravBandyopadhyay */
 .payslip-card-title {
-    color: #262626;
-    font-size: 1em;
+    color: var(--main-heading-color);
+    font-size: var(--nav-headings-font-size);
     line-height: normal;
-    font-weight: 700;
+    font-weight: 600;
     margin-bottom: 0.5em;
   }
 
   .payslip-small-desc {
-    font-size: 1em;
     font-weight: 400;
     line-height: 1.5em;
     color: #452c2c;
   }
 
   .payslip-small-desc {
-    font-size: 14px;
+    font-size: var(--normal-font-size);
   }
 
   .payslip-go-corner {
@@ -5164,7 +5158,6 @@ option {
     z-index: 0;
     overflow: hidden;
     background: linear-gradient(to bottom, #c3e6ec, #a7d1d9);
-    font-family: Arial, Helvetica, sans-serif;
   }
 
   .payslip-card:before {

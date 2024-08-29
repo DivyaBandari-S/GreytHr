@@ -494,7 +494,7 @@
                 </div>
                 <div class="col-md-3">
 
-        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle" style="width:100%;height:30px;color:#3b4452">
+        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle rounded bg-white" style="width:100%;height:33px;font-size:0.8rem;color:#3b4452;border:1px solid #ccc;">
             <option value="" >Select Request     </option>
       
             @foreach($requestCategories as $request => $categories)
@@ -669,7 +669,7 @@
                 </div>
                 <div class="col-md-3">
 
-<select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle" style="width:100%;height:30px;color:#3b4452">
+<select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle bg-white rounded" style="width:100%;height:33px;font-size:0.8rem;color:#3b4452;border:1px solid #ccc;">
     <option value="" >Select Request     </option>
 
     @foreach($requestCategories as $request => $categories)
@@ -817,7 +817,7 @@
                 </div>
                 <div class="col-md-3">
 
-<select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle" style="width:100%;height:30px;color:#3b4452">
+<select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle bg-white rounded" style="width:100%;height:33px;font-size:0.8rem;color:#3b4452;border:1px solid #ccc;">
     <option value="" >Select Request     </option>
 
     @foreach($requestCategories as $request => $categories)

@@ -943,7 +943,7 @@
                                             <img src="https://snow.payg.in/feaa4ca9871c7510279786a50cbb3576.iix?t=medium" style="height:4em;">
                                         </div>
                                         <div class="col-12 mb-2">
-                                            <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="DistributionRequest">New Distribution List</p>
+                                            <p style="text-decoration:underline;cursor: pointer; text-align: center;font-size:12px;" wire:click="DistributionRequest">New Distribution List</p>
                                         </div>
                                         @if($DistributionRequestaceessDialog)
                                         <div class="modal" tabindex="-1" role="dialog" style="{{ $showModal ? 'display: block;' : 'display: none;' }}">
