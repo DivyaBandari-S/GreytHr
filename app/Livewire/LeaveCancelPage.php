@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use App\Models\Notification;
 
 class LeaveCancelPage extends Component
 {
@@ -311,6 +312,17 @@ class LeaveCancelPage extends Component
                 'applying_to' => json_encode($applyingToDetails), // Assuming applyingto is a JSON field
                 'cc_to' => json_encode($ccToDetails), // Assuming ccto is a JSON field
             ]);
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            Notification::create([
+                'emp_id' => $employeeId,
+                'notification_type' => 'leaveCancel',
+                'leave_type' => $leaveRequest->leave_type,
+                'leave_reason' =>  $this->leave_cancel_reason,
+                'applying_to' => json_encode($applyingToDetails),
+                'cc_to' => json_encode($ccToDetails),
+            ]);
+
             session()->flash('message', 'Applied request for leave cancel successfully.');
             $this->showAlert = true;
         } catch (\Exception $e) {

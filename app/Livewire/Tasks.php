@@ -244,6 +244,7 @@ class Tasks extends Component
     public $selectedPeopleName, $selectedPerson, $selectedPersonClients, $selectedPersonClientsWithProjects;
     public function mount()
     {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->selectedPersonClients = collect();
         $this->selectedPersonClientsWithProjects = collect();
         $this->year = Carbon::now()->format('Y');
@@ -252,6 +253,14 @@ class Tasks extends Component
         if (session()->has('showAlert')) {
             $this->showAlert = session('showAlert');
         }
+
+        // TO reduce notification count by making as read related to  task
+
+         DB::table('notifications')
+        ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$employeeId])
+        ->where('notification_type', 'task')
+        ->update(['is_read' => 1]);
+
     }
 
     public function selectPerson($personId)
@@ -426,7 +435,7 @@ class Tasks extends Component
                 'mime_type' => $mimeType,
                 'status' => "Open",
             ]);
-     
+
 
             preg_match('/\((.*?)\)/', $this->assignee, $matches);
             $extracted = isset($matches[1]) ? $matches[1] : $this->assignee;

@@ -187,6 +187,12 @@ class EmployeesReview extends Component
             $this->showleave = true;
             $this->showattendance = false;
         }
+// TO reduce notification count by making as read related to leave and leaveCancel
+
+        DB::table('notifications')
+        ->whereIn('notification_type', ['leave', 'leaveCancel'])
+        ->update(['is_read' => 1]);
+
     }
 
 
