@@ -1332,6 +1332,7 @@ button.close-button {
 {
     display:flex;
     flex-direction:row;
+    width: 100%;
 }
 /* CSS for the table header (thead) */
 .who-is-in-table thead {
@@ -3923,6 +3924,7 @@ select .yearSelect {
 .calendar-date {
     color: black;
     cursor: pointer;
+    justify-content: center;
 }
 
 .event-details {
