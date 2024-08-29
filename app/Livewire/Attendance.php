@@ -22,12 +22,18 @@ use Livewire\Component;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Log;
+use Torann\GeoIP\Facades\GeoIP;
 
 class Attendance extends Component
 {
     public $currentDate2;
     public $hours;
 
+    public $country;
+
+    public $city;
+
+    public $postal_code;
     public $totalWorkingPercentage;
     public $minutesFormatted;
 
@@ -314,6 +320,13 @@ class Attendance extends Component
             $endDate = Carbon::parse($this->to_date);
             $totalHoursWorked=0;
             $totalMinutesWorked=0;
+            $ip = request()->ip();
+            $location = GeoIP::getLocation($ip);
+            $lat = $location['lat'];
+            $lon = $location['lon'];
+            $this->country = $location['country'];
+            $this->city = $location['city'];
+            $this->postal_code = $location['postal_code'];
             while ($fromDate->lte($toDate)) {
                 $inTimeForWorkHrs=SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->where('in_or_out','IN')->whereDate('created_at',$fromDate)->first();
                 $outTimeForWorkHrs=SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->where('in_or_out','OUT')->whereDate('created_at',$fromDate)->first();
@@ -1073,6 +1086,8 @@ class Attendance extends Component
             $this->view_student_emp_id = $student->emp_id;
             $this->view_student_swipe_time = $student->swipe_time;
             $this->view_student_in_or_out = $student->in_or_out;
+           
+           
         } catch (\Exception $e) {
             Log::error('Error in viewDetails method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while viewing details. Please try again later.');
