@@ -872,6 +872,10 @@
     overflow-y: auto;
     
 }
+.highermanager:hover
+{
+    background-color: aliceblue;
+}
     </style>
     <div class="container">
          <a href="/Attendance" class="submit-btn"style="text-decoration:none;">Back</a>
@@ -952,7 +956,7 @@
                         <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
                     </div>
                     <div class="center p-0 m-0">
-                            <p class="mb-0" style="font-size:10px;">{{$reportingmanagerfullName->first_name}}&nbsp;{{$reportingmanagerfullName->last_name}}</p>
+                            <p class="mb-0" style="font-size:10px;">{{ucwords(strtolower($reportingmanagerfullName->first_name))}}&nbsp;{{ucwords(strtolower($reportingmanagerfullName->last_name))}}</p>
                             <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText">#({{$reportingmanager}})</p>
                     </div>
                     <div class="downArrow" wire:click="applyingTo">
@@ -982,12 +986,12 @@
                     <div class="scrollApplyingTO">
                         
                             @foreach ($heademployees as $employee)
-                                   <div class="d-flex gap-4 align-items-center">
+                                   <div class="highermanager d-flex gap-4 mt-2 align-items-center"wire:click="togglehigherManagers('{{ $employee->emp_id }}')">
                                         <div class="employee-profile-image-container">
                                             <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
                                         </div>
 
-                                        <div class="center d-flex flex-column mt-2 mb-2">
+                                        <div class="center d-flex flex-column mt-3 mb-2">
                                             <span class="ellipsis mb-0">
                                                 {{ ucwords(strtolower($employee->first_name))}} {{ ucwords(strtolower($employee->last_name))}}
                                             </span>

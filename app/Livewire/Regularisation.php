@@ -71,12 +71,14 @@ class Regularisation extends Component
     public $month;
     public $currentMonth;
 
+    public $reportingmanagerinloop;
     public $openAccordionForPending = null;
 
     public $openAccordionForHistory = null;
     public $reportingmanager;
     public $showApplyingToContainer = false;
 
+    public $istogglehigherManagers=false;
     public $heademployees;
     public $chevronButton=false;
     
@@ -113,6 +115,12 @@ class Regularisation extends Component
         } else {
             $this->openAccordionForPending = $id; // Set to open
         }
+    }
+    public function togglehigherManagers($EmpId)
+    {
+        $this->istogglehigherManagers=!$this->istogglehigherManagers;
+        $this->reportingmanager=$EmpId;
+        
     }
     public function toggleHistoryAccordion($id)
     {
@@ -468,11 +476,19 @@ public function historyButton()
                 ->first();  
             
             $empid = $employeeDetails->manager_id ?? null;
-            
-            $this->reportingmanager = EmployeeDetails::where('emp_id', $loggedInEmpId)->value('manager_id');
+            if($this->istogglehigherManagers==true)
+            {
+                $this->reportingmanager = $this->reportingmanager;
+              
+            }
+            else
+            {
+                $this->reportingmanager = EmployeeDetails::where('emp_id', $loggedInEmpId)->value('manager_id');
+            }
             $this->headreportingmanager = EmployeeDetails::where('emp_id', $loggedInEmpId)->value('dept_head');
+            $this->reportingmanagerinloop=EmployeeDetails::where('emp_id', $loggedInEmpId)->value('manager_id');
             $this->reportingmanagerfullName=EmployeeDetails::where('emp_id',$this->reportingmanager)->first();
-            $this->heademployees = EmployeeDetails::whereIn('emp_id', [ $this->reportingmanager,$this->headreportingmanager])->get();
+            $this->heademployees = EmployeeDetails::whereIn('emp_id', [ $this->reportingmanagerinloop,$this->headreportingmanager])->get();
 
 
             $employeeDetails1 = $empid ? EmployeeDetails::where('emp_id', $empid)->first() : null;
