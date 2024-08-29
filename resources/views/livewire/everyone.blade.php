@@ -159,7 +159,7 @@
         <p style="font-weight: 500;font-size:13px;color:#47515b;cursor:pointer">Activities</p>
         <div class="activities" style="width: 100%; height: 30px;">
             <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
-                <input type="radio" name="radio" value="activities" checked data-url="/Feeds" onclick="handleRadioChange(this)">
+                <input type="radio" name="radio" value="activities"  data-url="/Feeds" onclick="handleRadioChange(this)">
                 <div class="feed-icon-container" style="margin-left: 10px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -176,9 +176,9 @@
         <div class="posts" style="width: 100%; height: 30px;">
             <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
                 @if(auth()->guard('emp')->check())
-                <input type="radio" id="radio-emp" name="radio" value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
+                <input type="radio" id="radio-emp" name="radio" checked value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
                 @elseif(auth()->guard('hr')->check())
-                <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
+                <input type="radio" id="radio-hr" name="radio" checked value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
                 @else
                 <p>No employee details available.</p>
                 @endif

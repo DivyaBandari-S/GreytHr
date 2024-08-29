@@ -488,13 +488,13 @@
                             <div class="medium-header border-cyan-200" style="margin-left:-1px">All Activities - All Groups</div>
                         </div>
 
-                        <div class="col-md-5 text-right" style="display: flex; justify-content: flex-end; align-items: center; margin-left: 20px;">
+                        <div class="col-md-5 text-right" style="display: flex; justify-content: flex-end; align-items: center; margin-left: -80px;">
                             <p style="font-size: 14px; margin-right: 5px;margin-top:10px;font-weight:500;">Sort:</p>
                             <div class="dropdown" style="position: relative; display: inline-block;margin-top:-5px">
                                 <button id="dropdown-toggle" class="dropdown-toggle" style="background: none; border: none; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center;color:#3b4452;">
                                     {{ $sortType === 'newest' ? 'Newest First' : 'Most Recent Interacted' }}
                                 </button>
-                                <div class="dropdown-menu" style="display: {{ $dropdownVisible ? 'block' : 'none' }}; position: absolute; background-color: white; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; min-width: 190px; right: 0; border-radius: 4px; border: 1px solid #ddd;">
+                                <div class="dropdown-menu" style="display: {{ $dropdownVisible ? 'block' : 'none' }}; position: absolute; background-color: white; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; min-width: 190px; right: -60px; border-radius: 4px; border: 1px solid #ddd;">
                                     <a href="#" data-sort="newest" wire:click.prevent="updateSortType('newest')" class="dropdown-item" style="padding: 8px 16px; display: block; font-size: 14px; text-decoration: none; color:#3b4452;">Newest First</a>
                                     <a href="#" data-sort="interacted" wire:click.prevent="updateSortType('interacted')" class="dropdown-item" style="padding: 8px 16px; display: block; font-size: 14px; text-decoration: none; color:#3b4452;">Most Recent Interacted</a>
                                 </div>
