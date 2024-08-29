@@ -1352,7 +1352,59 @@ color: #fff;
         .attendance-period-header {
             font-weight: 500;
         }
-       
+        .custom-scrollbar {
+    max-height: 600px; /* Set the height limit to trigger the scrollbar */
+    overflow-y: auto; /* Enable vertical scrolling */
+    scrollbar-width: thin; /* For Firefox - makes the scrollbar thinner */
+    scrollbar-color: #888 #f1f1f1; /* For Firefox - custom scrollbar color */
+}
+
+/* Chrome, Edge, Safari */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background of the scrollbar track */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #888; /* Scrollbar thumb color */
+    border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Change color on hover */
+}
+.custom-scrollbar-for-right-side-container
+{
+    max-height: 600px; /* Set the height limit to trigger the scrollbar */
+    overflow-y: auto; /* Enable vertical scrolling */
+    scrollbar-width: thin; /* For Firefox - makes the scrollbar thinner */
+    scrollbar-color: #888 #f1f1f1; /* For Firefox - custom scrollbar color */
+}
+ 
+/* Chrome, Edge, Safari */
+.custom-scrollbar-for-right-side-container
+::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+}
+ 
+.custom-scrollbar-for-right-side-container
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background of the scrollbar track */
+}
+ 
+.custom-scrollbar-for-right-side-container
+::-webkit-scrollbar-thumb {
+    background-color: #888; /* Scrollbar thumb color */
+    border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+}
+ 
+.custom-scrollbar-for-right-side-container
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Change color on hover */
+}
     </style>
     @php
     $flag=0;
@@ -1557,7 +1609,7 @@ color: #fff;
 
         <div class="row m-0 p-0">
             @if($defaultfaCalendar==1)
-            <div class="col-12 col-md-7 m-0 p-1 calendar custom-scrollbar"style="height: 600px;">
+            <div class="col-12 col-md-7 m-0 p-1 calendar custom-scrollbar">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="calendar-heading-container">
                         <button wire:click="beforeMonth" class="nav-btn">&lt; Prev</button>

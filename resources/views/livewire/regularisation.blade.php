@@ -810,6 +810,7 @@
             padding: 10px;
             height: 25px;
             width: 2px;
+            justify-content: center;
             display: flex;
             margin: 0 auto;
             align-items: center;
