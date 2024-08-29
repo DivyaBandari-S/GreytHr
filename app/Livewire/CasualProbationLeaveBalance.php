@@ -178,6 +178,7 @@ class CasualProbationLeaveBalance extends Component
 
             for ($month = $startingMonth; $month <= $currentMonth; $month++) {
                 // Fetch availed leaves count for this month
+                $this->availedLeavesCount =0;
                 $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                     ->where('leave_type', 'Casual Leave Probation')
                     ->where('status', 'approved')

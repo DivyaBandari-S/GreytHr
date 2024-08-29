@@ -174,6 +174,7 @@ class SickLeaveBalances extends Component
                 ->first();
             for ($month = $startingMonth; $month <= $currentMonth; $month++) {
                 // Fetch availed leaves count for this month
+                $this->availedLeavesCount =0;
                 $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                     ->where('leave_type', 'Sick Leave')
                     ->where('status', 'approved')
