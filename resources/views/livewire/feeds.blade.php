@@ -126,26 +126,26 @@
         <div class="form-group" style="margin-top: 5px;">
             <label for="file_path" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
             <div style="text-align: start;">
+           
 
-
-                <input type="file" wire:model="file_path"  class="form-control"  id="file_path"  style="margin-top:5px" onchange="handleImageChange()">
+                <input type="file" wire:model="file_path" class="form-control"  id="file_path"  style="margin-top:5px" onchange="handleImageChange()">
                 @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
 
-     
+                <!-- Success Message -->
+           
+        
             </div>
         </div>
     </div>
 
     <!-- Submit & Cancel Buttons -->
     <div class="modal-footer" style="border-top: 1px solid #ccc;">
-        <div class="d-flex justify-content-center" style="width: 100%;">
-            <button type="submit"   wire:target="file_path" wire:loading.attr="disabled" class="submit-btn">Submit</button>
+    <div class="d-flex justify-content-center" style="width: 100%;">
+            <button type="submit" wire:target="file_path" wire:loading.attr="disabled" class="submit-btn">Submit</button>
             <button wire:click="closeFeeds" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79); margin-left: 10px">Cancel</button>
         </div>
     </div>
 </form>
-
-
 
 
                                 </div>
@@ -163,7 +163,7 @@
             <!-- Additional row -->
             <div class="row mt-2 d-flex">
 
-                <div class="col-md-4 bg-white p-3 fixed" style="border-radius:5px;border:1px solid silver;height:fit-content">
+                <div class="col-md-4 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:fit-content">
 
                     <p style="font-weight: 500;font-size:13px;color:#47515b;">Filters</p>
                     <hr style="width: 100%;border-bottom: 1px solid grey;">
@@ -496,13 +496,11 @@
                         </div>
 
                         <div class="col-md-5 text-right" style="display: flex; justify-content: flex-end; align-items: center; margin-left: -80px;">
-                        <div class="col-md-5 text-right" style="display: flex; justify-content: flex-end; align-items: center; margin-left: -80px;">
                             <p style="font-size: 14px; margin-right: 5px;margin-top:10px;font-weight:500;">Sort:</p>
                             <div class="dropdown" style="position: relative; display: inline-block;margin-top:-5px">
                                 <button id="dropdown-toggle" class="dropdown-toggle" style="background: none; border: none; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center;color:#3b4452;">
                                     {{ $sortType === 'newest' ? 'Newest First' : 'Most Recent Interacted' }}
                                 </button>
-                                <div class="dropdown-menu" style="display: {{ $dropdownVisible ? 'block' : 'none' }}; position: absolute; background-color: white; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; min-width: 190px; right: -60px; border-radius: 4px; border: 1px solid #ddd;">
                                 <div class="dropdown-menu" style="display: {{ $dropdownVisible ? 'block' : 'none' }}; position: absolute; background-color: white; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; min-width: 190px; right: -60px; border-radius: 4px; border: 1px solid #ddd;">
                                     <a href="#" data-sort="newest" wire:click.prevent="updateSortType('newest')" class="dropdown-item" style="padding: 8px 16px; display: block; font-size: 14px; text-decoration: none; color:#3b4452;">Newest First</a>
                                     <a href="#" data-sort="interacted" wire:click.prevent="updateSortType('interacted')" class="dropdown-item" style="padding: 8px 16px; display: block; font-size: 14px; text-decoration: none; color:#3b4452;">Most Recent Interacted</a>
@@ -2070,6 +2068,23 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 
 
 <script>
+     function handleImageChange() {
+        // Display a flash message
+        showFlashMessage('File uploaded successfully!');
+    }
+
+    function showFlashMessage(message) {
+        const container = document.getElementById('flash-message-container');
+        container.textContent = message;
+        container.style.fontSize = '0.75rem';
+        container.style.display = 'block';
+
+        // Hide the message after 3 seconds
+        setTimeout(() => {
+            container.style.display = 'none';
+        }, 3000);
+    }
+
     document.addEventListener('livewire:load', function() {
         // Listen for clicks on emoji triggers and toggle the emoji list
         document.querySelectorAll('.emoji-trigger').forEach(trigger => {
@@ -2155,22 +2170,6 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 </script>
 
 <script>
-        function handleImageChange() {
-        // Display a flash message
-        showFlashMessage('File uploaded successfully!');
-    }
-
-    function showFlashMessage(message) {
-        const container = document.getElementById('flash-message-container');
-        container.textContent = message;
-        container.style.fontSize = '0.75rem';
-        container.style.display = 'block';
-
-        // Hide the message after 3 seconds
-        setTimeout(() => {
-            container.style.display = 'none';
-        }, 3000);
-    }
     function toggleEmojiDrawer() {
         let drawer = document.getElementById('drawer');
 
