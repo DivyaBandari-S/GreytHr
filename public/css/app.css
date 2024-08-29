@@ -1187,7 +1187,7 @@ button.close-button {
     display: flex;
     flex-direction: column;
     margin-top: 30px;
-    margin-left: 10px;
+    margin-left: 60px;
     align-items: center;
     justify-content: center;
     background-color: transparent;
@@ -1200,9 +1200,10 @@ button.close-button {
     width: 100%;
     align-items: center;
     background-color: #ffffff;
-
     flex: 1;
-    padding-right: 12px;
+    padding-right: 19.5px;
+    padding-left: 19.5px;
+    border-top: 1px solid #52afe9;
 }
 
 .field-for-employee-who-is-in:not(:last-child) {
@@ -1223,7 +1224,7 @@ button.close-button {
     display: flex;
     justify-content: space-between;
     padding: 8px 15px;
-    border-bottom: 1px solid var(--label-color);
+    border-bottom: 1px solid #ddd;
 }
 
 .heading-who-is-in i {
@@ -1286,7 +1287,50 @@ button.close-button {
 
     display: block;
 }
+.who-is-in-table-late-employee {
+    border-collapse: collapse;
 
+    /* Set the max height you prefer */
+
+    display: block;
+}
+.who-is-in-table-for-early-employee{
+    border-collapse: collapse;
+
+    /* Set the max height you prefer */
+
+    display: block;
+}
+.who-is-in-table-for-early-employee thead{
+    background-color: #ebf5ff;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-left: 10px; 
+}
+.who-is-in-table-for-late-employee thead
+{
+    
+    background-color: #ebf5ff;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-right: 3px; 
+    
+}
+.who-is-in-table-for-late-employee th
+{
+    font-size: 0.7rem;
+    font-weight: normal;
+    color: #6c757d;
+}
+.content-who-is-in
+{
+    display:flex;
+    flex-direction:row;
+}
 /* CSS for the table header (thead) */
 .who-is-in-table thead {
 
@@ -1297,6 +1341,7 @@ button.close-button {
     align-items: center;
     text-align: center;
     margin-right: 3px;
+    
 
 
 }

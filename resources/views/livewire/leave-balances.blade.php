@@ -296,9 +296,15 @@
                         </div>
                     </div>
                     <div class="center d-flex flex-column align-items-center justify-content-center text-center" >
+                        @if($lossOfPayBalance > 0)
                         <h5 class="mb-0" >
                             &minus;{{($lossOfPayBalance)}}
                         </h5>
+                        @else
+                        <h5 class="mb-0" >
+                            {{($lossOfPayBalance)}}
+                        </h5>
+                        @endif
                         <p class="mb-0 remaining" >Balance</p>
                     </div>
                 </div>
