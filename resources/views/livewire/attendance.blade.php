@@ -1702,7 +1702,7 @@ color: #fff;
                                                 </span>
                                                 @endif
                                                 @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
-                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 90px; margin-right:12px;white-space: nowrap;">
                                                     <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
                                                 @elseif($isCurrentMonth)
