@@ -111,6 +111,8 @@ class Home extends Component
     public $country;
     public $postal_code;
     public $dataSqlServer;
+    public $lon;
+    public $lat;
     public function mount()
     {
         $this->fetchWeather();
@@ -768,8 +770,8 @@ class Home extends Component
             // Get the IP address and determine location
             $ip = request()->ip();
             $location = GeoIP::getLocation($ip);
-            $lat = $location['lat'];
-            $lon = $location['lon'];
+            $this->lat = $location['lat'];
+            $this->lon = $location['lon'];
             $this->country = $location['country'];
             $this->city = $location['city'];
             $this->postal_code = $location['postal_code'];
@@ -778,7 +780,7 @@ class Home extends Component
             $apiUrl = env('WEATHER_API_URL');
 
             // Prepare the request URL with dynamic latitude and longitude
-            $requestUrl = $apiUrl . '?latitude=' . $lat . '&longitude=' . $lon . '&current_weather=true';
+            $requestUrl = $apiUrl . '?latitude=' . $this->lat . '&longitude=' . $this->lon . '&current_weather=true';
 
             // Log request URL for debugging
             Log::info("Request URL: $requestUrl");
