@@ -168,7 +168,7 @@
                                             for="confirmNewPassword">Confirm New Password</label>
                                         <br><input class="form-control placeholder-small" style="font-size: 12px;" type="password"
                                             id="confirmNewPassword" name="confirmNewPassword"
-                                            placeholder="Enter your new password again"
+                                            placeholder="Enter your confirm new password"
                                             wire:model.lazy="confirmNewPassword">
                                         @error('confirmNewPassword')
                                         <p class="pt-2 px-1 text-danger" style="font-size:10px">

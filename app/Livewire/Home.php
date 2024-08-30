@@ -425,12 +425,12 @@ class Home extends Component
             // Get the count of matching leave applications
             $this->leaveApplied = $matchingLeaveApplications;
             $groupedRequests = [];
-            
+
             // Iterate through each leave request
             foreach ($this->leaveApplied as $request) {
                 $leaveRequest = $request['leaveRequest'];
                 $empId = $leaveRequest->emp_id; // Extract emp_id from LeaveRequest model
-            
+
                 if (!isset($groupedRequests[$empId])) {
                     // Initialize the array for this employee ID
                     $groupedRequests[$empId] = [
@@ -438,13 +438,13 @@ class Home extends Component
                         'leaveRequests' => [] // Store all leave requests for this employee
                     ];
                 }
-            
+
                 // Increment the count and store the leave request
                 $groupedRequests[$empId]['count']++;
                 $groupedRequests[$empId]['leaveRequests'][] = $leaveRequest;
             }
 
-            
+
             // Store the grouped requests in the class property
             $this->groupedRequests = $groupedRequests;
 
@@ -906,5 +906,28 @@ class Home extends Component
         ];
 
         return $weatherCodes[$code] ?? '';
+    }
+
+
+    public function getLocationByIP()
+    {
+
+        try {
+
+            $ip = '';
+
+            // $ip = request()->ip();
+            $apiUrl = env('FINDIP_API_URL');
+
+            // Construct the full API URL
+            $url = "{$apiUrl}/{$ip}/json/";
+
+            // Make the HTTP request
+            $response = Http::get($url);
+            // dd($response->json());
+        } catch (\Exception $e) {
+            Log::error("Exception: ", ['message' => $e->getMessage()]);
+        }
+
     }
 }
