@@ -1675,17 +1675,17 @@ color: #fff;
                                             @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
 
                                                 @if($day['isPublicHoliday'])
-                                                <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">H</span>
+                                                <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 50px; margin-left: 37px;white-space: nowrap;padding-top:5px">H</span>
                                                 @elseif($day['status'] == 'CLP')
-                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">CLP</span>
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 50px; margin-left: 37px;white-space: nowrap;padding-top:5px">CLP</span>
                                                 @elseif($day['status'] == 'SL')
-                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">SL</span>
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 50px; margin-left: 37px;white-space: nowrap;padding-top:5px">SL</span>
                                                 @elseif($day['status'] == 'LOP')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">LOP</span>
                                                 @elseif($day['status'] == 'A')
-                                                <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
+                                                <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:50px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
                                                 @elseif($day['status'] == 'P')
-                                                <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px">P</span>
+                                                <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:50px; margin-left: 37px;white-space: nowrap;padding-top:10px">P</span>
                                                 @endif
 
 
@@ -1695,7 +1695,7 @@ color: #fff;
                                                 @php
                                                 $Regularised=true;
                                                 @endphp
-                                                <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
+                                                <span style="display:flex;text-align:start;width:10px;height:10px;margin-top:5px;border-radius:50%;padding-right: 10px; margin-right:25px;">
                                                     <p class="me-2 mb-0">
                                                     <div class="down-arrow-reg"></div>
                                                     </p>
@@ -1706,9 +1706,16 @@ color: #fff;
                                                     <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
                                                 @elseif($isCurrentMonth)
-                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
-                                                </span>
+                                                  @if($day['isRegularised']==true)
+                                                  <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 90px;margin-right:20px; white-space: nowrap;">
+                                                            <p style="color: #a3b2c7;margin-top:6px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                        </span>
+                                                 
+                                                  @else
+                                                        <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 90px;margin-right:20px; white-space: nowrap;">
+                                                            <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                        </span>
+                                                  @endif
                                                 @endif
                                                 @endif
                                         </div>
