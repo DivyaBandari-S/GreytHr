@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use App\Models\Notification;
 
 class LeaveCancelPage extends Component
 {
@@ -16,13 +17,14 @@ class LeaveCancelPage extends Component
     public  $showinfoMessage = true;
     public  $showinfoButton = false;
     public $showCcRecipents = false;
+    public $showApplyingTo = true;
     public $ccRecipients = [];
     public $selectedCCEmployees = [];
     public $searchTerm = '';
     public $filter = '';
     public $applying_to;
     public $selectedCcTo = [];
-    public $cc_to;
+    public $cc_to, $reason ;
     public $selectedYear;
     public $loginEmpManagerId;
     public $loginEmpManager;
@@ -42,29 +44,15 @@ class LeaveCancelPage extends Component
     public $searchQuery = '';
     public $showCasualLeaveProbation;
     public $empManagerDetails, $selectedManagerDetails;
-    public $showApplyingTo = false;
     public $showAlert = false;
     protected $rules = [
-        'leave_type' => 'required',
-        'from_date' => 'required|date',
-        'from_session' => 'required',
-        'to_date' => 'required|date',
-        'to_session' => 'required',
-        'contact_details' => 'required',
+        'applying_to' => 'required',
         'reason' => 'required',
-        'files.*' => 'nullable|file|max:10240',
     ];
 
     protected $messages = [
-        'leave_type.required' => 'Leave type is required',
-        'from_date.required' => 'From date is required',
-        'from_session.required' => 'Session is required',
-        'to_date.required' => 'To date is required',
-        'to_session.required' => 'Session is required',
-        'contact_details.required' => 'Contact details are required',
         'reason.required' => 'Reason is required',
-        'files.*.file' => 'Each file must be a valid file',
-        'files.*.max' => 'Each file must not exceed 10MB in size',
+        'applying_to.required' => 'Please select a leave type to submit',
     ];
 
 
@@ -263,6 +251,7 @@ class LeaveCancelPage extends Component
 
     public function markAsLeaveCancel()
     {
+        $this->validate();
         try {
             // Check if a leave request ID is set
             if (empty($this->selectedLeaveRequestId)) {
@@ -323,11 +312,21 @@ class LeaveCancelPage extends Component
                 'applying_to' => json_encode($applyingToDetails), // Assuming applyingto is a JSON field
                 'cc_to' => json_encode($ccToDetails), // Assuming ccto is a JSON field
             ]);
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            Notification::create([
+                'emp_id' => $employeeId,
+                'notification_type' => 'leaveCancel',
+                'leave_type' => $leaveRequest->leave_type,
+                'leave_reason' =>  $this->leave_cancel_reason,
+                'applying_to' => json_encode($applyingToDetails),
+                'cc_to' => json_encode($ccToDetails),
+            ]);
+
             session()->flash('message', 'Applied request for leave cancel successfully.');
             $this->showAlert = true;
-            $this->reset(); // Reset component state
         } catch (\Exception $e) {
-            session()->flash('error', 'Failed to mark leave request as cancel. Please try again.');
+            session()->flash('error', 'Failed to submit the leave cancel request. Please try again.');
             $this->showAlert = true;
             Log::error('Error marking leave request as cancel: ' . $e->getMessage());
         }

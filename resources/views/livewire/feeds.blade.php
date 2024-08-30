@@ -5,13 +5,14 @@
 
     @else
     <div class="px-4" style="position: relative;">
+   
         @if ($message)
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            {{ $message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
+                {{ $message }}
+                    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"
+                        style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
+                </div>
+                @endif
         <div class="col-md-12  mt-3" style="height:60px;margin-top:10px">
 
             <div class="row bg-white rounded border d-flex" style="height:80px; ">
@@ -94,51 +95,58 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;margin-top:-5px"></button>
                                     </div>
                                     @endif
+                                    <form wire:submit.prevent="submit" enctype="multipart/form-data">
+    <div class="modal-body" style="padding: 20px;">
+        <!-- Category Selection -->
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label for="category" style="font-weight: 600; color: #3b4452;">You are posting in:</label>
+            <select wire:model.lazy="category" class="form-select" id="category" style="border: 1px solid #ccc; border-radius: 4px; padding: 5px; font-size: 0.75rem; color: #3b4452; margin-top: 5px; height: 30px;">
+                <option value="">Select Category</option>
+                <option value="Appreciations">Appreciations</option>
+                <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
+                <option value="Companynews">Company News</option>
+                <option value="Events">Events</option>
+                <option value="Everyone">Everyone</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="US">US</option>
+            </select>
+            @error('category') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
 
-                                    <form wire:submit.prevent="submit">
-                                        <div class="modal-body" style="padding: 20px;">
-                                            <div class="form-group" style="margin-bottom: 15px;">
-                                                <label for="category" style="font-weight: 600; color: #3b4452;">You are posting in:</label>
-                                                <select wire:model.lazy="category" class="form-select" id="category" style="border: 1px solid #ccc; border-radius: 4px; padding: 5px; font-size: 0.75rem; color: #3b4452; margin-top: 5px; height: 30px;">
-                                                    <option value="">Select Category</option>
-                                                    <option value="Appreciations">Appreciations</option>
-                                                    <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
-                                                    <option value="Companynews">Company News</option>
-                                                    <option value="Events">Events</option>
-                                                    <option value="Everyone">Everyone</option>
-                                                    <option value="Hyderabad">Hyderabad</option>
-                                                    <option value="US">US</option>
-                                                </select>
-                                                @error('category') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
+        <!-- Description Input -->
+        <div class="form-group">
+            <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
+            <textarea wire:model.lazy="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
+            @error('description') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
+       <!-- File Input -->
+       <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
+                                    role="alert"></div>
+        <!-- File Upload -->
+        <div class="form-group" style="margin-top: 5px;">
+            <label for="file_path" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
+            <div style="text-align: start;">
+           
 
-                                            <div class="form-group">
-                                                <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
-                                                <textarea wire:model.lazy="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
-                                                @error('description') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
+                <input type="file" wire:model="file_path" class="form-control"  id="file_path"  style="margin-top:5px" onchange="handleImageChange()">
+                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
 
-                                            <div class="form-group" style="margin-top: 5px;">
-                                                <label for="attachment" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
-                                                <div style="text-align: start;">
-                                                    <input wire:model.lazy="attachment" type="file" accept="image/*" style="font-size: 12px; margin-top: 5px">
-                                                    @error('attachment') <span class="text-danger">{{ $message }}</span> @enderror
-                                                    <span style="font-size:12px;margin-left:10px">
-                                                        <a href="https://greythr.freshdesk.com/support/solutions/articles/1060000078626-what-are-the-guidelines-that-an-employee-needs-to-follow-when-using-greythr-engage" target="_blank">
-                                                            See Posting Guidelines
-                                                        </a>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
+                <!-- Success Message -->
+           
+        
+            </div>
+        </div>
+    </div>
 
-                                        <div class="modal-footer" style="border-top: 1px solid #ccc;">
-                                            <div class="d-flex justify-content-center" style="width: 100%;">
-                                                <button type="submit" class="submit-btn">Submit</button>
-                                                <button wire:click="closeFeeds" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79); margin-left: 10px">Cancel</button>
-                                            </div>
-                                        </div>
-                                    </form>
+    <!-- Submit & Cancel Buttons -->
+    <div class="modal-footer" style="border-top: 1px solid #ccc;">
+    <div class="d-flex justify-content-center" style="width: 100%;">
+            <button type="submit" wire:target="file_path" wire:loading.attr="disabled" class="submit-btn">Submit</button>
+            <button wire:click="closeFeeds" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79); margin-left: 10px">Cancel</button>
+        </div>
+    </div>
+</form>
+
 
                                 </div>
                             </div>
@@ -224,29 +232,29 @@
                                 <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;overflow-y:auto;max-height:200px;overflow-x: hidden;">
                                     <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">All Feeds</a>
                                     @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
                                     @endif
                                     @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
+                                    <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
+                                    <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
                                     @endif
                                     @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
                                     @endif
                                     @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
                                     @endif
                                     @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hreveryone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
+                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/everyone" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
+                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
                                     @endif
                                 </ul>
                             </div>
@@ -487,13 +495,13 @@
                             <div class="medium-header border-cyan-200" style="margin-left:-1px">All Activities - All Groups</div>
                         </div>
 
-                        <div class="col-md-5 text-right" style="display: flex; justify-content: flex-end; align-items: center; margin-left: 20px;">
+                        <div class="col-md-5 text-right" style="display: flex; justify-content: flex-end; align-items: center; margin-left: -80px;">
                             <p style="font-size: 14px; margin-right: 5px;margin-top:10px;font-weight:500;">Sort:</p>
                             <div class="dropdown" style="position: relative; display: inline-block;margin-top:-5px">
                                 <button id="dropdown-toggle" class="dropdown-toggle" style="background: none; border: none; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center;color:#3b4452;">
                                     {{ $sortType === 'newest' ? 'Newest First' : 'Most Recent Interacted' }}
                                 </button>
-                                <div class="dropdown-menu" style="display: {{ $dropdownVisible ? 'block' : 'none' }}; position: absolute; background-color: white; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; min-width: 190px; right: 0; border-radius: 4px; border: 1px solid #ddd;">
+                                <div class="dropdown-menu" style="display: {{ $dropdownVisible ? 'block' : 'none' }}; position: absolute; background-color: white; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; min-width: 190px; right: -60px; border-radius: 4px; border: 1px solid #ddd;">
                                     <a href="#" data-sort="newest" wire:click.prevent="updateSortType('newest')" class="dropdown-item" style="padding: 8px 16px; display: block; font-size: 14px; text-decoration: none; color:#3b4452;">Newest First</a>
                                     <a href="#" data-sort="interacted" wire:click.prevent="updateSortType('interacted')" class="dropdown-item" style="padding: 8px 16px; display: block; font-size: 14px; text-decoration: none; color:#3b4452;">Most Recent Interacted</a>
                                 </div>
@@ -2060,6 +2068,23 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 
 
 <script>
+     function handleImageChange() {
+        // Display a flash message
+        showFlashMessage('File uploaded successfully!');
+    }
+
+    function showFlashMessage(message) {
+        const container = document.getElementById('flash-message-container');
+        container.textContent = message;
+        container.style.fontSize = '0.75rem';
+        container.style.display = 'block';
+
+        // Hide the message after 3 seconds
+        setTimeout(() => {
+            container.style.display = 'none';
+        }, 3000);
+    }
+
     document.addEventListener('livewire:load', function() {
         // Listen for clicks on emoji triggers and toggle the emoji list
         document.querySelectorAll('.emoji-trigger').forEach(trigger => {

@@ -1,7 +1,7 @@
 <div>
 <body>
 <div>
-        <div class="employee-swipes-fields">
+        <div class="employee-swipes-fields d-flex align-items-center">
             <div class="dropdown-container1-employee-swipes">
                 <label for="start_date"style="color: #666;font-size:12px;">Start Date<span style="color: red;">*</span>:</label><br/>
                 <input type="date"style="font-size: 12px;" id="start_date" wire:model="startDate"wire:change="checkDates">
@@ -29,7 +29,7 @@
                         
                     </div>
             </div>
-                <div class="dropdown-container1-employee-swipes-for-download-and-filter">
+                <div class="dropdown-container1-employee-swipes-for-download-and-filter d-flex">
                         <div class="dropdown-container1-employee-swipes">
 
                             <button type="button" class="button2" data-toggle="modal" data-target="#exampleModalCenter">
@@ -51,7 +51,7 @@
         <div class="col-md-9 mb-4" >
            <div class="bg-white border rounded" style="height: 100vh;">
              <div class="bg-white rounded p-0 m-0">
-                <table class="employee-swipes-table  bg-white" >
+                <table class="employee-swipes-table  bg-white" style="width: 100%;">
                     <thead>
                         <tr>
                             <th>Employee&nbsp;Name</th>

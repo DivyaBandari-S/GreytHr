@@ -12,7 +12,7 @@ class RegularisationPending extends Component
 {
     public $data;
     
-    public $regularisationrequest=[];
+    public $regularisationrequest;
 
     public $ManagerId;
     public $ManagerName;
@@ -29,8 +29,6 @@ class RegularisationPending extends Component
         $this->regularisationEntries = json_decode($this->regularisationrequest->regularisation_entries, true);
         $this->regularisationEntries = array_reverse($this->regularisationEntries);
         $this->totalEntries = count($this->regularisationEntries);
-       
-        
     }
  
     public function render()

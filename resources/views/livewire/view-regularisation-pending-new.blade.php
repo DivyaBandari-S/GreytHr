@@ -53,7 +53,7 @@
 
 
     <div class="accordion bg-white border mb-3 rounded">
-        <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
+        <div class="accordion-heading rounded">
 
             <div class="accordion-title p-2 rounded">
 
@@ -84,14 +84,14 @@
 
 
 
-                <div class="arrow-btn">
-                    <i class="fa fa-angle-down"></i>
+                <div class="arrow-btn"wire:click="toggleActiveAccordion({{ $r->id }})"style="color:{{ $openAccordionForActive === $r->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForActive === $r->id ? '#3a9efd' : '#778899' }}">
+                <i class="fa fa-angle-{{ $openAccordionForActive === $r->id ? 'up' : 'down' }}"style="color:{{ $openAccordionForActive === $r->id ? '#3a9efd' : '#778899' }}"></i>
                 </div>
 
             </div>
 
         </div>
-        <div class="accordion-body m-0 p-0">
+        <div class="accordion-body m-0 p-0"style="display:{{ $openAccordionForActive === $r->id ? 'block' : 'none' }} ">
 
             <div style="width:100%; height:1px; border-bottom:1px solid #ccc;"></div>
 
@@ -144,7 +144,7 @@
                         <div class="modal-content">
                             <div class="modal-header" style="background-color: #f5f5f5; height: 50px">
                                 <h5 class="modal-title" id="rejectModalTitle"style="color:#778899;">Reject Request</h5>
-                                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeRejectModal" style="background-color: #f5f5f5;border-radius:20px;border:2px solid #778899;height:20px;width:20px;" >
+                                <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeRejectModal" style="background-color: #f5f5f5;border-radius:20px;font-size:12px;border:2px solid #778899;height:15px;width:15px;" >
                                 </button>
                             </div>
                             <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -156,9 +156,8 @@
 
                             </div>
                             <div class="modal-footer">
-                                    <button type=
-                                    "button"class="approveBtn"wire:click="closeRejectModal">Cancel</button>
-                                    <button type="button"class="rejectBtn"wire:click="reject({{$r->id}})">Confirm</button>
+                                <button type="button"class="approveBtn"wire:click="reject({{$r->id}})">Confirm</button>
+                                <button type="button"class="rejectBtn"wire:click="closeRejectModal">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -171,7 +170,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color: #f5f5f5; height: 50px">
                                         <h5 class="modal-title" id="approveModalTitle"style="color:#778899;">Approve Request</h5>
-                                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeApproveModal" style="background-color: #f5f5f5;border-radius:20px;border:2px solid #778899;height:20px;width:20px;" >
+                                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeApproveModal" style="background-color: #f5f5f5;font-size:12px;border-radius:20px;border:2px solid #778899;height:15px;width:15px;" >
                                         </button>
                                     </div>
                                     <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -183,9 +182,9 @@
 
                                     </div>
                                     <div class="modal-footer">
-                                            <button type=
-                                            "button"class="approveBtn"wire:click="closeApproveModal">Cancel</button>
-                                            <button type="button"class="rejectBtn"wire:click="approve({{$r->id}})">Confirm</button>
+                                            <button type="button"class="approveBtn"wire:click="approve({{$r->id}})">Confirm</button>
+                                            <button type="button"class="rejectBtn"wire:click="closeApproveModal">Cancel</button>
+                                            
                                     </div>
                                 </div>
                             </div>

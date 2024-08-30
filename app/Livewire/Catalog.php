@@ -100,7 +100,7 @@ class Catalog extends Component
   
 
     protected $messages = [
-   'distributor_name' =>'Disstributor name is required',
+   'distributor_name' =>'Distributor name is required',
    'selected_equipment'=>'Selected Equipment is required ',
         'subject.required' => 'Subject  is required.',
         'mail.required' => ' Email  is required.',

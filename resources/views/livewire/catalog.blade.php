@@ -45,8 +45,8 @@
                                     <div class="col-12 text-center mb-2">
                                         <img src="https://snow.payg.in/89294c29871c7510279786a50cbb35b5.iix?t=medium" style="height:4em;">
                                     </div>
-                                    <div class="col-12 mb-2">
-                                        <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="AddRequest" style="font-size: 10px;">Add Members to Distribution List</p>
+                                    <div class="col-12 mb-2" style="font-size:12px">
+                                        <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="AddRequest" >Add Members to Distribution List</p>
                                     </div>
                                     @if($AddRequestaceessDialog)
     <div class="modal" tabindex="-1" role="dialog" style="{{ $showModal ? 'display: block;' : 'display: none;' }}">
@@ -183,7 +183,7 @@
 
                                 </div>
 
-                                <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="AddRequest">View Details</p>
+                               
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
@@ -193,7 +193,7 @@
                                     <div class="col-12 text-center mb-2">
                                         <img src="https://snow.payg.in/cc7c281087dc7150fc21ed7bbbbb356b.iix?t=medium" style="width: 4em; height:4em;">
                                     </div>
-                                    <div class="col-12 mb-2">
+                                    <div class="col-12 mb-2" style="font-size:12px">
                                         <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="ItRequest">Request for IT Accessories</p>
                                     </div>
                                     @if($ItRequestaceessDialog)
@@ -376,7 +376,7 @@
                                     @endif
 
                                 </div>
-                                <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="ItRequest">View Details</p>
+
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
@@ -386,7 +386,7 @@
                                     <div class="col-12 text-center mb-2">
                                         <img src="https://snow.payg.in/c3d8c429871c7510279786a50cbb3564.iix?t=medium" style="height:4em;">
                                     </div>
-                                    <div class="col-12 mb-2">
+                                    <div class="col-12 mb-2" style="font-size:12px">
                                         <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="MailRequest">Add Members to Mailbox</p>
                                     </div>
                                     @if($MailRequestaceessDialog)
@@ -557,7 +557,7 @@
                                     @endif
 
                                 </div>
-                                <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="MailRequest">View Details</p>
+                     
                             </div>
                         </div>
 
@@ -569,7 +569,7 @@
                                         <div class="col-12 text-center mb-2">
                                             <img src="https://snow.payg.in/673ac469871c7510279786a50cbb3563.iix?t=medium" style="height:4em;">
                                         </div>
-                                        <div class="col-12 mb-2">
+                                        <div class="col-12 mb-2" style="font-size:12px">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="IdRequest">New ID Card Request</p>
                                         </div>
                                         @if($IdRequestaceessDialog)
@@ -744,7 +744,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
-                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="IdRequest">View Details</p>
+
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
@@ -754,7 +754,7 @@
                                         <div class="col-12 text-center mb-2">
                                             <img src="https://snow.payg.in/79ee2f8187c0b510e34c63d70cbb355f.iix?t=medium" style="width: 4em; height:4em;">
                                         </div>
-                                        <div class="col-12 mb-2">
+                                        <div class="col-12 mb-2" style="font-size:12px">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="MmsRequest">MMS Account Request</p>
                                         </div>
                                         @if($MmsRequestaceessDialog)
@@ -932,18 +932,18 @@
                                         <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
-                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;" wire:click="MmsRequest">View Details</p>
+        
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
                                 <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
                                     <p style="font-size: 12px;"><b>New Distribution List</b></p>
                                     <div class="row m-0">
-                                        <div class="col-12 text-center mb-2">
+                                        <div class="col-12 text-center mb-2" style="font-size:12px">
                                             <img src="https://snow.payg.in/feaa4ca9871c7510279786a50cbb3576.iix?t=medium" style="height:4em;">
                                         </div>
                                         <div class="col-12 mb-2">
-                                            <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="DistributionRequest">New Distribution List</p>
+                                            <p style="text-decoration:underline;cursor: pointer; text-align: center;font-size:12px;" wire:click="DistributionRequest">New Distribution List</p>
                                         </div>
                                         @if($DistributionRequestaceessDialog)
                                         <div class="modal" tabindex="-1" role="dialog" style="{{ $showModal ? 'display: block;' : 'display: none;' }}">
@@ -1115,7 +1115,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
-                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="DistributionRequest">View Details</p>
+
                                 </div>
                             </div>
                         </div>
@@ -1125,10 +1125,10 @@
                                 <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
                                     <p style="font-size: 12px;"><b>New Laptop</b></p>
                                     <div class="row m-0">
-                                        <div class="col-12 text-center mb-2">
+                                        <div class="col-12 text-center mb-2" style="font-size:12px">
                                             <img src="https://snow.payg.in/1a00f1cb878cb950279786a50cbb35ea.iix?t=medium" style="height:4em;">
                                         </div>
-                                        <div class="col-12 mb-2">
+                                        <div class="col-12 mb-2" style="font-size:12px">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="LapRequest">Laptop Request</p>
                                         </div>
                                         @if($LapRequestaceessDialog)
@@ -1305,31 +1305,31 @@
                                         <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
-                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="LapRequest">View Details</p>
+
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
                                 <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
                                     <p style="font-size: 12px;"><b>New Mailbox Request</b></p>
                                     <div class="row m-0">
-                                        <div class="col-12 text-center mb-2">
+                                        <div class="col-12 text-center mb-2" style="font-size:12px">
                                             <img src="https://snow.payg.in/723bc4e9871c7510279786a50cbb3585.iix?t=medium" style="width: 4em; height:4em;">
                                         </div>
-                                        <div class="col-12 mb-2">
+                                        <div class="col-12 mb-2" style="font-size:12px">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;">New Mailbox Request</p>
                                         </div>
                                     </div>
-                                    <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+ 
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
                                 <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
                                     <p style="font-size: 12px;"><b>Devops Access Request</b></p>
                                     <div class="row m-0">
-                                        <div class="col-12 text-center mb-2">
+                                        <div class="col-12 text-center mb-2" style="font-size:12px">
                                             <img src="https://snow.payg.in/3111f90f878cb950279786a50cbb359b.iix?t=medium" style="height:4em;">
                                         </div>
-                                        <div class="col-12 mb-2">
+                                        <div class="col-12 mb-2" style="font-size:12px">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="DevopsRequest">Devops Access Request</p>
                                         </div>
                                         @if($DevopsRequestaceessDialog)
@@ -1505,7 +1505,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
                                         @endif
                                     </div>
-                                    <p style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;text-decoration:underline" wire:click="DevopsRequest">View Details</p>
+
                                 </div>
                             </div>
                         </div>
@@ -1527,11 +1527,11 @@
                                             <div class="col-12 text-center mb-2">
                                                 <img src="https://snow.payg.in/a9fa00e9871c7510279786a50cbb3525.iix?t=medium" style="height:4em;">
                                             </div>
-                                            <div class="col-12 mb-2">
+                                            <div class="col-12 mb-2" style="font-size:12px">
                                                 <p style="text-decoration:underline;cursor: pointer; text-align: center;">O365 Desktop License Access</p>
                                             </div>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+
                                     </div>
                                 </div>
 
@@ -1539,18 +1539,18 @@
                                     <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;height: 220px;">
                                         <p style="font-size: 12px;"><b>Other Request</b></p>
                                         <div class="row m-0 mb-5">
-                                            <p class="p-0" style="cursor: pointer; margin-bottom: 4.4em;text-decoration:underline;text-align: center;">Other Service Request</p>
+                                            <p class="p-0" style="cursor: pointer; margin-bottom: 4.4em;text-decoration:underline;text-align: center;font-size:12px">Other Service Request</p>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+        
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-4">
                                     <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;height: 220px;">
                                         <p style=" font-size: 12px;"><b>Privilege Access Request</b></p>
                                         <div class="row m-0 mb-5">
-                                            <p class="p-0" style="cursor: pointer; margin-bottom: 4.4em;text-decoration:underline;text-align: center;">Privilege Access Request</p>
+                                            <p class="p-0" style="cursor: pointer; margin-bottom: 4.4em;text-decoration:underline;text-align: center;font-size:12px">Privilege Access Request</p>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+
                                     </div>
                                 </div>
                             </div>
@@ -1564,11 +1564,11 @@
                                             </div>
                                             <div class="col-12 mb-2 text-center">
                                                 <div style="max-width: 100%; overflow: hidden;">
-                                                    <p style="text-decoration:underline; cursor: pointer; ">Remove Members from Distribution List</p>
+                                                    <p style="text-decoration:underline; cursor: pointer;font-size:12px ">Remove Members from Distribution List</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+
                                     </div>
                                 </div>
 
@@ -1583,11 +1583,10 @@
                                                 <img src="https://snow.payg.in/6dfb082d871c7510279786a50cbb3590.iix?t=medium" style="height:4em;">
                                             </div>
                                             <div class="col-12 mb-2">
-                                                <p style="text-decoration:underline;cursor: pointer; text-align: center;">Remove Members from Mailbox</p>
+                                                <p style="text-decoration:underline;cursor: pointer; text-align: center;font-size:12px">Remove Members from Mailbox</p>
                                             </div>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
-                                    </div>
+                                       
                                 </div>
 
                                 <div class="col-md-4 mb-4">
@@ -1601,7 +1600,7 @@
                                                 <p style="text-decoration:underline;cursor: pointer; text-align: center;">New SIM Request</p>
                                             </div>
                                         </div>
-                                        <a href="" style="color:blue; cursor: pointer; font-size:smaller; display: block; text-align: center;">View Details</a>
+
                                     </div>
                                 </div>
                             </div>
@@ -1676,7 +1675,7 @@
                                     <img src="https://snow.payg.in/1a00f1cb878cb950279786a50cbb35ea.iix?t=medium" class="me-3" style="height:4em;">
                                     <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">New Laptop Request</a>
                                 </td>
-                                <td class="descrption-td" style="vertical-align: middle;">
+                                <td class="descrption-td" style="vertical-align: middle;font-size:12px">
                                     <p style="font-size: 12px">New Laptop Request</p>
                                 </td>
                             </tr>
@@ -1784,7 +1783,7 @@
                                 <div class="row m-0 mb-5">
                                     <p class="p-0" style="cursor: pointer">Shifting Distribution List to Shared Mailboxt</p>
                                 </div>
-                                <a href="#" id="standCardView" style="color:blue; cursor: pointer">View Details</a>
+                              
 
                             </div>
                         </div>

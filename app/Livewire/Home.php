@@ -124,10 +124,18 @@ class Home extends Component
         // $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
         // $month = $currentDate->format('n');
         // $year = $currentDate->format('Y');
+        // $currentDate = Carbon::today();
+        // $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        // $month = $currentDate->format('n');
+        // $year = $currentDate->format('Y');
 
         // // // Construct the table name for SQL Server
         // $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        // // // Construct the table name for SQL Server
+        // $tableName = 'DeviceLogs_' . $month . '_' . $year;
 
+        // $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+        // $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
         // $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
         // $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
 
