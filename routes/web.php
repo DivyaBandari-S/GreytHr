@@ -326,9 +326,9 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/leave-apply', LeaveApply::class);
     Route::get('/holiday-calendar', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
-    Route::get('/casualleavebalance', CasualLeaveBalance::class)->name('casual-leave-balance');
-    Route::get('/sickleavebalance', SickLeaveBalances::class)->name('sick-leave-balance');
-    Route::get('/casualprobationleavebalance', CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
+    Route::get('/leave-balances/casualleavebalance', CasualLeaveBalance::class)->name('casual-leave-balance');
+    Route::get('/leave-balances/sickleavebalance', SickLeaveBalances::class)->name('sick-leave-balance');
+    Route::get('/leave-balances/casualprobationleavebalance', CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
     Route::get('/leave-cancel', LeaveCancel::class)->name('lseave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
