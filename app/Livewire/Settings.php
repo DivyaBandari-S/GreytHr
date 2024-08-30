@@ -305,7 +305,7 @@ class Settings extends Component
     {
         return [
             'oldPassword.required' => 'Please enter your old password.',
-            'newPassword.required' => 'Please enter a new password.',
+            'newPassword.required' => 'Please enter new password.',
             'newPassword.string' => 'The new password must be a valid string.',
             'newPassword.min' => 'Your password must be at least 8 characters long.',
             'newPassword.regex' => 'Your password must contain at least one capital letter, one lowercase letter, one digit, and one special character.',

@@ -37,7 +37,7 @@ class Home extends Component
     public $currentDate;
     public $swipes;
     public $showSalary = false;
-    public $groupedRequests ;
+    public $groupedRequests;
 
     public $whoisinTitle = '';
     public $currentDay;
@@ -110,93 +110,11 @@ class Home extends Component
     public $city;
     public $country;
     public $postal_code;
+    public $dataSqlServer;
     public function mount()
     {
         $this->fetchWeather();
-        // Get the current month and year
-        // $currentDate = Carbon::today();
-        // $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-        // $month = $currentDate->format('n');
-        // $year = $currentDate->format('Y');
 
-        // // // Construct the table name for SQL Server
-        // $tableName = 'DeviceLogs_' . $month . '_' . $year;
-
-        // $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
-        // $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
-
-        // Get data from SQL Server for the normalized user ID
-        // $dataSqlServer = DB::connection('sqlsrv')
-        //     ->table($tableName)
-        //     ->select('UserId', 'logDate', 'Direction')
-        //     ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
-        //     ->whereDate('logDate', $today) // Filter for today's date
-        //     ->orderBy('logDate')
-        //     ->get();
-        // Assuming $dataSqlServer is the collection you want to split
-        // foreach ($dataSqlServer as $data) {
-        //     // Accessing individual fields
-        //     $userId = $data->UserId;
-        //     $logDate = $data->logDate;
-        //     $direction = $data->Direction;
-
-        //     // Example: If you want to split the date and time from logDate
-        //     $dateTimeParts = explode(' ', $logDate);
-        //     $date = $dateTimeParts[0]; // 2024-08-28
-        //     $time = $dateTimeParts[1]; // 11:36:50.000
-
-        //     // Output or further processing
-        //     dump($userId, $date, $time, $direction);
-        // }
-
-
-        // // Get data from MySQL
-        // $dataMySql = DB::connection('mysql')
-        //     ->table('employee_details')
-        //     ->pluck('emp_id');2
-        // $mysqlEmployeeIds = $dataMySql->toArray();
-
-        // // Process and match the data from both databases
-        // foreach ($dataSqlServer as $sqlData) {
-        //     foreach ($mysqlEmployeeIds as $mysqlData) {
-        //         // Remove hyphens from emp_id in MySQL
-        //         $empIdWithoutHyphens = str_replace('-', '', $mysqlData);
-
-        //         // Compare emp_id from MySQL with UserId from SQL Server
-        //         if ($sqlData->UserId === $empIdWithoutHyphens) {
-        //             $matchedData[] = [
-        //                 'UserId' => $sqlData->UserId,
-        //                 'logDate' => $sqlData->logDate,
-        //                 'Direction' => $sqlData->Direction,
-        //             ];
-        //         }
-        //     }
-        // }
-        // $this->swipedDataRecords = $matchedData;
-        // // dd($this->swipedDataRecords);
-        // foreach ($this->swipedDataRecords as $data) {
-        //     // Check if a record with the same emp_id, direction, and DownloadDate already exists
-        //     $existingRecord = SwipeData::where('emp_id', $data['UserId'])
-        //         ->where('direction', $data['Direction'])
-        //         ->whereDate('DownloadDate', $data['logDate'])
-        //         ->exists();
-
-        //     // If the record does not exist, create a new SwipeData record
-        //     if (!$existingRecord) {
-        //         SwipeData::create([
-        //             'emp_id' => $data['UserId'],
-        //             'direction' => $data['Direction'],
-        //             'DownloadDate' => $data['logDate']
-        //         ]);
-        //     }
-        // }
-
-        // //SwipeData for loginEmployees
-        // $currentDate = Carbon::today()->toDateString(); // Get today's date
-        // $employeeId = str_replace('-', '', auth()->guard('emp')->user()->emp_id);
-        // $this->swipeDataOfEmployee = SwipeData::where('emp_id', $employeeId)
-        //     ->whereDate('DownloadDate', $currentDate)
-        //     ->get();
 
         $currentHour = date('G');
 
@@ -233,6 +151,41 @@ class Home extends Component
             ->with('employee')
             ->count();
     }
+
+
+    public function fetchSwipeData()
+    {
+        // Debug configuration
+        //dd(config('database.connections.odbc'));
+
+        $currentDate = Carbon::today();
+        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
+
+        // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+
+        $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+        $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+
+        try {
+            // Get data from SQL Server for the normalized user ID
+            $this->dataSqlServer = DB::connection('odbc')
+                ->table($tableName)
+                ->select('UserId', 'logDate', 'Direction')
+                ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
+                ->whereDate('logDate', $today) // Filter for today's date
+                ->orderBy('logDate')
+                ->get();
+        } catch (\Exception $e) {
+            // Handle the error
+            $this->dataSqlServer = collect(); // or handle error as needed
+            // Log error or display message
+            logger()->error("Data fetch error: " . $e->getMessage());
+        }
+    }
+
     public function reviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = true;
@@ -700,7 +653,7 @@ class Home extends Component
                 'totalTasksCount' => $this->totalTasksCount,
                 'taskCount' => $this->taskCount,
                 'employeeNames' => $this->employeeNames,
-                'groupedRequests' =>$this->groupedRequests
+                'groupedRequests' => $this->groupedRequests
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
@@ -928,6 +881,5 @@ class Home extends Component
         } catch (\Exception $e) {
             Log::error("Exception: ", ['message' => $e->getMessage()]);
         }
-
     }
 }
