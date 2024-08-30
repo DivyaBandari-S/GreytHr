@@ -317,7 +317,7 @@ class Tasks extends Component
     {
         $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
             $selectedPerson = $this->peoples->where('emp_id', $id)->first();
-            return $selectedPerson ? $selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')' : '';
+            return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name .' #(' . $selectedPerson->emp_id . ')' : '';
         }, $this->selectedPeopleForFollowers);
 
         $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
