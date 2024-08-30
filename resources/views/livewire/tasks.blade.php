@@ -575,8 +575,8 @@
                                     <br>
                                     <i wire:click="forAssignee"  wire:change="autoValidate" class="fa fa-user icon" id="profile-icon"></i>
                                     @if ($showRecipients)
-                                        <strong style="font-size: 12;">Selected assignee:
-                                        </strong>{{ $selectedPeopleName }}
+                                        <strong style="font-size: 12;" >Selected assignee:
+                                        </strong><span title="{{$selectedPeopleName}}">{{ $selectedPeopleName }}</span>
                                     @else
                                         <a wire:click="forAssignee"  class="hover-link" style="color:black;cursor:pointer"> Add Assignee</a>
                                     @endif <br>
@@ -673,7 +673,7 @@
                                 @endif
                                 <div class="row">
                                     <div class="col-md-6">
-                                        @if ($selectedPersonClients->isEmpty())
+                                        @if ($selectedPersonClients->isEmpty() || $selectedPersonClients=="")
                                         @else
                                             <div style="margin-bottom: 10px;">
                                                 <label style="font-size: 13px;color:#778899" for="clientSelect">Select
@@ -805,7 +805,7 @@
                                         class="fas fa-user icon" id="profile-icon"></i>
                                     @if ($showFollowers)
                                         <strong style="font-size: 12;">Selected Followers:
-                                        </strong>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}
+                                        </strong><span title="{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}">{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</span>
                                     @else
                                         <a wire:click="forFollowers" class="hover-link" style="color:black;cursor:pointer"> Add Followers</a>
                                     @endif

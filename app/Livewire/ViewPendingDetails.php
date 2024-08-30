@@ -31,7 +31,7 @@ class ViewPendingDetails extends Component
     public $leaveRequest;
     public $leaveApplications = [];
     public $selectedYear;
-    public $searchQuery = '';
+    public $filter = '';
     public $showAlert = false;
     public function mount()
     {
@@ -43,7 +43,7 @@ class ViewPendingDetails extends Component
     {
         $this->showAlert = false;
     }
-    public function fetchPendingLeaveApplications($searchQuery = null)
+    public function fetchPendingLeaveApplications($filter = null)
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -57,12 +57,12 @@ class ViewPendingDetails extends Component
                 ->orderBy('leave_applications.created_at', 'desc');
 
             // Search query conditions
-            if ($searchQuery !== null) {
-                $query->where(function ($query) use ($searchQuery) {
-                    $query->where('employee_details.first_name', 'like', '%' . $searchQuery . '%')
-                        ->orWhere('employee_details.last_name', 'like', '%' . $searchQuery . '%')
-                        ->orWhere('leave_applications.category_type', 'like', '%' . $searchQuery . '%')
-                        ->orWhere('leave_applications.leave_type', 'like', '%' . $searchQuery . '%');
+            if ($filter !== null) {
+                $query->where(function ($query) use ($filter) {
+                    $query->where('employee_details.first_name', 'like', '%' . $filter . '%')
+                        ->orWhere('employee_details.last_name', 'like', '%' . $filter . '%')
+                        ->orWhere('leave_applications.category_type', 'like', '%' . $filter . '%')
+                        ->orWhere('leave_applications.leave_type', 'like', '%' . $filter . '%');
                 });
             }
 
@@ -328,18 +328,18 @@ class ViewPendingDetails extends Component
     // Method to handle search input change
     public function updatedSearchQuery($value)
     {
-        $this->searchQuery = $value;
-        // Call fetchPendingLeaveApplications with updated $searchQuery
-        $this->fetchPendingLeaveApplications($this->searchQuery);
+        $this->filter = $value;
+        // Call fetchPendingLeaveApplications with updated $filter
+        $this->fetchPendingLeaveApplications($this->filter);
     }
     public function render()
     {
-        // Call fetchPendingLeaveApplications with $searchQuery
-        $this->fetchPendingLeaveApplications($this->searchQuery);
+        // Call fetchPendingLeaveApplications with $filter
+        $this->fetchPendingLeaveApplications($this->filter);
 
         return view('livewire.view-pending-details', [
             'leaveApplications' => $this->leaveApplications,
-            'searchQuery' => $this->searchQuery,
+            'filter' => $this->filter,
             'count' => $this->count
         ]);
     }

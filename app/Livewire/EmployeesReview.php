@@ -187,17 +187,15 @@ class EmployeesReview extends Component
             $this->showleave = true;
             $this->showattendance = false;
         }
-// TO reduce notification count by making as read related to leave and leaveCancel
+        // TO reduce notification count by making as read related to leave and leaveCancel
         $employeeId = auth()->guard('emp')->user()->emp_id;
         DB::table('notifications')
-        ->where(function ($query) use ($employeeId) {
-            $query->whereJsonContains('notifications.applying_to', [['manager_id' => $employeeId]]);
-        })
-        ->whereIn('notification_type', ['leave', 'leaveCancel'])
-        ->delete();
-
+            ->where(function ($query) use ($employeeId) {
+                $query->whereJsonContains('notifications.applying_to', [['manager_id' => $employeeId]]);
+            })
+            ->whereIn('notification_type', ['leave', 'leaveCancel'])
+            ->delete();
     }
-
 
     public function getPendingLeaveRequest()
     {
@@ -205,7 +203,7 @@ class EmployeesReview extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $companyId = auth()->guard('emp')->user()->company_id;
 
-            // Retrieve team members' emp_ids where logged-in user is the manager
+            // Retrieve team members' emp_ids where the logged-in user is the manager
             $teamMembersIds = EmployeeDetails::where('manager_id', $employeeId)
                 ->where('company_id', $companyId)
                 ->pluck('emp_id')
@@ -222,24 +220,15 @@ class EmployeesReview extends Component
                 })
                 ->orderBy('created_at', 'desc');
 
-            // Apply search filter if $this->searchQuery is provided
-            if (!empty($this->searchQuery)) {
-                $query->where(function ($query) {
-                    $query->where('emp_id', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('leave_type', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('status', 'LIKE', '%' . $this->searchQuery . '%');
-                });
-            }
-
             // Execute the query
             $this->leaveApplications = $query->get();
             $this->count = count($this->leaveApplications);
-
         } catch (\Exception $e) {
             Log::error('Error in getPendingLeaveRequest method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while processing your request. Please try again later.');
         }
     }
+
 
 
 

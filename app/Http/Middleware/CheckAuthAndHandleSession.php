@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class CheckAuthAndHandleSession
 {
-    protected $timeout = 15 * 60;   // 15 minutes timeout in seconds
+    protected $timeout = 60 * 60;   // 15*6o minutes timeout in seconds
 
     /**
      * Handle an incoming request.
@@ -37,9 +37,7 @@ class CheckAuthAndHandleSession
                     return $this->sessionHijackedResponse($user);
                 }
 
-
                 $this->updateSession($request, $guard, $user);
-
                 $this->storeSessionData($request, $guard, $user);
 
                 // If user is authenticated, stop checking other guards
@@ -105,7 +103,6 @@ class CheckAuthAndHandleSession
 
         return false;
     }
-
 
     /**
      * Update session data with the current request information.
@@ -229,13 +226,17 @@ class CheckAuthAndHandleSession
     {
         $loginUrl = route('emplogin');
 
-        $html = <<<HTML
-    <html>
+        $html = '
+    <!DOCTYPE html>
+    <html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Session Expired</title>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: \'Montserrat\', sans-serif;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -257,42 +258,52 @@ class CheckAuthAndHandleSession
             .login-link {
                 display: inline-block;
                 padding: 10px 20px;
+                font-size: 16px;
                 color: #fff;
-                background-color: #007bff;
-                text-decoration: none;
+                background-color:#02114f;
                 border-radius: 5px;
-                font-weight: bold;
-            }
-            .login-link:hover {
-                background-color: #0056b3;
+                text-decoration: none;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <div class="message">Your session has expired. Please login again.</div>
-            <a href="$loginUrl" class="login-link">Login</a>
+            <div class="message">
+                <span>Your session has expired. Please login again.</span>
+            </div>
+            <a href="' . $loginUrl . '" class="login-link">Login</a>
         </div>
     </body>
-    </html>
-    HTML;
+    </html>';
 
-        return new Response($html, 200);
+        return response($html);
     }
+
+    /**
+     * Return a custom session hijacked response.
+     *
+     * @param $user
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     protected function sessionHijackedResponse($user): Response
     {
         $loginUrl = route('emplogin');
-        $location = session('location', 'Unknown Location');
-        $deviceType = session('device_type', 'Unknown Device');
-        $ipAddress = request()->ip();
+        $userType = Session::get('user_type');
+        $deviceType = Session::get('device_type');
+        $location = Session::get('location');
+        $ip = request()->ip();
 
-        $html = <<<HTML
-    <html>
+        $html = '
+    <!DOCTYPE html>
+    <html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Session Hijacked</title>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: \'Montserrat\', sans-serif;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -311,39 +322,40 @@ class CheckAuthAndHandleSession
                 font-size: 18px;
                 margin-bottom: 20px;
             }
-            .details {
-                margin-bottom: 20px;
-                font-size: 16px;
-                color: #555;
-            }
             .login-link {
                 display: inline-block;
                 padding: 10px 20px;
+                font-size: 16px;
                 color: #fff;
-                background-color: #007bff;
-                text-decoration: none;
+                background-color: #dc3545;
                 border-radius: 5px;
-                font-weight: bold;
+                text-decoration: none;
             }
-            .login-link:hover {
-                background-color: #0056b3;
+            .details {
+                margin-top: 20px;
+                font-size: 16px;
+            }
+            .details p {
+                margin: 5px 0;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <div class="message">Your session was accessed from another device.</div>
-            <div class="details">
-                Device: $deviceType<br>
-                Location: $location<br>
-                IP Address: $ipAddress
+            <div class="message">
+                <span>Your session has been hijacked. Please login again.</span>
             </div>
-            <a href="$loginUrl" class="login-link">Login</a>
+            <a href="' . $loginUrl . '" class="login-link">Login</a>
+            <div class="details">
+                <p><strong>User Type:</strong> ' . $userType . '</p>
+                <p><strong>Device Type:</strong> ' . $deviceType . '</p>
+                <p><strong>Location:</strong> ' . $location . '</p>
+                <p><strong>IP Address:</strong> ' . $ip . '</p>
+            </div>
         </div>
     </body>
-    </html>
-    HTML;
+    </html>';
 
-        return new Response($html, 200);
+        return response($html);
     }
 }

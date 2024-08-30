@@ -7,7 +7,15 @@
                         style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
                 </div>
                 @endif
-
+                @if(session()->has('message'))
+    <div class="alert alert-success" style="max-width: 500px; margin: auto;">
+        {{ session('message') }}
+ 
+    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"
+                        style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
+                </div>
+                </div>
+@endif
         <div class="col-md-12  mt-3" style="height:60px;margin-top:10px">
 
 <div class="row bg-white rounded border d-flex" style="height:80px; ">
@@ -201,6 +209,25 @@
             </label>
         </div>
 
+        @if($isManager)
+    <div class="post-requests" style="width: 100%; height: 30px;">
+        <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
+            @if(auth()->guard('emp')->check())
+                <input type="radio" id="radio-emp" name="radio" style="margin-left:5px" value="post-requests" data-url="/emp-post-requests" onclick="handleRadioChange(this)">
+            @elseif(auth()->guard('hr')->check())
+                <input type="radio" id="radio-hr" name="radio" style="margin-left:5px" value="post-requests" data-url="/hr-post-requests" onclick="handleRadioChange(this)">
+            @endif
+            <div class="feed-icon-container" style="margin-left: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                </svg>
+            </div>
+            <span class="custom-radio-button bg-blue" style="margin-left: 10px; font-size: 10px;"></span>
+            <span style="color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;">Post Requests</span>
+        </label>
+    </div>
+@endif
 
         <hr style="width: 100%;border-bottom: 1px solid grey;">
         <div >
@@ -481,7 +508,20 @@
 
         </div>
     </div>
-                <div class="col">
+    <div class="col m-0" style="max-height: 100vh; overflow-y: auto;scroll-behavior: smooth;">
+                    <div class="row align-items-center ">
+                        <div class="col-md-5" style=" justify-content: flex-start;display:flex">
+                            <div style="width: 2px; height: 40px; background-color: #97E8DF; margin-right: 10px;"></div>
+                            <gt-heading _ngcontent-eff-c648="" size="md" class="ng-tns-c648-2 hydrated"></gt-heading>
+                            <div class="medium-header border-cyan-200" style="margin-left:-1px">Posts</div>
+                        </div>
+
+                 
+
+
+                    </div>
+                    
+                    <div class="col">
 
                     <div id="eventsSection" style=" display: flex; flex-direction: column; align-items: center; justify-content: center; ">
                         @if($posts->isEmpty())
@@ -499,7 +539,7 @@
 
                     @else
                 
-                    @foreach($posts as $post)
+                    @foreach($posts->where('status', 'Closed') as $post)
     <div class="col-12 col-md-10" style="margin-top: 10px;">
         <!-- Upcoming Birthdays List -->
         <div class="F" style="background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452;">
@@ -511,42 +551,64 @@
                     {{ $post->category }}
                 </div>
                 <div class="col-6 col-md-4 text-md-end" style="font-size: 11px; font-weight: normal; color: #9E9696;margin-left:-10px">
-                    {{ $post->created_at->diffForHumans() }}
+                    {{ $post->updated_at->diffForHumans() }}
                 </div>
             </div>
             <div class="row m-0 mt-3 align-items-center">
-                @php
-                $manager = $post->employeeDetails;
-                @endphp
-                @if($manager)
-                    <div class="col-3 text-center">
-                        @if(($manager->image) && $manager->image !== 'null')
-                            <img class="rounded-circle" height="50" width="50" src="{{ $manager->image_url }}" alt="Employee Image">
-                        @else
-                            @if($manager && $manager->gender == "Male")
-                                <img class="rounded-circle" height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
-                            @elseif($manager && $manager->gender == "Female")
-                                <img class="rounded-circle" height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
-                            @else
-                                <img class="rounded-circle" height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
-                            @endif
-                        @endif
-                    </div>
-                    <div class="col-9">
-                        <p class="m-0" style="margin-left: 20px; font-size: 14px;">
-                            {{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}
-                        </p>
-                    </div>
+    @php
+        $employee = $post->employeeDetails;
+        $manager = $post->managerDetails;
+    @endphp
+
+    {{-- Display Employee Details --}}
+    @if($employee)
+        <div class="col-3 text-center">
+            @if($employee->image && $employee->image !== 'null')
+                <img class="rounded-circle" height="50" width="50" src="{{ $employee->image_url }}" alt="Employee Image">
+            @else
+                @if($employee->gender == "Male")
+                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                @elseif($employee->gender == "Female")
+                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
                 @else
-                    <p>No employee details available.</p>
+                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/user.jpg') }}" alt="Default Image">
                 @endif
-            </div>
+            @endif
+        </div>
+        <div class="col-9">
+            <p class="m-0" style="margin-left: 20px; font-size: 14px;">
+                {{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}
+            </p>
+        </div>
+    @else($manager)
+        <div class="col-3 text-center">
+            @if($manager->image && $manager->image !== 'null')
+                <img class="rounded-circle" height="50" width="50" src="{{ $manager->image_url }}" alt="Manager Image">
+            @else
+                @if($manager->gender == "Male")
+                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                @elseif($manager->gender == "Female")
+                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                @else
+                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                @endif
+            @endif
+        </div>
+        <div class="col-9">
+            <p class="m-0" style="margin-left: 20px; font-size: 14px;">
+                {{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}
+            </p>
+        </div>
+    @endif
+</div>
+
+
             <div class="row m-0 mb-3">
                 <div class="col-6 text-start mt-3">
-                    <img src="{{ $post->image_url ?? ''}}"  class="img-fluid" style="max-width: 70px; max-height: 70px;borer-radius:5px">
+                    <img src="{{ $post->image_url ?? ''}}"  class="img-fluid" style="max-width: 70px; max-height: 70px;border-radius:5px">
                 </div>
                 <div class="col-6 m-auto text-start mt-3">
-                    <p style="font-size: 14px; font-family: 'Open Sans', sans-serif; margin-top: 10px; font-weight: 100; color: #677A8E;">
+                    <p style="font-size: 14px; margin-top: 10px; font-weight: 100; color: #677A8E;">
                         {{ $post->description }}
                     </p>
                 </div>
@@ -598,10 +660,12 @@
                             });
                         });
                     })
+                    
                     function handleImageChange() {
         // Display a flash message
         showFlashMessage('File uploaded successfully!');
     }
+
 
     function showFlashMessage(message) {
         const container = document.getElementById('flash-message-container');
@@ -613,6 +677,7 @@
         setTimeout(() => {
             container.style.display = 'none';
         }, 3000);
+        
     }
                     // Hide emoji list when an emoji is selected
                     document.querySelectorAll('.emoji-option').forEach(option => {
@@ -988,4 +1053,7 @@
                 </script>
 
             </div>
+        </div>
+        </div>
+        </div>
         </div>
