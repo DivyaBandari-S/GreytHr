@@ -37,7 +37,7 @@ class Home extends Component
     public $currentDate;
     public $swipes;
     public $showSalary = false;
-    public $groupedRequests =[];
+    public $groupedRequests ;
 
     public $whoisinTitle = '';
     public $currentDay;

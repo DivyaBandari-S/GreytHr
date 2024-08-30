@@ -3207,6 +3207,11 @@ l
     cursor: pointer;
     font-size: 10px;
 }
+.reviewCountShow{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .teamOnLeave {
     font-size: var(--home-headings-font-size);
     color: var(--main-heading-color);
@@ -3237,6 +3242,21 @@ l
     align-items: center;
     line-height: 1.6;
 }
+#searchButtonReview{
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;v
+    outline: none;
+    background: rgb(2, 17, 79);
+    /* border-radius: 5px; */
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 3px 12px;
+    color: white;
+}
+
 
 @media screen and (max-width: 1060px) {
     .detail-container {
@@ -3275,6 +3295,11 @@ l
     }
     .view-container {
         width: 100%;
+    }
+    .reviewCountShow{
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
     }
 }
 /* //end of leave-history styles */
