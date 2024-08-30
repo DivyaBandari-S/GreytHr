@@ -907,4 +907,27 @@ class Home extends Component
 
         return $weatherCodes[$code] ?? '';
     }
+
+
+    public function getLocationByIP()
+    {
+
+        try {
+
+            $ip = '';
+
+            // $ip = request()->ip();
+            $apiUrl = env('FINDIP_API_URL');
+
+            // Construct the full API URL
+            $url = "{$apiUrl}/{$ip}/json/";
+
+            // Make the HTTP request
+            $response = Http::get($url);
+            // dd($response->json());
+        } catch (\Exception $e) {
+            Log::error("Exception: ", ['message' => $e->getMessage()]);
+        }
+
+    }
 }
