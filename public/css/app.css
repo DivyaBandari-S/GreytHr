@@ -1510,7 +1510,17 @@ input[type="date"]::before {
     display: flex;
     justify-content: space-between;
 }
-
+.employee-swipes-fields
+{
+    display: flex;
+    flex-direction: row;
+}
+.dropdown-container1-employee-swipes-for-download-and-filter
+{
+    display: flex;
+    flex-direction: row;
+    margin-top:-5px;
+}
 .container-employee-swipes-right {
     background-color: #fff;
     height: 100vh;
