@@ -396,7 +396,14 @@
     }
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
     @endphp
-    @for ($i = 1; $i <= $daysInMonth; $i++) @php $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); $dayName=date('D', $timestamp); $fullDate=date('Y-m-d', $timestamp); @endphp @endfor <div class="row">
+    @for ($i = 1; $i <= $daysInMonth; $i++) 
+              @php 
+                   $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); 
+                   $dayName=date('D', $timestamp); 
+                   $fullDate=date('Y-m-d', $timestamp); 
+              @endphp 
+    @endfor 
+    <div class="row">
         <div class="search-bar" style="margin-left:30px;">
             <input type="text" wire:model="search" placeholder="Search..." wire:change="searchfilter">
         </div>
