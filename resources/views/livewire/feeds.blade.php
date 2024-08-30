@@ -205,6 +205,25 @@
                             <span style="color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;">Posts</span>
                         </label>
                     </div>
+                    @if($isManager)
+    <div class="post-requests" style="width: 100%; height: 30px;">
+        <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
+            @if(auth()->guard('emp')->check())
+                <input type="radio" id="radio-emp" name="radio" style="margin-left:5px" value="post-requests" data-url="/emp-post-requests" onclick="handleRadioChange(this)">
+            @elseif(auth()->guard('hr')->check())
+                <input type="radio" id="radio-hr" name="radio" style="margin-left:5px" value="post-requests" data-url="/hr-post-requests" onclick="handleRadioChange(this)">
+            @endif
+            <div class="feed-icon-container" style="margin-left: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                </svg>
+            </div>
+            <span class="custom-radio-button bg-blue" style="margin-left: 10px; font-size: 10px;"></span>
+            <span style="color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;">Post Requests</span>
+        </label>
+    </div>
+@endif
 
 
                     <hr style="width: 100%;border-bottom: 1px solid grey;">
