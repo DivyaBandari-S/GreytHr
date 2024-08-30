@@ -380,19 +380,21 @@ class HelpDesk extends Component
         try {
 
             $validatedData = $this->validate($this->rules);
-
-            $fileContent = null; // Use a separate variable for file content
+ // Validate and store the uploaded file
+ $fileContent = null;
+            $mime_type = null;
+            $file_name = null;
+           $this->validate($this->rules);
             if ($this->file_path) {
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                $mime_type = $this->file_path->getMimeType();
+                $file_name = $this->file_path->getClientOriginalName();
                 // Validate and store the uploaded file
-                $validatedFile = $this->validate([
-                    'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960', // Adjust max size as needed
-                ]);
-
-
+            }
             // Store the file as binary data
-            $fileContent = file_get_contents($this->file_path->getRealPath());
 
-            if ($fileContent === false) {
+
+            if (  $fileContent  === false) {
                 Log::error('Failed to read the uploaded file.', [
                     'file_path' => $this->file_path->getRealPath(),
                 ]);
@@ -401,11 +403,10 @@ class HelpDesk extends Component
             }
 
             // Check if the file content is too large
-            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+            if (strlen(  $fileContent ) > 16777215) { // 16MB for MEDIUMBLOB
                 session()->flash('error', 'File size exceeds the allowed limit.');
                 return;
             }
-        }
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -418,6 +419,8 @@ class HelpDesk extends Component
                 'file_path' => $fileContent, // Store the binary file data
                 'cc_to' => $this->cc_to ?? '-',
                 'priority' => $this->priority,
+                'file_name' => $file_name,
+                'mime_type' => $mime_type,
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',

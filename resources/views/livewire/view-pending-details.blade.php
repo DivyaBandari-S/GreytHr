@@ -1,4 +1,12 @@
 <div>
+    @if($showAlert)
+    <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.1s="hideAlert" style="font-size: 12px; right: 25%;top:15%;" id="success-alert">
+        {{ session('message') }}
+        <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
+            <span>X</span>
+        </button>
+    </div>
+    @endif
     <div class="col" id="leavePending" style="width: 95%; padding: 0;border-radius: 5px; ">
         <div class="row m-0 p-0 mt-3">
             <div class="d-flex align-items-center justify-content-between p-0">
@@ -22,9 +30,9 @@
         <div class="approved-leave-container mt-1 px-1" style="border-radius: 5px; ">
             <div class="accordion rounded mb-4 p-0">
                 <div class="accordion-heading rounded m-0 p-0" onclick="toggleAccordion(this)">
-                    <div class="accordion-title rounded m-0 p-1" >
+                    <div class="accordion-title rounded m-0 p-1">
                         <!-- Display leave details here based on $leaveRequest -->
-                        <div class="col accordion-content d-flex align-items-center" >
+                        <div class="col accordion-content d-flex align-items-center">
                             <div class="accordion-profile" style="display:flex; gap:7px; margin:auto 0;align-items:center;justify-content:center;">
                                 @if(isset($leaveRequest['leaveRequest']->image) && $leaveRequest['leaveRequest']->image !== 'null')
                                 <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['leaveRequest']->image)}}" style="border-radius: 50%;">
@@ -172,7 +180,7 @@
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
                                     <span style="font-size:10px; color: #890000;font-weight:500;">LOP</span>
                                 </div>
-                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
+                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">&minus;{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
                                 <!-- Casual Leave Probation-->
                                 @elseif($leaveRequest['leaveRequest']->leave_type === 'Casual Leave Probation')
                                 <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #FDEBD0  ; display: flex; align-items: center; justify-content: center; margin-left: 15px;">

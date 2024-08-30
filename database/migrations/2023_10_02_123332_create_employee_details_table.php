@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('job_role')->nullable();
             $table->string('manager_id')->nullable();
             $table->string('dept_head')->nullable();
-            $table->enum('employee_status', ['active', 'on-leave', 'terminated', 'resigned'])->default('active');
+            $table->enum('employee_status', ['active', 'on-leave', 'terminated', 'resigned', 'on-probation'])->default('active');
             $table->string('emergency_contact')->unique()->nullable();
             $table->string('password')->nullable();
             $table->tinyInteger('status')->default(1);
@@ -45,7 +45,7 @@ return new class extends Migration
             $table->string('shift_type')->nullable();
             $table->string('shift_start_time')->nullable();
             $table->string('shift_end_time')->nullable();
-            $table->string('probation_Period')->nullable();
+            $table->string('probation_Period')->default('30');
             $table->json('confirmation_date')->nullable();
             $table->string('referral')->nullable();
             $table->string('service_age')->nullable();

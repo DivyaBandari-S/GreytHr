@@ -187,6 +187,12 @@ class EmployeesReview extends Component
             $this->showleave = true;
             $this->showattendance = false;
         }
+// TO reduce notification count by making as read related to leave and leaveCancel
+
+        DB::table('notifications')
+        ->whereIn('notification_type', ['leave', 'leaveCancel'])
+        ->update(['is_read' => 1]);
+
     }
 
 
@@ -366,7 +372,7 @@ class EmployeesReview extends Component
 
                 ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
 
-                ->orderByDesc('id')
+                ->orderByDesc('regularisation_dates.updated_at')
 
                 ->get();
         } else {
@@ -374,14 +380,14 @@ class EmployeesReview extends Component
 
                 ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
 
-                ->orderByDesc('regularisation_dates.id')
+              
 
                 ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
 
 
                 ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
 
-                ->orderByDesc('id')
+                ->orderByDesc('updated_at')
 
                 ->get();
         }

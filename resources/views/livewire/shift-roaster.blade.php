@@ -196,12 +196,10 @@
             border: 1px solid #ccc;
             background: #ebf5ff;
             padding: 0;
-            max-width: 800px;
+            max-width: 100%;
             overflow-x: auto;
             scrollbar-width: thin;
-            /* For Firefox */
             scrollbar-color: #dce0e5;
-            /* For Firefox */
         }
 
         /* For Webkit-based browsers (Chrome, Safari, Edge) */
@@ -249,8 +247,9 @@
 
         .table tbody td {
             border-right: 1px solid #d5d5d5;
-
-            /* Vertical border color and width */
+        }
+        .table tbody tr {
+            height: 70px;
         }
 
         .Attendance table tbody td {
@@ -373,11 +372,11 @@
 
         </div>
 
-        <div class="shift-roster-download-and-dropdown col-md-4">
-            <button class="btn btn-primary" wire:click="downloadExcel">
+        <div class="shift-roster-download-and-dropdown col-md-4 d-flex justify-content-end gap-2">
+            <button class="submit-btn py-0" wire:click="downloadExcel" style="padding:4px 10px;">
                 <i class="fa fa-download" aria-hidden="true"></i>
             </button>
-            <select name="year" wire:model="selectedMonth" wire:change="updateselectedMonth">
+            <select class="dropdown bg-white rounded border" style="width:30%;" name="year" wire:model="selectedMonth" wire:change="updateselectedMonth">
                 <option value="May">May 2024</option>
                 <option value="June">Jun 2024</option>
                 <option value="July">Jul 2024</option>
@@ -411,7 +410,7 @@
                 @if(($Employees))
                 <tr>
                     <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}<span class="text-muted">(#{{$emp->emp_id}})</span><br /><span class="text-muted" style="font-size:11px;">{{ucwords(strtolower($emp->job_role))}},{{ucwords(strtolower($emp->job_location))}}</span>
+                        {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}<span class="text-muted">(#{{$emp->emp_id}})</span><br /><span class="text-muted" style="font-size:11px;">{{ucwords(strtolower($emp->job_role)),}}{{ucwords(strtolower($emp->job_location))}}</span>
                     </td>
 
 

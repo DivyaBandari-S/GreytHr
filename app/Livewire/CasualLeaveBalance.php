@@ -167,6 +167,7 @@ class CasualLeaveBalance extends Component
 
 
         $currentMonth = date('n');
+        $lastmonth=12;
         $currentYear = date('Y');
 
         $startingMonth = 1; // January
@@ -183,8 +184,9 @@ class CasualLeaveBalance extends Component
         // dd($grantedLeavesCount);
 
 
-        for ($month = $startingMonth; $month <= $currentMonth; $month++) {
+        for ($month = $startingMonth; $month <= $lastmonth; $month++) {
             // Fetch availed leaves count for this month
+            $this->availedLeavesCount =0;
             $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', 'Casual Leave')
                 ->where('status', 'approved')
@@ -200,7 +202,6 @@ class CasualLeaveBalance extends Component
                         $availedleaveRequest->to_session
                     );
                     $this->availedLeavesCount += $days;
-
 
                     // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
                 }

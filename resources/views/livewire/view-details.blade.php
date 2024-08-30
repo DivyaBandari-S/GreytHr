@@ -132,7 +132,7 @@
 
                                     </div>
 
-                                    <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
+                                    <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">&minus;{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
 
                                     <!-- marriage leave -->
 

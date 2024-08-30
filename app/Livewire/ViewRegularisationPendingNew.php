@@ -14,6 +14,8 @@ class ViewRegularisationPendingNew extends Component
     public $regularisations;
     public $employeeId;
 
+    public $openAccordionForActive=null;
+
     public $searchQuery='';
     public $searching=0;
     public $regularised_date;
@@ -38,7 +40,9 @@ class ViewRegularisationPendingNew extends Component
         ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
         ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
         ->with('employee')
+        ->orderBy('created_at', 'desc')
         ->get();
+        
         foreach ($this->regularisations as $regularisation) {
             $this->regularised_date = Carbon::parse($regularisation->created_at)->toDateString();
 
@@ -50,6 +54,15 @@ class ViewRegularisationPendingNew extends Component
             }
 
 
+        }
+    }
+    public function toggleActiveAccordion($id)
+    {
+        
+        if ($this->openAccordionForActive === $id) {
+            $this->openAccordionForActive = null; // Close if already open
+        } else {
+            $this->openAccordionForActive = $id; // Set to open
         }
     }
     public function openRejectModal()
@@ -221,6 +234,7 @@ class ViewRegularisationPendingNew extends Component
             ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
             ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
             ->with('employee') 
+            ->orderBy('created_at','desc')
             ->get();
         }
         

@@ -146,7 +146,6 @@ public function submitsec80()
  
         adddeclaration::create($this->fields);
     } else {
-        dd('Not logged in or user data not retrieved correctly.');
     }
     session(['form_submitted' => true]);
 }
@@ -201,7 +200,6 @@ public function submitotherdeductions()
  
         otherchapter::create($this->fieldsdeductions);
     } else {
-        dd('Not logged in or user data not retrieved correctly.');
     }
     session(['submitted' => true]);
 }

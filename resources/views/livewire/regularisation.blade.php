@@ -272,8 +272,8 @@
         }
 
         .container1 {
-            width: 600px;
-            height: 200px;
+            width: 530px;
+            height: 195px;
             /* margin-right: 300px; */
             background-color: #FFFFFF;
             margin-top: 15px;
@@ -748,7 +748,7 @@
 
         .active,
         .accordion:hover {
-            background-color: #ccc;
+            background-color: #fff;
         }
 
         .panel {
@@ -759,25 +759,17 @@
             transition: max-height 0.2s ease-out;
         }
 
-        .remarks-container {
-            width: 300px;
-            /* Adjust the width as needed */
-            margin: 0 auto;
-            /* Center the container horizontally */
-        }
+        
 
-        .remarks-container input[type="text"] {
-            width: 100%;
-            /* Take up the full width of the container */
-            padding: 8px;
-            /* Adjust padding as needed */
-            border: 1px solid #ccc;
-            /* Add border */
-            border-radius: 4px;
-            /* Add border radius */
-            box-sizing: border-box;
-            /* Include padding and border in the width */
-        }
+        .remarks-container {
+        width: 100%;  /* This will make the container take the full width */
+        max-width: 1200px;  /* Adjust to set a specific large width */
+        height: 210px;  /* A smaller height */
+        background-color: #fff;  /* Light background color for visibility */
+        border:1px solid #ccc;
+        padding: 20px;
+        margin: 0 auto;  /* Center the container */
+    }
 
         .calendar-dates {
             display: flex;
@@ -801,7 +793,7 @@
         }
 
         .calendar-date.current-date {
-            background-color: #24a7f8;
+            background-color: rgb(2, 17, 79);
             color: #fff;
             border-radius: 50%;
             padding: 10px;
@@ -818,6 +810,7 @@
             padding: 10px;
             height: 25px;
             width: 2px;
+            justify-content: center;
             display: flex;
             margin: 0 auto;
             align-items: center;
@@ -854,8 +847,36 @@
     text-decoration: none; /* Remove underline */
    
 }
-
-
+.remarks-input {
+        width: 500px;  /* Adjust width as needed */
+        height: 50px;  /* Adjust height as needed */
+        padding: 10px;  /* Adds some inner spacing */
+        font-size: 16px;  /* Increases font size */
+    }
+.nextMonth
+{
+    background-color: rgb(2, 17, 79);
+    color: white;
+}
+.prevMonth
+{
+    background-color: rgb(2, 17, 79);
+    color: white;   
+}
+.regularisationCardheading
+{
+    background: pink;
+}
+.scrollApplyingTO
+{
+    max-height: 400px; 
+    overflow-y: auto;
+    
+}
+.highermanager:hover
+{
+    background-color: aliceblue;
+}
     </style>
     <div class="container">
          <a href="/Attendance" class="submit-btn"style="text-decoration:none;">Back</a>
@@ -884,12 +905,12 @@
         <div class="col-md-5 mb-3">
             <div class="calendar-box">
                 <div class="calendar-header">
-                    <button class="btn btn-primary" wire:click="previousMonth"><i style="line-height: inherit;" class="fas fa-chevron-left"></i></button>
+                    <button class="btn prevMonth" wire:click="previousMonth"><i style="line-height: inherit;" class="fas fa-chevron-left"></i></button>
                     <p style="margin-top:7px; font-weight: 600">
 
                         {{ \Carbon\Carbon::createFromDate($this->year, $this->month, 1)->format('F Y') }}
                     </p>
-                    <button class="btn btn-primary" wire:click="nextMonth"><i style="line-height: inherit;" class="fas fa-chevron-right"></i></button>
+                    <button class="btn nextMonth" wire:click="nextMonth"><i style="line-height: inherit;" class="fas fa-chevron-right"></i></button>
                 </div>
                 <div class="calendar-weekdays">
                     <div class="weekday">Sun</div>
@@ -904,7 +925,7 @@
                     @foreach($calendar as $week)
                     <div class="calendar-week">
                         @foreach($week as $day)
-                        <div class="calendar-date {{ $day['isCurrentDate'] ? 'current-date' : '' }} {{ in_array($day['date'], $selectedDates) ? 'selected-date' : '' }}{{ $day['isCurrentMonth'] ? '' : 'other-month-date' }}{{$day['isAfterToday'] ? 'after-today' : '' }}" wire:click="selectDate('{{ $day['date'] }}')">{{ $day['day'] }}</div>
+                        <div class="calendar-date {{ $day['isCurrentDate'] ? 'current-date' : '' }} {{ in_array($day['date'], $selectedDates) ? 'selected-date' : '' }}{{ $day['isCurrentMonth'] ? '' : 'other-month-date' }}{{$day['isAfterToday'] ? 'after-today' : '' }}" wire:click="submitShifts('{{ $day['date'] }}')">{{ $day['day'] }}</div>
                         @endforeach
                     </div>
                     @endforeach
@@ -929,40 +950,117 @@
             </div>
         </div>
         <div class="col-md-7 mb-3">
-            @if(count($selectedDates)>0)
+            @if(count($selectedDates)>0&&$isdatesApplied==false)
             <div class="remarks-container">
-                <input type="text" placeholder="Enter Remarks" wire:model="remarks">
-            </div>
+            <div class="reporting mb-2">
+                    <div class="employee-profile-image-container">
+                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                    </div>
+                    <div class="center p-0 m-0">
+                            <p class="mb-0" style="font-size:10px;">{{ucwords(strtolower($reportingmanagerfullName->first_name))}}&nbsp;{{ucwords(strtolower($reportingmanagerfullName->last_name))}}</p>
+                            <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText">#({{$reportingmanager}})</p>
+                    </div>
+                    <div class="downArrow" wire:click="applyingTo">
+                         <i class="fas fa-chevron-{{$chevronButton ? 'up' : 'down' }}" style="cursor:pointer"></i>
+                    </div>
+                </div>
+                
+                @if($showApplyingToContainer)
+                <div class="searchContainer"style="z-index: 10;position: relative;">
+                    <!-- Content for the search container -->
+                    <div class="search-container-who-is-in" style="margin-left: auto;">
+
+                                    <div class="form-group-who-is-in">
+                                       <div class="search-input-who-is-in" style="margin-top:100px;">
+                                        <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
+                                            <div class="search-icon-who-is-in" wire:click="searchFilters">
+                                              <i class="fa fa-search" aria-hidden="true"></i>
+                                            </div>
+                                       </div>
+                                    </div>
+
+
+
+                         </div>
+
+                    <!-- Your Blade file -->
+                    <div class="scrollApplyingTO">
+                        
+                            @foreach ($heademployees as $employee)
+                                   <div class="highermanager d-flex gap-4 mt-2 align-items-center"wire:click="togglehigherManagers('{{ $employee->emp_id }}')">
+                                        <div class="employee-profile-image-container">
+                                            <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                        </div>
+
+                                        <div class="center d-flex flex-column mt-3 mb-2">
+                                            <span class="ellipsis mb-0">
+                                                {{ ucwords(strtolower($employee->first_name))}} {{ ucwords(strtolower($employee->last_name))}}
+                                            </span>
+                                            <span class="mb-0 normalTextValue" style="font-size:10px;"> #{{ $employee->emp_id }} </span>
+                                        </div>
+                                    </div>
+                            @endforeach
+                         
+                      
+                    
+                    </div>
+                </div>
+                @endif
+                <input type="text" placeholder="Enter Remarks" wire:model="remarks"class="remarks-input"> 
+               
+            </div>        
+                               
+
+                    
+
+                  
+
+                  
+
+                
+
+                  
+
+
+
+
+
+
+
+
+        
+           
             <div class="col-md-5">
-                @foreach($regularisationEntries as $index => $regularisationEntry)
-                <div class="container1" style="background-color:white;">
-                    <div class="row m-0">
-                        <div class="col-2 pb-1 pt-1 p-0" style="border-right: 1px solid black; text-align: center;">
-                            <p class="mb-1" style="font-weight:bold;font-size:20px;">
+                <li>
+                @foreach($shift_times as $index => $regularisationEntry)
+                <div class="container1"style="background-color:white;" >
+                    <div class="row m-0"style="position:relative;">
+                    <div class="col-2 pb-0 pt-0 p-1" style="border-right: 1px solid #7f8fa4; text-align: center; padding-left: 15px; padding-right: 15px;">
+                            <p class="mb-1" style="font-weight:600;font-size:20px;color:#7f8fa4;">
                                 {{date('d', strtotime($regularisationEntry['date']))}}
                             </p>
-                            <p class="text-muted m-0" style="font-weight:600;font-size:14px;">
+                            <p class="text-muted m-0" style="font-weight:500;font-size:14px;color:#7f8fa4;">
                                 {{ date('D', strtotime($regularisationEntry['date'])) }}
                             </p>
                         </div>
                         <div class="col-5 pb-1 pt-1">
-                            <p class="text-overflow mb-1" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-weight: 600;">
-                                10:00 am to 07:00 pm</p>
+                            <p class="text-overflow mb-1" style="white-space: nowrap;font-weight: 600;text-align:center;    background: #ececec;font-size:14px;color:#7f8fa4;">
+                                10:00 am to 07:00 pm<span><i class="fas fa-caret-down"></i></span></p>
 
                         </div>
-
+                        <div style="position: absolute; top: 5px; left: 490px; cursor: pointer;font-size:20px;color:#7f8fa4;" wire:click="deleteStoredArray({{ $index }})">
+                              <i class="fa fa-times"></i>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-cross" style="position: absolute; top: 20px; right: -340px;">
-                        <i class="fas fa-times" wire:click="deleteStoredArray({{ $index }})"></i>
-                    </button>
-                    <div class="horizontal-line-attendance-info"></div>
-                    <div style=" overflow-x: auto; max-width: 100%;">
-                        <table>
-                            <thead>
+                    
+                    
+                    <div>
+                        <table class="regularisationCard" style="width:100%">
+                            <thead class="regularisationCardheading">
                                 <tr>
-                                    <th style="font-weight:normal;font-size:12px;">From</th>
-                                    <th style="font-weight:normal;font-size:12px;">To</th>
-                                    <th style="font-weight:normal;font-size:12px;">Reason</th>
+                                    <th style="font-weight:normal;font-size:12px;border: none;">From</th>
+                                    <th style="font-weight:normal;font-size:12px;border: none;text-align:left;">To</th>
+                                    <th style="font-weight:normal;font-size:12px;border: none;">Reason</th>
 
                                 </tr>
                             </thead>
@@ -971,28 +1069,42 @@
 
                                 <tr>
 
-                                    <td>
+                                    <td style="border: none;">
 
-                                        <input type="text" style="width:20%" wire:model="regularisationEntries.{{ $index }}.from" required><br>
-                                        @error("regularisationEntries.$index.from") <span class="error">{{ $message }}</span>
-                                        @enderror
+                                               <input type="text" placeholder="10:00" class="time-input text-5"
+                                                wire:model.lazy="shift_times.{{ $index }}.from"
+                                                style="text-align: center;width: 70px;" maxlength="5" />
+        
+                                                <!-- <p class="text-muted">
+                                                    Entered Start Time: {{ $shift_times[$index]['from'] ?? '' }}
+                                                </p> -->
+                                    
                                     </td>
-                                    <td>
+                                    <td style="border: none;">
 
-                                        <input type="text" style="width:20%" wire:model="regularisationEntries.{{ $index }}.to" required><br>
-                                        @error("regularisationEntries.$index.to") <span class="error">{{ $message }}</span>
-                                        @enderror
+                                            <input type="text" placeholder="19:00" class="time-input text-5"
+                                            wire:model.lazy="shift_times.{{ $index }}.to"
+                                            style="text-align: center;width: 70px;" maxlength="5" />
+        
+                                            <!-- <p class="text-muted">
+                                                Entered End Time: {{ $shift_times[$index]['to'] ?? '' }}
+                                            </p> -->
                                     </td>
-                                    <td>
+                                    <td style="border: none;">
 
-                                        <input type="text" style="width:75%" wire:model="regularisationEntries.{{ $index }}.reason" required><br>
-                                        @error("regularisationEntries.$index.reason") <span class="error">{{ $message }}</span> @enderror
+                                    <input type="text" placeholder="Reason" class="reason-input text-5"
+                                        wire:model.lazy="shift_times.{{ $index }}.reason"
+                                        style="text-align: center;width: 200px;" />
+        
+                    <!-- <p class="text-muted">
+                        Reason: {{ $shift_times[$index]['reason'] ?? '' }}
+                    </p> -->
 
                                     </td>
 
 
                                 </tr>
-
+                                
 
                                 <!-- Add more rows with dashes as needed -->
                             </tbody>
@@ -1002,19 +1114,29 @@
                     </div>
                 </div>
 
-            </div>
+            </li>
+            <!-- <button wire:click="submitShiftsForcheck">test</button> -->
             @endforeach
-            <div style="display:flex;flex-direction:row;margin-left: 50px;margin-top:10px;">
-                <button type="button" wire:click="storearraydates" style="color: #24a7f8;border:1px solid #24a7f8;background: #fff;border-radius:5px;">Submit</button>
-                <a href="/Attendance" style="color:#24a7f8; margin-left: 10px;">Cancel</a>
             </div>
+            <footer style="position: fixed; bottom: 0; width: 100%;left:-20px; background-color: #fff; padding: 5px 0; text-align: center; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);">
+                <div style="display:flex; justify-content: right;">
+                    <button type="button" wire:click="storearraydates" style="color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;">Submit</button>
+                    <a href="/Attendance" style="color:rgb(2,17,79); margin-left: 20px; padding: 10px 20px;">Cancel</a>
+                </div>
+            </footer>
+
         </div>
-        @else
+        @elseif($isdatesApplied==false)
         <div class="apply-box">
             <img src="{{ asset('images/pending.png') }}" style="margin-top:50px;" height="180" width="180">
             <p style="color: #7f8fa4;font-weight:400;font-size: 14px;">Smart! Your attendance is sorted.</p>
             <p style="color: #a3b2c7;font-weight:400;font-size: 12px;margin-top:-20px;">Still want to apply
                 regularization? Select dates(s).</p>
+        </div>
+        @else
+        <div class="apply-box">
+            <img src="{{ asset('images/date-to-start-regularizing.png') }}" style="margin-top:50px;" height="180" width="180">
+            <p style="color: #7f8fa4;font-weight:400;font-size: 14px;">Select date to start regularizing</p>
         </div>
         @endif
     </div>
@@ -1030,7 +1152,7 @@ $numberOfEntries = count($regularisationEntries);
 $firstItem = reset($regularisationEntries); // Get the first item
 $lastItem = end($regularisationEntries); // Get the last item
 @endphp
-<div class="accordion-heading rounded" onclick="toggleAccordion(this)" style="margin-top:10px;">
+<div class="accordion-heading rounded" style="margin-top:10px;">
 
     <div class="accordion-title p-2 rounded">
 
@@ -1069,14 +1191,16 @@ $lastItem = end($regularisationEntries); // Get the last item
 
         </div>
 
-        <div class="arrow-btn">
-            <i class="fa fa-angle-down"></i>
+        <div class="arrow-btn" wire:click="togglePendingAccordion({{ $pr->id }})"style="color:{{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }}">
+            <i class="fa fa-angle-{{ $openAccordionForPending === $pr->id ? 'up' : 'down' }}"style="color:{{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }}"></i>
         </div>
 
     </div>
 
 </div>
-<div class="accordion-body m-0 p-0">
+
+              
+<div class="accordion-body m-0 p-0"style="display: {{ $openAccordionForPending === $pr->id ? 'block' : 'none' }}">
 
     <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
 
@@ -1184,7 +1308,7 @@ $lastEntry = end($regularisationEntries);
 @endphp
 
 @if(($hr->status=='pending'&&$hr->is_withdraw==1)||$hr->status=='approved'||$hr->status=='rejected')
-<div class="accordion-heading rounded" onclick="toggleAccordion(this)" style="margin-top:10px;">
+<div class="accordion-heading rounded"style="margin-top:10px;">
 
     <div class="accordion-title p-2 rounded">
 
@@ -1232,14 +1356,14 @@ $lastEntry = end($regularisationEntries);
             @endif
         </div>
 
-        <div class="arrow-btn">
-            <i class="fa fa-angle-down"></i>
+        <div class="arrow-btn"wire:click="toggleHistoryAccordion({{ $hr->id }})"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}">
+            <i class="fa fa-angle-{{ $openAccordionForHistory === $hr->id ? 'up' : 'down' }}"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}"></i>
         </div>
 
     </div>
 
 </div>
-<div class="accordion-body m-0 p-0">
+<div class="accordion-body m-0 p-0"style="display: {{ $openAccordionForHistory === $hr->id ? 'block' : 'none' }}">
 
     <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
 

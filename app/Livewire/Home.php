@@ -118,17 +118,36 @@ class Home extends Component
         // $month = $currentDate->format('n');
         // $year = $currentDate->format('Y');
 
-        // // Construct the table name for SQL Server
+        // // // Construct the table name for SQL Server
         // $tableName = 'DeviceLogs_' . $month . '_' . $year;
 
-        // // Get data from SQL Server
+        // $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+        // $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+
+        // Get data from SQL Server for the normalized user ID
         // $dataSqlServer = DB::connection('sqlsrv')
         //     ->table($tableName)
         //     ->select('UserId', 'logDate', 'Direction')
+        //     ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
         //     ->whereDate('logDate', $today) // Filter for today's date
         //     ->orderBy('logDate')
         //     ->get();
-        // // dd($dataSqlServer);
+        // Assuming $dataSqlServer is the collection you want to split
+        // foreach ($dataSqlServer as $data) {
+        //     // Accessing individual fields
+        //     $userId = $data->UserId;
+        //     $logDate = $data->logDate;
+        //     $direction = $data->Direction;
+
+        //     // Example: If you want to split the date and time from logDate
+        //     $dateTimeParts = explode(' ', $logDate);
+        //     $date = $dateTimeParts[0]; // 2024-08-28
+        //     $time = $dateTimeParts[1]; // 11:36:50.000
+
+        //     // Output or further processing
+        //     dump($userId, $date, $time, $direction);
+        // }
+
 
         // // Get data from MySQL
         // $dataMySql = DB::connection('mysql')

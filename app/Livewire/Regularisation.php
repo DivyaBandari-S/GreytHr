@@ -34,6 +34,9 @@ class Regularisation extends Component
     public $data1;
     public $data7;
     public $data8;
+    public $shift_start_time = '10:00'; 
+
+    public $shift_end_time = '19:00'; 
     public $manager3;
     public $selectedDates = [];
     public $employee;
@@ -60,10 +63,26 @@ class Regularisation extends Component
 
     public $storedArray1;
     public $numberOfItems;
+
+    public $headreportingmanager;
+
+    public $headreportingmanagerfullName;
     public $year;
     public $month;
     public $currentMonth;
 
+    public $reportingmanagerinloop;
+    public $openAccordionForPending = null;
+
+    public $openAccordionForHistory = null;
+    public $reportingmanager;
+    public $showApplyingToContainer = false;
+
+    public $istogglehigherManagers=false;
+    public $heademployees;
+    public $chevronButton=false;
+    
+    public $reportingmanagerfullName;
     public $isdeletedArray=0;
     public $currentYear;
     public $data10;
@@ -71,10 +90,12 @@ class Regularisation extends Component
     public $defaultApply=1;
     public $currentDateTime;
    
+    public $shift_times = []; 
     public $count=0;
     public function mount()
     {
         try {
+         
             $this->year = now()->year;
             $this->month = now()->month;
             $this->getDaysInMonth($this->year, $this->month);
@@ -85,6 +106,70 @@ class Regularisation extends Component
             Log::error('Error in mount method: ' . $e->getMessage());
             // Handle the error as needed, such as displaying a message to the user
         }
+    }
+    public function togglePendingAccordion($id)
+    {
+        
+        if ($this->openAccordionForPending === $id) {
+            $this->openAccordionForPending = null; // Close if already open
+        } else {
+            $this->openAccordionForPending = $id; // Set to open
+        }
+    }
+    public function togglehigherManagers($EmpId)
+    {
+        $this->istogglehigherManagers=!$this->istogglehigherManagers;
+        $this->reportingmanager=$EmpId;
+        
+    }
+    public function toggleHistoryAccordion($id)
+    {
+        
+        if ($this->openAccordionForHistory === $id) {
+            $this->openAccordionForHistory = null; // Close if already open
+        } else {
+            $this->openAccordionForHistory = $id; // Set to open
+        }
+    }
+    public function applyingTo()
+    {
+        $this->chevronButton = !$this->chevronButton;
+        $this->showApplyingToContainer = !$this->showApplyingToContainer;
+            
+    }
+    public function submitShifts($date)
+    {
+       
+        if (!in_array($date, $this->selectedDates)) {
+            // Add the date to the selectedDates array only if it's not already selected
+            $this->selectedDates[] = $date;
+            $this->shift_times[]=[
+                'date' => $date,
+                'from'=>'',
+                'to'=>'',
+                'reason'=>'',
+            ];
+        }
+        foreach ($this->shift_times as $date => $times) {
+            if (preg_match('/^\d{2}:\d{2}$/', $times['from'])) {
+                [$hours, $minutes] = explode(':', $times['from']);
+                // Process hours and minutes as needed
+            } else {
+                // Handle invalid input format for start time
+            }
+
+            if (preg_match('/^\d{2}:\d{2}$/', $times['to'])) {
+                [$hours, $minutes] = explode(':', $times['to']);
+                // Process hours and minutes as needed
+            } else {
+                // Handle invalid input format for end time
+            }
+        }
+         
+    }
+    public function submitShiftsForcheck()
+    {
+        dd($this->shift_times);
     }
     //This function is used to create calendar
     public function generateCalendar()
@@ -237,9 +322,9 @@ public function nextMonth()
     public function deleteStoredArray($index)
     {
         try {
-            unset($this->regularisationEntries[$index]);
+            unset($this->shift_times[$index]);
             $this->isdeletedArray += 1;
-            $this->updatedregularisationEntries = array_values($this->regularisationEntries);
+            $this->updatedregularisationEntries = array_values($this->shift_times);
         } catch (\Exception $e) {
             // Log the error or handle it as needed
             Log::error('Error in deleteStoredArray method: ' . $e->getMessage());
@@ -253,7 +338,7 @@ public function nextMonth()
         $this->isdatesApplied = true;
         $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
         $emp_id = $employeeDetails->emp_id;
-        $regularisationEntriesJson = json_encode($this->regularisationEntries);
+        $regularisationEntriesJson = json_encode($this->shift_times);
         if ($this->isdeletedArray > 0) {
             $regularisationEntriesArray = $this->updatedregularisationEntries;
         } else {
@@ -271,6 +356,7 @@ public function nextMonth()
             'regularisation_date' => '2024-03-26',
         ]);
         session()->flash('message', 'CV created successfully.');
+        $this->remarks='';
         $regularisationEntriesJson = [];
         $this->regularisationEntries = [];
     } catch (\Exception $e) {
@@ -370,6 +456,7 @@ public function historyButton()
             session()->flash('error', 'An error occurred while updating count.');
         }
     }
+    
     public function openWithdrawModal()
     {
         $this->withdrawModal=true;
@@ -387,9 +474,23 @@ public function historyButton()
             $employeeDetails = EmployeeDetails::select('manager_id')
                 ->where('emp_id', $loggedInEmpId)
                 ->first();  
-    
+            
             $empid = $employeeDetails->manager_id ?? null;
-           
+            if($this->istogglehigherManagers==true)
+            {
+                $this->reportingmanager = $this->reportingmanager;
+              
+            }
+            else
+            {
+                $this->reportingmanager = EmployeeDetails::where('emp_id', $loggedInEmpId)->value('manager_id');
+            }
+            $this->headreportingmanager = EmployeeDetails::where('emp_id', $loggedInEmpId)->value('dept_head');
+            $this->reportingmanagerinloop=EmployeeDetails::where('emp_id', $loggedInEmpId)->value('manager_id');
+            $this->reportingmanagerfullName=EmployeeDetails::where('emp_id',$this->reportingmanager)->first();
+            $this->heademployees = EmployeeDetails::whereIn('emp_id', [ $this->reportingmanagerinloop,$this->headreportingmanager])->get();
+
+
             $employeeDetails1 = $empid ? EmployeeDetails::where('emp_id', $empid)->first() : null;
            
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();

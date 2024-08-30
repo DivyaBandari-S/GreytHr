@@ -1,5 +1,4 @@
 <div class="d-flex align-items-center gap-3 ">
-
     <div  id="notificationButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
         <a href="#" class="nav-link">
             <i class='fas fa-bell icon' ></i>
@@ -10,7 +9,7 @@
     </div>
     <div>
         <div class="nav-link" onclick="window.location.href='{{ url('/users') }}'">
-            <i class='fas fa-comment-dots chat-icon'></i>
+            <i class='fas fa-comment-dots icon' style="cursor:pointer;"></i>
             @if ($chatNotificationCount > 0)
             <span class="badge">
                 {{ $chatNotificationCount }}
@@ -49,8 +48,6 @@
                            <p style="margin-bottom: 0px;font-size:xx-small;color: #535f6b;">{{$notification->notify_time}}</p>
                         </div>
                     @endif
-
-
                 </div>
             </div>
             @elseif($notification->notification_type=='leave')
@@ -72,7 +69,27 @@
                            <p style="margin-bottom: 0px;font-size:xx-small;color: #535f6b;">{{$notification->notify_time}}</p>
                         </div>
                      @endif
+                </div>
+            </div>
+            @elseif($notification->notification_type=='leaveCancel')
+            <div>
+                <div class="border rounded bg-white p-2 mb-2 leave-request-container" title="{{ $notification->leave_type }}">
+                    <p class="mb-0 notification-text"></p>
+                    <a href="#" class="notification-head" wire:click.prevent="reduceLeaveRequestCount('{{ $notification->emp_id }}')">
+                        {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
+                        (#{{ $notification->emp_id }})
+                    </a>
 
+                    @if($notification->details_count>1 && $notification->details_count<=10 )
+                        <p class="mb-0 notification-text-para"> Sent {{$notification->details_count}} leave cancel requests.</p>
+                        @elseif($notification->details_count>10)
+                        <p class="mb-0 notification-text-para"> Sent 10+ leave cancel requests.</p>
+                        @else
+                        <p class="mb-0 notification-text-para"> Sent a leave cancel request.</p>
+                        <div style="display: flex; justify-content:end">
+                           <p style="margin-bottom: 0px;font-size:xx-small;color: #535f6b;">{{$notification->notify_time}}</p>
+                        </div>
+                     @endif
                 </div>
             </div>
             @elseif($notification->notification_type=='message')

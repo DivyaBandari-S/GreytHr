@@ -16,7 +16,7 @@ class Notification extends Component
     public $matchingLeaveRequests;
     public $senderDetails;
     public $messagenotifications;
-    public $leavenotifications;
+    public $leavenotifications,$leavecancelnotifications;
     public $tasknotifications;
     public $totalnotifications;
     public $totalnotificationscount;
@@ -57,6 +57,18 @@ class Notification extends Component
                 ->get();
                 // ->groupBy('emp_id');
 
+                $this->leavecancelnotifications = DB::table('notifications')
+                ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
+                ->where(function ($query) use ($loggedInEmpId) {
+                    $query->whereJsonContains('notifications.applying_to', [['manager_id' => $loggedInEmpId]])
+                        ->orWhereJsonContains('notifications.cc_to', [['emp_id' => $loggedInEmpId]]);
+                })
+                ->where('notification_type', 'leaveCancel')
+                ->where('is_read', 0)
+                ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
+                ->get();
+
+
 
             $this->tasknotifications = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
@@ -68,7 +80,7 @@ class Notification extends Component
 
                 // ->groupBy('emp_id');
 
-                $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications);
+                $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications)->merge($this->leavecancelnotifications);
 
                 $groupedNotifications = $allNotifications->groupBy(function($item) {
                     return $item->emp_id . '-' . $item->notification_type;
@@ -118,12 +130,7 @@ class Notification extends Component
                 ->where('emp_id', $requestId)
                 ->where('notification_type', 'task')
                 ->update(['is_read' => 1]);
-            DB::table('notifications')
-                ->where('emp_id', $requestId)
-                ->where('notification_type', 'task')
-                ->update(['is_read' => 1]);
 
-            $this->fetchNotifications();
             $this->fetchNotifications();
 
             return redirect()->route('tasks');

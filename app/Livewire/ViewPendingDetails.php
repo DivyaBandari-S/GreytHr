@@ -32,13 +32,17 @@ class ViewPendingDetails extends Component
     public $leaveApplications = [];
     public $selectedYear;
     public $searchQuery = '';
+    public $showAlert = false;
     public function mount()
     {
         //for year selection
         $this->selectedYear = Carbon::now()->format('Y');
         $this->fetchPendingLeaveApplications();
     }
-
+    public function hideAlert()
+    {
+        $this->showAlert = false;
+    }
     public function fetchPendingLeaveApplications($searchQuery = null)
     {
         try {
@@ -133,33 +137,24 @@ class ViewPendingDetails extends Component
     }
 
     //calcilate number of days in a leave application
-    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
+
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+            }
+
             // Check if the start and end sessions are different on the same day
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
-            ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+            if ($startDate->isSameDay($endDate)) {
+                if ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
+                    return 1;
+                } elseif ($this->getSessionNumber($fromSession) == $this->getSessionNumber($toSession)) {
                     return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
-            }
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
-            ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 1;
-                } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
@@ -171,7 +166,6 @@ class ViewPendingDetails extends Component
                 if ($startDate->isWeekday()) {
                     $totalDays += 1;
                 }
-
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -188,6 +182,8 @@ class ViewPendingDetails extends Component
                 // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
+                } else {
+                    $totalDays += 0.5;
                 }
             } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
                 if ($this->getSessionNumber($fromSession) !== 1) {
@@ -211,6 +207,7 @@ class ViewPendingDetails extends Component
     }
 
 
+
     //This method used to approve leave application by manager
     public function approveLeave($index)
     {
@@ -232,6 +229,7 @@ class ViewPendingDetails extends Component
                     $leaveRequest->updated_at = now(); // Update timestamps
                     $leaveRequest->save();
                     session()->flash('message', 'Leave application approved successfully.');
+                    $this->showAlert = true;
                     $this->fetchPendingLeaveApplications();
                 }
             }
@@ -264,6 +262,7 @@ class ViewPendingDetails extends Component
                     $leaveRequest->updated_at = now();
                     $leaveRequest->save();
                     session()->flash('message', 'Leave cancel application approved successfully.');
+                    $this->showAlert = true;
                     $this->fetchPendingLeaveApplications();
                 }
             }
@@ -286,6 +285,7 @@ class ViewPendingDetails extends Component
             // Check if status is already approved
             if ($leaveRequest->cancel_status === 'rejected') {
                 session()->flash('message', 'Leave application is already approved.');
+                $this->showAlert = true;
             } else {
                 // Check if days since creation is more than 3 days or status is not yet approved
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
@@ -294,6 +294,7 @@ class ViewPendingDetails extends Component
                     $leaveRequest->updated_at = now();
                     $leaveRequest->save();
                     session()->flash('message', 'Leave cancel application approved successfully.');
+                    $this->showAlert = false;
                     $this->fetchPendingLeaveApplications();
                 }
             }
@@ -315,6 +316,7 @@ class ViewPendingDetails extends Component
             $leaveRequest->save();
             $leaveRequest->updated_at = now();
             session()->flash('message', 'Leave application rejected.');
+             $this->showAlert = true;
             $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Log the error

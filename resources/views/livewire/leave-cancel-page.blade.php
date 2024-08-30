@@ -62,10 +62,10 @@
                 <div>
                     @if($showApplyingTo)
                     <div class="form-group mt-3">
-                        <div class="d-flex " wire:click="applyingTo">
+                        <div class="d-flex " wire:click="applyingTo" wire:model="applying_to">
                             <span class="normalTextValue" style="cursor: pointer;">
                                 <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
-                                Applying To
+                                Applying To <span class="requiredMark">*</span>
                             </span>
                         </div>
                     </div>
