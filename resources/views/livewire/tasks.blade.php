@@ -673,7 +673,7 @@
                                 @endif
                                 <div class="row">
                                     <div class="col-md-6">
-                                        @if ($selectedPersonClients->isEmpty())
+                                        @if ($selectedPersonClients->isEmpty() || $selectedPersonClients=="")
                                         @else
                                             <div style="margin-bottom: 10px;">
                                                 <label style="font-size: 13px;color:#778899" for="clientSelect">Select
