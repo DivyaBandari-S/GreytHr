@@ -39,7 +39,6 @@ class Home extends Component
     public $currentDate;
     public $swipes;
     public $showSalary = false;
-    public $groupedRequests =[];
 
     public $whoisinTitle = '';
     public $currentDay;
@@ -426,16 +425,10 @@ class Home extends Component
             $this->currentDate = now()->format('d M Y');
             $today = Carbon::now()->format('Y-m-d');
             $this->leaveRequests = LeaveRequest::with('employee')
-                ->where(function ($query) {
-                    $query->where('status', 'Pending')
-                        ->orWhere(function ($query) {
-                            $query->where('status', 'approved')
-                                ->where('cancel_status', 'Pending Leave Cancel');
-                        });
-                })
-                ->orderBy('created_at', 'desc')
+                ->where('status', 'pending')
                 ->get();
             $matchingLeaveApplications = [];
+
             foreach ($this->leaveRequests as $leaveRequest) {
                 $applyingToJson = trim($leaveRequest->applying_to);
                 $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
@@ -490,21 +483,9 @@ class Home extends Component
                     }
                 }
             }
+
             // Get the count of matching leave applications
             $this->leaveApplied = $matchingLeaveApplications;
-            $groupedRequests = [];
-            foreach ($this->leaveApplied as $request) {
-                $managerId = $request['managerId'];
-                if (!isset($groupedRequests[$managerId])) {
-                    $groupedRequests[$managerId] = [
-                        'count' => 0,
-                        'leaveRequest' => $request['leaveRequest']
-                    ];
-                }
-                $groupedRequests[$managerId]['count']++;
-            }
-            
-            $this->groupedRequests = $groupedRequests;
 
             $this->count = count($matchingLeaveApplications);
 
@@ -758,7 +739,6 @@ class Home extends Component
                 'totalTasksCount' => $this->totalTasksCount,
                 'taskCount' => $this->taskCount,
                 'employeeNames' => $this->employeeNames,
-                'groupedRequests' =>$this->groupedRequests
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions

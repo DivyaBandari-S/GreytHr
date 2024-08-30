@@ -1,1 +1,50 @@
+[2024-08-30 16:23:34] local.INFO: Stored session ID: ZCuXCGwxjG8wqXEvHVrWWjXqC8zyO1taFXhyTnHy  
+[2024-08-30 16:23:34] local.INFO: Existing session ID: None  
+[2024-08-30 16:23:34] local.INFO: Session updated {"user_id":"XSS-0488","session_id":"ZCuXCGwxjG8wqXEvHVrWWjXqC8zyO1taFXhyTnHy","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-08-30 16:23:34] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
 
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImdIcTJ1NWVEQytGcGcvc0U1SXRLU0E9PSIsInZhbHVlIjoiWXY4S2E4a1M3QmNmZ0pNV2R0cVFsc2NXbll0emZ2MTY1d2pHMlEraFg5ZW44c0NNc3VWSHpaVWFaTHM5TUlsczZjRGp0TXZjbHI5MVltSUQxODhlQ3JwRTNGZ2JaSUIrbUhPM2s0Z3lFUit2SXROWUJRM1pJNnhCZ0p2Q2RDL0QiLCJtYWMiOiI2MDIxNzg5YjRkNmNhN2UwZGNkY2U5MzRlMTg5MGM3ZDI4MTM3NDEyN2E2MTc5NWU3MmZjMjg1ZjM2ZjhhMTYzIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InNPSVp6cFFoRWpXK1N4WFlnZWQ1SEE9PSIsInZhbHVlIjoiWFFoL1RmYzVSdzZtaVkvcWxNSkpZZE0wZHAzUXpvbVFHWnBoN2tMQUozdVp6RGRnYUxURFQ2bThJM1Frai82bmt2ZVF6UDJBUVhVOFhudzBmUXJKbGZkelB1SFc1em5GM05TRUs0MnB4WlNMaFFaOXV1dnZkYzJocGNVM0N5NVAiLCJtYWMiOiJlNjA5OWE5NjA5MTM5MmE1ZWI5MTg4ZTI0YjVhMTQ5MTAyMDBmMjE0Y2Y1YTZkZGYxODI2NjIzYjNhMzU5YWE1IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Purpose:                   prefetch
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Sec-Purpose:               prefetch;prerender
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=tmx1Yxe4bOTuH1DU2MBoWBcuQ7GYzjl0edf2tJrh; laravel_session=ZCuXCGwxjG8wqXEvHVrWWjXqC8zyO1taFXhyTnHy
+
+
+
+"}} 
+[2024-08-30 16:23:34] local.INFO: Request URL: https://api.open-meteo.com/v1/forecast?latitude=41.31&longitude=-72.92&current_weather=true  
+[2024-08-30 16:23:36] local.INFO: API Response: {"latitude":41.305393,"longitude":-72.932014,"generationtime_ms":0.08594989776611328,"utc_offset_seconds":0,"timezone":"GMT","timezone_abbreviation":"GMT","elevation":9.0,"current_weather_units":{"time":"iso8601","interval":"seconds","temperature":"°C","windspeed":"km/h","winddirection":"°","is_day":"","weathercode":"wmo code"},"current_weather":{"time":"2024-08-30T10:45","interval":900,"temperature":16.5,"windspeed":8.8,"winddirection":9,"is_day":1,"weathercode":3}} 
+[2024-08-30 16:23:36] local.INFO: API Response Status Code: {"status":200} 
+[2024-08-30 16:23:36] local.INFO: API Response Headers: {"headers":{"Date":["Fri, 30 Aug 2024 10:53:35 GMT"],"Content-Type":["application/json; charset=utf-8"],"Transfer-Encoding":["chunked"],"Connection":["keep-alive"]}} 
+[2024-08-30 16:23:36] local.INFO: API Response Body: {"body":"{\"latitude\":41.305393,\"longitude\":-72.932014,\"generationtime_ms\":0.08594989776611328,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbreviation\":\"GMT\",\"elevation\":9.0,\"current_weather_units\":{\"time\":\"iso8601\",\"interval\":\"seconds\",\"temperature\":\"°C\",\"windspeed\":\"km/h\",\"winddirection\":\"°\",\"is_day\":\"\",\"weathercode\":\"wmo code\"},\"current_weather\":{\"time\":\"2024-08-30T10:45\",\"interval\":900,\"temperature\":16.5,\"windspeed\":8.8,\"winddirection\":9,\"is_day\":1,\"weathercode\":3}}"} 
+[2024-08-30 16:23:36] local.ERROR: Data fetch error: could not find driver  
