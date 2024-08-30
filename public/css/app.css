@@ -3243,8 +3243,10 @@ l
     line-height: 1.6;
 }
 #searchButtonReview{
-    position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border: none; outline: none; background: rgb(2, 17, 79); border-radius: 5px; padding: 2px 12px;
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%); border: none; outline: none; background: rgb(2, 17, 79);  padding: 3px 12px;
     color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 
