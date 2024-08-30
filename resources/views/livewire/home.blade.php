@@ -170,9 +170,7 @@
                 </div>
 
             </div>
-
         </div>
-
 
         <!-- main content -->
 
@@ -313,28 +311,28 @@
                                     </div>
                                 @endforeach
 
-                                @if ($totalRequests > 3)
-                                    <div class="payslip-small-desc remainContent d-flex flex-column align-items-center"
-                                        wire:click="reviewLeaveAndAttendance">
-                                        <span>+{{ $totalRequests - 3 }}
-                                            <span>More</span>
-                                        </span>
-                                    </div>
-                                @endif
-                            </div>
-                        @else
-                            <div class="d-flex flex-column justify-content-center align-items-center">
-                                <p class="payslip-small-desc mb-2 homeText">
-                                    Hurrah! You've nothing to review.
-                                </p>
-                            </div>
+                        @if ($totalRequests > 3)
+                        <div class="payslip-small-desc remainContent d-flex flex-column align-items-center"
+                            wire:click="reviewLeaveAndAttendance">
+                            <span>+{{ $totalRequests - 3 }}
+                                <span>More</span>
+                            </span>
+                        </div>
                         @endif
-                        <a href="/employees-review">
-                            <div class="payslip-go-corner">
-                                <div class="payslip-go-arrow">→</div>
-                            </div>
-                        </a>
                     </div>
+                    @else
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        <p class="payslip-small-desc mb-2 homeText">
+                            Hurrah! You've nothing to review.
+                        </p>
+                    </div>
+                    @endif
+                    <a href="/employees-review">
+                        <div class="payslip-go-corner">
+                            <div class="payslip-go-arrow">→</div>
+                        </div>
+                    </a>
+                </div>
 
                 </div>
                 @if ($showReviewLeaveAndAttendance)
@@ -360,44 +358,39 @@
                                                         $leaveRequests = $data['leaveRequests'];
                                                         $count = $data['count'];
 
-                                                        // Use the first leave request to get employee details
-                                                        $firstLeaveRequest = $leaveRequests[0];
-                                                        if ($firstLeaveRequest && $firstLeaveRequest->employee) {
-                                                            $firstName = $firstLeaveRequest->employee->first_name;
-                                                            $lastName = $firstLeaveRequest->employee->last_name;
-                                                            $initials =
-                                                                strtoupper(substr($firstName, 0, 1)) .
-                                                                strtoupper(substr($lastName, 0, 1));
-                                                        } else {
-                                                            $firstName = 'Unknown';
-                                                            $lastName = '';
-                                                            $initials = '?';
-                                                        }
-                                                    @endphp
-                                                    <div
-                                                        class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
-                                                        <div class="thisCircle d-flex align-items-center justify-content-center"
-                                                            style="border: 2px solid {{ getRandomColor() }}"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="{{ $firstName }} {{ $lastName }}">
-                                                            <span>{{ $initials }}</span>
-                                                        </div>
-                                                        @if ($count > 1)
-                                                            <span
-                                                                class="badge badge-pill badge-info position-absolute translate-middle badge-count">
-                                                                {{ $count }}
-                                                            </span>
-                                                        @endif
-                                                        <span class="leaveText">Leave</span>
-                                                    </div>
-                                                @endforeach
-                                            </div>
+                                    // Use the first leave request to get employee details
+                                    $firstLeaveRequest = $leaveRequests[0];
+                                    if ($firstLeaveRequest && $firstLeaveRequest->employee) {
+                                    $firstName = $firstLeaveRequest->employee->first_name;
+                                    $lastName = $firstLeaveRequest->employee->last_name;
+                                    $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
+                                    } else {
+                                    $firstName = 'Unknown';
+                                    $lastName = '';
+                                    $initials = '?';
+                                    }
+                                    @endphp
+                                    <div class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
+                                        <div class="thisCircle d-flex align-items-center justify-content-center"
+                                            style="border: 2px solid {{ getRandomColor() }}" data-toggle="tooltip"
+                                            data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                            <span>{{ $initials }}</span>
+                                        </div>
+                                        @if ($count > 1)
+                                        <span class="badge badge-pill badge-info position-absolute translate-middle badge-count">
+                                            {{ $count }}
+                                        </span>
                                         @endif
+                                        <span class="leaveText">Leave</span>
                                     </div>
-                                    <h6 class="normalTextValue">Attendance Requests</h6>
-                                    <div class="d-flex flex-row">
-                                        @for ($i = 0; $i <= $countofregularisations; $i++)
-                                            <?php
+                                    @endforeach
+                                </div>
+                                @endif
+                            </div>
+                            <h6 class="normalTextValue">Attendance Requests</h6>
+                            <div class="d-flex flex-row">
+                                @for ($i = 0; $i <= $countofregularisations; $i++)
+                                    <?php
                                     // Fetch the regularisation at the current index
                                     $regularisation = $this->regularisations[$i] ?? null;
                                     if ($regularisation && $regularisation->employee) {
@@ -905,18 +898,18 @@ eum nihil itaque!
 
             <div class="payslip-card mb-3">
 
-                <div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="payslip-card-title">Task Overview</h5>
-                        <div>
-                            <select class="form-select custom-select-width"
-                                wire:change="$set('filterPeriod', $event.target.value)">
-                                <option value="this_month" selected>This month</option>
-                                <option value="last_month">Last month</option>
-                                <option value="this_year">This year</option>
-                            </select>
-                        </div>
+            <div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="payslip-card-title">Task Overview</h5>
+                    <div>
+                        <select class="form-select custom-select-width"
+                            wire:change="$set('filterPeriod', $event.target.value)">
+                            <option value="this_month" selected>This month</option>
+                            <option value="last_month">Last month</option>
+                            <option value="this_year">This year</option>
+                        </select>
                     </div>
+                </div>
 
 
                     <div class="row text-center mt-3">
