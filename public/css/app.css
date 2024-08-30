@@ -19,6 +19,7 @@
     --sub-headings-font-size: 0.8rem;
     --main-headings-font-size: 1rem;
     --nav-headings-font-size: 0.925rem;
+    --home-headings-font-size: 0.825rem;
 }
 .input-group input:focus {
     outline: none; /* Remove the default blue outline */
@@ -3194,6 +3195,7 @@ l
     align-items: center;
     width: 35px;
     height: 35px;
+    cursor: pointer;
     border-radius: 50%;
     color: var(--label-color);
     font-weight: 500;
@@ -3206,7 +3208,7 @@ l
     font-size: 10px;
 }
 .teamOnLeave {
-    font-size: var(--nav-headings-font-size);
+    font-size: var(--home-headings-font-size);
     color: var(--main-heading-color);
     font-weight: 600;
 }
@@ -5091,7 +5093,7 @@ option {
 /* From Uiverse.io by SouravBandyopadhyay */
 .payslip-card-title {
     color: var(--main-heading-color);
-    font-size: var(--nav-headings-font-size);
+    font-size: var(--home-headings-font-size);
     line-height: normal;
     font-weight: 600;
     margin-bottom: 0.5em;

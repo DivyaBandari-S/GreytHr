@@ -4,6 +4,7 @@ namespace App\Livewire;
  
 use Livewire\Component;
 use App\Models\Comment;
+use App\Models\Company;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -39,16 +40,30 @@ class Activities extends Component
     public $employeeDetails;
     public $isSubmitting = false;
     public $attachment;
+    public $empCompanyLogoUrl;
+
     public $emp_id;
+    public $isManager;
     public $image;
     public $message='';
+    public $posts;
     public $showFeedsDialog = false;
    
     public function addFeeds()
     {
         $this->showFeedsDialog = true;
     }
-   
+    public function openPost($postId)
+    {
+        $post = Post::find($postId);
+    
+        if ($post) {
+            $post->update(['status' => 'Open']);
+        }
+    
+        return redirect()->to('/feeds'); // Redirect to the appropriate route
+    }
+    
     public function closeFeeds()
     {
        
@@ -77,12 +92,42 @@ class Activities extends Component
    
         // Combine and sort data
         $this->combinedData = $this->combineAndSortData($this->employees);
-   
+        $this->posts  = Post::where('status', 'Closed')
+             ->orderBy('updated_at', 'desc')
+             ->get();
+             $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
         // Fetch comments for the initial set of cards
         $this->comments = Comment::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->emojis = Emoji::all();
+        $employeeId = Auth::guard('emp')->user()->emp_id;
+        $this->isManager = DB::table('employee_details')
+            ->where('manager_id', $employeeId)
+            ->exists();
     }
-   
+    private function getEmpCompanyLogoUrl()
+    {
+        // Get the current authenticated employee's company ID
+        if (auth()->guard('emp')->check()) {
+            // Get the current authenticated employee's company ID
+            $empCompanyId = auth()->guard('emp')->user()->company_id;
+    
+            // Assuming you have a Company model with a 'company_logo' attribute
+            $company = Company::where('company_id', $empCompanyId)->first();
+    
+            // Return the company logo URL, or a default if company not found
+            return $company ? $company->company_logo : asset('user.jpg');
+        } elseif (auth()->guard('hr')->check()) {
+            $empCompanyId = auth()->guard('hr')->user()->company_id;
+    
+            // Assuming you have a Company model with a 'company_logo' attribute
+            $company = Company::where('company_id', $empCompanyId)->first();
+            return $company ? $company->company_logo : asset('user.jpg');
+        }
+    
+
+        
+      
+    }
  
     public function add_comment($emp_id)
 {
@@ -143,40 +188,35 @@ class Activities extends Component
  
     public function submit()
     {
-
         $validatedData = $this->validate($this->newCommentRules);
     
         try {
-            // Validate the form data
-           
             $fileContent = null;
             $mimeType = null;
             $fileName = null;
-            $file_path=null;
     
+            // Process the uploaded file
             if ($this->file_path) {
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mimeType = $this->file_path->getMimeType();
                 $fileName = $this->file_path->getClientOriginalName();
-                // Validate and store the uploaded file
             }
-            // Store the file as binary data
-
-
-            if (  $fileContent  === false) {
+    
+            // Check if the file content is valid
+            if ($fileContent === false) {
                 Log::error('Failed to read the uploaded file.', [
                     'file_path' => $this->file_path->getRealPath(),
                 ]);
                 session()->flash('error', 'Failed to read the uploaded file.');
                 return;
             }
-
+    
             // Check if the file content is too large
-            if (strlen(  $fileContent ) > 16777215) { // 16MB for MEDIUMBLOB
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
                 session()->flash('error', 'File size exceeds the allowed limit.');
                 return;
             }
-
+    
             // Get the authenticated user
             $user = Auth::user();
     
@@ -184,33 +224,34 @@ class Activities extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
     
-         
+            // Check if the authenticated employee is a manager
+            $isManager = DB::table('employee_details')
+                ->where('manager_id', $employeeId)
+                ->exists();
     
-        // Check if the authenticated employee is a manager
-        $isManager = DB::table('employee_details')
-        ->where('manager_id', $employeeId)
-        ->exists();
-
-    // If not a manager, prevent post creation
-    if (!$isManager) {
-        session()->flash('error', 'Employees are not allowed to post feeds.');
-        return;
-    }
-
-    // Retrieve the HR details if applicable
-    $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
+            // If not a manager, set `emp_id` instead of `manager_id`
+            $postStatus = $isManager ? 'Closed' : 'Pending'; // Set to 'Closed' if the user is a manager
+            $managerId = $isManager ? $employeeId : null;
+            $empId = $isManager ? null : $employeeId;
+    
+            // Retrieve the HR details if applicable
+            $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
+    
             // Create the post
             $post = Post::create([
                 'hr_emp_id' => $hrDetails->hr_emp_id ?? '-',
-                'manager_id' =>$employeeId, // Associate the post with the manager
+                'manager_id' => $managerId, // Set manager_id only if the user is a manager
+                'emp_id' => $empId,          // Set emp_id only if the user is an employee
                 'category' => $this->category,
                 'description' => $this->description,
                 'file_path' => $fileContent, // Store binary data in the database
                 'mime_type' => $mimeType,
                 'file_name' => $fileName,
+                'status' => $postStatus,
             ]);
+    
             // Reset form fields and display success message
-            $this->reset(['category', 'description', ]);
+            $this->reset(['category', 'description']);
             $this->message = 'Post created successfully!';
             session()->flash('showAlert', true);
             $this->showFeedsDialog = false;
@@ -240,7 +281,7 @@ class Activities extends Component
     
     return view('livewire.activities', [
         'comments' => $this->comments,
-        'employees' => $this->employeeDetails,
+        'employees' => $this->employeeDetails,    'isManager' => $this->isManager,
     ]);
 }
  

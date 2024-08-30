@@ -23,6 +23,7 @@ return new class extends Migration
             $table->binary('file_path')->nullable();
             $table->string('file_name')->nullable();
             $table->string('mime_type')->nullable();
+            $table->string('status')->default('Open');
             $table->timestamps();
         });
     }

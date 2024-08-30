@@ -7,15 +7,7 @@
                         style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
                 </div>
                 @endif
-                @if(session()->has('message'))
-    <div class="alert alert-success" style="max-width: 500px; margin: auto;">
-        {{ session('message') }}
- 
-    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"
-                        style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
-                </div>
-                </div>
-@endif
+
         <div class="col-md-12  mt-3" style="height:60px;margin-top:10px">
 
 <div class="row bg-white rounded border d-flex" style="height:80px; ">
@@ -192,9 +184,9 @@
         <div class="posts" style="width: 100%; height: 30px;">
             <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
                 @if(auth()->guard('emp')->check())
-                <input type="radio" id="radio-emp" name="radio" checked value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
+                <input type="radio" id="radio-emp" name="radio"  value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
                 @elseif(auth()->guard('hr')->check())
-                <input type="radio" id="radio-hr" name="radio" checked value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
+                <input type="radio" id="radio-hr" name="radio"  value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
                 @else
                 <p>No employee details available.</p>
                 @endif
@@ -213,9 +205,9 @@
     <div class="post-requests" style="width: 100%; height: 30px;">
         <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
             @if(auth()->guard('emp')->check())
-                <input type="radio" id="radio-emp" name="radio" style="margin-left:5px" value="post-requests" data-url="/emp-post-requests" onclick="handleRadioChange(this)">
+                <input type="radio" id="radio-emp" name="radio" style="margin-left:5px" checked value="post-requests" data-url="/emp-post-requests" onclick="handleRadioChange(this)">
             @elseif(auth()->guard('hr')->check())
-                <input type="radio" id="radio-hr" name="radio" style="margin-left:5px" value="post-requests" data-url="/hr-post-requests" onclick="handleRadioChange(this)">
+                <input type="radio" id="radio-hr" name="radio" style="margin-left:5px" checked value="post-requests" data-url="/hr-post-requests" onclick="handleRadioChange(this)">
             @endif
             <div class="feed-icon-container" style="margin-left: 10px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
@@ -508,131 +500,123 @@
 
         </div>
     </div>
+   
     <div class="col m-0" style="max-height: 100vh; overflow-y: auto;scroll-behavior: smooth;">
                     <div class="row align-items-center ">
                         <div class="col-md-5" style=" justify-content: flex-start;display:flex">
                             <div style="width: 2px; height: 40px; background-color: #97E8DF; margin-right: 10px;"></div>
                             <gt-heading _ngcontent-eff-c648="" size="md" class="ng-tns-c648-2 hydrated"></gt-heading>
-                            <div class="medium-header border-cyan-200" style="margin-left:-1px">Posts</div>
+                            <div class="medium-header border-cyan-200" style="margin-left:-1px">Post Requests</div>
                         </div>
 
                  
 
 
                     </div>
-                    
-                    <div class="col">
+                    <div class="col-md-12">
 
                     <div id="eventsSection" style=" display: flex; flex-direction: column; align-items: center; justify-content: center; ">
-                        @if($posts->isEmpty())
-                        <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png" alt="Empty Image" style="width: 300px; height: auto; display: block;">
+                    @if($isManager)    
+                    @if($posts->where('status', 'Pending')->isEmpty())
+                        <img src="https://freesvg.org/img/request.png" alt="Empty Image" style="width: 250px; height: auto; display: block;">
                         <p style="font-size:20px;font-weight:500; text-align: center;color:#3b4452">It feels empty here!</p>
-                        <p style="font-size:12px;color:#778899; text-align: center;">Your feed is still in making as there's no post to show.</p>
-                        <button style="background-color:rgb(2, 17, 79); width:110px; height:30px; border:1px solid grey; border-radius:5px; color:white;" wire:click="addFeeds">Create Post</button>
-
-                        <!-- Begin the form outside the .form-group div -->
-                        @if($showFeedsDialog)
-                        <!-- Form content here -->
-                        @endif
+                        <p style="font-size:12px;color:#778899; text-align: center;">Your feed is still in making as there's no post requeststo show.</p>
+                  
 
                     </div>
 
                     @else
-                
-                    @foreach($posts->where('status', 'Closed') as $post)
-    <div class="col-12 col-md-10" style="margin-top: 10px;">
-        <!-- Upcoming Birthdays List -->
-        <div class="F" style="background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452;">
-            <div class="row mt-2">
-                <div class="col-12 col-md-4 text-center mb-2 mb-md-0">
-                    <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width: 100%; max-width: 120px;">
-                </div>
-                <div class="col-6 col-md-4 text-center" style="font-size: 13px; font-weight: normal; color: #9E9696;">
-                    {{ $post->category }}
-                </div>
-                <div class="col-6 col-md-4 text-md-end" style="font-size: 11px; font-weight: normal; color: #9E9696;margin-left:-10px">
-                    {{ $post->updated_at->diffForHumans() }}
+                   
+                    @foreach($posts->where('status', 'Pending') as $post)
+
+                    <div class="col-md-12 bg-white" style="border-radius:5px;border:1px solid #ccc;height:auto;margin-top:10px">
+                         <div class="row m-2">
+                            <p style="font-weight:500;color:#3b4452;font-size:14px;margin-top:10px">Post Requests :</p>
+                            <div class="col-md-4" style="font-size:12px;">
+                               EmpID : {{ $post->emp_id }}
+                               
+                            </div>
+                            <div class="col-md-7" style="font-size:12px">
+                            @if($post->employeeDetails)
+  Employee Name: {{ $post->employeeDetails->first_name }} {{ $post->employeeDetails->last_name }}
+@else
+ No employee details found for this post.
+@endif
+                               
+                            </div>
+                     
+                            </div>
+                            <div class="row m-2">
+                            <div class="col-md-12 " style="font-size:12px">
+                               Category : {{ $post->category }}
+                               
+                            </div>
+                            </div>
+                            <div class="row m-2">
+                            <div class="col " style="font-size:12px">
+                               Description : {{ $post->description }}
+                               
+                            </div>
+                            </div>
+                            <div class="row" style="display:flex">
+                            <div class="col-md-5 m-2" style="font-size:12px">
+                               @if ($post->getImageUrlAttribute())
+                                <a href="#" wire:click.prevent="showImage('{{ $post->getImageUrlAttribute() }}')"
+                                    style="text-decoration: none; color: #007BFF;margin-left:10px">
+                                    View Image
+                                </a>
+                                @endif
+                            </div>
+                          
+                                @if ($showImageDialog)
+                            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title viewfile">View File</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                    @if ($imageUrl)
+                    <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+                    @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="submit-btn"
+                            wire:click.prevent="downloadImage">Download</button>
+                        <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
+                    </div>
                 </div>
             </div>
-            <div class="row m-0 mt-3 align-items-center">
-    @php
-        $employee = $post->employeeDetails;
-        $manager = $post->managerDetails;
-    @endphp
-
-    {{-- Display Employee Details --}}
-    @if($employee)
-        <div class="col-3 text-center">
-            @if($employee->image && $employee->image !== 'null')
-                <img class="rounded-circle" height="50" width="50" src="{{ $employee->image_url }}" alt="Employee Image">
-            @else
-                @if($employee->gender == "Male")
-                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                @elseif($employee->gender == "Female")
-                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                @else
-                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                @endif
-            @endif
         </div>
-        <div class="col-9">
-            <p class="m-0" style="margin-left: 20px; font-size: 14px;">
-                {{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}
-            </p>
-        </div>
-    @else($manager)
-        <div class="col-3 text-center">
-            @if($manager->image && $manager->image !== 'null')
-                <img class="rounded-circle" height="50" width="50" src="{{ $manager->image_url }}" alt="Manager Image">
-            @else
-                @if($manager->gender == "Male")
-                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                @elseif($manager->gender == "Female")
-                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                @else
-                    <img class="rounded-circle" height="50" width="50" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                @endif
-            @endif
-        </div>
-        <div class="col-9">
-            <p class="m-0" style="margin-left: 20px; font-size: 14px;">
-                {{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}
-            </p>
-        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+    
+@endif
+                               
+<div class="col-md-5 m-2" style="font-size:12px">
+<div class="row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+    @if($post->status !== 'Closed')
+        <button 
+            wire:click="closePost('{{ $post->id }}')" 
+            style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; font-size:12px; border: 1px solid silver; width:70px; height:30px">
+            Approve
+        </button>
+    @else
+        <button 
+            disabled
+            style="background-color: gray; color: white; border-radius: 5px; font-size:12px; border: 1px solid silver; width:70px; height:30px">
+            Closed
+        </button>
     @endif
 </div>
 
-
-            <div class="row m-0 mb-3">
-                <div class="col-6 text-start mt-3">
-                    <img src="{{ $post->image_url ?? ''}}"  class="img-fluid" style="max-width: 70px; max-height: 70px;border-radius:5px">
-                </div>
-                <div class="col-6 m-auto text-start mt-3">
-                    <p style="font-size: 14px; margin-top: 10px; font-weight: 100; color: #677A8E;">
-                        {{ $post->description }}
-                    </p>
-                </div>
-            </div>
-            <confirmation-modal class="confirmation-modal">
-                <gt-popup-modal label="modal" size="sm" class="hydrated">
-                    <div class="body-content">
-                        <div slot="modal-body">
-                            <!-- Content for modal body -->
-                        </div>
+            </div>  
+                         </div>
                     </div>
-                    <div slot="modal-footer">
-                        <div class="flex justify-end">
-                            <gt-button shade="secondary" name="Cancel" class="mr-2x hydrated"></gt-button>
-                            <gt-button shade="primary" name="Confirm" class="hydrated"></gt-button>
-                        </div>
                     </div>
-                </gt-popup-modal>
-            </confirmation-modal>
-        </div>
-    </div>
+                    
 @endforeach
 
-
+@endif
             
 
 
@@ -660,12 +644,10 @@
                             });
                         });
                     })
-                    
                     function handleImageChange() {
         // Display a flash message
         showFlashMessage('File uploaded successfully!');
     }
-
 
     function showFlashMessage(message) {
         const container = document.getElementById('flash-message-container');
@@ -677,7 +659,6 @@
         setTimeout(() => {
             container.style.display = 'none';
         }, 3000);
-        
     }
                     // Hide emoji list when an emoji is selected
                     document.querySelectorAll('.emoji-option').forEach(option => {

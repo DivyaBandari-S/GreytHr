@@ -259,7 +259,7 @@ class Tasks extends Component
          DB::table('notifications')
         ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$employeeId])
         ->where('notification_type', 'task')
-        ->update(['is_read' => 1]);
+        ->delete();
 
     }
 

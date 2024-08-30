@@ -61,6 +61,8 @@ class Feeds extends Component
     public $sortType='newest';
     public $newComment = '';
     public $employeeDetails;
+    public $status;
+    public $postStatus;
     public $isSubmitting = false;
     public $emp_id;
     public $addcomments;
@@ -70,6 +72,7 @@ class Feeds extends Component
 
     public $selectedEmojiReaction;
     public $message = '';
+    public $isManager;
     public $flashMessage = '';
       public $storedemojis;
 
@@ -80,6 +83,17 @@ class Feeds extends Component
     {
         $this->showMessage = false;
     }
+    public function openPost($postId)
+{
+    $post = Post::find($postId);
+
+    if ($post) {
+        $post->update(['status' => 'Open']);
+    }
+
+    return redirect()->to('/feeds'); // Redirect to the appropriate route
+}
+
     public function addFeeds()
     {
         $this->showFeedsDialog = true;
@@ -132,6 +146,10 @@ class Feeds extends Component
         $this->combinedData = $this->combineAndSortData($this->employees);
 
       $this->loadComments();   
+      $employeeId = Auth::guard('emp')->user()->emp_id;
+      $this->isManager = DB::table('employee_details')
+          ->where('manager_id', $employeeId)
+          ->exists();
  
        $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
@@ -434,41 +452,35 @@ public function loadaddComments()
     }
     public function submit()
     {
-
         $validatedData = $this->validate($this->newCommentRules);
     
         try {
-            // Validate the form data
-           
             $fileContent = null;
             $mimeType = null;
             $fileName = null;
     
             // Process the uploaded file
-       
             if ($this->file_path) {
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mimeType = $this->file_path->getMimeType();
                 $fileName = $this->file_path->getClientOriginalName();
-                // Validate and store the uploaded file
             }
-            // Store the file as binary data
-
-
-            if (  $fileContent  === false) {
+    
+            // Check if the file content is valid
+            if ($fileContent === false) {
                 Log::error('Failed to read the uploaded file.', [
                     'file_path' => $this->file_path->getRealPath(),
                 ]);
                 session()->flash('error', 'Failed to read the uploaded file.');
                 return;
             }
-
+    
             // Check if the file content is too large
-            if (strlen(  $fileContent ) > 16777215) { // 16MB for MEDIUMBLOB
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
                 session()->flash('error', 'File size exceeds the allowed limit.');
                 return;
             }
-
+    
             // Get the authenticated user
             $user = Auth::user();
     
@@ -476,34 +488,34 @@ public function loadaddComments()
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
     
-         
+            // Check if the authenticated employee is a manager
+            $isManager = DB::table('employee_details')
+                ->where('manager_id', $employeeId)
+                ->exists();
     
-        // Check if the authenticated employee is a manager
-        $isManager = DB::table('employee_details')
-        ->where('manager_id', $employeeId)
-        ->exists();
-
-    // If not a manager, prevent post creation
-    if (!$isManager) {
-        session()->flash('error', 'Employees are not allowed to post feeds.');
-        return;
-    }
-
-    // Retrieve the HR details if applicable
-    $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
+            // If not a manager, set `emp_id` instead of `manager_id`
+            $postStatus = $isManager ? 'Closed' : 'Pending'; // Set to 'Closed' if the user is a manager
+            $managerId = $isManager ? $employeeId : null;
+            $empId = $isManager ? null : $employeeId;
+    
+            // Retrieve the HR details if applicable
+            $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
+    
             // Create the post
             $post = Post::create([
                 'hr_emp_id' => $hrDetails->hr_emp_id ?? '-',
-                'manager_id' =>$employeeId, // Associate the post with the manager
+                'manager_id' => $managerId, // Set manager_id only if the user is a manager
+                'emp_id' => $empId,          // Set emp_id only if the user is an employee
                 'category' => $this->category,
                 'description' => $this->description,
                 'file_path' => $fileContent, // Store binary data in the database
                 'mime_type' => $mimeType,
                 'file_name' => $fileName,
+                'status' => $postStatus,
             ]);
-         
+    
             // Reset form fields and display success message
-            $this->reset(['category', 'description', ]);
+            $this->reset(['category', 'description']);
             $this->message = 'Post created successfully!';
             session()->flash('showAlert', true);
             $this->showFeedsDialog = false;
@@ -518,7 +530,6 @@ public function loadaddComments()
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
     }
-    
     
     
     
@@ -584,7 +595,11 @@ public function loadaddComments()
         $this->hr = collect();
         $storedEmojis = collect();
         $emojis = collect();
-    
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $isManager = DB::table('employee_details')
+            ->where('manager_id', $employeeId)
+            ->exists();
+     
         // Check if 'emp' guard is authenticated
         if (auth()->guard('emp')->check()) {
             $this->employeeDetails = EmployeeDetails::with('personalInfo') // Eager load personal info
@@ -619,7 +634,7 @@ public function loadaddComments()
             'hr' => $this->employeeDetails,
             'employees' => $this->employeeDetails,
             'emojis' => $emojis,
-
+            'isManager' => $this->isManager,
             'storedEmojis' => $storedEmojis
         ]);
     }
