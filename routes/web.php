@@ -93,6 +93,7 @@ use App\Livewire\ViewPendingDetails;
 use App\Livewire\Emojies;
 use App\Livewire\EmployeeAssetsDetails;
 use App\Livewire\EmployeeDirectory;
+use App\Livewire\EmpPostrequest;
 use App\Livewire\EmpTimeSheet;
 use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
@@ -277,6 +278,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/Feeds', Feeds::class)->name('Feeds');
     Route::get('/events', Activities::class);
     Route::get('/everyone', Everyone::class);
+    Route::get('/emp-post-requests', EmpPostrequest::class);
 
     //People module
     Route::get('/PeoplesList', Peoples::class)->name('people');
@@ -341,6 +343,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // TODO module
     Route::get('/tasks', Tasks::class)->name('tasks');
+  
     Route::get('/employees-review', EmployeesReview::class)->name('review');
     Route::get('/reports', ReportManagement::class)->name('reports');
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');

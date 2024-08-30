@@ -12,6 +12,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 // use Hashids;
 use Vinkla\Hashids\Facades\Hashids;
 class ChatBox extends Component
@@ -39,8 +40,16 @@ class ChatBox extends Component
 
     public function redirectToEncryptedLink($id)
     {
+        $auth_id = auth()->user()->emp_id;
+        DB::table('notifications')
+        ->where('notification_type', 'message')
+        ->where('chatting_id', $id)
+        ->where('receiver_id', $auth_id)
+        ->delete();
+
         // $hashids = new Hashids('default-salt', 50);
         $encryptedId = Hashids::encode($id);
+
         return redirect()->to(route('chat', $encryptedId));
     }
 
@@ -186,12 +195,12 @@ class ChatBox extends Component
             'body' => 'required|string|max:255',
             'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960',
         ]);
-    
+
         // Initialize variables
         $fileContent = null;
         $mimeType = null;
         $fileName = null;
-    
+
         // Store the file as binary data if provided
         if ($this->file_path) {
             $fileContent = file_get_contents($this->file_path->getRealPath());
@@ -209,11 +218,11 @@ class ChatBox extends Component
                 session()->flash('error', 'File size exceeds the allowed limit.');
                 return;
             }
-    
+
             $mimeType = $this->file_path->getMimeType();
             $fileName = $this->file_path->getClientOriginalName();
         }
-    
+
         // Create the message record
         $createdMessage = Message::create([
             'chating_id' => $this->selectedConversation->id,
@@ -224,7 +233,7 @@ class ChatBox extends Component
             'file_name' => $fileName,
             'mime_type' => $mimeType,
         ]);
-    
+
         // Create a notification if the receiver is different from the sender
         if (auth()->user()->emp_id != optional($this->selectedConversation->getReceiver())->emp_id) {
             Notification::create([
@@ -235,23 +244,23 @@ class ChatBox extends Component
                 'body' => $this->body,
             ]);
         }
-    
+
         // Reset input fields
         $this->reset('body', 'file_path'); // Reset file_path if that’s what you meant
-    
+
         // Scroll to bottom of the chat
         $this->dispatch('scroll-bottom');
-    
+
         // Push the message to the list
         $this->loadedMessages->push($createdMessage);
-    
+
         // Update the conversation model
         $this->selectedConversation->updated_at = now();
         $this->selectedConversation->save();
-    
+
         // Refresh the chat list
         $this->dispatch('chat.chat-list', 'refresh');
-    
+
         // Broadcast the message
         $this->selectedConversation->getReceiver()
             ->notify(new MessageSent(
@@ -261,7 +270,7 @@ class ChatBox extends Component
                 $this->selectedConversation->getReceiver()->id
             ));
     }
-    
+
         public function mount()
     {
 

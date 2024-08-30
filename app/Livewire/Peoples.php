@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 class Peoples extends Component
 {
     public $searchTerm = '';
+    public $searchValue = '';
     public $peoples;
     public $selectedPerson = null;
     public $selectedMyTeamPerson = null;
@@ -74,13 +75,13 @@ class Peoples extends Component
     {
         try {
             $companyId = Auth::user()->company_id;
-            $trimmedSearchTerm = trim($this->searchTerm);
+            $trimmedSearchTerm = trim($this->searchValue);
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
 
             $this->filteredMyTeamPeoples = EmployeeDetails::with('starredPeople')
                 ->where('company_id', $companyId)
-                ->where('manager_id', $managerId)
+                ->where('manager_id', $employeeId)
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
                         ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
