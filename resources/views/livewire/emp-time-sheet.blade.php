@@ -205,10 +205,10 @@
                 gap: 0.5rem;
             }
 
-            .d-flex {
+            /* .d-flex {
                 flex-direction: column;
                 align-items: flex-start;
-            }
+            } */
         }
 
         @media (max-width: 576px) {
@@ -916,4 +916,4 @@
             </div>
         </div>
     </div>
-</div>a
+</div>

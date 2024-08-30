@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="pt-4 pb-4"
+                <div class="pt-4"
                     style="border-radius: 10px; background-color: #02114f; text-align: -webkit-center; position: relative">
 
                     <div class="section-banner">
@@ -164,15 +164,14 @@
 
                     </div>
                     <div class="locationGlobe">
-                        <i class="fa-solid fa-location-dot"></i>
-                        {{ $city }}
+                        <i class="fa-solid fa-location-dot me-2" style="color: red;"></i>
+                        <!-- {{ $city }} -->
+                        Shankarmatha, Bangaluru, Karnataka, 560079
                     </div>
                 </div>
 
             </div>
-
         </div>
-
 
         <!-- main content -->
 
@@ -312,7 +311,7 @@
                         <div class="payslip-small-desc remainContent d-flex flex-column align-items-center"
                             wire:click="reviewLeaveAndAttendance">
                             <span>+{{ $totalRequests - 3 }}
-                            <span>More</span>
+                                <span>More</span>
                             </span>
                         </div>
                         @endif
@@ -384,7 +383,7 @@
                                 </div>
                                 @endif
                             </div>
-                            <h6  class="normalTextValue">Attendance Requests</h6>
+                            <h6 class="normalTextValue">Attendance Requests</h6>
                             <div class="d-flex flex-row">
                                 @for ($i = 0; $i <= $countofregularisations; $i++)
                                     <?php
@@ -890,19 +889,19 @@ eum nihil itaque!
 
         <div class="payslip-card mb-3">
 
-        <div>
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="payslip-card-title">Task Overview</h5>
-                <div>
-                    <select class="form-select custom-select-width"
-                        wire:change="$set('filterPeriod', $event.target.value)">
-                        <option value="this_month" selected>This month</option>
-                        <option value="last_month">Last month</option>
-                        <option value="this_year">This year</option>
-                    </select>
+            <div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="payslip-card-title">Task Overview</h5>
+                    <div>
+                        <select class="form-select custom-select-width"
+                            wire:change="$set('filterPeriod', $event.target.value)">
+                            <option value="this_month" selected>This month</option>
+                            <option value="last_month">Last month</option>
+                            <option value="this_year">This year</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-           
+
 
                 <div class="row text-center mt-3">
                     <div class="col-4">
