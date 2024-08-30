@@ -259,7 +259,7 @@ class Tasks extends Component
          DB::table('notifications')
         ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$employeeId])
         ->where('notification_type', 'task')
-        ->update(['is_read' => 1]);
+        ->delete();
 
     }
 
@@ -317,7 +317,7 @@ class Tasks extends Component
     {
         $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
             $selectedPerson = $this->peoples->where('emp_id', $id)->first();
-            return $selectedPerson ? $selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')' : '';
+            return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name .' #(' . $selectedPerson->emp_id . ')' : '';
         }, $this->selectedPeopleForFollowers);
 
         $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));

@@ -39,6 +39,7 @@ class Home extends Component
     public $currentDate;
     public $swipes;
     public $showSalary = false;
+    public $groupedRequests ;
 
     public $whoisinTitle = '';
     public $currentDay;
@@ -486,9 +487,32 @@ class Home extends Component
 
             // Get the count of matching leave applications
             $this->leaveApplied = $matchingLeaveApplications;
+            $groupedRequests = [];
+
+            // Iterate through each leave request
+            foreach ($this->leaveApplied as $request) {
+                $leaveRequest = $request['leaveRequest'];
+                $empId = $leaveRequest->emp_id; // Extract emp_id from LeaveRequest model
+
+                if (!isset($groupedRequests[$empId])) {
+                    // Initialize the array for this employee ID
+                    $groupedRequests[$empId] = [
+                        'count' => 0,
+                        'leaveRequests' => [] // Store all leave requests for this employee
+                    ];
+                }
+
+                // Increment the count and store the leave request
+                $groupedRequests[$empId]['count']++;
+                $groupedRequests[$empId]['leaveRequests'][] = $leaveRequest;
+            }
+
+
+            // Store the grouped requests in the class property
+            $this->groupedRequests = $groupedRequests;
+
 
             $this->count = count($matchingLeaveApplications);
-
             //team on leave
             $currentDate = Carbon::today();
             $this->teamOnLeaveRequests = LeaveRequest::with('employee')

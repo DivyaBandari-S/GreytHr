@@ -9,7 +9,7 @@
     @endif
     <div class="col" id="leavePending" style="width: 95%; padding: 0;border-radius: 5px; ">
         <div class="row m-0 p-0 mt-3">
-            <div class="d-flex align-items-center justify-content-between p-0">
+            <div class="reviewCountShow p-0">
                 <div class="d-flex align-items-center gap-2">
                     @if($count > 0)
                     <span class="totalRequestCount">Total Leave Requests
@@ -19,10 +19,13 @@
                     </span>
                     @endif
                 </div>
-                <div class="search-container d-flex align-items-end justify-content-end p-1">
-                    <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Enter employee name" class="border outline-none rounded">
-                    <button wire:click="fetchPendingLeaveApplications" id="searchButton" style="border:none;outline:none;background:#fff;border-radius:5px;padding:1px 10px;"><i class="fas fa-search" style="width:7px;height:7px;"></i></button>
+                <div class="search-container d-flex align-items-end justify-content-end p-2" style="position: relative;">
+                    <input type="text" wire:model.debounce.500ms="filter" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded" style="padding-right: 40px;">
+                    <button wire:click="fetchPendingLeaveApplications" id="searchButtonReview" >
+                        <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
+                    </button>
                 </div>
+
             </div>
         </div>
         @if(!empty($this->leaveApplications))
