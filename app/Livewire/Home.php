@@ -23,6 +23,8 @@ use Livewire\Component;
 use App\Models\HolidayCalendar;
 use App\Models\RegularisationDates;
 use App\Models\SalaryRevision;
+use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -109,46 +111,36 @@ class Home extends Component
     public $city;
     public $country;
     public $postal_code;
+    public $dataSqlServer;
+    public $locationData = [];
     public function mount()
     {
+
         $this->fetchWeather();
+        $this->fetchSwipeData();
+        $this->getLocationByIP();
         // Get the current month and year
-        $currentDate = Carbon::today();
-        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-        $month = $currentDate->format('n');
-        $year = $currentDate->format('Y');
+        // $currentDate = Carbon::today();
+        // $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        // $month = $currentDate->format('n');
+        // $year = $currentDate->format('Y');
 
-        // // Construct the table name for SQL Server
-        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        // // // Construct the table name for SQL Server
+        // $tableName = 'DeviceLogs_' . $month . '_' . $year;
 
-        $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
-        $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+        // $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+        // $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
 
-        // Get data from SQL Server for the normalized user ID
-        $dataSqlServer = DB::connection('sqlsrv')
-            ->table($tableName)
-            ->select('UserId', 'logDate', 'Direction')
-            ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
-            ->whereDate('logDate', $today) // Filter for today's date
-            ->orderBy('logDate')
-            ->get();
-        dump($dataSqlServer);
-        // Assuming $dataSqlServer is the collection you want to split
-        // foreach ($dataSqlServer as $data) {
-        //     // Accessing individual fields
-        //     $userId = $data->UserId;
-        //     $logDate = $data->logDate;
-        //     $direction = $data->Direction;
+        // // Get data from SQL Server for the normalized user ID
+        // $dataSqlServer = DB::connection('odbc')
+        //     ->table($tableName)
+        //     ->select('UserId', 'logDate', 'Direction')
+        //     ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
+        //     ->whereDate('logDate', $today) // Filter for today's date
+        //     ->orderBy('logDate')
+        //     ->get();
 
-        //     // Example: If you want to split the date and time from logDate
-        //     $dateTimeParts = explode(' ', $logDate);
-        //     $date = $dateTimeParts[0]; // 2024-08-28
-        //     $time = $dateTimeParts[1]; // 11:36:50.000
-
-        //     // Output or further processing
-        //     dump($userId, $date, $time, $direction);
-        // }
-
+        // dd($dataSqlServer);
 
         // // Get data from MySQL
         // $dataMySql = DB::connection('mysql')
@@ -233,6 +225,73 @@ class Home extends Component
             ->with('employee')
             ->count();
     }
+
+    public function fetchSwipeData()
+    {
+        $currentDate = Carbon::today();
+        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
+
+        // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+
+        $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+        $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+
+        try {
+            // Hard-coded ODBC DSN, username, and password
+            $dsn = 'Driver={SQL Server};Server=122.175.44.131,1433;Database=eSSL;';
+            $username = 'essl'; // Replace with your actual username
+            $password = 'essl'; // Replace with your actual password
+
+            // Create a new PDO instance
+            $dbh = new \PDO("odbc:{$dsn}", $username, $password);
+
+            // Fetch data using raw PDO query
+            $stmt = $dbh->prepare("SELECT UserId, logDate, Direction FROM {$tableName} WHERE UserId = ? AND CAST(logDate AS DATE) = ? ORDER BY logDate");
+            $stmt->execute([$normalizedUserId, $today]);
+            $this->dataSqlServer = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            // dd($this->dataSqlServer);
+        } catch (\PDOException $e) {
+            // Handle the error
+            $this->dataSqlServer = [];
+            logger()->error("Data fetch error: " . $e->getMessage());
+        }
+    }
+
+    // public function fetchSwipeData()
+    // {
+    //     // Debug configuration
+    //     dd(config('database.connections.odbc'));
+
+    //     $currentDate = Carbon::today();
+    //     $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+    //     $month = $currentDate->format('n');
+    //     $year = $currentDate->format('Y');
+
+    //     // Construct the table name for SQL Server
+    //     $tableName = 'DeviceLogs_' . $month . '_' . $year;
+
+    //     $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+    //     $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+
+    //     try {
+    //         // Get data from SQL Server for the normalized user ID
+    //         $this->dataSqlServer = DB::connection('odbc')
+    //             ->table($tableName)
+    //             ->select('UserId', 'logDate', 'Direction')
+    //             ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
+    //             ->whereDate('logDate', $today) // Filter for today's date
+    //             ->orderBy('logDate')
+    //             ->get();
+    //     } catch (\Exception $e) {
+    //         // Handle the error
+    //         $this->dataSqlServer = collect(); // or handle error as needed
+    //         // Log error or display message
+    //         logger()->error("Data fetch error: " . $e->getMessage());
+    //     }
+    // }
     public function reviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = true;
@@ -779,12 +838,14 @@ class Home extends Component
 
 
 
-    // Livewire component method
+    // Fetch Weather from IP
     public function fetchWeather()
     {
         try {
             // Get the IP address and determine location
             $ip = request()->ip();
+            //https://ipapi.co/205.254.168.205/json/
+            //https://api.findip.net/205.254.168.20/?token=e2986e29136143d1b7794b79921cb215
             $location = GeoIP::getLocation($ip);
             $lat = $location['lat'];
             $lon = $location['lon'];
@@ -794,7 +855,6 @@ class Home extends Component
 
             // Get the base API URL from the .env file
             $apiUrl = env('WEATHER_API_URL');
-
             // Prepare the request URL with dynamic latitude and longitude
             $requestUrl = $apiUrl . '?latitude=' . $lat . '&longitude=' . $lon . '&current_weather=true';
 
@@ -877,5 +937,25 @@ class Home extends Component
         ];
 
         return $weatherCodes[$code] ?? '';
+    }
+
+    public function getLocationByIP()
+    {
+
+        try {
+
+            $ip = '';
+
+            // $ip = request()->ip();
+            $apiUrl = env('FINDIP_API_URL');
+
+            // Construct the full API URL
+            $url = "{$apiUrl}/{$ip}/json/";
+
+            // Make the HTTP request
+            $response = Http::get($url);
+            // dd($response->json());
+        } catch (Exception $e) {
+        }
     }
 }
