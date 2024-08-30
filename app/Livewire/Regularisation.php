@@ -107,6 +107,14 @@ class Regularisation extends Component
             // Handle the error as needed, such as displaying a message to the user
         }
     }
+   
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName, [
+            'shift_times.*.from' => 'required|date_format:H:i',
+            'shift_times.*.to' => 'required|date_format:H:i',
+        ]);
+    }
     public function togglePendingAccordion($id)
     {
         
@@ -140,6 +148,7 @@ class Regularisation extends Component
     public function submitShifts($date)
     {
        
+        
         if (!in_array($date, $this->selectedDates)) {
             // Add the date to the selectedDates array only if it's not already selected
             $this->selectedDates[] = $date;
@@ -335,6 +344,11 @@ public function nextMonth()
     public function storearraydates()
 {
     try {
+      
+        $validatedData = $this->validate([
+            'shift_times.*.from' => 'required|date_format:H:i',
+            'shift_times.*.to' => 'required|date_format:H:i',
+        ]);
         $this->isdatesApplied = true;
         $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
         $emp_id = $employeeDetails->emp_id;
