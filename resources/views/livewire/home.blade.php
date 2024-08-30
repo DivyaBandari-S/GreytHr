@@ -890,43 +890,19 @@ eum nihil itaque!
 
         <div class="payslip-card mb-3">
 
-            <div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="payslip-card-title">Overview</h5>
-                    <div>
-                        <select class="form-select custom-select-width"
-                            wire:change="$set('filterPeriod', $event.target.value)">
-                            <option value="this_month" selected>This month</option>
-                            <option value="last_month">Last month</option>
-                            <option value="this_year">This year</option>
-                        </select>
-                    </div>
+        <div>
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="payslip-card-title">Task Overview</h5>
+                <div>
+                    <select class="form-select custom-select-width"
+                        wire:change="$set('filterPeriod', $event.target.value)">
+                        <option value="this_month" selected>This month</option>
+                        <option value="last_month">Last month</option>
+                        <option value="this_year">This year</option>
+                    </select>
                 </div>
-                <div class="d-flex justify-content-between mt-3">
-                    <div>
-                        @if ($TaskAssignedToCount)
-                        <p class="track-text"> Total Tasks: <span
-                                class="track-count">{{ $TaskAssignedToCount }}</span> </p>
-                        @else
-                        <p class="track-text"> Total Tasks: <span class="track-count">0</span></p>
-                        @endif
-                    </div>
-
-
-                    {{-- @if ($countAssignedByOpen > 0 && $countAssignedToOpen > 0)
-                            pending tasks {{ $countAssignedByOpen + $countAssignedToOpen }}
-                    @endif --}}
-                    <div>
-                        @if ($taskCount > 0)
-                        <p data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Task Requests: {{ ucwords(strtolower($employeeNames)) }}"
-                            class="track-text">New Tasks: <span
-                                class="track-count">{{ $taskCount }}</span></p>
-                        @endif
-                    </div>
-
-                    {{-- <p class="payslip-card-title">Task Overview</p> --}}
-                </div>
+            </div>
+           
 
                 <div class="row text-center mt-3">
                     <div class="col-4">

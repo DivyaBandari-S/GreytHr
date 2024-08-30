@@ -297,9 +297,13 @@
                         @if ($starredPeoples->isEmpty())
                             <div class="container people-empty-text">Looks like you don't have any records</div>
                         @else
+                            @php
+                                // Check if $selectStarredPeoples is null and set it to the first record if needed
+                                $defaultSelection = $starredPeoples->where('starred_status', 'starred')->first();
+                            @endphp
                             @foreach ($starredPeoples->where('starred_status', 'starred') as $people)
                                 <div wire:click="starredPersonById('{{ $people->id }}')"
-                                    class="container people-detail-container {{ $selectStarredPeoples && $selectStarredPeoples->id == $people->id ? 'selected' : '' }}">
+                                    class="container people-detail-container {{ ($selectStarredPeoples && $selectStarredPeoples->id == $people->id) || (!$selectStarredPeoples && $defaultSelection->id == $people->id) ? 'selected' : ''}}">
                                     <div class="row align-items-center">
                                         <div class="col-3">
                                             @if (!empty($people->profile) && $people->profile !== 'null')
@@ -596,9 +600,14 @@
                     <div class="container people-empty-text">No People Found</div>
                 @else
                     <div class="people-starred-list-container">
+                        @php
+                            // Get the first record to use for default selection if no other record is selected
+                            $defaultSelection = $peopleData->first();
+                        @endphp
+
                         @foreach ($peopleData as $people)
                             <div wire:click="selectPerson('{{ $people->emp_id }}')"
-                                class="container people-detail-container {{ $selectedPerson && $selectedPerson->emp_id == $people->emp_id ? 'selected' : '' }}">
+                                class="container people-detail-container {{ ($selectedPerson && $selectedPerson->emp_id == $people->emp_id) || (!$selectedPerson && $defaultSelection && $defaultSelection->emp_id == $people->emp_id) ? 'selected' : ''  }}">
                                 <div class="row align-items-center">
                                     <div class="col-3">
                                         @if (!empty($people->image) && $people->image !== 'null')
@@ -873,7 +882,7 @@
         <div class="col-12 col-md-4 bg-white people-left-side-container">
 
             <div class="input-group people-input-group-container">
-                <input wire:model="searchTerm" type="text" class="form-control people-search-input"
+                <input wire:model="searchValue" type="text" class="form-control people-search-input"
                     placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                 <div class="input-group-append">
                     <button wire:click="filterMyTeam" class="people-search-btn" type="button">
@@ -887,9 +896,13 @@
                     <div class="container people-empty-text">No People Found</div>
                 @else
                     <div class="people-starred-list-container">
+                        @php
+                            // Get the first record to use for default selection if no other record is selected
+                            $defaultSelection = $myTeamData->first();
+                        @endphp
                         @foreach ($myTeamData as $people)
                             <div wire:click="selectMyTeamPerson('{{ $people->emp_id }}')"
-                                class="container people-detail-container {{ $selectedMyTeamPerson && $selectedMyTeamPerson->emp_id == $people->emp_id ? 'selected' : '' }}">
+                                class="container people-detail-container {{ ($selectedMyTeamPerson && $selectedMyTeamPerson->emp_id == $people->emp_id) || (!$selectedMyTeamPerson && $defaultSelection && $defaultSelection->emp_id == $people->emp_id) ? 'selected' : '' }}">
                                 <div class="row align-items-center">
                                     <div class="col-3">
                                         @if (!empty($people->image) && $people->image !== 'null')
