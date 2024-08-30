@@ -810,6 +810,7 @@
             padding: 10px;
             height: 25px;
             width: 2px;
+            justify-content: center;
             display: flex;
             margin: 0 auto;
             align-items: center;
@@ -1072,22 +1073,28 @@
 
                                                <input type="text" placeholder="10:00" class="time-input text-5"
                                                 wire:model.lazy="shift_times.{{ $index }}.from"
-                                                style="text-align: center;width: 70px;" maxlength="5" />
+                                                style="text-align: center;width: 70px;" maxlength="5"  oninput="validateFromTime(this)" />
         
                                                 <!-- <p class="text-muted">
                                                     Entered Start Time: {{ $shift_times[$index]['from'] ?? '' }}
                                                 </p> -->
+                                                @error('shift_times.'.$index.'.from')
+                                                       <span class="error-message" style="color: red; font-size: 12px;">Please enter sign-in time in HH:MM Format</span>
+                                                @enderror
                                     
                                     </td>
                                     <td style="border: none;">
 
                                             <input type="text" placeholder="19:00" class="time-input text-5"
                                             wire:model.lazy="shift_times.{{ $index }}.to"
-                                            style="text-align: center;width: 70px;" maxlength="5" />
+                                            style="text-align: center;width: 70px;" maxlength="5" oninput="validateToTime(this)" />
         
                                             <!-- <p class="text-muted">
                                                 Entered End Time: {{ $shift_times[$index]['to'] ?? '' }}
                                             </p> -->
+                                            @error('shift_times.'.$index.'.to')
+                                                      <span class="error-message" style="color: red; font-size: 12px;">Please enter sign-out time in HH:MM Format</span>
+                                            @enderror
                                     </td>
                                     <td style="border: none;">
 
@@ -1439,6 +1446,29 @@ $lastEntry = end($regularisationEntries);
 
         }
     }
+    function validateFromTime(input) {
+                const timeFromFormat = /^([01]\d|2[0-3]):([0-5]\d)$/; // 24-hour time format validation
+                const isFromValid = timeFromFormat.test(input.value);
+                const errorFromMessage = input.nextElementSibling;  // Assuming the error message is the next sibling of the input
+
+                if (!isFromValid && input.value.length === 5) {
+                    errorFromMessage.style.display = 'inline';  // Show the error message
+                } else {
+                    errorFromMessage.style.display = 'none';    // Hide the error message when valid
+                }
+    }
+    function validateToTime(input) {
+    const timeToFormat = /^([01]\d|2[0-3]):([0-5]\d)$/; // 24-hour time format validation
+    const isToValid = timeToFormat.test(input.value);
+    const errorToMessage = input.nextElementSibling;  // Assuming the error message is the next sibling of the input
+
+    if (!isToValid && input.value.length === 5) {
+        errorToMessage.style.display = 'inline';  // Show the error message
+    } else {
+        errorToMessage.style.display = 'none';    // Hide the error message when valid
+    }
+}
 </script>
+
 </div>
 </div>
