@@ -179,7 +179,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-    
+
         Barryvdh\DomPDF\ServiceProvider::class,
 
         App\Providers\BroadcastServiceProvider::class,
@@ -187,8 +187,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
         Vinkla\Hashids\HashidsServiceProvider::class,
-        // App\Providers\LaravelLivewireLoaderProvider::class,
-
     ])->toArray(),
 
     /*
@@ -206,7 +204,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
 
-     
+
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
