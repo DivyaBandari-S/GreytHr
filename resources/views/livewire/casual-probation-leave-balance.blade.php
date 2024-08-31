@@ -10,7 +10,7 @@
         .custom-table-wrapper .balance-table {
             width: 100%;
             margin: 0 auto;
-            table-layout: fixed;
+            /* table-layout: fixed; */
             border-collapse: collapse;
         }
 
@@ -52,7 +52,6 @@
             padding: 10px;
             display: flex;
             width: 60%;
-            max-width: 100%;
             justify-content: space-around;
             align-items: center;
         }
@@ -76,6 +75,18 @@
             color: #778899;
             font-size: 11px;
         }
+        @media only screen and (max-width: 600px) {
+            .info-container {
+                width:80%;
+            }
+
+        }
+        @media only screen and (max-width: 400px) {
+            .info-container {
+                width:95%;
+            }
+
+        }
     </style>
     <div class="row m-0 px-2 py-1 ">
         @if(session()->has('emp_error'))
@@ -84,7 +95,7 @@
         </div>
         @endif
         <div class="row m-0 p-0">
-            <div class="col-7 p-0 m-0 mb-2 ">
+            <div class="col-md-7 col-sm-12 p-0 m-0 ">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center " style="font-size: 14px;background:none;font-weight:500;">
                         <li class="breadcrumb-item"><a  href="{{ route('home') }}">Home</a></li>
@@ -94,7 +105,7 @@
                 </nav>
             </div>
             <div class="col-md-5 ">
-                <div class="buttons-container d-flex gap-3 justify-content-end mt-2 p-0 ">
+                <div class="buttons-container d-flex gap-3 justify-content-end  p-0 ">
                     <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
                     <select class="dropdown bg-white rounded " wire:change='changeYear($event.target.value)'  wire:model='year'    style="margin-right:5px;width:fit-content">
                         <?php
@@ -162,7 +173,7 @@
             <div class="row p-0 m-0">
                 <div class="col-md-12 mt-4">
                     <div class="custom-table-wrapper bg-white border rounded ">
-                        <table class="balance-table table-striped table-sm">
+                        <table class="balance-table table-responsive">
                             <thead class="thead">
                                 <tr>
                                     <th style="width:13.66%; padding: 5px 7px;">Transaction Type</th>
@@ -225,6 +236,5 @@
             options: chartOptions
         });
 
-        console.log(chartData);
     });
 </script>
