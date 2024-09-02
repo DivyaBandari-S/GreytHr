@@ -72,7 +72,11 @@
     font-size: var(--normal-font-size);
     padding: 4px;
 }
-
+.task-custom-select-width {
+    width: 150px;
+    font-size: var(--normal-font-size);
+    padding: 7px;
+}
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
     background-color: white;

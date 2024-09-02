@@ -891,7 +891,7 @@ eum nihil itaque!
         <div class="payslip-card mb-3">
 
         <div>
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">
                 <h5 class="payslip-card-title">Task Overview</h5>
                 <div>
                     <select class="form-select custom-select-width"
