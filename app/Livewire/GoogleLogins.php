@@ -13,19 +13,20 @@ use Illuminate\Support\Facades\Log;
 class GoogleLogins extends Component
 {
     public $google;
+    public $googleClientId;
+    public $googleClientSecret;
+    public $googleRedirectUri;
 
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')
-        ->redirectUrl('http://127.0.0.1:8000/auth/google/callback')
-            ->redirect();
+        return Socialite::driver('google')->redirect();
     }
 
     public function handleGoogleCallback()
     {
-        $googleClientId = config('services.google.client_id');
-        $googleClientSecret = config('services.google.client_secret');
-        $googleRedirectUri = config('services.google.redirect');
+        $this->googleClientId = config('services.google.client_id');
+        $this->googleClientSecret = config('services.google.client_secret');
+        $this->googleRedirectUri = config('services.google.redirect');
 
 
         try {
