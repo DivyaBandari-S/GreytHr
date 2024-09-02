@@ -35,7 +35,7 @@ class PostLoginMessage
             $userName = ucwords(trim($firstName . ' ' . $lastName));
             $homeUrl = route('home');
 
-            $html = <<<HTML
+            $html = '
             <!DOCTYPE html>
             <html lang="en">
             <head>
@@ -51,17 +51,17 @@ class PostLoginMessage
                         justify-content: center;
                         align-items: center;
                         background-color: #f8f9fa;
-                        font-family: 'Montserrat', sans-serif;
+                        font-family: \'Montserrat\', sans-serif;
                     }
                     #message {
                         font-size: 1.25em;
                         color: #3b4452;
-                        font-weight:500;
+                        font-weight: 500;
                         text-align: center;
                     }
                     .name {
                         font-weight: bold;
-                        color: #007bff; /* Blue color */
+                        color: #02114f;
                     }
                     .dots {
                         display: inline-block;
@@ -93,69 +93,66 @@ class PostLoginMessage
                 </style>
                 <script>
                     setTimeout(function() {
-                        window.location.href = "$homeUrl";
+                        window.location.href = "' . $homeUrl . '";
                     }, 3000);
                 </script>
             </head>
             <body>
                 <div id="message">
-                    Hi <span class="name">$userName</span>, just a moment, we're getting things ready for you
+                    Hi <span class="name">' . $userName . '</span>, just a moment, we\'re getting things ready for you
                     <span class="dots">
                         <span>.</span><span>.</span><span>.</span>
                     </span>
                 </div>
             </body>
-            </html>
-            HTML;
-
-
+            </html>';
 
             return new Response($html, 200);
         } catch (\Exception $e) {
             // Handle the exception (e.g., log the error and show a default message)
             $homeUrl = route('home');
-            $html = <<<HTML
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Error</title>
-                <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-                <style>
-                    body, html {
-                        height: 100%;
-                        margin: 0;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        background-color: #f8f9fa;
-                        font-family: 'Montserrat', sans-serif;
-                    }
-                    #message {
-                        font-size: 24px;
-                        color: #333;
-                        text-align: center;
-                    }
-                    .error {
-                        font-weight: bold;
-                        color: #dc3545; /* Red color */
-                    }
-                </style>
-                <script>
-                    setTimeout(function() {
-                        window.location.href = "$homeUrl";
-                    }, 3000);
-                </script>
-            </head>
-            <body>
-                <div id="message">
-                    <div class="error">An error occurred: {$e->getMessage()}</div>
-                    <div>Please try again later.</div>
-                </div>
-            </body>
-            </html>
-            HTML;
+            $html = '
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error</title>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+        <style>
+            body, html {
+                height: 100%;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #f8f9fa;
+                font-family: \'Montserrat\', sans-serif;
+            }
+            #message {
+                font-size: 24px;
+                color: #333;
+                text-align: center;
+            }
+            .error {
+                font-weight: bold;
+                color: #dc3545; /* Red color */
+            }
+        </style>
+        <script>
+            setTimeout(function() {
+                window.location.href = "' . $homeUrl . '";
+            }, 3000);
+        </script>
+    </head>
+    <body>
+        <div id="message">
+            <div class="error">An error occurred: ' . $e->getMessage() . '</div>
+            <div>Please try again later.</div>
+        </div>
+    </body>
+    </html>';
+
 
 
             return new Response($html, 500);
