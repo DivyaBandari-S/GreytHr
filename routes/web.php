@@ -112,7 +112,7 @@ use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\HelpDesks;
 use App\Models\Task;
-
+use Illuminate\Support\Facades\File;
 Route::group(['middleware' => 'checkAuth'], function () {
 
     Route::get('/emplogin', EmpLogin::class)->name('emplogin');
@@ -286,7 +286,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     //Helpdesk module
 
-    Route::get('/HelpDesk', HelpDesk::class)->name('HelpDesk');
+    Route::get('/HelpDesk', HelpDesk::class)->name('helpdesk');
 
     Route::get('/catalog', Catalog::class)->name('catalog');
 
@@ -328,9 +328,9 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/leave-apply', LeaveApply::class);
     Route::get('/holiday-calendar', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
-    Route::get('/casualleavebalance', CasualLeaveBalance::class)->name('casual-leave-balance');
-    Route::get('/sickleavebalance', SickLeaveBalances::class)->name('sick-leave-balance');
-    Route::get('/casualprobationleavebalance', CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
+    Route::get('/leave-balances/casualleavebalance', CasualLeaveBalance::class)->name('casual-leave-balance');
+    Route::get('/leave-balances/sickleavebalance', SickLeaveBalances::class)->name('sick-leave-balance');
+    Route::get('/leave-balances/casualprobationleavebalance', CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
     Route::get('/leave-cancel', LeaveCancel::class)->name('lseave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
@@ -370,10 +370,6 @@ Route::get('/your-download-route', function () {
 Route::get('/downloadform', function () {
     return view('downloadform');
 });
-Route::get('/chat-box', function () {
-    return view('chat-box');
-});
-
 
 Route::get('/attune-reports', function () {
     return view('mail-content_view');
@@ -461,16 +457,6 @@ Route::get('/file/{id}', function ($id) {
     ]);
 })->name('file.show');
 
-// Route::get('/file/{id}', function ($id) {
-//     $file = Message::findOrFail($id);
-
-//     return Response::make($file->file_path, 200, [
-//         'Content-Type' => $file->mime_type,
-//         'Content-Disposition' => (strpos($file->mime_type, 'image') === false ? 'attachment' : 'inline') . '; filename="' . $file->file_name . '"',
-//     ]);
-// })->name('file.show');
-
-
 Route::get('/taskfile/{id}', function ($id) {
     $file = Task::findOrFail($id);
 
@@ -480,13 +466,140 @@ Route::get('/taskfile/{id}', function ($id) {
     ]);
 })->name('files.showTask');
 
+
 Route::get('/clear', function () {
+    // Clear the contents of all log files
+    $logFiles = File::glob(storage_path('logs/*.log'));
+    foreach ($logFiles as $file) {
+        File::put($file, ''); // This will empty the file without deleting it
+    }
+
+    // Perform other Artisan commands
     Artisan::call('optimize:clear');
     Artisan::call('optimize');
+    Artisan::call('config:cache');
     Artisan::call('cache:clear');
     Artisan::call('config:clear');
     Artisan::call('route:clear');
     Artisan::call('view:clear');
 
-    return 'Cache, config, route, and view caches cleared!';
+    return 'Log contents cleared, and caches have been cleared and optimized!';
+});
+
+Route::get('/test-odbc', function () {
+    try {
+        // Hard-coded DSN, username, and password
+        $dsn = 'Driver={SQL Server};Server=122.175.44.131,1433;Database=eSSL;';
+        $username = 'essl'; // Replace with your actual username
+        $password = 'essl'; // Replace with your actual password
+
+        // Create a new PDO instance
+        $dbh = new PDO("odbc:{$dsn}", $username, $password);
+
+        // Optionally, you can perform a query to further test the connection
+        // $result = $dbh->query("SELECT TOP 1 * FROM YourTableName")->fetchAll(PDO::FETCH_ASSOC);
+
+        return "Connection successful!";
+    } catch (\PDOException $e) {
+        return "Connection failed: " . $e->getMessage();
+    }
+});
+
+
+Route::get('/test-odbc-env', function () {
+    try {
+        // Fetch details from .env file
+        $dsn = env('DB_ODBC_DSN');
+        $username = env('DB_ODBC_USERNAME');
+        $password = env('DB_ODBC_PASSWORD');
+
+        // Create a new PDO instance
+        $dbh = new PDO("odbc:{$dsn}", $username, $password);
+
+        // Optionally, you can perform a query to further test the connection
+        // $result = $dbh->query("SELECT TOP 1 * FROM YourTableName")->fetchAll(PDO::FETCH_ASSOC);
+
+        return "Connection successful!";
+    } catch (\PDOException $e) {
+        return "Connection failed: " . $e->getMessage();
+    }
+});
+
+
+Route::get('/test-odbc-data', function () {
+    try {
+        // Fetch connection details from configuration
+        $config = config('database.connections.odbc');
+        $dsn = $config['dsn'];
+        $username = $config['username'];
+        $password = $config['password'];
+
+        // Create a new PDO instance
+        $dbh = new PDO("odbc:{$dsn}", $username, $password);
+
+        // Define your table name and user ID
+        $tableName = 'DeviceLogs_8_2024'; // Replace with your actual table name
+        $normalizedUserId = 'XSS0488'; // Replace with your actual user ID
+        $today = now()->toDateString(); // Get today's date in 'Y-m-d' format
+
+        // Fetch data using raw PDO query
+        $stmt = $dbh->prepare("SELECT UserId, logDate, Direction FROM {$tableName} WHERE UserId = ? AND CAST(logDate AS DATE) = ? ORDER BY logDate");
+        $stmt->execute([$normalizedUserId, $today]);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Output the data for debugging
+        dump($data);
+
+        return "Data fetched successfully!";
+    } catch (\PDOException $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
+
+
+
+Route::get('/test-odbc-conf', function () {
+    try {
+        $dsn = config('database.connections.odbc.dsn');
+        $username = config('database.connections.odbc.username');
+        $password = config('database.connections.odbc.password');
+
+        $dbh = new PDO("odbc:{$dsn}", $username, $password);
+
+        // Optionally, perform a query
+        // $result = $dbh->query("SELECT TOP 1 * FROM YourTableName")->fetchAll(PDO::FETCH_ASSOC);
+
+        return "Connection successful!";
+    } catch (\PDOException $e) {
+        return "Connection failed: " . $e->getMessage();
+    }
+});
+
+Route::get('/test-odbc-dir', function () {
+    try {
+        // Hard-coded ODBC DSN, username, and password
+        $dsn = 'Driver={SQL Server};Server=122.175.44.131,1433;Database=eSSL;';
+        $username = 'essl'; // Replace with your actual username
+        $password = 'essl'; // Replace with your actual password
+
+        // Create a new PDO instance
+        $dbh = new PDO("odbc:{$dsn}", $username, $password);
+
+        // Define your table name and user ID
+        $tableName = 'DeviceLogs_8_2024'; // Replace with your actual table name
+        $normalizedUserId = 'XSS0488'; // Replace with your actual user ID
+        $today = now()->toDateString(); // Get today's date in 'Y-m-d' format
+
+        // Fetch data using raw PDO query
+        $stmt = $dbh->prepare("SELECT UserId, logDate, Direction FROM {$tableName} WHERE UserId = ? AND CAST(logDate AS DATE) = ? ORDER BY logDate");
+        $stmt->execute([$normalizedUserId, $today]);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Output the data for debugging
+        dd($data);
+
+        return "Data fetched successfully!";
+    } catch (\PDOException $e) {
+        return "Error: " . $e->getMessage();
+    }
 });

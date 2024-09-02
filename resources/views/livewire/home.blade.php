@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="pt-4 pb-4"
+                <div class="pt-4"
                     style="border-radius: 10px; background-color: #02114f; text-align: -webkit-center; position: relative">
 
                     <div class="section-banner">
@@ -164,15 +164,13 @@
 
                     </div>
                     <div class="locationGlobe">
-                        <i class="fa-solid fa-location-dot"></i>
-                        {{ $city }}
+                        <i class="fa-solid fa-location-dot me-2" style="color: red;"></i>
+                        {{ $city }}, {{ $country }}-{{ $postal_code }}
                     </div>
                 </div>
 
             </div>
-
         </div>
-
 
         <!-- main content -->
 
@@ -273,7 +271,8 @@
                         // Separate requests into those to show and those to hide
                         $requestsToShow = array_slice($groupedRequests, 0, 3, true);
                         $totalRequests = count($groupedRequests);
-                        $requestsToHide = $totalRequests > 3 ? array_slice($groupedRequests, 3, null, true) : [];
+                        $requestsToHide =
+                        $totalRequests > 3 ? array_slice($groupedRequests, 3, null, true) : [];
                         @endphp
 
                         @foreach ($requestsToShow as $empId => $data)
@@ -286,21 +285,25 @@
                         if ($firstLeaveRequest && $firstLeaveRequest->employee) {
                         $firstName = $firstLeaveRequest->employee->first_name;
                         $lastName = $firstLeaveRequest->employee->last_name;
-                        $initials = strtoupper(substr($firstName, 0, 1)) . strtoupper(substr($lastName, 0, 1));
+                        $initials =
+                        strtoupper(substr($firstName, 0, 1)) .
+                        strtoupper(substr($lastName, 0, 1));
                         } else {
                         $firstName = 'Unknown';
                         $lastName = '';
                         $initials = '?';
                         }
                         @endphp
-                        <div class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
+                        <div
+                            class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
                             <div class="thisCircle d-flex align-items-center justify-content-center"
                                 style="border: 2px solid {{ getRandomColor() }}" data-toggle="tooltip"
                                 data-placement="top" title="{{ $firstName }} {{ $lastName }}">
                                 <span>{{ $initials }}</span>
                             </div>
                             @if ($count > 1)
-                            <span class="badge badge-pill badge-info position-absolute translate-middle badge-count">
+                            <span
+                                class="badge badge-pill badge-info position-absolute translate-middle badge-count">
                                 {{ $count }}
                             </span>
                             @endif
@@ -309,11 +312,11 @@
                         @endforeach
 
                         @if ($totalRequests > 3)
-                        <div class="payslip-small-desc remainContent d-flex flex-column align-items-center"
-                            wire:click="reviewLeaveAndAttendance">
-                            <span>+{{ $totalRequests - 3 }}
-                            <span>More</span>
-                            </span>
+                        <div class="remainContent d-flex flex-column justify-content-center align-items-center">
+                            <a href="#" wire:click="reviewLeaveAndAttendance">
+                                <span>+{{ $totalRequests - 3 }}</span>
+                                <p class="mb-0" style="margin-top:-5px;">More</p>
+                            </a>
                         </div>
                         @endif
                     </div>
@@ -384,7 +387,7 @@
                                 </div>
                                 @endif
                             </div>
-                            <h6  class="normalTextValue">Attendance Requests</h6>
+                            <h6 class="normalTextValue">Attendance Requests</h6>
                             <div class="d-flex flex-row">
                                 @for ($i = 0; $i <= $countofregularisations; $i++)
                                     <?php
@@ -542,8 +545,8 @@ Submit your time sheet for this week.
                             <p class="payslip-small-desc">No employees are absent today</p>
                             @endif
                             @if ($CountAbsentEmployees > 5)
-                            <div
-                                class="remainContent d-flex flex-column align-items-center payslip-small-desc" wire:click="openAbsentEmployees">
+                            <div class="remainContent d-flex flex-column align-items-center payslip-small-desc"
+                                wire:click="openAbsentEmployees">
                                 <span>+{{ $CountAbsentEmployees - 5 }}</span>
                                 <p class="mb-0" style="margin-top:-5px;">More</p>
                             </div>
@@ -584,8 +587,8 @@ Submit your time sheet for this week.
                             <p class="payslip-small-desc">No employees arrived late today</p>
                             @endif
                             @if ($CountLateSwipes > 5)
-                            <div
-                                class="remainContent d-flex flex-column align-items-center payslip-small-desc" wire:click="openLateEmployees">
+                            <div class="remainContent d-flex flex-column align-items-center payslip-small-desc"
+                                wire:click="openLateEmployees">
                                 <span>+{{ $CountLateSwipes - 5 }}</span>
                                 <p class="mb-0" style="margin-top:-5px;">More</p>
                             </div>
@@ -616,7 +619,8 @@ Submit your time sheet for this week.
                             str_pad(dechex(mt_rand(0xcccccc, 0xffffff)), 6, '0' , STR_PAD_LEFT);
                             @endphp
                             <a href="/whoisinchart" style="text-decoration: none;">
-                            <div class="thisCircle" style="border: 2px solid {{ getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;"
+                            <div class="thisCircle"
+                                style="border: 2px solid {{ getRandomAbsentColor() }};border-radius:50%;width: 35px;height: 35px;display: flex;align-items: center;justify-content: center;"
                                 data-toggle="tooltip" data-placement="top"
                                 title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
                                 <span class="initials">
@@ -630,8 +634,8 @@ Submit your time sheet for this week.
                             <p class="payslip-small-desc">No employees arrived early today</p>
                             @endif
                             @if ($CountEarlySwipes > 5)
-                            <div
-                                class="remainContent d-flex flex-column align-items-center payslip-small-desc" wire:click="openEarlyEmployees">
+                            <div class="remainContent d-flex flex-column align-items-center payslip-small-desc"
+                                wire:click="openEarlyEmployees">
                                 <span>+{{ $CountEarlySwipes - 5 }}</span>
                                 <p class="mb-0" style="margin-top:-5px;">More</p>
                             </div>
@@ -654,7 +658,7 @@ Submit your time sheet for this week.
         <div class="col-md-3 mb-4 ">
             <div class="home-hover">
                 <div class="reviews">
-                    <div class="homeCard4 p-3">
+                    <div class="homeCard4 p-2">
                         <div class="team-heading  mt-2 d-flex justify-content-between">
                             <div>
                                 <p class="teamOnLeave"> Team On Leave</pclass>
@@ -704,18 +708,18 @@ Submit your time sheet for this week.
                         @endif
                         </div>
 
-                        <div class="mt-4">
+                        <div class="mt-3">
                             <p class="payslip-small-desc">
                                 This month ({{ $upcomingLeaveApplications }}) </p>
                             @if ($upcomingLeaveRequests)
-                            <div wire:ignore class="mt-2 d-flex align-items-center gap-3 mb-3">
+                            <div wire:ignore class="mt-2 d-flex align-items-center gap-2 mb-3">
                                 @foreach ($upcomingLeaveRequests->take(3) as $requests)
                                 @php
                                 $randomColorList =
                                 '#' .
                                 str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0', STR_PAD_LEFT);
                                 @endphp
-                                <div wire:ignore class="d-flex gap-4 align-items-center">
+                                <div wire:ignore class="d-flex align-items-center">
                                     <div class="thisCircle"
                                         style="border: 1px solid {{ $randomColorList }}">
                                         <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
@@ -724,10 +728,12 @@ Submit your time sheet for this week.
                                 </div>
                                 @endforeach
                                 @if ($upcomingLeaveRequests->count() > 3)
-                                <div class="remainContent d-flex flex-column align-items-center">
+                                <div
+                                    class="remainContent d-flex flex-column align-items-center">
                                     <!-- Placeholder color -->
                                     <a href="/team-on-leave-chart">
-                                        <span>+{{ $upcomingLeaveRequests->count() - 3 }} </span>
+                                        <span>+{{ $upcomingLeaveRequests->count() - 3 }}
+                                        </span>
                                         <span style="margin-top:-5px;">More</span>
                                     </a>
                                 </div>
@@ -742,7 +748,7 @@ Submit your time sheet for this week.
                     @else
                     <div
                         style="display:flex;justify-content:center;flex-direction:column;align-items:center;">
-                        <img src="{{asset('images/no data.png')}}" name="noData" id="noData"
+                        <img src="{{ asset('images/no data.png') }}" name="noData" id="noData"
                             alt="Image Description" style="width: 120px; height:100px;">
                         <p class="homeText">
                             Wow! No leaves planned today.
@@ -849,13 +855,7 @@ Submit your time sheet for this week.
 
         <div class="payslip-card mb-3">
             <p class="payslip-card-title">Quick Access</p>
-            <!-- <p class="small-desc">
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat
-veritatis nobis saepe itaque rerum nostrum aliquid obcaecati odio
-officia deleniti. Expedita iste et illum, quaerat pariatur consequatur
-eum nihil itaque!
-</p> -->
-            <div style="display: flex; justify-content: space-between; position: relative;">
+            <div class="m-0 row">
                 <div class="quick col-md-7 px-3 py-0 ps-0">
                     <a href="/reimbursement" class="quick-link">Reimbursement</a>
                     <a href="/itstatement" class="quick-link">IT Statement</a>
@@ -863,7 +863,7 @@ eum nihil itaque!
                     <a href="#" class="quick-link">Loan Statement</a>
                 </div>
                 <div class="col-md-5"
-                    style="text-align: center; background-color: #FFF8F0; padding: 5px 10px; border-radius: 10px; font-size: 8px; font-family: montserrat; position: absolute; bottom: 0; right: 0;">
+                    style="text-align: center; background-color: #FFF8F0; padding: 5px 10px; border-radius: 10px; font-size: 8px; font-family: montserrat; bottom: 0; right: 0;">
                     <img src="images/quick_access.png" style="padding-top: 2em; width: 6em">
                     <p class="pt-4">Use quick access to view important salary details.</p>
                 </div>

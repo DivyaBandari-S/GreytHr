@@ -187,8 +187,7 @@
                                 $isWeekend = in_array($carbonDate->dayOfWeek, [0, 6]); // 0 for Sunday, 6 for Saturday
                                 $isActiveDate = ($selectedDate === $carbonDate->toDateString());
                                 @endphp
-                                <td wire:click="dateClicked($event.target.textContent)" class="calendar-date{{ $selectedDate === $day['day'] ? ' active-date' : '' }}" data-date="{{ $day['day'] }}" style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};">
-
+                                <td wire:click="dateClicked('{{ $day['day'] }}')" class="calendar-date{{ $selectedDate === $day['day'] ? ' active-date' : '' }}" data-date="{{ $day['day'] }}" style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};">
                                     @if ($day)
                                     <div>
                                         @if ($day['isToday'])
@@ -274,23 +273,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="filter-container1">
+                    <!-- <div class="filter-container1">
                         <div id="main" style="margin-left: {{ $showDialog ? '250px' : '0' }}">
                             <button class="openbtn" wire:click="open">
                                 <i class="fas fa-filter" style="color:#778899;"></i>
                             </button>
                         </div>
-
-                    </div>
+                    </div> -->
                 </div>
-
+                @if($showAccordion)
                 <div class="accordion rounded mt-3">
                     <div class="accordion-heading active rounded">
                         <div class="accordion-title p-2">
                             <div class="accordion-content ">
                                 <span style="font-size: 14px; font-weight: 500;color:#778899;">Leave transactions({{ count($this->leaveTransactions) }})</span>
                             </div>
-                            <div class="arrow-btn" onclick="toggleAccordion(this)">
+                            <div class="arrow-btn" >
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                         </div>
@@ -300,8 +298,8 @@
                             <table class="leave-table p-2" style="width: 100%; border-collapse: collapse; ;overflow: auto;">
                                 <thead style="background-color: #ecf7fc; text-align:start;  width:100%;">
                                     <tr>
-                                        <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 40%;">Employee ID</th>
-                                        <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 20%;">No of days</th>
+                                        <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 30%;">Employee ID</th>
+                                        <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 30%;">No of days</th>
                                         <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 40%;">From-To </th>
                                     </tr>
                                 </thead>
@@ -316,17 +314,17 @@
                                     @if (!empty($selectedDate))
                                     @forelse($this->leaveTransactions as $transaction)
                                     <tr style="border-bottom: 1px solid #ccc; font-size:12px;text-align:start;">
-                                        <td style="padding: 20px 5px; border-top: 1px solid #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;width: 40%;">
+                                        <td style="padding: 10px 5px; border-top: 1px solid #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;width: 30%;">
                                             <span style="color: black; font-size: 12px; font-weight: 500;cursor:pointer;" title="{{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }}: {{ $transaction->emp_id }}">
                                                 {{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }} <span style="font-size: 11px; color: #778899;">(#{{ $transaction->emp_id }})</span>
                                             </span> <br>
-                                            <span style="font-size: 11px; color: #778899;white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;cursor:pointer;" title="{{ $transaction->employee->job_location }}, {{ $transaction->employee->job_title }}">
-                                                {{ $transaction->employee->job_location }}, {{ $transaction->employee->job_title }}
+                                            <span style="font-size: 11px; color: #778899;white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;cursor:pointer;" title="{{ $transaction->employee->job_location }}, {{ $transaction->employee->job_title }}">
+                                                {{ ($transaction->employee->job_location),}} {{ $transaction->employee->job_role }}
                                             </span>
                                         </td>
 
-                                        <td style=" padding:20px 5px;border-top: 1px solid #ccc;font-weight:500;width: 20%;">{{ $this->calculateNumberOfDays($transaction->from_date, $transaction->from_session, $transaction->to_date, $transaction->to_session) }}</td>
-                                        <td style=" padding:20px 5px;border-top: 1px solid #ccc;width: 40%;">
+                                        <td style=" padding:10px 5px;border-top: 1px solid #ccc;font-weight:500;width: 30%;text-align:center;">{{ $this->calculateNumberOfDays($transaction->from_date, $transaction->from_session, $transaction->to_date, $transaction->to_session) }}</td>
+                                        <td style=" padding:10px 5px;border-top: 1px solid #ccc;width: 40%;">
 
                                             @if($transaction->from_date === $transaction->to_date)
                                             <span style="color:black;font-size:12px;font-weight:500;">{{ \Carbon\Carbon::parse($transaction->from_date)->format('d M') }}</span>
@@ -346,7 +344,7 @@
                                     <tr>
                                         <td colspan="3">
                                             <div class="leave-trans" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                                <img src="/images/pending.png" alt="Pending Image" style=" margin: 0 auto;">
+                                                <img src="/images/pending.png" alt="Pending Image" style=" margin: 0 auto;" height="100" width="100">
                                                 <span class="">No Employees are on leave</span>
                                             </div>
                                         </td>
@@ -359,7 +357,7 @@
                                         <td colspan="3">
                                             <div class="leave-trans" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                                 <img src="/images/pending.png" alt="Pending Image" style="width: 100%; margin: 0 auto;">
-                                                <span style="font-size: 0.75rem; font-weight: 500; color:#778899;">No Employees are on leave</span>
+                                                <span class="normalTextValue">No Employees are on leave</span>
                                             </div>
                                         </td>
                                     </tr>
@@ -370,28 +368,37 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
 
 
         <script>
+            // Function to toggle the accordion
             function toggleAccordion(element) {
                 const accordionBody = element.closest('.accordion').querySelector('.accordion-body');
                 const arrowIcon = element.querySelector('i');
                 const isOpen = accordionBody.style.display === 'block';
+
                 if (isOpen) {
                     accordionBody.style.display = 'none';
                     arrowIcon.classList.remove('fa-chevron-up');
                     arrowIcon.classList.add('fa-chevron-down');
-                    localStorage.setItem('accordionState', 'closed');
+                    localStorage.setItem('accordionState', 'close');
                 } else {
                     accordionBody.style.display = 'block';
                     arrowIcon.classList.remove('fa-chevron-down');
                     arrowIcon.classList.add('fa-chevron-up');
                     localStorage.setItem('accordionState', 'open');
                 }
-
             }
+
+            // Event delegation for toggling the accordion
+            document.addEventListener('click', function(event) {
+                if (event.target && event.target.closest('.arrow-btn')) {
+                    toggleAccordion(event.target.closest('.arrow-btn'));
+                }
+            });
 
             // Check the accordion state on page load and set it accordingly
             window.addEventListener('load', function() {
@@ -401,21 +408,18 @@
                 if (accordionState === 'closed') {
                     accordionBodies.forEach(body => {
                         body.style.display = 'none';
-                        const arrowIcon = body.previousElementSibling.querySelector('i');
+                        const arrowIcon = body.previousElementSibling.querySelector('.arrow-btn i');
                         arrowIcon.classList.remove('fa-chevron-up');
                         arrowIcon.classList.add('fa-chevron-down');
                     });
                 } else {
                     accordionBodies.forEach(body => {
                         body.style.display = 'block';
-                        const arrowIcon = body.previousElementSibling.querySelector('i');
+                        const arrowIcon = body.previousElementSibling.querySelector('.arrow-btn i');
                         arrowIcon.classList.remove('fa-chevron-down');
                         arrowIcon.classList.add('fa-chevron-up');
                     });
                 }
             });
         </script>
-
-
-
     </div>

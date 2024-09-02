@@ -220,10 +220,16 @@
 
 
                         </form>
-                        <button onclick="window.location.href = '{{ url('/login') }}'" class="google-login-btn" style="width: 165px; margin-left: 180px; font-size: 12px;height:30px">
-                            <img src="https://pbs.twimg.com/profile_images/1605297940242669568/q8-vPggS_400x400.jpg" style="height: 20px; width: 20px;">
-                            <div >Login with Google</div>
-                        </button>
+                        <div style="display: flex; justify-content: center; align-items: center; margin: 15px;">
+    <button onclick="window.location.href = '{{ url('/login') }}'" 
+            style="display: flex; align-items: center; justify-content: center; width: 90%; max-width: 150px; font-size: 12px; height: 40px; background-color: white; border: 1px solid #ccc; border-radius: 5px;">
+        <img src="https://dynoinvestment.com/static/images/google-logo.png" 
+             style="height: 25px; width: 25px; margin-right: 8px;">
+        <span>Login with Google</span>
+    </button>
+</div>
+
+                  
                     </div>
 
                     @endif

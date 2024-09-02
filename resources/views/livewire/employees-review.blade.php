@@ -389,10 +389,14 @@
                         aria-autocomplete="list">
                 </div> -->
 
-                <div class="row m-0 p-0 mt-3">
-                    <div class="search-container d-flex align-items-end justify-content-end p-1">
-                        <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Enter employee name" class="border outline-none rounded">
-                        <button wire:click="searchPendingLeave" id="searchButton" style="border:none;outline:none;background:#fff;border-radius:5px;padding:1px 10px;"><i class="fas fa-search" style="width:7px;height:7px;"></i></button>
+                <div class="row m-0 p-0 mt-3 d-flex align-items-end justify-content-end">
+                    <div class="col-md-4 m-0 p-0">
+                        <div class=" search-container  p-2" style="position: relative;">
+                            <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded" style="padding-right: 40px;">
+                            <button wire:click="searchPendingLeave" id="searchButtonReview">
+                                <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -27,12 +27,15 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="leave_type">Leave Type <span class="requiredMark">*</span> </label> <br>
-                        <div class="custom-select-wrapper" style="width: 50%;">
+                        <div class="custom-select-wrapper" style="width: 65%;">
                             <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leave_type">
                                 <option value="default">Select Type</option>
                                 <option value="Casual Leave">Casual Leave</option>
-                                @if($showCasualLeaveProbation)
-                                <aoption value="Casual Leave Probation">Casual Leave Probation</aoption>
+                                @if($showCasualLeaveProbation == true)
+                                <option value="Casual Leave Probation">Casual Leave Probation</option>
+                                @endif
+                                @if($showCasualLeaveProbationYear == true)
+                                <option value="Casual Leave Probation">Casual Leave Probation</option>
                                 @endif
                                 <option value="Loss of Pay">Loss of Pay</option>
                                 <option value="Marriage Leave">Marriage Leave</option>
@@ -52,29 +55,39 @@
                     <div class="form-group">
                         <div class="pay-bal">
                             <span class="normalTextValue">Balance :</span>
+                            @php
+                            $leaveBalances = $leaveBalances ?? []; // Ensure $leaveBalances is an array
+                            @endphp
                             @if(!empty($leaveBalances))
                             <div class="d-flex align-items-center justify-content-center" style="cursor:pointer;">
                                 @if($leave_type == 'Sick Leave')
-                                <!-- Sick Leave -->
-                                <span class="sickLeaveBalance" title="Sick Leave">{{ $leaveBalances['sickLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance" title="Sick Leave">
+                                    {{ $leaveBalances['sickLeaveBalance'] ?? 'N/A' }}
+                                </span>
                                 @elseif($leave_type == 'Casual Leave')
-                                <!-- Casual Leave -->
-                                <span class="sickLeaveBalance" title="Casual Leave Probation">{{ $leaveBalances['casualLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance" title="Casual Leave Probation">
+                                    {{ $leaveBalances['casualLeaveBalance'] ?? 'N/A' }}
+                                </span>
                                 @elseif($leave_type == 'Casual Leave Probation')
-                                <!-- Casual Leave Probation -->
-                                <span class="sickLeaveBalance">{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance">
+                                    {{ $leaveBalances['casualProbationLeaveBalance'] ?? 'N/A' }}
+                                </span>
                                 @elseif($leave_type == 'Loss of Pay')
-                                <!-- Loss of Pay -->
-                                <span class="sickLeaveBalance">&minus;&nbsp;{{($leaveBalances['lossOfPayBalance']) }}</span>
+                                <span class="sickLeaveBalance">
+                                    &minus;&nbsp;{{ $leaveBalances['lossOfPayBalance'] ?? 'N/A' }}
+                                </span>
                                 @elseif($leave_type == 'Maternity Leave')
-                                <!-- Loss of Pay -->
-                                <span class="sickLeaveBalance">{{ $leaveBalances['maternityLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance">
+                                    {{ $leaveBalances['maternityLeaveBalance'] ?? 'N/A' }}
+                                </span>
                                 @elseif($leave_type == 'Paternity Leave')
-                                <!-- Loss of Pay -->
-                                <span class="sickLeaveBalance">{{ $leaveBalances['paternityLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance">
+                                    {{ $leaveBalances['paternityLeaveBalance'] ?? 'N/A' }}
+                                </span>
                                 @elseif($leave_type == 'Marriage Leave')
-                                <!-- Loss of Pay -->
-                                <span class="sickLeaveBalance">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
+                                <span class="sickLeaveBalance">
+                                    {{ $leaveBalances['marriageLeaveBalance'] ?? 'N/A' }}
+                                </span>
                                 @endif
                             </div>
                             @else
@@ -379,14 +392,17 @@
                     $hiddenEmployees = $employeesCollection->slice(3);
                     @endphp
 
-                    <ul class="d-flex align-items-center mb-0" style="list-style-type: none; gap:10px;">
+                    <ul class="d-flex align-items-center mb-0 employee-list" style="list-style-type: none; gap:10px;">
                         @foreach($visibleEmployees as $recipient)
-                        <li>
+                        <li class="employee-item" style="flex: 1 1 auto;">
                             <div class="px-2 py-1 d-flex justify-content-between align-items-center" style="border-radius: 25px; border: 2px solid #adb7c1; gap:10px;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
-                                <span style="color: #778899; font-size:12px;">{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}</span>
+                                <span class="text-container normalTextValue font-weight-normal">
+                                    {{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}
+                                </span>
                                 <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer; color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
                             </div>
                         </li>
+
                         @endforeach
 
                         @if(count($selectedCCEmployees) > 3)
@@ -401,7 +417,7 @@
                     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
-                                <div class="modal-header" >
+                                <div class="modal-header">
                                     <h5 class="modal-title" style="color:white;">More Recipients</h5>
                                     <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
                                         wire:click="openModal" style="background-color: white; height:10px;width:10px;">
@@ -430,7 +446,7 @@
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
-                        <div class="col m-0 p-0" >
+                        <div class="col m-0 p-0">
                             <div class="input-group" style="width:180px;">
                                 <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">

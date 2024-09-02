@@ -85,12 +85,8 @@ class LeaveBalances extends Component
     public function mount()
     {
         try {
-            $this->selectedYear = Carbon::now()->format('Y');
-            $this->currentYear = now()->year;
-            $this->employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
-            $this->fromDateModal = Carbon::createFromDate($this->currentYear, 1, 1)->format('Y-m-d');
-            $this->toDateModal = Carbon::createFromDate($this->currentYear, 12, 31)->format('Y-m-d');
+            $this->selectedYear = Carbon::now()->format('Y'); // Initialize to the current year
+            $this->updateLeaveBalances();
             $hireDate = $this->employeeDetails->hire_date;
             if ($hireDate) {
                 $hireDate = Carbon::parse($hireDate);
@@ -100,34 +96,6 @@ class LeaveBalances extends Component
             } else {
                 $this->differenceInMonths = null;
             }
-            $this->sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Sick Leave', $this->currentYear);
-            $this->lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Loss Of Pay', $this->currentYear);
-            $this->casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave', $this->currentYear);
-            $this->casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave Probation', $this->currentYear);
-            $this->marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Marriage Leave', $this->currentYear);
-            $this->maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Maternity Leave', $this->currentYear);
-            $this->paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Petarnity Leave', $this->currentYear);
-
-            // Check if employeeDetails is not null before accessing its properties
-            if ($this->employeeDetails) {
-
-                // Get the logged-in employee's approved leave days for sick, Casual, and loss of pay leave
-                $leaveBalances = LeaveHelper::getApprovedLeaveDays($this->employeeId, $this->selectedYear);
-
-                // Use the returned values in your component
-                $this->totalCasualDays = $leaveBalances['totalCasualDays'];
-                $this->totalSickDays = $leaveBalances['totalSickDays'];
-                $this->totalCasualLeaveProbationDays = $leaveBalances['totalCasualLeaveProbationDays'];
-                $this->totalLossOfPayDays = $leaveBalances['totalLossOfPayDays'];
-                // Calculate leave balances
-                $this->sickLeaveBalance = $this->sickLeavePerYear - $this->totalSickDays;
-                $this->casualLeaveBalance = $this->casualLeavePerYear - $this->totalCasualDays;
-                $this->casualProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->totalCasualLeaveProbationDays;
-                $this->lossOfPayBalance = $this->totalLossOfPayDays;
-                $this->consumedCasualLeaves = $this->casualLeavePerYear - $this->casualLeaveBalance;
-                $this->consumedSickLeaves = $this->sickLeavePerYear - $this->sickLeaveBalance;
-                $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
-            }
         } catch (\Exception $e) {
             // Log the error if needed
             logger()->error('Error during component mount: ' . $e->getMessage());
@@ -135,7 +103,58 @@ class LeaveBalances extends Component
             session()->flash('mountError', 'An error occurred while loading the component. Please try again later.');
         }
     }
+    public function updatedSelectedYear()
+    {
+        $this->updateLeaveBalances();
+    }
+    
+    private function updateLeaveBalances()
+    {
+        try {
+            $this->currentYear = $this->selectedYear;
+            $this->employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
+            $this->fromDateModal = Carbon::createFromDate($this->currentYear, 1, 1)->format('Y-m-d');
+            $this->toDateModal = Carbon::createFromDate($this->currentYear, 12, 31)->format('Y-m-d');
+            
+            if ($this->employeeDetails) {
+                $hireDate = $this->employeeDetails->hire_date;
+                if ($hireDate) {
+                    $hireDate = Carbon::parse($hireDate);
+                    $currentDate = Carbon::now();
+                    $this->differenceInMonths = $hireDate->diffInMonths($currentDate);
+                } else {
+                    $this->differenceInMonths = null;
+                }
 
+                $this->sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Sick Leave', $this->currentYear);
+                $this->lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Loss Of Pay', $this->currentYear);
+                $this->casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave', $this->currentYear);
+                $this->casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave Probation', $this->currentYear);
+                $this->marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Marriage Leave', $this->currentYear);
+                $this->maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Maternity Leave', $this->currentYear);
+                $this->paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Paternity Leave', $this->currentYear);
+                $leaveBalances = LeaveHelper::getApprovedLeaveDays($this->employeeId, $this->selectedYear);
+
+                $this->totalCasualDays = $leaveBalances['totalCasualDays'];
+                $this->totalSickDays = $leaveBalances['totalSickDays'];
+                $this->totalCasualLeaveProbationDays = $leaveBalances['totalCasualLeaveProbationDays'];
+                $this->totalLossOfPayDays = $leaveBalances['totalLossOfPayDays'];
+
+                $this->sickLeaveBalance = $this->sickLeavePerYear - $this->totalSickDays;
+                $this->casualLeaveBalance = $this->casualLeavePerYear - $this->totalCasualDays;
+                $this->casualProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->totalCasualLeaveProbationDays;
+                $this->lossOfPayBalance = $this->totalLossOfPayDays;
+
+                $this->consumedCasualLeaves = $this->casualLeavePerYear - $this->casualLeaveBalance;
+                $this->consumedSickLeaves = $this->sickLeavePerYear - $this->sickLeaveBalance;
+                $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
+            }
+        } catch (\Exception $e) {
+            logger()->error('Error during component mount: ' . $e->getMessage());
+            session()->flash('mountError', 'An error occurred while loading the component. Please try again later.');
+        }
+    }
 
     //this method will show increment color a color if leave are consumed,
     protected function getTubeColor($consumedLeaves, $leavePerYear, $leaveType)

@@ -6,9 +6,9 @@
         }
     </style>
     @if (session()->has('emp_error'))
-    <div class="alert alert-danger">
-        {{ session('emp_error') }}
-    </div>
+        <div class="alert alert-danger">
+            {{ session('emp_error') }}
+        </div>
     @endif
     <div class="row m-0">
         <div class="d-flex align-items-center justify-content-end gap-3">
@@ -20,7 +20,7 @@
 
             </div>
 
-            <div class="ps-0">
+            <div class="ps-0" style="background-color: pink;">
                 <button wire:click="show" class="btn btn-primary"
                     style="background-color:rgb(2, 17, 79);color:white;font-size:12px;"><i
                         style="color: white;height:10px;width:10px;font-size:12px;" class="fas fa-cog "></i>
@@ -38,156 +38,150 @@
 
                 <div style="position: fixed; top: 15%; left: 50%; transform: translate(-50%, -50%); z-index: 999;">
                     @if (session()->has('password'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert"
-                        style="font-size: 12px;">
-                        <strong>{{ session('password') }}</strong>
-                        <button type="button" class="btn-close btn-xs" data-bs-dismiss="alert"
-                            aria-label="Close"></button>
-                    </div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                            style="font-size: 12px;">
+                            <strong>{{ session('password') }}</strong>
+                            <button type="button" class="btn-close btn-xs" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
                     @endif
                 </div>
             </div>
         </div>
     </div>
     @if ($showAlertDialog)
-    .
-    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header d-flex justify-content-between"
-                    style="background-color: rgb(2, 17, 79);color: white; height: 40px; padding: 8px; position: relative;">
-                    <h6 class="modal-title" id="exampleModalLongTitle">Login
-                        History</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="close"
-                        style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        .
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header d-flex justify-content-between"
+                        style="background-color: rgb(2, 17, 79);color: white; height: 40px; padding: 8px; position: relative;">
+                        <h6 class="modal-title" id="exampleModalLongTitle">Login
+                            History</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="close"
+                            style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
 
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col" style="font-size: 10px;"><b>Last Login</b></div>
-                        <div class="col" style="font-size: 10px;"><b>Last Login Failure</b></div>
-                        <div class="col" style="font-size: 10px;"><b>Last Password Changed</b></div>
                     </div>
-                    <div class="row">
-                        <div class="col" style="font-size: 10px;">{{ $lastLogin }}</div>
-                        <div class="col" style="font-size: 10px;">{{ $lastLoginFailure }}</div>
-                        <div class="col" style="font-size: 10px;">{{ $lastPasswordChanged }}</div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col" style="font-size: 10px;"><b>Last Login</b></div>
+                            <div class="col" style="font-size: 10px;"><b>Last Login Failure</b></div>
+                            <div class="col" style="font-size: 10px;"><b>Last Password Changed</b></div>
+                        </div>
+                        <div class="row">
+                            <div class="col" style="font-size: 10px;">{{ $lastLogin }}</div>
+                            <div class="col" style="font-size: 10px;">{{ $lastLoginFailure }}</div>
+                            <div class="col" style="font-size: 10px;">{{ $lastPasswordChanged }}</div>
+                        </div>
+                        <table class="table-s" border="1" style="margin-top: 10px;width:100%">
+                            <tr class="tr-s">
+                                <th class="th-s"
+                                    style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
+                                    Login Location</th>
+                                <th class="th-s"
+                                    style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
+                                    Device</th>
+                                <th class="th-s"
+                                    style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
+                                    IP Address</th>
+
+
+                            </tr>
+
+                            @foreach ($loginHistory as $history)
+                                <tr class="tr-s">
+                                    <td class="th-d"
+                                        style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                        {{ $history->location }}</td>
+                                    <td class="th-d"
+                                        style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                        {{ $history->device_type }}<br>{{ $history->user_agent }}</td>
+                                    <td class="th-d"
+                                        style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                        {{ $history->ip_address }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
                     </div>
-                    <table class="table-s" border="1" style="margin-top: 10px;width:100%">
-                        <tr class="tr-s">
-                            <th class="th-s"
-                                style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
-                                Login Location</th>
-                            <th class="th-s"
-                                style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
-                                Device</th>
-                            <th class="th-s"
-                                style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
-                                IP Address</th>
-
-
-                        </tr>
-
-                        @foreach ($loginHistory as $history)
-                        <tr class="tr-s">
-                            <td class="th-d"
-                                style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
-                                {{ $history->location }}
-                            </td>
-                            <td class="th-d"
-                                style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
-                                {{ $history->device_type }}<br>{{ $history->user_agent }}
-                            </td>
-                            <td class="th-d"
-                                style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
-                                {{ $history->ip_address }}
-                            </td>
-                        </tr>
-                        @endforeach
-                    </table>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
     @if ($showDialog)
-    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header d-flex justify-content-between"
-                    style="background-color: rgb(2, 17, 79);color: white; height: 40px; padding: 8px; position: relative;">
-                    <h6 class="modal-title" id="exampleModalLongTitle">Change Password</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                        wire:click="remove"
-                        style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header d-flex justify-content-between"
+                        style="background-color: rgb(2, 17, 79);color: white; height: 40px; padding: 8px; position: relative;">
+                        <h6 class="modal-title" id="exampleModalLongTitle">Change Password</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            wire:click="remove"
+                            style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
 
-                </div>
-                <form wire:submit.prevent="changePassword">
-                    @if ($error)
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong style="font-size: 12px;">{{ $error }}</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                            aria-label="Close"></button>
                     </div>
-                    @endif
-                    <div class="modal-body" style="background-color: #f0f0f0;">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card" style="padding: 20px; text-align: left;">
-                                    <div class="form-group">
-                                        <label
-                                            for="oldPassword">Old Password</label>
-                                        <br><input class="form-control placeholder-small" style="font-size: 12px;" type="password"
-                                            id="oldPassword" name="oldPassword"
-                                            placeholder="Enter your old password" wire:model.lazy="oldPassword">
-                                        @error('oldPassword')
-                                        <p class="pt-2 px-1 text-danger" style="font-size:10px">
-                                            {{ str_replace('oldPassword', 'Password', $message) }}
-                                        </p>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label
-                                            for="newPassword">New Password</label>
-                                        <br><input class="form-control placeholder-small" style="font-size: 12px;" type="password"
-                                            id="newPassword" name="newPassword"
-                                            placeholder="Enter your new password" wire:model.lazy="newPassword">
-                                        @error('newPassword')
-                                        <p class="pt-2 px-1 text-danger" style="font-size:10px">
-                                            {{ str_replace('newPassword', 'Password', $message) }}
-                                        </p>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label
-                                            for="confirmNewPassword">Confirm New Password</label>
-                                        <br><input class="form-control placeholder-small" style="font-size: 12px;" type="password"
-                                            id="confirmNewPassword" name="confirmNewPassword"
-                                            placeholder="Enter your new password again"
-                                            wire:model.lazy="confirmNewPassword">
-                                        @error('confirmNewPassword')
-                                        <p class="pt-2 px-1 text-danger" style="font-size:10px">
-                                            {{ str_replace('newPassword', 'Password', $message) }}
-                                        </p>
-                                        @enderror
+                    <form wire:submit.prevent="changePassword">
+                        @if ($error)
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong style="font-size: 12px;">{{ $error }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
+                        <div class="modal-body" style="background-color: #f0f0f0;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card" style="padding: 20px; text-align: left;">
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;color:#778899;font-weight:500;"
+                                                for="oldPassword">Old Password</label>
+                                            <br><input class="form-control" style="font-size: 12px;" type="password"
+                                                id="oldPassword" name="oldPassword"
+                                                placeholder="Enter your old password" wire:model.lazy="oldPassword">
+                                            @error('oldPassword')
+                                                <p class="pt-2 px-1 text-danger" style="font-size:10px">
+                                                    {{ str_replace('oldPassword', 'Password', $message) }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;color:#778899;font-weight:500;"
+                                                for="newPassword">New Password</label>
+                                            <br><input class="form-control" style="font-size: 12px;" type="password"
+                                                id="newPassword" name="newPassword"
+                                                placeholder="Enter your new password" wire:model.lazy="newPassword">
+                                            @error('newPassword')
+                                                <p class="pt-2 px-1 text-danger" style="font-size:10px">
+                                                    {{ str_replace('newPassword', 'Password', $message) }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;color:#778899;font-weight:500;"
+                                                for="confirmNewPassword">Confirm New Password</label>
+                                            <br><input class="form-control" style="font-size: 12px;" type="password"
+                                                id="confirmNewPassword" name="confirmNewPassword"
+                                                placeholder="Enter your new password again"
+                                                wire:model.lazy="confirmNewPassword">
+                                            @error('confirmNewPassword')
+                                                <p class="pt-2 px-1 text-danger" style="font-size:10px">
+                                                    {{ str_replace('newPassword', 'Password', $message) }}</p>
+                                            @enderror
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div style="margin-top: 20px; text-align: center;">
+                                <button class="submit-btn">Save Password</button>
+                            </div>
                         </div>
-                        <div style="margin-top: 20px; text-align: center;">
-                            <button class="submit-btn">Save Password</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
 
     @foreach ($employees as $employee)
@@ -320,20 +314,20 @@
                 </div>
                 <!-- <div class="row" style="margin-top: 20px;">
                     </div> -->
-                <div class="row m-0" style="margin-top: 10px;">
-                    <div class="col-md-12 mb-3">
-                        @if ($editingTimeZone)
-                        <select id="time_zone" name="time_zone" wire:model="selectedTimeZone"
-                            class="form-control" style="width: 150px; font-size: 12px;">
-                            @foreach ($timeZones as $tz)
-                            <option value="{{ $tz }}">{{ $tz }}</option>
-                            @endforeach
-                        </select>
-                        @else
-                        <div style="color: black; font-size: 12px;">{{ $employee->time_zone ?? '-' }}</div>
-                        @endif
+                    <div class="row m-0" style="margin-top: 10px;">
+                        <div class="col-md-12 mb-3">
+                            @if ($editingTimeZone)
+                                <select id="time_zone" name="time_zone" wire:model="selectedTimeZone"
+                                    class="form-control" style="width: 150px; font-size: 12px;">
+                                    @foreach ($timeZones as $tz)
+                                        <option value="{{ $tz }}">{{ $tz }}</option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <div style="color: black; font-size: 12px;">{{ $employee->time_zone ?? '-' }}</div>
+                            @endif
+                        </div>
                     </div>
-                </div>
 
             </div>
             <hr>
@@ -353,17 +347,17 @@
                 </div>
                 <!-- <div class="row" style="color: grey;margin-top: 20px;">
                     </div> -->
-                @if ($editingBiography)
-                <div class="row m-0" style="margin-top: 10px;">
-                    <div class="col-md-12 mb-3" style="color: black; font-size: 12px;">
-                        <textarea style="width:100%;font-size:12px" wire:model="biography" id="biography" class="form-control"
-                            placeholder="Enter Biography" rows="4"></textarea>
-                    </div>
-                </div>
-                @else
-                <div class="row m-0" style="margin-top: 10px;">
-                    <div class="col-md-12 mb-3" style="color: black; font-size: 12px;">
-                        {{ $employee->empPersonalInfo && !empty($employee->empPersonalInfo->biography)
+                    @if ($editingBiography)
+                        <div class="row m-0" style="margin-top: 10px;">
+                            <div class="col-md-12 mb-3" style="color: black; font-size: 12px;">
+                                <textarea style="width:100%;font-size:12px" wire:model="biography" id="biography" class="form-control"
+                                    placeholder="Enter Biography" rows="4"></textarea>
+                            </div>
+                        </div>
+                    @else
+                        <div class="row m-0" style="margin-top: 10px;">
+                            <div class="col-md-12 mb-3" style="color: black; font-size: 12px;">
+                                {{ $employee->empPersonalInfo && !empty($employee->empPersonalInfo->biography)
                                     ? ucwords(strtolower($employee->empPersonalInfo->biography))
                                     : '-' }}
 

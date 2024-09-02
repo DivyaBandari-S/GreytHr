@@ -46,7 +46,7 @@ class LeaveCancelPage extends Component
     public $empManagerDetails, $selectedManagerDetails;
     public $showAlert = false;
     protected $rules = [
-        'leave_cancel_reasona' => 'required',
+        'leave_cancel_reason' => 'required',
     ];
 
     protected $messages = [
