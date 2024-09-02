@@ -138,17 +138,22 @@ class Tasks extends Component
         }
 
         if ($this->search) {
-            $query->where(function ($query) {
-                $query->where('assignee', 'like', '%' . $this->search . '%')
-                    ->orWhere('followers', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('emp', function ($query) {
-                        $query->where('first_name', 'like', '%' . $this->search . '%')
-                            ->orWhere('last_name', 'like', '%' . $this->search . '%');
+            $searchTerm = trim($this->search); // Trim any extra whitespace
+            $searchTerm = strtolower($searchTerm); // Convert to lowercase for case-insensitivity
+        
+            $query->where(function ($query) use ($searchTerm) {
+                $query->whereRaw('LOWER(assignee) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(followers) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereHas('emp', function ($query) use ($searchTerm) {
+                        $query->whereRaw('LOWER(first_name) LIKE ?', ["%{$searchTerm}%"])
+                            ->orWhereRaw('LOWER(last_name) LIKE ?', ["%{$searchTerm}%"]);
                     })
-                    ->orWhere('task_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('emp_id', 'like', '%' . $this->search . '%');
+                    ->orWhereRaw('LOWER(task_name) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(emp_id) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(CONCAT("T-", id)) LIKE ?', ["%{$searchTerm}%"]);
             });
         }
+        
 
         $this->filterData = $query->orderBy('created_at', 'desc')->get();
         $this->peopleFound = count($this->filterData) > 0;
@@ -192,15 +197,19 @@ class Tasks extends Component
 
 
         if ($this->closedSearch) {
-            $query->where(function ($query) {
-                $query->where('assignee', 'like', '%' . $this->closedSearch . '%')
-                    ->orWhere('followers', 'like', '%' . $this->closedSearch . '%')
-                    ->orWhereHas('emp', function ($query) {
-                        $query->where('first_name', 'like', '%' . $this->closedSearch . '%')
-                            ->orWhere('last_name', 'like', '%' . $this->closedSearch . '%');
+            $searchTerm = trim($this->closedSearch); // Trim any extra whitespace
+            $searchTerm = strtolower($searchTerm); // Convert to lowercase for case-insensitivity
+        
+            $query->where(function ($query) use ($searchTerm) {
+                $query->whereRaw('LOWER(assignee) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(followers) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereHas('emp', function ($query) use ($searchTerm) {
+                        $query->whereRaw('LOWER(first_name) LIKE ?', ["%{$searchTerm}%"])
+                            ->orWhereRaw('LOWER(last_name) LIKE ?', ["%{$searchTerm}%"]);
                     })
-                    ->orWhere('task_name', 'like', '%' . $this->closedSearch . '%')
-                    ->orWhere('emp_id', 'like', '%' . $this->closedSearch . '%');
+                    ->orWhereRaw('LOWER(task_name) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(emp_id) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(CONCAT("T-", id)) LIKE ?', ["%{$searchTerm}%"]);
             });
         }
 
