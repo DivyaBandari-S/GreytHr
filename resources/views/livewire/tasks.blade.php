@@ -202,7 +202,7 @@
                                             <td
                                                 style="padding: 10px; border:none;font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">
 
-                                                {{ ucfirst($record->assignee) }}
+                                                {{ ucwords(strtolower($record->assignee)) }}
                                             </td>
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">
@@ -434,7 +434,7 @@
 
                                             <td
                                                 style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
-                                                {{ ucfirst($record->assignee) }}
+                                                {{ ucwords(strtolower($record->assignee)) }}
                                             </td>
 
                                             <td
