@@ -23,6 +23,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\CleanupLivewireTempFiles::class,
+        \Sarfraznawaz2005\Loading\Http\Middleware\LoadingMiddleware::class
     ];
 
     /**

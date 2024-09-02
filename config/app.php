@@ -187,6 +187,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
         Vinkla\Hashids\HashidsServiceProvider::class,
+        Sarfraznawaz2005\Loading\ServiceProvider::class,
     ])->toArray(),
 
     /*
