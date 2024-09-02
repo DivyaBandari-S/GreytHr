@@ -115,6 +115,7 @@ class Home extends Component
     public $lat;
     public function mount()
     {
+        $this->fetchSwipeData();
         $this->fetchWeather();
 
 
@@ -157,8 +158,6 @@ class Home extends Component
 
     public function fetchSwipeData()
     {
-        // Debug configuration
-        //dd(config('database.connections.odbc'));
 
         $currentDate = Carbon::today();
         $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
@@ -172,14 +171,16 @@ class Home extends Component
         $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
 
         try {
+
             // Get data from SQL Server for the normalized user ID
-            $this->dataSqlServer = DB::connection('odbc')
+            $dataSqlServer = DB::connection('sqlsrv')
                 ->table($tableName)
                 ->select('UserId', 'logDate', 'Direction')
                 ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
                 ->whereDate('logDate', $today) // Filter for today's date
                 ->orderBy('logDate')
                 ->get();
+            // dd($dataSqlServer);
         } catch (\Exception $e) {
             // Handle the error
             $this->dataSqlServer = collect(); // or handle error as needed
