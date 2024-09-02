@@ -369,7 +369,7 @@
                         <h5 class="mb-0">{{$casualLeaveBalance}}</h5>
                         <p class="mb-0 remaining" >Balance</p>
                         @if($casualLeavePerYear)
-                        <a href="/casualleavebalance?year={{ $currentYear }}" style="font-size:12px;">View Details</a>
+                        <a href="/leave-balances/casualleavebalance?year={{ $currentYear }}" style="font-size:12px;">View Details</a>
                         @endif
                     </div>
                     <div class="px-3 ">
@@ -400,7 +400,7 @@
                         <h5 class="mb-0">{{ $sickLeaveBalance }}</h5>
                         <p class="mb-0 remaining" >Balance</p>
                         @if($sickLeavePerYear > 0)
-                        <a href="/sickleavebalance?year={{$currentYear}}" style="font-size:12px;">View Details</a>
+                        <a href="/leave-balances/sickleavebalance?year={{$currentYear}}" style="font-size:12px;">View Details</a>
                         @endif
                     </div>
                     <div class="px-3">
@@ -432,9 +432,9 @@
                         <h5 class="mb-0">{{ $casualProbationLeaveBalance }}</h5>
                         <p class="mb-0 remaining" >Balance</p>
                         @if($casualProbationLeavePerYear > 0)
-                        <a href="/casualprobationleavebalance?year={{$currentYear}}" style="font-size:12px;">View Details</a>
+                        <a href="/leave-balances/casualprobationleavebalance?year={{$currentYear}}" style="font-size:12px;">View Details</a>
                         @endif
-                    </div>  
+                    </div>
                     <div class="px-3">
                     <div class="tube-container">
                         <p class="mb-0" style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">

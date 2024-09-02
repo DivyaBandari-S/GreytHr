@@ -17,6 +17,7 @@
             <div class="heading rounded mb-3">
                 <div class="heading-2 rounded">
                     <div class="d-flex flex-row justify-content-between rounded">
+                        @if($leaveRequest->category_type == 'Leave')
                         <div class="field">
                             <span class="normalTextValue">
                                 @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
@@ -24,7 +25,7 @@
                                 @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
                                 Approved by
                                 @else
-                                Pending with
+                                Rejected by
                                 @endif
                             </span>
                             <br>
@@ -40,7 +41,33 @@
                             @endforeach
                             @endif
                         </div>
+                        @else
+                        <div class="field">
+                            <span class="normalTextValue">
+                                @if($leaveRequest->cancel_status == 'Pending Leave Cancel')
+                                Pending with
+                                @elseif(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+                                Approved by
+                                @else
+                                Rejected by
+                                @endif
+                            </span>
+                            <br>
+                            @if(strtoupper($leaveRequest->cancel_status) == 'WITHDRAWN')
+                            <span class="normalText">
+                                {{ ucwords(strtoupper($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtoupper($this->leaveRequest->employee->last_name)) }}
+                            </span>
+                            @elseif(!empty($leaveRequest['applying_to']))
+                            @foreach($leaveRequest['applying_to'] as $applyingTo)
+                            <span class="normalText">
+                                {{ ucwords(strtoupper($applyingTo['report_to'] ))}}
+                            </span>
+                            @endforeach
+                            @endif
+                        </div>
+                        @endif
                         <div>
+                            @if($leaveRequest->category_type == 'Leave')
                             <span>
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
@@ -56,6 +83,23 @@
 
                                 @endif
                             </span>
+                            @else
+                            <span>
+                                @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+
+                                <span class="approvedColor mt-2">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
+
+                                <span class="rejectColor mt-2">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @else
+
+                                <span class="otherStatus mt-2">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @endif
+                            </span>
+                            @endif
                         </div>
                     </div>
                     <div class="middle-container">
@@ -247,16 +291,17 @@
                         <div class="v-line"></div>
                         <div class=cirlce></div>
                     </div>
-                    <div class="mt-4 d-flex flex-column" style="gap: 70px;">
+                    <div class="mt-4 d-flex flex-column" style="gap: 60px;">
                         <div class="group">
                             <div>
-                                <h5 class="normalText text-start">
+                               @if($leaveRequest->category_type == 'Leave')
+                               <h5 class="normalText text-start">
                                     @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                                     Withdrawn <br><span class="normalText text-start">by</span>
                                     <span class="normalTextValue text-start">
                                         {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
                                     </span>
-                                    @elseif(strtoupper($leaveRequest->status) == 'PENDING')
+                                    @elseif($leaveRequest->status == 'Pending')
                                     <span class="normalTextValue text-start"> Pending <br> with</span>
                                     @if(!empty($leaveRequest['applying_to']))
                                     @foreach($leaveRequest['applying_to'] as $applyingTo)
@@ -271,6 +316,29 @@
                                     @endif
                                     <br>
                                 </h5>
+                               @else
+                               <h5 class="normalText text-start">
+                                    @if(strtoupper($leaveRequest->cancel_status) == 'WITHDRAWN')
+                                    Withdrawn <br><span class="normalText text-start">by</span>
+                                    <span class="normalTextValue text-start">
+                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
+                                    </span>
+                                    @elseif($leaveRequest->cancel_status == 'Pending Leave Cancel')
+                                    <span class="normalTextValue text-start"> Pending <br> with</span>
+                                    @if(!empty($leaveRequest['applying_to']))
+                                    @foreach($leaveRequest['applying_to'] as $applyingTo)
+                                    <span class="normalText text-start">
+                                        {{ ucwords(strtolower($applyingTo['report_to'] ))}}
+                                    </span>
+                                    @endforeach
+                                    @endif
+                                    @else
+                                    Rejected by
+                                    <span class="normalText"> {{ ucwords(strtolower($applyingTo['report_to'] ))}}</span>
+                                    @endif
+                                    <br>
+                                </h5>
+                               @endif
                             </div>
 
                         </div>
