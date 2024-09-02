@@ -1003,6 +1003,21 @@ button.close-button {
     .displayBlock {
         display: block !important;
     }
+    .employee-list {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .employee-item {
+        display: inline-block;
+        min-width: 150px; /* Adjust width as needed */
+    }
+
+    .employee-item .text-container {
+        white-space: nowrap; /* Prevent text from wrapping to the next line */
+        overflow: hidden; /* Hide overflowed text */
+        text-overflow: ellipsis; /* Add ellipsis (...) */
+        max-width: 100px; /* Set a maximum width for the container */
+    }
 }
 /* end of app.blade */
 
@@ -1511,16 +1526,14 @@ input[type="date"]::before {
     display: flex;
     justify-content: space-between;
 }
-.employee-swipes-fields
-{
+.employee-swipes-fields {
     display: flex;
     flex-direction: row;
 }
-.dropdown-container1-employee-swipes-for-download-and-filter
-{
+.dropdown-container1-employee-swipes-for-download-and-filter {
     display: flex;
     flex-direction: row;
-    margin-top:-5px;
+    margin-top: -5px;
 }
 .container-employee-swipes-right {
     background-color: #fff;
@@ -3207,7 +3220,7 @@ l
     cursor: pointer;
     font-size: 10px;
 }
-.reviewCountShow{
+.reviewCountShow {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -3242,13 +3255,19 @@ l
     align-items: center;
     line-height: 1.6;
 }
-#searchButtonReview{
-    position: absolute; right: 8px; top: 50%; transform: translateY(-50%); border: none; outline: none; background: rgb(2, 17, 79);  padding: 3px 12px;
+#searchButtonReview {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    outline: none;
+    background: rgb(2, 17, 79);
+    padding: 3px 12px;
     color: white;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-
 
 @media screen and (max-width: 1060px) {
     .detail-container {
@@ -3288,7 +3307,7 @@ l
     .view-container {
         width: 100%;
     }
-    .reviewCountShow{
+    .reviewCountShow {
         display: flex;
         flex-direction: column;
         justify-content: start;
@@ -5127,7 +5146,6 @@ option {
     background-color: #17a2b8;
     left: 100%;
     top: 5%;
-
 }
 
 .payslip-small-desc {
@@ -5202,7 +5220,7 @@ option {
     left: 10px; */
     padding: 10px 10px 10px 15px;
     text-align: left;
-  }
+}
 .track-text {
     font-size: 12px !important;
 }
