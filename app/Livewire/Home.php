@@ -111,10 +111,12 @@ class Home extends Component
     public $country;
     public $postal_code;
     public $dataSqlServer;
+    public $lon;
+    public $lat;
     public function mount()
     {
         $this->fetchWeather();
-
+        $this->fetchSwipeData();
 
         $currentHour = date('G');
 
@@ -152,39 +154,94 @@ class Home extends Component
             ->count();
     }
 
+    //################################ in local this is working ################################################
+    // public function fetchSwipeData()
+    // {
+
+    //     $currentDate = Carbon::today();
+    //     $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+    //     $month = $currentDate->format('n');
+    //     $year = $currentDate->format('Y');
+
+    //     // Construct the table name for SQL Server
+    //     $tableName = 'DeviceLogs_' . $month . '_' . $year;
+
+    //     $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+    //     $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+
+    //     try {
+
+    //         // Get data from SQL Server for the normalized user ID
+    //         $dataSqlServer = DB::connection('sqlsrv')
+    //             ->table($tableName)
+    //             ->select('UserId', 'logDate', 'Direction')
+    //             ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
+    //             ->whereDate('logDate', $today) // Filter for today's date
+    //             ->orderBy('logDate')
+    //             ->get();
+    //         // dd($dataSqlServer);
+    //     } catch (\Exception $e) {
+    //         // Handle the error
+    //         $this->dataSqlServer = collect(); // or handle error as needed
+    //         // Log error or display message
+    //         logger()->error("Data fetch error: " . $e->getMessage());
+    //     }
+    // }
+    //################################ in sever this is working ################################################
 
     public function fetchSwipeData()
     {
-        // Debug configuration
-        //dd(config('database.connections.odbc'));
-
         $currentDate = Carbon::today();
         $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
         $month = $currentDate->format('n');
         $year = $currentDate->format('Y');
 
-        // Construct the table name for SQL Server
         $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        $appUserId = Auth::user()->emp_id;
+        $normalizedUserId = str_replace('-', '', $appUserId);
 
-        $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
-        $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+        $dsn = env('DB_ODBC_DSN');
+        $username = env('DB_ODBC_USERNAME');
+        $password = env('DB_ODBC_PASSWORD');
 
         try {
-            // Get data from SQL Server for the normalized user ID
-            $this->dataSqlServer = DB::connection('odbc')
-                ->table($tableName)
-                ->select('UserId', 'logDate', 'Direction')
-                ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
-                ->whereDate('logDate', $today) // Filter for today's date
-                ->orderBy('logDate')
-                ->get();
-        } catch (\Exception $e) {
+            $pdo = new \PDO("odbc:{$dsn}", $username, $password);
+            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+            $sql = "
+                SELECT UserId, logDate, Direction
+                FROM {$tableName}
+                WHERE UserId = :userId
+                AND CAST(logDate AS DATE) = :today
+                ORDER BY logDate
+            ";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':userId', $normalizedUserId, \PDO::PARAM_STR);
+            $stmt->bindParam(':today', $today, \PDO::PARAM_STR);
+            $stmt->execute();
+
+            $this->dataSqlServer = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            // Return results
+            return $this->dataSqlServer;
+        } catch (\PDOException $e) {
             // Handle the error
-            $this->dataSqlServer = collect(); // or handle error as needed
-            // Log error or display message
-            logger()->error("Data fetch error: " . $e->getMessage());
+            $this->dataSqlServer = [];
+            logger()->error("PDO error: " . $e->getMessage());
+            // Return or handle error result
+            return ['error' => 'PDO error: ' . $e->getMessage()];
+        } catch (\Exception $e) {
+            // General error handling
+            $this->dataSqlServer = [];
+            logger()->error("General error: " . $e->getMessage());
+            // Return or handle error result
+            return ['error' => 'General error: ' . $e->getMessage()];
         }
     }
+
+
+
 
     public function reviewLeaveAndAttendance()
     {
@@ -768,8 +825,8 @@ class Home extends Component
             // Get the IP address and determine location
             $ip = request()->ip();
             $location = GeoIP::getLocation($ip);
-            $lat = $location['lat'];
-            $lon = $location['lon'];
+            $this->lat = $location['lat'];
+            $this->lon = $location['lon'];
             $this->country = $location['country'];
             $this->city = $location['city'];
             $this->postal_code = $location['postal_code'];
@@ -778,7 +835,7 @@ class Home extends Component
             $apiUrl = env('WEATHER_API_URL');
 
             // Prepare the request URL with dynamic latitude and longitude
-            $requestUrl = $apiUrl . '?latitude=' . $lat . '&longitude=' . $lon . '&current_weather=true';
+            $requestUrl = $apiUrl . '?latitude=' . $this->lat . '&longitude=' . $this->lon . '&current_weather=true';
 
             // Log request URL for debugging
             Log::info("Request URL: $requestUrl");

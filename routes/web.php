@@ -113,6 +113,7 @@ use Vinkla\Hashids\Facades\Hashids;
 use App\Models\HelpDesks;
 use App\Models\Task;
 use Illuminate\Support\Facades\File;
+
 Route::group(['middleware' => 'checkAuth'], function () {
 
     Route::get('/emplogin', EmpLogin::class)->name('emplogin');
@@ -244,7 +245,7 @@ Route::middleware(['auth:admins', 'handleSession'])->group(function () {
 });
 
 
-Route::middleware(['auth:emp', 'handleSession'])->group(function () {
+Route::middleware(['auth:emp','handleSession'])->group(function () {
     Route::get('/google-redirect', [GoogleDriveController::class, 'auth'])
         ->name('google-redirect');
     Route::get('/google-callback', [GoogleDriveController::class, 'callback'])
@@ -343,7 +344,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // TODO module
     Route::get('/tasks', Tasks::class)->name('tasks');
-  
+
     Route::get('/employees-review', EmployeesReview::class)->name('review');
     Route::get('/reports', ReportManagement::class)->name('reports');
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');
@@ -526,54 +527,7 @@ Route::get('/test-odbc-env', function () {
 });
 
 
-Route::get('/test-odbc-data', function () {
-    try {
-        // Fetch connection details from configuration
-        $config = config('database.connections.odbc');
-        $dsn = $config['dsn'];
-        $username = $config['username'];
-        $password = $config['password'];
 
-        // Create a new PDO instance
-        $dbh = new PDO("odbc:{$dsn}", $username, $password);
-
-        // Define your table name and user ID
-        $tableName = 'DeviceLogs_8_2024'; // Replace with your actual table name
-        $normalizedUserId = 'XSS0488'; // Replace with your actual user ID
-        $today = now()->toDateString(); // Get today's date in 'Y-m-d' format
-
-        // Fetch data using raw PDO query
-        $stmt = $dbh->prepare("SELECT UserId, logDate, Direction FROM {$tableName} WHERE UserId = ? AND CAST(logDate AS DATE) = ? ORDER BY logDate");
-        $stmt->execute([$normalizedUserId, $today]);
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Output the data for debugging
-        dump($data);
-
-        return "Data fetched successfully!";
-    } catch (\PDOException $e) {
-        return "Error: " . $e->getMessage();
-    }
-});
-
-
-
-Route::get('/test-odbc-conf', function () {
-    try {
-        $dsn = config('database.connections.odbc.dsn');
-        $username = config('database.connections.odbc.username');
-        $password = config('database.connections.odbc.password');
-
-        $dbh = new PDO("odbc:{$dsn}", $username, $password);
-
-        // Optionally, perform a query
-        // $result = $dbh->query("SELECT TOP 1 * FROM YourTableName")->fetchAll(PDO::FETCH_ASSOC);
-
-        return "Connection successful!";
-    } catch (\PDOException $e) {
-        return "Connection failed: " . $e->getMessage();
-    }
-});
 
 Route::get('/test-odbc-dir', function () {
     try {

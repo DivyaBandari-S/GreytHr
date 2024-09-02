@@ -70,19 +70,20 @@ class LeaveHelper
         }
     }
 
-
     private static function getSessionNumber($session)
     {
         // You might need to customize this based on your actual session values
         return (int) str_replace('Session ', '', $session);
     }
 
-    public static function getApprovedLeaveDays($employeeId)
+    public static function getApprovedLeaveDays($employeeId, $selectedYear)
     {
         // Fetch approved leave requests
+        $selectedYear = (int) $selectedYear;
         $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where('status', 'approved')
             ->whereIn('leave_type', ['Casual Leave Probation', 'Loss Of Pay', 'Sick Leave', 'Casual Leave', 'Maternity Leave', 'Marriage Leave', 'Petarnity Leave'])
+            ->whereYear('to_date', '=', $selectedYear)
             ->get();
         $totalCasualDays = 0;
         $totalCasualLeaveProbationDays = 0;
