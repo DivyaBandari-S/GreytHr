@@ -103,11 +103,14 @@ class LeaveBalances extends Component
             session()->flash('mountError', 'An error occurred while loading the component. Please try again later.');
         }
     }
-    public function updatedSelectedYear()
+    public function updatedSelectedYear($value)
     {
+        // Debugging output
+        logger()->info('Selected Year Updated: ' . $value);
         $this->updateLeaveBalances();
     }
-    
+
+
     private function updateLeaveBalances()
     {
         try {
@@ -116,7 +119,7 @@ class LeaveBalances extends Component
             $this->employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
             $this->fromDateModal = Carbon::createFromDate($this->currentYear, 1, 1)->format('Y-m-d');
             $this->toDateModal = Carbon::createFromDate($this->currentYear, 12, 31)->format('Y-m-d');
-            
+
             if ($this->employeeDetails) {
                 $hireDate = $this->employeeDetails->hire_date;
                 if ($hireDate) {
@@ -135,7 +138,6 @@ class LeaveBalances extends Component
                 $this->maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Maternity Leave', $this->currentYear);
                 $this->paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Paternity Leave', $this->currentYear);
                 $leaveBalances = LeaveHelper::getApprovedLeaveDays($this->employeeId, $this->selectedYear);
-
                 $this->totalCasualDays = $leaveBalances['totalCasualDays'];
                 $this->totalSickDays = $leaveBalances['totalSickDays'];
                 $this->totalCasualLeaveProbationDays = $leaveBalances['totalCasualLeaveProbationDays'];
@@ -275,15 +277,13 @@ class LeaveBalances extends Component
             $marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $selectedYear);
             $maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $selectedYear);
             $paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Petarnity Leave', $selectedYear);
-            $lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Loss Of Pay', $selectedYear);
 
             if (!$employeeDetails) {
                 return null;
             }
 
             // Get the logged-in employee's approved leave days for all leave types
-            $approvedLeaveDays = LeaveHelper::getApprovedLeaveDays($employeeId);
-
+            $approvedLeaveDays = LeaveHelper::getApprovedLeaveDays($employeeId, $selectedYear);
             // Calculate leave balances
             $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];
             $casualLeaveBalance = $casualLeavePerYear - $approvedLeaveDays['totalCasualDays'];
