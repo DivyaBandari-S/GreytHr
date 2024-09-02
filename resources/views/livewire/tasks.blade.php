@@ -109,7 +109,7 @@
 
         @if ($activeTab == 'open')
             <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
-                <form class="form-inline row" style="margin-bottom: -15px;">
+                <div class="form-inline row" style="margin-bottom: -15px;">
                     <!-- Search Box -->
                     <div class="input-group people-input-group-container">
                         <input wire:model="search" type="text" class="form-control people-search-input"
@@ -122,10 +122,19 @@
                     </div>
 
                     <div class="form-group task-date-range-picker">
-                        <!-- <label for="drp" class="form-label">DateRangePicker</label> -->
-                        <livewire:date-component key="{{ 'drp-' . uniqid() }}" :start="$start" :end="$end" />
+                       
+                            <select class="form-select task-custom-select-width"
+                                wire:model="filterPeriod"
+                               >
+                                <option value="all" selected>All</option>
+                                <option value="this_week">This Week</option>
+                                <option value="this_month">This Month</option>
+                                <option value="last_month">Last Month</option>
+                                <option value="this_year">This Year</option>
+                            </select>
+                        
                     </div>
-                </form>
+                </div>
             </div>
             <div class="card-body"
                 style="background-color:white;width:100%;border-radius:5px;max-height:400px;overflow-y:auto;overflow-y:auto;margin-top: 10px;">
@@ -331,7 +340,7 @@
 
         @if ($activeTab == 'completed')
             <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
-                <form wire:submit.prevent="applyFilters" class="form-inline row" style="margin-bottom: -15px;">
+                <div class="form-inline row" style="margin-bottom: -15px;">
                     <!-- Search Box -->
                     <div class="input-group people-input-group-container">
                         <input wire:model="closedSearch" type="text" class="form-control people-search-input"
@@ -344,12 +353,19 @@
                     </div>
 
                     <div class="form-group task-date-range-picker">
-
-                        <livewire:date-component key="{{ 'drp-' . uniqid() }}" :start="$start" :end="$end" />
+                        <select class="form-select task-custom-select-width"
+                                wire:model="filterPeriod"
+                               >
+                                <option value="all" selected>All</option>
+                                <option value="this_week">This Week</option>
+                                <option value="this_month">This Month</option>
+                                <option value="last_month">Last Month</option>
+                                <option value="this_year">This Year</option>
+                            </select>
                     </div>
 
 
-                </form>
+                </div>
             </div>
             <div class="card-body"
                 style="background-color:white;width:100%;border-radius:5px;max-height:300px;overflow-y:auto;overflow-x:auto;margin-top: 10px;">
@@ -576,7 +592,7 @@
                                     <i wire:click="forAssignee"  wire:change="autoValidate" class="fa fa-user icon" id="profile-icon"></i>
                                     @if ($showRecipients)
                                         <strong style="font-size: 12;" >Selected assignee:
-                                        </strong><span title="{{$selectedPeopleName}}">{{ $selectedPeopleName }}</span>
+                                        </strong><span>{{ $selectedPeopleName }}</span>
                                     @else
                                         <a wire:click="forAssignee"  class="hover-link" style="color:black;cursor:pointer"> Add Assignee</a>
                                     @endif <br>
@@ -805,7 +821,7 @@
                                         class="fas fa-user icon" id="profile-icon"></i>
                                     @if ($showFollowers)
                                         <strong style="font-size: 12;">Selected Followers:
-                                        </strong><span title="{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}">{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</span>
+                                        </strong><span>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</span>
                                     @else
                                         <a wire:click="forFollowers" class="hover-link" style="color:black;cursor:pointer"> Add Followers</a>
                                     @endif
@@ -911,8 +927,7 @@
                                 </div>
 
                                 <!-- File Input -->
-                                <div id="flash-message-container" style="display: none;" class="alert alert-success"
-                                    role="alert"></div>
+                                
                                 <div class="row">
                                     {{-- <div class="col">
                                         <label for="fileInput"
@@ -925,13 +940,16 @@
                                             <i class="fa fa-paperclip"></i> Attach Image
                                         </label>
                                     </div>
-                                    @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                   
                                 </div>
                                 
                             <div>
                                 <input type="file" style="font-size: 0.75rem;" wire:model="file_path" id="file_path" wire:change="autoValidate" class="form-control" onchange="handleImageChange()">
+                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
 
                             </div>
+                            <div id="flash-message-container" style="display: none; margin-top: 10px;" class="alert alert-success"
+                                    role="alert"></div>
 
 
                                 {{-- <input wire:change="autoValidate" style="font-size: 0.75rem;" wire:model="image"

@@ -185,131 +185,134 @@
     @endif
 
     @foreach ($employees as $employee)
-        <div class="row m-0">
-            <div class="col-md-2"></div>
-            <div class="card col-md-8" style="margin-top:20px;padding:10px">
-                <div class="row m-0">
-                    <div class="col-md-2">
-                        @if (!empty($employee->image) && $employee->image !== 'null')
-                            <img class="settings-profile-image"
-                                src="{{ 'data:image/jpeg;base64,' . base64_encode($employee->image) }}">
-                        @else
-                            @if ($employee && $employee->gender == 'Male')
-                                <img class="settings-profile-image" src="{{ asset('images/male-default.png') }}"
-                                    alt="Default Male Image">
-                            @elseif($employee && $employee->gender == 'Female')
-                                <img class="settings-profile-image" src="{{ asset('images/female-default.jpg') }}"
-                                    alt="Default Female Image">
-                            @else
-                                <img class="settings-profile-image" src="{{ asset('images/user.jpg') }}"
-                                    alt="Default Image">
-                            @endif
-                        @endif
+    <div class="row m-0">
+        <div class="col-md-2"></div>
+        <div class="card col-md-8 p-2">
+            <div class="row m-0 p-0 d-flex">
+                <div class="col-lg-2 col-md-12 text-center">
+                    @if (!empty($employee->image) && $employee->image !== 'null')
+                    <img class="settings-profile-image"
+                        src="{{ 'data:image/jpeg;base64,' . base64_encode($employee->image) }}">
+                    @else
+                    @if ($employee && $employee->gender == 'Male')
+                    <img class="settings-profile-image" src="{{ asset('images/male-default.png') }}"
+                        alt="Default Male Image">
+                    @elseif($employee && $employee->gender == 'Female')
+                    <img class="settings-profile-image" src="{{ asset('images/female-default.jpg') }}"
+                        alt="Default Female Image">
+                    @else
+                    <img class="settings-profile-image" src="{{ asset('images/user.jpg') }}"
+                        alt="Default Image">
+                    @endif
+                    @endif
 
+                </div>
+                <div class="col-lg-3 col-md-6 text-start">
+                    <div class="mb-2" style="font-size:13px;">
+                        <strong>{{ ucwords(strtolower($employee->first_name)) }}
+                            {{ ucwords(strtolower($employee->last_name)) }}</strong>
                     </div>
-                    <div class="col-md-5">
-                        <div class="mb-2" style="font-size:13px;">
-                            <strong>{{ ucwords(strtolower($employee->first_name)) }}
-                                {{ ucwords(strtolower($employee->last_name)) }}</strong>
-                        </div>
-                        <div style="font-size: 12px; color: #000;">
-                            <div style="display: inline-block;width:65px;color:#778899;">Emp ID</div> : <span
-                                style="font-weight:500; padding:0 5px;">{{ $employee->emp_id }}</span>
-                        </div>
-
-                        <div style="font-size:12px;color: #000;">
-                            <div style="display: inline-block;width:65px;color:#778899;">Location</div> : <span
-                                style="font-weight:500; padding:0 5px;">{{ !empty($employee->job_location) ? ucwords(strtolower($employee->job_location)) : '-' }}
-                            </span>
-                        </div>
-                        <div style="font-size:12px;color: #000;">
-                            <div style="display: inline-block;width:65px;color:#778899;">Role</div> : <span
-                                style="font-weight:500; padding:0 5px;">{{ !empty($employee->job_role) ? ucwords(strtolower($employee->job_role)) : '-' }}</span>
-                        </div>
+                    <div style="font-size: 12px; color: #000;">
+                        <div style="display: inline-block;width:65px;color:#778899;">Emp ID</div> : <span
+                            style="font-weight:500; padding:0 5px;">{{ $employee->emp_id }}</span>
                     </div>
-                    <div class="col-md-5" style="margin-top: 15px;">
-                        <div style="font-size:12px;color: #000;">
-                            <div style="display: inline-block;width:100px;color:#778899;">Official Birthday</div> :
-                            <span style="font-weight:500; padding:0 5px;">
-                                {{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
+                </div>
+                <div class="col-lg-3 col-md-6 text-start" >
+                    <div style="font-size:12px;color: #000;">
+                        <div style="display: inline-block;width:100px;color:#778899;">Official Birthday</div> :
+                        <span style="font-weight:500; padding:0 5px;">
+                            {{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
                                     ? date('d M, Y', strtotime($employee->empPersonalInfo->date_of_birth))
                                     : '-' }}</span>
 
-                        </div>
-                        <div style="font-size:12px;color: #000;">
-                            <div style="display: inline-block;width:100px;color:#778899;">Department</div> : <span
-                                style="font-weight:500; padding:0 5px;">{{ ucwords(strtolower($employee->empDepartment->department)) ?? '-' }}</span>
-                        </div>
+                    </div>
+                    <div style="font-size:12px;color: #000;">
+                        <div style="display: inline-block;width:100px;color:#778899;">Department</div> : <span
+                            style="font-weight:500; padding:0 5px;">{{ ucwords(strtolower($employee->empDepartment->department)) ?? '-' }}</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-start" >
+                <div style="font-size:12px;color: #000;">
+                        <div style="display: inline-block;width:65px;color:#778899;">Location</div> : <span
+                            style="font-weight:500; padding:0 5px;">{{ !empty($employee->job_location) ? ucwords(strtolower($employee->job_location)) : '-' }}
+                        </span>
+                    </div>
+                    <div style="font-size:12px;color: #000;">
+                        <div style="display: inline-block;width:65px;color:#778899;">Designation</div> : <span
+                            style="font-weight:500; padding:0 5px;">{{ !empty($employee->job_role) ? ucwords(strtolower($employee->job_role)) : '-' }}</span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2"></div>
         </div>
-        <div class="row m-0">
-            <div class="col-md-2"></div>
-            <div class="card col-md-8 p-0" style="margin-top: 20px;height:auto;margin-bottom:10px">
-                <div class="card-header" style="background-color: rgb(2, 17, 79);color:white;font-size: 15px">
-                    My Profile
-                </div>
-                <div class="container mt-3">
-                    <div class="col-md-6 mb-3" style="color:#778899;font-size:12px;"><strong>Profile</strong></div>
-                    <div class="row m-0" style="margin-top: 20px;">
-                        <div class="col-md-4 mb-3" style="color: #778899;font-size: 12px;">
-                            Nick Name
-                        </div>
-                        <div class="col-md-4 mb-3" style="color: #778899;font-size: 12px">
-                            Wish Me On
-                        </div>
-                        <div class="col-md-4 mb-3" style="text-align: end; font-size:  12px; cursor: pointer;">
-                            @if ($editingNickName)
-                                <!-- <i wire:click="editProfile" class="fas fa-edit"></i> -->
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row m-0">
+        <div class="col-md-2"></div>
+        <div class="card col-md-8 p-0" style="margin-top: 20px;height:auto;margin-bottom:10px">
+            <div class="card-header" style="background-color: rgb(2, 17, 79);color:white;font-size: 15px">
+                My Profile
+            </div>
+            <div class="container mt-3">
+                <div class="row m-0" style="font-size: 12px;">
+                    <div class="col-6 mb-3" style="color:#778899;font-size:12px;">
+                        <strong>Profile</strong>
+                    </div>
+                    <div class="col-6 mb-3" style="text-align: end; cursor: pointer;">
+                        @if ($editingNickName)
+                        
                                 <i wire:click="cancelProfile" class="fas fa-times me-3"></i>
                                 <i wire:click="saveProfile" class="fa fa-save"></i>
-                            @else
-                                <i wire:click="editProfile" class="fas fa-edit"></i>
-                            @endif
-                        </div>
+                            
+                        @else
+                            <i wire:click="editProfile" class="fas fa-edit"></i>
+                        @endif
                     </div>
-                    @if ($editingNickName)
-                        <div class="row m-0" style="margin-top: 10px;">
-                            <div class="col-md-4 mb-3">
-                                <input style="font-size:12px" type="text" class="form-control custom-placeholder"
-                                    wire:model="nickName" placeholder="Enter Nick Name">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <input style="font-size: 12px;" class="form-control" type="date"
-                                    id="date_of_birth" placeholder="Select Wish Me On" name="date_of_birth"
-                                    wire:model="wishMeOn" max="{{ date('Y-m-d') }}">
-                            </div>
-                        </div>
-                    @else
-                        <div class="row m-0" style="margin-top: 10px;">
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
+                </div>
+                <div class="row m-0" style="margin-top: 20px;">
+                    <div class="col-md-4 mb-3 d-flex flex-column">
+                        <span class="label-text" style="color: #778899;font-size: 12px;">Nick Name</span>
+                        @if ($editingNickName)
+                            <input style="font-size:12px; margin-top: 5px;" type="text" class="form-control custom-placeholder"
+                                wire:model="nickName" placeholder="Enter Nick Name">
+                        @else
+                            <span class="value-text" style="color: black; font-size: 12px;">
                                 {{ $employee->empPersonalInfo ? ucwords(strtolower($employee->empPersonalInfo->nick_name ?? '-')) : '-' }}
-                            </div>
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
+                            </span>
+                        @endif
+                    </div>
+                    <div class="col-md-4 mb-3 d-flex flex-column">
+                        <span class="label-text" style="color: #778899;font-size: 12px;">Wish Me On</span>
+                        @if ($editingNickName)
+                            <input style="font-size: 12px; margin-top: 5px;" class="form-control" type="date"
+                                id="date_of_birth" placeholder="Select Wish Me On" name="date_of_birth"
+                                wire:model="wishMeOn" max="{{ date('Y-m-d') }}">
+                        @else
+                            <span class="value-text" style="color: black; font-size: 12px;">
                                 {{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
                                     ? date('d M, Y', strtotime($employee->empPersonalInfo->date_of_birth))
                                     : '-' }}
-                            </div>
-                        </div>
-                    @endif
-                </div>
-                <hr>
-                <div class="container">
-                    <div class="row m-0" style="font-size: 12px;">
-                        <div class="col-md-6 mb-3" style="color:#778899;"><strong>Time Zone</strong></div>
-                        <div class="col-md-6 mb-3" style="text-align: end; cursor: pointer;">
-                            @if ($editingTimeZone)
-                                <!-- <i wire:click="editTimeZone" class="fas fa-edit"></i> -->
-                                <i wire:click="cancelTimeZone" class="fas fa-times me-3"></i>
-                                <i wire:click="saveTimeZone" class="fa fa-save"></i>
-                            @else
-                                <i wire:click="editTimeZone" class="fas fa-edit"></i>
-                            @endif
-                        </div>
+                            </span>
+                        @endif
                     </div>
-                    <!-- <div class="row" style="margin-top: 20px;">
+                    
+                </div>
+            </div>
+            
+            <hr>
+            <div class="container">
+                <div class="row m-0" style="font-size: 12px;">
+                    <div class="col-6 mb-3" style="color:#778899;"><strong>Time Zone</strong></div>
+                    <div class="col-6 mb-3" style="text-align: end; cursor: pointer;">
+                        @if ($editingTimeZone)
+                        <!-- <i wire:click="editTimeZone" class="fas fa-edit"></i> -->
+                        <i wire:click="cancelTimeZone" class="fas fa-times me-3"></i>
+                        <i wire:click="saveTimeZone" class="fa fa-save"></i>
+                        @else
+                        <i wire:click="editTimeZone" class="fas fa-edit"></i>
+                        @endif
+                    </div>
+                </div>
+                <!-- <div class="row" style="margin-top: 20px;">
                     </div> -->
                     <div class="row m-0" style="margin-top: 10px;">
                         <div class="col-md-12 mb-3">
@@ -326,23 +329,23 @@
                         </div>
                     </div>
 
-                </div>
-                <hr>
-                <div class="container">
-                    <div class="row m-0" style="font-size: 12px;">
-                        <div class="col-md-6 mb-3" style="color:#778899;"><strong>Biography</strong></div>
-                        <div class="col-md-6 mb-3" style="text-align: end;  cursor: pointer;">
-                            @if ($editingBiography)
-                                <!-- <i wire:click="editBiography" class="fas fa-edit"></i> -->
-                                <i wire:click="cancelBiography" class="fas fa-times me-3"></i>
-                                <i wire:click="saveBiography" class="fa fa-save"></i>
-                            @else
-                                <i wire:click="editBiography" class="fas fa-edit"></i>
-                            @endif
-                            </i>
-                        </div>
+            </div>
+            <hr>
+            <div class="container">
+                <div class="row m-0" style="font-size: 12px;">
+                    <div class="col-6 mb-3" style="color:#778899;"><strong>Biography</strong></div>
+                    <div class="col-6 mb-3" style="text-align: end;  cursor: pointer;">
+                        @if ($editingBiography)
+                        <!-- <i wire:click="editBiography" class="fas fa-edit"></i> -->
+                        <i wire:click="cancelBiography" class="fas fa-times me-3"></i>
+                        <i wire:click="saveBiography" class="fa fa-save"></i>
+                        @else
+                        <i wire:click="editBiography" class="fas fa-edit"></i>
+                        @endif
+                        </i>
                     </div>
-                    <!-- <div class="row" style="color: grey;margin-top: 20px;">
+                </div>
+                <!-- <div class="row" style="color: grey;margin-top: 20px;">
                     </div> -->
                     @if ($editingBiography)
                         <div class="row m-0" style="margin-top: 10px;">
@@ -358,70 +361,75 @@
                                     ? ucwords(strtolower($employee->empPersonalInfo->biography))
                                     : '-' }}
 
-                            </div>
-                        </div>
-                    @endif
-                </div>
-                <hr>
-                <div class="container">
-                    <div class="row m-0" style="font-size: 12px;">
-                        <div class="col-md-6 mb-3" style="color:#778899;"><strong>Social Media</strong></div>
-                        <div class="col-md-6 mb-3" style="text-align: end; cursor: pointer;">
-                            @if ($editingSocialMedia)
-                                <!-- <i wire:click="editSocialMedia" class="fas fa-edit"></i> -->
-                                <i wire:click="cancelSocialMedia" class="fas fa-times me-3"></i>
-                                <i wire:click="saveSocialMedia" class="fa fa-save"></i>
-                            @else
-                                <i wire:click="editSocialMedia" class="fas fa-edit"></i>
-                            @endif
-                            </i>
-                        </div>
                     </div>
-                    <div class="row m-0" style="color: #778899;margin-top: 10px;">
-                        <div class="col-md-4 mb-3" style="font-size: 12px;">Facebook</div>
-                        <div class="col-md-4 mb-3" style="font-size: 12px;">Twitter</div>
-                        <div class="col-md-4 mb-3" style="font-size: 12px;">LinkedIn</div>
-                    </div>
-                    @if ($editingSocialMedia)
-                        <div class="row m-0" style="margin-top: 10px;">
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                <input style="font-size:12px" type="text" class="form-control custom-placeholder"
-                                    wire:model.lazy="facebook" placeholder="Enter Facebook Url">
-                                @error('facebook')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                <input style="font-size:12px" type="text" class="form-control custom-placeholder"
-                                    wire:model.lazy="twitter" placeholder="Enter Twitter Url">
-                                @error('twitter')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                <input style="font-size:12px" type="text" class="form-control custom-placeholder"
-                                    wire:model.lazy="linkedIn" placeholder="Enter LinkedIn Url">
-                                @error('linkedIn')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    @else
-                        <div class="row m-0" style="margin-top: 10px;">
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ !empty($employee->empPersonalInfo->facebook) ? $employee->empPersonalInfo->facebook : '-' }}
-                            </div>
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ !empty($employee->empPersonalInfo->twitter) ? $employee->empPersonalInfo->twitter : '-' }}
-                            </div>
-                            <div class="col-md-4 mb-3" style="color: black; font-size: 12px;">
-                                {{ !empty($employee->empPersonalInfo->linked_in) ? $employee->empPersonalInfo->linked_in : '-' }}
-                            </div>
-                        </div>
-                    @endif
                 </div>
+                @endif
             </div>
-            <div class="col-md-2"></div>
+            <hr>
+            <div class="container">
+                <div class="row m-0" style="font-size: 12px;">
+                    <div class="col-6 mb-3" style="color:#778899;"><strong>Social Media</strong></div>
+                    <div class="col-6 mb-3" style="text-align: end; cursor: pointer;">
+                        @if ($editingSocialMedia)
+                        <!-- <i wire:click="editSocialMedia" class="fas fa-edit"></i> -->
+                        <i wire:click="cancelSocialMedia" class="fas fa-times me-3"></i>
+                        <i wire:click="saveSocialMedia" class="fa fa-save"></i>
+                        @else
+                        <i wire:click="editSocialMedia" class="fas fa-edit"></i>
+                        @endif
+                        </i>
+                    </div>
+                </div>
+                <div class="container mt-3">
+                    <div class="row m-0" style="margin-top: 20px;">
+                        <div class="col-md-4 mb-3 d-flex flex-column">
+                            <span class="label-text" style="color: #778899; font-size: 12px;">Facebook</span>
+                            @if ($editingSocialMedia)
+                                <input style="font-size: 12px; margin-top: 5px;" type="text" class="form-control custom-placeholder"
+                                    wire:model.lazy="facebook" placeholder="Enter Facebook URL">
+                                @error('facebook')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            @else
+                                <span class="value-text" style="color: black; font-size: 12px;">
+                                    {{ !empty($employee->empPersonalInfo->facebook) ? $employee->empPersonalInfo->facebook : '-' }}
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-4 mb-3 d-flex flex-column">
+                            <span class="label-text" style="color: #778899; font-size: 12px;">Twitter</span>
+                            @if ($editingSocialMedia)
+                                <input style="font-size: 12px; margin-top: 5px;" type="text" class="form-control custom-placeholder"
+                                    wire:model.lazy="twitter" placeholder="Enter Twitter URL">
+                                @error('twitter')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            @else
+                                <span class="value-text" style="color: black; font-size: 12px;">
+                                    {{ !empty($employee->empPersonalInfo->twitter) ? $employee->empPersonalInfo->twitter : '-' }}
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-4 mb-3 d-flex flex-column">
+                            <span class="label-text" style="color: #778899; font-size: 12px;">LinkedIn</span>
+                            @if ($editingSocialMedia)
+                                <input style="font-size: 12px; margin-top: 5px;" type="text" class="form-control custom-placeholder"
+                                    wire:model.lazy="linkedIn" placeholder="Enter LinkedIn URL">
+                                @error('linkedIn')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            @else
+                                <span class="value-text" style="color: black; font-size: 12px;">
+                                    {{ !empty($employee->empPersonalInfo->linked_in) ? $employee->empPersonalInfo->linked_in : '-' }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
         </div>
+        <div class="col-md-2"></div>
+    </div>
     @endforeach
 </div>

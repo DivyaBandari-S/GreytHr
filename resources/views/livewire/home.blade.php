@@ -900,18 +900,18 @@ Submit your time sheet for this week.
 
             <div class="payslip-card mb-3">
 
+        <div>
+            <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">
+                <h5 class="payslip-card-title">Task Overview</h5>
                 <div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="payslip-card-title">Task Overview</h5>
-                        <div>
-                            <select class="form-select custom-select-width"
-                                wire:change="$set('filterPeriod', $event.target.value)">
-                                <option value="this_month" selected>This month</option>
-                                <option value="last_month">Last month</option>
-                                <option value="this_year">This year</option>
-                            </select>
-                        </div>
-                    </div>
+                    <select class="form-select custom-select-width"
+                        wire:change="$set('filterPeriod', $event.target.value)">
+                        <option value="this_month" selected>This month</option>
+                        <option value="last_month">Last month</option>
+                        <option value="this_year">This year</option>
+                    </select>
+                </div>
+            </div>
 
 
                     <div class="row text-center mt-3">

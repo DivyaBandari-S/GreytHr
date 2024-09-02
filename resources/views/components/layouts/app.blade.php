@@ -39,12 +39,12 @@
     @guest
         <livewire:emplogin />
     @else
-        <section>
-            @livewire('main-layout')
-            <main id="maincontent" style="overflow-x: hidden; height: calc(100vh - 65px);">
-                {{ $slot }}
-            </main>
-        </section>
+    <section>
+        @livewire('main-layout')
+        <main id="maincontent" style="overflow-x: hidden; height: calc(100vh - 65px);">
+            {{ $slot }}
+        </main>
+    </section>
     @endguest
     @livewireScripts
     <script src="{{ asset('js/admin-dash.js?v=' . filemtime(public_path('js/admin-dash.js'))) }}"></script>
