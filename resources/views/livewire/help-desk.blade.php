@@ -481,31 +481,27 @@
             @endif
 
             @if ($activeTab == "active")
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="input-group people-input-group-container">
-                        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+            <div class="row mt-2">
+    <div class="col-12 col-md-3 mb-2 mb-md-0">
+        <div class="input-group">
+        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
                         <div class="input-group-append">
                             <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
                             </button>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
 
-        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle rounded bg-white" style="width:100%;height:33px;font-size:0.8rem;color:#3b4452;border:1px solid #ccc;">
-            <option value="" >Select Request     </option>
-      
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-select" style="height:33px; font-size:0.8rem;">
+            <option value="">Select Request</option>
             @foreach($requestCategories as $request => $categories)
                 <option value="{{ $request }}">{{ $request }}</option>
             @endforeach
         </select>
-  
-
+    </div>
 </div>
-
-            </div>
 
 
 
@@ -656,30 +652,27 @@
 
 
             @if ($activeTab == "closed")
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="input-group people-input-group-container">
-                        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+            <div class="row mt-2">
+    <div class="col-12 col-md-3 mb-2 mb-md-0">
+        <div class="input-group">
+        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
                         <div class="input-group-append">
-                            <button wire:click="searchClosedHelpDesk" class="submit-btn" type="button">
+                            <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
                             </button>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
 
-<select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle bg-white rounded" style="width:100%;height:33px;font-size:0.8rem;color:#3b4452;border:1px solid #ccc;">
-    <option value="" >Select Request     </option>
-
-    @foreach($requestCategories as $request => $categories)
-        <option value="{{ $request }}">{{ $request }}</option>
-    @endforeach
-</select>
-
-
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-select" style="height:33px; font-size:0.8rem;">
+            <option value="">Select Request</option>
+            @foreach($requestCategories as $request => $categories)
+                <option value="{{ $request }}">{{ $request }}</option>
+            @endforeach
+        </select>
+    </div>
 </div>
-            </div>
             <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
 
                 <table style="width: 100%; border-collapse: collapse;">
@@ -804,30 +797,27 @@
 
 
             @if ($activeTab == "pending")
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="input-group people-input-group-container">
-                        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+            <div class="row mt-2">
+    <div class="col-12 col-md-3 mb-2 mb-md-0">
+        <div class="input-group">
+        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
                         <div class="input-group-append">
-                            <button wire:click="searchPendingHelpDesk" class="submit-btn" type="button">
+                            <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
                             </button>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
 
-<select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" data-bs-toggle="dropdown" class="dropdown-toggle bg-white rounded" style="width:100%;height:33px;font-size:0.8rem;color:#3b4452;border:1px solid #ccc;">
-    <option value="" >Select Request     </option>
-
-    @foreach($requestCategories as $request => $categories)
-        <option value="{{ $request }}">{{ $request }}</option>
-    @endforeach
-</select>
-
-
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-select" style="height:33px; font-size:0.8rem;">
+            <option value="">Select Request</option>
+            @foreach($requestCategories as $request => $categories)
+                <option value="{{ $request }}">{{ $request }}</option>
+            @endforeach
+        </select>
+    </div>
 </div>
-            </div>
             <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
 
                 <table style="width: 100%; border-collapse: collapse;">
