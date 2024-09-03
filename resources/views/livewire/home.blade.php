@@ -106,73 +106,21 @@
                             </div>
                         </div>
 
-                        <div id="star-3">
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-bottomright"></div>
-                                <div id="curved-corner-bottomleft"></div>
-                            </div>
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-topright"></div>
-                                <div id="curved-corner-topleft"></div>
-                            </div>
-                        </div>
-
-                        <div id="star-4">
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-bottomright"></div>
-                                <div id="curved-corner-bottomleft"></div>
-                            </div>
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-topright"></div>
-                                <div id="curved-corner-topleft"></div>
-                            </div>
-                        </div>
-
-                        <div id="star-5">
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-bottomright"></div>
-                                <div id="curved-corner-bottomleft"></div>
-                            </div>
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-topright"></div>
-                                <div id="curved-corner-topleft"></div>
-                            </div>
-                        </div>
-
-                        <div id="star-6">
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-bottomright"></div>
-                                <div id="curved-corner-bottomleft"></div>
-                            </div>
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-topright"></div>
-                                <div id="curved-corner-topleft"></div>
-                            </div>
-                        </div>
-
-                        <div id="star-7">
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-bottomright"></div>
-                                <div id="curved-corner-bottomleft"></div>
-                            </div>
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-topright"></div>
-                                <div id="curved-corner-topleft"></div>
-                            </div>
-                        </div>
-
-
                     </div>
                     <div class="locationGlobe">
-                        <i class="fa-solid fa-location-dot me-2" style="color: red;cursor: pointer;"
-                            onclick="openMap('{{ $lat }}','{{ $lon }}')"></i>
+                        <i class="fa-solid fa-location-dot me-2" id="getLocationLink"
+                            style="color: red;cursor: pointer;"></i>
 
-                        {{ $city }},{{ $country }}-{{ $postal_code }}
+                        {{ $city }}
+
                     </div>
+
                 </div>
 
             </div>
+
         </div>
+
 
         <!-- main content -->
 
@@ -433,6 +381,7 @@
                     <div class="modal-backdrop fade show blurred-backdrop"></div>
                 @endif
             @endif
+
 
             <div class="col-md-3 mb-4 ">
                 <div class="payslip-card" style="height: 195px;">
@@ -772,8 +721,6 @@ Submit your time sheet for this week.
         @endif
 
 
-
-
         <div class="col-md-4 mb-4 ">
 
             <div class="payslip-card">
@@ -865,6 +812,12 @@ Submit your time sheet for this week.
 
             <div class="payslip-card mb-3">
                 <p class="payslip-card-title">Quick Access</p>
+                <!-- <p class="small-desc">
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat
+veritatis nobis saepe itaque rerum nostrum aliquid obcaecati odio
+officia deleniti. Expedita iste et illum, quaerat pariatur consequatur
+eum nihil itaque!
+</p> -->
                 <div class="m-0 row">
                     <div class="quick col-md-7 px-3 py-0 ps-0">
                         <a href="/reimbursement" class="quick-link">Reimbursement</a>
@@ -900,18 +853,18 @@ Submit your time sheet for this week.
 
             <div class="payslip-card mb-3">
 
-        <div>
-            <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">
-                <h5 class="payslip-card-title">Task Overview</h5>
                 <div>
-                    <select class="form-select custom-select-width"
-                        wire:change="$set('filterPeriod', $event.target.value)">
-                        <option value="this_month" selected>This month</option>
-                        <option value="last_month">Last month</option>
-                        <option value="this_year">This year</option>
-                    </select>
-                </div>
-            </div>
+                    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">
+                        <h5 class="payslip-card-title">Task Overview</h5>
+                        <div>
+                            <select class="form-select custom-select-width"
+                                wire:change="$set('filterPeriod', $event.target.value)">
+                                <option value="this_month" selected>This month</option>
+                                <option value="last_month">Last month</option>
+                                <option value="this_year">This year</option>
+                            </select>
+                        </div>
+                    </div>
 
 
                     <div class="row text-center mt-3">
@@ -935,6 +888,7 @@ Submit your time sheet for this week.
                     </div>
                 </a>
             </div>
+
             <div class="payslip-card mb-3">
                 <p class="payslip-card-title">IT Declaration</p>
                 <p class="payslip-small-desc">
@@ -1021,7 +975,7 @@ Submit your time sheet for this week.
                             </button>
                         </div>
                         <div class="modal-body" style="max-height:300px;overflow-y:auto">
-                            <div class="team-leave d-flex flex-row gap-3 mb-2">
+                            <div class="team-leave d-flex flex-row gap-3">
                                 @for ($i = 0; $i < $CountAbsentEmployees; $i++)
                                     @if (isset($AbsentEmployees[$i]))
                                         @php
@@ -1107,7 +1061,7 @@ Submit your time sheet for this week.
                             </button>
                         </div>
                         <div class="modal-body" style="max-height:300px;overflow-y:auto">
-                            <div class="team-leave d-flex flex-row gap-3 ">
+                            <div class="team-leave d-flex flex-row gap-3">
                                 @for ($i = 0; $i < $CountEarlySwipes; $i++)
                                     @if (isset($EarlySwipes[$i]))
                                         @php
@@ -1155,5 +1109,46 @@ Submit your time sheet for this week.
     function openMap(latitude, longitude) {
         const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
         window.open(url, '_blank');
+    }
+</script>
+
+<script>
+    document.getElementById('getLocationLink').addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Clicked the link!');
+
+        // Call the getLocation function when the link is clicked
+        getLocation();
+    });
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            console.log('Requesting location...');
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+
+                    // Log the latitude and longitude to the console
+                    console.log("Latitude: " + latitude);
+                    console.log("Longitude: " + longitude);
+                    console.log("Coordinates: (" + latitude + ", " + longitude + ")");
+
+                    // Construct the Google Maps URL with the user's coordinates
+                    const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                    console.log("Opening Google Maps URL: " + url);
+
+                    // Open the URL in a new tab
+                    window.open(url, '_blank');
+                },
+                function(error) {
+                    console.error("Error occurred. Error code: " + error.code);
+                    // Error handling here
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
     }
 </script>
