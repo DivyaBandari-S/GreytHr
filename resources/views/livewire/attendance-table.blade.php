@@ -515,6 +515,15 @@ width: 170px; */
             border: 1px solid #ddd;  /* Optional border for visual distinction */
             box-sizing: border-box;  /* Ensure padding and border are included in width and height */
         }
+        @media  screen and (max-height:320px) {
+
+            .custom-container {
+                      /* Adjust width as needed */
+            height: 220px;           /* Adjust height as needed */
+           
+        }
+            
+        }
 
         .clickable-date1 {
             background-color: pink;
@@ -1758,13 +1767,13 @@ color: #fff;
                                 
                                 @if($viewDetailsOutswiperecord)
                                 <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:5px;white-space:nowrap;"> {{$viewDetailsOutswiperecord->in_or_out}} </td>
-                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:5px"> {{$viewDetailsOutswiperecord->swipe_time}} </td>
+                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px"> {{$viewDetailsOutswiperecord->swipe_time}} </td>
                                 @else
                                 <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;"> OUT </td>
                                 <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> {{$viewDetailsInswiperecord->swipe_time}} </td>
                                 @endif
                                 @if($viewDetailsOutswiperecord)
-                                  <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
+                                  <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">-</td>
                                 @else
                                   <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">System inserted out</td>
                                 @endif  

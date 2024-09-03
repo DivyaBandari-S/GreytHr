@@ -1405,6 +1405,11 @@ color: #fff;
 ::-webkit-scrollbar-thumb:hover {
     background-color: #555; /* Change color on hover */
 }
+@media screen and (max-height: 513px) {
+    .penalty-and-average-work-hours-card{
+        margin-top: 20px;
+    }
+}
     </style>
     @php
     $flag=0;
@@ -1415,12 +1420,13 @@ color: #fff;
     @endphp
 
     <div>
+        
         <div class="row m-0" style="text-align: end;">
             <div class="col-md-12">
                 <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info" id="myButton">My Regularisations</a>
             </div>
         </div>
-
+         
 
 
         <div class="row m-0 d-flex justify-content-center text-center">
@@ -1444,10 +1450,10 @@ color: #fff;
             </div>
             <div class="col-md-2"></div>
         </div>
-
+         
         <div class="row m-0 mt-3">
             <div class="row m-0 d-flex justify-content-center" style="display:flex;justify-content:center;">
-                <div class="col-md-3">
+                <div class="penalty-and-average-work-hours-card col-md-3">
                     <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
                         <section class="text-center">
@@ -1455,46 +1461,46 @@ color: #fff;
                         </section>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="penalty-and-average-work-hours-card col-md-3">
                     <div class="insight-card bg-white pt-2 pb-2"style="{{ $isNextMonth == 1 ? 'height: 135px;' : '' }}">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">
                             Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
                         <section class="text-center">
-                            @if($this->isNextMonth==1)
-                               <p class="text-2" style="margin-top:30px;">-</p>
-                            @else
-                               <p class="text-2" style="margin-top:30px;">{{$averageFormattedTime}}</p>
-                            @endif
-                            @if($this->isNextMonth==0)
+                            
+                               <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
+                           
+                           
                             <div>
-                                <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($totalWorkingPercentage)}}%
-                                </span>
-                                <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                </span>
+                                @if(!empty($percentageOfWorkHours))
+                                    <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{$percentageOfWorkHours}}%
+                                    </span>
+                                    <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                    </span>
+                                @endif
                             </div>
-                            @endif
+                            
                         </section>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="penalty-and-average-work-hours-card col-md-3">
                     <div class="insight-card bg-white pt-2 pb-2"style="{{ $isNextMonth == 1 ? 'height: 135px;' : '' }}">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
                         </h6>
                         <section class="text-center">
-                            @if($isNextMonth==1)
-                             <p class="text-2" style="margin-top:30px;">-</p>
-                            @else
-                            <p class="text-2" style="margin-top:30px;">{{$averageFormattedTime}}</p>
-                            @endif
-                            @if($isNextMonth==0)
+                            
+                            <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
+                            
+                          
                             <div>
-                                <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
-                                    +{{intval($totalWorkingPercentage)}}% </span>
-                                <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                              @if(!empty($percentageOfWorkHours))
+                                        <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
+                                            +{{$percentageOfWorkHours}}% </span>
+                                        <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
 
-                                </span>
+                                        </span>
+                              @endif          
                             </div>
-                            @endif
+                          
                         </section>
                     </div>
                 </div>
@@ -1587,7 +1593,7 @@ color: #fff;
             <div class="col-6" style="text-align: left">
                 <a href="#" id="toggleSidebar" class="gt-overlay-toggle" style="margin-top:69px;color:rgb(2, 17, 79); display: none">Legend</a>
             </div>
-            <div class="col-12" style="text-align: -webkit-right;">
+            <div class="col-12">
                 <div class="toggle-box-attendance-info">
                     <i class="fas fa-calendar" id="calendar-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 1 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 1 )? 'rgb(2,17,79)' : '#fff' }};" wire:click="showBars"></i>
                     <i class="fas fa-bars" id="bars-icon" style="cursor:pointer;padding:2px 2px;color: {{ ($defaultfaCalendar == 0 )? '#fff' : 'rgb(2,17,79)' }};background-color: {{ ($defaultfaCalendar == 0 )? 'rgb(2,17,79)' : '#fff' }};" wire:click="showTable"></i>
@@ -1675,17 +1681,17 @@ color: #fff;
                                             @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
 
                                                 @if($day['isPublicHoliday'])
-                                                <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 50px; margin-left: 37px;white-space: nowrap;padding-top:5px">H</span>
+                                                <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">H</span>
                                                 @elseif($day['status'] == 'CLP')
-                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 50px; margin-left: 37px;white-space: nowrap;padding-top:5px">CLP</span>
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">CLP</span>
                                                 @elseif($day['status'] == 'SL')
-                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 50px; margin-left: 37px;white-space: nowrap;padding-top:5px">SL</span>
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">SL</span>
                                                 @elseif($day['status'] == 'LOP')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">LOP</span>
                                                 @elseif($day['status'] == 'A')
-                                                <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:50px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
+                                                <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
                                                 @elseif($day['status'] == 'P')
-                                                <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:50px; margin-left: 37px;white-space: nowrap;padding-top:10px">P</span>
+                                                <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px">P</span>
                                                 @endif
 
 
@@ -1695,27 +1701,27 @@ color: #fff;
                                                 @php
                                                 $Regularised=true;
                                                 @endphp
-                                                <span style="display:flex;text-align:start;width:10px;height:10px;margin-top:5px;border-radius:50%;padding-right: 10px; margin-right:25px;">
+                                                <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
                                                     <p class="me-2 mb-0">
                                                     <div class="down-arrow-reg"></div>
                                                     </p>
                                                 </span>
                                                 @endif
                                                 @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
-                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 90px; margin-right:12px;white-space: nowrap;">
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                     <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
                                                 @elseif($isCurrentMonth)
-                                                  @if($day['isRegularised']==true)
-                                                  <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 90px;margin-right:20px; white-space: nowrap;">
-                                                            <p style="color: #a3b2c7;margin-top:6px;font-weight: 400;">{{$employee->shift_type}}</p>
-                                                        </span>
-                                                 
-                                                  @else
-                                                        <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 90px;margin-right:20px; white-space: nowrap;">
-                                                            <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
-                                                        </span>
-                                                  @endif
+                                                @if($day['isRegularised']==true)
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+                                                @else
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+
+                                                @endif
                                                 @endif
                                                 @endif
                                         </div>

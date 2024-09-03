@@ -98,7 +98,7 @@
 <div class="modal-backdrop fade show blurred-backdrop"></div>
 @endif
 <div class="cont m-0 p-0 " style="display:flex; justify-content: end;">
-  <div class="search-container-who-is-in" style="margin-left: auto;">
+  <div class="search-container-who-is-in">
 
     <div class="form-group-who-is-in">
       <div class="search-input-who-is-in" style="margin-top:50px;">
@@ -337,7 +337,7 @@
         
           <thead>
             <tr>
-              <th style="padding-left:10px;">Employee</th>
+              <th style="padding-right:18px;">Employee</th>
               <th >Number&nbsp;of&nbsp;days</th>
             </tr>
           </thead>
