@@ -954,7 +954,11 @@ button.close-button {
     background: transparent;
     outline: none;
 }
-
+.employee-item {
+    display: inline-block;
+    min-width: 120px;
+    margin-bottom: 7px;
+}
 .dropdown-btn {
     background-color: transparent;
     color: #fff;
@@ -1022,7 +1026,8 @@ button.close-button {
     }
     .employee-item {
         display: inline-block;
-        min-width: 150px; /* Adjust width as needed */
+        min-width: 120px; /* Adjust width as needed */
+        margin-bottom: 7px;
     }
 
     .employee-item .text-container {
