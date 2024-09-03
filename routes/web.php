@@ -245,7 +245,7 @@ Route::middleware(['auth:admins', 'handleSession'])->group(function () {
 });
 
 
-Route::middleware(['auth:emp','handleSession'])->group(function () {
+Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/google-redirect', [GoogleDriveController::class, 'auth'])
         ->name('google-redirect');
     Route::get('/google-callback', [GoogleDriveController::class, 'callback'])

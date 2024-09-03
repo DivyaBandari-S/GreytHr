@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
 use App\Mail\PasswordChanged;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class EmpLogin extends Component
@@ -44,6 +45,8 @@ class EmpLogin extends Component
     public $showErrorModal = false;
     public $showLoader = false;
     public $passwordChangedModal = false;
+    public $latitude;
+    public $longitude;
     public $form = [
         'emp_id' => '',
         'password' => '',

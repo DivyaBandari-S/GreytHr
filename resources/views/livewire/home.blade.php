@@ -164,10 +164,11 @@
 
                     </div>
                     <div class="locationGlobe">
-                        <i class="fa-solid fa-location-dot me-2" style="color: red;cursor: pointer;"
-                            onclick="openMap('{{ $lat }}','{{ $lon }}')"></i>
+                        <i class="fa-solid fa-location-dot me-2" id="getLocationLink"
+                            style="color: red;cursor: pointer;"></i>
 
-                        {{ $city }},{{ $country }}-{{ $postal_code }}
+                        {{ $city }}
+
                     </div>
                 </div>
 
@@ -900,18 +901,18 @@ Submit your time sheet for this week.
 
             <div class="payslip-card mb-3">
 
-        <div>
-            <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">
-                <h5 class="payslip-card-title">Task Overview</h5>
                 <div>
-                    <select class="form-select custom-select-width"
-                        wire:change="$set('filterPeriod', $event.target.value)">
-                        <option value="this_month" selected>This month</option>
-                        <option value="last_month">Last month</option>
-                        <option value="this_year">This year</option>
-                    </select>
-                </div>
-            </div>
+                    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">
+                        <h5 class="payslip-card-title">Task Overview</h5>
+                        <div>
+                            <select class="form-select custom-select-width"
+                                wire:change="$set('filterPeriod', $event.target.value)">
+                                <option value="this_month" selected>This month</option>
+                                <option value="last_month">Last month</option>
+                                <option value="this_year">This year</option>
+                            </select>
+                        </div>
+                    </div>
 
 
                     <div class="row text-center mt-3">
@@ -1155,5 +1156,46 @@ Submit your time sheet for this week.
     function openMap(latitude, longitude) {
         const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
         window.open(url, '_blank');
+    }
+</script>
+
+<script>
+    document.getElementById('getLocationLink').addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Clicked the link!');
+
+        // Call the getLocation function when the link is clicked
+        getLocation();
+    });
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            console.log('Requesting location...');
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+
+                    // Log the latitude and longitude to the console
+                    console.log("Latitude: " + latitude);
+                    console.log("Longitude: " + longitude);
+                    console.log("Coordinates: (" + latitude + ", " + longitude + ")");
+
+                    // Construct the Google Maps URL with the user's coordinates
+                    const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                    console.log("Opening Google Maps URL: " + url);
+
+                    // Open the URL in a new tab
+                    window.open(url, '_blank');
+                },
+                function(error) {
+                    console.error("Error occurred. Error code: " + error.code);
+                    // Error handling here
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
     }
 </script>
