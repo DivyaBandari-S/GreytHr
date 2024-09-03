@@ -4,12 +4,6 @@
             margin-right: 62px;
         }
 
-      
-
-        
-        
-        
-
        
         .my-button-attendance-info {
             padding: 5px 10px;
