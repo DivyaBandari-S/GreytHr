@@ -407,7 +407,7 @@
 
                         @if(count($selectedCCEmployees) > 3)
                         <li>
-                            <span type="button" wire:click="openModal" class="normalText">View More</span>
+                            <span type="button" wire:click="openModal" class="normalText"><a href="#">View More</a></span>
                         </li>
                         @endif
                     </ul>

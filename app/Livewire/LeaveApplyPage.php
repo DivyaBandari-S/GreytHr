@@ -333,6 +333,7 @@ class LeaveApplyPage extends Component
             // Step 1: Retrieve total number of days for the selected leave type
             $checkLeaveBalance = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', $this->leave_type)
+                ->whereNotIn('leave_type', ['Loss Of Pay'])
                 ->whereIn('status', ['approved', 'pending'])
                 ->get();
 
