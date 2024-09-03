@@ -4,12 +4,6 @@
             margin-right: 62px;
         }
 
-      
-
-        
-        
-        
-
        
         .my-button-attendance-info {
             padding: 5px 10px;
@@ -1407,7 +1401,7 @@ color: #fff;
 }
 @media screen and (max-height: 513px) {
     .penalty-and-average-work-hours-card{
-        margin-top: 20px;
+        margin-top: 40px;
     }
 }
     </style>
@@ -2141,7 +2135,7 @@ color: #fff;
 
                     <div class="container-body" style="margin-top:2px;height:auto;border-top:1px solid #ccc;display: {{ $toggleButton ? 'block' : 'none' }};">
                         <!-- Content of the container body -->
-                        <div style="max-width: 100%; text-align: center;">
+                        <div class="table-responsive"style="max-width: 100%; text-align: center;">
                           
                             <table>
                                @if ($SwiperecordsCount > 0)

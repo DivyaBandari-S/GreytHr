@@ -52,7 +52,7 @@ class AttendenceMasterDataNew extends Component
 
     public $todayyear;
 
-    
+
     public $legend=false;
     public function mount()
     {

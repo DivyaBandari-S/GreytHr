@@ -116,7 +116,7 @@ class Home extends Component
     public function mount()
     {
         $this->fetchWeather();
-        $this->fetchSwipeData();
+        // $this->fetchSwipeData();
 
         $currentHour = date('G');
 
@@ -189,56 +189,56 @@ class Home extends Component
     // }
     //################################ in sever this is working ################################################
 
-    public function fetchSwipeData()
-    {
-        $currentDate = Carbon::today();
-        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-        $month = $currentDate->format('n');
-        $year = $currentDate->format('Y');
+    // public function fetchSwipeData()
+    // {
+    //     $currentDate = Carbon::today();
+    //     $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+    //     $month = $currentDate->format('n');
+    //     $year = $currentDate->format('Y');
 
-        $tableName = 'DeviceLogs_' . $month . '_' . $year;
-        $appUserId = Auth::user()->emp_id;
-        $normalizedUserId = str_replace('-', '', $appUserId);
+    //     $tableName = 'DeviceLogs_' . $month . '_' . $year;
+    //     $appUserId = Auth::user()->emp_id;
+    //     $normalizedUserId = str_replace('-', '', $appUserId);
 
-        $dsn = env('DB_ODBC_DSN');
-        $username = env('DB_ODBC_USERNAME');
-        $password = env('DB_ODBC_PASSWORD');
+    //     $dsn = env('DB_ODBC_DSN');
+    //     $username = env('DB_ODBC_USERNAME');
+    //     $password = env('DB_ODBC_PASSWORD');
 
-        try {
-            $pdo = new \PDO("odbc:{$dsn}", $username, $password);
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+    //     try {
+    //         $pdo = new \PDO("odbc:{$dsn}", $username, $password);
+    //         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-            $sql = "
-                SELECT UserId, logDate, Direction
-                FROM {$tableName}
-                WHERE UserId = :userId
-                AND CAST(logDate AS DATE) = :today
-                ORDER BY logDate
-            ";
+    //         $sql = "
+    //             SELECT UserId, logDate, Direction
+    //             FROM {$tableName}
+    //             WHERE UserId = :userId
+    //             AND CAST(logDate AS DATE) = :today
+    //             ORDER BY logDate
+    //         ";
 
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':userId', $normalizedUserId, \PDO::PARAM_STR);
-            $stmt->bindParam(':today', $today, \PDO::PARAM_STR);
-            $stmt->execute();
+    //         $stmt = $pdo->prepare($sql);
+    //         $stmt->bindParam(':userId', $normalizedUserId, \PDO::PARAM_STR);
+    //         $stmt->bindParam(':today', $today, \PDO::PARAM_STR);
+    //         $stmt->execute();
 
-            $this->dataSqlServer = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    //         $this->dataSqlServer = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-            // Return results
-            return $this->dataSqlServer;
-        } catch (\PDOException $e) {
-            // Handle the error
-            $this->dataSqlServer = [];
-            logger()->error("PDO error: " . $e->getMessage());
-            // Return or handle error result
-            return ['error' => 'PDO error: ' . $e->getMessage()];
-        } catch (\Exception $e) {
-            // General error handling
-            $this->dataSqlServer = [];
-            logger()->error("General error: " . $e->getMessage());
-            // Return or handle error result
-            return ['error' => 'General error: ' . $e->getMessage()];
-        }
-    }
+    //         // Return results
+    //         return $this->dataSqlServer;
+    //     } catch (\PDOException $e) {
+    //         // Handle the error
+    //         $this->dataSqlServer = [];
+    //         logger()->error("PDO error: " . $e->getMessage());
+    //         // Return or handle error result
+    //         return ['error' => 'PDO error: ' . $e->getMessage()];
+    //     } catch (\Exception $e) {
+    //         // General error handling
+    //         $this->dataSqlServer = [];
+    //         logger()->error("General error: " . $e->getMessage());
+    //         // Return or handle error result
+    //         return ['error' => 'General error: ' . $e->getMessage()];
+    //     }
+    // }
 
 
 

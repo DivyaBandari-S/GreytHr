@@ -411,10 +411,10 @@
                 @foreach($approvedLeaveApplicationsList as $leaveRequest)
                 <div class="accordion rounded mb-3">
                     <div class="accordion-heading rounded p-1" onclick="toggleAccordion(this)">
-                        <div class="accordion-head rounded d-flex justify-content-between m-auto p-2">
+                        <div class="accordion-head rounded m-0">
                             <!-- Display leave details here based on $leaveRequest -->
                             <div class="col accordion-content">
-                                <div class="accordion-profile" style="display:flex; gap:7px; margin:auto 0;align-items:center;justify-content:center;">
+                                <div class="accordion-profile d-flex align-items-center justify-content-center" style="gap:7px; margin:auto 0;">
                                     @if(isset($leaveRequest['approvedLeaveRequest']->image) && $leaveRequest['approvedLeaveRequest']->image !== 'null')
                                     <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['approvedLeaveRequest']->image)}}" style="border-radius: 50%;">
                                     @else
@@ -428,7 +428,7 @@
                                     @endif
                                     <div>
                                         @if(isset($leaveRequest['approvedLeaveRequest']->first_name))
-                                        <p style="font-size: 12px; font-weight: 500; text-align: start; margin: 0 auto;">
+                                        <p class="mb-0 normalText m-auto text-start" >
                                             <span style="display: inline-block; width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->first_name)) }} {{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->last_name)) }}">
                                                 {{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->first_name)) }}
                                                 {{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->last_name)) }}
@@ -442,7 +442,7 @@
                                         </p>
 
                                         @else
-                                        <p style="font-size: 12px; font-weight: 500; text-align: center;">Name Not
+                                        <p class="normalTetValue text-center mb-0">Name Not
                                             Available</p>
                                         @endif
                                     </div>
@@ -471,7 +471,7 @@
                                 @elseif(strtoupper($leaveRequest['approvedLeaveRequest']->status) == 'REJECTED')
                                 <span style=" font-size: 12px; font-weight: 500; color:#FF0000;">{{ strtoupper($leaveRequest['approvedLeaveRequest']->status) }}</span>
                                 @else
-                                <span style=" font-size: 12px; font-weight: 500; color:#778899;">{{ strtoupper($leaveRequest['approvedLeaveRequest']->status) }}</span>
+                                <span class="normalTextValue">{{ strtoupper($leaveRequest['approvedLeaveRequest']->status) }}</span>
                                 @endif
                             </div>
                             @else
@@ -481,7 +481,7 @@
                                 @elseif(strtoupper($leaveRequest['approvedLeaveRequest']->cancel_status) == 'REJECTED')
                                 <span style=" font-size: 12px; font-weight: 500; color:#FF0000;">{{ strtoupper($leaveRequest['approvedLeaveRequest']->cancel_status) }}</span>
                                 @else
-                                <span style=" font-size: 12px; font-weight: 500; color:#778899;">{{ strtoupper($leaveRequest['approvedLeaveRequest']->cancel_status) }}</span>
+                                <span class="normalTextValue">{{ strtoupper($leaveRequest['approvedLeaveRequest']->cancel_status) }}</span>
                                 @endif
                             </div>
                             @endif
@@ -495,20 +495,18 @@
                     </div>
 
                     <div class="accordion-body m-0 p-0">
+                    <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
+                        <div class="review-content px-3" >
 
-                        <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:5px;"></div>
+                            <span class="normalTextValue">Duration:</span>
 
-                        <div class="review-content" style="display: flex;justify-content:start;align-items: center;gap:7px;padding:5px;margin-bottom: 3px;">
+                            <span class="normalText font-weight-normal">
 
-                            <span style="color: #778899; font-size: 12px; font-weight: 500;">Duration:</span>
-
-                            <span style="font-size: 12px;">
-
-                                <span style="font-size: 12px; font-weight: 500;">{{ $leaveRequest['approvedLeaveRequest']->formatted_from_date }}</span>
+                                <span class="normalText">{{ $leaveRequest['approvedLeaveRequest']->formatted_from_date }}</span>
 
                                 ({{ $leaveRequest['approvedLeaveRequest']->from_session }} ) to
 
-                                <span style="font-size: 12px; font-weight: 500;">{{ $leaveRequest['approvedLeaveRequest']->formatted_to_date }}</span>
+                                <span class="normalText">{{ $leaveRequest['approvedLeaveRequest']->formatted_to_date }}</span>
 
                                 ( {{ $leaveRequest['approvedLeaveRequest']->to_session }} )
 
@@ -516,28 +514,27 @@
 
                         </div>
 
-                        <div class="review-content" style="display: flex;justify-content:start;align-items: center;gap:7px;padding:5px;margin-bottom: 3px;">
+                        <div class="review-content px-3" >
 
-                            <span style="color: #778899; font-size: 12px; font-weight: 500;">Reason:</span>
+                            <span class="normalTextValue">Reason:</span>
 
-                            <span style="font-size: 12px;">{{ucfirst( $leaveRequest['approvedLeaveRequest']->reason) }}</span>
+                            <span class="normalText font-weight-400">{{ucfirst( $leaveRequest['approvedLeaveRequest']->reason) }}</span>
                         </div>
 
                         <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
+                        <div class="approvedLeaveDetails d-flex justify-content-between align-items-center">
 
-                        <div style="display:flex; flex-direction:row; justify-content:space-between;">
+                            <div class="review-content px-3" >
 
-                            <div class="review-content" style="display: flex;justify-content:start;align-items: center;gap:7px;padding:5px;margin-bottom: 3px;">
+                                <span class="normalTextValue">Applied on:</span>
 
-                                <span style="color: #778899; font-size: 12px; font-weight: 400;">Applied on:</span>
-
-                                <span style="color: #333; font-size: 11px; font-weight: 500;">{{ $leaveRequest['approvedLeaveRequest']->created_at->format('d M, Y') }}</span>
+                                <span class="normalText">{{ $leaveRequest['approvedLeaveRequest']->created_at->format('d M, Y') }}</span>
 
                             </div>
-                            <div class="review-content" style="display: flex;justify-content:start;align-items: center;gap:7px;padding:5px;margin-bottom: 3px;">
-                                <span style="color: #778899; font-size: 12px; font-weight: 500;">Leave Balance:</span>
+                            <div class="review-content px-3" >
+                                <span class="normalTextValue">Leave Balance:</span>
                                 @if(!empty($leaveRequest['leaveBalances']))
-                                <div style=" flex-direction:row; display: flex; align-items: center;justify-content:center;">
+                                <div class="d-flex align-items-center flex-row justify-content-center" >
                                     @if(isset($leaveRequest['leaveBalances']['sickLeaveBalance']))
                                     <!-- Sick Leave -->
                                     <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e6e6fa; display: flex; align-items: center; justify-content: center; margin-left:15px;">
@@ -587,7 +584,7 @@
                                 @endif
                             </div>
 
-                            <div class="review-content" style="display: flex;justify-content:start;align-items: center;gap:7px;padding:5px;margin-bottom: 3px;">
+                            <div class="review-content px-3" >
 
                                 <a href="{{ route('approved-details', ['leaveRequestId' => $leaveRequest['approvedLeaveRequest']->id]) }}">
                                     <span style="color: #3a9efd; font-size: 11px; font-weight: 500;">View Details</span>

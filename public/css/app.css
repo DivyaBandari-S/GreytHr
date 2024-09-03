@@ -55,6 +55,13 @@
     overflow-y: auto;
     padding: 0;
 }
+.modal-title{
+    color: #fff;
+    font-size: var(--sub-headings-font-size);
+}
+.modal-header{
+    background-color: rgb(2, 17, 79);
+}
 
 .swiper-container {
     width: 100%;
@@ -94,6 +101,21 @@
     width: 80%;
     margin-top: 30px;
     border-radius: 5px;
+}
+.settings-birthday-value{
+    flex: 1; 
+    margin-left: 5px; 
+    font-weight: 500; 
+    color: #000;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    max-width: 60px;
+}
+@media (max-width: 991px) {
+    .settings-birthday-value {
+        max-width: 150px;
+    }
 }
 .primarySideBar {
     font-family: "Montserrat", sans-serif;
@@ -2636,6 +2658,15 @@ input[type="radio"] {
     background-color: #fff;
     cursor: pointer;
 }
+.accordion-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+}
+.review-content{
+    display: flex;justify-content:start;align-items: center;gap:7px;margin-bottom: 3px;
+}
 .historyContent {
     max-height: 80vh;
     overflow-y: auto;
@@ -2665,6 +2696,7 @@ input[type="radio"] {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding: 10px 20px;
     border-radius: 5px;
 }
 
@@ -3355,6 +3387,25 @@ l
     .accordion-heading {
         max-width: 100%;
         overflow-x: auto;
+    }
+    .accordion-head{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .accordion-title {
+        display: flex;
+        max-width: 100%;
+        overflow-x: auto;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 5px;
+        gap: 20px;
+    }
+    .approvedLeaveDetails{
+        max-width: 100%;
+        overflow-x: auto;
+        gap: 20px;
     }
 }
 /* //end of leave-history styles */

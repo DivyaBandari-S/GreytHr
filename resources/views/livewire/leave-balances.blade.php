@@ -26,8 +26,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title">Download Leave Transaction Report</h6>
-                    <button type="button" class="btn-close" wire:click="closeModal" data-dismiss="modal" aria-label="Close">
-                    </button>
+                    <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
+                     wire:click="closeModal" style="background-color: white; height:10px;width:10px;">
+                                    </button>
                 </div>
                 <form novalidate class="ng-valid ng-touched ng-dirty" wire:submit.prevent="generatePdf">
                     @csrf
@@ -44,6 +45,7 @@
                                     <div class="input-group date">
                                         <input type="date" wire:model="fromDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate" style="color: #778899;">
                                     </div>
+                                    @error('fromDateModal') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -52,6 +54,7 @@
                                     <div class="input-group date">
                                         <input type="date" wire:model="toDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate" style="color: #778899;">
                                     </div>
+                                    @error('toDateModal') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                         </div>
@@ -130,7 +133,7 @@
                         </h5>
                         @else
                         <h5 class="mb-0" >
-                            {{($lossOfPayBalance)}}
+                            0
                         </h5>
                         @endif
                         <p class="mb-0 remaining" >Balance</p>
@@ -200,7 +203,8 @@
                         <a href="/leave-balances/casualleavebalance?year={{ $currentYear }}" style="font-size:12px;">View Details</a>
                         @endif
                     </div>
-                    <div class="px-3 ">
+                    @if($casualLeavePerYear > 0)
+                    <div class="px-3">
                         <div class="tube-container">
                             <p class="mb-0" style="color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;">
                                 @if($consumedCasualLeaves > 0)
@@ -212,6 +216,7 @@
                             <div class="tube" style="width: {{ $percentageCasual }}%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave Probation') }};"></div>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
             <div class="col-md-4 containerBalanceHeight mb-2">
@@ -231,6 +236,7 @@
                         <a href="/leave-balances/sickleavebalance?year={{$currentYear}}" style="font-size:12px;">View Details</a>
                         @endif
                     </div>
+                    @if($sickLeavePerYear > 0)
                     <div class="px-3">
                     <div class="tube-container">
                         <p class="mb-0" style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
@@ -243,6 +249,7 @@
                         <div class="tube" style="width: {{ $percentageSick }}%; background-color: {{ $this->getTubeColor($consumedSickLeaves, $sickLeavePerYear, 'Sick Leave') }};"></div>
                     </div>
                     </div>
+                    @endif
                 </div>
             </div>
             @if( $casualProbationLeavePerYear > 0)

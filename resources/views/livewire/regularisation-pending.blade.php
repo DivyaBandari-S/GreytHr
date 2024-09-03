@@ -106,7 +106,7 @@
         </div>
         </div>
     </div>
-  <div class="rounded bg-white border mt-4">
+  <div class="table-responsive rounded bg-white border mt-4">
   <table class="custom-table">
         <thead>
             <tr>
