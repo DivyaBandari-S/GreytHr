@@ -24,7 +24,7 @@ use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class LeaveCalender extends Component
 {
-    public $year;
+    public $year, $date;
     public $month;
     public $calendar;
     public $leaveData;
@@ -332,57 +332,61 @@ class LeaveCalender extends Component
     }
     public function searchData()
     {
-        $this->loadLeaveTransactions($this->selectedDate);
+        $this->loadLeaveTransactions($this->date);
     }
 
     public function loadLeaveTransactions($date)
     {
-
         try {
-            // Retrieve leave transactions for the selected date from the database
+            // Retrieve the authenticated employee's ID and company ID
             $employeeId = auth()->guard('emp')->user()->emp_id;
-
             $companyId = auth()->guard('emp')->user()->company_id;
             $dateFormatted = Carbon::parse($date)->format('Y-m-d');
             $leaveCount = 0; // Initialize leave count variable
 
-            // Filter data based on the selected filter type
+            // Apply search term condition
+            $searchTerm = '%' . $this->searchTerm . '%';
+
             if ($this->filterCriteria === 'Me') {
+                // Query for leave transactions of the logged-in employee
                 $leaveTransactions = LeaveRequest::with('employee')
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
                     ->where('emp_id', $employeeId)
                     ->where('status', 'approved')
+                    ->where(function ($query) use ($searchTerm) {
+                        $query->where('emp_id', 'like', $searchTerm)
+                            ->orWhereHas('employee', function ($query) use ($searchTerm) {
+                                $query->where('first_name', 'like', $searchTerm)
+                                    ->orWhere('last_name', 'like', $searchTerm);
+                            });
+                    })
                     ->get();
+
                 $leaveCount = $leaveTransactions->count();
                 $this->leaveTransactions = $leaveTransactions;
             } elseif ($this->filterCriteria === 'MyTeam') {
-                // Retrieve the manager_id of the logged-in employee
-                $employeeId = auth()->guard('emp')->user()->emp_id;
-                // Retrieve the company_id of the logged-in employee
-                $companyId = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+                // Retrieve the manager_id and team members
                 $teamMembersIds = EmployeeDetails::where('manager_id', $employeeId)
-                 ->where('company_id', $companyId)
-                ->pluck('emp_id')
-                ->toArray();
+                    ->where('company_id', $companyId)
+                    ->pluck('emp_id')
+                    ->toArray();
 
-                // Retrieve leave requests for team members for the selected date
+                // Query for leave transactions of team members
                 $leaveTransactionsOfTeam = LeaveRequest::with('employee')
                     ->whereIn('emp_id', $teamMembersIds)
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
-                    ->where('status', 'approved');
+                    ->where('status', 'approved')
+                    ->where(function ($query) use ($searchTerm) {
+                        $query->where('emp_id', 'like', $searchTerm)
+                            ->orWhereHas('employee', function ($query) use ($searchTerm) {
+                                $query->where('first_name', 'like', $searchTerm)
+                                    ->orWhere('last_name', 'like', $searchTerm);
+                            });
+                    })
+                    ->get();
 
-                $leaveTransactionsOfTeam->where(function ($query) {
-                    $query->where('emp_id', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhereHas('employee', function ($query) {
-                            $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                                ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
-                                ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-                        });
-                });
-
-                $leaveTransactionsOfTeam = $leaveTransactionsOfTeam->get();
                 $leaveCount = $leaveTransactionsOfTeam->count();
                 $this->leaveTransactions = $leaveTransactionsOfTeam;
             }
@@ -421,10 +425,11 @@ class LeaveCalender extends Component
         return LeaveRequest::where('from_date', $day)->get();
     }
 
-
+    public $showAccordion = true;
     public function dateClicked($date)
     {
         try {
+            $this->showAccordion = true;
             $date = (int) $date;
             $this->selectedDate = Carbon::createFromDate($this->year, $this->month, $date)->format('Y-m-d');
             $this->loadLeaveTransactions($this->selectedDate);

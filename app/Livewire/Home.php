@@ -37,6 +37,7 @@ class Home extends Component
     public $currentDate;
     public $swipes;
     public $showSalary = false;
+    public $groupedRequests;
 
     public $whoisinTitle = '';
     public $currentDay;
@@ -109,89 +110,13 @@ class Home extends Component
     public $city;
     public $country;
     public $postal_code;
+    public $dataSqlServer;
+    public $lon;
+    public $lat;
     public function mount()
     {
         $this->fetchWeather();
-        // Get the current month and year
-        $currentDate = Carbon::today();
-        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-        $month = $currentDate->format('n');
-        $year = $currentDate->format('Y');
-
-        // // Construct the table name for SQL Server
-        $tableName = 'DeviceLogs_' . $month . '_' . $year;
-
-        $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
-        $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
-        // Get data from SQL Server for the normalized user ID
-        // $dataSqlServer = DB::connection('sqlsrv')
-        //     ->table('DeviceLogs_1_2024')
-        //     ->get();
-            
-        // Assuming $dataSqlServer is the collection you want to split
-        // foreach ($dataSqlServer as $data) {
-        //     // Accessing individual fields
-        //     $userId = $data->UserId;
-        //     $logDate = $data->logDate;
-        //     $direction = $data->Direction;
-
-        //     // Example: If you want to split the date and time from logDate
-        //     $dateTimeParts = explode(' ', $logDate);
-        //     $date = $dateTimeParts[0]; // 2024-08-28
-        //     $time = $dateTimeParts[1]; // 11:36:50.000
-
-        //     // Output or further processing
-        //     dump($userId, $date, $time, $direction);
-        // }
-
-
-        // // Get data from MySQL
-        // $dataMySql = DB::connection('mysql')
-        //     ->table('employee_details')
-        //     ->pluck('emp_id');2
-        // $mysqlEmployeeIds = $dataMySql->toArray();
-
-        // // Process and match the data from both databases
-        // foreach ($dataSqlServer as $sqlData) {
-        //     foreach ($mysqlEmployeeIds as $mysqlData) {
-        //         // Remove hyphens from emp_id in MySQL
-        //         $empIdWithoutHyphens = str_replace('-', '', $mysqlData);
-
-        //         // Compare emp_id from MySQL with UserId from SQL Server
-        //         if ($sqlData->UserId === $empIdWithoutHyphens) {
-        //             $matchedData[] = [
-        //                 'UserId' => $sqlData->UserId,
-        //                 'logDate' => $sqlData->logDate,
-        //                 'Direction' => $sqlData->Direction,
-        //             ];
-        //         }
-        //     }
-        // }
-        // $this->swipedDataRecords = $matchedData;
-        // // dd($this->swipedDataRecords);
-        // foreach ($this->swipedDataRecords as $data) {
-        //     // Check if a record with the same emp_id, direction, and DownloadDate already exists
-        //     $existingRecord = SwipeData::where('emp_id', $data['UserId'])
-        //         ->where('direction', $data['Direction'])
-        //         ->whereDate('DownloadDate', $data['logDate'])
-        //         ->exists();
-
-        //     // If the record does not exist, create a new SwipeData record
-        //     if (!$existingRecord) {
-        //         SwipeData::create([
-        //             'emp_id' => $data['UserId'],
-        //             'direction' => $data['Direction'],
-        //             'DownloadDate' => $data['logDate']
-        //         ]);
-        //     }
-        // }
-
-        // //SwipeData for loginEmployees
-        // $currentDate = Carbon::today()->toDateString(); // Get today's date
-        // $employeeId = str_replace('-', '', auth()->guard('emp')->user()->emp_id);
-        // $this->swipeDataOfEmployee = SwipeData::where('emp_id', $employeeId)
-        //     ->whereDate('DownloadDate', $currentDate)
-        //     ->get();
+        $this->fetchSwipeData();
 
         $currentHour = date('G');
 
@@ -228,6 +153,96 @@ class Home extends Component
             ->with('employee')
             ->count();
     }
+
+    //################################ in local this is working ################################################
+    // public function fetchSwipeData()
+    // {
+
+    //     $currentDate = Carbon::today();
+    //     $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+    //     $month = $currentDate->format('n');
+    //     $year = $currentDate->format('Y');
+
+    //     // Construct the table name for SQL Server
+    //     $tableName = 'DeviceLogs_' . $month . '_' . $year;
+
+    //     $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+    //     $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+
+    //     try {
+
+    //         // Get data from SQL Server for the normalized user ID
+    //         $dataSqlServer = DB::connection('sqlsrv')
+    //             ->table($tableName)
+    //             ->select('UserId', 'logDate', 'Direction')
+    //             ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
+    //             ->whereDate('logDate', $today) // Filter for today's date
+    //             ->orderBy('logDate')
+    //             ->get();
+    //         // dd($dataSqlServer);
+    //     } catch (\Exception $e) {
+    //         // Handle the error
+    //         $this->dataSqlServer = collect(); // or handle error as needed
+    //         // Log error or display message
+    //         logger()->error("Data fetch error: " . $e->getMessage());
+    //     }
+    // }
+    //################################ in sever this is working ################################################
+
+    public function fetchSwipeData()
+    {
+        $currentDate = Carbon::today();
+        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
+
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        $appUserId = Auth::user()->emp_id;
+        $normalizedUserId = str_replace('-', '', $appUserId);
+
+        $dsn = env('DB_ODBC_DSN');
+        $username = env('DB_ODBC_USERNAME');
+        $password = env('DB_ODBC_PASSWORD');
+
+        try {
+            $pdo = new \PDO("odbc:{$dsn}", $username, $password);
+            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+            $sql = "
+                SELECT UserId, logDate, Direction
+                FROM {$tableName}
+                WHERE UserId = :userId
+                AND CAST(logDate AS DATE) = :today
+                ORDER BY logDate
+            ";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':userId', $normalizedUserId, \PDO::PARAM_STR);
+            $stmt->bindParam(':today', $today, \PDO::PARAM_STR);
+            $stmt->execute();
+
+            $this->dataSqlServer = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            // Return results
+            return $this->dataSqlServer;
+        } catch (\PDOException $e) {
+            // Handle the error
+            $this->dataSqlServer = [];
+            logger()->error("PDO error: " . $e->getMessage());
+            // Return or handle error result
+            return ['error' => 'PDO error: ' . $e->getMessage()];
+        } catch (\Exception $e) {
+            // General error handling
+            $this->dataSqlServer = [];
+            logger()->error("General error: " . $e->getMessage());
+            // Return or handle error result
+            return ['error' => 'General error: ' . $e->getMessage()];
+        }
+    }
+
+
+
+
     public function reviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = true;
@@ -353,10 +368,16 @@ class Home extends Component
             $this->currentDate = now()->format('d M Y');
             $today = Carbon::now()->format('Y-m-d');
             $this->leaveRequests = LeaveRequest::with('employee')
-                ->where('status', 'pending')
+                ->where(function ($query) {
+                    $query->where('status', 'Pending')
+                        ->orWhere(function ($query) {
+                            $query->where('status', 'approved')
+                                ->where('cancel_status', 'Pending Leave Cancel');
+                        });
+                })
+                ->orderBy('created_at', 'desc')
                 ->get();
             $matchingLeaveApplications = [];
-
             foreach ($this->leaveRequests as $leaveRequest) {
                 $applyingToJson = trim($leaveRequest->applying_to);
                 $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
@@ -411,12 +432,34 @@ class Home extends Component
                     }
                 }
             }
-
             // Get the count of matching leave applications
             $this->leaveApplied = $matchingLeaveApplications;
+            $groupedRequests = [];
+
+            // Iterate through each leave request
+            foreach ($this->leaveApplied as $request) {
+                $leaveRequest = $request['leaveRequest'];
+                $empId = $leaveRequest->emp_id; // Extract emp_id from LeaveRequest model
+
+                if (!isset($groupedRequests[$empId])) {
+                    // Initialize the array for this employee ID
+                    $groupedRequests[$empId] = [
+                        'count' => 0,
+                        'leaveRequests' => [] // Store all leave requests for this employee
+                    ];
+                }
+
+                // Increment the count and store the leave request
+                $groupedRequests[$empId]['count']++;
+                $groupedRequests[$empId]['leaveRequests'][] = $leaveRequest;
+            }
+
+
+            // Store the grouped requests in the class property
+            $this->groupedRequests = $groupedRequests;
+
 
             $this->count = count($matchingLeaveApplications);
-
             //team on leave
             $currentDate = Carbon::today();
             $this->teamOnLeaveRequests = LeaveRequest::with('employee')
@@ -667,6 +710,7 @@ class Home extends Component
                 'totalTasksCount' => $this->totalTasksCount,
                 'taskCount' => $this->taskCount,
                 'employeeNames' => $this->employeeNames,
+                'groupedRequests' => $this->groupedRequests
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
@@ -781,8 +825,8 @@ class Home extends Component
             // Get the IP address and determine location
             $ip = request()->ip();
             $location = GeoIP::getLocation($ip);
-            $lat = $location['lat'];
-            $lon = $location['lon'];
+            $this->lat = $location['lat'];
+            $this->lon = $location['lon'];
             $this->country = $location['country'];
             $this->city = $location['city'];
             $this->postal_code = $location['postal_code'];
@@ -791,7 +835,7 @@ class Home extends Component
             $apiUrl = env('WEATHER_API_URL');
 
             // Prepare the request URL with dynamic latitude and longitude
-            $requestUrl = $apiUrl . '?latitude=' . $lat . '&longitude=' . $lon . '&current_weather=true';
+            $requestUrl = $apiUrl . '?latitude=' . $this->lat . '&longitude=' . $this->lon . '&current_weather=true';
 
             // Log request URL for debugging
             Log::info("Request URL: $requestUrl");
@@ -872,5 +916,27 @@ class Home extends Component
         ];
 
         return $weatherCodes[$code] ?? '';
+    }
+
+
+    public function getLocationByIP()
+    {
+
+        try {
+
+            $ip = '';
+
+            // $ip = request()->ip();
+            $apiUrl = env('FINDIP_API_URL');
+
+            // Construct the full API URL
+            $url = "{$apiUrl}/{$ip}/json/";
+
+            // Make the HTTP request
+            $response = Http::get($url);
+            // dd($response->json());
+        } catch (\Exception $e) {
+            Log::error("Exception: ", ['message' => $e->getMessage()]);
+        }
     }
 }

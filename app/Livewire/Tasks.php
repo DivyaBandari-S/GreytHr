@@ -76,13 +76,12 @@ class Tasks extends Component
         if ($tab === 'open') {
             $this->activeTab = 'open';
             $this->search = '';
-            $this->start = now()->startOfYear()->format('Y-m-d');
-            $this->end = now()->endOfYear()->format('Y-m-d');
+            $this->filterPeriod='all';
+            
         } elseif ($tab === 'completed') {
             $this->activeTab = 'completed';
             $this->closedSearch = '';
-            $this->start = now()->startOfYear()->format('Y-m-d');
-            $this->end = now()->endOfYear()->format('Y-m-d');
+            $this->filterPeriod='all';
         }
         $this->loadTasks();
     }
@@ -100,6 +99,8 @@ class Tasks extends Component
             $this->searchCompletedTasks();
         }
     }
+    public $filterPeriod = 'all';
+ 
 
     public function searchActiveTasks()
     {
@@ -110,24 +111,49 @@ class Tasks extends Component
         })
             ->where('status', 'Open');
 
-
-        if ($this->start && $this->end) {
-            $query->whereBetween('created_at', [$this->start, $this->end]);
+         // Filter by period
+         switch ($this->filterPeriod) {
+            case 'this_week':
+                $startOfWeek = now()->startOfWeek()->toDateString();
+                $endOfWeek = now()->endOfWeek()->toDateString();
+                $query->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
+                break;
+            case 'this_month':
+                $startOfMonth = now()->startOfMonth()->toDateString();
+                $endOfMonth = now()->endOfMonth()->toDateString();
+                $query->whereBetween('created_at', [$startOfMonth, $endOfMonth]);
+                break;
+            case 'last_month':
+                $startOfLastMonth = now()->subMonth()->startOfMonth()->toDateString();
+                $endOfLastMonth = now()->subMonth()->endOfMonth()->toDateString();
+                $query->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth]);
+                break;
+            case 'this_year':
+                $startOfYear = now()->startOfYear()->toDateString();
+                $endOfYear = now()->endOfYear()->toDateString();
+                $query->whereBetween('created_at', [$startOfYear, $endOfYear]);
+                break;
+            case 'all':
+                break;
         }
-
 
         if ($this->search) {
-            $query->where(function ($query) {
-                $query->where('assignee', 'like', '%' . $this->search . '%')
-                    ->orWhere('followers', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('emp', function ($query) {
-                        $query->where('first_name', 'like', '%' . $this->search . '%')
-                            ->orWhere('last_name', 'like', '%' . $this->search . '%');
+            $searchTerm = trim($this->search); // Trim any extra whitespace
+            $searchTerm = strtolower($searchTerm); // Convert to lowercase for case-insensitivity
+        
+            $query->where(function ($query) use ($searchTerm) {
+                $query->whereRaw('LOWER(assignee) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(followers) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereHas('emp', function ($query) use ($searchTerm) {
+                        $query->whereRaw('LOWER(first_name) LIKE ?', ["%{$searchTerm}%"])
+                            ->orWhereRaw('LOWER(last_name) LIKE ?', ["%{$searchTerm}%"]);
                     })
-                    ->orWhere('task_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('emp_id', 'like', '%' . $this->search . '%');
+                    ->orWhereRaw('LOWER(task_name) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(emp_id) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(CONCAT("T-", id)) LIKE ?', ["%{$searchTerm}%"]);
             });
         }
+        
 
         $this->filterData = $query->orderBy('created_at', 'desc')->get();
         $this->peopleFound = count($this->filterData) > 0;
@@ -144,42 +170,52 @@ class Tasks extends Component
             ->where('status', 'Completed');
 
 
-        if ($this->start && $this->end) {
-            $query->whereBetween('created_at', [$this->start, $this->end]);
-        }
+            switch ($this->filterPeriod) {
+                case 'this_week':
+                    $startOfWeek = now()->startOfWeek()->toDateString();
+                    $endOfWeek = now()->endOfWeek()->toDateString();
+                    $query->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
+                    break;
+                case 'this_month':
+                    $startOfMonth = now()->startOfMonth()->toDateString();
+                    $endOfMonth = now()->endOfMonth()->toDateString();
+                    $query->whereBetween('created_at', [$startOfMonth, $endOfMonth]);
+                    break;
+                case 'last_month':
+                    $startOfLastMonth = now()->subMonth()->startOfMonth()->toDateString();
+                    $endOfLastMonth = now()->subMonth()->endOfMonth()->toDateString();
+                    $query->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth]);
+                    break;
+                case 'this_year':
+                    $startOfYear = now()->startOfYear()->toDateString();
+                    $endOfYear = now()->endOfYear()->toDateString();
+                    $query->whereBetween('created_at', [$startOfYear, $endOfYear]);
+                    break;
+                case 'all':
+                    break;
+            }
 
 
         if ($this->closedSearch) {
-            $query->where(function ($query) {
-                $query->where('assignee', 'like', '%' . $this->closedSearch . '%')
-                    ->orWhere('followers', 'like', '%' . $this->closedSearch . '%')
-                    ->orWhereHas('emp', function ($query) {
-                        $query->where('first_name', 'like', '%' . $this->closedSearch . '%')
-                            ->orWhere('last_name', 'like', '%' . $this->closedSearch . '%');
+            $searchTerm = trim($this->closedSearch); // Trim any extra whitespace
+            $searchTerm = strtolower($searchTerm); // Convert to lowercase for case-insensitivity
+        
+            $query->where(function ($query) use ($searchTerm) {
+                $query->whereRaw('LOWER(assignee) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(followers) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereHas('emp', function ($query) use ($searchTerm) {
+                        $query->whereRaw('LOWER(first_name) LIKE ?', ["%{$searchTerm}%"])
+                            ->orWhereRaw('LOWER(last_name) LIKE ?', ["%{$searchTerm}%"]);
                     })
-                    ->orWhere('task_name', 'like', '%' . $this->closedSearch . '%')
-                    ->orWhere('emp_id', 'like', '%' . $this->closedSearch . '%');
+                    ->orWhereRaw('LOWER(task_name) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(emp_id) LIKE ?', ["%{$searchTerm}%"])
+                    ->orWhereRaw('LOWER(CONCAT("T-", id)) LIKE ?', ["%{$searchTerm}%"]);
             });
         }
 
         $this->filterData = $query->orderBy('created_at', 'desc')->get();
         $this->peopleFound = count($this->filterData) > 0;
     }
-
-
-    public function updatedStart($value)
-    {
-        $this->start = $value;
-        $this->loadTasks();
-    }
-
-    public function updatedEnd($value)
-    {
-        $this->end = $value;
-        $this->loadTasks();
-    }
-
-
 
     protected $rules = [
         'newComment' => 'required',
@@ -196,29 +232,6 @@ class Tasks extends Component
     {
 
         $this->validateOnly($field, $this->rules);
-    }
-
-    public string $year = '';
-    public string $start = '';
-    public string $end = '';
-
-    protected $listeners = [
-        'update',
-        'updateStart',
-        'updateEnd'
-    ];
-
-    public function update($start, $end)
-    {
-        $this->year = carbon::parse($start)->format('Y');
-        $this->start = $start;
-        $this->end = $end;
-    }
-
-    public function changeYear()
-    {
-        $this->start = Carbon::parse($this->start)->year($this->year)->format('Y-m-d');
-        $this->end = Carbon::parse($this->end)->year($this->year)->format('Y-m-d');
     }
 
     public function forAssignee()
@@ -247,9 +260,7 @@ class Tasks extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->selectedPersonClients = collect();
         $this->selectedPersonClientsWithProjects = collect();
-        $this->year = Carbon::now()->format('Y');
-        $this->start = now()->startOfYear()->format('Y-m-d');
-        $this->end = now()->endOfYear()->format('Y-m-d');
+        $this->loadTasks();
         if (session()->has('showAlert')) {
             $this->showAlert = session('showAlert');
         }
@@ -259,8 +270,12 @@ class Tasks extends Component
          DB::table('notifications')
         ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$employeeId])
         ->where('notification_type', 'task')
-        ->update(['is_read' => 1]);
+        ->delete();
 
+    }
+    public function updatedFilterPeriod()
+    {
+        $this->loadTasks();
     }
 
     public function selectPerson($personId)
@@ -317,7 +332,7 @@ class Tasks extends Component
     {
         $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
             $selectedPerson = $this->peoples->where('emp_id', $id)->first();
-            return $selectedPerson ? $selectedPerson->first_name . ' #(' . $selectedPerson->emp_id . ')' : '';
+            return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name .' #(' . $selectedPerson->emp_id . ')' : '';
         }, $this->selectedPeopleForFollowers);
 
         $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
@@ -665,12 +680,6 @@ class Tasks extends Component
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
-
-        if ($this->activeTab === 'open') {
-            $this->searchActiveTasks();
-        } elseif ($this->activeTab === 'completed') {
-            $this->searchCompletedTasks();
-        }
 
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
 

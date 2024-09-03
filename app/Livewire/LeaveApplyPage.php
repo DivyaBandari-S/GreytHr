@@ -72,7 +72,7 @@ class LeaveApplyPage extends Component
     public $selectedCcTo = [];
     public $selectedCCEmployees = [];
     public $showerrorMessage = false;
-    public $showCasualLeaveProbation;
+    public $showCasualLeaveProbation, $showCasualLeaveProbationYear;
     protected $rules = [
         'leave_type' => 'required',
         'from_date' => 'required|date',
@@ -111,7 +111,11 @@ class LeaveApplyPage extends Component
                 $this->selectedManagerDetails = $managerDetails;
             }
             // Determine if the dropdown option should be displayed
-            $this->showCasualLeaveProbation = $this->employee && !$this->employee->probation_period && !$this->employee->confirmation_date;
+            $this->showCasualLeaveProbation = $this->employee && !$this->employee->confirmation_date;
+            $currentYear = date('Y'); // Get the current year
+            $this->showCasualLeaveProbationYear = $this->employee &&
+                !empty($this->employee->confirmation_date) &&
+                (date('Y', strtotime($this->employee->confirmation_date)) == $currentYear);
         }
     }
 
@@ -329,16 +333,26 @@ class LeaveApplyPage extends Component
             // Step 1: Retrieve total number of days for the selected leave type
             $checkLeaveBalance = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', $this->leave_type)
+                ->whereNotIn('leave_type', ['Loss Of Pay'])
                 ->whereIn('status', ['approved', 'pending'])
                 ->get();
 
             $totalNumberOfDays = 0; // Initialize the counter for total days
-
             if (!$checkLeaveBalance->isEmpty()) {
                 foreach ($checkLeaveBalance as $leaveRequest) {
                     $numberBalanceOfDays = $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session);
                     $totalNumberOfDays += $numberBalanceOfDays;
                 }
+            }
+            // Calculate the days for the new leave request, if provided
+            if ($this->from_date && $this->from_session && $this->to_date && $this->to_session) {
+                $totalEnteredDays = $this->calculateNumberOfDays(
+                    $this->from_date,
+                    $this->from_session,
+                    $this->to_date,
+                    $this->to_session
+                );
+                $totalNumberOfDays += $totalEnteredDays;
             }
 
             // Step 2: Retrieve leave balances
@@ -503,50 +517,59 @@ class LeaveApplyPage extends Component
             $this->showApplyingTo = false;
             $this->selectedYear = Carbon::now()->format('Y');
             $employeeId = auth()->guard('emp')->user()->emp_id;
+
             // Retrieve all leave balances
             $allLeaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
+
+            // Debugging output
+            Log::info('All Leave Balances:', $allLeaveBalances);
+
             // Filter leave balances based on the selected leave type
             switch ($this->leave_type) {
                 case 'Casual Leave Probation':
                     $this->leaveBalances = [
-                        'casualProbationLeaveBalance' => $allLeaveBalances['casualProbationLeaveBalance']
+                        'casualProbationLeaveBalance' => $allLeaveBalances['casualProbationLeaveBalance'] ?? '0'
                     ];
                     break;
                 case 'Casual Leave':
                     $this->leaveBalances = [
-                        'casualLeaveBalance' => $allLeaveBalances['casualLeaveBalance']
+                        'casualLeaveBalance' => $allLeaveBalances['casualLeaveBalance'] ?? '0'
                     ];
                     break;
                 case 'Loss of Pay':
                     $this->leaveBalances = [
-                        'lossOfPayBalance' => $allLeaveBalances['lossOfPayBalance']
+                        'lossOfPayBalance' => $allLeaveBalances['lossOfPayBalance'] ?? '0'
                     ];
-
                     break;
                 case 'Sick Leave':
                     $this->leaveBalances = [
-                        'sickLeaveBalance' => $allLeaveBalances['sickLeaveBalance']
+                        'sickLeaveBalance' => $allLeaveBalances['sickLeaveBalance'] ?? '0'
                     ];
                     break;
                 case 'Maternity Leave':
                     $this->leaveBalances = [
-                        'maternityLeaveBalance' => $allLeaveBalances['maternityLeaveBalance']
+                        'maternityLeaveBalance' => $allLeaveBalances['maternityLeaveBalance'] ?? '0'
                     ];
                     break;
                 case 'Paternity Leave':
                     $this->leaveBalances = [
-                        'paternityLeaveBalance' => $allLeaveBalances['paternityLeaveBalance']
+                        'paternityLeaveBalance' => $allLeaveBalances['paternityLeaveBalance'] ?? '0'
                     ];
                     break;
                 case 'Marriage Leave':
                     $this->leaveBalances = [
-                        'marriageLeaveBalance' => $allLeaveBalances['marriageLeaveBalance']
+                        'marriageLeaveBalance' => $allLeaveBalances['marriageLeaveBalance'] ?? '0'
                     ];
                     break;
                 default:
                     $this->leaveBalances = [];
                     break;
             }
+
+            // Debugging output
+            Log::info('Selected Leave Type:', ['leave_type' => $this->leave_type]);
+            Log::info('Leave Balances:', $this->leaveBalances);
+
             $this->showNumberOfDays = true;
         } catch (\Exception $e) {
             // Log the error
@@ -557,6 +580,7 @@ class LeaveApplyPage extends Component
             return redirect()->back();
         }
     }
+
     //it will calculate number of days for leave application
     public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {

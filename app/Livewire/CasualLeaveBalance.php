@@ -13,12 +13,12 @@ use Illuminate\Support\Facades\DB;
 
 class CasualLeaveBalance extends Component
 {
-    public $leaveData,$year,$currentYear;
+    public $leaveData, $year, $currentYear;
     public $employeeLeaveBalances;
     public $employeeleaveavlid;
     public $totalSickDays = 0;
     public $employeeDetails;
-    public $Availablebalance,$leaveGrantedData,$availedLeavesCount;
+    public $Availablebalance, $leaveGrantedData, $availedLeavesCount;
 
 
     // public function mount(){
@@ -114,19 +114,19 @@ class CasualLeaveBalance extends Component
     public function render()
     {
         $this->currentYear = date('Y');
-         $this->year= request()->query('year') ?? date('Y');
+        $this->year = request()->query('year') ?? date('Y');
 
         // $this->yearDropDown();
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
         $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
-        ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-        ->whereYear('to_date', '>=', $this->year)
-        ->get();
+            ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+            ->whereYear('to_date', '>=', $this->year)
+            ->get();
 
-        $this->employeeLeaveBalances =EmployeeLeaveBalances::where('emp_id', $employeeId)
-        ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-        ->whereYear('to_date', '>=', $this->year)
+        $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
+            ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+            ->whereYear('to_date', '>=', $this->year)
             ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Casual Leave\"')) AS casual_leave")
             ->pluck('casual_leave')
             ->first();
@@ -139,7 +139,7 @@ class CasualLeaveBalance extends Component
             ->whereYear('to_date', '>=', $this->year)
             ->where('status', 'approved')
             ->get();
-            // dd(  $this->employeeleaveavlid);
+        // dd(  $this->employeeleaveavlid);
 
 
 
@@ -175,36 +175,49 @@ class CasualLeaveBalance extends Component
         $grantedLeavesByMonth = [];
         $availedLeavesByMonth = [];
 
-            $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
+        $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
             ->whereYear('to_date', '>=', $this->year)
             ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Casual Leave\"')) AS casual_leave")
             ->pluck('casual_leave')
             ->first();
         // dd($grantedLeavesCount);
-
-
         for ($month = $startingMonth; $month <= $lastmonth; $month++) {
-            // Fetch availed leaves count for this month
-            $this->availedLeavesCount =0;
+            // Reset availed leaves count for this month
+            $this->availedLeavesCount = 0;
+
+            // Fetch leave requests that overlap with the current month
             $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', 'Casual Leave')
                 ->where('status', 'approved')
                 ->whereYear('from_date', $currentYear)
-                ->whereMonth('from_date', $month)
+                ->where(function ($query) use ($month) {
+                    $query->whereMonth('from_date', $month)
+                          ->orWhereMonth('to_date', $month);
+                })
                 ->get();
-                foreach ($availedLeavesRequests as $availedleaveRequest) {
-                    //$leaveType = $leaveRequest->leave_type;
-                    $days = self::calculateNumberOfDays(
-                        $availedleaveRequest->from_date,
-                        $availedleaveRequest->from_session,
-                        $availedleaveRequest->to_date,
-                        $availedleaveRequest->to_session
-                    );
-                    $this->availedLeavesCount += $days;
 
-                    // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
-                }
+            foreach ($availedLeavesRequests as $availedleaveRequest) {
+                $originalStartDate = Carbon::parse($availedleaveRequest->from_date);
+                $originalEndDate = Carbon::parse($availedleaveRequest->to_date);
+
+                // Adjust the start date to the first day of the month if it is earlier
+                $startDate = $originalStartDate->month < $month ? Carbon::create($currentYear, $month, 1) : $originalStartDate;
+
+                // Adjust the end date to the last day of the month if it is later
+                $endDate = $originalEndDate->month > $month ? Carbon::create($currentYear, $month, Carbon::create($currentYear, $month)->daysInMonth) : $originalEndDate;
+
+                // Calculate the number of days within this month
+                $days = self::calculateNumberOfDays(
+                    $startDate,
+                    $availedleaveRequest->from_session,
+                    $endDate,
+                    $availedleaveRequest->to_session
+                );
+
+                // Accumulate the days for this month
+                $this->availedLeavesCount += $days;
+            }
 
             // Adjust granted leaves count by subtracting availed leaves count
             $grantedLeavesCount -= $this->availedLeavesCount;
@@ -216,6 +229,7 @@ class CasualLeaveBalance extends Component
             $grantedLeavesByMonth[] = $grantedLeavesCount;
             $availedLeavesByMonth[] = $this->availedLeavesCount;
         }
+
 
         $chartData = [
             'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],

@@ -55,7 +55,6 @@ class Notification extends Component
                 ->where('is_read', 0)
                 ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
                 ->get();
-                // ->groupBy('emp_id');
 
                 $this->leavecancelnotifications = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
@@ -126,12 +125,12 @@ class Notification extends Component
     public function reduceTaskCount($requestId)
     {
         try {
-            DB::table('notifications')
-                ->where('emp_id', $requestId)
-                ->where('notification_type', 'task')
-                ->update(['is_read' => 1]);
+            // DB::table('notifications')
+            //     ->where('emp_id', $requestId)
+            //     ->where('notification_type', 'task')
+            //     ->update(['is_read' => 1]);
 
-            $this->fetchNotifications();
+            // $this->fetchNotifications();
 
             return redirect()->route('tasks');
         } catch (\Exception $e) {
@@ -143,13 +142,13 @@ class Notification extends Component
     {
         try {
 
-            DB::table('notifications')
-                ->where('emp_id', $requestId)
-                ->where('notification_type', 'leave')
-                ->update(['is_read' => 1]);
+            // DB::table('notifications')
+            //     ->where('emp_id', $requestId)
+            //     ->where('notification_type', 'leave')
+            //     ->update(['is_read' => 1]);
 
 
-            $this->fetchNotifications();
+            // $this->fetchNotifications();
 
             return redirect()->route('review', ['tab' => 'leave']);
         } catch (\Exception $e) {
@@ -162,11 +161,11 @@ class Notification extends Component
     {
 
         try {
-            DB::table('notifications')
-                ->where('chatting_id', $messageId)
-                ->update(['message_read_at' => Carbon::now()]);
+            // DB::table('notifications')
+            //     ->where('chatting_id', $messageId)
+            //     ->update(['message_read_at' => Carbon::now()]);
 
-            $this->fetchNotifications();
+            // $this->fetchNotifications();
             return redirect()->route('chat', ['query' => \Vinkla\Hashids\Facades\Hashids::encode($messageId)]) ;
 
         } catch (\Exception $e) {

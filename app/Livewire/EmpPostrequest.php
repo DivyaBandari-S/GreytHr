@@ -2,9 +2,10 @@
 
 namespace App\Livewire;
 
+use Livewire\Component;
 use App\Models\Company;
 use App\Models\Post;
-use Livewire\Component;
+
 use Livewire\WithFileUploads;
 use App\Models\EmployeeDetails;
 use App\Models\Hr;
@@ -12,16 +13,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-class Everyone extends Component
-{
-    
-    use WithFileUploads;
+class EmpPostrequest extends Component
+{  use WithFileUploads;
 
     public $image;
     public $posts;
+    public $showImageDialog = false;
 
     public $showAlert = false;
     public $file_path;
+    public $imageUrl;
 
     public $category;
     public $isManager;
@@ -44,39 +45,42 @@ class Everyone extends Component
         'description.required' => 'Description is required.',
        
     ];
+    public function closePost($postId)
+    {
+        $post = Post::find($postId);
+    
+        if ($post && $post->status !== 'Closed') {
+            $post->status = 'Closed';
+            $success = $post->save(); // Save and check if successful
+    
+            if ($success) {
+                // Set the flash message only if the status was successfully updated
+                session()->flash('message', 'Request approved.');
+            }
+            return redirect()->to('/everyone');
+        }
+    }
+    
     public function addFeeds()
     {
         $this->showFeedsDialog = true;
     }
-    public function openPost($postId)
-    {
-        $post = Post::find($postId);
-    
-        if ($post) {
-            $post->update(['status' => 'Open']);
-        }
-    
-        return redirect()->to('/feeds'); // Redirect to the appropriate route
-    }
-    
     public function mount()
     {
-     
-        $this->posts  = Post::where('status', 'Closed')
-             ->orderBy('updated_at', 'desc')
-             ->get();
-
+        // Retrieve posts data and assign it to the $posts property
+        $this->posts = Post::orderBy('created_at', 'desc')->get();
         $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
   
         $user = Auth::user();
+        $this->employeeDetails = $user->employeeDetails;
 
         if ($user) {
             $this->employeeDetails = $user->employeeDetails;
         }
         $employeeId = Auth::guard('emp')->user()->emp_id;
         $this->isManager = DB::table('employee_details')
-            ->where('manager_id', $employeeId)
-            ->exists();
+        ->where('manager_id', $employeeId)
+        ->exists();
     }
     private function getEmpCompanyLogoUrl()
     {
@@ -102,6 +106,16 @@ class Everyone extends Component
         
       
     }
+    
+    public function showImage($url)
+    {
+        $this->imageUrl = $url;
+        $this->showImageDialog = true;
+    }
+    public function closeImageDialog()
+    {
+        $this->showImageDialog = false;
+    }
     public function closeFeeds()
     {
         
@@ -126,7 +140,7 @@ class Everyone extends Component
 
     public function submit()
     {
-        $validatedData = $this->validate($this->rules);
+        $validatedData = $this->validate($this->newCommentRules);
     
         try {
             $fileContent = null;
@@ -168,7 +182,7 @@ class Everyone extends Component
                 ->exists();
     
             // If not a manager, set `emp_id` instead of `manager_id`
-            $postStatus = $isManager ? 'Closed' : 'Pending'; // Set to 'Closed' if the user is a manager
+            $postStatus = $isManager ? 'Open' : 'Pending';
             $managerId = $isManager ? $employeeId : null;
             $empId = $isManager ? null : $employeeId;
     
@@ -193,8 +207,6 @@ class Everyone extends Component
             $this->message = 'Post created successfully!';
             session()->flash('showAlert', true);
             $this->showFeedsDialog = false;
-            return redirect()->to('/everyone'); 
-            
     
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
@@ -208,9 +220,12 @@ class Everyone extends Component
     }
     
     
+    
 
     public function render()
     {
+
+        $this->employeeDetails = EmployeeDetails::where('emp_id', Auth::user()->emp_id)->first();
 
           if (auth()->guard('hr')->check()) {
             $this->employeeDetails = Hr::where('hr_emp_id', Auth::user()->hr_emp_id)->first();
@@ -222,6 +237,6 @@ class Everyone extends Component
             return;
         }
         
-        return view('livewire.everyone',[     'empCompanyLogoUrl' => $this->empCompanyLogoUrl,     ]);
+        return view('livewire.emp-postrequest',[     'employees' => $this->employeeDetails,    'empCompanyLogoUrl' => $this->empCompanyLogoUrl,     'isManager' => $this->isManager,]);
     }
 }
