@@ -861,9 +861,22 @@
 .nextMonth:hover{
  
     border: 1px solid rgb(2, 17, 79);
-    color: rgb(2, 17, 79);
+    color: white;
+    background-color: rgb(2, 17, 79);
+}
+.nextMonth:active{
+ 
+ border: 1px solid rgb(2, 17, 79);
+ color: rgb(2, 17, 79);
+ background-color: rgb(2, 17, 79);
 }
 .prevMonth:hover{
+ 
+ border: 1px solid rgb(2, 17, 79);
+ color: white;
+ background-color: rgb(2, 17, 79);
+}
+.prevMonth:active{
  
  border: 1px solid rgb(2, 17, 79);
  color: white;
