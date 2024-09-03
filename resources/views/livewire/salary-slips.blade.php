@@ -21,18 +21,18 @@
     <div class="col">
     @if ($salaryRevision->isEmpty())
     <div class="homeCard5">
-                            <div class="py-2 px-3" style="height:400px">
-                                <div class="d-flex justify-content-center">
-                                    <p style="font-size:20px;color:#778899;font-weight:500;align-items:center">Payslip</p>
-                                    
-                                </div>
+    <div class="py-2 px-3 h-100">
+        <div class="d-flex justify-content-center">
+            <p class="text-center" style="font-size:20px;color:#778899;font-weight:500;">Payslip</p>
+        </div>
 
-                                <div style="display:flex;align-items:center;flex-direction:column;">
-                                        <img src="https://th.bing.com/th/id/OIP.mahJODIeDJLFSbIYARY4WwAAAA?pid=ImgDet&w=178&h=178&c=7&dpr=1.5" alt="" style="height:300px;width:300px;">
-                                    <p style="color: #677A8E;  margin-bottom: 20px; font-size:12px;"> We are working on your payslip!</p>
-                                </div>
-                            </div>
-                        </div>
+        <div class="d-flex flex-column align-items-center">
+            <img src="https://th.bing.com/th/id/OIP.mahJODIeDJLFSbIYARY4WwAAAA?pid=ImgDet&w=178&h=178&c=7&dpr=1.5" alt="Payslip Image" class="img-fluid" style="max-width:100%; height:auto;">
+            <p class="text-center" style="color: #677A8E; margin-bottom: 20px; font-size:12px;">We are working on your payslip!</p>
+        </div>
+    </div>
+</div>
+
     <!-- <div class="message-container" style="background-color: white; border: 1px solid #ccc; border-radius: 5px; padding: 20px; margin-bottom: 20px; width: 600px; height: 400px; font-family: Montserrat; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
     <img src="https://static.vecteezy.com/system/resources/previews/005/950/625/original/modern-design-icon-of-pay-slip-vector.jpg" style="height: 250px; width: 250px; justify-content: center; margin-top: 0px;">
     <br>
@@ -118,7 +118,7 @@
 @endforeach
 @endif
 
-<div class="col-md-4 mb-2">
+<div class="col-md-4 mt-1">
 <div class="employee-details-container  px-3  rounded" style="background-color: #ffffe8;">
     <div class="mt-3 d-flex justify-content-between">
        <h6 style="color: #778899;font-weight:500;">Employee details</h6>

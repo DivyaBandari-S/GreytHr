@@ -19,7 +19,7 @@ class GoogleLogins extends Component
 
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')-> redirect()->to('https://s6.payg-india.com/auth/google/callback');
     }
 
     public function handleGoogleCallback()
