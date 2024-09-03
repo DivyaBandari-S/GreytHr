@@ -237,7 +237,7 @@
                     </div>
                     <div class="col-lg-3 col-6 text-start mt-2 p-0">
                         <!-- Official Birthday -->
-                        <div style="font-size: 12px; color: #000; margin-bottom: 10px;">
+                        <div style="font-size: 12px; color: #000; margin-bottom: 15px;">
                             <div style="display: flex; align-items: flex-start;">
                                 <div style="width: 95px; color: #778899; flex-shrink: 0;white-space: nowrap;">
                                     Official Birthday
