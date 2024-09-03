@@ -224,7 +224,7 @@
     <button onclick="window.location.href = '{{ url('/login') }}'" 
             style="display: flex; align-items: center; justify-content: center; width: 90%; max-width: 150px; font-size: 12px; height: 40px; background-color: white; border: 1px solid #ccc; border-radius: 5px;">
         <img src="https://dynoinvestment.com/static/images/google-logo.png" 
-             style="height: 25px; width: 25px; margin-right: 8px;">
+             style="height: 25px; width: 29px; margin-right: 8px;">
         <span>Login with Google</span>
     </button>
 </div>
