@@ -1619,7 +1619,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/89294c29871c7510279786a50cbb35b5.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px" wire:click="ItRequest">Add Members to Distribution List</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;" wire:click="AddRequest">Add Members to Distribution List</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">Add Members to Distribution List</p>
@@ -1628,7 +1628,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/c3d8c429871c7510279786a50cbb3564.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">Add Members to Mailbox</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;"  wire:click="MailRequest">Add Members to Mailbox</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">Add Members to Mailbox</p>
@@ -1637,7 +1637,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/3111f90f878cb950279786a50cbb359b.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 14px">Devops Access Request</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 14px;white-space: nowrap;"  wire:click="DevopsRequest">Devops Access Request</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">Devops Access Request</p>
@@ -1646,7 +1646,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/673ac469871c7510279786a50cbb3563.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">ID Card Request</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;"  wire:click="IdRequest">ID Card Request</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">New ID Card Request</p>
@@ -1655,7 +1655,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/79ee2f8187c0b510e34c63d70cbb355f.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">MMS Account Request</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;" wire:click="MmsRequest">MMS Account Request</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">MMS Account Request</p>
@@ -1664,7 +1664,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/feaa4ca9871c7510279786a50cbb3576.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">New Distribution List</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;"  wire:click="DistributionRequest">New Distribution List</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">New Distribution List</p>
@@ -1673,7 +1673,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/1a00f1cb878cb950279786a50cbb35ea.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">New Laptop Request</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;" wire:click="LapRequest">New Laptop Request</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;font-size:12px">
                                     <p style="font-size: 12px">New Laptop Request</p>
@@ -1682,7 +1682,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/723bc4e9871c7510279786a50cbb3585.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 14px">New Mailbox Request</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 14px;white-space: nowrap;">New Mailbox Request</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">New Mailbox Request</p>
@@ -1691,7 +1691,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/a9fa00e9871c7510279786a50cbb3525.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">O365 Desktop License Access</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;">O365 Desktop License Access</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">O365 Desktop License Access</p>
@@ -1699,7 +1699,7 @@
                             </tr>
                             <tr>
                                 <td class="item-td">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">Other Request</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;">Other Request</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">Other Service Request</p>
@@ -1707,7 +1707,7 @@
                             </tr>
                             <tr>
                                 <td class="item-td">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">Privilege Access Request</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;">Privilege Access Request</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">Privilege Access Request</p>
@@ -1716,7 +1716,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/6dfb082d871c7510279786a50cbb3590.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">Remove Members from Distribution List</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;">Remove Members from Distribution List</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">Remove Members from Distribution List</p>
@@ -1725,7 +1725,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/6dfb082d871c7510279786a50cbb3590.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">Remove Members from Mailbox</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;">Remove Members from Mailbox</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">Remove Members from Mailbox</p>
@@ -1734,7 +1734,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/cc7c281087dc7150fc21ed7bbbbb356b.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">Request for IT Accessories</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;" wire:click="ItRequest">Request for IT Accessories</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">Request for IT Accessories</p>
@@ -1743,7 +1743,7 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/ef99c469871c7510279786a50cbb357f.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px">SIM Request</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;">SIM Request</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;">
                                     <p style="font-size: 12px">New SIM Request</p>

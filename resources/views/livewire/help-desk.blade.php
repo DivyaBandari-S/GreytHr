@@ -2,7 +2,7 @@
 
     <div style="overflow-x:hidden">
 
-        <body>
+     
             <div class="row ">
                 @if (session()->has('message'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
@@ -505,10 +505,10 @@
 
 
 
+<div style="width: 100%; background-color: white; margin-top: 10px; overflow-x: auto;">
 
 
-
-            <table style="width: 100%; background-color: white; margin-top: 10px; border-collapse: collapse;">
+            <table style="width: 100%; background-color: white; margin-top: 10px; border-collapse: collapse; overflow-x: auto;">
                 <thead>
                     <tr style="background-color: rgb(2, 17, 79); color: white;">
                         <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">Request Raised By</th>
@@ -640,6 +640,7 @@
                     @endif
                 </tbody>
             </table>
+                                    </div>
             @endif
 
 
