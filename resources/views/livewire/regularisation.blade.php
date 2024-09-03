@@ -861,12 +861,26 @@
 .nextMonth:hover{
  
     border: 1px solid rgb(2, 17, 79);
-    color: rgb(2, 17, 79);
+    color: white;
+    background-color: rgb(2, 17, 79);
+}
+.nextMonth:active{
+ 
+ border: 1px solid rgb(2, 17, 79);
+ color: rgb(2, 17, 79);
+ background-color: rgb(2, 17, 79);
 }
 .prevMonth:hover{
  
  border: 1px solid rgb(2, 17, 79);
- color: rgb(2, 17, 79);
+ color: white;
+ background-color: rgb(2, 17, 79);
+}
+.prevMonth:active{
+ 
+ border: 1px solid rgb(2, 17, 79);
+ color: white;
+ background-color: rgb(2, 17, 79);
 }
 .prevMonth
 {
@@ -888,7 +902,7 @@
     background-color: aliceblue;
 }
 @media screen and (max-height: 320px) {
-    .regularisation-footer {
+    .regularisation-footer footer{
         left: 30px;
         padding: 10px 0;
     }
@@ -901,6 +915,19 @@
     .regularisation-footer a {
         padding: 8px 15px; /* Adjust padding for smaller screens */
     }
+    .accordion-heading {
+
+background-color: whitesmoke;
+
+border: 1px solid #778899;
+
+
+}
+.accordion-body{
+    background-color: whitesmoke;
+
+border: 1px solid #778899;
+}
 }
     </style>
 @if (session('error'))
