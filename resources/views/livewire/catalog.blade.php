@@ -1588,7 +1588,7 @@
                                         </div>
                                        
                                 </div>
-
+</div>
                                 <div class="col-md-4 mb-4">
                                     <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;height: 220px;">
                                         <p style="font-size: 12px;"><b>SIM Request</b></p>
@@ -1597,7 +1597,7 @@
                                                 <img src="https://snow.payg.in/ef99c469871c7510279786a50cbb357f.iix?t=medium" style="height:4em;">
                                             </div>
                                             <div class="col-12 mb-2">
-                                                <p style="text-decoration:underline;cursor: pointer; text-align: center;">New SIM Request</p>
+                                                <p style="text-decoration:underline;cursor: pointer; text-align: center;font-size: 12px;">New SIM Request</p>
                                             </div>
                                         </div>
 
