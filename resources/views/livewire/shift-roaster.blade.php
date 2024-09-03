@@ -350,6 +350,10 @@
             border-bottom: 17px solid #677a8e;
             margin-right: 5px;
         }
+        .dropdown-for-shift-roster-download-and-dropdown
+        {
+            font-size: 12px;
+        }
 
         .emptyday {
             color: #aeadad;

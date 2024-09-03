@@ -515,6 +515,15 @@ width: 170px; */
             border: 1px solid #ddd;  /* Optional border for visual distinction */
             box-sizing: border-box;  /* Ensure padding and border are included in width and height */
         }
+        @media  screen and (max-height:320px) {
+
+            .custom-container {
+                      /* Adjust width as needed */
+            height: 220px;           /* Adjust height as needed */
+           
+        }
+            
+        }
 
         .clickable-date1 {
             background-color: pink;

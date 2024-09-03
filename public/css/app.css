@@ -1663,6 +1663,10 @@ td {
     background-color: #ecffdc;
     position: relative;
 }
+.shift-roster-download-and-dropdown-for-attendance-muster
+{
+    margin-left:370px;
+}
 .green-section-employee-swipes p {
     font-size: 11px;
     margin-bottom: 0 !important;
