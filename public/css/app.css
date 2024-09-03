@@ -73,6 +73,15 @@
     padding: 4px;
 }
 .task-custom-select-width {
+
+    width: 150px;
+
+    font-size: var(--normal-font-size);
+
+    padding: 7px;
+
+}
+.task-custom-select-width {
     width: 150px;
     font-size: var(--normal-font-size);
     padding: 7px;
@@ -945,7 +954,11 @@ button.close-button {
     background: transparent;
     outline: none;
 }
-
+.employee-item {
+    display: inline-block;
+    min-width: 120px;
+    margin-bottom: 7px;
+}
 .dropdown-btn {
     background-color: transparent;
     color: #fff;
@@ -1013,7 +1026,8 @@ button.close-button {
     }
     .employee-item {
         display: inline-block;
-        min-width: 150px; /* Adjust width as needed */
+        min-width: 120px; /* Adjust width as needed */
+        margin-bottom: 7px;
     }
 
     .employee-item .text-container {
@@ -1027,7 +1041,12 @@ button.close-button {
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
-
+@media screen and (max-height: 320px) {
+    .form-group-who-is-in{
+       
+        margin-right: 70px;
+    }
+}
 .arrow-btn {
     color: var(--label-color);
     height: 22px;
@@ -1573,6 +1592,19 @@ input[type="date"]::before {
 .search-icon-employee-swipes::before {
     font-size: 16px;
 }
+@media screen and (max-height:320px){
+   
+    .content-who-is-in{
+        flex-direction: column;
+    }
+    .container-box-for-employee-information-who-is-in{
+        margin-left: 15px;
+    }
+    .form-group-who-is-in{
+        margin-right: 80px;
+        margin-top: 70px;
+    }
+}
 
 .employees-swipe-table-scrollbar {
     overflow-y: scroll;
@@ -1635,6 +1667,10 @@ td {
     width: 100%;
     background-color: #ecffdc;
     position: relative;
+}
+.shift-roster-download-and-dropdown-for-attendance-muster
+{
+    margin-left:370px;
 }
 .green-section-employee-swipes p {
     font-size: 11px;
@@ -3315,6 +3351,10 @@ l
         display: flex;
         flex-direction: column;
         justify-content: start;
+    }
+    .accordion-heading {
+        max-width: 100%;
+        overflow-x: auto;
     }
 }
 /* //end of leave-history styles */
@@ -5479,4 +5519,20 @@ option {
 .page-title {
     color: var(--main-heading-color);
     width: -webkit-fill-available;
+    font-size: 16px;
+}
+@media screen and (max-width: 767px) {
+
+    .title-page {
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        width: calc(100vw - 15em);
+
+    }
+
 }
