@@ -33,10 +33,10 @@
         <div class="approved-leave-container mt-1 px-1" style="border-radius: 5px; ">
             <div class="accordion rounded mb-4 p-0">
                 <div class="accordion-heading rounded m-0 p-0" onclick="toggleAccordion(this)">
-                    <div class="accordion-title rounded m-0 p-1">
+                    <div class="accordion-title rounded m-0">
                         <!-- Display leave details here based on $leaveRequest -->
                         <div class="col accordion-content d-flex align-items-center">
-                            <div class="accordion-profile" style="display:flex; gap:7px; margin:auto 0;align-items:center;justify-content:center;">
+                            <div class="accordion-profile d-flex gap-3 m-auto align-items-center justify-content-center">
                                 @if(isset($leaveRequest['leaveRequest']->image) && $leaveRequest['leaveRequest']->image !== 'null')
                                 <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['leaveRequest']->image)}}" style="border-radius: 50%;">
                                 @else
@@ -87,10 +87,10 @@
                             @php
                             $numberOfDays = $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session);
                             @endphp
-                            <p style="color: #778899; font-size: 12px; font-weight: 500; margin-bottom:0;">
+                            <p class="normalTextValue mb-0">
                                 Period <br>
                                 @if($numberOfDays == 1)
-                                <span style="color: #333; font-size: 12px; font-weight: 600;">
+                                <span class="normalText">
                                     @if(isset($leaveRequest['leaveRequest']->from_date))
                                     {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}
                                     @else
@@ -99,7 +99,7 @@
                                 </span> <br>
                                 <span style="color: #778899; font-size: 10px;">Full Day</span>
                                 @elseif($numberOfDays == 0.5)
-                                <span style="color: #333; font-size: 12px; font-weight: 500;">
+                                <span class="normalText">
                                     @if(isset($leaveRequest['leaveRequest']->from_date))
                                     <span style="font-size: 12px; font-weight: 600;"> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span style="color: #494F55;font-size:10px;font-weight:normal; ">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
                                     @else
@@ -108,7 +108,7 @@
                                 </span> <br>
                                 <span style="color: #778899; font-size: 10px;">Half Day</span>
                                 @else
-                                <span style="color: #333; font-size: 12px; font-weight: 500;">
+                                <span class="normalText">
                                     @if(isset($leaveRequest['leaveRequest']->from_date))
                                     <div class="d-flex gap-2">
                                         <span style="font-size: 12px; font-weight: 600;"> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span style="color: #494F55;font-size:10px;font-weight:normal; ">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
@@ -130,41 +130,41 @@
                 </div>
 
 
-                <div class="accordion-body p-0 m-0">
+                <div class="accordion-body m-0 p-0">
                     <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
-                    <div class="content1 px-2">
-                        <span style="color: #333; font-size: 12px; font-weight: 500;">No. of days :</span>
+                    <div class="content1 px-4">
+                        <span class="normalTextValue">No. of days :</span>
                         @if(isset($leaveRequest['leaveRequest']->from_date))
-                        <span style="color: #778899; font-size: 11px ;font-weight: 400;">
+                        <span class="normalText font-weight-400">
                             {{ $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session) }}
                         </span>
                         @else
-                        <span style="color: #778899; font-size: 12px; font-weight: 400;">No. of days not available</span>
+                        <span class="normalText font-weight-400">No. of days not available</span>
                         @endif
                     </div>
-                    <div class="content1 px-2">
-                        <span style="color: #333; font-size: 12px; font-weight: 500;">Reason :</span>
+                    <div class="content1 px-4">
+                        <span class="normalTextValue">Reason :</span>
                         @if(isset($leaveRequest['leaveRequest']->reason))
-                        <span style="font-size: 11px; color:#778899">{{ ucfirst($leaveRequest['leaveRequest']->reason) }}</span>
+                        <span class="normalText font-weight-400">{{ ucfirst($leaveRequest['leaveRequest']->reason) }}</span>
                         @else
-                        <span style="font-size: 10px; color:#778899">Reason Not Available</span>
+                        <span class="normalText font-weight-400">Reason Not Available</span>
                         @endif
                     </div>
                     <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
-                    <div style="display:flex; flex-direction:row; justify-content:space-between;">
-                        <div class="content1 px-2">
-                            <span style="color: #778899; font-size: 12px; font-weight: 500;">Applied On <br>
+                    <div class="approvedLeaveDetails d-flex justify-content-between align-items-center px-3">
+                        <div class="content1">
+                            <span class="normalTextValue">Applied On <br>
                                 @if(isset($leaveRequest['leaveRequest']->created_at))
-                                <span style="color: #333; font-size: 11px; font-weight: 500;">
+                                <span class="normalText">
                                     {{ $leaveRequest['leaveRequest']->created_at->format('d M, Y') }}
                                 </span>
                                 @else
-                                <span style="color: #333; font-size: 12px; font-weight: 400;">No. of days not available</span>
+                                <span class="normalText font-weight-400">No. of days not available</span>
                                 @endif
                             </span>
                         </div>
                         <div class="content2">
-                            <span style="color: #778899; font-size: 12px; font-weight: 500;">Leave Balance:</span>
+                            <span class="normalTextValue">Leave Balance:</span>
                             @if(!empty($leaveRequest['leaveBalances']))
                             <div style=" flex-direction:row; display: flex; align-items: center;justify-content:center;">
                                 <!-- Sick Leave -->

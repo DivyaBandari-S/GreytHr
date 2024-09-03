@@ -408,7 +408,7 @@
             <input type="text" wire:model="search" placeholder="Search..." wire:change="searchfilter">
         </div>
         <div class="shift-roster-download-and-dropdown-for-attendance-muster col-md-4 d-flex justify-content-end gap-2">
-            <button class="submit-btn py-0"wire:click="downloadExcel"style="padding:4px 10px;">
+            <button class="submit-btn py-0"wire:click="downloadExcel"style="padding:0px 10px;">
                 <i class="fa fa-download" aria-hidden="true"></i>
             </button>
             <select class="dropdown-for-shift-roster-download-and-dropdown bg-white rounded border" style="width:30%;" name="year" wire:model="selectedYear" wire:change="updateselectedYear">

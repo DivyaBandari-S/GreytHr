@@ -689,7 +689,7 @@
                                 @endif
                                 <div class="row">
                                     <div class="col-md-6">
-                                        @if ($selectedPersonClients->isEmpty() || $selectedPersonClients=="")
+                                        @if (empty($selectedPersonClients) || (is_array($selectedPersonClients) && !count($selectedPersonClients)) || ($selectedPersonClients instanceof \Illuminate\Support\Collection && $selectedPersonClients->isEmpty()))
                                         @else
                                             <div style="margin-bottom: 10px;">
                                                 <label style="font-size: 13px;color:#778899" for="clientSelect">Select
@@ -714,7 +714,9 @@
 
                                     </div>
                                     <div class="col-md-6">
-                                        @if ($selectedPersonClientsWithProjects->isEmpty())
+                                        @if (is_null($selectedPersonClientsWithProjects) || 
+                                        empty($selectedPersonClientsWithProjects) || 
+                                        ($selectedPersonClientsWithProjects instanceof \Illuminate\Support\Collection && $selectedPersonClientsWithProjects->isEmpty()))
                                         @else
                                             <div style="margin-bottom: 10px;">
                                                 <label style="font-size: 13px;color:#778899" for="clientSelect">Select
