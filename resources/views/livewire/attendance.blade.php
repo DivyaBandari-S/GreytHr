@@ -1407,7 +1407,7 @@ color: #fff;
 }
 @media screen and (max-height: 513px) {
     .penalty-and-average-work-hours-card{
-        margin-top: 20px;
+        margin-top: 40px;
     }
 }
     </style>
