@@ -1758,13 +1758,13 @@ color: #fff;
                                 
                                 @if($viewDetailsOutswiperecord)
                                 <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:5px;white-space:nowrap;"> {{$viewDetailsOutswiperecord->in_or_out}} </td>
-                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:5px"> {{$viewDetailsOutswiperecord->swipe_time}} </td>
+                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px"> {{$viewDetailsOutswiperecord->swipe_time}} </td>
                                 @else
                                 <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;"> OUT </td>
                                 <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> {{$viewDetailsInswiperecord->swipe_time}} </td>
                                 @endif
                                 @if($viewDetailsOutswiperecord)
-                                  <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
+                                  <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">-</td>
                                 @else
                                   <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">System inserted out</td>
                                 @endif  

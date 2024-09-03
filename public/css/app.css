@@ -1009,7 +1009,12 @@ button.close-button {
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
-
+@media screen and (max-height: 320px) {
+    .form-group-who-is-in{
+       
+        margin-right: 70px;
+    }
+}
 .arrow-btn {
     color: var(--label-color);
     height: 22px;
@@ -1533,6 +1538,7 @@ input[type="date"]::before {
     display: flex;
     justify-content: space-between;
 }
+
 .employee-swipes-fields
 {
     display: flex;
@@ -1577,6 +1583,19 @@ input[type="date"]::before {
 
 .search-icon-employee-swipes::before {
     font-size: 16px;
+}
+@media screen and (max-height:320px){
+   
+    .content-who-is-in{
+        flex-direction: column;
+    }
+    .container-box-for-employee-information-who-is-in{
+        margin-left: 15px;
+    }
+    .form-group-who-is-in{
+        margin-right: 80px;
+        margin-top: 70px;
+    }
 }
 
 .employees-swipe-table-scrollbar {

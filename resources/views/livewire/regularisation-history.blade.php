@@ -264,7 +264,7 @@
             </div>
               <div style="display:flex; flex-direction:column; gap:60px;">
               <div class="group">
-              <div>
+              <div style="margin-top:20px;">
                 <h5 style="color: #333; font-size: 12px; font-weight: 400; text-align:start;">
                     @if($regularisationrequest->status=='pending')
                         Withdrawn <br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
@@ -282,7 +282,7 @@
                                           &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($regularisationrequest->created_at)->format('h:i A') }}
                                     </span>
                     @elseif($regularisationrequest->status=='approved')
-                        Accept<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
+                        Accepted<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
                         <span style="color: #778899; font-weight: 500;">
                            {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
                         </span> 
@@ -293,12 +293,12 @@
                                           @elseif(\Carbon\Carbon::parse($regularisationrequest->approved_date)->isYesterday())
                                                       Yesterday
                                           @else
-                                                 {{ \Carbon\Carbon::parse($regularisationrequest->approved_date)->format('Y-m-d') }}
+                                                 {{ \Carbon\Carbon::parse($regularisationrequest->approved_date)->format('jS F, Y') }}
                                           @endif
                                           &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($regularisationrequest->approved_date)->format('h:i A') }}
                                     </span>
                     @elseif($regularisationrequest->status=='rejected')
-                       rccept<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
+                       Rejected<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
                         <span style="color: #778899; font-weight: 500;">
                            {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
                         </span>  
@@ -309,7 +309,7 @@
                                           @elseif(\Carbon\Carbon::parse($regularisationrequest->rejected_date)->isYesterday())
                                                       Yesterday
                                           @else
-                                                 {{ \Carbon\Carbon::parse($regularisationrequest->rejected_date)->format('Y-m-d') }}
+                                                 {{ \Carbon\Carbon::parse($regularisationrequest->rejected_date)->format('jS F, Y') }}
                                           @endif
                                           &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($regularisationrequest->rejected_date)->format('h:i A') }}
                                     </span>      
@@ -321,7 +321,7 @@
  
            </div>
            <div class="group">
-               <div >
+               <div style="margin-top:-15px;">
                   <h5 style="color: #333; font-size: 12px; font-weight: 400; text-align:start;">Submitted<br>
                           <span style="color: #778899; font-size: 11px; font-weight: 400;text-align:start;">
                                     
@@ -330,7 +330,7 @@
                                       @elseif(\Carbon\Carbon::parse($regularisationrequest->created_at)->isYesterday())
                                                 Yesterday
                                       @else
-                                         {{ \Carbon\Carbon::parse($regularisationrequest->created_at)->format('Y-m-d') }}
+                                         {{ \Carbon\Carbon::parse($regularisationrequest->created_at)->format('jS F, Y') }}
                                       @endif
                                       &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($regularisationrequest->created_at)->format('h:i A') }}
                           </span>
@@ -344,7 +344,7 @@
         </div>
         </div>
     </div>
-    <div class="rounded bg-white border mt-4">
+    <div class="table-responsive rounded bg-white border mt-4">
   <table class="custom-table">
         <thead>
             <tr>

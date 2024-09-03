@@ -113,25 +113,21 @@ class Home extends Component
     {
         $this->fetchWeather();
         // Get the current month and year
-        // $currentDate = Carbon::today();
-        // $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-        // $month = $currentDate->format('n');
-        // $year = $currentDate->format('Y');
+        $currentDate = Carbon::today();
+        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
 
-        // // // Construct the table name for SQL Server
-        // $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        // // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
 
-        // $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
-        // $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
-
+        $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+        $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
         // Get data from SQL Server for the normalized user ID
         // $dataSqlServer = DB::connection('sqlsrv')
-        //     ->table($tableName)
-        //     ->select('UserId', 'logDate', 'Direction')
-        //     ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
-        //     ->whereDate('logDate', $today) // Filter for today's date
-        //     ->orderBy('logDate')
+        //     ->table('DeviceLogs_1_2024')
         //     ->get();
+            
         // Assuming $dataSqlServer is the collection you want to split
         // foreach ($dataSqlServer as $data) {
         //     // Accessing individual fields
