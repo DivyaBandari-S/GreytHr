@@ -378,7 +378,7 @@ class Attendance extends Component
         try {
                  
             $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id','first_name', 'last_name', 'shift_type', 'shift_start_time', 'shift_end_time')->first();
-            //insights
+            
             $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
             
             $this->to_date = now()->toDateString();
@@ -386,7 +386,6 @@ class Attendance extends Component
             $this->calculateAvgWorkingHrs($this->from_date,$this->to_date,$this->employee->emp_id);
             $fromDate = \Carbon\Carbon::createFromFormat('Y-m-d', $this->from_date);
             $toDate = \Carbon\Carbon::createFromFormat('Y-m-d', $this->to_date);
-
             $currentDate = Carbon::parse($this->from_date);
             $endDate = Carbon::parse($this->to_date);
             $totalHoursWorked=0;
@@ -403,7 +402,9 @@ class Attendance extends Component
 
 // Get the current date of the current month
             $currentDateOfCurrentMonth = Carbon::now()->endOfDay();
-          
+            $this->year = now()->year;
+            $this->month = now()->month;
+            $this->generateCalendar();
             
             while ($currentDate->lte($endDate)) {
                 $dateString = $currentDate->toDateString();
@@ -448,7 +449,6 @@ class Attendance extends Component
             
             $this->updateModalTitle();
             $this->calculateTotalDays();
-
             $this->previousMonth = Carbon::now()->subMonth()->format('F');
 
             $swipeRecords = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
@@ -477,9 +477,6 @@ class Attendance extends Component
             $this->currentWeekday = date('D');
             $this->currentDate1 = date('d M Y');
             $this->swiperecords = SwipeRecord::all();
-            $this->year = now()->year;
-            $this->month = now()->month;
-            $this->generateCalendar();
             $averageWorkHrsForCurrentMonth=$this->calculateAverageWorkHoursAndPercentage($firstDateOfPreviousMonth,$currentDateOfCurrentMonth);
             $this->averageWorkHours = $averageWorkHrsForCurrentMonth['averageWorkHours'];
             $this->percentageOfWorkHours = $averageWorkHrsForCurrentMonth['percentageOfWorkHours'];

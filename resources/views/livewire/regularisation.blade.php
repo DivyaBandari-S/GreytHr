@@ -887,6 +887,21 @@
 {
     background-color: aliceblue;
 }
+@media screen and (max-height: 320px) {
+    .regularisation-footer {
+        left: 30px;
+        padding: 10px 0;
+    }
+
+    .regularisation-footer div {
+        justify-content: center; /* Center buttons on very small screens */
+    }
+
+    .regularisation-footer button, 
+    .regularisation-footer a {
+        padding: 8px 15px; /* Adjust padding for smaller screens */
+    }
+}
     </style>
 @if (session('error'))
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -1157,7 +1172,7 @@
             <!-- <button wire:click="submitShiftsForcheck">test</button> -->
             @endforeach
             </div>
-            <footer style="position: fixed; bottom: 0; width: 100%;left:-20px; background-color: #fff; padding: 5px 0; text-align: center; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);">
+            <footer class="regularisation-footer"style="position: fixed; bottom: 0; width: 100%;left:-20px; background-color: #fff; padding: 5px 0; text-align: center; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);">
                 <div style="display:flex; justify-content: right;">
                     <button type="button" wire:click="storearraydates" style="color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;">Submit</button>
                     <a href="/Attendance" style="color:rgb(2,17,79); margin-left: 20px; padding: 10px 20px;">Cancel</a>

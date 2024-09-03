@@ -192,9 +192,15 @@ class Regularisation extends Component
               // Stop further execution if the date is in the future
               return;
         }
-        if ($selectedDate->greaterThanOrEqualTo(Carbon::today())) {
+        if ($selectedDate->greaterThan(Carbon::today())) {
             // Throw a validation error or set a message for the user
             session()->flash('error', 'Future dates are not allowed for regularisation');
+            // Stop further execution if the date is in the future
+            return;
+        }
+        if ($selectedDate->EqualTo(Carbon::today())) {
+            // Throw a validation error or set a message for the user
+            session()->flash('error', 'Today dates are not allowed for regularisation');
             // Stop further execution if the date is in the future
             return;
         }
