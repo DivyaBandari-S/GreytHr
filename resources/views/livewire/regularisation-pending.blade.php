@@ -64,7 +64,7 @@
             </div>
               <div style="display:flex; flex-direction:column; gap:60px;">
               <div class="group">
-              <div>
+              <div style="margin-top:20px;margin-left:10px;">
                 <h5 style="color: #333; font-size: 12px; font-weight: 400; text-align:start;">
                     
                         Pending <br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">with</span>
@@ -84,7 +84,7 @@
  
            </div>
            <div class="group">
-               <div >
+               <div style="margin-top:15px;margin-left:10px;">
                   <h5 style="color: #333; font-size: 12px; font-weight: 400; text-align:start;">Submitted<br>
                 <span style="color: #778899; font-size: 11px; font-weight: 400;text-align:start;">
                                       @if(\Carbon\Carbon::parse($regularisationrequest->created_at)->isToday())

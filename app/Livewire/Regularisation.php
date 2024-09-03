@@ -3,6 +3,7 @@
 // About this component: It shows allowing employees to adjust or provide reasons for discrepancies in their recorded work hours
 namespace App\Livewire;
 use App\Models\EmployeeDetails;
+use App\Models\HolidayCalendar;
 use App\Models\RegularisationDates;
 
 use App\Models\Regularisations;
@@ -51,6 +52,8 @@ class Regularisation extends Component
     public $remarks;
 
     public $withdraw_session=false;
+
+    public $showMessage = false;
     public $isdatesApplied=false;
     public $count_for_regularisation=0;
 
@@ -68,6 +71,8 @@ class Regularisation extends Component
 
     public $headreportingmanagerfullName;
     public $year;
+
+    public $ispreviousMonth=false;
     public $month;
     public $currentMonth;
 
@@ -92,27 +97,56 @@ class Regularisation extends Component
    
     public $shift_times = []; 
     public $count=0;
+
+    public $holidays;
+
+    public $monthinFormat;
+
+    public $todayMonth;
+
+    public $todayYear;
+
     public function mount()
     {
         try {
          
             $this->year = now()->year;
             $this->month = now()->month;
+            $this->todayYear=now()->year;
+            $this->todayMonth=now()->month;
             $this->getDaysInMonth($this->year, $this->month);
+            $this->monthinFormat = now()->format('F');
+            $this->holidays = HolidayCalendar::where('month', $this->monthinFormat)
+            ->where('year',  $this->year )
+            ->get();
+           
             // $this->updateCurrentMonthYear();
             $this->currentDate = now();
             $this->generateCalendar();
+            if (session()->has('success')) {
+                $this->showMessage = true;
+            }
         } catch (\Exception $e) {
             Log::error('Error in mount method: ' . $e->getMessage());
             // Handle the error as needed, such as displaying a message to the user
         }
     }
    
+    public function hideMessage()
+    {
+        $this->showMessage = false;
+    }
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName, [
             'shift_times.*.from' => 'required|date_format:H:i',
-            'shift_times.*.to' => 'required|date_format:H:i',
+            'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
+            'shift_times.*.reason' => 'required',
+        ], [
+            'shift_times.*.from.date_format' => 'Please enter sign-in time in HH:MM format',
+            'shift_times.*.to.date_format' => 'Please enter sign-out time in HH:MM format',
+            'shift_times.*.reason' => 'Please enter the reason',
+            'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
         ]);
     }
     public function togglePendingAccordion($id)
@@ -147,11 +181,39 @@ class Regularisation extends Component
     }
     public function submitShifts($date)
     {
+        $selectedDate = Carbon::parse($date);
+        $selecteddateyear = $selectedDate->year;
+        $selecteddatemonth = $selectedDate->month;
+      
+        if($selecteddateyear<=(Carbon::today()->year)&&$selecteddatemonth<(Carbon::today()->month))
+        {
+              // Throw a validation error or set a message for the user
+              session()->flash('error', 'Attendance Period is locked');
+              // Stop further execution if the date is in the future
+              return;
+        }
+        if ($selectedDate->greaterThanOrEqualTo(Carbon::today())) {
+            // Throw a validation error or set a message for the user
+            session()->flash('error', 'Future dates are not allowed for regularisation');
+            // Stop further execution if the date is in the future
+            return;
+        }
+        if ($selectedDate->isWeekend()) {
+            // Throw a validation error for weekends
+            session()->flash('error', 'This is a weekend. Regularisation is not allowed on weekends');
+            return;
+        }
+        $holiday = HolidayCalendar::where('date', $selectedDate->toDateString())->first();
+        if ($holiday) {
+            session()->flash('error', 'The selected date is a holiday. Regularisation is not allowed on holidays.');
+            return;
+        }
        
-        
+
         if (!in_array($date, $this->selectedDates)) {
             // Add the date to the selectedDates array only if it's not already selected
             $this->selectedDates[] = $date;
+           
             $this->shift_times[]=[
                 'date' => $date,
                 'from'=>'',
@@ -255,6 +317,7 @@ class Regularisation extends Component
                 
                 $this->month = $this->date->month;
                 $daysInMonth1 = $this->getDaysInMonth($this->year, $this->month);
+                $this->generateCalendar();
             } catch (\Exception $e) {
                 Log::error('Error in previousMonth method: ' . $e->getMessage());
                 // Handle the error as needed, such as displaying a message to the user
@@ -272,6 +335,7 @@ public function nextMonth()
         $this->year = $this->date->year;
         $this->month = $this->date->month;
         $daysInMonth2 = $this->getDaysInMonth($this->year, $this->month);
+        $this->generateCalendar();
     } catch (\Exception $e) {
         Log::error('Error in nextMonth method: ' . $e->getMessage());
         // Handle the error as needed, such as displaying a message to the user
@@ -347,7 +411,12 @@ public function nextMonth()
       
         $validatedData = $this->validate([
             'shift_times.*.from' => 'required|date_format:H:i',
-            'shift_times.*.to' => 'required|date_format:H:i',
+            'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
+            'shift_times.*.reason' => 'required',
+        ], [
+            'shift_times.*.from.date_format' => 'Please enter sign-in time in HH:MM format',
+            'shift_times.*.to.date_format' => 'Please enter sign-out time in HH:MM format',
+            'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
         ]);
         $this->isdatesApplied = true;
         $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();

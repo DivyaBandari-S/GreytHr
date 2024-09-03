@@ -45,6 +45,9 @@ class Attendance extends Component
     public $avgSignInTime;
 
 
+    public $averageWorkHours;
+
+    public $percentageOfWorkHours;
     public $CurrentDate;
     public $avgSignOutTime;
 
@@ -153,6 +156,7 @@ class Attendance extends Component
     public $avgSwipeOutTime = null;
     public $totalmodalDays;
 
+    public $averageWorkHrsForCurrentMonth;
     public $averageFormattedTimeForCurrentMonth;
     public $holidayCountForInsightsPeriod;
     public $weekendDays=0;
@@ -188,6 +192,73 @@ class Attendance extends Component
             // $this->showErrorMessage('An error occurred while closing the modal.');
         }
     }
+    public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
+{
+    // Define start and end dates for August
+
+
+    // Standard workday in minutes (e.g., 9 hours = 540 minutes)
+    $standardWorkdayMinutes = 9 * 60;
+
+    // Retrieve all swipe records for August
+    $records = SwipeRecord::whereDate('created_at', '>=', $startDate)
+                          ->whereDate('created_at', '<=', $endDate)
+                          ->get();
+    
+    // Group records by day and filter them by 'IN' and 'OUT' times
+    $groupedRecords = $records->groupBy(function ($record) {
+        return $record->created_at->format('Y-m-d'); // Group by date only
+    });
+
+    $totalMinutes = 0;
+    $workingDays = 0;
+
+    foreach ($groupedRecords as $day => $swipes) {
+        // Convert 'IN' swipe_time to Carbon instance
+        $inTime = $swipes->firstWhere('in_or_out', 'IN')->swipe_time ?? null;
+        if ($inTime) {
+            $inTime = Carbon::parse($inTime); // Convert to Carbon instance
+        }
+
+        // Convert 'OUT' swipe_time to Carbon instance
+        $outTime = $swipes->firstWhere('in_or_out', 'OUT')->swipe_time ?? null;
+        if ($outTime) {
+            $outTime = Carbon::parse($outTime); // Convert to Carbon instance
+        }
+
+        // Ensure both IN and OUT times exist and calculate difference
+        if ($inTime && $outTime) {
+            // Calculate difference in minutes between IN and OUT
+            $dailyMinutes = $inTime->diffInMinutes($outTime);
+            $totalMinutes += $dailyMinutes;
+            $workingDays++;
+        }
+    }
+
+    // Calculate average minutes per working day
+    if ($workingDays > 0) {
+        $averageMinutesPerDay = $totalMinutes / $workingDays;
+
+        // Convert average minutes into hours and minutes
+        $averageHours = intdiv($averageMinutesPerDay, 60);
+        $averageMinutes = $averageMinutesPerDay % 60;
+
+        // Format the result as HH:mm
+        $averageWorkHours = sprintf('%02d:%02d', $averageHours, $averageMinutes);
+
+        // Calculate percentage of average work hours compared to standard workday
+        $percentageOfWorkHours = ($averageMinutesPerDay / $standardWorkdayMinutes) * 100;
+        $percentageOfWorkHours = round($percentageOfWorkHours, 2); // Round to 2 decimal places
+    } else {
+        $averageWorkHours = '00:00';
+        $percentageOfWorkHours = 0;
+    }
+     $percentageOfWorkHours=intval($percentageOfWorkHours);
+    return [
+        'averageWorkHours' => $averageWorkHours,
+        'percentageOfWorkHours' => $percentageOfWorkHours
+    ];
+}
     public function toggleSession1Fields()
     {
         try {
@@ -327,38 +398,12 @@ class Attendance extends Component
             $this->country = $location['country'];
             $this->city = $location['city'];
             $this->postal_code = $location['postal_code'];
-            while ($fromDate->lte($toDate)) {
-                $inTimeForWorkHrs=SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->where('in_or_out','IN')->whereDate('created_at',$fromDate)->first();
-                $outTimeForWorkHrs=SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->where('in_or_out','OUT')->whereDate('created_at',$fromDate)->first();
-                if ($inTimeForWorkHrs && $outTimeForWorkHrs) {
-                    $inTimeForAvgWorkHrs = \Carbon\Carbon::parse($inTimeForWorkHrs->swipe_time);
-                    $outTimeForAvgWorkHrs = \Carbon\Carbon::parse($outTimeForWorkHrs->swipe_time);
-                
-                    $hoursWorked = $inTimeForAvgWorkHrs->diffInHours($outTimeForAvgWorkHrs);
-                    $minutesWorked = $inTimeForAvgWorkHrs->diffInMinutes($outTimeForAvgWorkHrs) % 60;
+            
+            $firstDateOfPreviousMonth = Carbon::now()->subMonth()->startOfMonth();
 
-                    $this->totalHoursWorked += $hoursWorked;
-                    $this->totalMinutesWorked += $minutesWorked;
-                    $this->daysWithRecords++;
-                }
-                // Move to the next day
-                $fromDate->addDay();
-            }
-            if ($this->daysWithRecords > 0) {
-                $this->averageHoursWorked = $this->totalHoursWorked / $this->daysWithRecords;
-                $this->averageMinutesWorked = $this->totalMinutesWorked / $this->daysWithRecords;
-            
-                
-            } 
-           
-            
-            $timeDifferences = [];
-            function formatTime($seconds) {
-                $hours = floor($seconds / 3600);
-                $minutes = floor(($seconds % 3600) / 60);
-                $seconds = $seconds % 60;
-                return sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
-            }
+// Get the current date of the current month
+            $currentDateOfCurrentMonth = Carbon::now()->endOfDay();
+          
             
             while ($currentDate->lte($endDate)) {
                 $dateString = $currentDate->toDateString();
@@ -435,6 +480,9 @@ class Attendance extends Component
             $this->year = now()->year;
             $this->month = now()->month;
             $this->generateCalendar();
+            $averageWorkHrsForCurrentMonth=$this->calculateAverageWorkHoursAndPercentage($firstDateOfPreviousMonth,$currentDateOfCurrentMonth);
+            $this->averageWorkHours = $averageWorkHrsForCurrentMonth['averageWorkHours'];
+            $this->percentageOfWorkHours = $averageWorkHrsForCurrentMonth['percentageOfWorkHours'];
         } catch (\Exception $e) {
             // Log the exception
             Log::error('Error in mount method: ' . $e->getMessage());
@@ -1228,6 +1276,7 @@ public function calculateAvgWorkHours()
             $date = Carbon::create($this->year, $this->month, 1)->subMonth();
             $this->year = $date->year;
             $this->month = $date->month;
+          
             $this->generateCalendar();
             $prevdate=Carbon::create($date->year, $date->month, 1)->subMonth();
             $lastDateOfPreviousMonth = $date->endOfMonth()->toDateString();
@@ -1246,7 +1295,7 @@ public function calculateAvgWorkHours()
             $date = Carbon::create($this->year, $this->month, 1)->addMonth();
             $this->year = $date->year;
             $this->month = $date->month;
-            $this->isNextMonth=1;
+         
             $this->generateCalendar();
             $this->changeDate = 1;
             $this->dateClicked($date->toDateString());
@@ -1320,7 +1369,7 @@ public function calculateAvgWorkHours()
             $this->regularised_date = null;
             $this->regularised_reason = null;
         }
-    }
+    }    
     public function render()
     {
         try {
