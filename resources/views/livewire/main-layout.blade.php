@@ -122,33 +122,34 @@
         <!-- NAVBAR -->
         <nav>
             <i class='fas fa-bars toggle-sidebar'></i>
-            <h6 class="mx-0 my-0 page-title"> @livewire('page-title')
-            </h6>
-            <div>
-                @livewire('notification')
-            </div>
-            <span class="divider"></span>
-            <div class="profile">
-                <div class="d-flex brandLogoDiv" >
-                    @livewire('company-logo')
-                    @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
-                    <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="" onclick="openProfile()">
-                    @else
-                    @if($loginEmployeeProfile->gender=='Male')
-                    <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="" onclick="openProfile()">
-                    @elseif($loginEmployeeProfile->gender=='Female')
-                    <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="" onclick="openProfile()">
-                    @else
-                    <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="" onclick="openProfile()">
-                    @endif
-                    @endif
+            <h6 class="mx-0 my-0 page-title"> @livewire('page-title')</h6>
+            <div class="d-flex">
+                <div class="m-auto me-2">
+                    @livewire('notification')
                 </div>
-                <ul class="profile-link">
-                    <li><a href="/ProfileInfo"><i class='fas fa-user-circle icon'></i> Profile</a></li>
-                    <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
-                </ul>
+                <span class="divider m-auto me-2"></span>
+                <div class="profile m-auto me-2">
+                    <div class="d-flex brandLogoDiv" >
+                        @livewire('company-logo')
+                        @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
+                        <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="" onclick="openProfile()">
+                        @else
+                        @if($loginEmployeeProfile->gender=='Male')
+                        <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="" onclick="openProfile()">
+                        @elseif($loginEmployeeProfile->gender=='Female')
+                        <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="" onclick="openProfile()">
+                        @else
+                        <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="" onclick="openProfile()">
+                        @endif
+                        @endif
+                    </div>
+                    <ul class="profile-link">
+                        <li><a href="/ProfileInfo"><i class='fas fa-user-circle icon'></i> Profile</a></li>
+                        <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
+                    </ul>
+                </div>
+                <div class="pointer m-auto">@livewire('log-out')</div>
             </div>
-            <div class="pointer">@livewire('log-out')</div>
         </nav>
         <!-- NAVBAR -->
     </section>

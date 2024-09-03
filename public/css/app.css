@@ -73,6 +73,15 @@
     padding: 4px;
 }
 .task-custom-select-width {
+
+    width: 150px;
+
+    font-size: var(--normal-font-size);
+
+    padding: 7px;
+
+}
+.task-custom-select-width {
     width: 150px;
     font-size: var(--normal-font-size);
     padding: 7px;
@@ -3316,6 +3325,10 @@ l
         flex-direction: column;
         justify-content: start;
     }
+    .accordion-heading {
+        max-width: 100%;
+        overflow-x: auto;
+    }
 }
 /* //end of leave-history styles */
 
@@ -5479,4 +5492,20 @@ option {
 .page-title {
     color: var(--main-heading-color);
     width: -webkit-fill-available;
+    font-size: 16px;
+}
+@media screen and (max-width: 767px) {
+
+    .title-page {
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        width: calc(100vw - 15em);
+
+    }
+
 }

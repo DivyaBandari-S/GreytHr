@@ -177,7 +177,6 @@
                                 <h5 class="normalText text-start">
                                     @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                                     Withdrawn
-
                                     <span class="normalText text-start">by</span> <br>
                                     <span class="normalTextValue text-start">
                                         {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }} <br>
@@ -189,7 +188,9 @@
                                     @foreach($leaveRequest['applying_to'] as $applyingTo)
                                     <span class="normalText text-start">
                                         {{ ucwords(strtolower($applyingTo['report_to'] ))}}
-                                    </span>
+                                    </span> <br>
+                                    <span class="normalTextValue text-start" style="font-size:0.625rem;">{{ $leaveRequest->updated_at->format('d M, Y g:i a') }}</span>
+
                                     @endforeach
                                     @endif
                                     @else

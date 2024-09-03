@@ -517,50 +517,59 @@ class LeaveApplyPage extends Component
             $this->showApplyingTo = false;
             $this->selectedYear = Carbon::now()->format('Y');
             $employeeId = auth()->guard('emp')->user()->emp_id;
+
             // Retrieve all leave balances
             $allLeaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
+
+            // Debugging output
+            Log::info('All Leave Balances:', $allLeaveBalances);
+
             // Filter leave balances based on the selected leave type
             switch ($this->leave_type) {
                 case 'Casual Leave Probation':
                     $this->leaveBalances = [
-                        'casualProbationLeaveBalance' => $allLeaveBalances['casualProbationLeaveBalance']
+                        'casualProbationLeaveBalance' => $allLeaveBalances['casualProbationLeaveBalance'] ?? '0'
                     ];
                     break;
                 case 'Casual Leave':
                     $this->leaveBalances = [
-                        'casualLeaveBalance' => $allLeaveBalances['casualLeaveBalance']
+                        'casualLeaveBalance' => $allLeaveBalances['casualLeaveBalance'] ?? '0'
                     ];
                     break;
                 case 'Loss of Pay':
                     $this->leaveBalances = [
-                        'lossOfPayBalance' => $allLeaveBalances['lossOfPayBalance']
+                        'lossOfPayBalance' => $allLeaveBalances['lossOfPayBalance'] ?? '0'
                     ];
-
                     break;
                 case 'Sick Leave':
                     $this->leaveBalances = [
-                        'sickLeaveBalance' => $allLeaveBalances['sickLeaveBalance']
+                        'sickLeaveBalance' => $allLeaveBalances['sickLeaveBalance'] ?? '0'
                     ];
                     break;
                 case 'Maternity Leave':
                     $this->leaveBalances = [
-                        'maternityLeaveBalance' => $allLeaveBalances['maternityLeaveBalance']
+                        'maternityLeaveBalance' => $allLeaveBalances['maternityLeaveBalance'] ?? '0'
                     ];
                     break;
                 case 'Paternity Leave':
                     $this->leaveBalances = [
-                        'paternityLeaveBalance' => $allLeaveBalances['paternityLeaveBalance']
+                        'paternityLeaveBalance' => $allLeaveBalances['paternityLeaveBalance'] ?? '0'
                     ];
                     break;
                 case 'Marriage Leave':
                     $this->leaveBalances = [
-                        'marriageLeaveBalance' => $allLeaveBalances['marriageLeaveBalance']
+                        'marriageLeaveBalance' => $allLeaveBalances['marriageLeaveBalance'] ?? '0'
                     ];
                     break;
                 default:
                     $this->leaveBalances = [];
                     break;
             }
+
+            // Debugging output
+            Log::info('Selected Leave Type:', ['leave_type' => $this->leave_type]);
+            Log::info('Leave Balances:', $this->leaveBalances);
+
             $this->showNumberOfDays = true;
         } catch (\Exception $e) {
             // Log the error
@@ -571,6 +580,7 @@ class LeaveApplyPage extends Component
             return redirect()->back();
         }
     }
+
     //it will calculate number of days for leave application
     public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {

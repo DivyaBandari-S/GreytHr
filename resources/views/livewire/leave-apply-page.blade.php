@@ -55,38 +55,41 @@
                     <div class="form-group">
                         <div class="pay-bal">
                             <span class="normalTextValue">Balance :</span>
-                            @php
-                            $leaveBalances = $leaveBalances ?? []; // Ensure $leaveBalances is an array
-                            @endphp
-                            @if(!empty($leaveBalances))
+
+                            @if(isset($leaveBalances) && !empty($leaveBalances))
                             <div class="d-flex align-items-center justify-content-center" style="cursor:pointer;">
                                 @if($leave_type == 'Sick Leave')
                                 <span class="sickLeaveBalance" title="Sick Leave">
-                                    {{ $leaveBalances['sickLeaveBalance'] ?? 'N/A' }}
+                                    {{ ($leaveBalances['sickLeaveBalance']) ?? '0' }}
                                 </span>
                                 @elseif($leave_type == 'Casual Leave')
                                 <span class="sickLeaveBalance" title="Casual Leave Probation">
-                                    {{ $leaveBalances['casualLeaveBalance'] ?? 'N/A' }}
+                                    {{ ($leaveBalances['casualLeaveBalance']) ?? '0' }}
                                 </span>
                                 @elseif($leave_type == 'Casual Leave Probation')
                                 <span class="sickLeaveBalance">
-                                    {{ $leaveBalances['casualProbationLeaveBalance'] ?? 'N/A' }}
+                                    {{ ($leaveBalances['casualProbationLeaveBalance']) ?? '0' }}
                                 </span>
                                 @elseif($leave_type == 'Loss of Pay')
                                 <span class="sickLeaveBalance">
-                                    &minus;&nbsp;{{ $leaveBalances['lossOfPayBalance'] ?? 'N/A' }}
+                                    @if(isset($leaveBalances['lossOfPayBalance']) && $leaveBalances['lossOfPayBalance'] > 0)
+                                    &minus;&nbsp;{{ $leaveBalances['lossOfPayBalance'] }}
+                                    @else
+                                    {{ $leaveBalances['lossOfPayBalance'] ?? '0' }}
+                                    @endif
+
                                 </span>
                                 @elseif($leave_type == 'Maternity Leave')
                                 <span class="sickLeaveBalance">
-                                    {{ $leaveBalances['maternityLeaveBalance'] ?? 'N/A' }}
+                                    {{ ($leaveBalances['maternityLeaveBalance']) ?? '0' }}
                                 </span>
                                 @elseif($leave_type == 'Paternity Leave')
                                 <span class="sickLeaveBalance">
-                                    {{ $leaveBalances['paternityLeaveBalance'] ?? 'N/A' }}
+                                    {{ ($leaveBalances['paternityLeaveBalance']) ?? '0' }}
                                 </span>
                                 @elseif($leave_type == 'Marriage Leave')
                                 <span class="sickLeaveBalance">
-                                    {{ $leaveBalances['marriageLeaveBalance'] ?? 'N/A' }}
+                                    {{ ($leaveBalances['marriageLeaveBalance']) ?? '0' }}
                                 </span>
                                 @endif
                             </div>
@@ -106,14 +109,14 @@
                                 @endif
                             </span>
                             <!-- Add a condition to check if the number of days exceeds the leave balance -->
-                            @if(!empty($leaveBalances))
+                            @if(isset($leaveBalances) && !empty($leaveBalances))
                             <!-- Directly access the leave balance for the selected leave type -->
                             @php
                             $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session);
                             @endphp
                             @if($leave_type == 'Casual Leave Probation')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $leaveBalances['casualProbationLeaveBalance'])
+                            @if($calculatedNumberOfDays > ($leaveBalances['casualProbationLeaveBalance'] ?? 0))
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message">
                                 <span class="Insufficient">Insufficient leave balance</span>
@@ -126,7 +129,7 @@
 
                             @elseif($leave_type == 'Casual Leave')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $leaveBalances['casualLeaveBalance'])
+                            @if($calculatedNumberOfDays > ($leaveBalances['casualLeaveBalance'] ?? 0))
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message">
                                 <span class="Insufficient">Insufficient leave balance</span>
@@ -138,7 +141,7 @@
                             @endif
                             @elseif($leave_type == 'Sick Leave')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $leaveBalances['sickLeaveBalance'])
+                            @if($calculatedNumberOfDays > ($leaveBalances['sickLeaveBalance'] ?? 0))
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message">
                                 <span class="Insufficient">Insufficient leave balance</span>
@@ -150,7 +153,7 @@
                             @endif
                             @elseif($leave_type == 'Maternity Leave')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $leaveBalances['maternityLeaveBalance'])
+                            @if($calculatedNumberOfDays > ($leaveBalances['maternityLeaveBalance'] ?? 0))
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message">
                                 <div class="alert-danger Insufficient">Insufficient leave balance</div>
@@ -162,7 +165,7 @@
                             @endif
                             @elseif($leave_type == 'Paternity Leave')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $leaveBalances['paternityLeaveBalance'])
+                            @if($calculatedNumberOfDays > ($leaveBalances['paternityLeaveBalance'] ?? 0))
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message">
                                 <span class="Insufficient">Insufficient leave balance</span>
@@ -174,7 +177,7 @@
                             @endif
                             @elseif($leave_type == 'Marriage Leave')
                             <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > $leaveBalances['marriageLeaveBalance'])
+                            @if($calculatedNumberOfDays > ($leaveBalances['marriageLeaveBalance'] ?? 0))
                             <!-- Display an error message if the number of days exceeds the leave balance -->
                             <div class="error-message">
                                 <span class="Insufficient">Insufficient leave balance</span>

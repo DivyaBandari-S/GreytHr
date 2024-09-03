@@ -265,8 +265,8 @@
                     <div class="search-container d-flex">
                         <div class="form-group">
                             <div class="search-input-leave">
-                                <div class="search-cont ">
-                                    <input wire:model.debounce.500ms="searchTerm" type="text" placeholder="Search Employee">
+                                <div class="search-cont d-flex align-items-center gap-2">
+                                    <input wire:model.debounce.500ms="searchTerm" type="text" placeholder="Search..." class="placeholder-small" style="font-size:12px;padding: 0.37rem 0.2rem;">
                                     <!-- Search button -->
                                     <button class="btn-3" wire:click="searchData"><i class="fa fa-search"></i></button>
                                 </div>
@@ -345,7 +345,7 @@
                                         <td colspan="3">
                                             <div class="leave-trans" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                                 <img src="/images/pending.png" alt="Pending Image" style=" margin: 0 auto;" height="100" width="100">
-                                                <span class="">No Employees are on leave</span>
+                                                <span class="normalTextValue">No Employees are on leave</span>
                                             </div>
                                         </td>
                                     </tr>
