@@ -426,12 +426,14 @@
                                         wire:click="openModal" style="background-color: white; height:10px;width:10px;">
                                     </button>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body d-flex align-items-center" style="max-width:100%;overflow-x:auto;">
                                     <ul class="d-flex align-items-center mb-0" style="list-style-type: none; gap:10px;">
                                         @foreach($hiddenEmployees as $recipient)
-                                        <li>
+                                        <li class="employee-item" style="flex: 1 1 auto;">
                                             <div class="px-2 py-1 d-flex justify-content-between align-items-center" style="border-radius: 25px; border: 2px solid #adb7c1; gap:10px;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
-                                                <span style="color: #778899; font-size:12px;">{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}</span>
+                                                <span class="text-container normalTextValue font-weight-normal">
+                                                    {{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}
+                                                </span>
                                                 <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer; color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
                                             </div>
                                         </li>
