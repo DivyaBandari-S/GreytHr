@@ -7,6 +7,7 @@ use App\Models\HolidayCalendar;
 use App\Models\SwipeRecord;
 use Carbon\Carbon;
 use Livewire\Component;
+use Torann\GeoIP\Facades\GeoIP;
 
 class AttendanceTable extends Component
 {
@@ -38,6 +39,11 @@ class AttendanceTable extends Component
     public $legend=true;
     public $showSR = false;
 
+    public $country='-';
+
+    public $city='-';
+
+    public $postal_code='-';
     protected $listeners = [
         'update',
     ];
@@ -49,7 +55,14 @@ class AttendanceTable extends Component
         $this->year = Carbon::now()->format('Y');
         $this->start = Carbon::now()->year($this->year)->firstOfMonth()->format('Y-m-d');
         $this->end = Carbon::now()->year($this->year)->lastOfMonth()->format('Y-m-d');
-        $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->select('emp_id','first_name','last_name')->first();
+        $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
+        $ip = request()->ip();
+        $location = GeoIP::getLocation($ip);
+        $lat = $location['lat'];
+        $lon = $location['lon'];
+        $this->country = $location['country'];
+        $this->city = $location['city'];
+        $this->postal_code = $location['postal_code'];
     }
     public function openlegend()
     {

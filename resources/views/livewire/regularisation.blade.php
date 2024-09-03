@@ -145,8 +145,8 @@
 
         #prevMonth,
         #nextMonth {
-            background: none;
-            border: none;
+            
+            
             cursor: pointer;
             font-size: 14px;
             /* Reduce font size */
@@ -794,7 +794,7 @@
 
         .calendar-date.current-date {
             background-color: rgb(2, 17, 79);
-            color: #fff;
+            color: #778899;
             border-radius: 50%;
             padding: 10px;
             height: 30px;
@@ -858,6 +858,16 @@
     background-color: rgb(2, 17, 79);
     color: white;
 }
+.nextMonth:hover{
+ 
+    border: 1px solid rgb(2, 17, 79);
+    color: rgb(2, 17, 79);
+}
+.prevMonth:hover{
+ 
+ border: 1px solid rgb(2, 17, 79);
+ color: rgb(2, 17, 79);
+}
 .prevMonth
 {
     background-color: rgb(2, 17, 79);
@@ -878,19 +888,24 @@
     background-color: aliceblue;
 }
     </style>
+@if (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+@if($showMessage)
+    <div class="alert alert-success">
+        {{ session('success') }}
+        <button type="button" wire:click="hideMessage" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
     <div class="container">
          <a href="/Attendance" class="submit-btn"style="text-decoration:none;">Back</a>
         <!-- Check for success message -->
-        @if (session()->has('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-
-        </div>
-
-        @endif
+        
 
         <!-- Your page content here -->
     </div>
@@ -901,6 +916,7 @@
         <button class="my-button history-button" style="background-color: {{ ($isHistory==1&&$defaultApply==0) ? 'rgb(2,17,79)' : '#fff' }};color: {{ ($isHistory==1&&$defaultApply==0) ? '#fff' : 'initial' }};" wire:click="historyButton">History</button>
     </div>
     @if($isApply==1&&$defaultApply==1)
+    
     <div class="h row m-0 mt-4">
         <div class="col-md-5 mb-3">
             <div class="calendar-box">
@@ -931,7 +947,11 @@
                     @endforeach
                 </div>
                 <div class="calendar-footer" style="text-align: center;
-                                @if($isdatesApplied)
+                                
+                                @if($year<=$todayYear&&$month<$todayMonth)
+                                      background-color: rgb(176, 255, 176);
+                                    color: green; 
+                                @elseif($isdatesApplied)
                                     background-color: rgb(176, 255, 176);
                                     color: green; /* Change text color accordingly */
                                 @else
@@ -939,18 +959,28 @@
                                     color: #7f8fa4;
                                 @endif
                                 padding: 8px;">
-
-                    @if($isdatesApplied==true)
+                    @if($year<=$todayYear&&$month<$todayMonth)
+                      @if($todayMonth-$month==1)
+                            <i class="far fa-check-circle"></i>
+                            All exception days are already applied.
+                      @else
+                         <i class="far fa-check-circle"></i>
+                          Regularization done for this period.
+                      @endif    
+                    @elseif($isdatesApplied==true)
                     <i class="far fa-check-circle"></i>
                     All exception days are already applied.
                     @else
                     No exception dates to regularise.
                     @endif
                 </div>
+              
+              
             </div>
         </div>
         <div class="col-md-7 mb-3">
             @if(count($selectedDates)>0&&$isdatesApplied==false)
+           
             <div class="remarks-container">
             <div class="reporting mb-2">
                     <div class="employee-profile-image-container">
@@ -1078,10 +1108,9 @@
                                                 <!-- <p class="text-muted">
                                                     Entered Start Time: {{ $shift_times[$index]['from'] ?? '' }}
                                                 </p> -->
-                                                @error('shift_times.'.$index.'.from')
-                                                       <span class="error-message" style="color: red; font-size: 12px;">Please enter sign-in time in HH:MM Format</span>
-                                                @enderror
-                                    
+                                                @if ($errors->has('shift_times.'.$index.'.from'))
+                                                     <span class="error-message" style="color: red; font-size: 12px;">{{ $errors->first('shift_times.'.$index.'.from') }}</span>
+                                                @endif
                                     </td>
                                     <td style="border: none;">
 
@@ -1092,20 +1121,24 @@
                                             <!-- <p class="text-muted">
                                                 Entered End Time: {{ $shift_times[$index]['to'] ?? '' }}
                                             </p> -->
-                                            @error('shift_times.'.$index.'.to')
-                                                      <span class="error-message" style="color: red; font-size: 12px;">Please enter sign-out time in HH:MM Format</span>
-                                            @enderror
+                                            @if ($errors->has('shift_times.'.$index.'.to'))
+                                                @if (strpos($errors->first('shift_times.'.$index.'.to'), 'HH:MM') !== false)
+                                                    <span class="error-message" style="color: red; font-size: 12px;">Please enter sign-out time in HH:MM format</span>
+                                                @elseif (strpos($errors->first('shift_times.'.$index.'.to'), 'later') !== false)
+                                                    <span class="error-message" style="color: red; font-size: 12px;">Sign-out time must be later than sign-in time</span>
+                                                @endif
+                                            @endif
                                     </td>
                                     <td style="border: none;">
 
-                                    <input type="text" placeholder="Reason" class="reason-input text-5"
+                                      <input type="text" placeholder="Reason" class="reason-input text-5"
                                         wire:model.lazy="shift_times.{{ $index }}.reason"
-                                        style="text-align: center;width: 200px;" />
+                                        style="text-align: center;width: 200px;"/>
         
-                    <!-- <p class="text-muted">
-                        Reason: {{ $shift_times[$index]['reason'] ?? '' }}
-                    </p> -->
-
+                                        @if ($errors->has('shift_times.'.$index.'.reason'))
+                                            <span class="error-message" style="color: red; font-size: 12px;">{{ $errors->first('shift_times.'.$index.'.reason') }}</span>
+                                        @endif
+     
                                     </td>
 
 
@@ -1131,6 +1164,11 @@
                 </div>
             </footer>
 
+        </div>
+        @elseif($year<=$todayYear&&$month<$todayMonth)
+        <div class="apply-box">
+            <img src="{{ asset('images/Attendance-Period-Locked.png') }}" style="margin-top:50px;" height="250" width="250">
+           
         </div>
         @elseif($isdatesApplied==false)
         <div class="apply-box">
@@ -1270,26 +1308,29 @@ $lastItem = end($regularisationEntries); // Get the last item
 
 </div>
 @if($withdrawModal==true)
-<div class="modal" tabindex="-1" role="dialog"style="display: block;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Withdraw Confirmation</h5>
-                <button type="button" class="close"aria-label="Close"wire:click="closewithdrawModal">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p style="font-size:14px;">Are you sure you want to withdraw this application?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="approveBtn btn-primary"wire:click="closewithdrawModal">Cancel</button>
-                <button type="button" class="rejectBtn" wire:click="withdraw({{$pr->id}})">Confirm</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal-backdrop fade show blurred-backdrop"></div>
+<div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #f5f5f5; height: 50px">
+                                        <h5 class="modal-title" id="approveModalTitle"style="color:#778899;">Withdraw Confirmation</h5>
+                                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closewithdrawModal" style="background-color: #f5f5f5;font-size:12px;border-radius:20px;border:2px solid #778899;height:15px;width:15px;" >
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                                         <p style="font-size:14px;">Are you sure you want to withdraw this application?</p>
+  
+                                    </div>
+                                    <div class="modal-footer">
+                                            <button type="button"class="approveBtn"wire:click="withdraw({{$pr->id}})">Confirm</button>
+                                            <button type="button"class="rejectBtn"wire:click="closewithdrawModal">Cancel</button>
+                                           
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-backdrop fade show blurred-backdrop" style="background-color: rgba(0, 0, 0, 0.2);"></div>
+ 
+
 @endif
 @endif
 @endforeach
