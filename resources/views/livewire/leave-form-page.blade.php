@@ -167,7 +167,7 @@
 
                      <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
-                        <div class="accordion-title px-4 py-3 rounded">
+                        <div class="accordion-title  rounded">
 
                            <!-- Display leave details here based on $leaveRequest -->
 
@@ -230,7 +230,7 @@
 
                         <div style="width:100%; height:1px; border-bottom:1px solid #ccc;"></div>
 
-                        <div class="content pt-1 px-4">
+                        <div class="content pt-1 px-3">
 
                            <span class="normalTextValue">Duration:</span>
 
@@ -250,7 +250,7 @@
 
                         </div>
 
-                        <div class="content pb-1 px-4">
+                        <div class="content pb-1 px-3">
 
                            <span class="normalTextValue">Reason:</span>
 
@@ -262,7 +262,7 @@
 
                         <div class="d-flex justify-content-between align-items-center py-2 px-3">
 
-                           <div class="content px-2">
+                           <div class="content px-1">
 
                               <span class="normalTextValue">Applied on:</span>
 
@@ -306,13 +306,13 @@
 
                @foreach($this->leaveRequests->whereIn('status', ['approved', 'rejected','Withdrawn']) as $leaveRequest)
 
-               <div class="container mt-4" style="width:85%; margin:0 auto;">
+               <div class="containerWidth mt-4" >
 
                   <div class="accordion rounded ">
 
                      <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
-                        <div class="accordion-title px-4 py-3">
+                        <div class="accordion-title">
 
                            <!-- Display leave details here based on $leaveRequest -->
 
@@ -398,7 +398,7 @@
 
                         <div class="verticalLine"></div>
 
-                        <div class="content pt-1 px-4">
+                        <div class="content pt-1 px-3">
 
                            <span class="headerText">Duration:</span>
 
@@ -416,7 +416,7 @@
 
                         </div>
 
-                        <div class="content  pb-1 px-4">
+                        <div class="content  pb-1 px-3">
 
                            <span class="headerText">Reason:</span>
 
@@ -428,7 +428,7 @@
 
                         <div class="d-flex flex-row justify-content-between px-3 py-2">
 
-                           <div class="content px-2 ">
+                           <div class="content px-1 ">
 
                               <span class="headerText">Applied on:</span>
 
@@ -436,7 +436,7 @@
 
                            </div>
 
-                           <div class="content px-2 ">
+                           <div class="content px-1 ">
                               <a href="{{ route('leave-pending', ['leaveRequestId' => $leaveRequest->id]) }}">
                                  <span class="viewDetails">View
                                     Details</span>

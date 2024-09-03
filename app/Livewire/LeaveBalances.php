@@ -69,7 +69,10 @@ class LeaveBalances extends Component
         'fromDateModal' => 'required|date',
         'toDateModal' => 'required|date|after_or_equal:fromDateModal',
     ];
-
+    protected $messages = [
+        'fromDateModal.required' => 'From date is required',
+        'toDateModal.required' => 'To date is required',
+    ];
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
@@ -404,6 +407,8 @@ class LeaveBalances extends Component
     {
         return $this->selectedYear === $year;
     }
+
+
 
     public function generatePdf()
     {
