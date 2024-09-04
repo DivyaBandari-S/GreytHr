@@ -50,7 +50,6 @@
             justify-content: space-between;
             align-items: center;
             width: 500px;
-            /* Adjust the total width as needed */
             height: 40px;
             /* Adjust the height as needed */
             /* Background color of the container */
@@ -1406,9 +1405,6 @@ color: #fff;
     }
 }
 @media screen and (max-height: 320px) {
-    .penalty-and-average-work-hours-card{
-        margin-top: 40px;
-    }
     .legendTriangleIcon
     {
         margin-right: 40px;
@@ -1457,7 +1453,7 @@ color: #fff;
          
         <div class="row m-0 mt-3">
             <div class="row m-0 d-flex justify-content-center" style="display:flex;justify-content:center;">
-                <div class="penalty-and-average-work-hours-card col-md-3">
+                <div class="penalty-and-average-work-hours-card mb-3 col-md-3">
                     <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
                         <section class="text-center">
@@ -1465,7 +1461,7 @@ color: #fff;
                         </section>
                     </div>
                 </div>
-                <div class="penalty-and-average-work-hours-card col-md-3">
+                <div class="penalty-and-average-work-hours-card mb-3 col-md-3">
                     <div class="insight-card bg-white pt-2 pb-2"style="{{ $isNextMonth == 1 ? 'height: 135px;' : '' }}">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">
                             Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
@@ -1482,11 +1478,11 @@ color: #fff;
                                     </span>
                                
                             </div>
-                            
+
                         </section>
                     </div>
                 </div>
-                <div class="penalty-and-average-work-hours-card col-md-3">
+                <div class="penalty-and-average-work-hours-card col-md-3 mb-3">
                     <div class="insight-card bg-white pt-2 pb-2"style="{{ $isNextMonth == 1 ? 'height: 135px;' : '' }}">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
                         </h6>

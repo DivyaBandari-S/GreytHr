@@ -20,12 +20,12 @@
 
         .my-button {
             margin: 0px;
+            font-size: 0.8rem;
             background-color: #FFFFFF;
             border: 1px solid #a3b2c7;
             /* font-size: 20px;
         height: 50px; */
-            padding: 10px 20px;
-            /* Adjust as needed for spacing */
+            padding: 8px 30px;
         }
 
         .mother-box {
@@ -39,10 +39,6 @@
             /* Align the content vertically */
         }
 
-        .apply-button {
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
-        }
 
         .horizontal-line-attendance-info {
             width: 100%;
@@ -64,13 +60,13 @@
 
 
         .history-button {
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
         }
 
         .apply-button {
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
             transition: border-color 0.3s, color 0.3s;
             /* Smooth transition effect */
         }
