@@ -201,7 +201,7 @@ class Attendance extends Component
     $standardWorkdayMinutes = 9 * 60;
 
     // Retrieve all swipe records for August
-    $records = SwipeRecord::whereDate('created_at', '>=', $startDate)
+    $records = SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->whereDate('created_at', '>=', $startDate)
                           ->whereDate('created_at', '<=', $endDate)
                           ->get();
     

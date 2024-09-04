@@ -215,6 +215,7 @@ width: 170px; */
         .legendtext {
             color: #778899;
             font-size: 12px;
+            padding-top: 2px;
         }
 
         .bg-white {
@@ -1410,6 +1411,15 @@ color: #fff;
         margin-top: 40px;
     }
 }
+@media screen and (max-height: 320px) {
+    .penalty-and-average-work-hours-card{
+        margin-top: 40px;
+    }
+    .legendTriangleIcon
+    {
+        margin-right: 40px;
+    }
+}
     </style>
     @php
     $flag=0;
@@ -1471,12 +1481,12 @@ color: #fff;
                            
                            
                             <div>
-                                @if(!empty($percentageOfWorkHours))
+                               
                                     <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{$percentageOfWorkHours}}%
                                     </span>
                                     <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
                                     </span>
-                                @endif
+                               
                             </div>
                             
                         </section>
@@ -1492,13 +1502,13 @@ color: #fff;
                             
                           
                             <div>
-                              @if(!empty($percentageOfWorkHours))
+                              
                                         <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
                                             +{{$percentageOfWorkHours}}% </span>
                                         <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
 
                                         </span>
-                              @endif          
+                                     
                             </div>
                           
                         </section>
@@ -1825,19 +1835,19 @@ color: #fff;
                             <p class="legendtext m-0">Override</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
+                            <p class="legendTriangleIcon me-2 mb-0">
                             <div class="down-arrow-ign-attendance-info"></div>
                             </p>
                             <p class="legendtext m-0">Ignored</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
+                            <p class="legendTriangleIcon me-2 mb-0">
                             <div class="down-arrow-gra"></div>
                             </p>
                             <p class="legendtext m-0">Grace</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
+                            <p class="legendTriangleIcon me-2 mb-0">
                             <div class="down-arrow-reg"></div>
                             </p>
                             <p class="legendtext m-0">Regularized</p>
@@ -1849,25 +1859,25 @@ color: #fff;
                             <p class="mb-0">
                                 <i class="fas fa-mug-hot"></i>
                             </p>
-                            <p class="m-1 attendance-legend-text">Rest Day</p>
+                            <p class="m-1 pb-2 attendance-legend-text">Rest Day</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="mb-0">
                                 <i class="fas fa-tv"></i>
                             </p>
-                            <p class="m-1 attendance-legend-text">Off Day</p>
+                            <p class="m-1 attendance-legend-text"style="margin-bottom:14px;">Off Day</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="mb-0">
                                 <i class="fas fa-umbrella"></i>
                             </p>
-                            <p class="m-1 attendance-legend-text">Holiday</p>
+                            <p class="m-1 pb-2 attendance-legend-text">Holiday</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="mb-0">
                                 <i class="fas fa-calendar-day"></i>
                             </p>
-                            <p class="m-1 attendance-legend-text">Half Day</p>
+                            <p class="m-1  pb-2 attendance-legend-text">Half Day</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="mb-0">
