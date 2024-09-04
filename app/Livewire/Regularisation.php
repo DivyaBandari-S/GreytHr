@@ -143,10 +143,12 @@ class Regularisation extends Component
             'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
             'shift_times.*.reason' => 'required',
         ], [
+            'shift_times.*.from.required' => 'Please enter the sign-in time',
             'shift_times.*.from.date_format' => 'Please enter sign-in time in HH:MM format',
+            'shift_times.*.to.required' => 'Please enter the sign-out time',
             'shift_times.*.to.date_format' => 'Please enter sign-out time in HH:MM format',
-            'shift_times.*.reason' => 'Please enter the reason',
             'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
+            'shift_times.*.reason.required' => 'Please enter the reason',
         ]);
     }
     public function togglePendingAccordion($id)
@@ -420,9 +422,12 @@ public function nextMonth()
             'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
             'shift_times.*.reason' => 'required',
         ], [
+            'shift_times.*.from.required' => 'Please enter the sign-in time',
             'shift_times.*.from.date_format' => 'Please enter sign-in time in HH:MM format',
+            'shift_times.*.to.required' => 'Please enter the sign-out time',
             'shift_times.*.to.date_format' => 'Please enter sign-out time in HH:MM format',
             'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
+            'shift_times.*.reason.required' => 'Please enter the reason',
         ]);
         $this->isdatesApplied = true;
         $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
@@ -444,7 +449,7 @@ public function nextMonth()
             'is_withdraw' => 0,
             'regularisation_date' => '2024-03-26',
         ]);
-        session()->flash('message', 'CV created successfully.');
+        session()->flash('message', 'Hurry Up! Regularisation Created Successfully.');
         $this->remarks='';
         $regularisationEntriesJson = [];
         $this->regularisationEntries = [];
@@ -452,7 +457,7 @@ public function nextMonth()
         // Log the error or handle it as needed
         Log::error('Error in storearraydates method: ' . $e->getMessage());
         // You might want to inform the user about the error or take other appropriate actions
-        session()->flash('error', 'An error occurred while creating CV.');
+        session()->flash('error1', 'Please enter the fields before submitting for regularisation.');
     }
 }
 

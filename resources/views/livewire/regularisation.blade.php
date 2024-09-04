@@ -271,18 +271,7 @@
 
         }
 
-        .container1 {
-            width: 530px;
-            height: 195px;
-            /* margin-right: 300px; */
-            background-color: #FFFFFF;
-            margin-top: 15px;
-            /* margin-top: 420px; */
-            border-radius: 10px;
-            /* float: right; */
-            border: 1px solid #ccc;
-            display: block;
-        }
+        
 
         .accordion:hover {
 
@@ -1103,9 +1092,17 @@ border: 1px solid #778899;
         
            
             <div class="col-md-5">
+            @if (session('error1'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ session('error1') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                @endif
                 <li>
+
                 @foreach($shift_times as $index => $regularisationEntry)
-                <div class="container1"style="background-color:white;" >
+          
+                <div class="container-for-adding-regularisation-entries"style="background-color:white;" >
                     <div class="row m-0"style="position:relative;">
                     <div class="col-2 pb-0 pt-0 p-1" style="border-right: 1px solid #7f8fa4; text-align: center; padding-left: 15px; padding-right: 15px;">
                             <p class="mb-1" style="font-weight:600;font-size:20px;color:#7f8fa4;">
@@ -1120,13 +1117,13 @@ border: 1px solid #778899;
                                 10:00 am to 07:00 pm<span><i class="fas fa-caret-down"></i></span></p>
 
                         </div>
-                        <div style="position: absolute; top: 5px; left: 490px; cursor: pointer;font-size:20px;color:#7f8fa4;" wire:click="deleteStoredArray({{ $index }})">
+                        <div style="position: absolute; top: 5px; display:flex;justify-content:end; cursor: pointer;font-size:20px;color:#7f8fa4;" wire:click="deleteStoredArray({{ $index }})">
                               <i class="fa fa-times"></i>
                         </div>
                     </div>
                     
                     
-                    <div>
+                    <div class="table-responsive">
                         <table class="regularisationCard" style="width:100%">
                             <thead class="regularisationCardheading">
                                 <tr>
