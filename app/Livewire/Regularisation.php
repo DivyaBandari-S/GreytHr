@@ -545,14 +545,14 @@ public function historyButton()
             session()->flash('error', 'An error occurred while updating count.');
         }
     }
-    
+
     public function openWithdrawModal()
     {
         $this->withdrawModal=true;
     }
     public function closewithdrawModal()
     {
-        $this->withdrawModal=false;   
+        $this->withdrawModal=false;
     }
        
     public function render()
@@ -629,13 +629,12 @@ public function historyButton()
                 'manager11' => $manager,
                 'count' => $this->c,
                 'count1' => $this->data,
-                'manager2' => $this->manager3,
                 'data2' => $this->data1,
                 'data5' => $this->data4,
                 'data81' => $this->data7,
                 'withdraw' => $this->data8,
                 'data11' => $this->data10,
-                'manager2' => $this->manager1,
+
                 'EmployeeDetails' => $employeeDetails1
             ]);
         } catch (\Exception $e) {

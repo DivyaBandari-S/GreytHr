@@ -53,7 +53,7 @@
                             <p>
                                 @if($this->isSelectedAll())
                                 All
-                                @else
+                                @elser
                                 {{ implode(', ', $selectedLocations) }}
                                 @endif
                             </p>
