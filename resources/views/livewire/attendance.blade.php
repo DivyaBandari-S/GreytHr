@@ -4,12 +4,6 @@
             margin-right: 62px;
         }
 
-      
-
-        
-        
-        
-
        
         .my-button-attendance-info {
             padding: 5px 10px;
@@ -1478,7 +1472,7 @@ color: #fff;
                         <section class="text-center">
                             
                                <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
-                           
+
                            
                             <div>
                                
