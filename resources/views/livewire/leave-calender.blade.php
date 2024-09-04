@@ -46,7 +46,7 @@
                 <h6>Apply Filter</h6>
             </div>
             <div class="main-content">
-                <label for="locations" style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Location</label>
+                <span style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Location</span>
                 <div wire:click="openLocations" class="loc-dropdown">
                     <div style="position: relative;">
                         <div style="display: flex;justify-content:space-between; align-items: center;">
@@ -71,24 +71,24 @@
                         <a href="#" wire:click="closeLocations" style="top:-5px; right:5px;position:absolute;">×</a>
                     </div>
                     <div style="display:flex;flex-direction:column;gap:10px;">
-                        <label>
-                            <input type="checkbox" wire:click="toggleSelection('All')" wire:model="selectedLocations" value="All"> All
+                        <label for="All">
+                            <input id="All" type="checkbox" wire:click="toggleSelection('All')" wire:model="selectedLocations" value="All"> All
                         </label>
-                        <label>
-                            <input type="checkbox" wire:click="toggleSelection('Hyderabad')" wire:model="selectedLocations" value="Hyderabad"> Hyderabad
+                        <label for="Hyderabad">
+                            <input id="Hyderabad" type="checkbox" wire:click="toggleSelection('Hyderabad')" wire:model="selectedLocations" value="Hyderabad"> Hyderabad
                         </label>
-                        <label>
-                            <input type="checkbox" wire:click="toggleSelection('Udaipur')" wire:model="selectedLocations" value="Udaipur"> Udaipur
+                        <label for="Udaipur">
+                            <input id="Udaipur" type="checkbox" wire:click="toggleSelection('Udaipur')" wire:model="selectedLocations" value="Udaipur"> Udaipur
                         </label>
-                        <label>
-                            <input type="checkbox" wire:click="toggleSelection('Rajasthan')" wire:model="selectedLocations" value="Rajasthan"> Rajasthan
+                        <label for="Rajasthan">
+                            <input id="Rajasthan" type="checkbox" wire:click="toggleSelection('Rajasthan')" wire:model="selectedLocations" value="Rajasthan"> Rajasthan
                         </label>
                     </div>
                 </div>
                 @endif
 
                 <!-- Department -->
-                <label for="departments" style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Department</label>
+                <span  style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Department</span>
                 <div wire:click="openDept" class="loc-dropdown">
                     <div style="position: relative;">
                         <div style="display: flex;justify-content:space-between; align-items: center;">
@@ -113,17 +113,17 @@
                         <a href="#" wire:click="closeDept" style="top:-5px; right:5px;position:absolute;">×</a>
                     </div>
                     <div style="display:flex;flex-direction:column;gap:10px;">
-                        <label>
-                            <input type="checkbox" wire:click="toggleDeptSelection('All')" wire:model="selectedDepartments" value="All"> All
+                        <label for="All">
+                            <input id="All" type="checkbox" wire:click="toggleDeptSelection('All')" wire:model="selectedDepartments" value="All"> All
                         </label>
-                        <label>
-                            <input type="checkbox" wire:click="toggleDeptSelection('Development')" wire:model="selectedDepartments" value="Development"> Development
+                        <label for="Development">
+                            <input id="Development" type="checkbox" wire:click="toggleDeptSelection('Development')" wire:model="selectedDepartments" value="Development"> Development
                         </label>
-                        <label>
-                            <input type="checkbox" wire:click="toggleDeptSelection('Sales')" wire:model="selectedDepartments" value="Sales"> Sales
+                        <label for="Sales">
+                            <input id="Sales" type="checkbox" wire:click="toggleDeptSelection('Sales')" wire:model="selectedDepartments" value="Sales"> Sales
                         </label>
-                        <label>
-                            <input type="checkbox" wire:click="toggleDeptSelection('IT')" wire:model="selectedDepartments" value="IT"> IT
+                        <label for="IT">
+                            <input id="IT" type="checkbox" wire:click="toggleDeptSelection('IT')" wire:model="selectedDepartments" value="IT"> IT
                         </label>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                                     @if ($day)
                                     <div>
                                         @if ($day['isToday'])
-                                        <div style="background-color: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px; ">
+                                        <div style="background-color: rgb(2,17,79); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px; ">
                                             {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
                                         </div>
                                         @else

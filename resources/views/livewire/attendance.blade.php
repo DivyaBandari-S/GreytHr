@@ -1462,7 +1462,7 @@ color: #fff;
                         <section class="text-center">
                             
                                <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
-                           
+
                            
                             <div>
                                 @if(!empty($percentageOfWorkHours))
