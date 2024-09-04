@@ -1092,14 +1092,16 @@ border: 1px solid #778899;
         
            
             <div class="col-md-5">
-                <li>
-                @foreach($shift_times as $index => $regularisationEntry)
-                @if (session('error1'))
+            @if (session('error1'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             {{ session('error1') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                 @endif
+                <li>
+
+                @foreach($shift_times as $index => $regularisationEntry)
+          
                 <div class="container-for-adding-regularisation-entries"style="background-color:white;" >
                     <div class="row m-0"style="position:relative;">
                     <div class="col-2 pb-0 pt-0 p-1" style="border-right: 1px solid #7f8fa4; text-align: center; padding-left: 15px; padding-right: 15px;">
