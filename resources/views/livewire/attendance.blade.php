@@ -1406,9 +1406,7 @@ color: #fff;
     }
 }
 @media screen and (max-height: 320px) {
-    .penalty-and-average-work-hours-card{
-        margin-top: 40px;
-    }
+   
     .legendTriangleIcon
     {
         margin-right: 40px;
@@ -1471,15 +1469,15 @@ color: #fff;
                             Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
                         <section class="text-center">
                             
-                               <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
+                               <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
 
                            
                             <div>
                                
-                                    <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{$percentageOfWorkHours}}%
+                                    <!-- <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageOfWorkHrs)}}%
                                     </span>
                                     <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                    </span>
+                                    </span> -->
                                
                             </div>
                             
@@ -1492,16 +1490,16 @@ color: #fff;
                         </h6>
                         <section class="text-center">
                             
-                            <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
+                            <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
                             
                           
                             <div>
                               
-                                        <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
-                                            +{{$percentageOfWorkHours}}% </span>
+                                        <!-- <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
+                                            +{{intval($percentageOfWorkHrs)}}% </span>
                                         <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
 
-                                        </span>
+                                        </span> -->
                                      
                             </div>
                           
@@ -1510,7 +1508,7 @@ color: #fff;
                 </div>
                 <div class="col-md-2 mt-5" style="text-align: center">
                     <a href="#" class="attendanceperiod" wire:click="öpenattendanceperiodModal">
-                        +3 Insights
+                        Insights
                     </a>
                 </div>
             </div>

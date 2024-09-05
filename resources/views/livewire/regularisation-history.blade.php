@@ -431,7 +431,7 @@
                 <td style="text-transform: uppercase;color:#f66;">{{$regularisationrequest->status}}</td>
                 @endif
                 <td>{{$regularisationrequest->approver_remarks}}</td>
-                <td class="overflow-cell">10:00 am to 07:00 pm</td>
+                <td>{{ \Carbon\Carbon::parse($empName->shift_start_time)->format('H:i a') }} to {{ \Carbon\Carbon::parse($empName->shift_end_time)->format('H:i a') }}</td>
                 <td>
                     @if(empty($entry['from']))
                     10:00

@@ -2663,6 +2663,10 @@ input[type="radio"] {
         width: 100% !important;
         margin: 0 auto;
     }
+    .container-for-adding-regularisation-entries
+    {
+        width:100%;
+    }
     .form-control {
         width: 100%;
     }

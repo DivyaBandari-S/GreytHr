@@ -20,10 +20,12 @@ class RegularisationPending extends Component
     public $totalEntries;
     public $regularisationEntries;
 
+    public $empDetails;
     public $id;
     public function mount($id)
     {
         $this->regularisationrequest = RegularisationDates::with('employee')->find($id);
+        $this->empDetails=EmployeeDetails::where('emp_id',$this->regularisationrequest->emp_id)->first();
         $this->ManagerId=$this->regularisationrequest->employee->manager_id;
         $this->ManagerName=EmployeeDetails::select('first_name','last_name')->where('emp_id',$this->ManagerId)->first();
         $this->regularisationEntries = json_decode($this->regularisationrequest->regularisation_entries, true);

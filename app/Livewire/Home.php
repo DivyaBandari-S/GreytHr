@@ -117,7 +117,7 @@ class Home extends Component
     {
         $this->fetchWeather();
         // $this->fetchSwipeData();
-
+        $this->fetchSwipeData1();
         $currentHour = date('G');
 
         if ($currentHour >= 4 && $currentHour < 12) {
@@ -153,40 +153,117 @@ class Home extends Component
             ->with('employee')
             ->count();
     }
-
+    public function fetchSwipeData1()
+    {
+        $currentDate = Carbon::today();
+        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
+ 
+        // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+ 
+        // Retrieve the authenticated user details using Eloquent
+        $authUser = Auth::user();
+        $userId = $authUser->emp_id;
+        $normalizedUserId = str_replace('-', '', $userId); // Normalize the user ID
+ 
+        try {
+            // Get employee details to determine if the user is a manager
+            $employeeDetails = EmployeeDetails::where('emp_id', $userId)->first();
+ 
+            if (!$employeeDetails) {
+                throw new \Exception('Employee details not found.');
+            }
+ 
+            // Prepare an array to hold swipe data results
+            $swipeData = [];
+ 
+            // Fetch the swipe log for the logged-in user (whether they are an employee or a manager)
+            $userSwipeLog = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->select('UserId', 'logDate', 'Direction')
+                ->where('UserId', $normalizedUserId)
+                ->whereDate('logDate', $today)
+                ->orderBy('logDate')
+                ->first(); // Get only the first entry for the day
+ 
+            // Add the user's swipe log to the results
+            $swipeData[] = [
+                'employee' => $employeeDetails,
+                'swipe_log' => $userSwipeLog,
+            ];
+ 
+            // If the user is a manager, fetch all employees under them
+            if (!empty($employeeDetails->manager_id)) {
+                $managedEmployees = EmployeeDetails::where('manager_id', $userId)->get();
+ 
+                // Loop through each employee and fetch their first swipe log
+                foreach ($managedEmployees as $employee) {
+                    $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
+ 
+                    // Fetch the first swipe log for each employee, if it exists
+                    $employeeSwipeLog = DB::connection('sqlsrv')
+                        ->table($tableName)
+                        ->select('UserId', 'logDate', 'Direction')
+                        ->where('UserId', $normalizedEmployeeId)
+                        ->whereDate('logDate', $today)
+                        ->orderBy('logDate')
+                        ->first(); // Get only the first entry for the day
+ 
+                    // Add the employee and their swipe log (if any) to the results
+                    $swipeData[] = [
+                        'employee' => $employee,
+                        'swipe_log' => $employeeSwipeLog,
+                    ];
+                }
+            }
+ 
+            // For debugging, you can check the combined results
+ 
+ 
+            // Process or return the data as needed
+            // dd($swipeData);
+            return $swipeData;
+        } catch (\Exception $e) {
+            // Handle the error
+            $this->dataSqlServer = collect(); // or handle error as needed
+            logger()->error("Data fetch error: " . $e->getMessage());
+        }
+    }
     //################################ in local this is working ################################################
-    // public function fetchSwipeData()
-    // {
+    public function fetchSwipeData()
+    {
 
-    //     $currentDate = Carbon::today();
-    //     $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-    //     $month = $currentDate->format('n');
-    //     $year = $currentDate->format('Y');
+        $currentDate = Carbon::today();
+        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
 
-    //     // Construct the table name for SQL Server
-    //     $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
 
-    //     $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
-    //     $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
+        $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
+        $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
 
-    //     try {
+        try {
 
-    //         // Get data from SQL Server for the normalized user ID
-    //         $dataSqlServer = DB::connection('sqlsrv')
-    //             ->table($tableName)
-    //             ->select('UserId', 'logDate', 'Direction')
-    //             ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
-    //             ->whereDate('logDate', $today) // Filter for today's date
-    //             ->orderBy('logDate')
-    //             ->get();
-    //         // dd($dataSqlServer);
-    //     } catch (\Exception $e) {
-    //         // Handle the error
-    //         $this->dataSqlServer = collect(); // or handle error as needed
-    //         // Log error or display message
-    //         logger()->error("Data fetch error: " . $e->getMessage());
-    //     }
-    // }
+            // Get data from SQL Server for the normalized user ID
+            $dataSqlServer = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->select('UserId', 'logDate', 'Direction')
+                ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
+                ->whereDate('logDate', $today) // Filter for today's date
+                ->orderBy('logDate')
+                ->get();
+            // dd($dataSqlServer);
+        } catch (\Exception $e) {
+            // Handle the error
+            $this->dataSqlServer = collect(); // or handle error as needed
+            // Log error or display message
+            logger()->error("Data fetch error: " . $e->getMessage());
+        }
+    }
     //################################ in sever this is working ################################################
 
     // public function fetchSwipeData()

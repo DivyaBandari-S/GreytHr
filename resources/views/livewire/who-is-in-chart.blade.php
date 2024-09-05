@@ -176,8 +176,8 @@
         <table class="who-is-in-table-for-late-employee" style="width: 100%;">
           <thead>
             <tr>
-              <th style="padding-right:42px;">Employee</th>
-              <th >Expected&nbsp;In&nbsp;Time</th>
+            <th style="padding-right:53px;">Employee</th>
+            <th>Expected InTime</th>
             </tr>
           </thead>
           <tbody>

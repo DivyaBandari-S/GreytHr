@@ -19,6 +19,7 @@ use App\Models\SwipeRecord;
 use App\Models\EmployeeDetails;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -56,7 +57,9 @@ class EmployeeSwipesData extends Component
     {
             try {
                 $today = now()->startOfDay();
-
+                $authUser = Auth::user();
+                $userId = $authUser->emp_id;
+                
                 $userSwipesToday = SwipeRecord::where('emp_id', Auth::guard('emp')->user()->emp_id)
                     ->where('created_at', '>=', $today)
                     ->where('created_at', '<', $today->copy()->endOfDay())
@@ -83,7 +86,26 @@ class EmployeeSwipesData extends Component
             } catch (\Exception $e) {
                     Log::error('Error in mount method: ' . $e->getMessage());
                     $this->status = 'Error';
-            }
+            }   
+            
+    
+            // Construct the table name for SQL Server
+           
+          
+            
+              
+
+                // $dataSqlServer = DB::connection('sqlsrv')
+                // ->table($tableName)
+                // ->select('UserId', 'logDate', 'Direction')
+                // ->whereIn('UserId', $employeeIds)
+                // ->whereDate('logDate', $today)
+                // ->orderBy('logDate')
+                // ->get()
+                // ->unique('UserId')
+                // ->values(); // Re-index the collection
+            
+              
     }
     public function updateselectedSwipeTime($value)
     {
@@ -201,6 +223,19 @@ class EmployeeSwipesData extends Component
     try {
         $currentDate = now()->toDateString();
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+        $currentDate = Carbon::today();
+        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
+ 
+        // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+ 
+        // Retrieve the authenticated user details using Eloquent
+        $authUser = Auth::user();
+        $userId = $authUser->emp_id;
+        $normalizedUserId = str_replace('-', '', $userId);
+        $managedEmployees = EmployeeDetails::where('manager_id', $userId)->get();
         $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','shift_start_time','shift_end_time')->get();
         $this->employeeShiftDetails=EmployeeDetails::where('emp_id',$loggedInEmpId)->first();
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
@@ -241,6 +276,7 @@ class EmployeeSwipesData extends Component
                 ->whereDate('swipe_records.created_at', $currentDate)
                 ->orderBy('employee_details.first_name')
                 ->get();
+                
         }
 
        if($this->searching==1)
@@ -264,13 +300,43 @@ class EmployeeSwipesData extends Component
        }
        else
        {
-            $this->swipes = SwipeRecord::select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time')
-            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id')) // Specify swipe_records.emp_id
-            ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id')) // Specify swipe_records.emp_id
-            ->whereDate('swipe_records.created_at', $currentDate)
-            ->orderBy('employee_details.first_name')
-            ->get();
+        $managedEmployees = EmployeeDetails::where('manager_id', $userId)->where('employee_status','active')->get();
+        foreach ($managedEmployees as $employee) {
+            $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
+
+            // Fetch the first swipe log for each employee, if it exists
+            $employeeSwipeLog = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->select('UserId', 'logDate', 'Direction')
+                ->where('UserId', $normalizedEmployeeId)
+                ->whereDate('logDate', $today)
+                ->orderBy('logDate')
+                ->first(); // Get only the first entry for the day
+               
+            
+            
+            // Add the employee and their swipe log (if any) to the results
+            $swipeData[] = [
+                'employee' => $employee,
+                'swipe_log' => $employeeSwipeLog,
+            ];
+
+        }
+        $this->swipes=$swipeData;
+        
+        // $this->swipes = DB::connection('sqlsrv')
+        // ->table($tableName)
+        // ->select('UserId', 'logDate', 'Direction')
+        // ->whereIn('UserId', $employeeIds)
+        // ->whereDate('logDate', $today)
+        // ->orderBy('logDate')
+        // ->get()
+        // ->unique('UserId')
+        // ->values();
+       
+    
+      
+           
        }
 
         $todaySwipeIN = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $currentDate)->first();
