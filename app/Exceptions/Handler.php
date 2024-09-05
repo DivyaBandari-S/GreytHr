@@ -5,9 +5,11 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -31,7 +33,7 @@ class Handler extends ExceptionHandler
         });
     }
 
-  /**
+    /**
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -40,37 +42,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
-        if ($e instanceof NotFoundHttpException) {
-            return response()->view('errors.404', [], 404);
-        }
 
-        if ($e instanceof HttpException) {
-            $statusCode = $e->getStatusCode();
-
-            switch ($statusCode) {
-                case 400:
-                    return response()->view('errors.400', [], 400);
-                case 401:
-                    return response()->view('errors.401', [], 401);
-                case 403:
-                    return response()->view('errors.403', [], 403);
-                case 404:
-                    return response()->view('errors.404', [], 404);
-                case 419:
-                    return response()->view('errors.419', [], 419);
-                case 429:
-                    return response()->view('errors.429', [], 429);
-                case 500:
-                    return response()->view('errors.500', [], 500);
-                case 503:
-                    return response()->view('errors.503', [], 503);
-                default:
-                    return response()->view('errors.default', ['statusCode' => $statusCode], $statusCode);
-            }
-        }
-
-        if ($e instanceof QueryException) {
-            return response()->view('errors.db_error', [], 500);
+        if ($e instanceof QueryException || $e instanceof \PDOException || $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException || $e instanceof \Illuminate\Database\DeadlockException) {
+            Log::error($e->getMessage(), ['exception' => $e]);
+            return response()->view('errors.db_error');
         }
 
         return parent::render($request, $e);
