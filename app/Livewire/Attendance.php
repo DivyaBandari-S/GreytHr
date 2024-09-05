@@ -118,7 +118,6 @@ class Attendance extends Component
 
     public $avgWorkingHrsForModalTitle;
     public $legend = true;
-
     public $isNextMonth = 0;
     public $record;
 
@@ -204,15 +203,15 @@ class Attendance extends Component
         // Standard workday in minutes (e.g., 9 hours = 540 minutes)
         $standardWorkdayMinutes = 9 * 60;
 
-        // Retrieve all swipe records for August
-        $records = SwipeRecord::whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
-            ->get();
+    // Retrieve all swipe records for August
+    $records = SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->whereDate('created_at', '>=', $startDate)
+                          ->whereDate('created_at', '<=', $endDate)
+                          ->get();
 
-        // Group records by day and filter them by 'IN' and 'OUT' times
-        $groupedRecords = $records->groupBy(function ($record) {
-            return $record->created_at->format('Y-m-d'); // Group by date only
-        });
+    // Group records by day and filter them by 'IN' and 'OUT' times
+    $groupedRecords = $records->groupBy(function ($record) {
+        return $record->created_at->format('Y-m-d'); // Group by date only
+    });
 
         $totalMinutes = 0;
         $workingDays = 0;
@@ -381,17 +380,14 @@ class Attendance extends Component
 
         try {
 
-            $this->fetchSwipeData();
-
             $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type', 'shift_start_time', 'shift_end_time')->first();
-
             $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
 
             $this->to_date = now()->toDateString();
 
             $this->calculateAvgWorkingHrs($this->from_date, $this->to_date, $this->employee->emp_id);
-            $fromDate = \Carbon\Carbon::createFromFormat('Y-m-d', $this->from_date);
-            $toDate = \Carbon\Carbon::createFromFormat('Y-m-d', $this->to_date);
+            $fromDate = Carbon::createFromFormat('Y-m-d', $this->from_date);
+            $toDate = Carbon::createFromFormat('Y-m-d', $this->to_date);
             $currentDate = Carbon::parse($this->from_date);
             $endDate = Carbon::parse($this->to_date);
             $totalHoursWorked = 0;
@@ -425,6 +421,7 @@ class Attendance extends Component
                     ->where('in_or_out', 'OUT')
                     ->whereDate('created_at', $dateString)
                     ->pluck('swipe_time');
+
                 $totalDifferenceForDay = 0;
                 // Calculate total time differences for the current date
                 foreach ($inTimes as $index => $inTime) {
@@ -435,6 +432,8 @@ class Attendance extends Component
                         $totalDifferenceForDay += $difference;
 
                         $timeDifferences[$dateString][] = $difference; // Store differences for each date
+                        $timeDifferences[$dateString][] = $difference;
+                // Store differences for each date
                     }
                 }
 
@@ -444,7 +443,9 @@ class Attendance extends Component
 
             // Optionally, calculate average time difference per day
             $averageDifferences = [];
+
             foreach ($timeDifferences as $date => $differences) {
+
                 if (count($differences) > 0) {
                     $averageDifference = array_sum($differences) / count($differences);
                     $averageDifferences[$date] = $averageDifference;
@@ -477,6 +478,7 @@ class Attendance extends Component
                 ];
             });
 
+
             // Get the current date and store it in the $currentDate property
             $this->currentDate = date('d');
             $this->currentWeekday = date('D');
@@ -485,10 +487,10 @@ class Attendance extends Component
             $averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($firstDateOfPreviousMonth, $currentDateOfCurrentMonth);
             $this->averageWorkHours = $averageWorkHrsForCurrentMonth['averageWorkHours'];
             $this->percentageOfWorkHours = $averageWorkHrsForCurrentMonth['percentageOfWorkHours'];
+
         } catch (\Exception $e) {
             // Log the exception
             Log::error('Error in mount method: ' . $e->getMessage());
-
             // Handle the error in a user-friendly way, e.g., setting default values
             $this->from_date = now()->startOfMonth()->toDateString();
             $this->to_date = now()->toDateString();
@@ -851,7 +853,6 @@ class Attendance extends Component
     {
         try {
             // Format the dates and update the modal title
-            // $this->from_date=Carbon::now()->startOfMonth()->toDateString();
             $formattedFromDate = Carbon::parse($this->from_date)->format('Y-m-d');
             $formattedToDate = Carbon::parse($this->to_date)->format('Y-m-d');
             $fromDatetemp = Carbon::parse($this->from_date);
@@ -867,29 +868,46 @@ class Attendance extends Component
             $this->countofAbsent = $this->totalmodalDays - $this->count - $this->weekendDays - $this->holidayCountForInsightsPeriod;
             $this->leaveTaken = $this->caluclateNumberofLeaves($fromDatetemp, $toDatetemp, auth()->guard('emp')->user()->emp_id);
 
-            $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'IN')
+            $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->where('in_or_out', 'IN')
                 ->whereBetween('created_at', [$formattedFromDate, $formattedToDate])
                 ->select('swipe_time')->get();
-            $FirstOutTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'OUT')
+
+            $FirstOutTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->where('in_or_out', 'OUT')
                 ->whereBetween('created_at', [$formattedFromDate, $formattedToDate])
                 ->select('swipe_time')->get();
-            $totalDuration = CarbonInterval::seconds(0); // Initialize total duration to zero
+
+            $totalDuration = CarbonInterval::seconds(0);
             $totalDuration1 = CarbonInterval::seconds(0);
+
             foreach ($FirstInTimes as $record) {
-                $time = Carbon::parse($record->swipe_time); // Parse swipe_time to Carbon instance
-                $totalDuration->addSeconds($time->secondsSinceMidnight()); // Add time to total duration
+                $time = Carbon::parse($record->swipe_time);
+                $totalDuration->addSeconds($time->secondsSinceMidnight());
             }
+
             foreach ($FirstOutTimes as $record) {
-                $time1 = Carbon::parse($record->swipe_time); // Parse swipe_time to Carbon instance
-                $totalDuration1->addSeconds($time1->secondsSinceMidnight()); // Add time to total duration
+                $time1 = Carbon::parse($record->swipe_time);
+                $totalDuration1->addSeconds($time1->secondsSinceMidnight());
             }
 
             $this->totalDurationFormatted = $totalDuration->cascade()->format('%H:%I:%S');
             $this->totalDurationFormatted1 = $totalDuration1->cascade()->format('%H:%I:%S');
-            $FirstInTimesCount = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'IN')
+
+            // Convert total duration to seconds for calculation
+            $totalSeconds = $totalDuration->totalSeconds;
+            $totalSeconds1 = $totalDuration1->totalSeconds;
+
+            $FirstInTimesCount = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->where('in_or_out', 'IN')
                 ->whereBetween('created_at', [$formattedFromDate, $formattedToDate])
                 ->count();
-            $this->avgDurationFormatted = $this->totalDurationFormatted / $FirstInTimesCount;
+
+            if ($FirstInTimesCount > 0) {
+                $this->avgDurationFormatted = $totalSeconds / $FirstInTimesCount;
+            } else {
+                $this->avgDurationFormatted = 0; // Handle division by zero
+            }
         } catch (\Exception $e) {
             Log::error('Error in updateModalTitle method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while updating the modal title. Please try again later.');
@@ -1360,144 +1378,6 @@ class Attendance extends Component
             $this->regularised_reason = null;
         }
     }
-
-
-    //################################ in local this is working ################################################
-    public function fetchSwipeData()
-    {
-        $currentDate = Carbon::today();
-        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-        $month = $currentDate->format('n');
-        $year = $currentDate->format('Y');
-
-        // Construct the table name for SQL Server
-          $tableName = 'DeviceLogs_' . $month . '_' . $year;
-
-        // Retrieve the authenticated user details using Eloquent
-        $authUser = Auth::user();
-        $userId = $authUser->emp_id;
-        $normalizedUserId = str_replace('-', '', $userId); // Normalize the user ID
-
-        try {
-            // Get employee details to determine if the user is a manager
-            $employeeDetails = EmployeeDetails::where('emp_id', $userId)->first();
-
-            if (!$employeeDetails) {
-                throw new \Exception('Employee details not found.');
-            }
-
-            // Prepare an array to hold swipe data results
-            $swipeData = [];
-
-            // Fetch the swipe log for the logged-in user (whether they are an employee or a manager)
-            $userSwipeLog = DB::connection('sqlsrv')
-                ->table($tableName)
-                ->select('UserId', 'logDate', 'Direction')
-                ->where('UserId', $normalizedUserId)
-                ->whereDate('logDate', $today)
-                ->orderBy('logDate')
-                ->first(); // Get only the first entry for the day
-
-            // Add the user's swipe log to the results
-            $swipeData[] = [
-                'employee' => $employeeDetails,
-                'swipe_log' => $userSwipeLog,
-            ];
-
-            // If the user is a manager, fetch all employees under them
-            if (!empty($employeeDetails->manager_id)) {
-                $managedEmployees = EmployeeDetails::where('manager_id', $userId)->get();
-
-                // Loop through each employee and fetch their first swipe log
-                foreach ($managedEmployees as $employee) {
-                    $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
-
-                    // Fetch the first swipe log for each employee, if it exists
-                    $employeeSwipeLog = DB::connection('sqlsrv')
-                        ->table($tableName)
-                        ->select('UserId', 'logDate', 'Direction')
-                        ->where('UserId', $normalizedEmployeeId)
-                        ->whereDate('logDate', $today)
-                        ->orderBy('logDate')
-                        ->first(); // Get only the first entry for the day
-
-                    // Add the employee and their swipe log (if any) to the results
-                    $swipeData[] = [
-                        'employee' => $employee,
-                        'swipe_log' => $employeeSwipeLog,
-                    ];
-                }
-            }
-
-            // For debugging, you can check the combined results
-
-
-            // Process or return the data as needed
-            dd($swipeData);
-            return $swipeData;
-        } catch (\Exception $e) {
-            // Handle the error
-            $this->dataSqlServer = collect(); // or handle error as needed
-            logger()->error("Data fetch error: " . $e->getMessage());
-        }
-    }
-
-
-
-
-
-    //################################ in sever this is working ################################################
-
-    // public function fetchSwipeData()
-    // {
-    //     $currentDate = Carbon::today();
-    //     $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-    //     $month = $currentDate->format('n');
-    //     $year = $currentDate->format('Y');
-
-    //     $tableName = 'DeviceLogs_' . $month . '_' . $year;
-    //     $appUserId = Auth::user()->emp_id;
-    //     $normalizedUserId = str_replace('-', '', $appUserId);
-
-    //     $dsn = env('DB_ODBC_DSN');
-    //     $username = env('DB_ODBC_USERNAME');
-    //     $password = env('DB_ODBC_PASSWORD');
-
-    //     try {
-    //         $pdo = new \PDO("odbc:{$dsn}", $username, $password);
-    //         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-    //         $sql = "
-    //             SELECT UserId, logDate, Direction
-    //             FROM {$tableName}
-    //             WHERE UserId = :userId
-    //             AND CAST(logDate AS DATE) = :today
-    //             ORDER BY logDate
-    //         ";
-
-    //         $stmt = $pdo->prepare($sql);
-    //         $stmt->bindParam(':userId', $normalizedUserId, \PDO::PARAM_STR);
-    //         $stmt->bindParam(':today', $today, \PDO::PARAM_STR);
-    //         $stmt->execute();
-
-    //         $this->dataSqlServer = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-    //         // Return results
-    //         return $this->dataSqlServer;
-    //     } catch (\PDOException $e) {
-    //         // Handle the error
-    //         $this->dataSqlServer = [];
-    //         logger()->error("PDO error: " . $e->getMessage());
-    //         // Return or handle error result
-    //         return ['error' => 'PDO error: ' . $e->getMessage()];
-    //     } catch (\Exception $e) {
-    //         // General error handling
-    //         $this->dataSqlServer = [];
-    //         logger()->error("General error: " . $e->getMessage());
-    //         // Return or handle error result
-    //         return ['error' => 'General error: ' . $e->getMessage()];
-    //     }
-    // }
     public function render()
     {
         try {

@@ -10,14 +10,14 @@
                 <label for="end_date"style="color: #666;font-size:12px;">End Date<span style="color: red;">*</span>:</label><br/>
                 <input type="date" style="font-size: 12px;"id="end_date" wire:model="endDate"wire:change="checkDates">
             </div>
-            <div class="dropdown-container1-employee-swipes">
+            <div class="dropdown-container1-employee-swipes-for-date-type">
                 <label for="dateType"style="color: #666;font-size:12px;">Date Type<span style="color: red;">*</span>:</label><br/>
                 <button class="dropdown-btn1"style="font-size: 12px;">Swipe Date</button>
                 <div class="dropdown-content1-employee-swipes">
 
                 </div>
             </div>
-            <div class="dropdown-container1-employee-swipes">
+            <div class="dropdown-container1-employee-swipes-for-search-employee">
                     <label for="dateType"style="color: #666;font-size:12px;">Employee Search</label><br/>
                 
                     <div class="search-input-employee-swipes">
@@ -32,7 +32,7 @@
                 <div class="dropdown-container1-employee-swipes-for-download-and-filter d-flex">
                         <div class="dropdown-container1-employee-swipes">
 
-                            <button type="button" class="button2" data-toggle="modal" data-target="#exampleModalCenter">
+                            <button type="btn" class="button2" data-toggle="modal" data-target="#exampleModalCenter">
                                 <i class="fa-solid fa-download"wire:click="downloadFileforSwipes"></i>
                             </button>
                             
@@ -49,9 +49,9 @@
 
     <div class="row m-0 p-0  mt-4" >
         <div class="col-md-9 mb-4" >
-           <div class="bg-white border rounded" style="height: 100vh;">
-             <div class="bg-white rounded p-0 m-0">
-                <table class="employee-swipes-table  bg-white" style="width: 100%;">
+           <div class="bg-white border rounded">
+             <div class="table-responsive bg-white rounded p-0 m-0">
+                <table class="employee-swipes-table  bg-white" style="width: 100%;padding-right:10px;">
                     <thead>
                         <tr>
                             <th>Employee&nbsp;Name</th>
@@ -105,7 +105,7 @@
                 </table>
             </div>
             @if($searchtest == 1)
-            <div class="table-responsive bg-white rounded p-0 m-0" style="width:100%;">
+            <div class="table-responsive bg-white rounded p-0 m-0">
                 <table class="employee-swipes-table bg-white ">
                     <thead>
                         <tr>
@@ -152,7 +152,7 @@
             @endif
            </div>
         </div>
-        <div class="col-md-3 p-0 bg-white rounded border">
+        <div class="green-and-white-section-for-employee-swipes col-md-3 p-0 bg-white rounded border">
                 <div class="green-section-employee-swipes p-2">
                  <img src="https://cdn-icons-png.flaticon.com/512/2055/2055568.png"
                             class="container-employee-swipes-right-image">

@@ -379,6 +379,7 @@
             color: #aeadad;
             pointer-events: none;
         }
+     
     </style>
     @php
     $present=0;
