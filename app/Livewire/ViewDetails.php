@@ -32,6 +32,7 @@ class ViewDetails extends Component
     public $selectedYear;
     public $employeeDetails = [];
     public $leaveRequest;
+    public $showViewImageDialog = false;
 
     public function mount($leaveRequestId)
     {
@@ -54,6 +55,88 @@ class ViewDetails extends Component
             // Redirect back or to a specific route
             return redirect()->back(); // Or redirect()->route('route.name');
         }
+    }
+
+    public function downloadImage()
+    {
+        $fileDataArray = is_string($this->leaveRequest->file_paths)
+            ? json_decode($this->leaveRequest->file_paths, true)
+            : $this->leaveRequest->file_paths;
+
+        // Filter images
+        $images = array_filter(
+            $fileDataArray,
+            fn($fileData) => strpos($fileData['mime_type'], 'image') !== false,
+        );
+            // If only one image, provide direct download
+    if (count($images) === 1) {
+        $image = reset($images); // Get the single image
+        $base64File = $image['data'];
+        $mimeType = $image['mime_type'];
+        $originalName = $image['original_name'];
+ 
+        // Decode base64 content
+        $fileContent = base64_decode($base64File);
+ 
+        // Return the image directly
+        return response()->stream(
+            function () use ($fileContent) {
+                echo $fileContent;
+            },
+            200,
+            [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'attachment; filename="' . $originalName . '"',
+            ]
+        );
+    }
+
+        // Create a zip file for the images
+        if (count($images) > 1) {
+        $zipFileName = 'images.zip';
+        $zip = new \ZipArchive();
+        $zip->open(storage_path($zipFileName), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+        foreach ($images as $image) {
+            $base64File = $image['data'];
+            $mimeType = $image['mime_type'];
+            $extension = explode('/', $mimeType)[1];
+            $imageName = uniqid() . '.' . $extension;
+
+            $zip->addFromString($imageName, base64_decode($base64File));
+        }
+
+        $zip->close();
+
+        // Return the zip file as a download
+        return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
+    }
+      // If no images, return an appropriate response
+      return response()->json(['message' => 'No images found'], 404);
+}
+    public $showViewFileDialog = false; // Toggle modal visibility
+    public $files = []; // Store files array
+    public $selectedFile; // Store the selected file's data
+
+
+    public function closeViewFile()
+    {
+        $this->showViewFileDialog = false;
+    }
+    public function showViewFile()
+    {
+      
+        $this->showViewFileDialog = true;
+    }
+
+    public function showViewImage()
+    {
+      
+        $this->showViewImageDialog = true;
+    }
+    public function closeViewImage()
+    {
+        $this->showViewImageDialog = false;
     }
 
 
@@ -137,6 +220,9 @@ class ViewDetails extends Component
             // Attempt to decode cc_to
             $ccToJson = trim($this->leaveRequest->cc_to);
             $this->leaveRequest->cc_to = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
+            
+            $filePathsJson = trim($this->leaveRequest->file_paths);
+            $this->leaveRequest->file_paths = is_array($filePathsJson) ? $filePathsJson : json_decode($filePathsJson, true);
         } catch (\Exception $e) {
             Log::error("Exception occurred: " . $e->getMessage());
             session()->flash('error_message', 'An error occurred while processing the details. Please try again later.');

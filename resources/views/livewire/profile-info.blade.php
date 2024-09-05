@@ -456,7 +456,7 @@
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
                                 @if ($employeeDetails->empPersonalInfo )
-                                {{ $employeeDetails->empPersonalInfo->pan_no }}
+                                {{ $employeeDetails->empPersonalInfo->uan_no }}
                                 @else
                                 <span style="padding-left: 10px;">-</span>
                                 @endif
@@ -491,9 +491,11 @@
                         DETAILS</div>
                     <div class="row p-3 gx-0">
                         <div class="col-12 col-md-3">
+                          
                             @if (($employeeDetails->empParentDetails) && !empty(optional($employeeDetails->empParentDetails)->father_image) && optional($employeeDetails->empParentDetails)->father_image !== 'null')
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100"
                                 src="{{ 'data:image/jpeg;base64,' . base64_encode(optional($employeeDetails->empParentDetails)->father_image) }}">
+                              
                             @else
 
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100" src="{{ asset('images/male-default.png') }}"
