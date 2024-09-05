@@ -496,7 +496,6 @@
 
                     <div class="accordion-body m-0 p-0">
                     <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
-
                         <div class="review-content px-3" >
 
                             <span class="normalTextValue">Duration:</span>

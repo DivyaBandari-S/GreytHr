@@ -1949,13 +1949,13 @@ color: #fff;
                             <p class="m-1 attendance-legend-text">Rest Day</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mb-0">
+                            <p class="mt-1">
                                 <i class="fas fa-tv"></i>
                             </p>
                             <p class="m-1 attendance-legend-text">Off Day</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mb-0">
+                            <p class="mt-0">
                                 <i class="fas fa-umbrella"></i>
                             </p>
                             <p class="m-1 attendance-legend-text">Holiday</p>
