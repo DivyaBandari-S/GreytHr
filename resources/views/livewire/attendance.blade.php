@@ -1470,8 +1470,6 @@ color: #fff;
                                <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
 
 
-
-
                             <div>
 
                                     <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{$percentageOfWorkHours}}%
@@ -1500,7 +1498,6 @@ color: #fff;
                                         <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
 
                                         </span>
-                              @endif
 
                             </div>
 
@@ -2258,6 +2255,7 @@ color: #fff;
                 </div>
             </div>
         </div>
+
 
 
     </div>

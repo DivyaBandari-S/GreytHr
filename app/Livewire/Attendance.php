@@ -23,8 +23,6 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Log;
 use Torann\GeoIP\Facades\GeoIP;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class Attendance extends Component
 {
@@ -125,7 +123,6 @@ class Attendance extends Component
 
     public $Swiperecords;
     public $employeeId;
-    public $swipeData = [];
 
 
 
@@ -176,7 +173,6 @@ class Attendance extends Component
     public $showMessage = false;
 
     public $employee;
-    public $dataSqlServer;
     //This function will help us to toggle the arrow present in session fields
 
 
@@ -203,15 +199,15 @@ class Attendance extends Component
         // Standard workday in minutes (e.g., 9 hours = 540 minutes)
         $standardWorkdayMinutes = 9 * 60;
 
-    // Retrieve all swipe records for August
-    $records = SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->whereDate('created_at', '>=', $startDate)
-                          ->whereDate('created_at', '<=', $endDate)
-                          ->get();
+        // Retrieve all swipe records for August
+        $records = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->get();
 
-    // Group records by day and filter them by 'IN' and 'OUT' times
-    $groupedRecords = $records->groupBy(function ($record) {
-        return $record->created_at->format('Y-m-d'); // Group by date only
-    });
+        // Group records by day and filter them by 'IN' and 'OUT' times
+        $groupedRecords = $records->groupBy(function ($record) {
+            return $record->created_at->format('Y-m-d'); // Group by date only
+        });
 
         $totalMinutes = 0;
         $workingDays = 0;
@@ -399,7 +395,6 @@ class Attendance extends Component
             $this->country = $location['country'];
             $this->city = $location['city'];
             $this->postal_code = $location['postal_code'];
-
             $firstDateOfPreviousMonth = Carbon::now()->subMonth()->startOfMonth();
 
             // Get the current date of the current month
@@ -430,15 +425,11 @@ class Attendance extends Component
                         $outCarbon = Carbon::parse($outTimes[$index]);
                         $difference = $outCarbon->diffInSeconds($inCarbon);
                         $totalDifferenceForDay += $difference;
-
-                        $timeDifferences[$dateString][] = $difference; // Store differences for each date
                         $timeDifferences[$dateString][] = $difference;
-                // Store differences for each date
+                        // Store differences for each date
                     }
                 }
-
                 $currentDate->addDay(); // Move to the next day
-
             }
 
             // Optionally, calculate average time difference per day
@@ -487,7 +478,6 @@ class Attendance extends Component
             $averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($firstDateOfPreviousMonth, $currentDateOfCurrentMonth);
             $this->averageWorkHours = $averageWorkHrsForCurrentMonth['averageWorkHours'];
             $this->percentageOfWorkHours = $averageWorkHrsForCurrentMonth['percentageOfWorkHours'];
-
         } catch (\Exception $e) {
             // Log the exception
             Log::error('Error in mount method: ' . $e->getMessage());
@@ -1408,7 +1398,6 @@ class Attendance extends Component
                 $this->currentDate2record = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->get();
 
                 if (!empty($this->currentDate2record) && isset($this->currentDate2record[0]) && isset($this->currentDate2record[1])) {
-
                     $this->first_in_time = substr($this->currentDate2record[0]['swipe_time'], 0, 5);
                     $this->last_out_time = substr($this->currentDate2record[1]['swipe_time'], 0, 5);
                     $firstInTime = Carbon::createFromFormat('H:i', $this->first_in_time);
