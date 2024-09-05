@@ -557,3 +557,14 @@ Route::get('/test-odbc-dir', function () {
         return "Error: " . $e->getMessage();
     }
 });
+
+Route::get('/down', function () {
+    Artisan::call('down');
+    return 'Application is now in maintenance mode!';
+});
+
+
+Route::get('/up', function () {
+    Artisan::call('up');
+    return 'Application is now live!';
+});
