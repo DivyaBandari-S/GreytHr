@@ -430,8 +430,8 @@
                 <hr>
                 <div class="container">
                     <div class="row m-0" style="font-size: 12px;">
-                        <div class="col-6 mb-3" style="color:#778899;"><strong>Social Media</strong></div>
-                        <div class="col-6 mb-3" style="text-align: end; cursor: pointer;">
+                        <div class="col-6 " style="color:#778899;"><strong>Social Media</strong></div>
+                        <div class="col-6 " style="text-align: end; cursor: pointer;">
                             @if ($editingSocialMedia)
                                 <!-- <i wire:click="editSocialMedia" class="fas fa-edit"></i> -->
                                 <i wire:click="cancelSocialMedia" class="fas fa-times me-3"></i>
@@ -442,7 +442,7 @@
                             </i>
                         </div>
                     </div>
-                    <div class="container mt-3">
+                    <div class="container mt-3 mb-2">
                         <div class="row m-0" style="margin-top: 20px;">
                             <div class="col-md-4 mb-3 d-flex flex-column">
                                 <span class="label-text" style="color: #778899; font-size: 12px;">Facebook</span>

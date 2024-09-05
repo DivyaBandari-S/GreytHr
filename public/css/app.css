@@ -1087,8 +1087,11 @@ button.close-button {
     display: block;
 }
 @media  screen and (max-height:320px) {
-    .container-for-adding-regularisation-entries {
-        max-width: 100%;
+    .container-for-adding-regularisation-entries{
+        width: 100%;
+        display: block;
+        height: 195px;
+        margin-top: 15px;
     }
 }
 
@@ -1282,8 +1285,6 @@ input:checked + .slider:before {
     align-items: center;
     background-color: #ffffff;
     flex: 1;
-    padding-right: 19.5px;
-    padding-left: 19.5px;
     border-top: 1px solid #52afe9;
     border-right: 1px solid #52afe9;
 }
@@ -2684,7 +2685,7 @@ input[type="radio"] {
     .dropdown {
         width: 30%;
     }
-    
+
 }
 
 .applyingFor {
@@ -3515,6 +3516,12 @@ l
         max-width: 100%;
         overflow-x: auto;
         gap: 20px;
+    }
+    .container-for-adding-regularisation-entries{
+        width: 100%;
+        display: block;
+        height: 195px;
+        margin-top: 15px;
     }
 }
 /* //end of leave-history styles */

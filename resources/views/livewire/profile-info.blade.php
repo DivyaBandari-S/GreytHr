@@ -456,7 +456,7 @@
                             </div>
                             <div style="margin-left: 15px; font-size: 12px">
                                 @if ($employeeDetails->empPersonalInfo )
-                                {{ $employeeDetails->empPersonalInfo->pan_no }}
+                                {{ $employeeDetails->empPersonalInfo->uan_no }}
                                 @else
                                 <span style="padding-left: 10px;">-</span>
                                 @endif
@@ -491,9 +491,11 @@
                         DETAILS</div>
                     <div class="row p-3 gx-0">
                         <div class="col-12 col-md-3">
+                          
                             @if (($employeeDetails->empParentDetails) && !empty(optional($employeeDetails->empParentDetails)->father_image) && optional($employeeDetails->empParentDetails)->father_image !== 'null')
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100"
                                 src="{{ 'data:image/jpeg;base64,' . base64_encode(optional($employeeDetails->empParentDetails)->father_image) }}">
+                              
                             @else
 
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100" src="{{ asset('images/male-default.png') }}"
@@ -753,6 +755,16 @@
                                 No Manager Assigned
                                 @endif
                             </div>
+                              <div style="font-size: 11px; color: #778899; margin-left: 15px;">
+                                Job Mode
+                            </div>
+                            <div style="margin-left: 15px; font-size: 12px; margin-bottom: 10px;">
+                                @if ($employeeDetails->job_mode)
+                                {{ ucwords(strtolower($manager->job_mode)) }}
+                                @else
+                                NA
+                                @endif
+                            </div>
                         </div>
                         <div class="col-6  col-md-3">
                             @php
@@ -766,9 +778,27 @@
                             <div style="font-size: 11px; color: #778899; margin-left: 15px;">
                                 Department
                             </div>
-                            <div style="margin-left: 15px; font-size: 12px;">
+                            <div style="margin-left: 15px; font-size: 12px;margin-bottom: 10px;">
                                 @if ($department)
                                 {{ $department->department }}
+                                @else
+                                No Department Assigned
+                                @endif
+                            </div>
+                            @php
+                            // Fetch the department name directly in Blade
+                            $subDepartment = \App\Models\EmpSubDepartments::where(
+                            'sub_dept_id',
+                            $employeeDetails->sub_dept_id,
+                            )->first();
+                            @endphp
+
+                            <div style="font-size: 11px; color: #778899; margin-left: 15px;">
+                                Division
+                            </div>
+                            <div style="margin-left: 15px; font-size: 12px;">
+                                @if ($subDepartment)
+                                {{ ucwords(strtolower($subDepartment->sub_department)) }}
                                 @else
                                 No Department Assigned
                                 @endif
