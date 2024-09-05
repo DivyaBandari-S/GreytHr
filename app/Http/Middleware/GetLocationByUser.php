@@ -26,8 +26,8 @@ class GetLocationByUser
                                 console.log("Geolocation is supported by this browser.");
                                 navigator.geolocation.getCurrentPosition(
                                     function(position) {
-                                        // console.log("Latitude: " + position.coords.latitude);
-                                        // console.log("Longitude: " + position.coords.longitude);
+                                         console.log("Latitude: " + position.coords.latitude);
+                                         console.log("Longitude: " + position.coords.longitude);
 
                                         fetch("' . $targetRoute . '", {
                                             method: "POST",

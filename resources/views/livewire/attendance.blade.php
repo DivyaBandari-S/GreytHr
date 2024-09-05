@@ -4,7 +4,7 @@
             margin-right: 62px;
         }
 
-       
+
         .my-button-attendance-info {
             padding: 5px 10px;
             border: none;
@@ -1049,7 +1049,7 @@ width: 170px; */
         }
 
         .arrow-button::after {
-           
+
             /* Unicode character for right-pointing triangle (arrow) */
             font-size: 18px;
 
@@ -1193,7 +1193,7 @@ color: #fff;
         }
 
         .accordion:before {
-          
+
             /* Unicode character for "plus" sign (+) */
             font-size: 13px;
             color: #fff;
@@ -1202,7 +1202,7 @@ color: #fff;
         }
 
         .accordion:before {
-            
+
             /* Unicode character for "plus" sign (+) */
             font-size: 13px;
             color: #fff;
@@ -1377,24 +1377,24 @@ color: #fff;
     scrollbar-width: thin; /* For Firefox - makes the scrollbar thinner */
     scrollbar-color: #888 #f1f1f1; /* For Firefox - custom scrollbar color */
 }
- 
+
 /* Chrome, Edge, Safari */
 .custom-scrollbar-for-right-side-container
 ::-webkit-scrollbar {
     width: 8px; /* Set the width of the scrollbar */
 }
- 
+
 .custom-scrollbar-for-right-side-container
 ::-webkit-scrollbar-track {
     background: #f1f1f1; /* Background of the scrollbar track */
 }
- 
+
 .custom-scrollbar-for-right-side-container
 ::-webkit-scrollbar-thumb {
     background-color: #888; /* Scrollbar thumb color */
     border-radius: 10px; /* Rounded corners for the scrollbar thumb */
 }
- 
+
 .custom-scrollbar-for-right-side-container
 ::-webkit-scrollbar-thumb:hover {
     background-color: #555; /* Change color on hover */
@@ -1414,13 +1414,13 @@ color: #fff;
     @endphp
 
     <div>
-        
+
         <div class="row m-0" style="text-align: end;">
             <div class="col-md-12">
                 <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info" id="myButton">My Regularisations</a>
             </div>
         </div>
-         
+
 
 
         <div class="row m-0 d-flex justify-content-center text-center">
@@ -1444,7 +1444,7 @@ color: #fff;
             </div>
             <div class="col-md-2"></div>
         </div>
-         
+
         <div class="row m-0 mt-3">
             <div class="row m-0 d-flex justify-content-center" style="display:flex;justify-content:center;">
                 <div class="penalty-and-average-work-hours-card col-md-3">
@@ -1460,10 +1460,10 @@ color: #fff;
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">
                             Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
                         <section class="text-center">
-                            
+
                                <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
-                           
-                           
+
+
                             <div>
                                 @if(!empty($percentageOfWorkHours))
                                     <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{$percentageOfWorkHours}}%
@@ -1472,7 +1472,7 @@ color: #fff;
                                     </span>
                                 @endif
                             </div>
-                            
+
                         </section>
                     </div>
                 </div>
@@ -1481,10 +1481,10 @@ color: #fff;
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
                         </h6>
                         <section class="text-center">
-                            
+
                             <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
-                            
-                          
+
+
                             <div>
                               @if(!empty($percentageOfWorkHours))
                                         <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
@@ -1492,9 +1492,9 @@ color: #fff;
                                         <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
 
                                         </span>
-                              @endif          
+                              @endif
                             </div>
-                          
+
                         </section>
                     </div>
                 </div>
@@ -1571,9 +1571,9 @@ color: #fff;
                                 <div class="col-md-3 col-sm-6 p-0">
                                     <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted1}}</span></p>
                                 </div>
-                           
+
                             </div>
-                             
+
                         </div>
                     </div>
                 </div>
@@ -2136,11 +2136,11 @@ color: #fff;
                     <div class="container-body" style="margin-top:2px;height:auto;border-top:1px solid #ccc;display: {{ $toggleButton ? 'block' : 'none' }};">
                         <!-- Content of the container body -->
                         <div class="table-responsive"style="max-width: 100%; text-align: center;">
-                          
+
                             <table>
                                @if ($SwiperecordsCount > 0)
                                 <thead>
-                                   
+
                                     <tr>
                                         <th style="font-weight:normal;font-size:12px;">In/Out</th>
                                         <th style="font-weight:normal;font-size:12px;">Swipe&nbsp;Time</th>
@@ -2149,7 +2149,7 @@ color: #fff;
                                     </tr>
                                 </thead>
                                 <tbody>
-                                  
+
                                 @foreach ($swiperecordsfortoggleButton as $index =>$swiperecord)
                                 <tr>
                                        <td style="font-weight:normal;font-size:12px;">{{ $swiperecord->in_or_out }}</td>
@@ -2164,9 +2164,9 @@ color: #fff;
                                            </div>
                                        </td>
                                        <td style="font-size:10px;">{{$this->city}},{{$this->country}},{{$this->postal_code}}</td>
- 
+
                                        <td><button class="info-button" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
- 
+
                                    </tr>
                                    @if (($index + 1) % 2 == 0)
                                    <!-- Add a small container after every two records -->
@@ -2174,9 +2174,9 @@ color: #fff;
                                        <td colspan="4" style="height:1px; background-color: #f0f0f0; text-align: left;font-size:10px;">
                                            Actual Hrs:{{ $actualHours[($index + 1) / 2 - 1] }}</td>
                                    </tr>
- 
+
                                    @endif
-                               
+
                                 @endforeach
 
 
@@ -2206,9 +2206,9 @@ color: #fff;
                                     @if($swiperecord)
                                     <div class="row m-0 mt-3">
 
-                                        
+
                                               <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}</span></div>
-                                      
+
                                         <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br /><span style="color: #000000;">{{ $swiperecord->emp_id }}</span></div>
 
                                     </div>
@@ -2251,7 +2251,6 @@ color: #fff;
         </div>
 
 
-
     </div>
 
 
@@ -2263,8 +2262,8 @@ color: #fff;
 
 
 
-   
-   
+
+
 
     <script>
         document.getElementById("myButton").onclick = function() {
