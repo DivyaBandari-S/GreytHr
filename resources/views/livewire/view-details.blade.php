@@ -440,7 +440,7 @@
                                     <span class="normalText text-start">
                                         {{ ucwords(strtolower($applyingTo['report_to'] ))}}
                                     </span>
-                                    @endforeacha
+                                    @endforeach
                                     @endif
                                     @else
                                     Rejected by
