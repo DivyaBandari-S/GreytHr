@@ -239,6 +239,9 @@
                                         @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-label">CC to</span>
                                         @endif
+                                        @if (!empty($leaveRequest->file_paths))
+                                        <span class="custom-label">Attachments</span>
+                                        @endif
                                     </div>
 
                                     <div class="custom-grid-item">
@@ -275,6 +278,135 @@
                                         </span>
                                         @else
                                         @endif
+                                        @if (!empty($leaveRequest->file_paths))
+                                        @php
+
+                                        // Check if $leaveRequest->file_paths is a string or an array
+                                        $fileDataArray = is_string($leaveRequest->file_paths)
+                                        ? json_decode($leaveRequest->file_paths, true)
+                                        : $leaveRequest->file_paths;
+  
+
+                                        // Separate images and files
+                                        $images = array_filter(
+                                        $fileDataArray,
+                                        fn($fileData) => strpos($fileData['mime_type'], 'image') !== false,
+                                        );
+                                        $files = array_filter(
+                                        $fileDataArray,
+                                        fn($fileData) => strpos($fileData['mime_type'], 'image') === false,
+                                        );
+
+                                        @endphp
+
+
+                                        {{-- view file popup --}}
+                                        @if ($showViewImageDialog)
+                                        <div class="modal custom-modal" tabindex="-1" role="dialog" style="display: block;">
+                                            <div class="modal-dialog custom-modal-dialog custom-modal-dialog-centered custom-modal-lg" role="document">
+                                                <div class="modal-content custom-modal-content">
+                                                    <div class="modal-header custom-modal-header">
+                                                        <h5 class="modal-title view-file">View Image</h5>
+                                                    </div>
+                                                    <div class="modal-body custom-modal-body">
+                                                        <div class="swiper-container">
+                                                            <div class="swiper-wrapper">
+                                                                @foreach ($images as $image)
+                                                                @php
+                                                                $base64File = $image['data'];
+                                                                $mimeType = $image['mime_type'];
+                                                                @endphp
+                                                                <div class="swiper-slide">
+                                                                    <img src="data:{{ $mimeType }};base64,{{ $base64File }}" class="img-fluid" alt="Image">
+                                                                </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer custom-modal-footer">
+                                                        <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
+                                                        <button type="button" class="cancel-btn1" wire:click="closeViewImage">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                                        @endif
+                                        @if ($showViewFileDialog)
+                                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title view-file">View Files</h5>
+                                                    </div>
+                                                    <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                                                        <ul class="list-group list-group-flush">
+                                                            @foreach ($files as $file)
+
+                                                            @php
+
+                                                            $base64File = $file['data'];
+
+                                                            $mimeType = $file['mime_type'];
+
+                                                            $originalName = $file['original_name'];
+
+                                                            @endphp
+
+                                                            <li>
+
+                                                                <a href="data:{{ $mimeType }};base64,{{ $base64File }}"
+
+                                                                    download="{{ $originalName }}"
+
+                                                                    style="text-decoration: none; color: #007BFF; margin: 10px;">
+
+                                                                    {{ $originalName }}
+
+                                                                </a>
+
+                                                            </li>
+
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="cancel-btn1" wire:click="closeViewFile">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                                        @endif
+                                        <!-- Trigger Links -->
+                                        @if (!empty($images) && count($images) > 1)
+                                        <a href="#" wire:click.prevent="showViewImage"
+                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            View Images
+                                        </a>
+                                        @elseif(!empty($images) && count($images) == 1)
+                                        <a href="#" wire:click.prevent="showViewImage"
+                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            View Image
+                                        </a>
+                                        @endif
+
+                                        @if (!empty($files) && count($files) > 1)
+                                        <a href="#" wire:click.prevent="showViewFile"
+                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            Download Files
+                                        </a>
+                                        @elseif(!empty($files) && count($files) == 1)
+                                        <a href="#" wire:click.prevent="showViewFile"
+                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            Download File
+                                        </a>
+                                        @endif
+
+
+
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -308,7 +440,7 @@
                                     <span class="normalText text-start">
                                         {{ ucwords(strtolower($applyingTo['report_to'] ))}}
                                     </span>
-                                    @endforeach
+                                    @endforeacha
                                     @endif
                                     @else
                                     Rejected by

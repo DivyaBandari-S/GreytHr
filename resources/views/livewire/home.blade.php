@@ -1091,7 +1091,7 @@ eum nihil itaque!
         @endif
     </div>
 </div>
-
+<div>
 </div>
 <script>
     // Function to check if an element is in the viewport
@@ -1103,12 +1103,6 @@ eum nihil itaque!
             rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
-    }
-</script>
-<script>
-    function openMap(latitude, longitude) {
-        const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
-        window.open(url, '_blank');
     }
 </script>
 

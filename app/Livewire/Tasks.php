@@ -303,20 +303,7 @@ class Tasks extends Component
         }
     }
     public $showFollowers = false;
-    public $selectedPeopleForFollowers = [];
-    public function togglePersonSelection($personId)
-    {
 
-        if (in_array($personId, $this->selectedPeopleForFollowers)) {
-
-            $this->selectedPeopleForFollowers = array_diff($this->selectedPeopleForFollowers, [$personId]);
-        } else {
-
-            $this->selectedPeopleForFollowers[] = $personId;
-        }
-
-        $this->updateFollowers();
-    }
     public function updateCheckbox($personId)
     {
 
@@ -328,16 +315,34 @@ class Tasks extends Component
 
         $this->updateFollowers();
     }
-    public function updateFollowers()
-    {
-        $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
-            $selectedPerson = $this->peoples->where('emp_id', $id)->first();
-            return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name .' #(' . $selectedPerson->emp_id . ')' : '';
-        }, $this->selectedPeopleForFollowers);
 
-        $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
-        $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
+    public $selectedPeopleForFollowers = [];
+
+public function togglePersonSelection($personId)
+{
+    if (in_array($personId, $this->selectedPeopleForFollowers)) {
+        // Deselect the person
+        $this->selectedPeopleForFollowers = array_diff($this->selectedPeopleForFollowers, [$personId]);
+    } else {
+        // Select the person
+        $this->selectedPeopleForFollowers[] = $personId;
     }
+
+    // Ensure state is updated correctly
+    $this->updateFollowers();
+}
+
+public function updateFollowers()
+{
+    $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
+        $selectedPerson = $this->peoples->where('emp_id', $id)->first();
+        return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name .' #(' . $selectedPerson->emp_id . ')' : '';
+    }, $this->selectedPeopleForFollowers);
+
+    $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
+    $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
+}
+
     public function openForTasks($taskId)
     {
         $task = Task::find($taskId);

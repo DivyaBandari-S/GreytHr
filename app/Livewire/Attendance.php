@@ -199,15 +199,15 @@ class Attendance extends Component
         // Standard workday in minutes (e.g., 9 hours = 540 minutes)
         $standardWorkdayMinutes = 9 * 60;
 
-    // Retrieve all swipe records for August
-    $records = SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->whereDate('created_at', '>=', $startDate)
-                          ->whereDate('created_at', '<=', $endDate)
-                          ->get();
-    
-    // Group records by day and filter them by 'IN' and 'OUT' times
-    $groupedRecords = $records->groupBy(function ($record) {
-        return $record->created_at->format('Y-m-d'); // Group by date only
-    });
+        // Retrieve all swipe records for August
+        $records = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->get();
+
+        // Group records by day and filter them by 'IN' and 'OUT' times
+        $groupedRecords = $records->groupBy(function ($record) {
+            return $record->created_at->format('Y-m-d'); // Group by date only
+        });
 
         $totalMinutes = 0;
         $workingDays = 0;
@@ -426,7 +426,7 @@ class Attendance extends Component
                         $difference = $outCarbon->diffInSeconds($inCarbon);
                         $totalDifferenceForDay += $difference;
                         $timeDifferences[$dateString][] = $difference;
-                // Store differences for each date
+                        // Store differences for each date
                     }
                 }
                 $currentDate->addDay(); // Move to the next day
@@ -478,7 +478,6 @@ class Attendance extends Component
             $averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($firstDateOfPreviousMonth, $currentDateOfCurrentMonth);
             $this->averageWorkHours = $averageWorkHrsForCurrentMonth['averageWorkHours'];
             $this->percentageOfWorkHours = $averageWorkHrsForCurrentMonth['percentageOfWorkHours'];
-
         } catch (\Exception $e) {
             // Log the exception
             Log::error('Error in mount method: ' . $e->getMessage());

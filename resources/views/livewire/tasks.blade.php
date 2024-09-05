@@ -859,17 +859,18 @@
                                             </div>
                                         @else
                                             @foreach ($peopleData as $people)
-                                                <div wire:model="cc_to" wire:click="togglePersonSelection('{{ $people->emp_id }}')"
-                                                    class="container"
-                                                    style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-auto">
-                                                            <input type="checkbox"
-                                                                wire:model="selectedPeopleForFollowers"
-                                                                  wire:change="updateCheckbox('{{ $people->emp_id }}')"
-                                                                value="{{ $people->emp_id }}"
-                                                                id="checkbox-{{ $people->emp_id }}">
-                                                        </div>
+                                            <div
+                                            wire:click="togglePersonSelection('{{ $people->emp_id }}')"
+                                            class="container"
+                                            style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <input 
+                                                        type="checkbox"
+                                                        value="{{ $people->emp_id }}"
+                                                        id="checkbox-{{ $people->emp_id }}"
+                                                        {{ in_array($people->emp_id, $selectedPeopleForFollowers) ? 'checked' : '' }}>
+                                                </div>
                                                         <div class="col-auto">
                                                             @if (!empty($people->image) && $people->image !== 'null')
                                                                 <img class="profile-image"
@@ -1120,5 +1121,7 @@
             modalImage.src = imageSrc;
         }
     }
+
+
 </script>
 </div>
