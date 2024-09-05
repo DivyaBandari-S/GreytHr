@@ -217,6 +217,7 @@ class EmployeeSwipesData extends Component
     {
         $this->startDate=$this->startDate;
         $this->endDate=$this->endDate;
+        // dd($this->sta)
     }
     public function render()
 {

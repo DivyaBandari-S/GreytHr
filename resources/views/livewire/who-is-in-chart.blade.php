@@ -178,6 +178,7 @@
             <tr>
             <th style="padding-right:53px;">Employee</th>
             <th>Expected InTime</th>
+            <th></th>
             </tr>
           </thead>
           <tbody>
@@ -196,7 +197,11 @@
                 <span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$e1->emp_id}}</span>
               </td>
               <td style="font-weight:700;font-size:10px;">{{$e1->shift_start_time}}</td>
+              
+               <td></td>
             </tr>
+            
+          
             @endforeach
             @endif
           </tbody><!-- Add table rows (tbody) and data here if needed -->

@@ -1329,17 +1329,7 @@ color: #fff;
             border: 1px solid #cbd5e1;
         }
 
-        .info-button {
-            background-color: transparent;
-            color: rgb(2, 17, 79);
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: -10px;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            text-decoration: none;
-        }
+        
 
         .info-button:hover {
             text-decoration: underline;
