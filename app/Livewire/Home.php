@@ -30,8 +30,6 @@ use Jenssegers\Agent\Agent;
 use Throwable;
 use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Http;
-
-
 class Home extends Component
 {
     public $currentDate;
