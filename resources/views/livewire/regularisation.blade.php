@@ -779,7 +779,7 @@
 
         .calendar-date.current-date {
             background-color: rgb(2, 17, 79);
-            color: #778899;
+            color: white;
             border-radius: 50%;
             padding: 10px;
             height: 30px;

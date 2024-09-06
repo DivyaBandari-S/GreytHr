@@ -1671,7 +1671,7 @@ color: #fff;
 
 
                                         @if ($day['isToday'])
-                                        <div style="background-color: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
+                                        <div style="background-color: rgb(2,17,79); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
                                             {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
                                         </div>
                                         @else
