@@ -165,6 +165,7 @@ class Attendance extends Component
     public $weekendDays = 0;
     public $daysWithRecords = 0;
 
+    public $percentageinworkhrsforattendance;
     public $leaveTaken = 0;
     public $totalHoursWorked = 0;
 
@@ -195,15 +196,21 @@ class Attendance extends Component
             // $this->showErrorMessage('An error occurred while closing the modal.');
         }
     }
-    public function calculateDifferenceInAvgWorkHours()
-{
+    public function calculateDifferenceInAvgWorkHours($date,$date1)
+    {
+        // dd($date);
     // Get the current month and previous month dates
-    $currentMonthStart = Carbon::now()->startOfMonth()->toDateString();
-    $currentMonthEnd = Carbon::now()->today()->toDateString();
+      $currentMonthStart = \Carbon\Carbon::parse($date. '-01')->startOfMonth()->toDateString();
+      $currentMonthEnd = \Carbon\Carbon::parse($date)->endOfMonth()->toDateString(); // Today's date
+      if (\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today())) {
+         $currentMonthEnd = \Carbon\Carbon::today()->toDateString(); // Set to today's date if greater
+      }
 
-    $previousMonthStart = Carbon::now()->subMonth()->startOfMonth()->toDateString();
-    $previousMonthEnd = Carbon::now()->subMonth()->endOfMonth()->toDateString();
 
+      $date1 = \Carbon\Carbon::parse($date1);
+      $previousMonthStart = $date1->startOfMonth()->toDateString();
+      $previousMonthEnd = $date1->endOfMonth()->toDateString();
+      
     // Calculate average work hours for current and previous months
     $avgWorkHoursCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($currentMonthStart, $currentMonthEnd);
     $avgWorkHoursPreviousMonth = $this->calculateAverageWorkHoursAndPercentage($previousMonthStart, $previousMonthEnd);
@@ -532,7 +539,7 @@ class Attendance extends Component
             $this->swiperecords = SwipeRecord::all();
             $startOfMonth = Carbon::now()->startOfMonth();  
             $today = Carbon::now();
-            $abc=$this->calculateDifferenceInAvgWorkHours();
+            $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'),\Carbon\Carbon::now()->subMonth()->format('Y-m'));
            
             $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(),$today->toDateString());
             // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];
@@ -1356,7 +1363,7 @@ class Attendance extends Component
 
 
             // $previousMonthStart = $date->subMonth()->startOfMonth()->toDateString();
-
+            $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours($date->format('Y-m'),$date->copy()->subMonth()->format('Y-m'));
             $this->dateClicked($date->startOfMonth()->toDateString());
         } catch (\Exception $e) {
             Log::error('Error in beforeMonth method: ' . $e->getMessage());

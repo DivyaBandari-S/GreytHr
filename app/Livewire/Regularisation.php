@@ -4,6 +4,7 @@
 namespace App\Livewire;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
+use App\Models\LeaveRequest;
 use App\Models\RegularisationDates;
 
 use App\Models\Regularisations;
@@ -181,6 +182,25 @@ class Regularisation extends Component
         $this->showApplyingToContainer = !$this->showApplyingToContainer;
             
     }
+    private function isEmployeeLeaveOnDate($date, $employeeId)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+
+            return LeaveRequest::where('emp_id', $employeeId)
+                ->where('status', 'approved')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>=', $date);
+                })
+                ->exists();
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while checking employee leave. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
+    }
     public function submitShifts($date)
     {
         $selectedDate = Carbon::parse($date);
@@ -216,7 +236,11 @@ class Regularisation extends Component
             session()->flash('error', 'The selected date is a holiday. Regularisation is not allowed on holidays.');
             return;
         }
-       
+        if ($this->isEmployeeLeaveOnDate($selectedDate, auth()->guard('emp')->user()->emp_id)) {
+            session()->flash('error', 'You are on leave on this date. Regularisation is not allowed.');
+            return;
+        }
+        
 
         if (!in_array($date, $this->selectedDates)) {
             // Add the date to the selectedDates array only if it's not already selected
