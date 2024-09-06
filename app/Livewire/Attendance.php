@@ -158,6 +158,7 @@ class Attendance extends Component
     public $avgSwipeOutTime = null;
     public $totalmodalDays;
 
+    public $avgWorkHoursPreviousMonth;
     public $averageworkhours;
     public $averageWorkHrsForCurrentMonth = null;
     public $averageFormattedTimeForCurrentMonth;
@@ -215,11 +216,11 @@ class Attendance extends Component
       $previousMonthEnd = $date1->endOfMonth()->toDateString();
     // Calculate average work hours for current and previous months
     $avgWorkHoursCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($currentMonthStart, $currentMonthEnd);
-    $avgWorkHoursPreviousMonth = $this->calculateAverageWorkHoursAndPercentage($previousMonthStart, $previousMonthEnd);
+    $this->avgWorkHoursPreviousMonth = $this->calculateAverageWorkHoursAndPercentage($previousMonthStart, $previousMonthEnd);
 
         // Convert the average work hours (HH:MM) to total minutes for comparison
         list($currentMonthHours, $currentMonthMinutes) = explode(':', $avgWorkHoursCurrentMonth);
-        list($previousMonthHours, $previousMonthMinutes) = explode(':', $avgWorkHoursPreviousMonth);
+        list($previousMonthHours, $previousMonthMinutes) = explode(':', $this->avgWorkHoursPreviousMonth);
 
         $currentMonthTotalMinutes = ($currentMonthHours * 60) + $currentMonthMinutes;
         $previousMonthTotalMinutes = ($previousMonthHours * 60) + $previousMonthMinutes;
@@ -572,7 +573,7 @@ class Attendance extends Component
             $this->swiperecords = SwipeRecord::all();
             $startOfMonth = Carbon::now()->startOfMonth();
             $today = Carbon::now();
-            //$this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'),\Carbon\Carbon::now()->subMonth()->format('Y-m'));
+            $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'),\Carbon\Carbon::now()->subMonth()->format('Y-m'));
            
             $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(),$today->toDateString());
             // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];
