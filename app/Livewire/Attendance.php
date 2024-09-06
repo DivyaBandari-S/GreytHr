@@ -205,8 +205,6 @@ class Attendance extends Component
             return Carbon::parse($swipe->created_at)->toDateString();
         });
 
-
-
         //    dd($dailySwipes);
         $totalMinutes = 0;
 
