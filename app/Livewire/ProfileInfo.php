@@ -76,9 +76,6 @@ class ProfileInfo extends Component
                 ->first();
 
                 return view('livewire.profile-info');
-
-
-
         } catch (\Exception $e) {
             Log::error('Error in render method: ' . $e->getMessage());
             return view('livewire.profile-info')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);

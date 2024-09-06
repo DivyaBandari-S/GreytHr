@@ -572,7 +572,7 @@ class Attendance extends Component
             $this->swiperecords = SwipeRecord::all();
             $startOfMonth = Carbon::now()->startOfMonth();
             $today = Carbon::now();
-            //$this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'),\Carbon\Carbon::now()->subMonth()->format('Y-m'));
+            $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'),\Carbon\Carbon::now()->subMonth()->format('Y-m'));
            
             $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(),$today->toDateString());
             // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];

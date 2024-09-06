@@ -887,30 +887,30 @@
                                     <label for="emp_id">Employee ID</label>
                                     <input type="text" class="form-control" id="emp_id" name="emp_id" required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mt-2">
                                     <label for="reason">Reason</label>
                                     <input type="text" class="form-control" id="reason" name="reason">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mt-2">
                                     <label for="resignation_date">Resignation Date</label>
-                                    <input type="date" class="form-control" id="resignation_date" name="resignation_date" required>
+                                    <input type="date" class="form-control placeholder-small" id="resignation_date" name="resignation_date" required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mt-2">
                                     <label for="last_working_day">Last Working Day</label>
-                                    <input type="date" class="form-control" id="last_working_day" name="last_working_day">
+                                    <input type="date" class="form-control placeholder-small" id="last_working_day" name="last_working_day">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mt-2">
                                     <label for="comments">Comments</label>
                                     <textarea class="form-control" id="comments" name="comments"></textarea>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mt-2">
                                     <label for="signature">Signature</label>
-                                    <input type="file" class="form-control-file" id="signature" name="signature">
+                                    <input type="file" class="form-control-file" id="signature" name="signature" style="font-size:12px;">
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="submit-btn">Submit</button>
-                                <button type="button" class="cancel-btn" >Clear</button>
+                                <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);" >Clear</button>
                             </div>
                         </form>
                     </div>
