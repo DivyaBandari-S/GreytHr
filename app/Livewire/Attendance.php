@@ -263,7 +263,7 @@ class Attendance extends Component
             // Check if the date is a weekend or a holiday
             $isWeekend = $carbonDate->isWeekend();
             $isHoliday = HolidayCalendar::where('date', $carbonDate->toDateString())->exists();
-    
+
             // Check if the date is a leave day
             $isOnLeave = $leaveRequests->contains(function ($leaveRequest) use ($carbonDate) {
                 return $carbonDate->between($leaveRequest->from_date, $leaveRequest->to_date);
