@@ -260,7 +260,7 @@ class Attendance extends Component
                 $workingDaysCount++;
             }
         }
-    
+
         // Calculate the average minutes per working day
         if ($workingDaysCount > 0) {
             $averageMinutes = $totalMinutes / $workingDaysCount;
