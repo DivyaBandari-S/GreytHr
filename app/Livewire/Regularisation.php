@@ -99,6 +99,7 @@ class Regularisation extends Component
     public $shift_times = []; 
     public $count=0;
 
+    public $showAlert=false;
     public $holidays;
 
     public $monthinFormat;
@@ -201,6 +202,10 @@ class Regularisation extends Component
             return false; // Return false to handle the error gracefully
         }
     }
+    public function hideAlert()
+    {
+        $this->showAlert = false;
+    }
     public function submitShifts($date)
     {
         $selectedDate = Carbon::parse($date);
@@ -211,33 +216,39 @@ class Regularisation extends Component
         {
               // Throw a validation error or set a message for the user
               session()->flash('error', 'Attendance Period is locked');
+              $this->showAlert=true;
               // Stop further execution if the date is in the future
               return;
         }
         if ($selectedDate->greaterThan(Carbon::today())) {
             // Throw a validation error or set a message for the user
             session()->flash('error', 'Future dates are not allowed for regularisation');
+            $this->showAlert=true;
             // Stop further execution if the date is in the future
             return;
         }
         if ($selectedDate->EqualTo(Carbon::today())) {
             // Throw a validation error or set a message for the user
             session()->flash('error', 'Today dates are not allowed for regularisation');
+            $this->showAlert=true;
             // Stop further execution if the date is in the future
             return;
         }
         if ($selectedDate->isWeekend()) {
             // Throw a validation error for weekends
             session()->flash('error', 'This is a weekend. Regularisation is not allowed on weekends');
+            $this->showAlert=true;
             return;
         }
         $holiday = HolidayCalendar::where('date', $selectedDate->toDateString())->first();
         if ($holiday) {
             session()->flash('error', 'The selected date is a holiday. Regularisation is not allowed on holidays.');
+            $this->showAlert=true;
             return;
         }
         if ($this->isEmployeeLeaveOnDate($selectedDate, auth()->guard('emp')->user()->emp_id)) {
             session()->flash('error', 'You are on leave on this date. Regularisation is not allowed.');
+            $this->showAlert=true;
             return;
         }
         

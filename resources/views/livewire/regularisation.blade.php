@@ -916,9 +916,9 @@ border: 1px solid #778899;
 }
     </style>
 @if (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show w-50 m-auto" role="alert"wire:poll.10s="hideAlert">
         {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
 @if($showMessage)
@@ -1089,7 +1089,7 @@ border: 1px solid #778899;
            
             <div class="col-md-5">
             @if (session('error1'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"wire:poll.1s="hideAlert">
                             {{ session('error1') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
