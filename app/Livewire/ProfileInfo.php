@@ -26,6 +26,7 @@ class ProfileInfo extends Component
     public $empBankDetails;
     public $employeeDetails;
     public $image, $employee;
+    public $showModal = false;
     public $showSuccessMessage = false;
     
     public function closeMessage()
@@ -54,6 +55,14 @@ class ProfileInfo extends Component
             session()->flash('error', 'An error occurred while updating the profile. Please try again later.');
         }
 
+    }
+    public function showPopupModal()
+    {
+        $this->showModal = true;
+    }
+    public function closeModal()
+    {
+        $this->showModal = false;
     }
 
     public function render()
