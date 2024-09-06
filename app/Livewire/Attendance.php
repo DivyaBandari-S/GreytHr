@@ -230,85 +230,87 @@ class Attendance extends Component
 }
     public function calculateAverageWorkHoursAndPercentage($startDate,$endDate)
     {
-        $records = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-        ->whereDate('created_at', '>=', $startDate)
-        ->whereDate('created_at', '<', $endDate)
-        ->orderBy('created_at')
-        ->get();
+        $employeeId = auth()->guard('emp')->user()->emp_id;
     
-            $dailySwipes = $records->groupBy(function($swipe) {
-                return Carbon::parse($swipe->created_at)->toDateString();
-            });
-         
-            
-            
-       
-            $totalMinutes = 0;
-
+        // Retrieve swipe records within the given date range
+        $records = SwipeRecord::where('emp_id', $employeeId)
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<', $endDate)
+            ->orderBy('created_at')
+            ->get();
+    
+        // Group swipes by date
+        $dailySwipes = $records->groupBy(function ($swipe) {
+            return Carbon::parse($swipe->created_at)->toDateString();
+        });
+    
+        // Get leave requests for the employee within the date range
+        $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->whereDate('from_date', '<=', $endDate)
+                      ->whereDate('to_date', '>=', $startDate);
+            })
+            ->get();
+    
+        $totalMinutes = 0;
+        $workingDaysCount = 0; // Counter for days considered for working hours
+    
         foreach ($dailySwipes as $date => $swipesForDay) {
             $inTime = null;
-            $dayMinutes = 0;  // To store the total minutes for this particular day
+            $dayMinutes = 0;
             $carbonDate = Carbon::parse($date);
-
-                // Check if the date is a weekend
-                $isWeekend = $carbonDate->isWeekend();
-        
-                // Check if the date is a holiday
-                $isHoliday = HolidayCalendar::where('date', $carbonDate->toDateString())->exists();
-                $onLeave=$this->isEmployeeLeaveOnDate($date, auth()->guard('emp')->user()->emp_id);
-                
-             
-                        if($isWeekend==false||$isHoliday==false||$onLeave==false)
-                        {
-
-                                    foreach ($swipesForDay as $swipe) {
-                                        // If the swipe is 'IN', store the time
-                                        if ($swipe->in_or_out === 'IN') {
-                                            $inTime = Carbon::parse($swipe->swipe_time);
-                                        }
-
-                        // If the swipe is 'OUT' and there was a previous 'IN' time
-                        if ($swipe->in_or_out === 'OUT' && $inTime) {
-                            $outTime = Carbon::parse($swipe->swipe_time);
-                            // Calculate the difference in minutes and add it to the day's total
-                            $dayMinutes += $inTime->diffInMinutes($outTime);
-                            // Reset the 'IN' time after the calculation
-                            $inTime = null;
-                        }
+    
+            // Check if the date is a weekend or a holiday
+            $isWeekend = $carbonDate->isWeekend();
+            $isHoliday = HolidayCalendar::where('date', $carbonDate->toDateString())->exists();
+    
+            // Check if the date is a leave day
+            $isOnLeave = $leaveRequests->contains(function ($leaveRequest) use ($carbonDate) {
+                return $carbonDate->between($leaveRequest->from_date, $leaveRequest->to_date);
+            });
+    
+            // Process the day only if it's a working day and not a leave day
+            if (!$isWeekend && !$isHoliday && !$isOnLeave) {
+                foreach ($swipesForDay as $swipe) {
+                    if ($swipe->in_or_out === 'IN') {
+                        $inTime = Carbon::parse($swipe->swipe_time);
+                    }
+    
+                    // If the swipe is 'OUT' and there was a previous 'IN' time
+                    if ($swipe->in_or_out === 'OUT' && $inTime) {
+                        $outTime = Carbon::parse($swipe->swipe_time);
+                        // Calculate the difference in minutes and add it to the day's total
+                        $dayMinutes += $inTime->diffInMinutes($outTime);
+                        $inTime = null; // Reset the 'IN' time after the calculation
                     }
                 }
-
-                // If we have an 'IN' time but no 'OUT' time, the total minutes for the day should be 0
+    
+                // If there was an 'IN' time but no 'OUT' time, the total minutes for the day should be 0
                 if ($inTime && $dayMinutes === 0) {
                     $dayMinutes = 0;
                 }
+    
+                // Add the day's total minutes to the overall total
+                $totalMinutes += $dayMinutes;
+                $workingDaysCount++;
+            }
+        }
 
-                                    // Add the day's total minutes to the overall total
-                                    $totalMinutes += $dayMinutes;
-                        }
-                        $isWeekend=false;
-                        $isHoliday=false;
-                        $onLeave=false;
-                    }
-
-
-           
-                if (count($dailySwipes) > 0) {
-                    $averageMinutes = $totalMinutes / count($dailySwipes);
-                } else {
-                    $averageMinutes = 0; // Set to 0 or any fallback value if there are no swipes
-                }
-                            
-         
-            $hours = intdiv($averageMinutes, 60);
-            $minutes = $averageMinutes % 60;
-              
-            $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
-            
-            $standardWorkingMinutes = 9 * 60; // 540 minutes
-       
-          return  $averageWorkHours;
+        // Calculate the average minutes per working day
+        if ($workingDaysCount > 0) {
+            $averageMinutes = $totalMinutes / $workingDaysCount;
+        } else {
+            $averageMinutes = 0; // Set to 0 or any fallback value if there are no working days
+        }
+    
+        $hours = intdiv($averageMinutes, 60);
+        $minutes = $averageMinutes % 60;
+    
+        $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
+    
+        return $averageWorkHours;
     }
+
     public function toggleSession1Fields()
     {
         try {
