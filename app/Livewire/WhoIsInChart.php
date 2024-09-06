@@ -45,6 +45,7 @@ class WhoIsInChart extends Component
     public $notFound3;
     public $isdatepickerclicked = 0;
 
+    public $toggleButton=false;
     public $isToggled = false;
 
     public $openshiftselector = false;
@@ -66,7 +67,10 @@ class WhoIsInChart extends Component
 
 
     }
-    
+    public function opentoggleButton()
+    {
+        $this->toggleButton = !$this->toggleButton;   
+    }
     //This function will help us to get the details of late arrival employees(who arrived after 10:00am) in excel sheet
     public function downloadExcelForLateArrivals()
     {

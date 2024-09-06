@@ -755,6 +755,16 @@
                                 No Manager Assigned
                                 @endif
                             </div>
+                              <div style="font-size: 11px; color: #778899; margin-left: 15px;">
+                                Job Mode
+                            </div>
+                            <div style="margin-left: 15px; font-size: 12px; margin-bottom: 10px;">
+                                @if ($employeeDetails->job_mode)
+                                {{ ucwords(strtolower($manager->job_mode)) }}
+                                @else
+                                NA
+                                @endif
+                            </div>
                         </div>
                         <div class="col-6  col-md-3">
                             @php
@@ -768,9 +778,27 @@
                             <div style="font-size: 11px; color: #778899; margin-left: 15px;">
                                 Department
                             </div>
-                            <div style="margin-left: 15px; font-size: 12px;">
+                            <div style="margin-left: 15px; font-size: 12px;margin-bottom: 10px;">
                                 @if ($department)
                                 {{ $department->department }}
+                                @else
+                                No Department Assigned
+                                @endif
+                            </div>
+                            @php
+                            // Fetch the department name directly in Blade
+                            $subDepartment = \App\Models\EmpSubDepartments::where(
+                            'sub_dept_id',
+                            $employeeDetails->sub_dept_id,
+                            )->first();
+                            @endphp
+
+                            <div style="font-size: 11px; color: #778899; margin-left: 15px;">
+                                Division
+                            </div>
+                            <div style="margin-left: 15px; font-size: 12px;">
+                                @if ($subDepartment)
+                                {{ ucwords(strtolower($subDepartment->sub_department)) }}
                                 @else
                                 No Department Assigned
                                 @endif

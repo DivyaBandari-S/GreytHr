@@ -977,7 +977,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title viewfile">View File</h5>
+                        <h5 class="modal-title">View File</h5>
                     </div>
                     <div class="modal-body text-center">
                         <img src="{{ 'data:image/jpeg;base64,' . base64_encode($viewrecord->file_path) }}"

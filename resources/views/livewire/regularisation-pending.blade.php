@@ -124,7 +124,7 @@
                 <td>{{ \Carbon\Carbon::parse($entry['date'])->format('d M, Y') }}</td>
                 <td style="text-transform: uppercase;">pending</td>
                 <td>-</td>
-                <td class="overflow-cell">10:00 am to 07:00 pm</td>
+                <td >{{ \Carbon\Carbon::parse($empDetails->shift_start_time)->format('H:i a') }} to {{ \Carbon\Carbon::parse($empDetails->shift_end_time)->format('H:i a') }}</td>
                 <td>
                        @if(empty($entry['from']))
                             10:00
