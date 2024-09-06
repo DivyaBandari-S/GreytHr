@@ -4,6 +4,7 @@
 namespace App\Livewire;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
+use App\Models\LeaveRequest;
 use App\Models\RegularisationDates;
 
 use App\Models\Regularisations;
@@ -98,6 +99,7 @@ class Regularisation extends Component
     public $shift_times = []; 
     public $count=0;
 
+    public $showAlert=false;
     public $holidays;
 
     public $monthinFormat;
@@ -181,6 +183,29 @@ class Regularisation extends Component
         $this->showApplyingToContainer = !$this->showApplyingToContainer;
             
     }
+    private function isEmployeeLeaveOnDate($date, $employeeId)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+
+            return LeaveRequest::where('emp_id', $employeeId)
+                ->where('status', 'approved')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>=', $date);
+                })
+                ->exists();
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while checking employee leave. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
+    }
+    public function hideAlert()
+    {
+        $this->showAlert = false;
+    }
     public function submitShifts($date)
     {
         $selectedDate = Carbon::parse($date);
@@ -191,32 +216,42 @@ class Regularisation extends Component
         {
               // Throw a validation error or set a message for the user
               session()->flash('error', 'Attendance Period is locked');
+              $this->showAlert=true;
               // Stop further execution if the date is in the future
               return;
         }
         if ($selectedDate->greaterThan(Carbon::today())) {
             // Throw a validation error or set a message for the user
             session()->flash('error', 'Future dates are not allowed for regularisation');
+            $this->showAlert=true;
             // Stop further execution if the date is in the future
             return;
         }
         if ($selectedDate->EqualTo(Carbon::today())) {
             // Throw a validation error or set a message for the user
             session()->flash('error', 'Today dates are not allowed for regularisation');
+            $this->showAlert=true;
             // Stop further execution if the date is in the future
             return;
         }
         if ($selectedDate->isWeekend()) {
             // Throw a validation error for weekends
             session()->flash('error', 'This is a weekend. Regularisation is not allowed on weekends');
+            $this->showAlert=true;
             return;
         }
         $holiday = HolidayCalendar::where('date', $selectedDate->toDateString())->first();
         if ($holiday) {
             session()->flash('error', 'The selected date is a holiday. Regularisation is not allowed on holidays.');
+            $this->showAlert=true;
             return;
         }
-       
+        if ($this->isEmployeeLeaveOnDate($selectedDate, auth()->guard('emp')->user()->emp_id)) {
+            session()->flash('error', 'You are on leave on this date. Regularisation is not allowed.');
+            $this->showAlert=true;
+            return;
+        }
+        
 
         if (!in_array($date, $this->selectedDates)) {
             // Add the date to the selectedDates array only if it's not already selected

@@ -40,6 +40,9 @@ class EmployeeSwipesData extends Component
     public $search='';
 
     public $searching=0;
+
+    public $selectedSwipeLogTime = [];
+    public $swipeLogTime=null;
     public $sw_ipes;
     public $notFound;
     public $selectedEmployee;
@@ -208,6 +211,15 @@ class EmployeeSwipesData extends Component
         $this->searching=1;
        
     }
+    public function checkboxClicked($time)
+    {
+        // Handle the checkbox click event
+        // $time contains the time of the swipe log
+        // Perform your logic here
+
+        // Example: Logging the time
+       $this->swipeLogTime=$time;
+    }
     public function checkDates()
     {
         $this->startDate=$this->startDate;
@@ -251,8 +263,8 @@ class EmployeeSwipesData extends Component
             });
 
         if ($this->startDate && $this->endDate) {
-            $this->startDate = Carbon::parse($this->startDate);
-            $this->endDate = Carbon::parse($this->endDate);
+            $this->startDate = Carbon::parse($this->startDate)->toDateString();
+            $this->endDate = Carbon::parse($this->endDate)->toDateString();
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)->where('employee_status','active')->get();
         foreach ($managedEmployees as $employee) {
             $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
@@ -263,7 +275,7 @@ class EmployeeSwipesData extends Component
                 ->select('UserId', 'logDate', 'Direction')
                 ->where('UserId', $normalizedEmployeeId)
                 ->whereDate('logDate','>=' ,$this->startDate)
-                ->whereDate('logDate','>=' ,$this->endDate)
+                ->whereDate('logDate','<=' ,$this->endDate)
                 ->orderBy('logDate')
                 ->get(); // Get only the first entry for the day
                
@@ -277,6 +289,7 @@ class EmployeeSwipesData extends Component
 
         }
         $this->swipes=$swipeData;
+     
             
         } else {
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)->where('employee_status','active')->get();
@@ -288,7 +301,7 @@ class EmployeeSwipesData extends Component
                 ->table($tableName)
                 ->select('UserId', 'logDate', 'Direction')
                 ->where('UserId', $normalizedEmployeeId)
-                ->whereDate('logDate', '2024-09-05')
+                ->whereDate('logDate', $today)
                 ->orderBy('logDate')
                 ->first(); // Get only the first entry for the day
                
