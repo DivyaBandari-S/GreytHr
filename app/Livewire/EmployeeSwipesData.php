@@ -146,60 +146,55 @@ class EmployeeSwipesData extends Component
     public function downloadFileforSwipes()
     {
         try
-        {        
-                $currentDate = now()->toDateString();
-                $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-                $this->loggedInEmpId1 = EmployeeDetails::where('emp_id', Auth::guard('emp')->user()->emp_id)->get();
-                $this->loggedInEmpId1 = EmployeeDetails::where('emp_id', Auth::guard('emp')->user()->emp_id)->get();
-                $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
-                $approvedLeaveRequests=LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->where('leave_applications.status', 'approved')
-                ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-                ->whereDate('from_date', '<=', $currentDate)
-                ->whereDate('to_date', '>=', $currentDate)
-                ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
-                ->map(function ($leaveRequest) {
-                    // Calculate the number of days between from_date and to_date
-                    $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
-                    $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
-                    $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
-                    return $leaveRequest;
-                });
-                if ($this->startDate && $this->endDate) {
-                    $prev_date = $this->startDate;
-                    $next_date = $this->endDate;
-                    $this->swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $prev_date,  $next_date) {
-                        $query->selectRaw('MIN(id)')
-                            ->from('swipe_records')
-                            ->whereIn('emp_id', $employees->pluck('emp_id'))
-                            ->whereBetween('created_at', [$prev_date, $next_date])
-                            ->groupBy('emp_id');
-                    })
-                        ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                        ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-                        ->get();
-                } else {
-                    $this->swipes = SwipeRecord::select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-                    ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                    ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id')) // Specify swipe_records.emp_id
-                    ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id')) // Specify swipe_records.emp_id
-                    ->whereDate('swipe_records.created_at', $currentDate)
-                    ->orderBy('employee_details.first_name')
-                    ->get();
-                }
-                $data = [
-                    ['LIST OF PRESENT EMPLOYEES'],
-                    ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Shift', 'In/Out', 'Door/Address', 'Status'],
+        {
+            $currentDate = Carbon::today();    
+        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
+        $authUser = Auth::user();
+        $userId = $authUser->emp_id;
+        // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        $managedEmployees = EmployeeDetails::where('manager_id', $userId)
+        ->where('employee_status', 'active')
+        ->get();
 
-                ];
-                $employees1 = $this->swipes;
-                foreach ($employees1 as $employee) {
-                    $swipeTime1 = Carbon::parse($employee['created_at'])->format('d-m-Y'); // Format the date
-                    $data[] = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name'],  $employee['created_at']->format('d M, Y') , $employee['swipe_time'], '10:00 am to 07:00pm', $employee['in_or_out'], '-', '-'];
-                }
-                $filePath = storage_path('app/todays_present_employees.xlsx');
-                SimpleExcelWriter::create($filePath)->addRows($data);  
-                return response()->download($filePath, 'todays_present_employees.xlsx');
+    $swipeData = [];
+
+    foreach ($managedEmployees as $employee) {
+        $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
+
+        // Fetch the first swipe log for each employee, if it exists
+        $employeeSwipeLog = DB::connection('sqlsrv')
+            ->table($tableName)
+            ->select('UserId', 'logDate', 'Direction')
+            ->where('UserId', $normalizedEmployeeId)
+            ->whereDate('logDate', $today)
+            ->orderBy('logDate')
+            ->first(); // Get only the first entry for the day
+
+        // Add the employee and their swipe log (if any) to the results
+        $swipeData[] = [
+            'Employee ID' => $employee->emp_id,
+            'Employee Name' => ucfirst(strtolower($employee->first_name)).' '.ucfirst(strtolower($employee->last_name)), // Assuming you have a `name` field
+            'Swipe Date' => $employeeSwipeLog ? \Carbon\Carbon::parse($employeeSwipeLog->logDate)->format('d-M-Y') : 'No Swipe Log',
+            'Swipe Time' => $employeeSwipeLog ? \Carbon\Carbon::parse($employeeSwipeLog->logDate)->format('h:i A') : 'No Swipe Log',
+            'Direction' => $employeeSwipeLog->Direction ?? 'No Swipe Log',
+        ];
+    }
+
+    // Define header columns
+    $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Direction'];
+
+    // Create the Excel file
+    $filePath = storage_path('app/todays_present_employees.xlsx');
+
+    SimpleExcelWriter::create($filePath)
+        ->addRow($headerColumns) // Add header row
+        ->addRows($swipeData) // Add data rows
+        ->close(); // Close the writer to save the file
+
+    return response()->download($filePath, 'todays_present_employees.xlsx');
         }catch (\Exception $e) {
             // Handle the exception and provide a user-friendly message
             Log::error('Error downloading file for swipes: ' . $e->getMessage());
@@ -256,27 +251,57 @@ class EmployeeSwipesData extends Component
             });
 
         if ($this->startDate && $this->endDate) {
-            $prev_date = $this->startDate;
-            $next_date = $this->endDate;
-            $this->swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $prev_date, $next_date) {
-                $query->selectRaw('MIN(id)')
-                    ->from('swipe_records')
-                    ->whereIn('emp_id', $employees->pluck('emp_id'))
-                    ->whereBetween('created_at', [$prev_date, $next_date])
-                    ->groupBy('emp_id');
-            })
-            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-            ->orderBy('created_at')
-            ->get();
+            $this->startDate = Carbon::parse($this->startDate);
+            $this->endDate = Carbon::parse($this->endDate);
+            $managedEmployees = EmployeeDetails::where('manager_id', $userId)->where('employee_status','active')->get();
+        foreach ($managedEmployees as $employee) {
+            $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
+
+            // Fetch the first swipe log for each employee, if it exists
+            $employeeSwipeLog = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->select('UserId', 'logDate', 'Direction')
+                ->where('UserId', $normalizedEmployeeId)
+                ->whereDate('logDate','>=' ,$this->startDate)
+                ->whereDate('logDate','>=' ,$this->endDate)
+                ->orderBy('logDate')
+                ->get(); // Get only the first entry for the day
+               
+            
+            
+            // Add the employee and their swipe log (if any) to the results
+            $swipeData[] = [
+                'employee' => $employee,
+                'swipe_log' => $employeeSwipeLog,
+            ];
+
+        }
+        $this->swipes=$swipeData;
+            
         } else {
-            $this->swipes = SwipeRecord::select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time')
-                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id')) // Specify swipe_records.emp_id
-                ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id')) // Specify swipe_records.emp_id
-                ->whereDate('swipe_records.created_at', $currentDate)
-                ->orderBy('employee_details.first_name')
-                ->get();
+            $managedEmployees = EmployeeDetails::where('manager_id', $userId)->where('employee_status','active')->get();
+        foreach ($managedEmployees as $employee) {
+            $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
+
+            // Fetch the first swipe log for each employee, if it exists
+            $employeeSwipeLog = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->select('UserId', 'logDate', 'Direction')
+                ->where('UserId', $normalizedEmployeeId)
+                ->whereDate('logDate', '2024-09-05')
+                ->orderBy('logDate')
+                ->first(); // Get only the first entry for the day
+               
+            
+            
+            // Add the employee and their swipe log (if any) to the results
+            $swipeData[] = [
+                'employee' => $employee,
+                'swipe_log' => $employeeSwipeLog,
+            ];
+
+        }
+        $this->swipes=$swipeData;
                 
         }
 
@@ -310,7 +335,7 @@ class EmployeeSwipesData extends Component
                 ->table($tableName)
                 ->select('UserId', 'logDate', 'Direction')
                 ->where('UserId', $normalizedEmployeeId)
-                ->whereDate('logDate', $today)
+                ->whereDate('logDate',$today)
                 ->orderBy('logDate')
                 ->first(); // Get only the first entry for the day
                

@@ -1350,16 +1350,27 @@ color: #fff;
     $presentCount=0;
     $absentCount=0;
     $holidaycountforcontainer=0;
-    $totalWorkedMinutes=0;
+    $totalShortFallHoursWorked=0;
+    $totalshortfallMinutesWorked=0;
     $currentYear = date('Y');
     $currentMonth=date('n');
     $currentMonthRep=date('F');
     $holidayNote=false;
-    $totalWorkHours=0;
+    $totalHoursWorked = 0;
+    $totalMinutesWorked = 0;
     $currentMonthRep = DateTime::createFromFormat('F', $currentMonthRep)->format('M');
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
+    $totalSecondsWorked = 0;
+    $totalexcessHoursWorked=0;
+                             $totalexcessMinutesWorked=0;
     @endphp
+    <div class="date-filters mt-2">
+            <label for="from-date" style="font-size: 11px; color: #778899;">From Date:</label>
+            <input type="date" id="from-date" wire:model="fromDate" wire:change="updatefromDate" style="font-size: 11px; color: #778899; margin-right: 10px;">
 
+            <label for="to-date" style="font-size: 11px; color: #778899;">To Date:</label>
+            <input type="date" id="to-date" wire:model="toDate" wire:change="updatetoDate" style="font-size: 11px; color: #778899;">
+    </div>
     <div class="m-auto">
                 <div class="table-container scrollable-table" style=" width: 100%;
     overflow-x: auto;">
@@ -1425,178 +1436,169 @@ color: #fff;
 
                 </tr>
 
-                @for($i = 1; $i <= $daysInMonth; $i++) 
-                      @php 
-                          $dateKey=str_pad($i, 2, '0' , STR_PAD_LEFT) . " " . $currentMonthRep . " " . $currentYear; 
-                          $dateKeyForLookup=$currentYear . '-' .str_pad($currentMonth, 2, '0' , STR_PAD_LEFT) . '-' . str_pad($i, 2, '0' , STR_PAD_LEFT); 
-                          if (in_array($dateKeyForLookup, $holiday)) 
-                          { 
-                                $holidayNote=true; 
-                          } 
-                          $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); 
-                          $dayName=date('D', $timestamp); 
-                          $isWeekend=($dayName=='Sat' || $dayName=='Sun' ); 
-                          $isPresent=$distinctDates->has($dateKeyForLookup);
-                          
-                          $isDate=($dateKeyForLookup<$todaysDate); 
-                           $swipeRecordExists=$swiperecord->contains(function ($record) use ($dateKeyForLookup) {
-                        return \Carbon\Carbon::parse($record->created_at)->toDateString() === $dateKeyForLookup;
-                        });
-                        @endphp
-                     
-                        <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate? ( $isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isPresent|| $swipeRecordExists?  '#edfaed':'#fcf0f0'))) :'white'}};">
+                @php
+    use Carbon\Carbon;
 
+    $fromDate = Carbon::parse($fromDate); // Assuming $fromDate is in 'Y-m-d' format
+    $toDate = Carbon::parse($toDate); // Assuming $toDate is in 'Y-m-d' format
+    $currentMonthRep = $fromDate->format('M');
+    $currentYear = $fromDate->year;
+@endphp
 
-                            <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">
-                                <p style="white-space:nowrap;">
-                                    {{str_pad($i, 2, '0', STR_PAD_LEFT) }}&nbsp;&nbsp;{{$currentMonthRep}}&nbsp;{{$currentYear}}({{$dayName}})
-                                    @if($swipeRecordExists==true)
-                                <div class="down-arrow-reg"></div>
-                                @endif
-                                </p>
-                            </td>
+@for ($date = $fromDate; $date->lte($toDate); $date->addDay())
+    @php 
+        $dateKey = $date->format('d M Y');
+        $dateKeyForLookup = $date->format('Y-m-d');
+        $dayName = $date->format('D');
+        $isWeekend = ($dayName == 'Sat' || $dayName == 'Sun');
+        $isPresent = $distinctDates->has($dateKeyForLookup);
+        
+        $holidayNote = in_array($dateKeyForLookup, $holiday);
+        $isDate = ($dateKeyForLookup < $todaysDate);
+        $swipeRecordExists = $swiperecord->contains(function ($record) use ($dateKeyForLookup) {
+            return \Carbon\Carbon::parse($record->created_at)->toDateString() === $dateKeyForLookup;
+        });
+        
+        if ($distinctDates->has($dateKeyForLookup)) {
+            $record = $distinctDates[$dateKeyForLookup];
+            $standardHours = 9;
+            $standardMinutes = 0;
+            $firstInTimestamp = strtotime($record['first_in_time']);
+            $lastOutTimestamp = strtotime($record['last_out_time']);
 
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap;">10:(GS)</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap;">10:00 Am to 07:00Pm</td>
+            $standardWorkingMinutes = ($standardHours * 60) + $standardMinutes;
+            $differenceInSeconds = $lastOutTimestamp - $firstInTimestamp;
+            $totalSecondsWorked += $differenceInSeconds;
+            $hours = floor($differenceInSeconds / 3600);
+            $minutes = floor(($differenceInSeconds % 3600) / 60);
+            $totalWorkedMinutes = ($hours * 60) + $minutes;
+           
+        }
+       
+    @endphp
 
+    <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isPresent || $swipeRecordExists ? '#edfaed' : '#fcf0f0'))) : 'white'}};">
+        <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">
+            <p style="white-space:nowrap;">
+                {{ $date->format('d') }}&nbsp;&nbsp;{{$currentMonthRep}}&nbsp;{{$currentYear}}({{$dayName}})
+                @if($swipeRecordExists)
+                    <div class="down-arrow-reg"></div>
+                @endif
+            </p>
+        </td>
 
-                            @if($distinctDates->has($dateKeyForLookup))
-                            @php
-                             $standardHours = 9;
-                             $standardMinutes = 0;
-                            $record = $distinctDates[$dateKeyForLookup];
-                            $firstInTimestamp = strtotime($record['first_in_time']);
-                            $lastOutTimestamp = strtotime($record['last_out_time']);
-                           
-    
-                             // Calculate the standard working minutes (9 hours)
-                            $standardWorkingMinutes = ($standardHours * 60) + $standardMinutes;
-                            // Calculate difference in seconds
-                            $differenceInSeconds = $lastOutTimestamp - $firstInTimestamp;
-                            // Calculate hours and minutes
-                            
-                            $hours = floor($differenceInSeconds / 3600);
-                            $minutes = floor(($differenceInSeconds % 3600) / 60);
-                            $totalWorkedMinutes = ($hours * 60) + $minutes;
-                            
-                            @endphp
+        <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap;">10:(GS)</td>
+        <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap;">10:00 Am to 07:00Pm</td>
 
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($isDate)
-                                {{ date('H:i', strtotime($record['first_in_time'])) }}
-                                @else    
-                                 00:00
-                                @endif
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($isDate)
-                                    @if(empty($record['last_out_time']))
-                                            
-                                            {{ date('H:i', strtotime($record['first_in_time'])) }}
-                                    @else
-                                            {{ date('H:i', strtotime($record['last_out_time'])) }}
-                                    @endif
-                                @else    
-                                    00:00
-                                @endif    
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                               
-                                
-                                @if($isDate==false)   
-                                     00:00
-                                @elseif(empty($record['last_out_time']))
-                                      00:00
-                                @else
-                                
-                                {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
-                                @endif
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($isDate==false)   
-                                             00:00
-                                @elseif(empty($record['last_out_time']))
-                                00:00
-                                @else
-                                 {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
-                                @endif
-                            </td>
-                            @else
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            @endif
+        @if($distinctDates->has($dateKeyForLookup))
+            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                @if($isDate)
+                    {{ date('H:i', strtotime($record['first_in_time'])) }}
+                @else    
+                    00:00
+                @endif
+            </td>
+            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                @if($isDate)
+                    @if(empty($record['last_out_time']))
+                        {{ date('H:i', strtotime($record['first_in_time'])) }}
+                    @else
+                        {{ date('H:i', strtotime($record['last_out_time'])) }}
+                    @endif
+                @else    
+                    00:00
+                @endif    
+            </td>
+            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                @if($isDate == false)   
+                    00:00
+                @elseif(empty($record['last_out_time']))
+                    00:00
+                @else
+                    {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
+                @endif
+            </td>
+            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                @if($isDate == false)   
+                    00:00
+                @elseif(empty($record['last_out_time']))
+                    00:00
+                @else
+                        @php
+                             $totalHoursWorked+=$hours;
+                             $totalMinutesWorked+=$minutes;
+                        @endphp  
+                    {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
+                @endif
+            </td>
+        @else
+            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+        @endif
 
+        <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666'))) : 'black'}}">
+            @if($isDate)
+                @if($isWeekend)
+                    O
+                    @php $offCount++; @endphp
+                @elseif($holidayNote)
+                    H
+                    @php $holidaycountforcontainer++; @endphp
+                @elseif($distinctDates->has($dateKeyForLookup))
+                    P
+                    @php $presentCount++; @endphp
+                @else
+                    A
+                    @php $absentCount++; @endphp
+                @endif
+            @else
+                -
+            @endif
+        </td>
 
+        <td>
+            <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="viewDetails('{{ $dateKeyForLookup }}')">
+                Info
+            </button>
+        </td>
 
-
-                            <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666')) ):'black'}}">
-                                @if($isDate==true)
-                                @if($isWeekend==true)
-                                 O
-                                    @php
-                                    $offCount++;
-                                    @endphp
-                                @elseif($holidayNote==true)
-                                 H
-                                  @php
-                                    $holidaycountforcontainer++;
-                                  @endphp
-                                @elseif($distinctDates->has($dateKeyForLookup))
-                                P
-                                   @php
-                                      $presentCount++;
-                                   @endphp
-                                @else
-                                A
-                                  @php
-                                    $absentCount++;
-                                  @endphp
-                                @endif
-                                @else
-                                -
-                                @endif
-                            </td>
-
-                            <td>
-                                <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="viewDetails('{{$dateKeyForLookup}}')">
-                                    Info
-                                </button>
-                            </td>
-
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;">No&nbsp;attention&nbsp;required</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($totalWorkedMinutes<$standardWorkingMinutes&&!empty($record['last_out_time'])&&$isWeekend==false&&$holidayNote==false&&$isPresent==true)
-                                   @php
-                                      $shortfalltime=$standardWorkingMinutes-$totalWorkedMinutes;
-                                      $shortfallHours = floor($shortfalltime / 60);
-                                      $shortfallMinutes = $shortfalltime % 60;
-                                   @endphp
-                                 
-                                      {{str_pad($shortfallHours, 2, '0', STR_PAD_LEFT)}}: {{ str_pad($shortfallMinutes, 2, '0', STR_PAD_LEFT) }}
-                                    
-                                @else      
-                                  00:00
-                                @endif  
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                               @if($totalWorkedMinutes>$standardWorkingMinutes&&!empty($record['last_out_time'])&&$isWeekend==false&&$holidayNote==false&&$isPresent==true)
-                                   @php
-                                      $excesstime=$totalWorkedMinutes-$standardWorkingMinutes;
-                                      $excessHours = floor($excesstime / 60);
-                                      $excessMinutes = $excesstime % 60;
-                                   @endphp
-                                 
-                                      {{str_pad($excessHours, 2, '0', STR_PAD_LEFT)}}: {{ str_pad($excessMinutes, 2, '0', STR_PAD_LEFT) }}
-                                    
-                                @else      
-                                  00:00
-                                @endif  
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">10:00-14:00</td>
-                            @if($this->moveCaretLeftSession1==true)
-                            @if($distinctDates->has($dateKeyForLookup))
+        <td style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;">No&nbsp;attention&nbsp;required</td>
+        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+            @if($totalWorkedMinutes < $standardWorkingMinutes && !empty($record['last_out_time']) && !$isWeekend && !$holidayNote && $isPresent)
+                @php
+                    $shortfalltime = $standardWorkingMinutes - $totalWorkedMinutes;
+                    $shortfallHours = floor($shortfalltime / 60);
+                    $shortfallMinutes = $shortfalltime % 60;
+                    
+                             $totalshortfallHoursWorked+=$shortfallHours;
+                             $totalshortfallMinutesWorked+=$shortfallMinutes;
+                        
+                @endphp
+                {{ str_pad($shortfallHours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($shortfallMinutes, 2, '0', STR_PAD_LEFT) }}
+            @else      
+                00:00
+            @endif  
+        </td>
+        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+            @if($totalWorkedMinutes > $standardWorkingMinutes && !empty($record['last_out_time']) && !$isWeekend && !$holidayNote && $isPresent)
+                @php
+                    $excesstime = $totalWorkedMinutes - $standardWorkingMinutes;
+                    $excessHours = floor($excesstime / 60);
+                    $excessMinutes = $excesstime % 60;
+                    
+                    $totalexcessHoursWorked+=$excessHours;
+                             $totalexcessMinutesWorked+=$excessMinutes;
+                @endphp
+                {{ str_pad($excessHours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($excessMinutes, 2, '0', STR_PAD_LEFT) }}
+            @else      
+                00:00
+            @endif  
+        </td>
+        <td style="font-weight:normal;font-size:12px;padding-top:16px;">10:00-14:00</td>
+        @if($this->moveCaretLeftSession1)
+        @if($distinctDates->has($dateKeyForLookup))
                             @php
                             $record = $distinctDates[$dateKeyForLookup];
                             $firstInTime = \Carbon\Carbon::parse($record['first_in_time']);
@@ -1626,8 +1628,8 @@ color: #fff;
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
                             <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
 
-                            @endif
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">14:01-19:00</td>
+        @endif
+        <td style="font-weight:normal;font-size:12px;padding-top:16px;">14:01-19:00</td>
                             @if($this->moveCaretLeftSession2==true)
 
 
@@ -1659,9 +1661,9 @@ color: #fff;
                                     @php
                                     $holidayNote=false;
                                     @endphp
-                        </tr>
 
-                        @endfor
+    </tr>
+@endfor
 
 
                         <tr style="border-bottom: 1px solid #cbd5e1;background-color:white;">
@@ -1670,13 +1672,45 @@ color: #fff;
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                                @php
+                                         $extraHours = floor($totalMinutesWorked / 60);
+                                        $totalHoursWorked += $extraHours;
+                                        $remainingMinutes = $totalMinutesWorked % 60;
+
+                                        // Format total hours and minutes as HH:MM
+                                        $formattedTotalHours = str_pad($totalHoursWorked, 2, '0', STR_PAD_LEFT);
+                                        $formattedTotalMinutes = str_pad($remainingMinutes, 2, '0', STR_PAD_LEFT);
+                                @endphp               
+                                 {{ $formattedTotalHours }}:{{ $formattedTotalMinutes }}</td>
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;"> {{ $formattedTotalHours }}:{{ $formattedTotalMinutes }}</td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @php
+                                         $extraShortFallHours = floor($totalshortfallMinutesWorked / 60);
+                                        $totalShortFallHoursWorked += $extraShortFallHours;
+                                        $remainingShortFallMinutes = $totalshortfallMinutesWorked % 60;
+
+                                        // Format total hours and minutes as HH:MM
+                                        $formattedShortFallTotalHours = str_pad($totalShortFallHoursWorked, 2, '0', STR_PAD_LEFT);
+                                        $formattedShortFallTotalMinutes = str_pad($remainingShortFallMinutes, 2, '0', STR_PAD_LEFT);
+                                @endphp  
+                                {{$formattedShortFallTotalHours}}:{{$formattedShortFallTotalMinutes}}
+                            </td>
+                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @php
+                                         $extraexcessHours = floor($totalexcessMinutesWorked / 60);
+                                        $totalexcessHoursWorked += $extraexcessHours;
+                                        $remainingExcessMinutes = $totalexcessMinutesWorked % 60;
+
+                                        // Format total hours and minutes as HH:MM
+                                        $formattedExcessTotalHours = str_pad($totalexcessHoursWorked, 2, '0', STR_PAD_LEFT);
+                                        $formattedExcessTotalMinutes = str_pad($remainingExcessMinutes, 2, '0', STR_PAD_LEFT);
+                                @endphp  
+                                {{$formattedExcessTotalHours}}:{{$formattedExcessTotalMinutes}}
+                            </td>
                             <td></td>
                             @if($this->moveCaretLeftSession1==true)
                             <td></td>
@@ -1696,7 +1730,7 @@ color: #fff;
         </div>
         @if ($showAlertDialog)
         @php
-    $formattedDate = \Carbon\Carbon::parse($date)->format('d M');
+    $formattedDate = \Carbon\Carbon::parse($dateforpopup)->format('d M');
     @endphp
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -1708,7 +1742,7 @@ color: #fff;
                 </div>
                 <div class="modal-body">
                    
-                    @if($viewDetailsInswiperecord&&$date<$todaysDate)
+                    @if($viewDetailsInswiperecord&&$dateforpopup<$todaysDate)
                         @php
                     
                             $firstInTimestamp = strtotime($viewDetailsInswiperecord->swipe_time);
