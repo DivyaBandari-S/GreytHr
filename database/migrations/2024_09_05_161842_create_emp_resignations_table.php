@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('resignation_date'); // Date of resignation
             $table->date('last_working_day')->nullable(); // Last working day
             $table->text('comments')->nullable(); // Additional comments
-            $table->string('signature')->nullable();
+            $table->binary('signature')->nullable();
             $table->string('status')->default('Pending');
             $table->timestamps();
             $table->foreign('emp_id')
