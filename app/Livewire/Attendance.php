@@ -39,6 +39,8 @@ class Attendance extends Component
 
     public $avgWorkHoursFromJuly = 0;
     public $last_out_time;
+
+    public $percentageDifference;
     public $currentDate;
     public $date1;
 
@@ -193,6 +195,39 @@ class Attendance extends Component
             // $this->showErrorMessage('An error occurred while closing the modal.');
         }
     }
+    public function calculateDifferenceInAvgWorkHours()
+{
+    // Get the current month and previous month dates
+    $currentMonthStart = Carbon::now()->startOfMonth()->toDateString();
+    $currentMonthEnd = Carbon::now()->today()->toDateString();
+
+    $previousMonthStart = Carbon::now()->subMonth()->startOfMonth()->toDateString();
+    $previousMonthEnd = Carbon::now()->subMonth()->endOfMonth()->toDateString();
+
+    // Calculate average work hours for current and previous months
+    $avgWorkHoursCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($currentMonthStart, $currentMonthEnd);
+    $avgWorkHoursPreviousMonth = $this->calculateAverageWorkHoursAndPercentage($previousMonthStart, $previousMonthEnd);
+
+    // Convert the average work hours (HH:MM) to total minutes for comparison
+    list($currentMonthHours, $currentMonthMinutes) = explode(':', $avgWorkHoursCurrentMonth);
+    list($previousMonthHours, $previousMonthMinutes) = explode(':', $avgWorkHoursPreviousMonth);
+
+    $currentMonthTotalMinutes = ($currentMonthHours * 60) + $currentMonthMinutes;
+    $previousMonthTotalMinutes = ($previousMonthHours * 60) + $previousMonthMinutes;
+
+    // Calculate the difference in minutes
+    $differenceInMinutes = $currentMonthTotalMinutes - $previousMonthTotalMinutes;
+    if ($previousMonthTotalMinutes != 0) {
+        $this->percentageDifference = ($differenceInMinutes / $previousMonthTotalMinutes) * 100;
+    } else {
+        $this->percentageDifference = 0; // Handle the case where the previous month's total minutes is zero to avoid division by zero error
+    }
+    // Convert the difference back to hours and minutes
+    $hoursDifference = intdiv($differenceInMinutes, 60);
+    $minutesDifference = $differenceInMinutes % 60;
+
+    return $this->percentageDifference;
+}
     public function calculateAverageWorkHoursAndPercentage($startDate,$endDate)
     {
       
@@ -209,7 +244,7 @@ class Attendance extends Component
          
             
             
-        //    dd($dailySwipes);
+       
             $totalMinutes = 0;
 
 foreach ($dailySwipes as $date => $swipesForDay) {
@@ -219,12 +254,13 @@ foreach ($dailySwipes as $date => $swipesForDay) {
 
                 // Check if the date is a weekend
                 $isWeekend = $carbonDate->isWeekend();
-
+        
                 // Check if the date is a holiday
                 $isHoliday = HolidayCalendar::where('date', $carbonDate->toDateString())->exists();
-
+                $onLeave=$this->isEmployeeLeaveOnDate($date, auth()->guard('emp')->user()->emp_id);
+                
              
-                        if($isWeekend==false||$isHoliday==false)
+                        if($isWeekend==false||$isHoliday==false||$onLeave==false)
                         {
 
                                     foreach ($swipesForDay as $swipe) {
@@ -253,7 +289,7 @@ foreach ($dailySwipes as $date => $swipesForDay) {
                         }
                         $isWeekend=false;
                         $isHoliday=false;
-                       
+                        $onLeave=false;
                     }
 
 
@@ -494,7 +530,9 @@ foreach ($dailySwipes as $date => $swipesForDay) {
             $this->currentDate1 = date('d M Y');
             $this->swiperecords = SwipeRecord::all();
             $startOfMonth = Carbon::now()->startOfMonth();  
-            $today = Carbon::now(); 
+            $today = Carbon::now();
+            $abc=$this->calculateDifferenceInAvgWorkHours();
+           
             $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(),$today->toDateString());
             // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];
 
@@ -615,6 +653,8 @@ foreach ($dailySwipes as $date => $swipesForDay) {
     {
         $countofleaves = 0;
         $currentDate = $startDate->copy();
+        
+
         while ($currentDate->lt($endDate)) {
             if ($this->isEmployeeLeaveOnDate($currentDate, $employeeId)) {
                 $countofleaves++;

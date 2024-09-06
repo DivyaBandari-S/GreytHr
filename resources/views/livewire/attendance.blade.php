@@ -1472,12 +1472,17 @@ color: #fff;
 
 
                             <div>
-                               
-                                    <!-- <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageOfWorkHrs)}}%
-                                    </span>
-                                    <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                    </span> -->
-                               
+                                   @if($percentageDifference>0)
+                                            <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageDifference)}}%
+                                            </span>
+                                            <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                            </span>
+                                   @else 
+                                       <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageDifference)}}%
+                                        </span>
+                                        <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                        </span> 
+                                    @endif
                             </div>
 
                         </section>
@@ -1494,11 +1499,17 @@ color: #fff;
                           
                             <div>
                               
-                                        <!-- <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
-                                            +{{intval($percentageOfWorkHrs)}}% </span>
-                                        <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-
-                                        </span> -->
+                            @if($percentageDifference>0)
+                                            <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageDifference)}}%
+                                            </span>
+                                            <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                            </span>
+                                   @else 
+                                       <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageDifference)}}%
+                                        </span>
+                                        <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                        </span> 
+                                    @endif
                                      
                             </div>
 

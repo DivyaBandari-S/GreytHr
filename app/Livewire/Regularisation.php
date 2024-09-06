@@ -403,7 +403,17 @@ public function nextMonth()
     public function deleteStoredArray($index)
     {
         try {
-            unset($this->shift_times[$index]);
+            if (isset($this->selectedDates[$index])) {
+                unset($this->selectedDates[$index]);
+                $this->selectedDates = array_values($this->selectedDates); // Reindex the array
+            }
+        
+            // Remove the shift time corresponding to the selected date from shift_times array
+            if (isset($this->shift_times[$index])) {
+                unset($this->shift_times[$index]);
+                $this->shift_times = array_values($this->shift_times); // Reindex the array
+            }
+            // unset($this->shift_times[$index]);
             $this->isdeletedArray += 1;
             $this->updatedregularisationEntries = array_values($this->shift_times);
         } catch (\Exception $e) {
