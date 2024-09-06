@@ -107,7 +107,7 @@
                         </div>
 
                     </div>
-                    <div class="locationGlobe">
+                    <div class="locationGlobe d-flex justify-content-end">
                         <i class="fa-solid fa-location-dot me-2" id="getLocationLink"
                             style="color: red;cursor: pointer;"></i>
 
