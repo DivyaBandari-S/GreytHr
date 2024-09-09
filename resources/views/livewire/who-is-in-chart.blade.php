@@ -102,7 +102,7 @@
 
     <div class="form-group-who-is-in">
       <div class="search-input-who-is-in" style="margin-top:50px;">
-        <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
+        <input wire:model="search" type="text" placeholder="Search Employee" class="search-text"style="font-size: 12px;">
         <div class="search-icon-who-is-in" wire:click="searchFilters">
           <i class="fa fa-search" aria-hidden="true"></i>
         </div>
@@ -176,8 +176,9 @@
         <table class="who-is-in-table-for-late-employee" style="width: 100%;">
           <thead>
             <tr>
-              <th style="padding-right:42px;">Employee</th>
-              <th >Expected&nbsp;In&nbsp;Time</th>
+            <th style="padding-right:53px;">Employee</th>
+            <th>Expected InTime</th>
+            <th></th>
             </tr>
           </thead>
           <tbody>
@@ -191,12 +192,17 @@
             @else
             @foreach($Employees1 as $e1)
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;max-width:120px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;">
+              <td style="font-size:10px;font-weight:700;max-width:120px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;"data-toggle="tooltip"
+              data-placement="top" title="{{ ucwords(strtolower($e1->first_name)) }} {{ ucwords(strtolower($e1->last_name)) }}">
                 {{ ucwords(strtolower($e1->first_name)) }} {{ ucwords(strtolower($e1->last_name)) }}<br />
                 <span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$e1->emp_id}}</span>
               </td>
               <td style="font-weight:700;font-size:10px;">{{$e1->shift_start_time}}</td>
+              
+               <td></td>
             </tr>
+            
+          
             @endforeach
             @endif
           </tbody><!-- Add table rows (tbody) and data here if needed -->
@@ -234,7 +240,8 @@
             @if($isLateBy10AM)
 
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;max-width:110px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;padding-left:15px;">
+              <td style="font-size:10px;font-weight:700;max-width:110px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;padding-left:15px;"data-toggle="tooltip"
+              data-placement="top" title="{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}">
                 @php
                 $firstNameParts = explode(' ', strtolower($s1->first_name));
                 $lastNameParts = explode(' ', strtolower($s1->last_name));
@@ -303,7 +310,8 @@
             @endphp 
             @if($isEarlyBy10AM) 
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;">{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}<br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span></td>
+              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;"data-toggle="tooltip"
+              data-placement="top" title="{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}">{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}<br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span></td>
               <td style="font-weight:700;font-size:10px;">{{$earlyArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
             </tr>
 
@@ -357,7 +365,8 @@
 
 
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;">
+              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;"data-toggle="tooltip"
+              data-placement="top" title="{{ ucwords(strtolower($alr->first_name)) }} {{ ucwords(strtolower($alr->last_name)) }}">
                 @php
                 $firstNameParts = explode(' ', strtolower($alr->first_name));
                 $lastNameParts = explode(' ', strtolower($alr->last_name));

@@ -1,8 +1,6 @@
 <div>
 
     <div style="overflow-x:hidden">
-
-     
             <div class="row ">
                 @if (session()->has('message'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
@@ -932,9 +930,7 @@
 
                         @endif
                         @endforeach
-
                         @endif
-
                     </tbody>
                 </table>
 

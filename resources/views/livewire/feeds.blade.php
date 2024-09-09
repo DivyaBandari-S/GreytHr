@@ -5,7 +5,7 @@
 
     @else
     <div class="px-4" style="position: relative;">
-   
+
         @if ($message)
                 <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
                 {{ $message }}
