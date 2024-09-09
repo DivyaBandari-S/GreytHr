@@ -39,6 +39,8 @@ class Attendance extends Component
 
     public $avgWorkHoursFromJuly = 0;
     public $last_out_time;
+
+    public $percentageDifference;
     public $currentDate;
     public $date1;
 
@@ -157,12 +159,13 @@ class Attendance extends Component
     public $totalmodalDays;
 
     public $averageworkhours;
-    public $averageWorkHrsForCurrentMonth=null;
+    public $averageWorkHrsForCurrentMonth = null;
     public $averageFormattedTimeForCurrentMonth;
     public $holidayCountForInsightsPeriod;
     public $weekendDays = 0;
     public $daysWithRecords = 0;
 
+    public $percentageinworkhrsforattendance;
     public $leaveTaken = 0;
     public $totalHoursWorked = 0;
 
@@ -193,87 +196,161 @@ class Attendance extends Component
             // $this->showErrorMessage('An error occurred while closing the modal.');
         }
     }
-    public function calculateAverageWorkHoursAndPercentage($startDate,$endDate)
+    public function calculateDifferenceInAvgWorkHours($date,$date1)
     {
-      
-   
-        $records = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-        ->whereDate('created_at', '>=', $startDate)
-        ->whereDate('created_at', '<', $endDate)
-        ->orderBy('created_at')
-        ->get();
-    
-            $dailySwipes = $records->groupBy(function($swipe) {
-                return Carbon::parse($swipe->created_at)->toDateString();
+        // dd($date);
+    // Get the current month and previous month dates
+      $currentMonthStart = \Carbon\Carbon::parse($date. '-01')->startOfMonth()->toDateString();
+      $currentMonthEnd = \Carbon\Carbon::parse($date)->endOfMonth()->toDateString(); // Today's date
+      if (\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today()) &&(\Carbon\Carbon::parse($currentMonthEnd)->isSameMonth(\Carbon\Carbon::today()) &&\Carbon\Carbon::parse($currentMonthEnd)->isSameYear(\Carbon\Carbon::today()))) {
+         $currentMonthEnd = \Carbon\Carbon::today()->toDateString(); // Set to today's date if greater
+      }
+      elseif(\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today()))
+      {
+         return '-';
+      }
+
+      $date1 = \Carbon\Carbon::parse($date1);
+      $previousMonthStart = $date1->startOfMonth()->toDateString();
+      $previousMonthEnd = $date1->endOfMonth()->toDateString();
+    // Calculate average work hours for current and previous months
+    $avgWorkHoursCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($currentMonthStart, $currentMonthEnd);
+    $avgWorkHoursPreviousMonth = $this->calculateAverageWorkHoursAndPercentage($previousMonthStart, $previousMonthEnd);
+
+        // Convert the average work hours (HH:MM) to total minutes for comparison
+        list($currentMonthHours, $currentMonthMinutes) = explode(':', $avgWorkHoursCurrentMonth);
+        list($previousMonthHours, $previousMonthMinutes) = explode(':', $avgWorkHoursPreviousMonth);
+
+        $currentMonthTotalMinutes = ($currentMonthHours * 60) + $currentMonthMinutes;
+        $previousMonthTotalMinutes = ($previousMonthHours * 60) + $previousMonthMinutes;
+
+        // Calculate the difference in minutes
+        $differenceInMinutes = $currentMonthTotalMinutes - $previousMonthTotalMinutes;
+        if ($previousMonthTotalMinutes != 0) {
+            $this->percentageDifference = ($differenceInMinutes / $previousMonthTotalMinutes) * 100;
+        } else {
+            $this->percentageDifference = 0; // Handle the case where the previous month's total minutes is zero to avoid division by zero error
+        }
+        // Convert the difference back to hours and minutes
+        $hoursDifference = intdiv($differenceInMinutes, 60);
+        $minutesDifference = $differenceInMinutes % 60;
+
+        return $this->percentageDifference;
+    }
+    public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
+        // Retrieve swipe records within the given date range
+        $records = SwipeRecord::where('emp_id', $employeeId)
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<', $endDate)
+            ->orderBy('created_at')
+            ->get();
+
+        // Group swipes by date
+        $dailySwipes = $records->groupBy(function ($swipe) {
+            return Carbon::parse($swipe->created_at)->toDateString();
+        });
+
+        // Get leave requests for the employee within the date range
+        $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
+            ->where('status', 'approved') // Filter for approved leave requests
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->whereDate('from_date', '<=', $endDate)
+                    ->whereDate('to_date', '>=', $startDate);
+            })
+            ->get();
+
+        $totalMinutes = 0;
+        $workingDaysCount = 0;
+
+        // Determine if the current month is involved
+        $today = Carbon::now();
+        $isCurrentMonth = Carbon::parse($startDate)->isSameMonth($today) && Carbon::parse($endDate)->isSameMonth($today);
+
+        // Calculate the total working days in the date range
+        $currentDate = Carbon::parse($startDate);
+        $endDate = Carbon::parse($endDate);
+
+        while ($currentDate <= $endDate) {
+            // Skip the current date if it's in the current month and it's today
+            if ($isCurrentMonth && $currentDate->isSameDay($today)) {
+                $currentDate->addDay();
+                continue;
+            }
+
+            $isWeekend = $currentDate->isWeekend();
+            $isHoliday = HolidayCalendar::where('date', $currentDate->toDateString())->exists();
+
+            // Check if the date is a leave day
+            $isOnLeave = $leaveRequests->contains(function ($leaveRequest) use ($currentDate) {
+                return $currentDate->between($leaveRequest->from_date, $leaveRequest->to_date);
             });
-         
-            
-            
-        //    dd($dailySwipes);
-            $totalMinutes = 0;
 
-foreach ($dailySwipes as $date => $swipesForDay) {
-                $inTime = null;
-                $dayMinutes = 0;  // To store the total minutes for this particular day
-                $carbonDate = Carbon::parse($date);
+            // Count the day as a working day if it's not a weekend, holiday, or leave day
+            if (!$isWeekend && !$isHoliday && !$isOnLeave) {
+                $workingDaysCount++;
+            }
 
-                // Check if the date is a weekend
-                $isWeekend = $carbonDate->isWeekend();
+            $currentDate->addDay();
+        }
+        foreach ($dailySwipes as $date => $swipesForDay) {
+            $inTime = null;
+            $dayMinutes = 0;
+            $carbonDate = Carbon::parse($date);
 
-                // Check if the date is a holiday
-                $isHoliday = HolidayCalendar::where('date', $carbonDate->toDateString())->exists();
+            // Check if the date is a weekend or a holiday
+            $isWeekend = $carbonDate->isWeekend();
+            $isHoliday = HolidayCalendar::where('date', $carbonDate->toDateString())->exists();
 
-             
-                        if($isWeekend==false||$isHoliday==false)
-                        {
+            // Check if the date is a leave day
+            $isOnLeave = $leaveRequests->contains(function ($leaveRequest) use ($carbonDate) {
+                return $carbonDate->between($leaveRequest->from_date, $leaveRequest->to_date);
+            });
 
-                                    foreach ($swipesForDay as $swipe) {
-                                        // If the swipe is 'IN', store the time
-                                        if ($swipe->in_or_out === 'IN') {
-                                            $inTime = Carbon::parse($swipe->swipe_time);
-                                        }
-
-                                        // If the swipe is 'OUT' and there was a previous 'IN' time
-                                        if ($swipe->in_or_out === 'OUT' && $inTime) {
-                                            $outTime = Carbon::parse($swipe->swipe_time);
-                                            // Calculate the difference in minutes and add it to the day's total
-                                            $dayMinutes += $inTime->diffInMinutes($outTime);
-                                            // Reset the 'IN' time after the calculation
-                                            $inTime = null;
-                                        }
-                                    }
-
-                        // If we have an 'IN' time but no 'OUT' time, the total minutes for the day should be 0
-                                    if ($inTime && $dayMinutes === 0) {
-                                        $dayMinutes = 0;
-                                    }
-
-                                    // Add the day's total minutes to the overall total
-                                    $totalMinutes += $dayMinutes;
-                        }
-                        $isWeekend=false;
-                        $isHoliday=false;
-                       
+            // Process the day only if it's a working day and not a leave day
+            if (!$isWeekend && !$isHoliday && !$isOnLeave) {
+                foreach ($swipesForDay as $swipe) {
+                    if ($swipe->in_or_out === 'IN') {
+                        $inTime = Carbon::parse($swipe->swipe_time);
                     }
 
-
-           
-                if (count($dailySwipes) > 0) {
-                    $averageMinutes = $totalMinutes / count($dailySwipes);
-                } else {
-                    $averageMinutes = 0; // Set to 0 or any fallback value if there are no swipes
+                    // If the swipe is 'OUT' and there was a previous 'IN' time
+                    if ($swipe->in_or_out === 'OUT' && $inTime) {
+                        $outTime = Carbon::parse($swipe->swipe_time);
+                        // Calculate the difference in minutes and add it to the day's total
+                        $dayMinutes += $inTime->diffInMinutes($outTime);
+                        $inTime = null; // Reset the 'IN' time after the calculation
+                    }
                 }
-                            
-         
-            $hours = intdiv($averageMinutes, 60);
-            $minutes = $averageMinutes % 60;
-              
-            $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
-            
-            $standardWorkingMinutes = 9 * 60; // 540 minutes
-       
-          return  $averageWorkHours;
+
+                // If there was an 'IN' time but no 'OUT' time, the total minutes for the day should be 0
+                if ($inTime && $dayMinutes === 0) {
+                    $dayMinutes = 0;
+                }
+
+                // Add the day's total minutes to the overall total
+                $totalMinutes += $dayMinutes;
+            }
+        }
+
+        // Calculate the average minutes per working day
+        if ($workingDaysCount > 0) {
+            $averageMinutes = $totalMinutes / $workingDaysCount;
+        } else {
+            $averageMinutes = 0; // Set to 0 or any fallback value if there are no working days
+        }
+
+        $hours = intdiv($averageMinutes, 60);
+        $minutes = $averageMinutes % 60;
+
+        $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
+
+        return $averageWorkHours;
     }
+
+
     public function toggleSession1Fields()
     {
         try {
@@ -418,9 +495,9 @@ foreach ($dailySwipes as $date => $swipesForDay) {
             $this->year = now()->year;
             $this->month = now()->month;
             $this->generateCalendar();
-            $startOfMonth='2024-08-01';
-            $endOfMonth='2024-08-31';
-            
+            $startOfMonth = '2024-08-01';
+            $endOfMonth = '2024-08-31';
+
             while ($currentDate->lte($endDate)) {
                 $dateString = $currentDate->toDateString();
 
@@ -493,13 +570,15 @@ foreach ($dailySwipes as $date => $swipesForDay) {
             $this->currentWeekday = date('D');
             $this->currentDate1 = date('d M Y');
             $this->swiperecords = SwipeRecord::all();
-            $startOfMonth = Carbon::now()->startOfMonth();  
-            $today = Carbon::now(); 
+            $startOfMonth = Carbon::now()->startOfMonth();
+            $today = Carbon::now();
+            $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'),\Carbon\Carbon::now()->subMonth()->format('Y-m'));
+           
             $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(),$today->toDateString());
             // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];
 
             // $this->percentageOfWorkHrs=$averageWorkHrsForCurrentMonth['work_percentage'];
-          
+
         } catch (\Exception $e) {
             // Log the exception
             Log::error('Error in mount method: ' . $e->getMessage());
@@ -615,6 +694,8 @@ foreach ($dailySwipes as $date => $swipesForDay) {
     {
         $countofleaves = 0;
         $currentDate = $startDate->copy();
+
+
         while ($currentDate->lt($endDate)) {
             if ($this->isEmployeeLeaveOnDate($currentDate, $employeeId)) {
                 $countofleaves++;
@@ -1300,28 +1381,23 @@ foreach ($dailySwipes as $date => $swipesForDay) {
             $this->month = $date->month;
             $today = Carbon::today();
             $this->generateCalendar();
-            $startDateOfPreviousMonth = $date->startOfMonth()->toDateString(); 
+            $startDateOfPreviousMonth = $date->startOfMonth()->toDateString();
             $endDateOfPreviousMonth = $date->endOfMonth()->toDateString();
             if ($today->year == $date->year && $today->month == $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 // Adjust $endDateOfPreviousMonth to today's date since it's greater than today
-              
+
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $today->toDateString());
-            }
-            elseif($today->year >= $date->year && $today->month >= $date->month && $endDateOfPreviousMonth > $today->toDateString())
-            {
+            } elseif ($today->year >= $date->year && $today->month >= $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 $this->averageWorkHrsForCurrentMonth = '-';
-            }
-            else
-            {
+            } else {
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $endDateOfPreviousMonth);
             }
             //$this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $endDateOfPreviousMonth);
-           
-            
+
+
             // $previousMonthStart = $date->subMonth()->startOfMonth()->toDateString();
-        
+            $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours($date->format('Y-m'),$date->copy()->subMonth()->format('Y-m'));
             $this->dateClicked($date->startOfMonth()->toDateString());
-          
         } catch (\Exception $e) {
             Log::error('Error in beforeMonth method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while navigating to the previous month. Please try again later.');
@@ -1340,24 +1416,18 @@ foreach ($dailySwipes as $date => $swipesForDay) {
             $this->dateClicked($date->toDateString());
             $nextdate = Carbon::create($date->year, $date->month, 1)->addMonth();
             $lastDateOfNextMonth = $date->endOfMonth()->toDateString();
-            $startDateOfPreviousMonth = $date->startOfMonth()->toDateString(); 
+            $startDateOfPreviousMonth = $date->startOfMonth()->toDateString();
             $endDateOfPreviousMonth = $date->endOfMonth()->toDateString();
             if ($today->year == $date->year && $today->month == $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 // Adjust $endDateOfPreviousMonth to today's date since it's greater than today
-              
+
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $today->toDateString());
-            }
-            elseif($today->year >= $date->year && $today->month >= $date->month && $endDateOfPreviousMonth > $today->toDateString())
-            {
+            } elseif ($today->year >= $date->year && $today->month >= $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 $this->averageWorkHrsForCurrentMonth = '-';
-            }
-            else
-            {
+            } else {
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $endDateOfPreviousMonth);
             }
-            
-           
-           
+            $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours($date->format('Y-m'),$date->copy()->addMonth()->format('Y-m'));
         } catch (\Exception $e) {
             Log::error('Error in nextMonth method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while navigating to the next month. Please try again later.');

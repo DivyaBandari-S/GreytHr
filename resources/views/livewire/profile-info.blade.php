@@ -491,11 +491,11 @@
                         DETAILS</div>
                     <div class="row p-3 gx-0">
                         <div class="col-12 col-md-3">
-                          
+
                             @if (($employeeDetails->empParentDetails) && !empty(optional($employeeDetails->empParentDetails)->father_image) && optional($employeeDetails->empParentDetails)->father_image !== 'null')
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100"
                                 src="{{ 'data:image/jpeg;base64,' . base64_encode(optional($employeeDetails->empParentDetails)->father_image) }}">
-                              
+
                             @else
 
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;" height="100" width="100" src="{{ asset('images/male-default.png') }}"
@@ -730,7 +730,7 @@
                                     CURRENT POSITION </div>
                             </div>
                             <div class="col-6 col-md-6">
-                                <div style="margin-top: 2%; font-size: 11px; color: blue; margin-left: 25px">
+                                <div style="margin-top: 2%; font-size: 11px; color: blue; margin-left: 25px" wire:click="showPopupModal">
                                     Resign
                                 </div>
                             </div>
@@ -755,7 +755,7 @@
                                 No Manager Assigned
                                 @endif
                             </div>
-                              <div style="font-size: 11px; color: #778899; margin-left: 15px;">
+                            <div style="font-size: 11px; color: #778899; margin-left: 15px;">
                                 Job Mode
                             </div>
                             <div style="margin-left: 15px; font-size: 12px; margin-bottom: 10px;">
@@ -870,6 +870,55 @@
                 </div>
 
             </div>
+            <!-- modal -->
+            @if($showModal)
+            <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title">Apply Your Resignation</h6>
+                            <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
+                                wire:click="closeModal" style="background-color: white; height:10px;width:10px;">
+                            </button>
+                        </div>
+                        <form novalidate class="ng-valid ng-touched ng-dirty" wire:submit.prevent="generatePdf">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="emp_id">Employee ID</label>
+                                    <input type="text" class="form-control" id="emp_id" name="emp_id" required>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="reason">Reason</label>
+                                    <input type="text" class="form-control" id="reason" name="reason">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="resignation_date">Resignation Date</label>
+                                    <input type="date" class="form-control placeholder-small" id="resignation_date" name="resignation_date" required>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="last_working_day">Last Working Day</label>
+                                    <input type="date" class="form-control placeholder-small" id="last_working_day" name="last_working_day">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="comments">Comments</label>
+                                    <textarea class="form-control" id="comments" name="comments"></textarea>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="signature">Signature</label>
+                                    <input type="file" class="form-control-file" id="signature" name="signature" style="font-size:12px;">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="submit-btn">Submit</button>
+                                <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);" >Clear</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-backdrop fade show"></div>
+            @endif
+
 
             {{-- Assets --}}
 
