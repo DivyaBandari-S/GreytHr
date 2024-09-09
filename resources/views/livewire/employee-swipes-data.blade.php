@@ -74,7 +74,7 @@
                        @if(!empty($swipe['swipe_log']))
                        <tr class="employee-swipes-table-container">
                               <td  class="employee-swipes-name-and-id">
-                              <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox">
+                              <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" wire:click="checkboxClicked('{{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}')">
                                         <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                                {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
                                         </span>
@@ -132,7 +132,8 @@
                      <!-- Display swipe details -->
                        <tr class="employee-swipes-table-container">
                               <td  class="employee-swipes-name-and-id">
-                                        <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" value="{{ $swipe->emp_id }}">
+                              <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" 
+                              wire:click="checkboxClicked('{{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}')">
 
                                         <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ ucwords(strtolower($swipe->first_name)) }} {{ ucwords(strtolower($swipe->last_name)) }}">
                                             {{ ucwords(strtolower($swipe->first_name)) }} {{ ucwords(strtolower($swipe->last_name)) }}
@@ -161,10 +162,8 @@
                  <img src="https://cdn-icons-png.flaticon.com/512/2055/2055568.png"
                             class="container-employee-swipes-right-image">
                      <h6>Swipe-in Time</h6>
-                     @if($selectedSwipeTime)
-                        <p>{{$selectedSwipeTime}}</p>
-                     @elseif($SwipeTime)
-                        <p>{{$SwipeTime}}</p>
+                     @if($swipeLogTime)
+                        <p>{{$swipeLogTime}}</p>
                      @else
                         <p>Not Swiped Yet</p>
                      @endif

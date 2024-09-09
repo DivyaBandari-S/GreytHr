@@ -102,7 +102,7 @@
 
     <div class="form-group-who-is-in">
       <div class="search-input-who-is-in" style="margin-top:50px;">
-        <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
+        <input wire:model="search" type="text" placeholder="Search Employee" class="search-text"style="font-size: 12px;">
         <div class="search-icon-who-is-in" wire:click="searchFilters">
           <i class="fa fa-search" aria-hidden="true"></i>
         </div>

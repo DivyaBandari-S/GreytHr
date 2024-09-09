@@ -1842,6 +1842,7 @@ td {
 }
 .employee-swipes-checkbox {
     margin-left: -5px;
+    margin-top: -20px;
     height: 10px;
 }
 .employee-swipes-emp-id {
