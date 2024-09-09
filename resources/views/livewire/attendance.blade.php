@@ -859,6 +859,8 @@ width: 170px; */
             background-color: transparent;
             margin-left: 40px;
             float: right;
+            display: flex;
+            align-items: center;
             /* margin-left: 850px; */
             /* margin-top: -40px; */
             /* padding: 5.5px 6px; */
