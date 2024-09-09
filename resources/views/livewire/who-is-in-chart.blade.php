@@ -192,7 +192,8 @@
             @else
             @foreach($Employees1 as $e1)
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;max-width:120px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;">
+              <td style="font-size:10px;font-weight:700;max-width:120px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;"data-toggle="tooltip"
+              data-placement="top" title="{{ ucwords(strtolower($e1->first_name)) }} {{ ucwords(strtolower($e1->last_name)) }}">
                 {{ ucwords(strtolower($e1->first_name)) }} {{ ucwords(strtolower($e1->last_name)) }}<br />
                 <span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$e1->emp_id}}</span>
               </td>
@@ -239,7 +240,8 @@
             @if($isLateBy10AM)
 
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;max-width:110px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;padding-left:15px;">
+              <td style="font-size:10px;font-weight:700;max-width:110px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;padding-left:15px;"data-toggle="tooltip"
+              data-placement="top" title="{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}">
                 @php
                 $firstNameParts = explode(' ', strtolower($s1->first_name));
                 $lastNameParts = explode(' ', strtolower($s1->last_name));
@@ -308,7 +310,8 @@
             @endphp 
             @if($isEarlyBy10AM) 
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;">{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}<br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span></td>
+              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;"data-toggle="tooltip"
+              data-placement="top" title="{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}">{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}<br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span></td>
               <td style="font-weight:700;font-size:10px;">{{$earlyArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
             </tr>
 
@@ -362,7 +365,8 @@
 
 
             <tr style="border-bottom: 1px solid #ddd;">
-              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;">
+              <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;"data-toggle="tooltip"
+              data-placement="top" title="{{ ucwords(strtolower($alr->first_name)) }} {{ ucwords(strtolower($alr->last_name)) }}">
                 @php
                 $firstNameParts = explode(' ', strtolower($alr->first_name));
                 $lastNameParts = explode(' ', strtolower($alr->last_name));
