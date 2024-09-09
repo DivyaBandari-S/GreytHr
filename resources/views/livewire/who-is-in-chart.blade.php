@@ -102,7 +102,7 @@
 
     <div class="form-group-who-is-in">
       <div class="search-input-who-is-in" style="margin-top:50px;">
-        <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
+        <input wire:model="search" type="text" placeholder="Search Employee" class="search-text"style="font-size: 12px;">
         <div class="search-icon-who-is-in" wire:click="searchFilters">
           <i class="fa fa-search" aria-hidden="true"></i>
         </div>
@@ -176,8 +176,9 @@
         <table class="who-is-in-table-for-late-employee" style="width: 100%;">
           <thead>
             <tr>
-              <th style="padding-right:42px;">Employee</th>
-              <th >Expected&nbsp;In&nbsp;Time</th>
+            <th style="padding-right:53px;">Employee</th>
+            <th>Expected InTime</th>
+            <th></th>
             </tr>
           </thead>
           <tbody>
@@ -196,7 +197,11 @@
                 <span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$e1->emp_id}}</span>
               </td>
               <td style="font-weight:700;font-size:10px;">{{$e1->shift_start_time}}</td>
+              
+               <td></td>
             </tr>
+            
+          
             @endforeach
             @endif
           </tbody><!-- Add table rows (tbody) and data here if needed -->

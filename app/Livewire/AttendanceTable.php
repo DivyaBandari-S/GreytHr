@@ -36,11 +36,28 @@ class AttendanceTable extends Component
     public $employeeDetails;
     public string $end;
 
+    public $totalshortfallHoursWorked;
+
+    public $totalexcessHoursWorked;
+
+    public $totalexcessMinutesWorked;
+    public $totalshortfallMinutesWorked;
+    public $totalHoursWorked;
+
+    public $totalWorkedMinutes;
+    public $totalMinutesWorked;
+    public $startDate;
+
+    public $endDate;
     public $legend=true;
     public $showSR = false;
 
     public $country='-';
 
+    public $dateforpopup;
+    public $fromDate;
+
+    public $toDate;
     public $city='-';
 
     public $postal_code='-';
@@ -55,6 +72,8 @@ class AttendanceTable extends Component
         $this->year = Carbon::now()->format('Y');
         $this->start = Carbon::now()->year($this->year)->firstOfMonth()->format('Y-m-d');
         $this->end = Carbon::now()->year($this->year)->lastOfMonth()->format('Y-m-d');
+        $this->fromDate=$this->start;
+        $this->toDate=$this->endDate;
         $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
         $ip = request()->ip();
         $location = GeoIP::getLocation($ip);
@@ -63,6 +82,15 @@ class AttendanceTable extends Component
         $this->country = $location['country'];
         $this->city = $location['city'];
         $this->postal_code = $location['postal_code'];
+    }
+  
+    public function updatefromDate()
+    {
+        $this->fromDate=$this->fromDate;
+    }
+    public function updatetoDate()
+    {
+        $this->toDate=$this->toDate;
     }
     public function openlegend()
     {
@@ -88,11 +116,11 @@ class AttendanceTable extends Component
     public function viewDetails($i)
     {
         $this->showAlertDialog = true;
-        $this->date = $i;
-        $this->viewDetailsswiperecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->date)->get();
-        $this->viewDetailsInswiperecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'IN')->whereDate('created_at', $this->date)->first();
+        $this->dateforpopup = $i;
+        $this->viewDetailsswiperecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->dateforpopup)->get();
+        $this->viewDetailsInswiperecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'IN')->whereDate('created_at', $this->dateforpopup)->first();
        
-        $this->viewDetailsOutswiperecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'OUT')->whereDate('created_at', $this->date)->first();
+        $this->viewDetailsOutswiperecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'OUT')->whereDate('created_at', $this->dateforpopup)->first();
         
     }
     public function close()
@@ -113,9 +141,7 @@ class AttendanceTable extends Component
         $this->swiperecord = SwipeRecord::where('emp_id', $employeeId)->where('is_regularised', 1)->get();
         $currentMonth = date('F');
         $currentYear = date('Y');
-        $this->holiday = HolidayCalendar::where('month', $currentMonth)
-            ->where('year', $currentYear)
-            ->pluck('date')
+        $this->holiday = HolidayCalendar::pluck('date')
             ->toArray();
 
         $swipeRecords = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();

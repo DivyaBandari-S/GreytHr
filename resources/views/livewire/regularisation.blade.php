@@ -779,7 +779,7 @@
 
         .calendar-date.current-date {
             background-color: rgb(2, 17, 79);
-            color: #778899;
+            color: white;
             border-radius: 50%;
             padding: 10px;
             height: 30px;
@@ -916,9 +916,9 @@ border: 1px solid #778899;
 }
     </style>
 @if (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show w-50 m-auto" role="alert"wire:poll.10s="hideAlert">
         {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
 @if($showMessage)
@@ -1089,7 +1089,7 @@ border: 1px solid #778899;
            
             <div class="col-md-5">
             @if (session('error1'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"wire:poll.1s="hideAlert">
                             {{ session('error1') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -1285,7 +1285,7 @@ $lastItem = end($regularisationEntries); // Get the last item
 
     <div class="content px-2">
 
-        <span style="color: #778899; font-size: 12px; font-weight: 500;">Dates Applied:</span>
+        <span class="normalTextValue">Dates Applied:</span>
         @if($numberOfEntries>1)
         <span style="font-size: 11px;">
 
@@ -1396,7 +1396,7 @@ $lastEntry = end($regularisationEntries);
 
         <!-- Display leave details here based on $leaveRequest -->
 
-        <div class="accordion-content">
+        <div class="col accordion-content">
             @if($hr->status=='pending')
             <span style="color: #778899; font-size: 12px; font-weight: 500;">Withdrawn&nbsp;By</span>
             @elseif($hr->status=='rejected')
@@ -1413,7 +1413,7 @@ $lastEntry = end($regularisationEntries);
 
 
 
-        <div class="accordion-content">
+        <div class="col accordion-content">
 
             <span style="color: #778899; font-size: 12px; font-weight: 500;">No. of Days</span>
 
@@ -1428,7 +1428,7 @@ $lastEntry = end($regularisationEntries);
 
         <!-- Add other details based on your leave request structure -->
 
-        <div class="accordion-content">
+        <div class="col accordion-content">
             @if($hr->status=='approved')
             <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">closed</span>
             @elseif($hr->status=='rejected')

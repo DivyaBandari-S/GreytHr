@@ -113,6 +113,7 @@ width: 170px; */
             font-size: 14px;
             color: blue;
         }
+
         .info-icon-container-attendance-info .fa-info-circle:hover+.info-box-attendance-info {
             display: block;
         }
@@ -132,7 +133,7 @@ width: 170px; */
             Z-index: 1
         }
 
-       
+
 
         .text-2 {
             font-size: 18px;
@@ -506,23 +507,32 @@ width: 170px; */
             border: 1px solid #c5cdd4;
             /* Set the desired border color */
         }
+
         .custom-container {
-            margin-top:20px;
-            background-color: white; /* White background */
-            width: 100%;            /* Adjust width as needed */
-            height: 100px;           /* Adjust height as needed */
-            padding: 20px;           /* Optional padding for content spacing */
-            border: 1px solid #ddd;  /* Optional border for visual distinction */
-            box-sizing: border-box;  /* Ensure padding and border are included in width and height */
+            margin-top: 20px;
+            background-color: white;
+            /* White background */
+            width: 100%;
+            /* Adjust width as needed */
+            height: 100px;
+            /* Adjust height as needed */
+            padding: 20px;
+            /* Optional padding for content spacing */
+            border: 1px solid #ddd;
+            /* Optional border for visual distinction */
+            box-sizing: border-box;
+            /* Ensure padding and border are included in width and height */
         }
-        @media  screen and (max-height:320px) {
+
+        @media screen and (max-height:320px) {
 
             .custom-container {
-                      /* Adjust width as needed */
-            height: 220px;           /* Adjust height as needed */
-           
-        }
-            
+                /* Adjust width as needed */
+                height: 220px;
+                /* Adjust height as needed */
+
+            }
+
         }
 
         .clickable-date1 {
@@ -782,7 +792,7 @@ width: 170px; */
 
 
         }
-        
+
 
         .large-box-attendance-info .fourth-header-row {
             background-color: #fff;
@@ -915,12 +925,13 @@ width: 170px; */
             border: 2px solid transparent;
             /* Initial border color (transparent) */
         }
+
         .accordion-icon {
             font-size: 13px;
             color: #fff;
             float: right;
             margin-left: 5px;
-}
+        }
 
         .toggle-box-attendance-info i.fas.fa-bars:hover {
             color: rgb(2, 17, 79);
@@ -1141,16 +1152,17 @@ width: 170px; */
             margin-right: 20px;
 
         }
-        .accordion:before {
-          
-          /* Unicode character for "plus" sign (+) */
-          font-size: 13px;
-          color: #fff;
-          float: right;
-          margin-left: 5px;
-      }
 
-      
+        .accordion:before {
+
+            /* Unicode character for "plus" sign (+) */
+            font-size: 13px;
+            color: #fff;
+            float: right;
+            margin-left: 5px;
+        }
+
+
         .panel {
             /* padding: 0 18px; */
             display: none;
@@ -1159,6 +1171,7 @@ width: 170px; */
             border: 1px solid #cecece;
             font-size: 14px;
         }
+
         .accordion {
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -1236,7 +1249,7 @@ color: #fff;
         }
 
         .accordion:after {
-           
+
             /* Unicode character for "plus" sign (+) */
             font-size: 13px;
             color: #fff;
@@ -1269,10 +1282,11 @@ color: #fff;
         .leaveIcon {
             background-color: #fcf2ff;
         }
-        .sickleaveIcon
-        {
+
+        .sickleaveIcon {
             background-color: transparent;
         }
+
         .onDutyIcon {
             background-color: #fff7eb;
         }
@@ -1329,18 +1343,6 @@ color: #fff;
             border: 1px solid #cbd5e1;
         }
 
-        .info-button {
-            background-color: transparent;
-            color: rgb(2, 17, 79);
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: -10px;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            text-decoration: none;
-        }
-
         .info-button:hover {
             text-decoration: underline;
         }
@@ -1353,25 +1355,43 @@ color: #fff;
             border-bottom: 17px solid #f09541;
             margin-right: 5px;
         }
-        
     </style>
     @php
     $offCount=0;
     $presentCount=0;
     $absentCount=0;
     $holidaycountforcontainer=0;
-    $totalWorkedMinutes=0;
+    $totalShortFallHoursWorked=0;
+    $totalshortfallMinutesWorked=0;
     $currentYear = date('Y');
     $currentMonth=date('n');
     $currentMonthRep=date('F');
     $holidayNote=false;
-    $totalWorkHours=0;
+    $totalHoursWorked = 0;
+    $totalMinutesWorked = 0;
     $currentMonthRep = DateTime::createFromFormat('F', $currentMonthRep)->format('M');
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
+    $totalSecondsWorked = 0;
+    $totalexcessHoursWorked=0;
+    $totalexcessMinutesWorked=0;
     @endphp
-
+    <div class="date-filters p-0 row d-flex align-items-center mb-2">
+        <div class="col-md-3 m-0 ">
+            <div class="d-flex align-items-center gap-2">
+                <label class="normalTextValue " for="from-date">From Date:</label>
+                <input type="date" id="from-date" wire:model="fromDate" wire:change="updatefromDate" class="form-control" style="width:60%;">
+            </div>
+        </div>
+        <div class="col-md-3 m-0 p-0">
+            <div class="d-flex gap-2 align-items-center ">
+                <label class="normalTextValue" for="to-date">To Date:</label>
+                <input type="date" id="to-date" wire:model="toDate" wire:change="updatetoDate" class="form-control " style="width:65%;">
+            </div>
+        </div>
+        <div class="col-md-6"></div>
+    </div>
     <div class="m-auto">
-                <div class="table-container scrollable-table" style=" width: 100%;
+        <div class="table-container scrollable-table" style=" width: 100%;
     overflow-x: auto;">
             <table>
                 <tr class="first-header-row" style="background-color:#ebf5ff;border-bottom: 1px solid #cbd5e1;">
@@ -1435,557 +1455,581 @@ color: #fff;
 
                 </tr>
 
-                @for($i = 1; $i <= $daysInMonth; $i++) 
-                      @php 
-                          $dateKey=str_pad($i, 2, '0' , STR_PAD_LEFT) . " " . $currentMonthRep . " " . $currentYear; 
-                          $dateKeyForLookup=$currentYear . '-' .str_pad($currentMonth, 2, '0' , STR_PAD_LEFT) . '-' . str_pad($i, 2, '0' , STR_PAD_LEFT); 
-                          if (in_array($dateKeyForLookup, $holiday)) 
-                          { 
-                                $holidayNote=true; 
-                          } 
-                          $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); 
-                          $dayName=date('D', $timestamp); 
-                          $isWeekend=($dayName=='Sat' || $dayName=='Sun' ); 
-                          $isPresent=$distinctDates->has($dateKeyForLookup);
-                          
-                          $isDate=($dateKeyForLookup<$todaysDate); 
-                           $swipeRecordExists=$swiperecord->contains(function ($record) use ($dateKeyForLookup) {
-                        return \Carbon\Carbon::parse($record->created_at)->toDateString() === $dateKeyForLookup;
-                        });
-                        @endphp
-                     
-                        <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate? ( $isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isPresent|| $swipeRecordExists?  '#edfaed':'#fcf0f0'))) :'white'}};">
+                @php
+                use Carbon\Carbon;
 
+                $fromDate = Carbon::parse($fromDate); // Assuming $fromDate is in 'Y-m-d' format
+                $toDate = Carbon::parse($toDate); // Assuming $toDate is in 'Y-m-d' format
+                $currentMonthRep = $fromDate->format('M');
+                $currentYear = $fromDate->year;
+                @endphp
 
-                            <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">
-                                <p style="white-space:nowrap;">
-                                    {{str_pad($i, 2, '0', STR_PAD_LEFT) }}&nbsp;&nbsp;{{$currentMonthRep}}&nbsp;{{$currentYear}}({{$dayName}})
-                                    @if($swipeRecordExists==true)
-                                <div class="down-arrow-reg"></div>
-                                @endif
-                                </p>
-                            </td>
+                @for ($date = $fromDate; $date->lte($toDate); $date->addDay())
+                @php
+                $dateKey = $date->format('d M Y');
+                $dateKeyForLookup = $date->format('Y-m-d');
+                $dayName = $date->format('D');
+                $isWeekend = ($dayName == 'Sat' || $dayName == 'Sun');
+                $isPresent = $distinctDates->has($dateKeyForLookup);
 
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap;">10:(GS)</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap;">10:00 Am to 07:00Pm</td>
+                $holidayNote = in_array($dateKeyForLookup, $holiday);
+                $isDate = ($dateKeyForLookup < $todaysDate);
+                    $swipeRecordExists=$swiperecord->contains(function ($record) use ($dateKeyForLookup) {
+                    return \Carbon\Carbon::parse($record->created_at)->toDateString() === $dateKeyForLookup;
+                    });
 
+                    if ($distinctDates->has($dateKeyForLookup)) {
+                    $record = $distinctDates[$dateKeyForLookup];
+                    $standardHours = 9;
+                    $standardMinutes = 0;
+                    $firstInTimestamp = strtotime($record['first_in_time']);
+                    $lastOutTimestamp = strtotime($record['last_out_time']);
 
-                            @if($distinctDates->has($dateKeyForLookup))
+                    $standardWorkingMinutes = ($standardHours * 60) + $standardMinutes;
+                    $differenceInSeconds = $lastOutTimestamp - $firstInTimestamp;
+                    $totalSecondsWorked += $differenceInSeconds;
+                    $hours = floor($differenceInSeconds / 3600);
+                    $minutes = floor(($differenceInSeconds % 3600) / 60);
+                    $totalWorkedMinutes = ($hours * 60) + $minutes;
+
+                    }
+
+                    @endphp
+
+                    <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isPresent || $swipeRecordExists ? '#edfaed' : '#fcf0f0'))) : 'white'}};">
+                        <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">
+                            <p style="white-space:nowrap;">
+                                {{ $date->format('d') }}&nbsp;&nbsp;{{$currentMonthRep}}&nbsp;{{$currentYear}}({{$dayName}})
+                                @if($swipeRecordExists)
+                            <div class="down-arrow-reg"></div>
+                            @endif
+                            </p>
+                        </td>
+
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap;">10:(GS)</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap;">10:00 Am to 07:00Pm</td>
+
+                        @if($distinctDates->has($dateKeyForLookup))
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @if($isDate)
+                            {{ date('H:i', strtotime($record['first_in_time'])) }}
+                            @else
+                            00:00
+                            @endif
+                        </td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @if($isDate)
+                            @if(empty($record['last_out_time']))
+                            {{ date('H:i', strtotime($record['first_in_time'])) }}
+                            @else
+                            {{ date('H:i', strtotime($record['last_out_time'])) }}
+                            @endif
+                            @else
+                            00:00
+                            @endif
+                        </td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @if($isDate == false)
+                            00:00
+                            @elseif(empty($record['last_out_time']))
+                            00:00
+                            @else
+                            {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
+                            @endif
+                        </td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @if($isDate == false)
+                            00:00
+                            @elseif(empty($record['last_out_time']))
+                            00:00
+                            @else
                             @php
-                             $standardHours = 9;
-                             $standardMinutes = 0;
-                            $record = $distinctDates[$dateKeyForLookup];
-                            $firstInTimestamp = strtotime($record['first_in_time']);
-                            $lastOutTimestamp = strtotime($record['last_out_time']);
-                           
-    
-                             // Calculate the standard working minutes (9 hours)
-                            $standardWorkingMinutes = ($standardHours * 60) + $standardMinutes;
-                            // Calculate difference in seconds
-                            $differenceInSeconds = $lastOutTimestamp - $firstInTimestamp;
-                            // Calculate hours and minutes
-                            
-                            $hours = floor($differenceInSeconds / 3600);
-                            $minutes = floor(($differenceInSeconds % 3600) / 60);
-                            $totalWorkedMinutes = ($hours * 60) + $minutes;
-                            
+                            $totalHoursWorked+=$hours;
+                            $totalMinutesWorked+=$minutes;
                             @endphp
+                            {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
+                            @endif
+                        </td>
+                        @else
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        @endif
 
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($isDate)
-                                {{ date('H:i', strtotime($record['first_in_time'])) }}
-                                @else    
-                                 00:00
-                                @endif
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($isDate)
-                                    @if(empty($record['last_out_time']))
-                                            
-                                            {{ date('H:i', strtotime($record['first_in_time'])) }}
-                                    @else
-                                            {{ date('H:i', strtotime($record['last_out_time'])) }}
-                                    @endif
-                                @else    
-                                    00:00
-                                @endif    
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                               
-                                
-                                @if($isDate==false)   
-                                     00:00
-                                @elseif(empty($record['last_out_time']))
-                                      00:00
+                        <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666'))) : 'black'}}">
+                            @if($isDate)
+                            @if($isWeekend)
+                            O
+                            @php $offCount++; @endphp
+                            @elseif($holidayNote)
+                            H
+                            @php $holidaycountforcontainer++; @endphp
+                            @elseif($distinctDates->has($dateKeyForLookup))
+                            P
+                            @php $presentCount++; @endphp
+                            @else
+                            A
+                            @php $absentCount++; @endphp
+                            @endif
+                            @else
+                            -
+                            @endif
+                        </td>
+
+                        <td>
+                            <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="viewDetails('{{ $dateKeyForLookup }}')">
+                                Info
+                            </button>
+                        </td>
+
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;">No&nbsp;attention&nbsp;required</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @if($totalWorkedMinutes < $standardWorkingMinutes && !empty($record['last_out_time']) && !$isWeekend && !$holidayNote && $isPresent)
+                                @php
+                                $shortfalltime=$standardWorkingMinutes - $totalWorkedMinutes;
+                                $shortfallHours=floor($shortfalltime / 60);
+                                $shortfallMinutes=$shortfalltime % 60;
+
+                                $totalshortfallHoursWorked+=$shortfallHours;
+                                $totalshortfallMinutesWorked+=$shortfallMinutes;
+
+                                @endphp
+                                {{ str_pad($shortfallHours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($shortfallMinutes, 2, '0', STR_PAD_LEFT) }}
                                 @else
-                                
-                                {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
-                                @endif
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($isDate==false)   
-                                             00:00
-                                @elseif(empty($record['last_out_time']))
                                 00:00
-                                @else
-                                 {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
                                 @endif
-                            </td>
-                            @else
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            @endif
-
-
-
-
-                            <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666')) ):'black'}}">
-                                @if($isDate==true)
-                                @if($isWeekend==true)
-                                 O
-                                    @php
-                                    $offCount++;
-                                    @endphp
-                                @elseif($holidayNote==true)
-                                 H
-                                  @php
-                                    $holidaycountforcontainer++;
-                                  @endphp
-                                @elseif($distinctDates->has($dateKeyForLookup))
-                                P
-                                   @php
-                                      $presentCount++;
-                                   @endphp
-                                @else
-                                A
-                                  @php
-                                    $absentCount++;
-                                  @endphp
-                                @endif
-                                @else
-                                -
-                                @endif
-                            </td>
-
-                            <td>
-                                <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="viewDetails('{{$dateKeyForLookup}}')">
-                                    Info
-                                </button>
-                            </td>
-
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;">No&nbsp;attention&nbsp;required</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($totalWorkedMinutes<$standardWorkingMinutes&&!empty($record['last_out_time'])&&$isWeekend==false&&$holidayNote==false&&$isPresent==true)
-                                   @php
-                                      $shortfalltime=$standardWorkingMinutes-$totalWorkedMinutes;
-                                      $shortfallHours = floor($shortfalltime / 60);
-                                      $shortfallMinutes = $shortfalltime % 60;
-                                   @endphp
-                                 
-                                      {{str_pad($shortfallHours, 2, '0', STR_PAD_LEFT)}}: {{ str_pad($shortfallMinutes, 2, '0', STR_PAD_LEFT) }}
-                                    
-                                @else      
-                                  00:00
-                                @endif  
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                               @if($totalWorkedMinutes>$standardWorkingMinutes&&!empty($record['last_out_time'])&&$isWeekend==false&&$holidayNote==false&&$isPresent==true)
-                                   @php
-                                      $excesstime=$totalWorkedMinutes-$standardWorkingMinutes;
-                                      $excessHours = floor($excesstime / 60);
-                                      $excessMinutes = $excesstime % 60;
-                                   @endphp
-                                 
-                                      {{str_pad($excessHours, 2, '0', STR_PAD_LEFT)}}: {{ str_pad($excessMinutes, 2, '0', STR_PAD_LEFT) }}
-                                    
-                                @else      
-                                  00:00
-                                @endif  
-                            </td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">10:00-14:00</td>
-                            @if($this->moveCaretLeftSession1==true)
-                            @if($distinctDates->has($dateKeyForLookup))
+                                </td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @if($totalWorkedMinutes > $standardWorkingMinutes && !empty($record['last_out_time']) && !$isWeekend && !$holidayNote && $isPresent)
                             @php
-                            $record = $distinctDates[$dateKeyForLookup];
-                            $firstInTime = \Carbon\Carbon::parse($record['first_in_time']);
-                            $lateArrivalTime = $firstInTime->diff(\Carbon\Carbon::parse('10:00'))->format('%H:%I');
-                            $isLateBy10AM = $firstInTime->format('H:i') > '10:00';
+                            $excesstime = $totalWorkedMinutes - $standardWorkingMinutes;
+                            $excessHours = floor($excesstime / 60);
+                            $excessMinutes = $excesstime % 60;
+
+                            $totalexcessHoursWorked+=$excessHours;
+                            $totalexcessMinutesWorked+=$excessMinutes;
                             @endphp
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">
-                                @if($isDate)
-                                 {{ date('H:i', strtotime($record['first_in_time'])) }}
-                                @else 
-                                  00:00
-                                @endif  
-
-                            </td>
-                            @if($isDate==false)
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            @elseif($isLateBy10AM)
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{$lateArrivalTime}}</td>
+                            {{ str_pad($excessHours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($excessMinutes, 2, '0', STR_PAD_LEFT) }}
                             @else
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                            00:00
                             @endif
+                        </td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">10:00-14:00</td>
+                        @if($this->moveCaretLeftSession1)
+                        @if($distinctDates->has($dateKeyForLookup))
+                        @php
+                        $record = $distinctDates[$dateKeyForLookup];
+                        $firstInTime = \Carbon\Carbon::parse($record['first_in_time']);
+                        $lateArrivalTime = $firstInTime->diff(\Carbon\Carbon::parse('10:00'))->format('%H:%I');
+                        $isLateBy10AM = $firstInTime->format('H:i') > '10:00';
+                        @endphp
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @if($isDate)
+                            {{ date('H:i', strtotime($record['first_in_time'])) }}
                             @else
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                            00:00
                             @endif
 
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        </td>
+                        @if($isDate==false)
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        @elseif($isLateBy10AM)
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{$lateArrivalTime}}</td>
+                        @else
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        @endif
+                        @else
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        @endif
 
-                            @endif
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">14:01-19:00</td>
-                            @if($this->moveCaretLeftSession2==true)
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+
+                        @endif
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">14:01-19:00</td>
+                        @if($this->moveCaretLeftSession2==true)
 
 
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            @if($distinctDates->has($dateKeyForLookup))
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        @if($distinctDates->has($dateKeyForLookup))
+                        @php
+
+                        $record = $distinctDates[$dateKeyForLookup];
+                        $firstInTime = \Carbon\Carbon::parse($record['last_out_time']);
+                        $lateArrivalTime = $firstInTime->diff(\Carbon\Carbon::parse('19:00'))->format('%H:%I');
+                        $isEarlyBy07PM = $firstInTime->format('H:i') < '19:00' ; @endphp @if(empty($record['last_out_time'])) @php $record['last_out_time']=$record['first_in_time']; $firstInTime=\Carbon\Carbon::parse($record['last_out_time']); $lateArrivalTime=$firstInTime->diff(\Carbon\Carbon::parse('19:00'))->format('%H:%I');
+                            $isEarlyBy07PM = $firstInTime->format('H:i') < '19:00' ; @endphp <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{ date('H:i', strtotime($record['last_out_time'])) }}</td>
+                                @else
+
+                                <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{ date('H:i', strtotime($record['last_out_time'])) }}</td>
+                                @endif
+                                @if($isEarlyBy07PM)
+                                <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{$lateArrivalTime}}</td>
+                                @else
+                                <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                                @endif
+
+                                @else
+                                <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                                <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                                @endif
+                                @endif
+                                @php
+                                $holidayNote=false;
+                                @endphp
+
+                    </tr>
+                    @endfor
+
+
+                    <tr style="border-bottom: 1px solid #cbd5e1;background-color:white;">
+                        <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Total </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
                             @php
+                            $extraHours = floor($totalMinutesWorked / 60);
+                            $totalHoursWorked += $extraHours;
+                            $remainingMinutes = $totalMinutesWorked % 60;
 
-                            $record = $distinctDates[$dateKeyForLookup];
-                            $firstInTime = \Carbon\Carbon::parse($record['last_out_time']);
-                            $lateArrivalTime = $firstInTime->diff(\Carbon\Carbon::parse('19:00'))->format('%H:%I');
-                            $isEarlyBy07PM = $firstInTime->format('H:i') < '19:00' ; @endphp @if(empty($record['last_out_time'])) @php $record['last_out_time']=$record['first_in_time']; $firstInTime=\Carbon\Carbon::parse($record['last_out_time']); $lateArrivalTime=$firstInTime->diff(\Carbon\Carbon::parse('19:00'))->format('%H:%I');
-                                $isEarlyBy07PM = $firstInTime->format('H:i') < '19:00' ; @endphp <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{ date('H:i', strtotime($record['last_out_time'])) }}</td>
-                                    @else
-         
-                                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{ date('H:i', strtotime($record['last_out_time'])) }}</td>
-                                    @endif
-                                    @if($isEarlyBy07PM)
-                                    <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{$lateArrivalTime}}</td>
-                                    @else
-                                    <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                                    @endif
+                            // Format total hours and minutes as HH:MM
+                            $formattedTotalHours = str_pad($totalHoursWorked, 2, '0', STR_PAD_LEFT);
+                            $formattedTotalMinutes = str_pad($remainingMinutes, 2, '0', STR_PAD_LEFT);
+                            @endphp
+                            {{ $formattedTotalHours }}:{{ $formattedTotalMinutes }}
+                        </td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;"> {{ $formattedTotalHours }}:{{ $formattedTotalMinutes }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @php
+                            $extraShortFallHours = floor($totalshortfallMinutesWorked / 60);
+                            $totalShortFallHoursWorked += $extraShortFallHours;
+                            $remainingShortFallMinutes = $totalshortfallMinutesWorked % 60;
 
-                                    @else
-                                    <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                                    <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                                    @endif
-                                    @endif
-                                    @php
-                                    $holidayNote=false;
-                                    @endphp
-                        </tr>
+                            // Format total hours and minutes as HH:MM
+                            $formattedShortFallTotalHours = str_pad($totalShortFallHoursWorked, 2, '0', STR_PAD_LEFT);
+                            $formattedShortFallTotalMinutes = str_pad($remainingShortFallMinutes, 2, '0', STR_PAD_LEFT);
+                            @endphp
+                            {{$formattedShortFallTotalHours}}:{{$formattedShortFallTotalMinutes}}
+                        </td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                            @php
+                            $extraexcessHours = floor($totalexcessMinutesWorked / 60);
+                            $totalexcessHoursWorked += $extraexcessHours;
+                            $remainingExcessMinutes = $totalexcessMinutesWorked % 60;
 
-                        @endfor
-
-
-                        <tr style="border-bottom: 1px solid #cbd5e1;background-color:white;">
-                            <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Total </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                            <td></td>
-                            @if($this->moveCaretLeftSession1==true)
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            @endif
-                            <td></td>
-                            @if($this->moveCaretLeftSession2==true)
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            @endif
-                        </tr>
-                    </table>
+                            // Format total hours and minutes as HH:MM
+                            $formattedExcessTotalHours = str_pad($totalexcessHoursWorked, 2, '0', STR_PAD_LEFT);
+                            $formattedExcessTotalMinutes = str_pad($remainingExcessMinutes, 2, '0', STR_PAD_LEFT);
+                            @endphp
+                            {{$formattedExcessTotalHours}}:{{$formattedExcessTotalMinutes}}
+                        </td>
+                        <td></td>
+                        @if($this->moveCaretLeftSession1==true)
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        @endif
+                        <td></td>
+                        @if($this->moveCaretLeftSession2==true)
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        @endif
+                    </tr>
+            </table>
         </div>
         @if ($showAlertDialog)
         @php
-    $formattedDate = \Carbon\Carbon::parse($date)->format('d M');
-    @endphp
-    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Swipe Details for {{$formattedDate}}</b></h5>
-                    <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
-                    </button>
-                </div>
-                <div class="modal-body">
-                   
-                    @if($viewDetailsInswiperecord&&$date<$todaysDate)
-                        @php
-                    
-                            $firstInTimestamp = strtotime($viewDetailsInswiperecord->swipe_time);
+        $formattedDate = \Carbon\Carbon::parse($dateforpopup)->format('d M');
+        @endphp
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
+                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>Swipe Details for {{$formattedDate}}</b></h5>
+                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="close" style="background-color: white; height:10px;width:10px;">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        @if($viewDetailsInswiperecord&&$dateforpopup<$todaysDate)
+                            @php
+
+                            $firstInTimestamp=strtotime($viewDetailsInswiperecord->swipe_time);
                             if($viewDetailsOutswiperecord)
                             {
-                                $lastOutTimestamp = strtotime($viewDetailsOutswiperecord->swipe_time);
-                                $differenceInSeconds = $lastOutTimestamp - $firstInTimestamp;
-                                // Calculate hours and minutes
-                                $hours = floor($differenceInSeconds / 3600);
-                                $minutes = floor(($differenceInSeconds % 3600) / 60);
+                            $lastOutTimestamp = strtotime($viewDetailsOutswiperecord->swipe_time);
+                            $differenceInSeconds = $lastOutTimestamp - $firstInTimestamp;
+                            // Calculate hours and minutes
+                            $hours = floor($differenceInSeconds / 3600);
+                            $minutes = floor(($differenceInSeconds % 3600) / 60);
                             }
-                        @endphp      
-                    <div class="row">
-                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name : <span style="color: #333;">{{ucwords(strtolower($employeeDetails->first_name))}}&nbsp;{{ucwords(strtolower($employeeDetails->last_name))}}</span></div>
-                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Employee ID : <span style="color: #333;">{{$employeeDetails->emp_id}}</span></div>
-                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Access Card Number:</div>
-                    </div>
-                    <div class="swipes-table mt-4 border" style="max-height: 300px; overflow-y: auto; display: block;">
-                    <table style="width: 100%;">
-                        <tr style="background-color: #f6fbfc;">
-                            <th style="width:15%;font-size: 12px; text-align:start;padding:5px;color:#778899;font-weight:500;white-space:nowrap;">In/Out</th>
-                            <th style="width:15%;font-size: 12px; text-align:start;padding:5px;color:#778899;font-weight:500;white-space:nowrap;">Swipe Time</th>
-                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Location</th>
-                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Status</th>
-                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Last Updated On</th>
-                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Modified Time</th>
-                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Updated By</th>
-                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Longitude</th>
-                            <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Latitude</th>
-                        </tr>
- 
-                                        
-                            <tr style="border:1px solid #ccc;">
-                                
-                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px 10pxwhite-space:nowrap;"> {{$viewDetailsInswiperecord->in_or_out}} </td>
-                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;"> {{$viewDetailsInswiperecord->swipe_time}} </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
-                            </tr>
-                            <tr style="border:1px solid #ccc;">
-                                
-                                @if($viewDetailsOutswiperecord)
-                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:5px;white-space:nowrap;"> {{$viewDetailsOutswiperecord->in_or_out}} </td>
-                                <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px"> {{$viewDetailsOutswiperecord->swipe_time}} </td>
-                                @else
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;"> OUT </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> {{$viewDetailsInswiperecord->swipe_time}} </td>
-                                @endif
-                                @if($viewDetailsOutswiperecord)
-                                  <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">-</td>
-                                @else
-                                  <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">System inserted out</td>
-                                @endif  
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
-                            </tr>
-                       
-  
-                            <tr style="border:1px solid #ccc; background-color: #f0f0f0;">
-                                @if($viewDetailsOutswiperecord)
-                                 <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">Actual Hours :{{ str_pad($hours, 2, '0', STR_PAD_LEFT) }} hrs {{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }} mins mins'</td>
-                                @else   
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">Actual Hours :00 hrs 00 mins mins'</td>
-                                @endif
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"></td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">  </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">  </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">  </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">  </td>
-                                <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">  </td>
-                            </tr>
-                       
- 
-                    </table>
-                    </div>
-                    @else
-                       <div style="text-align:center;">
-                           <img src="https://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
-                           <div class="text-muted">No record available</div>
-                       </div>
-                    @endif
-                    <div style="display: flex; justify-content: center; margin-top: 20px;">
-                         <button class="cancel-btn" style="border:1px solid rgb(2, 17, 79);"wire:click="close">Close</button>
+                            @endphp
+                            <div class="row">
+                                <div class="col" style="font-size: 12px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name : <span style="color: #333;">{{ucwords(strtolower($employeeDetails->first_name))}}&nbsp;{{ucwords(strtolower($employeeDetails->last_name))}}</span></div>
+                                <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Employee ID : <span style="color: #333;">{{$employeeDetails->emp_id}}</span></div>
+                                <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Access Card Number:</div>
+                            </div>
+                            <div class="swipes-table mt-4 border" style="max-height: 300px; overflow-y: auto; display: block;">
+                                <table style="width: 100%;">
+                                    <tr style="background-color: #f6fbfc;">
+                                        <th style="width:15%;font-size: 12px; text-align:start;padding:5px;color:#778899;font-weight:500;white-space:nowrap;">In/Out</th>
+                                        <th style="width:15%;font-size: 12px; text-align:start;padding:5px;color:#778899;font-weight:500;white-space:nowrap;">Swipe Time</th>
+                                        <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Location</th>
+                                        <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Status</th>
+                                        <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Last Updated On</th>
+                                        <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Modified Time</th>
+                                        <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Updated By</th>
+                                        <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Longitude</th>
+                                        <th style="width:30%;font-size: 12px; text-align:start;padding:10px 10px;color:#778899;font-weight:500;white-space:nowrap;">Latitude</th>
+                                    </tr>
+
+
+                                    <tr style="border:1px solid #ccc;">
+
+                                        <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px 10pxwhite-space:nowrap;"> {{$viewDetailsInswiperecord->in_or_out}} </td>
+                                        <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;"> {{$viewDetailsInswiperecord->swipe_time}} </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                    </tr>
+                                    <tr style="border:1px solid #ccc;">
+
+                                        @if($viewDetailsOutswiperecord)
+                                        <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:5px;white-space:nowrap;"> {{$viewDetailsOutswiperecord->in_or_out}} </td>
+                                        <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px"> {{$viewDetailsOutswiperecord->swipe_time}} </td>
+                                        @else
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;"> OUT </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> {{$viewDetailsInswiperecord->swipe_time}} </td>
+                                        @endif
+                                        @if($viewDetailsOutswiperecord)
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">-</td>
+                                        @else
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">System inserted out</td>
+                                        @endif
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
+                                    </tr>
+
+
+                                    <tr style="border:1px solid #ccc; background-color: #f0f0f0;">
+                                        @if($viewDetailsOutswiperecord)
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">Actual Hours :{{ str_pad($hours, 2, '0', STR_PAD_LEFT) }} hrs {{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }} mins mins'</td>
+                                        @else
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">Actual Hours :00 hrs 00 mins mins'</td>
+                                        @endif
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"></td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> </td>
+                                    </tr>
+
+
+                                </table>
+                            </div>
+                            @else
+                            <div style="text-align:center;">
+                                <img src="https://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
+                                <div class="text-muted">No record available</div>
+                            </div>
+                            @endif
+                            <div style="display: flex; justify-content: center; margin-top: 20px;">
+                                <button class="cancel-btn" style="border:1px solid rgb(2, 17, 79);" wire:click="close">Close</button>
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
 
-        @endif    
+        @endif
     </div>
     <div class="custom-container">
         <div class="row">
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#edfaed;color:#778899;text-align:center;font-size:12px;">Present:<span style="font-weight:600;"> {{$presentCount}}</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color:rgb(252, 242, 255);color:#778899;text-align:center;font-size:12px;">Leave:<span style="font-weight:600;"> 0</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:12px;">Holiday:<span style="font-weight:600;"> {{$holidaycountforcontainer}}</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:12px;">Rest Day:<span style="font-weight:600;"> 0</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:12px;">Absent:<span style="font-weight:600;"> {{$absentCount}}</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color: #fff7eb;color:#778899;text-align:center;font-size:12px;">On Duty:<span style="font-weight:600;"> 0</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color: rgba(252, 217, 151,1);color:#778899;text-align:center;font-size:12px;">Shutdown:<span style="font-weight:600;"> 0</span></div>
-           <div class="col p-0 m-2"style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:12px;">Off Day:<span style="font-weight:600;"> {{$offCount}}</span></div>
+            <div class="col p-0 m-2" style="white-space:nowrap;background-color:#edfaed;color:#778899;text-align:center;font-size:12px;">Present:<span style="font-weight:600;"> {{$presentCount}}</span></div>
+            <div class="col p-0 m-2" style="white-space:nowrap;background-color:rgb(252, 242, 255);color:#778899;text-align:center;font-size:12px;">Leave:<span style="font-weight:600;"> 0</span></div>
+            <div class="col p-0 m-2" style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:12px;">Holiday:<span style="font-weight:600;"> {{$holidaycountforcontainer}}</span></div>
+            <div class="col p-0 m-2" style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:12px;">Rest Day:<span style="font-weight:600;"> 0</span></div>
+            <div class="col p-0 m-2" style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:12px;">Absent:<span style="font-weight:600;"> {{$absentCount}}</span></div>
+            <div class="col p-0 m-2" style="white-space:nowrap;background-color: #fff7eb;color:#778899;text-align:center;font-size:12px;">On Duty:<span style="font-weight:600;"> 0</span></div>
+            <div class="col p-0 m-2" style="white-space:nowrap;background-color: rgba(252, 217, 151,1);color:#778899;text-align:center;font-size:12px;">Shutdown:<span style="font-weight:600;"> 0</span></div>
+            <div class="col p-0 m-2" style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:12px;">Off Day:<span style="font-weight:600;"> {{$offCount}}</span></div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-auto p-1 m-2"style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:12px;">Restricted Holiday:<span style="font-weight:600;"> 0</span></div>
-            <div class="col-auto p-1 m-2"style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:12px;">Status Unknown:<span style="font-weight:600;"> 0</span></div>
+            <div class="col-auto p-1 m-2" style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:12px;">Restricted Holiday:<span style="font-weight:600;"> 0</span></div>
+            <div class="col-auto p-1 m-2" style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:12px;">Status Unknown:<span style="font-weight:600;"> 0</span></div>
         </div>
     </div>
-    <button class="accordion"wire:click="openlegend">Legends
-    <span class="accordion-icon">
-                            @if($legend)
-                                &#x2796; <!-- Unicode for minus sign -->
-                            @else
-                                &#x2795; <!-- Unicode for plus sign -->
-                            @endif
-                    </span>
+    <button class="accordion" wire:click="openlegend">Legends
+        <span class="accordion-icon">
+            @if($legend)
+            &#x2796; <!-- Unicode for minus sign -->
+            @else
+            &#x2795; <!-- Unicode for plus sign -->
+            @endif
+        </span>
     </button>
-                <div class="panel"style="display: {{ $legend ? 'block' : 'none' }};">
-                    <div class="row m-0 mt-3 mb-3">
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon presentIcon">P</span>
-                            </p>
-                            <p class="legendtext m-0">Present</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon absentIcon">A</span>
-                            </p>
-                            <p class="legendtext m-0">Absent</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon offDayIcon">O</span>
-                            </p>
-                            <p class="legendtext m-0">Off Day</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon offDayIcon">R</span>
-                            </p>
-                            <p class="legendtext m-0">Rest Day</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon leaveIcon">L</span>
-                            </p>
-                            <p class="legendtext m-0">Leave</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon onDutyIcon">OD</span>
-                            </p>
-                            <p class="legendtext m-0">On Duty</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon holidayIcon">H</span>
-                            </p>
-                            <p class="legendtext m-0">Holiday</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon deductionIcon">&nbsp;&nbsp;</span>
-                            </p>
-                            <p class="legendtext m-0" style="word-break: break-all;"> Deduction</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon alertForDeIcon">&nbsp;&nbsp;</span>
-                            </p>
-                            <p class="legendtext m-0">Allert for Deduction</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon absentIcon">?</span>
-                            </p>
-                            <p class="legendtext m-0">Status Unknown</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <i class="far fa-clock"></i>
-                            </p>
-                            <p class="legendtext m-0">Overtime</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <i class="far fa-edit"></i>
-                            </p>
-                            <p class="legendtext m-0">Override</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                            <div class="down-arrow-ign-attendance-info"></div>
-                            </p>
-                            <p class="legendtext m-0">Ignored</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                            <div class="down-arrow-gra"></div>
-                            </p>
-                            <p class="legendtext m-0">Grace</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                            <div class="down-arrow-reg"></div>
-                            </p>
-                            <p class="legendtext m-0">Regularized</p>
-                        </div>
-                    </div>
-                    <div class="row m-0 mb-3">
-                        <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Day Type</h6>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mb-0">
-                                <i class="fas fa-mug-hot"></i>
-                            </p>
-                            <p class="m-1 attendance-legend-text">Rest Day</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mt-1">
-                                <i class="fas fa-tv"></i>
-                            </p>
-                            <p class="m-1 attendance-legend-text">Off Day</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mt-0">
-                                <i class="fas fa-umbrella"></i>
-                            </p>
-                            <p class="m-1 attendance-legend-text">Holiday</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mb-0">
-                                <i class="fas fa-calendar-day"></i>
-                            </p>
-                            <p class="m-1 attendance-legend-text">Half Day</p>
-                        </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mb-0">
-                                <i class="fas fa-battery-empty"></i>
-                            </p>
-                            <p class="m-1 attendance-legend-text">IT Maintanance</p>
-                        </div>
-                    </div>
-                    <div class="row m-0 mb-3">
-                        <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Leave Type</h6>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
-                                <span class="legendsIcon sickleaveIcon">SL</span>
-                            </p>
-                            <p class="legendtext m-0">Sick Leave</p>
-                        </div>
-
-
-
-                    </div>
-                </div>
-
+    <div class="panel" style="display: {{ $legend ? 'block' : 'none' }};">
+        <div class="row m-0 mt-3 mb-3">
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon presentIcon">P</span>
+                </p>
+                <p class="legendtext m-0">Present</p>
             </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon absentIcon">A</span>
+                </p>
+                <p class="legendtext m-0">Absent</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon offDayIcon">O</span>
+                </p>
+                <p class="legendtext m-0">Off Day</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon offDayIcon">R</span>
+                </p>
+                <p class="legendtext m-0">Rest Day</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon leaveIcon">L</span>
+                </p>
+                <p class="legendtext m-0">Leave</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon onDutyIcon">OD</span>
+                </p>
+                <p class="legendtext m-0">On Duty</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon holidayIcon">H</span>
+                </p>
+                <p class="legendtext m-0">Holiday</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon deductionIcon">&nbsp;&nbsp;</span>
+                </p>
+                <p class="legendtext m-0" style="word-break: break-all;"> Deduction</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon alertForDeIcon">&nbsp;&nbsp;</span>
+                </p>
+                <p class="legendtext m-0">Allert for Deduction</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon absentIcon">?</span>
+                </p>
+                <p class="legendtext m-0">Status Unknown</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <i class="far fa-clock"></i>
+                </p>
+                <p class="legendtext m-0">Overtime</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <i class="far fa-edit"></i>
+                </p>
+                <p class="legendtext m-0">Override</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                <div class="down-arrow-ign-attendance-info"></div>
+                </p>
+                <p class="legendtext m-0">Ignored</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                <div class="down-arrow-gra"></div>
+                </p>
+                <p class="legendtext m-0">Grace</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                <div class="down-arrow-reg"></div>
+                </p>
+                <p class="legendtext m-0">Regularized</p>
+            </div>
+        </div>
+        <div class="row m-0 mb-3">
+            <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Day Type</h6>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="mb-0">
+                    <i class="fas fa-mug-hot"></i>
+                </p>
+                <p class="m-1 attendance-legend-text">Rest Day</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="mt-1">
+                    <i class="fas fa-tv"></i>
+                </p>
+                <p class="m-1 attendance-legend-text">Off Day</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="mt-0">
+                    <i class="fas fa-umbrella"></i>
+                </p>
+                <p class="m-1 attendance-legend-text">Holiday</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="mb-0">
+                    <i class="fas fa-calendar-day"></i>
+                </p>
+                <p class="m-1 attendance-legend-text">Half Day</p>
+            </div>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="mb-0">
+                    <i class="fas fa-battery-empty"></i>
+                </p>
+                <p class="m-1 attendance-legend-text">IT Maintanance</p>
+            </div>
+        </div>
+        <div class="row m-0 mb-3">
+            <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Leave Type</h6>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <p class="me-2 mb-0">
+                    <span class="legendsIcon sickleaveIcon">SL</span>
+                </p>
+                <p class="legendtext m-0">Sick Leave</p>
+            </div>
+
+
+
+        </div>
+    </div>
+
+</div>
 </div>
