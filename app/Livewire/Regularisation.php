@@ -4,6 +4,7 @@
 namespace App\Livewire;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
+use App\Models\LeaveRequest;
 use App\Models\RegularisationDates;
 
 use App\Models\Regularisations;
@@ -98,6 +99,7 @@ class Regularisation extends Component
     public $shift_times = []; 
     public $count=0;
 
+    public $showAlert=false;
     public $holidays;
 
     public $monthinFormat;
@@ -143,10 +145,12 @@ class Regularisation extends Component
             'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
             'shift_times.*.reason' => 'required',
         ], [
+            'shift_times.*.from.required' => 'Please enter the sign-in time',
             'shift_times.*.from.date_format' => 'Please enter sign-in time in HH:MM format',
+            'shift_times.*.to.required' => 'Please enter the sign-out time',
             'shift_times.*.to.date_format' => 'Please enter sign-out time in HH:MM format',
-            'shift_times.*.reason' => 'Please enter the reason',
             'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
+            'shift_times.*.reason.required' => 'Please enter the reason',
         ]);
     }
     public function togglePendingAccordion($id)
@@ -179,6 +183,29 @@ class Regularisation extends Component
         $this->showApplyingToContainer = !$this->showApplyingToContainer;
             
     }
+    private function isEmployeeLeaveOnDate($date, $employeeId)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+
+            return LeaveRequest::where('emp_id', $employeeId)
+                ->where('status', 'approved')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>=', $date);
+                })
+                ->exists();
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while checking employee leave. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
+    }
+    public function hideAlert()
+    {
+        $this->showAlert = false;
+    }
     public function submitShifts($date)
     {
         $selectedDate = Carbon::parse($date);
@@ -189,32 +216,42 @@ class Regularisation extends Component
         {
               // Throw a validation error or set a message for the user
               session()->flash('error', 'Attendance Period is locked');
+              $this->showAlert=true;
               // Stop further execution if the date is in the future
               return;
         }
         if ($selectedDate->greaterThan(Carbon::today())) {
             // Throw a validation error or set a message for the user
             session()->flash('error', 'Future dates are not allowed for regularisation');
+            $this->showAlert=true;
             // Stop further execution if the date is in the future
             return;
         }
         if ($selectedDate->EqualTo(Carbon::today())) {
             // Throw a validation error or set a message for the user
             session()->flash('error', 'Today dates are not allowed for regularisation');
+            $this->showAlert=true;
             // Stop further execution if the date is in the future
             return;
         }
         if ($selectedDate->isWeekend()) {
             // Throw a validation error for weekends
             session()->flash('error', 'This is a weekend. Regularisation is not allowed on weekends');
+            $this->showAlert=true;
             return;
         }
         $holiday = HolidayCalendar::where('date', $selectedDate->toDateString())->first();
         if ($holiday) {
             session()->flash('error', 'The selected date is a holiday. Regularisation is not allowed on holidays.');
+            $this->showAlert=true;
             return;
         }
-       
+        if ($this->isEmployeeLeaveOnDate($selectedDate, auth()->guard('emp')->user()->emp_id)) {
+            session()->flash('error', 'You are on leave on this date. Regularisation is not allowed.');
+            $this->showAlert=true;
+            return;
+        }
+        
 
         if (!in_array($date, $this->selectedDates)) {
             // Add the date to the selectedDates array only if it's not already selected
@@ -401,7 +438,17 @@ public function nextMonth()
     public function deleteStoredArray($index)
     {
         try {
-            unset($this->shift_times[$index]);
+            if (isset($this->selectedDates[$index])) {
+                unset($this->selectedDates[$index]);
+                $this->selectedDates = array_values($this->selectedDates); // Reindex the array
+            }
+        
+            // Remove the shift time corresponding to the selected date from shift_times array
+            if (isset($this->shift_times[$index])) {
+                unset($this->shift_times[$index]);
+                $this->shift_times = array_values($this->shift_times); // Reindex the array
+            }
+            // unset($this->shift_times[$index]);
             $this->isdeletedArray += 1;
             $this->updatedregularisationEntries = array_values($this->shift_times);
         } catch (\Exception $e) {
@@ -420,9 +467,12 @@ public function nextMonth()
             'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
             'shift_times.*.reason' => 'required',
         ], [
+            'shift_times.*.from.required' => 'Please enter the sign-in time',
             'shift_times.*.from.date_format' => 'Please enter sign-in time in HH:MM format',
+            'shift_times.*.to.required' => 'Please enter the sign-out time',
             'shift_times.*.to.date_format' => 'Please enter sign-out time in HH:MM format',
             'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
+            'shift_times.*.reason.required' => 'Please enter the reason',
         ]);
         $this->isdatesApplied = true;
         $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
@@ -444,7 +494,7 @@ public function nextMonth()
             'is_withdraw' => 0,
             'regularisation_date' => '2024-03-26',
         ]);
-        session()->flash('message', 'CV created successfully.');
+        session()->flash('message', 'Hurry Up! Regularisation Created Successfully.');
         $this->remarks='';
         $regularisationEntriesJson = [];
         $this->regularisationEntries = [];
@@ -452,7 +502,7 @@ public function nextMonth()
         // Log the error or handle it as needed
         Log::error('Error in storearraydates method: ' . $e->getMessage());
         // You might want to inform the user about the error or take other appropriate actions
-        session()->flash('error', 'An error occurred while creating CV.');
+        session()->flash('error1', 'Please enter the fields before submitting for regularisation.');
     }
 }
 
@@ -545,14 +595,14 @@ public function historyButton()
             session()->flash('error', 'An error occurred while updating count.');
         }
     }
-    
+
     public function openWithdrawModal()
     {
         $this->withdrawModal=true;
     }
     public function closewithdrawModal()
     {
-        $this->withdrawModal=false;   
+        $this->withdrawModal=false;
     }
        
     public function render()
@@ -629,13 +679,12 @@ public function historyButton()
                 'manager11' => $manager,
                 'count' => $this->c,
                 'count1' => $this->data,
-                'manager2' => $this->manager3,
                 'data2' => $this->data1,
                 'data5' => $this->data4,
                 'data81' => $this->data7,
                 'withdraw' => $this->data8,
                 'data11' => $this->data10,
-                'manager2' => $this->manager1,
+
                 'EmployeeDetails' => $employeeDetails1
             ]);
         } catch (\Exception $e) {

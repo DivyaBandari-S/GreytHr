@@ -345,7 +345,7 @@ class LeaveApplyPage extends Component
                 }
             }
             // Calculate the days for the new leave request, if provided
-            if ($this->from_date && $this->from_session && $this->to_date && $this->to_session) {
+            if ($this->leave_type !== 'Loss of Pay' && $this->from_date && $this->from_session && $this->to_date && $this->to_session) {
                 $totalEnteredDays = $this->calculateNumberOfDays(
                     $this->from_date,
                     $this->from_session,
@@ -355,11 +355,11 @@ class LeaveApplyPage extends Component
                 $totalNumberOfDays += $totalEnteredDays;
             }
 
+
             // Step 2: Retrieve leave balances
             $currentYear = now()->year;
             $leaveBalances = [
                 'Sick Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $currentYear),
-                'Loss Of Pay' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Loss Of Pay', $currentYear),
                 'Casual Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $currentYear),
                 'Casual Leave Probation' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $currentYear),
                 'Marriage Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $currentYear),

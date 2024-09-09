@@ -4,7 +4,7 @@
             margin-right: 62px;
         }
 
-       
+
         .my-button-attendance-info {
             padding: 5px 10px;
             border: none;
@@ -50,7 +50,6 @@
             justify-content: space-between;
             align-items: center;
             width: 500px;
-            /* Adjust the total width as needed */
             height: 40px;
             /* Adjust the height as needed */
             /* Background color of the container */
@@ -209,6 +208,7 @@ width: 170px; */
         .legendtext {
             color: #778899;
             font-size: 12px;
+            padding-top: 2px;
         }
 
         .bg-white {
@@ -1049,7 +1049,7 @@ width: 170px; */
         }
 
         .arrow-button::after {
-           
+
             /* Unicode character for right-pointing triangle (arrow) */
             font-size: 18px;
 
@@ -1193,7 +1193,7 @@ color: #fff;
         }
 
         .accordion:before {
-          
+
             /* Unicode character for "plus" sign (+) */
             font-size: 13px;
             color: #fff;
@@ -1202,7 +1202,7 @@ color: #fff;
         }
 
         .accordion:before {
-            
+
             /* Unicode character for "plus" sign (+) */
             font-size: 13px;
             color: #fff;
@@ -1377,24 +1377,24 @@ color: #fff;
     scrollbar-width: thin; /* For Firefox - makes the scrollbar thinner */
     scrollbar-color: #888 #f1f1f1; /* For Firefox - custom scrollbar color */
 }
- 
+
 /* Chrome, Edge, Safari */
 .custom-scrollbar-for-right-side-container
 ::-webkit-scrollbar {
     width: 8px; /* Set the width of the scrollbar */
 }
- 
+
 .custom-scrollbar-for-right-side-container
 ::-webkit-scrollbar-track {
     background: #f1f1f1; /* Background of the scrollbar track */
 }
- 
+
 .custom-scrollbar-for-right-side-container
 ::-webkit-scrollbar-thumb {
     background-color: #888; /* Scrollbar thumb color */
     border-radius: 10px; /* Rounded corners for the scrollbar thumb */
 }
- 
+
 .custom-scrollbar-for-right-side-container
 ::-webkit-scrollbar-thumb:hover {
     background-color: #555; /* Change color on hover */
@@ -1402,6 +1402,13 @@ color: #fff;
 @media screen and (max-height: 513px) {
     .penalty-and-average-work-hours-card{
         margin-top: 40px;
+    }
+}
+@media screen and (max-height: 320px) {
+   
+    .legendTriangleIcon
+    {
+        margin-right: 40px;
     }
 }
     </style>
@@ -1414,13 +1421,13 @@ color: #fff;
     @endphp
 
     <div>
-        
+
         <div class="row m-0" style="text-align: end;">
             <div class="col-md-12">
                 <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info" id="myButton">My Regularisations</a>
             </div>
         </div>
-         
+
 
 
         <div class="row m-0 d-flex justify-content-center text-center">
@@ -1444,10 +1451,10 @@ color: #fff;
             </div>
             <div class="col-md-2"></div>
         </div>
-         
+
         <div class="row m-0 mt-3">
             <div class="row m-0 d-flex justify-content-center" style="display:flex;justify-content:center;">
-                <div class="penalty-and-average-work-hours-card col-md-3">
+                <div class="penalty-and-average-work-hours-card mb-3 col-md-3">
                     <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
                         <section class="text-center">
@@ -1455,52 +1462,74 @@ color: #fff;
                         </section>
                     </div>
                 </div>
-                <div class="penalty-and-average-work-hours-card col-md-3">
-                    <div class="insight-card bg-white pt-2 pb-2"style="{{ $isNextMonth == 1 ? 'height: 135px;' : '' }}">
+                <div class="penalty-and-average-work-hours-card mb-3 col-md-3">
+                    <div class="insight-card bg-white pt-2 pb-2"style="{{ $percentageinworkhrsforattendance == 0 ? 'height: 135px;' : '' }}">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">
                             Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
                         <section class="text-center">
-                            
-                               <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
-                           
-                           
+                                   
+                                            <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
+                                    
+
                             <div>
-                                @if(!empty($percentageOfWorkHours))
-                                    <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{$percentageOfWorkHours}}%
-                                    </span>
-                                    <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                    </span>
-                                @endif
+                                   @if($avgWorkHoursPreviousMonth==0)
+                                   <span class="text-success ng-star-inserted" style="font-size:10px;">
+                                            </span>
+                                            <span class="text-muted" style="font-size:10px;margin-left:0px;">
+                                            </span>
+
+                                   @elseif($percentageinworkhrsforattendance>0)
+                                            <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
+                                            </span>
+                                            <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                            </span>
+                                   @elseif($percentageinworkhrsforattendance<0) 
+                                       <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageinworkhrsforattendance)}}%
+                                        </span>
+                                        <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                        </span> 
+                                    @endif
                             </div>
-                            
+
                         </section>
                     </div>
                 </div>
-                <div class="penalty-and-average-work-hours-card col-md-3">
-                    <div class="insight-card bg-white pt-2 pb-2"style="{{ $isNextMonth == 1 ? 'height: 135px;' : '' }}">
+                <div class="penalty-and-average-work-hours-card col-md-3 mb-3">
+                    <div class="insight-card bg-white pt-2 pb-2"style="{{ $percentageinworkhrsforattendance == 0 ? 'height: 135px;' : '' }}">
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
                         </h6>
                         <section class="text-center">
                             
-                            <p class="text-2" style="margin-top:30px;">{{$averageWorkHours}}</p>
+                            <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
                             
                           
                             <div>
-                              @if(!empty($percentageOfWorkHours))
-                                        <span _ngcontent-hbw-c670="" class="text-success ng-star-inserted" style="font-size:10px;">
-                                            +{{$percentageOfWorkHours}}% </span>
-                                        <span _ngcontent-hbw-c670="" class="text-muted" style="font-size:10px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-
+                            @if($avgWorkHoursPreviousMonth==0)
+                                   <span class="text-success ng-star-inserted" style="font-size:10px;">
+                                            </span>
+                                            <span class="text-muted" style="font-size:10px;margin-left:0px;">
+                                            </span>
+                              
+                            @elseif($percentageinworkhrsforattendance>0)
+                                            <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
+                                            </span>
+                                            <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                            </span>
+                                   @elseif($percentageinworkhrsforattendance<0)
+                                       <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageinworkhrsforattendance)}}%
                                         </span>
-                              @endif          
+                                        <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                        </span> 
+                                    @endif
+                                     
                             </div>
-                          
+
                         </section>
                     </div>
                 </div>
                 <div class="col-md-2 mt-5" style="text-align: center">
                     <a href="#" class="attendanceperiod" wire:click="öpenattendanceperiodModal">
-                        +3 Insights
+                        Insights
                     </a>
                 </div>
             </div>
@@ -1571,9 +1600,9 @@ color: #fff;
                                 <div class="col-md-3 col-sm-6 p-0">
                                     <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted1}}</span></p>
                                 </div>
-                           
+
                             </div>
-                             
+
                         </div>
                     </div>
                 </div>
@@ -1653,7 +1682,7 @@ color: #fff;
 
 
                                         @if ($day['isToday'])
-                                        <div style="background-color: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
+                                        <div style="background-color: rgb(2,17,79); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
                                             {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
                                         </div>
                                         @else
@@ -1819,19 +1848,19 @@ color: #fff;
                             <p class="legendtext m-0">Override</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
+                            <p class="legendTriangleIcon me-2 mb-0">
                             <div class="down-arrow-ign-attendance-info"></div>
                             </p>
                             <p class="legendtext m-0">Ignored</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
+                            <p class="legendTriangleIcon me-2 mb-0">
                             <div class="down-arrow-gra"></div>
                             </p>
                             <p class="legendtext m-0">Grace</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="me-2 mb-0">
+                            <p class="legendTriangleIcon me-2 mb-0">
                             <div class="down-arrow-reg"></div>
                             </p>
                             <p class="legendtext m-0">Regularized</p>
@@ -1843,25 +1872,25 @@ color: #fff;
                             <p class="mb-0">
                                 <i class="fas fa-mug-hot"></i>
                             </p>
-                            <p class="m-1 attendance-legend-text">Rest Day</p>
+                            <p class="m-1 pb-2 attendance-legend-text">Rest Day</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="mb-0">
                                 <i class="fas fa-tv"></i>
                             </p>
-                            <p class="m-1 attendance-legend-text">Off Day</p>
+                            <p class="m-1 attendance-legend-text"style="margin-bottom:14px;">Off Day</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="mb-0">
                                 <i class="fas fa-umbrella"></i>
                             </p>
-                            <p class="m-1 attendance-legend-text">Holiday</p>
+                            <p class="m-1 pb-2 attendance-legend-text">Holiday</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="mb-0">
                                 <i class="fas fa-calendar-day"></i>
                             </p>
-                            <p class="m-1 attendance-legend-text">Half Day</p>
+                            <p class="m-1  pb-2 attendance-legend-text">Half Day</p>
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="mb-0">
@@ -2136,11 +2165,11 @@ color: #fff;
                     <div class="container-body" style="margin-top:2px;height:auto;border-top:1px solid #ccc;display: {{ $toggleButton ? 'block' : 'none' }};">
                         <!-- Content of the container body -->
                         <div class="table-responsive"style="max-width: 100%; text-align: center;">
-                          
+
                             <table>
                                @if ($SwiperecordsCount > 0)
                                 <thead>
-                                   
+
                                     <tr>
                                         <th style="font-weight:normal;font-size:12px;">In/Out</th>
                                         <th style="font-weight:normal;font-size:12px;">Swipe&nbsp;Time</th>
@@ -2149,7 +2178,7 @@ color: #fff;
                                     </tr>
                                 </thead>
                                 <tbody>
-                                  
+
                                 @foreach ($swiperecordsfortoggleButton as $index =>$swiperecord)
                                 <tr>
                                        <td style="font-weight:normal;font-size:12px;">{{ $swiperecord->in_or_out }}</td>
@@ -2164,9 +2193,9 @@ color: #fff;
                                            </div>
                                        </td>
                                        <td style="font-size:10px;">{{$this->city}},{{$this->country}},{{$this->postal_code}}</td>
- 
+
                                        <td><button class="info-button" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
- 
+
                                    </tr>
                                    @if (($index + 1) % 2 == 0)
                                    <!-- Add a small container after every two records -->
@@ -2174,9 +2203,9 @@ color: #fff;
                                        <td colspan="4" style="height:1px; background-color: #f0f0f0; text-align: left;font-size:10px;">
                                            Actual Hrs:{{ $actualHours[($index + 1) / 2 - 1] }}</td>
                                    </tr>
- 
+
                                    @endif
-                               
+
                                 @endforeach
 
 
@@ -2206,9 +2235,9 @@ color: #fff;
                                     @if($swiperecord)
                                     <div class="row m-0 mt-3">
 
-                                        
+
                                               <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Name:<br /><span style="color: #000000;">{{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}</span></div>
-                                      
+
                                         <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Employee&nbsp;Id<br /><span style="color: #000000;">{{ $swiperecord->emp_id }}</span></div>
 
                                     </div>
@@ -2263,8 +2292,8 @@ color: #fff;
 
 
 
-   
-   
+
+
 
     <script>
         document.getElementById("myButton").onclick = function() {

@@ -108,10 +108,13 @@
 
                     </div>
                     <div class="locationGlobe">
-                        <i class="fa-solid fa-location-dot me-2" id="getLocationLink"
+                        <i class="fa-solid fa-location-dot me-2" id="openMap"
                             style="color: red;cursor: pointer;"></i>
-
-                        {{ $city }}
+                        {{ !empty($formattedAddress['village']) ? $formattedAddress['village'] . ', ' : '' }}
+                        {{ !empty($formattedAddress['county']) ? $formattedAddress['county'] . ', ' : '' }}
+                        {{ !empty($formattedAddress['city']) ? $formattedAddress['city'] . ',' : '' }}
+                        {{ !empty($formattedAddress['country']) ? $formattedAddress['country'] . '-' : '' }}
+                        {{ !empty($formattedAddress['postcode']) ? $formattedAddress['postcode'] . '.' : '' }}
 
                     </div>
 
@@ -1091,8 +1094,22 @@ eum nihil itaque!
         @endif
     </div>
 </div>
+<div>
+    {{-- @script
+        <script>
+            // Livewire.dispatch('post-created') (or) $wire.dispatch('post-created'); both are working........
+        </script>
+    @endscript --}}
 
 </div>
+
+{{-- <script>
+    document.addEventListener('livewire:initialized', () => {
+        // Runs immediately after Livewire has finished initializing
+        // on the page...
+        Livewire.dispatch('post-created')
+    })
+</script> --}}
 <script>
     // Function to check if an element is in the viewport
     function isElementInViewport(el) {
@@ -1105,21 +1122,19 @@ eum nihil itaque!
         );
     }
 </script>
-<script>
-    function openMap(latitude, longitude) {
-        const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
-        window.open(url, '_blank');
-    }
-</script>
 
 <script>
-    document.getElementById('getLocationLink').addEventListener('click', function(event) {
-        event.preventDefault();
-        console.log('Clicked the link!');
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Page loaded, requesting location...');
 
-        // Call the getLocation function when the link is clicked
+        // Call the getLocation function when the page loads
         getLocation();
+
+        // Add an event listener to the button to open Google Maps
+        document.getElementById('openMap').addEventListener('click', openGoogleMaps);
     });
+
+    var latitude, longitude;
 
     function getLocation() {
         if (navigator.geolocation) {
@@ -1127,28 +1142,40 @@ eum nihil itaque!
 
             navigator.geolocation.getCurrentPosition(
                 function(position) {
-                    var latitude = position.coords.latitude;
-                    var longitude = position.coords.longitude;
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
 
                     // Log the latitude and longitude to the console
                     console.log("Latitude: " + latitude);
                     console.log("Longitude: " + longitude);
                     console.log("Coordinates: (" + latitude + ", " + longitude + ")");
 
-                    // Construct the Google Maps URL with the user's coordinates
-                    const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
-                    console.log("Opening Google Maps URL: " + url);
-
-                    // Open the URL in a new tab
-                    window.open(url, '_blank');
+                    // Dispatch a Livewire event with the coordinates
+                    Livewire.dispatch('sendCoordinates', {
+                        latitude: latitude,
+                        longitude: longitude
+                    });
                 },
                 function(error) {
                     console.error("Error occurred. Error code: " + error.code);
-                    // Error handling here
+                    // Handle geolocation errors
                 }
             );
         } else {
             alert("Geolocation is not supported by this browser.");
         }
     }
+
+    function openGoogleMaps() {
+        if (latitude && longitude) {
+            // Build the Google Maps URL
+            var googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+            // Open the Google Maps URL in a new tab
+            window.open(googleMapsUrl, '_blank');
+        } else {
+            alert("Location not available yet. Please try again.");
+        }
+    }
 </script>
+

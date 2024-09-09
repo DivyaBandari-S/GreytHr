@@ -103,12 +103,12 @@
     border-radius: 5px;
 }
 .settings-birthday-value{
-    flex: 1; 
-    margin-left: 5px; 
-    font-weight: 500; 
+    flex: 1;
+    margin-left: 5px;
+    font-weight: 500;
     color: #000;
-    white-space: nowrap; 
-    overflow: hidden; 
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
     max-width: 60px;
 }
@@ -981,6 +981,17 @@ button.close-button {
     min-width: 120px;
     margin-bottom: 7px;
 }
+.info-button {
+    background-color: transparent;
+    color: rgb(2, 17, 79);
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: -10px;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+}
 .dropdown-btn {
     background-color: transparent;
     color: #fff;
@@ -1062,10 +1073,33 @@ button.close-button {
 /* end of app.blade */
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
+/*Starting of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
+.container-for-adding-regularisation-entries {
+    width: 530px;
+    height: 195px;
+    /* margin-right: 300px; */
+    background-color: #FFFFFF;
+    margin-top: 15px;
+    /* margin-top: 420px; */
+    border-radius: 10px;
+    /* float: right; */
+    border: 1px solid #ccc;
+    display: block;
+}
+@media  screen and (max-height:320px) {
+    .container-for-adding-regularisation-entries{
+        width: 100%;
+        display: block;
+        height: 195px;
+        margin-top: 15px;
+    }
+}
+
+/*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
 @media screen and (max-height: 320px) {
     .form-group-who-is-in{
-       
+
         margin-right: 70px;
     }
 }
@@ -1233,7 +1267,7 @@ input:checked + .slider:before {
 }
 
 .container-box-for-employee-information-who-is-in {
-    width: 82%;
+    width: 85%;
     display: flex;
     flex-direction: column;
     margin-top: 30px;
@@ -1251,8 +1285,6 @@ input:checked + .slider:before {
     align-items: center;
     background-color: #ffffff;
     flex: 1;
-    padding-right: 19.5px;
-    padding-left: 19.5px;
     border-top: 1px solid #52afe9;
     border-right: 1px solid #52afe9;
 }
@@ -1614,19 +1646,6 @@ input[type="date"]::before {
 .search-icon-employee-swipes::before {
     font-size: 16px;
 }
-@media screen and (max-height:320px){
-   
-    .content-who-is-in{
-        flex-direction: column;
-    }
-    .container-box-for-employee-information-who-is-in{
-        margin-left: 15px;
-    }
-    .form-group-who-is-in{
-        margin-right: 80px;
-        margin-top: 70px;
-    }
-}
 
 .employees-swipe-table-scrollbar {
     overflow-y: scroll;
@@ -1701,6 +1720,28 @@ td {
 }
 .record-not-found-who-is-in {
     text-align: center;
+    font-size: var(--normal-font-size);
+}
+.dropdown-container1-employee-swipes-for-date-type input[type="text"]
+{
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+    font-size: var(--normal-font-size);
+}
+.dropdown-container1-employee-swipes-for-date-type:hover  {
+    display: block;
+}
+.dropdown-container1-employee-swipes-for-date-type{
+    margin-left: 10px;
+    position: relative;
+}
+.dropdown-container1-employee-swipes-for-date-type input[type="date"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 30px;
     font-size: var(--normal-font-size);
 }
 .dropdown-container1-employee-swipes:hover .dropdown-content1-employee-swipes {
@@ -1801,6 +1842,7 @@ td {
 }
 .employee-swipes-checkbox {
     margin-left: -5px;
+    margin-top: -20px;
     height: 10px;
 }
 .employee-swipes-emp-id {
@@ -1835,6 +1877,62 @@ td {
 .swipe-details-description {
     font-size: var(--normal-font-size);
     font-weight: 500;
+}
+.dropdown-container1-employee-swipes-for-search-employee input[type="text"]
+{
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+    font-size: var(--normal-font-size);
+}
+.dropdown-container1-employee-swipes-for-search-employee
+{
+    display: block;
+}
+.dropdown-container1-employee-swipes-for-search-employee
+{
+    margin-left: 10px;
+    position: relative;
+}
+.dropdown-container1-employee-swipes-for-search-employee input[type="date"]
+{
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 30px;
+    font-size: var(--normal-font-size);
+}
+@media screen and (max-height:320px){
+
+    .content-who-is-in{
+        display: flex;
+        flex-direction: column;
+    }
+    .container-box-for-employee-information-who-is-in{
+        margin-left: 15px;
+    }
+    .form-group-who-is-in{
+        margin-right: 80px;
+        margin-top: 70px;
+    }
+    .green-and-white-section-for-employee-swipes
+    {
+        margin-top: 130px;
+        margin-left: 10px;
+    }
+    .employee-swipes-fields
+    {
+        flex-direction: column;
+    }
+    .dropdown-container1-employee-swipes-for-date-type
+    {
+        margin-left: 70px;
+    }
+    .dropdown-container1-employee-swipes-for-search-employee
+    {
+        margin-left: 90px;
+    }
 }
 
 /*ending of attendance submodule:employee swipes(Pranita Priyadarshi)*/
@@ -1947,6 +2045,13 @@ td {
 }
 .Attendance-attendance-muster .table tbody tr td:last-child {
     border-right: none;
+}
+@media  screen and(max-height:320px) {
+    .Attendance
+    {
+        margin-left: 248px;
+        margin-top: -853px;
+    }
 }
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
 
@@ -2571,13 +2676,19 @@ input[type="radio"] {
         width: 100% !important;
         margin: 0 auto;
     }
+    .container-for-adding-regularisation-entries
+    {
+        width:100%;
+    }
     .form-control {
         width: 100%;
     }
     .dropdown {
         width: 30%;
     }
+
 }
+
 .applyingFor {
     color: var(--main-heading-color);
     font-size: 14px;
@@ -3406,6 +3517,12 @@ l
         max-width: 100%;
         overflow-x: auto;
         gap: 20px;
+    }
+    .container-for-adding-regularisation-entries{
+        width: 100%;
+        display: block;
+        height: 195px;
+        margin-top: 15px;
     }
 }
 /* //end of leave-history styles */

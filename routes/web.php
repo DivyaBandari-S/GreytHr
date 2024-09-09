@@ -321,18 +321,15 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
 
     //leave module
-    Route::get('/leave-page', LeavePage::class)->name('leave-page');
     Route::get('/leave-form-page', LeaveFormPage::class)->name('leave-form-page');
     Route::get('/approved-details/{leaveRequestId}', ApprovedDetails::class)->name('approved-details');
     Route::get('/view-details/{leaveRequestId}', ViewDetails::class)->name('view-details');
     Route::get('/view-pending-details', ViewDetails::class)->name('pending-details');
-    Route::get('/leave-apply', LeaveApply::class);
     Route::get('/holiday-calendar', HolidayCalender::class)->name('holiday-calendar');
     Route::get('/leave-balances', LeaveBalances::class)->name('leave-balance');
     Route::get('/leave-balances/casualleavebalance', CasualLeaveBalance::class)->name('casual-leave-balance');
     Route::get('/leave-balances/sickleavebalance', SickLeaveBalances::class)->name('sick-leave-balance');
     Route::get('/leave-balances/casualprobationleavebalance', CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
-    Route::get('/leave-cancel', LeaveCancel::class)->name('lseave-cancel');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
     Route::get('/leave-pending/{leaveRequestId}', LeavePending::class)->name('leave-pending');
@@ -556,4 +553,15 @@ Route::get('/test-odbc-dir', function () {
     } catch (\PDOException $e) {
         return "Error: " . $e->getMessage();
     }
+});
+
+Route::get('/down', function () {
+    Artisan::call('down');
+    return 'Application is now in maintenance mode!';
+});
+
+
+Route::get('/up', function () {
+    Artisan::call('up');
+    return 'Application is now live!';
 });

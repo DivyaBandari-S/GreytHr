@@ -602,7 +602,7 @@
             @else
             <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
                 <img src="/images/pending.png" alt="Pending Image" style="width:50%; margin:0 auto;">
-                <p style="color:#969ea9; font-size:12px; font-weight:400; ">Hey, you have no leave records to view
+                <p class="normalTextValue text-center">Hey, you have no leave records to view
                 </p>
             </div>
             @endif
@@ -610,7 +610,7 @@
             @else
             <div class="leave-pending">
                 <img src="/images/pending.png" alt="Pending Image" style="width:50%; margin:0 auto;">
-                <p style="color:#969ea9; font-size:12px; font-weight:400; ">There are no records of any leave transaction to Review</p>
+                <p class="normalTextValue text-center">There are no records to view</p>
             </div>
 
             @endif

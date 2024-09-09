@@ -30,7 +30,7 @@ use Jenssegers\Agent\Agent;
 use Throwable;
 use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Http;
-
+use Livewire\Attributes\On;
 
 class Home extends Component
 {
@@ -64,6 +64,7 @@ class Home extends Component
     public $salaryRevision;
     public $pieChartData;
     public $absent_employees;
+    public $formattedAddress = [];
 
     public $showAllAbsentEmployees = false;
 
@@ -110,14 +111,13 @@ class Home extends Component
     public $city;
     public $country;
     public $postal_code;
-    public $dataSqlServer;
     public $lon;
     public $lat;
+    public $latitude;
+    public  $longitude;
     public function mount()
     {
         $this->fetchWeather();
-        // $this->fetchSwipeData();
-
         $currentHour = date('G');
 
         if ($currentHour >= 4 && $currentHour < 12) {
@@ -154,91 +154,7 @@ class Home extends Component
             ->count();
     }
 
-    //################################ in local this is working ################################################
-    // public function fetchSwipeData()
-    // {
 
-    //     $currentDate = Carbon::today();
-    //     $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-    //     $month = $currentDate->format('n');
-    //     $year = $currentDate->format('Y');
-
-    //     // Construct the table name for SQL Server
-    //     $tableName = 'DeviceLogs_' . $month . '_' . $year;
-
-    //     $appUserId = Auth::user()->emp_id;  // Dynamically get the authenticated user's ID
-    //     $normalizedUserId = str_replace('-', '', $appUserId); // Remove hyphen only, keep leading zeros
-
-    //     try {
-
-    //         // Get data from SQL Server for the normalized user ID
-    //         $dataSqlServer = DB::connection('sqlsrv')
-    //             ->table($tableName)
-    //             ->select('UserId', 'logDate', 'Direction')
-    //             ->where('UserId', $normalizedUserId)  // Filter by normalized user ID
-    //             ->whereDate('logDate', $today) // Filter for today's date
-    //             ->orderBy('logDate')
-    //             ->get();
-    //         // dd($dataSqlServer);
-    //     } catch (\Exception $e) {
-    //         // Handle the error
-    //         $this->dataSqlServer = collect(); // or handle error as needed
-    //         // Log error or display message
-    //         logger()->error("Data fetch error: " . $e->getMessage());
-    //     }
-    // }
-    //################################ in sever this is working ################################################
-
-    // public function fetchSwipeData()
-    // {
-    //     $currentDate = Carbon::today();
-    //     $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
-    //     $month = $currentDate->format('n');
-    //     $year = $currentDate->format('Y');
-
-    //     $tableName = 'DeviceLogs_' . $month . '_' . $year;
-    //     $appUserId = Auth::user()->emp_id;
-    //     $normalizedUserId = str_replace('-', '', $appUserId);
-
-    //     $dsn = env('DB_ODBC_DSN');
-    //     $username = env('DB_ODBC_USERNAME');
-    //     $password = env('DB_ODBC_PASSWORD');
-
-    //     try {
-    //         $pdo = new \PDO("odbc:{$dsn}", $username, $password);
-    //         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-    //         $sql = "
-    //             SELECT UserId, logDate, Direction
-    //             FROM {$tableName}
-    //             WHERE UserId = :userId
-    //             AND CAST(logDate AS DATE) = :today
-    //             ORDER BY logDate
-    //         ";
-
-    //         $stmt = $pdo->prepare($sql);
-    //         $stmt->bindParam(':userId', $normalizedUserId, \PDO::PARAM_STR);
-    //         $stmt->bindParam(':today', $today, \PDO::PARAM_STR);
-    //         $stmt->execute();
-
-    //         $this->dataSqlServer = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-    //         // Return results
-    //         return $this->dataSqlServer;
-    //     } catch (\PDOException $e) {
-    //         // Handle the error
-    //         $this->dataSqlServer = [];
-    //         logger()->error("PDO error: " . $e->getMessage());
-    //         // Return or handle error result
-    //         return ['error' => 'PDO error: ' . $e->getMessage()];
-    //     } catch (\Exception $e) {
-    //         // General error handling
-    //         $this->dataSqlServer = [];
-    //         logger()->error("General error: " . $e->getMessage());
-    //         // Return or handle error result
-    //         return ['error' => 'General error: ' . $e->getMessage()];
-    //     }
-    // }
 
 
 
@@ -710,7 +626,8 @@ class Home extends Component
                 'totalTasksCount' => $this->totalTasksCount,
                 'taskCount' => $this->taskCount,
                 'employeeNames' => $this->employeeNames,
-                'groupedRequests' => $this->groupedRequests
+                'groupedRequests' => $this->groupedRequests,
+
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
@@ -937,6 +854,82 @@ class Home extends Component
             // dd($response->json());
         } catch (\Exception $e) {
             Log::error("Exception: ", ['message' => $e->getMessage()]);
+        }
+    }
+
+    // public $latitude;
+    // public $longitude;
+    // #[Js]
+    // public function fetcLocationByJS()
+    // {
+    //     return <<<'JS'
+    //         console.log('Calling after loading...');
+    //         if (navigator.geolocation) {
+    //             navigator.geolocation.getCurrentPosition(function(position) {
+    //                 const latitude = position.coords.latitude;
+    //                 const longitude = position.coords.longitude;
+
+    //                 // Send the latitude and longitude back to Livewire using the correct variable names
+    //                 $wire.set('latitude', latitude);
+    //                 $wire.set('longitude', longitude);
+
+    //                 // Optionally alert the user
+    //                 alert('Location fetched: (' + latitude + ', ' + longitude + ')');
+    //             }, function(error) {
+    //                 alert('Error fetching location: ' + error.message);
+    //             });
+    //         } else {
+    //             alert('Geolocation is not supported by this browser.');
+    //         }
+    //     JS;
+    // }
+
+    #[On('post-created')]
+    public function updatePostList()
+    {
+        dd('called');
+    }
+
+    protected $listeners = ['sendCoordinates'];
+
+
+    public function sendCoordinates($latitude, $longitude)
+    {
+        // Log the received coordinates
+        Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+
+        // Build the API URL for reverse geocoding
+        $apiUrl = "https://nominatim.openstreetmap.org/reverse";
+
+        // Call the Nominatim API to get address details
+        try {
+            $response = Http::get($apiUrl, [
+                'lat' => $latitude,
+                'lon' => $longitude,
+                'format' => 'json'
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                // Extract address details
+                $address = $data['address'] ?? [];
+                $this->formattedAddress = [
+                    'village' => $address['village'] ?? '',
+                    'road' => $address['road'] ?? '',
+                    'suburb' => $address['suburb'] ?? '',
+                    'city_district' => $address['city_district'] ?? '',
+                    'city' => $address['city'] ?? '',
+                    'county' => $address['county'] ?? '',
+                    'state' => $address['state'] ?? '',
+                    'postcode' => $address['postcode'] ?? '',
+                    'country' => $address['country'] ?? '',
+                    'country_code' => $address['country_code'] ?? ''
+                ];
+            } else {
+                Log::error("Failed to fetch address. Error: " . $response->body());
+            }
+        } catch (\Exception $e) {
+            Log::error("Error occurred while fetching address: " . $e->getMessage());
         }
     }
 }
