@@ -39,7 +39,6 @@ class ViewPendingDetails extends Component
         //for year selection
         $this->selectedYear = Carbon::now()->format('Y');
         $this->fetchPendingLeaveApplications($this->filter = null);
-        $this->approveLeave($this->index);
     }
     public function hideAlert()
     {
