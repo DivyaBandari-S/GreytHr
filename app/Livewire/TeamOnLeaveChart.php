@@ -24,7 +24,7 @@ class TeamOnLeaveChart extends Component
     public $employeesOnLeave;
     public $chartData;
     public $chartOptions;
-    public $employeeId;
+    public $employeeId,$fromDateFormatted,$toDateFormatted;
     public $duration = 'this_month';
     public $search = '';
     public $leaveTypeFilter ="";
@@ -41,8 +41,19 @@ class TeamOnLeaveChart extends Component
         ];
 
         // Generate labels for the entire month
-        $currentMonth = Carbon::now()->month;
-        $daysInMonth = Carbon::now()->endOfMonth()->day;
+        if($this->duration=='last_month'){
+            $lastMonth = Carbon::now()->subMonth();  // Get the last month
+            $currentMonth = $lastMonth->month;  // Set to last month (e.g., August if now is September)
+            $daysInMonth = $lastMonth->daysInMonth;
+            $this->fromDateFormatted = $lastMonth->startOfMonth()->format('d M, Y');  // First day of last month
+            $this->toDateFormatted = $lastMonth->endOfMonth()->format('d M, Y');
+        }else{
+            $currentMonth = Carbon::now()->month;  // Current month (e.g., September)
+            $daysInMonth = Carbon::now()->daysInMonth;
+            $this->fromDateFormatted = Carbon::now()->startOfMonth()->format('d M, Y');  // First day of the current month
+            $this->toDateFormatted = Carbon::now()->endOfMonth()->format('d M, Y');
+        }
+
         $chartData['labels'] = array_map(function ($day) use ($currentMonth) {
             return Carbon::create()->month($currentMonth)->day($day)->format('M d');
         }, range(1, $daysInMonth));
@@ -138,9 +149,18 @@ class TeamOnLeaveChart extends Component
             // Apply the date filter based on the duration
             if ($this->duration ==='today') {
                 $query->whereDate('from_date', '<=', Carbon::now()->today())
-                  ->whereDate('to_date', '>=', Carbon::now()->today());
+                ->whereDate('to_date', '>=', Carbon::now()->today());
             } else if ($this->duration === 'this_month') {
-                $query->whereMonth('from_date', Carbon::now()->month);
+                $query->where(function ($query) {
+                    $query->whereMonth('from_date', Carbon::now()->month)
+                          ->orWhereMonth('to_date', Carbon::now()->month);
+            });
+
+        }else if($this->duration === 'last_month'){
+                $query->where(function ($query) {
+                    $query->whereMonth('from_date', Carbon::now()->subMonth()->month)
+                          ->orWhereMonth('to_date', Carbon::now()->subMonth()->month);  // Ensure leaves overlapping into last month are included
+                });
             }
 
             if (!empty($this->search)) {
@@ -267,21 +287,9 @@ class TeamOnLeaveChart extends Component
 
     public function updateDuration($value)
     {
-        $this->duration = $value;
 
-        $this->leaveApplications = $this->fetchTodayLeaveApplications();
-        if ($this->leaveApplications == null) {
-            $this->leaveApplications = [];
-        }
+        return redirect()->to("/team-on-leave-chart?duration={$value}");
 
-
-
-        $chartData = $this->prepareChartData($this->leaveApplications);
-
-        $this->chartData = [
-            'labels' => $chartData['labels'],
-            'datasets' => $chartData['datasets'],
-        ];
     }
     public function updateSearch($value)
     {
@@ -299,9 +307,10 @@ class TeamOnLeaveChart extends Component
     public function mount()
     {
         try {
-
+            $this->duration=request()->query('duration')?request()->query('duration'):'this_month';
             $this->leaveApplications = $this->fetchTodayLeaveApplications();
             // dd( $this->leaveApplications);
+
             if ($this->leaveApplications == null) {
                 $this->leaveApplications = [];
             }
