@@ -354,6 +354,7 @@ class HelpDesk extends Component
             // Optionally, you can set an error message to display to the user
             $this->dispatchBrowserEvent('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
         }
+   
     }
 
 
@@ -625,6 +626,7 @@ class HelpDesk extends Component
     public function updatedSelectedPeople()
     {
         $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+     
     }
 
 

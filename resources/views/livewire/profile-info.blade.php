@@ -876,41 +876,56 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h6 class="modal-title">Apply Your Resignation</h6>
+                            <h6 class="modal-title">Apply For Resignation</h6>
                             <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
                                 wire:click="closeModal" style="background-color: white; height:10px;width:10px;">
                             </button>
                         </div>
-                        <form novalidate class="ng-valid ng-touched ng-dirty" wire:submit.prevent="generatePdf">
+
+                        <form wire:submit.prevent="applyForResignation">
                             <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="emp_id">Employee ID</label>
-                                    <input type="text" class="form-control" id="emp_id" name="emp_id" required>
+                                @if ($errors->has('general'))
+                                <div class="alert alert-danger justify-content-center d-flex " wire:poll.1s="hideAlert" style="text-align: center;width: 60%;margin: 0 auto;position: absolute;right: 0;left: 0;top: -5%;">
+                                    {{ $errors->first('general') }}
                                 </div>
-                                <div class="form-group">
-                                    <label for="reason">Reason</label>
-                                    <input type="text" class="form-control" id="reason" name="reason">
+                                @endif
+                                @if (session()->has('success'))
+                                <div class="alert alert-success justify-content-center d-flex" wire:poll.1s="hideAlert" style="text-align: center;width: 60%;margin: 0 auto;position: absolute;right: 0;left: 0;top: -5%;">
+                                    {{ session('success') }}
                                 </div>
-                                <div class="form-group">
+                                @endif
+                                <div class="form-group ">
                                     <label for="resignation_date">Resignation Date</label>
-                                    <input type="date" class="form-control" id="resignation_date" name="resignation_date" required>
+                                    <input type="date" class="form-control placeholder-small" wire:model="resignation_date" wire:keydown.debounce.500ms="validateFields('resignation_date')" id="resignation_date" name="resignation_date"
+                                        min="<?php echo date('Y-m-d'); ?>">
+                                    @error('resignation_date') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
-                                <div class="form-group">
+
+                                <div class="form-group mt-2">
                                     <label for="last_working_day">Last Working Day</label>
-                                    <input type="date" class="form-control" id="last_working_day" name="last_working_day">
+                                    <input type="date" wire:model="last_working_day" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateFields('last_working_day')" id="last_working_day" name="last_working_day" min="<?php echo date('Y-m-d'); ?>">
+                                    @error('last_working_day') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mt-2">
+                                    <label for="reason">Reason</label>
+                                    <input type="text" wire:keydown.debounce.500ms="validateFields('reason')" wire:model.lazy="reason" class="form-control placeholder-small" id="reason" name="reason">
+                                    @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="form-group mt-2 mb-2">
                                     <label for="comments">Comments</label>
-                                    <textarea class="form-control" id="comments" name="comments"></textarea>
+                                    <textarea class="form-control placeholder-small" wire:keydown.debounce.500ms="validateFields('comments')" wire:model.lazy="comments" id="comments" name="comments"></textarea>
+                                    @error('comments') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
-                                <div class="form-group">
-                                    <label for="signature">Signature</label>
-                                    <input type="file" class="form-control-file" id="signature" name="signature">
+                                <div class="form-group mt-2">
+                                    <label for="signature">Signature</label> <br>
+                                    <input type="file" class="form-control-file" wire:keydown.debounce.500ms="validateFields('signature')" wire:model.lazy="signature" id="signature" name="signature" style="font-size:12px;">
+                                    <br>
+                                    @error('signature') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
-                            <div class="modal-footer">
+                            <div class="modal-footer d-flex justify-content-center">
                                 <button type="submit" class="submit-btn">Submit</button>
-                                <button type="button" class="cancel-btn" >Clear</button>
+                                <button type="button" class="cancel-btn" wire:click="resetInputFields" style="border:1px solid rgb(2,17,79);">Clear</button>
                             </div>
                         </form>
                     </div>
@@ -918,8 +933,6 @@
             </div>
             <div class="modal-backdrop fade show"></div>
             @endif
-
-
             {{-- Assets --}}
 
             <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px;display: none;" id="assetsDetails">
@@ -1004,22 +1017,25 @@
             function toggleDetails(sectionId, clickedLink) {
                 const tabs = ['personalDetails', 'accountDetails', 'familyDetails', 'employeeJobDetails', 'assetsDetails'];
 
+                // Remove active class from all links
                 const links = document.querySelectorAll('.custom-nav-link');
                 links.forEach(link => link.classList.remove('active'));
 
+                // Add active class to the clicked link
                 clickedLink.classList.add('active');
 
+                // Toggle tab visibility
                 tabs.forEach(tab => {
                     const tabElement = document.getElementById(tab);
                     if (tabElement) {
-                        if (tab === sectionId) {
-                            tabElement.style.display = 'block';
-                        } else {
-                            tabElement.style.display = 'none';
-                        }
+                        tabElement.style.display = (tab === sectionId) ? 'block' : 'none';
                     }
                 });
             }
 
-            document.getElementById('personalDetails').style.display = 'block';
+            document.getElementById('employeeJobDetails').style.display = 'block';
+            document.addEventListener('DOMContentLoaded', function() {
+                var today = new Date().toISOString().split('T')[0];
+                document.getElementById('resignation_date').setAttribute('min', today);
+            });
         </script>
