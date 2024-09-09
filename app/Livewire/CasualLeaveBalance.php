@@ -107,8 +107,7 @@ class CasualLeaveBalance extends Component
 
     public function changeYear($year)
     {
-
-        return redirect()->to("/casualleavebalance?year={$year}");
+        return redirect()->to("/leave-balances/casualleavebalance?year={$year}");
     }
 
     public function render()

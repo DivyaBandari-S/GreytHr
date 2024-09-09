@@ -34,8 +34,9 @@
 
     <div style="padding:10px 15px; width:80%; margin:0;">
         <label for="duration" class="normalTextValue" style="font-size:0.85rem;">Select Duration:</label>
-        <select class="normalTextValue" id="duration" wire:change="updateDuration($event.target.value)" style="font-size:0.8rem;">
+        <select class="normalTextValue"wire:model='duration' id="duration" wire:change="updateDuration($event.target.value)" style="font-size:0.8rem;">
             <option value="this_month">This Month</option>
+            <option value="last_month">Last Month</option>
             <option value="today">Today</option>
         </select>
     </div>
@@ -44,7 +45,7 @@
         <!-- Other HTML content -->
         <div style="display:flex; flex-direction:row; background:white;padding:10px 15px; border-bottom:1px solid #ccc; gap:10px;">
             <p class="mb-0 normalTextValue" style="font-size: 0.75rem;">Duration Selected:</p>
-            <p class="mb-0 normalText">{{ \Carbon\Carbon::now()->startOfMonth()->format('d M, Y') }} <span style="color:#ccc;margin:0 10px;">TO </span> {{ \Carbon\Carbon::now()->endOfMonth()->format('d M, Y') }}</p>
+            <p class="mb-0 normalText">{{ $fromDateFormatted  }} <span style="color:#ccc;margin:0 10px;">TO </span> {{$toDateFormatted }}</p>
         </div>
 
 
