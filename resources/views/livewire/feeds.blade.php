@@ -5,7 +5,7 @@
 
     @else
     <div class="px-4" style="position: relative;">
-   
+
         @if ($message)
                 <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
                 {{ $message }}
@@ -291,7 +291,7 @@
                             </div>
                             <div id="dropdownContent2" style="font-size: 12px; line-height: 1; text-decoration: none; color:#3b4452; text-align: left; padding-left: 0; display: none;overflow-y:auto;max-height:200px;overflow-x: hidden;">
                                 <ul class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
-                                    <b class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">India</b>
+                                    <a class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight :700;">India</a>
 
                                     @if (Auth::guard('hr')->check())
 
@@ -426,10 +426,10 @@
                                     @endif
                                     @if (Auth::guard('hr')->check())
 
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
+                                    <a class="menu-item"  style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
 
                                     @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight:700">USA</a>
+                                    <a class="menu-item"  style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight:700">USA</a>
                                     @endif
                                     @if (Auth::guard('hr')->check())
 
@@ -506,7 +506,7 @@
                     </div>
                 </div>
 
-                <div class="col m-0" style="max-height: 100vh; overflow-y: auto;scroll-behavior: smooth;">
+                <div class="col m-0" style="height:67vh ; max-height:67vh;overflow-y: auto;scroll-behavior: smooth;">
                     <div class="row align-items-center ">
                         <div class="col-md-5" style=" justify-content: flex-start;display:flex">
                             <div style="width: 2px; height: 40px; background-color: #97E8DF; margin-right: 10px;"></div>

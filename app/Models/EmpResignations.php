@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class EmpResignations extends Model
 {
     use HasFactory;
+    protected $table  =  'emp_resignations';
     protected $fillable = [
         'emp_id',
         'reason',
