@@ -30,7 +30,7 @@ use Jenssegers\Agent\Agent;
 use Throwable;
 use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Http;
-
+use Livewire\Attributes\On;
 
 class Home extends Component
 {
@@ -64,6 +64,7 @@ class Home extends Component
     public $salaryRevision;
     public $pieChartData;
     public $absent_employees;
+    public $formattedAddress = [];
 
     public $showAllAbsentEmployees = false;
 
@@ -112,6 +113,8 @@ class Home extends Component
     public $postal_code;
     public $lon;
     public $lat;
+    public $latitude;
+    public  $longitude;
     public function mount()
     {
         $this->fetchWeather();
@@ -623,7 +626,8 @@ class Home extends Component
                 'totalTasksCount' => $this->totalTasksCount,
                 'taskCount' => $this->taskCount,
                 'employeeNames' => $this->employeeNames,
-                'groupedRequests' => $this->groupedRequests
+                'groupedRequests' => $this->groupedRequests,
+
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
@@ -879,4 +883,53 @@ class Home extends Component
     //         }
     //     JS;
     // }
+
+    #[On('post-created')]
+    public function updatePostList()
+    {
+        dd('called');
+    }
+
+    protected $listeners = ['sendCoordinates'];
+
+
+    public function sendCoordinates($latitude, $longitude)
+    {
+        // Log the received coordinates
+        Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+
+        // Build the API URL for reverse geocoding
+        $apiUrl = "https://nominatim.openstreetmap.org/reverse";
+
+        // Call the Nominatim API to get address details
+        try {
+            $response = Http::get($apiUrl, [
+                'lat' => $latitude,
+                'lon' => $longitude,
+                'format' => 'json'
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                // Extract address details
+                $address = $data['address'] ?? [];
+                $this->formattedAddress = [
+                    'village' => $address['village'] ?? '',
+                    'road' => $address['road'] ?? '',
+                    'suburb' => $address['suburb'] ?? '',
+                    'city_district' => $address['city_district'] ?? '',
+                    'city' => $address['city'] ?? '',
+                    'county' => $address['county'] ?? '',
+                    'state' => $address['state'] ?? '',
+                    'postcode' => $address['postcode'] ?? '',
+                    'country' => $address['country'] ?? '',
+                    'country_code' => $address['country_code'] ?? ''
+                ];
+            } else {
+                Log::error("Failed to fetch address. Error: " . $response->body());
+            }
+        } catch (\Exception $e) {
+            Log::error("Error occurred while fetching address: " . $e->getMessage());
+        }
+    }
 }

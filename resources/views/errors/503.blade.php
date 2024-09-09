@@ -46,7 +46,7 @@
             <div class="col-md-6 d-flex" style="height: 100vh;">
                 <div class="m-auto me-5 ms-5">
                     <h3 class="mb-3">We're experience a technical hiccup!</h3>
-                    <p class="mb-3">Our team is working hard to fix a temporary issue with greytHR platform. We know
+                    <p class="mb-3">Our team is working hard to fix a temporary issue with Hr Xpert platform. We know
                         disruptions can be
                         frustating, and we sincerly apologize for any inconvience.
                     </p>

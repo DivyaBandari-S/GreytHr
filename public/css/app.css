@@ -103,12 +103,12 @@
     border-radius: 5px;
 }
 .settings-birthday-value{
-    flex: 1; 
-    margin-left: 5px; 
-    font-weight: 500; 
+    flex: 1;
+    margin-left: 5px;
+    font-weight: 500;
     color: #000;
-    white-space: nowrap; 
-    overflow: hidden; 
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
     max-width: 60px;
 }
@@ -1099,7 +1099,7 @@ button.close-button {
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
 @media screen and (max-height: 320px) {
     .form-group-who-is-in{
-       
+
         margin-right: 70px;
     }
 }
@@ -1886,11 +1886,11 @@ td {
     width: 200px;
     font-size: var(--normal-font-size);
 }
-.dropdown-container1-employee-swipes-for-search-employee 
+.dropdown-container1-employee-swipes-for-search-employee
 {
     display: block;
 }
-.dropdown-container1-employee-swipes-for-search-employee 
+.dropdown-container1-employee-swipes-for-search-employee
 {
     margin-left: 10px;
     position: relative;
@@ -1904,7 +1904,7 @@ td {
     font-size: var(--normal-font-size);
 }
 @media screen and (max-height:320px){
-   
+
     .content-who-is-in{
         display: flex;
         flex-direction: column;
