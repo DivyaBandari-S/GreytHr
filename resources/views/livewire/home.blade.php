@@ -80,9 +80,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="pt-4"
-                    style="border-radius: 10px; background-color: #02114f; text-align: -webkit-center; position: relative">
-
+                <div class="globe pt-4" >
                     <div class="section-banner">
                         <div id="star-1">
                             <div class="curved-corner-star">
@@ -173,9 +171,8 @@
                                 updateTime();
                                 setInterval(updateTime, 1000);
                             </script>
-                            <div wire:ignore class="A"
-                                style="display: flex;flex-direction:row;justify-content:space-between; align-items:center;margin-top:2em">
-                                <a style="width:50%;font-size:11px;cursor: pointer;color:blue" wire:click="open">View
+                            <div wire:ignore class="A d-flex justify-content-between align-items-center flex-row" style="margin-top:2em">
+                                <a class="viewSwipesList" wire:click="open">View
                                     Swipes</a>
                                 <button wire:ignore id="signButton"
                                     style="color: white; width: 80px; height: 26px;font-size:10px; background-color: rgb(2, 17, 79); border: 1px solid #CFCACA; border-radius: 5px; "
@@ -570,7 +567,6 @@
                 </div>
 
                 <!-- /third row -->
-
                 <div class="who-is-in d-flex flex-column justify-content-start">
                     <p class="mb-2 mt-2 section-name mt-1 payslip-small-desc">
                         On Time ({{ $CountEarlySwipes }})
@@ -631,7 +627,7 @@
                             <canvas id="combinedPieChart" width="100" height="100"></canvas>
                         </div>
                         <div class="c d-flex justify-content-end flex-column">
-                            <p class="payslip-small-desc">{{ date('M Y', strtotime('-1 month')) }}</p>
+                            <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}</p>
                             <p class=" payslip-small-desc align-items-end d-flex justify-content-end flex-column">
                                 {{ date('t', strtotime('-1 month')) }} <br>
                                 <span class="payslip-small-desc">Paid days</span>
@@ -663,8 +659,7 @@
                         </div>
                         </divclas>
 
-                        <div class="show-salary"
-                            style="display: flex; color: #1090D8; justify-content: space-between; font-size: 12px; margin-top: 20px; font-weight: 100;">
+                        <div class="show-salary">
                             <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download PDF</a>
                             <a class="showHideSalary">
                                 Hide Salary
@@ -794,8 +789,6 @@
                         </select>
                     </div>
                 </div>
-
-
                 <div class="row text-center mt-3">
                     <div class="col-4">
                         <h3 class="text-primary mb-1 track-text">{{ $TaskAssignedToCount }}</h3>

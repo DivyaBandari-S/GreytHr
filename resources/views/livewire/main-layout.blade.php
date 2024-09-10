@@ -61,7 +61,7 @@
                     @if($managerId)
                     <li>
                         <a href="/team-on-leave-chart">
-                            @livewire('team-on-leave')
+                            <span>Team on Leave</span>
                         </a>
                     </li>
                     @endif
@@ -74,22 +74,22 @@
                     @if ($managerId)
                     <li>
                         <a href="/whoisinchart">
-                            @livewire('whoisin')
+                        <span>Who is in</span>
                         </a>
                     </li>
                     <li>
                         <a href="/employee-swipes-data">
-                            @livewire('employee-swipes')
+                            <span>Employee Swipes</span>
                         </a>
                     </li>
                     <li>
                         <a href="/attendance-muster-data">
-                            @livewire('attendance-muster')
+                            <span>Attendance Muster</span>
                         </a>
                     </li>
                     <li>
                         <a href="/shift-roaster-data">
-                            @livewire('shift-roaster-submodule')
+                            <span>Shift Roaster</span>
                         </a>
                     </li>
                     @endif
