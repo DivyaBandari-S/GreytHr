@@ -177,7 +177,7 @@
                                 style="display: flex;flex-direction:row;justify-content:space-between; align-items:center;margin-top:2em">
                                 <a style="width:50%;font-size:11px;cursor: pointer;color:blue" wire:click="open">View
                                     Swipes</a>
-                                <button wire:ignore  id="signButton"
+                                <button wire:ignore id="signButton"
                                     style="color: white; width: 80px; height: 26px;font-size:10px; background-color: rgb(2, 17, 79); border: 1px solid #CFCACA; border-radius: 5px; "
                                     wire:click="toggleSignState">
                                     @if ($swipes)
@@ -624,52 +624,53 @@
             </div>
             @endif
             <div class="payslip-card">
-                <p class="payslip-card-title">Payslip</p>
-
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div style="position: relative;">
-                    <canvas id="combinedPieChart" width="100" height="100"></canvas>
-                    </div>
-                    <div class="c"
-                        style="font-size: 12px; font-weight: 500; color: #9E9696; display: flex; flex-direction: column; justify-content: flex-end;">
-                        <p style="color:#333;">{{ date('M Y', strtotime('-1 month')) }}</p>
-                        <p style="display: flex; justify-content: end; flex-direction: column; align-items: end; color: #333;">
-                            {{ date('t', strtotime('-1 month')) }} <br>
-                            <span style="color:#778899;">Paid days</span>
-                        </p>
-                    </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; margin-top: 20px;">
-                    <div class="net-salary">
-                        <div style="display: flex; gap: 10px;">
-                            <div style="padding: 2px; width: 2px; height: 17px; background: #000000; border-radius: 2px;"></div>
-                            <p style="font-size: 11px; margin-bottom: 10px;">Gross Pay</p>
+                <div class="px-3 py-2">
+                    <p class="payslip-card-title">Payslip</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="canvasBorder">
+                            <canvas id="combinedPieChart" width="100" height="100"></canvas>
                         </div>
-                        <p style="font-size: 12px;">₹ 50,000.00</p>
-                    </div>
-                    <div class="net-salary">
-                        <div style="display: flex; gap: 10px;">
-                            <div style="padding: 2px; width: 2px; height: 17px; background: #B9E3C6; border-radius: 2px;"></div>
-                            <p style="font-size: 11px; margin-bottom: 10px;">Deduction</p>
+                        <div class="c d-flex justify-content-end flex-column">
+                            <p class="payslip-small-desc">{{ date('M Y', strtotime('-1 month')) }}</p>
+                            <p class=" payslip-small-desc align-items-end d-flex justify-content-end flex-column">
+                                {{ date('t', strtotime('-1 month')) }} <br>
+                                <span class="payslip-small-desc">Paid days</span>
+                            </p>
                         </div>
-                        <p style="font-size: 12px;">₹ 5,000.00</p>
                     </div>
-                    <div class="net-salary">
-                        <div style="display: flex; gap: 10px;">
-                            <div style="padding: 2px; width: 2px; height: 17px; background: #1C9372; border-radius: 2px;"></div>
-                            <p style="font-size: 11px; margin-bottom: 10px;">Net Pay</p>
-                        </div>
-                        <p style="font-size: 12px;">₹ 45,000.00</p>
-                    </div>
-                </div>
 
-                <div class="show-salary"
-                    style="display: flex; color: #1090D8; justify-content: space-between; font-size: 12px; margin-top: 20px; font-weight: 100;">
-                    <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download PDF</a>
-                    <a class="showHideSalary">
-                        Hide Salary
-                    </a>
+                    <div class="d-flex flex-column mt-3 ">
+                        <div class="net-salary">
+                            <div class="d-flex gap-4">
+                                <div class="grossPay"></div>
+                                <p class="payslip-small-desc">Gross Pay</p>
+                            </div>
+                            <p class="payslip-small-desc">₹ 50,000.00</p>
+                        </div>
+                        <div class="net-salary">
+                            <div class="d-flex gap-4">
+                                <div class="deductionsPay"></div>
+                                <p class="payslip-small-desc">Deduction</p>
+                            </div>
+                            <p class="payslip-small-desc">₹ 5,000.00</p>
+                        </div>
+                        <div class="net-salary">
+                            <div class="d-flex gap-4">
+                                <div class="netPay"></div>
+                                <p class="payslip-small-desc">Net Pay</p>
+                            </div>
+                            <p class="payslip-small-desc">₹ 45,000.00</p>
+                        </div>
+                        </divclas>
+
+                        <div class="show-salary"
+                            style="display: flex; color: #1090D8; justify-content: space-between; font-size: 12px; margin-top: 20px; font-weight: 100;">
+                            <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download PDF</a>
+                            <a class="showHideSalary">
+                                Hide Salary
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1048,38 +1049,37 @@
         );
     }
     // Initial check on page load
-    document.addEventListener('DOMContentLoaded', function () {
-    var ctx = document.getElementById('combinedPieChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Gross Pay', 'Deduction', 'Net Pay'],
-            datasets: [{
-                label: 'Salary Breakdown',
-                data: [50000, 5000, 45000],
-                backgroundColor: ['#000000', '#B9E3C6', '#1C9372'],
-                borderColor: '#fcfcfc', // Set border color for the segments
-                borderWidth: 3, // Normal border width
-                hoverBorderWidth: 5 // Border width on hover
-            }]
-        },
-        options: {
-            responsive: true,
-            cutout: '55%', // Adjust this to increase thickness (lower cutout value for thicker ring)
-            plugins: {
-                legend: {
-                    display: false // Hide labels
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.label + ': ₹ ' + tooltipItem.raw;
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('combinedPieChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Gross Pay', 'Deduction', 'Net Pay'],
+                datasets: [{
+                    label: 'Salary Breakdown',
+                    data: [50000, 5000, 45000],
+                    backgroundColor: ['#000000', '#B9E3C6', '#1C9372'],
+                    borderColor: '#f2f8f9', // Set border color for the segments
+                    borderWidth: 2, // Normal border width
+                    hoverBorderWidth: 3 // Border width on hover
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '55%', // Adjust this to increase thickness (lower cutout value for thicker ring)
+                plugins: {
+                    legend: {
+                        display: false // Hide labels
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ₹ ' + tooltipItem.raw;
+                            }
                         }
                     }
                 }
             }
-        }
+        });
     });
-});
-
 </script>
