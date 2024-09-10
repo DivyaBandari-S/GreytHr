@@ -14,8 +14,5 @@ class EmojiReaction extends Model
     {
         return $this->hasMany(EmojiReaction::class, 'emp_id', 'emp_id');
     }
-    public function getImageUrlAttribute()
-    {
-        return 'data:image/jpeg;base64,' . base64_encode($this->attributes['image']);
-    }
+
 }

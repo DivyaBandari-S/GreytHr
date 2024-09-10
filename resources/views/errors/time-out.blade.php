@@ -28,7 +28,7 @@
             <h6 class="mb-3">Your session has timed out. Please log in again to continue.</h6>
             <div class="text-center">
                 <form action="{{ $loginUrl }}" method="GET">
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #02114f">Login</button>
                 </form>
             </div>
         </div>
