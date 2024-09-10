@@ -168,7 +168,7 @@ class LeaveCalender extends Component
         $this->searchTerm = '';
         $this->selectedLocations = ['All'];
         $this->selectedDepartments = ['All'];
-        $this->loadLeaveTransactions(now()->toDateString(),$this->filterType);
+        $this->loadLeaveTransactions(now()->toDateString(), $this->filterType);
         $this->generateCalendar();
     }
     public function generateCalendar()
@@ -332,23 +332,20 @@ class LeaveCalender extends Component
     }
     public function searchData()
     {
-        $this->loadLeaveTransactions($this->date,$this->filterType);
+        $this->loadLeaveTransactions($this->selectedDate, $this->filterCriteria);
     }
 
-    public function loadLeaveTransactions($date,$filterType)
+
+    public function loadLeaveTransactions($date, $filterType)
     {
         try {
-            // Retrieve the authenticated employee's ID and company ID
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $companyId = auth()->guard('emp')->user()->company_id;
             $dateFormatted = Carbon::parse($date)->format('Y-m-d');
-            $leaveCount = 0; // Initialize leave count variable
-
-            // Apply search term condition
             $searchTerm = '%' . $this->searchTerm . '%';
+            $leaveCount = 0;
 
-            if ($this->filterCriteria === 'Me') {
-                // Query for leave transactions of the logged-in employee
+            if ($filterType === 'Me') {
                 $leaveTransactions = LeaveRequest::with('employee')
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
@@ -362,17 +359,13 @@ class LeaveCalender extends Component
                             });
                     })
                     ->get();
-
                 $leaveCount = $leaveTransactions->count();
                 $this->leaveTransactions = $leaveTransactions;
-            } elseif ($this->filterCriteria === 'MyTeam') {
-                // Retrieve the manager_id and team members
-                $teamMembersIds = EmployeeDetails::where('manager_id', $employeeId)
-                    ->where('company_id', $companyId)
+            } elseif ($filterType === 'MyTeam') {
+                $teamMembersIds = EmployeeDetails::where('company_id', $companyId)
                     ->pluck('emp_id')
                     ->toArray();
 
-                // Query for leave transactions of team members
                 $leaveTransactionsOfTeam = LeaveRequest::with('employee')
                     ->whereIn('emp_id', $teamMembersIds)
                     ->whereDate('from_date', '<=', $dateFormatted)
@@ -392,17 +385,13 @@ class LeaveCalender extends Component
 
             return $leaveCount;
         } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database query exceptions
             Log::error('Database Error: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
-            // Handle other general exceptions
             Log::error('General Error: ' . $e->getMessage());
             session()->flash('error', 'An unexpected error occurred. Please try again later.');
         }
     }
-
-
     protected function getTeamOnLeaveDataForDay($day)
     {
         // Fetch team leave data from your database
@@ -421,20 +410,15 @@ class LeaveCalender extends Component
     {
         try {
             $this->showAccordion = true;
-            $date = (int) $date;
-            $this->selectedDate = Carbon::createFromDate($this->year, $this->month, $date)->format('Y-m-d');
-            $this->loadLeaveTransactions($this->selectedDate, $this->filterType);
+            $this->selectedDate = Carbon::createFromDate($this->year, $this->month, (int)$date)->format('Y-m-d');
+            $this->loadLeaveTransactions($this->selectedDate, $this->filterCriteria);
         } catch (\Exception $e) {
-            // Store the error message in the session
             session()->flash('error', 'An error occurred while processing your request. Please try again later.');
-
-            // Log the error
-            Log::error('An error occurred while processing dateClicked: ' . $e->getMessage());
-
-            // Redirect back to the previous page
+            Log::error('Error in dateClicked: ' . $e->getMessage());
             return redirect()->back();
         }
     }
+
 
 
 

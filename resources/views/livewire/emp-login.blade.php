@@ -1,5 +1,5 @@
 <div class="container-fluid p-0 loginBGGradiant">
-    <div class="m-0 pt-3 row">
+    <div class="m-0 pb-2 pt-3 row">
         <div class="col-md-12" style="text-align: end;">
             <button class="btn btn-primary" wire:click="jobs" style="background-color: rgb(2, 17, 79);color:white;border-radius:5px;border:none">
                 Recruitment</button>
@@ -7,10 +7,9 @@
     </div>
 
 
-    <div class="row m-0">
+    <div class="row m-0 d-felx align-items-center">
         <!-- Left Side (Login Form) -->
         <div class="col-md-6 ">
-
             @if ($showAlert)
             <div class="d-flex justify-content-center w-100" wire:poll.5s='hideAlert'>
 
