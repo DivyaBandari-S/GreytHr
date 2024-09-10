@@ -276,7 +276,7 @@
                     <p class="payslip-card-title">Review</p>
                     @if ($this->count > 0)
                     <div class="notify d-flex justify-content-between">
-                        <p class="payslip-small-desc" style="font-size: 12px; font-weight: 500;">
+                        <p class="payslip-small-desc">
                             {{ $count }} <br>
                             <span class="normalTextValue">Things to review</span>
                         </p>
@@ -307,8 +307,8 @@
                         // Use the first leave request to get employee details
                         $firstLeaveRequest = $leaveRequests[0];
                         if ($firstLeaveRequest && $firstLeaveRequest->employee) {
-                        $firstName = $firstLeaveRequest->employee->first_name;
-                        $lastName = $firstLeaveRequest->employee->last_name;
+                        $firstName = ucwords(strtolower($firstLeaveRequest->employee->first_name));
+                        $lastName = ucwords(strtolower($firstLeaveRequest->employee->last_name));
                         $initials =
                         strtoupper(substr($firstName, 0, 1)) .
                         strtoupper(substr($lastName, 0, 1));
@@ -318,21 +318,24 @@
                         $initials = '?';
                         }
                         @endphp
-                        <div
-                            class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
-                            <div class="thisCircle d-flex align-items-center justify-content-center"
-                                style="border: 2px solid {{ getRandomColor() }}" data-toggle="tooltip"
-                                data-placement="top" title="{{ $firstName }} {{ $lastName }}">
-                                <span>{{ $initials }}</span>
+                        <a href="/employees-review">
+                            <div
+                                class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
+                                <div class="thisCircle d-flex align-items-center justify-content-center"
+                                    style="border: 2px solid {{ getRandomColor() }}" data-toggle="tooltip"
+                                    data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                    <span>{{ $initials }}</span>
+                                </div>
+                                @if ($count > 1)
+                                <span
+                                    class="badge badge-pill badge-info position-absolute translate-middle badge-count">
+                                    {{ $count }}
+                                </span>
+                                @endif
+                                <span class="leaveText">Leave</span>
                             </div>
-                            @if ($count > 1)
-                            <span
-                                class="badge badge-pill badge-info position-absolute translate-middle badge-count">
-                                {{ $count }}
-                            </span>
-                            @endif
-                            <span class="leaveText">Leave</span>
-                        </div>
+                        </a>
+
                         @endforeach
 
                         @if ($totalRequests > 3)
