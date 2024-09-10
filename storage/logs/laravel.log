@@ -1,0 +1,360 @@
+[2024-09-10 10:26:14] local.INFO: Stored session ID:   
+[2024-09-10 10:26:14] local.INFO: Existing session ID: None  
+[2024-09-10 10:26:14] local.INFO: Session updated {"user_id":"XSS-0488","session_id":"HRyZMtRMLxw5b9Mu7RlO5mA4q89ctppqQzxUQtPz","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-10 10:26:14] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlhTSUZUa1RWMlAvenhmMW1YR1hKRXc9PSIsInZhbHVlIjoiVlQ2RWphdHNCc291MERYRnd4WjkzUkVSb1pyK3hvS0ptYXhWOGVid2ppTSt5VnAzcHlabGNIT05Fb1dPeFJOeUVzU2dNbHQvbEtTeTdFYmJad0FoVWpCSlJEYU5WbDRvVFZ0RzVpNVRRZUdnam94RWdicmd0NGZEZTlmWkVUcHgiLCJtYWMiOiJkZDc0ZTNkMWVjYWI0ZDBmYTNiMDVkMDY2YzcxOGIxMDE3ZWUxYTRmY2IyNTEzYWVkYWFjM2YwODE4ZWE0MDQ3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkQzNms2TjhRNkJ2MkNwdk9KUVljZGc9PSIsInZhbHVlIjoieUxlTjArYlM1SG9pU21OVWwyK2F2SzdqRFBIQ3NZTW9KSzVkSGpYYVE3T2M3VUI2cDVJS2ZtbnJiNU5vU1AwY2hKSFNJRVFzeHVVc1Rjd1VuZDE4bUNqWFVsQXU0UXNXSG1pNUppZVJxS0N3QkJvc01mV0plSEMrSGF6MjIwMmgiLCJtYWMiOiIwOGJmMmIwNDgwNzNmMjlhMmQ2NDMwZDNlNGI4ZTE1OTNiM2U0MDU5M2FkNjkzMmJjZmJjMGFjNWJhMmFhMDY0IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=16S1aF03SrK2peiAeh8S5ChpBC5xoIytILzPShL1; laravel_session=HRyZMtRMLxw5b9Mu7RlO5mA4q89ctppqQzxUQtPz
+
+
+
+"}} 
+[2024-09-10 10:26:14] local.INFO: Request URL: https://api.open-meteo.com/v1/forecast?latitude=41.31&longitude=-72.92&current_weather=true  
+[2024-09-10 10:26:16] local.INFO: API Response: {"latitude":41.305393,"longitude":-72.932014,"generationtime_ms":0.10800361633300781,"utc_offset_seconds":0,"timezone":"GMT","timezone_abbreviation":"GMT","elevation":9.0,"current_weather_units":{"time":"iso8601","interval":"seconds","temperature":"°C","windspeed":"km/h","winddirection":"°","is_day":"","weathercode":"wmo code"},"current_weather":{"time":"2024-09-10T04:45","interval":900,"temperature":16.0,"windspeed":8.7,"winddirection":277,"is_day":0,"weathercode":0}} 
+[2024-09-10 10:26:16] local.INFO: API Response Status Code: {"status":200} 
+[2024-09-10 10:26:16] local.INFO: API Response Headers: {"headers":{"Date":["Tue, 10 Sep 2024 04:56:16 GMT"],"Content-Type":["application/json; charset=utf-8"],"Transfer-Encoding":["chunked"],"Connection":["keep-alive"]}} 
+[2024-09-10 10:26:16] local.INFO: API Response Body: {"body":"{\"latitude\":41.305393,\"longitude\":-72.932014,\"generationtime_ms\":0.10800361633300781,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbreviation\":\"GMT\",\"elevation\":9.0,\"current_weather_units\":{\"time\":\"iso8601\",\"interval\":\"seconds\",\"temperature\":\"°C\",\"windspeed\":\"km/h\",\"winddirection\":\"°\",\"is_day\":\"\",\"weathercode\":\"wmo code\"},\"current_weather\":{\"time\":\"2024-09-10T04:45\",\"interval\":900,\"temperature\":16.0,\"windspeed\":8.7,\"winddirection\":277,\"is_day\":0,\"weathercode\":0}}"} 
+[2024-09-10 10:26:21] local.INFO: Received coordinates: Latitude: 17.406498, Longitude: 78.4772439  
+[2024-09-10 10:32:20] local.INFO: Session has timed out  
+[2024-09-10 10:32:55] local.INFO: Stored session ID:   
+[2024-09-10 10:32:55] local.INFO: Existing session ID: None  
+[2024-09-10 10:32:55] local.INFO: Session updated {"user_id":"XSS-0488","session_id":"nHFz8Zvp9EYJAskMwd3t3M1JHG4IlhvdPTksiEps","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-10 10:32:55] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkRSbHFGbFA1UzFTbjVHcVliN3c0WWc9PSIsInZhbHVlIjoicytKeEVlQ2hYVVVNbXdwL2picURZVUtTN01EQ050K1h0ZEhmYmd0cm5oamsxV1hpc1N2WlIrZjdDNm1iSVlhdjlMZFkxZlhRUUlKSG5DM2pwUUxrMGtYZ0Q3Skk0bkZPaTY4UzliVXVmaEJJajJ2TzFJMlBJMnExdTIwZDNTVnkiLCJtYWMiOiJlMmNmOWM5MzFmZjkzODg0MDM1Yjc2YmNjZDZiOThiNWQxMGJkN2NkM2NhNjRjODcyMjdkNDcyNjA4ZWE2ODBiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjlGYU8vUHFBaVlqUDFDTndZVEpKUnc9PSIsInZhbHVlIjoiRVViUmFRZjJ0V2xJcTFEK2luTTdYNzNEdGkwdU5zOTFHUi9IdVducFFjNC9hcStReUU3b09jVDhLQzVUK2dOaTRyMWtMLzJmUVdDMjZySmdWRlM2a1Y5RjVkNXFoTWRBdzRKVzNXa3RJYjZJYWFzYVQ0Szd4WitmS3M5M3Vwb1kiLCJtYWMiOiIzMzM5NGYwOGJkMTVkMWI4YzY2ODRhYTdmMWUxNGNkMzJlMDhmMzNiMzcwMzUyNjY3ZTQ4NjFiMDQ3YjE5ODBjIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=i51GpmzigNTpnUoq3prDpGL8dCjTrrhKo2EAWlVv; laravel_session=nHFz8Zvp9EYJAskMwd3t3M1JHG4IlhvdPTksiEps
+
+
+
+"}} 
+[2024-09-10 10:32:55] local.INFO: Request URL: https://api.open-meteo.com/v1/forecast?latitude=41.31&longitude=-72.92&current_weather=true  
+[2024-09-10 10:32:58] local.INFO: API Response: {"latitude":41.305393,"longitude":-72.932014,"generationtime_ms":0.06902217864990234,"utc_offset_seconds":0,"timezone":"GMT","timezone_abbreviation":"GMT","elevation":9.0,"current_weather_units":{"time":"iso8601","interval":"seconds","temperature":"°C","windspeed":"km/h","winddirection":"°","is_day":"","weathercode":"wmo code"},"current_weather":{"time":"2024-09-10T05:00","interval":900,"temperature":15.9,"windspeed":8.6,"winddirection":270,"is_day":0,"weathercode":0}} 
+[2024-09-10 10:32:58] local.INFO: API Response Status Code: {"status":200} 
+[2024-09-10 10:32:58] local.INFO: API Response Headers: {"headers":{"Date":["Tue, 10 Sep 2024 05:02:57 GMT"],"Content-Type":["application/json; charset=utf-8"],"Transfer-Encoding":["chunked"],"Connection":["keep-alive"]}} 
+[2024-09-10 10:32:58] local.INFO: API Response Body: {"body":"{\"latitude\":41.305393,\"longitude\":-72.932014,\"generationtime_ms\":0.06902217864990234,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbreviation\":\"GMT\",\"elevation\":9.0,\"current_weather_units\":{\"time\":\"iso8601\",\"interval\":\"seconds\",\"temperature\":\"°C\",\"windspeed\":\"km/h\",\"winddirection\":\"°\",\"is_day\":\"\",\"weathercode\":\"wmo code\"},\"current_weather\":{\"time\":\"2024-09-10T05:00\",\"interval\":900,\"temperature\":15.9,\"windspeed\":8.6,\"winddirection\":270,\"is_day\":0,\"weathercode\":0}}"} 
+[2024-09-10 10:33:01] local.INFO: Received coordinates: Latitude: 17.406498, Longitude: 78.4772439  
+[2024-09-10 10:33:36] local.INFO: Session has timed out  
+[2024-09-10 10:33:49] local.INFO: Stored session ID:   
+[2024-09-10 10:33:49] local.INFO: Existing session ID: None  
+[2024-09-10 10:33:49] local.INFO: Session updated {"user_id":"XSS-0488","session_id":"NnuMuZ50SIqJMRZGIsThBJD9smIHSa9Q3qfmPxaj","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-10 10:33:49] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlZNbWphOFRYS0tGK09scEd4M3BLckE9PSIsInZhbHVlIjoiMjZiNEI4RWszUDcwSDB1RFR6NE1IWUpuQnpZTGFvMHVyYkE3bk9HRzVSTnVkaDRwZDN4L0dObkJiNWZDQVdLcWdscFhlbTZGajRtVldKTkFsdWtPTnM5WmVGSStmZDhPbHR5OUFybzdpWjcwczVsYzI5bjltNVdqWHlXVkM4dUYiLCJtYWMiOiJiMmY1MGZlZjAyZjRmZjMwYTY2MDAxOTExMWNmYTQ3YzA1NjJkN2UzZDZlN2NkNmI2YWQ4MThjMGRhOGM2M2Y5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjBvbWpTQVZPOUJPK3JWTDdOdklnN2c9PSIsInZhbHVlIjoiREVkd3RmMHZIYmpOaDdJcGoraCtLOGxRNTlCc3E2di9HeUdZNXRqOXBRVUVEZjhQYk9KRHoyRVpkZ1BGMC9lWFdjZnFMQy9vcGpadUxoMGE1T2Jzc1Z0RlhnRkliTXg2ZzZudEpPOGlzT1RqajUxZUhtOE9OcDdyUXJLcVdESzciLCJtYWMiOiJmMjdkMTNjYTA0NGYwMTY0OWY2MWUxZmQ5MDVjNjk2NTA0ZWRiZWQ3NGRkZWQ2MjJkOTUyMDViMGUxZGY0NzA4IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=njNyuEYSmvZ6DEkcAGW0ppdwB4RX3InuWTMQfJPM; laravel_session=NnuMuZ50SIqJMRZGIsThBJD9smIHSa9Q3qfmPxaj
+
+
+
+"}} 
+[2024-09-10 10:33:49] local.INFO: Request URL: https://api.open-meteo.com/v1/forecast?latitude=41.31&longitude=-72.92&current_weather=true  
+[2024-09-10 10:33:51] local.INFO: API Response: {"latitude":41.305393,"longitude":-72.932014,"generationtime_ms":0.050067901611328125,"utc_offset_seconds":0,"timezone":"GMT","timezone_abbreviation":"GMT","elevation":9.0,"current_weather_units":{"time":"iso8601","interval":"seconds","temperature":"°C","windspeed":"km/h","winddirection":"°","is_day":"","weathercode":"wmo code"},"current_weather":{"time":"2024-09-10T05:00","interval":900,"temperature":15.9,"windspeed":8.6,"winddirection":270,"is_day":0,"weathercode":0}} 
+[2024-09-10 10:33:51] local.INFO: API Response Status Code: {"status":200} 
+[2024-09-10 10:33:51] local.INFO: API Response Headers: {"headers":{"Date":["Tue, 10 Sep 2024 05:03:51 GMT"],"Content-Type":["application/json; charset=utf-8"],"Transfer-Encoding":["chunked"],"Connection":["keep-alive"]}} 
+[2024-09-10 10:33:51] local.INFO: API Response Body: {"body":"{\"latitude\":41.305393,\"longitude\":-72.932014,\"generationtime_ms\":0.050067901611328125,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbreviation\":\"GMT\",\"elevation\":9.0,\"current_weather_units\":{\"time\":\"iso8601\",\"interval\":\"seconds\",\"temperature\":\"°C\",\"windspeed\":\"km/h\",\"winddirection\":\"°\",\"is_day\":\"\",\"weathercode\":\"wmo code\"},\"current_weather\":{\"time\":\"2024-09-10T05:00\",\"interval\":900,\"temperature\":15.9,\"windspeed\":8.6,\"winddirection\":270,\"is_day\":0,\"weathercode\":0}}"} 
+[2024-09-10 10:33:57] local.INFO: Received coordinates: Latitude: 17.416192, Longitude: 78.462976  
+[2024-09-10 10:34:05] local.INFO: Session has timed out  
+[2024-09-10 10:40:44] local.INFO: Stored session ID:   
+[2024-09-10 10:40:44] local.INFO: Existing session ID: None  
+[2024-09-10 10:40:44] local.INFO: Session updated {"user_id":"XSS-0488","session_id":"HbtKT1EKUKB5aK7o6BVCmeNpOfdMk5iaf6j9VWCt","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-10 10:40:44] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImpZcVhocXhOem5jbzZmWWZHSThJK1E9PSIsInZhbHVlIjoidHNsMXdjdTVmejlyRFhVczVhT3hid0ZacWNNZ3pMZU9xdnlFS21xSUpYSjc4Q0gvVEMyOFcvVTZMbnVpTGg0ek1uMWpvdXJ2THdwS0k1WVI3NStVNW9WazdSWWNyVmxPK2Z5RVR5KzNDb3ZuQ2hnbzBwRXZuUGpIeDFNVmpwMFYiLCJtYWMiOiIzZTQ3MjQ5ZDU2ZTI1NWMyOTk1MzU4ODgwOWY5ODUxYTlmMDdlYjc5YThmY2Q3YzdkNDliOGE1MTYyOGFiZmE3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImFPS2RNVmtTdE8rMEZ4WHBWaVpzamc9PSIsInZhbHVlIjoicUtGT2doR1J6czJwTUZoVEJ4dDUxdEdQL1o4cEZBMWhhRVBWTnpjdGtoUy90OEFlSGVhQ0sxckgwaUtURHVteVROcHlqTFdQRzVKUmtVYW1zeFc4bkdYdWk2S3VXblZWajNDZzJIZUxNWGJzVm05aGMzeFFrRGYxVCtQRGJyUUYiLCJtYWMiOiI4NTU3MTIxM2YxM2NkNWQyZWRmZDNiOTE0NTQwOWQxMTJmMGNlYTAyNjBmMWMwY2NjZGIzMmU5YTRmNzVkMmQ4IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=14LJ1wUsXzqIBlh0iVFW3Le74yOkgrpDvr0nrblJ; laravel_session=HbtKT1EKUKB5aK7o6BVCmeNpOfdMk5iaf6j9VWCt
+
+
+
+"}} 
+[2024-09-10 10:40:44] local.INFO: Request URL: https://api.open-meteo.com/v1/forecast?latitude=41.31&longitude=-72.92&current_weather=true  
+[2024-09-10 10:40:46] local.INFO: API Response: {"latitude":41.305393,"longitude":-72.932014,"generationtime_ms":0.08296966552734375,"utc_offset_seconds":0,"timezone":"GMT","timezone_abbreviation":"GMT","elevation":9.0,"current_weather_units":{"time":"iso8601","interval":"seconds","temperature":"°C","windspeed":"km/h","winddirection":"°","is_day":"","weathercode":"wmo code"},"current_weather":{"time":"2024-09-10T05:00","interval":900,"temperature":15.9,"windspeed":8.6,"winddirection":270,"is_day":0,"weathercode":0}} 
+[2024-09-10 10:40:46] local.INFO: API Response Status Code: {"status":200} 
+[2024-09-10 10:40:46] local.INFO: API Response Headers: {"headers":{"Date":["Tue, 10 Sep 2024 05:10:46 GMT"],"Content-Type":["application/json; charset=utf-8"],"Transfer-Encoding":["chunked"],"Connection":["keep-alive"]}} 
+[2024-09-10 10:40:46] local.INFO: API Response Body: {"body":"{\"latitude\":41.305393,\"longitude\":-72.932014,\"generationtime_ms\":0.08296966552734375,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbreviation\":\"GMT\",\"elevation\":9.0,\"current_weather_units\":{\"time\":\"iso8601\",\"interval\":\"seconds\",\"temperature\":\"°C\",\"windspeed\":\"km/h\",\"winddirection\":\"°\",\"is_day\":\"\",\"weathercode\":\"wmo code\"},\"current_weather\":{\"time\":\"2024-09-10T05:00\",\"interval\":900,\"temperature\":15.9,\"windspeed\":8.6,\"winddirection\":270,\"is_day\":0,\"weathercode\":0}}"} 
+[2024-09-10 10:40:50] local.INFO: Received coordinates: Latitude: 17.406498, Longitude: 78.4772439  
+[2024-09-10 10:40:52] local.ERROR: Failed to fetch address. Error: <html>
+<head>
+<title>Access blocked</title>
+</head>
+<body>
+<h1>Access blocked</h1>
+
+<p>You have been blocked because you have violated the
+<a href="https://operations.osmfoundation.org/policies/nominatim/">usage policy</a>
+of OSM's Nominatim geocoding service. Please be aware that OSM's resources are
+limited and shared between many users. The usage policy is there to ensure that
+the service remains usable for everybody.</p>
+
+<p>Please review the terms and make sure that your
+software adheres to the terms. You should in particular verify that you have set a
+<b>custom HTTP referrer or HTTP user agent</b> that identifies your application, and
+that you are not overusing the service with massive bulk requests.</p>
+
+<p>If you feel that this block is unjustified or remains after you have adopted
+your usage, you may contact the Nominatim system administrator at
+nominatim@openstreetmap.org to have this block lifted.</p>
+</body>
+</head>
+  
+[2024-09-10 10:42:05] local.INFO: Session has timed out  
+[2024-09-10 10:42:30] local.INFO: Stored session ID:   
+[2024-09-10 10:42:30] local.INFO: Existing session ID: None  
+[2024-09-10 10:42:30] local.INFO: Session updated {"user_id":"XSS-0488","session_id":"zw87l09IleJSMqbwKrWo8Nig4fINQcNYC40LJf6W","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-10 10:42:30] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkJKSTlCOGdtVUo1dnZEZDZKSWhSVWc9PSIsInZhbHVlIjoiY0dMZnBmL1JVTkl6SUpKRFdLTkVranJoWVdXaytBTGttUkJXTEtjN2p2WXAyZFZTLzduVDBNbkk5RDFIcDhJUS9OdVZkZURMTGVMZ1EvaGJ3Y01SZmw2OVFZalpFRjBuelZjMWZSZXB6eTlkYllGRUw4OXN3SE1XU1dIanNNUmciLCJtYWMiOiI2ODQzMDRhNDBhNDhhMjMyNDI0ZjgyYzk3NDUxMzkwYTM5MjQzYWJkYzVhN2Y1ZGExMTE4YmMwMTdiZWMwZGQyIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjNuQWtOVWFyelBxWVdXUWErTVZOUHc9PSIsInZhbHVlIjoiUFJDNFpuMk1xeVRrdERGU2tnZ2hQM29JMkgyREhPRExwTE5XYmM5OFBDRmFRSmtNUExUOStiZCsxWUtVajV2QUw3VzFMcThVckhsU0QzdkR1c0ZBVENSbUdlOWNjeEgzckRyb2NUc1JydmRjRlRVWklTc0FHVmpPM1RIRVBUUzciLCJtYWMiOiI5NjJjNDY2Y2FlNzRlYmI1OGY5MzNlZDA0NTMxZTMyYTFjMjJiZmYxNTdlNzhjNjQ3Nzc2MWU3MGFhMTY1ZDgxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=zXtSQ4oVlDC3N9HNUVOQj2le5HoyEY2mRWdUwFLG; laravel_session=zw87l09IleJSMqbwKrWo8Nig4fINQcNYC40LJf6W
+
+
+
+"}} 
+[2024-09-10 10:42:30] local.INFO: Request URL: https://api.open-meteo.com/v1/forecast?latitude=41.31&longitude=-72.92&current_weather=true  
+[2024-09-10 10:42:32] local.INFO: API Response: {"latitude":41.305393,"longitude":-72.932014,"generationtime_ms":0.10597705841064453,"utc_offset_seconds":0,"timezone":"GMT","timezone_abbreviation":"GMT","elevation":9.0,"current_weather_units":{"time":"iso8601","interval":"seconds","temperature":"°C","windspeed":"km/h","winddirection":"°","is_day":"","weathercode":"wmo code"},"current_weather":{"time":"2024-09-10T05:00","interval":900,"temperature":15.9,"windspeed":8.6,"winddirection":270,"is_day":0,"weathercode":0}} 
+[2024-09-10 10:42:32] local.INFO: API Response Status Code: {"status":200} 
+[2024-09-10 10:42:32] local.INFO: API Response Headers: {"headers":{"Date":["Tue, 10 Sep 2024 05:12:32 GMT"],"Content-Type":["application/json; charset=utf-8"],"Transfer-Encoding":["chunked"],"Connection":["keep-alive"]}} 
+[2024-09-10 10:42:32] local.INFO: API Response Body: {"body":"{\"latitude\":41.305393,\"longitude\":-72.932014,\"generationtime_ms\":0.10597705841064453,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbreviation\":\"GMT\",\"elevation\":9.0,\"current_weather_units\":{\"time\":\"iso8601\",\"interval\":\"seconds\",\"temperature\":\"°C\",\"windspeed\":\"km/h\",\"winddirection\":\"°\",\"is_day\":\"\",\"weathercode\":\"wmo code\"},\"current_weather\":{\"time\":\"2024-09-10T05:00\",\"interval\":900,\"temperature\":15.9,\"windspeed\":8.6,\"winddirection\":270,\"is_day\":0,\"weathercode\":0}}"} 
+[2024-09-10 10:45:44] local.INFO: Received coordinates: Latitude: 17.416192, Longitude: 78.462976  
+[2024-09-10 10:45:49] local.INFO: Stored session ID: zw87l09IleJSMqbwKrWo8Nig4fINQcNYC40LJf6W  
+[2024-09-10 10:45:50] local.INFO: Existing session ID: None  
+[2024-09-10 10:45:50] local.INFO: Session updated {"user_id":"XSS-0488","session_id":"zw87l09IleJSMqbwKrWo8Nig4fINQcNYC40LJf6W","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-10 10:45:50] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkhHdlRYaXhNWGE4bHIzREFYVGgrcVE9PSIsInZhbHVlIjoiYlo5aVQ4Q0pKVDhWcENNeFY5cllFMmhrbmVGdlNCTGloc3I4Z3JBNnZyUHBSWm9CNkVxd1NldmFTRDBwdS80R01DWks0ZlBpNENMRkdNdjhHczdzeGFuSFphMWtMdHJhSWZaazFtUlR3ZXNranlVWWZjb3h3bGM0cTBwczBjU0EiLCJtYWMiOiI2NTQyYmVjNTlmOWI0OWQ5ZjIwY2U4NWYzNzk1YTQyNDdiOWEzYmM4MDZmYmQyZTY1MzMwZTY3ZDY3YTk2NmQ4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IitwTzRJTDdZTENhVW9SaHp3eDU4SEE9PSIsInZhbHVlIjoicHE1dWMrcjdzS2hKb2t2VUwvd2R0d0EzUUFNTTcyYTJDdjREL2EwWUJKTE5iSlhkVndIdWk3R2RCcURaQVQ2VE1GZjdoeDl5cTgxVWVVWlZUZkhFallwZ0dnVE5RWVhITlMyWVp3bUtydUx5dHdKRGVRdVVNakFuMVJOZ3B4ZVgiLCJtYWMiOiJiOTg0MzEwNDg4ZWRiYjBmNGQ2YWRiM2VlZjY3ODY0MDljZjBhNjMzZDhmNDYwMDMwMmM4NWM1MmU0OGMwNTgxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=zXtSQ4oVlDC3N9HNUVOQj2le5HoyEY2mRWdUwFLG; laravel_session=zw87l09IleJSMqbwKrWo8Nig4fINQcNYC40LJf6W
+
+
+
+"}} 
+[2024-09-10 10:45:50] local.INFO: Request URL: https://api.open-meteo.com/v1/forecast?latitude=41.31&longitude=-72.92&current_weather=true  
+[2024-09-10 10:45:52] local.INFO: API Response: {"latitude":41.305393,"longitude":-72.932014,"generationtime_ms":0.051021575927734375,"utc_offset_seconds":0,"timezone":"GMT","timezone_abbreviation":"GMT","elevation":9.0,"current_weather_units":{"time":"iso8601","interval":"seconds","temperature":"°C","windspeed":"km/h","winddirection":"°","is_day":"","weathercode":"wmo code"},"current_weather":{"time":"2024-09-10T05:15","interval":900,"temperature":15.8,"windspeed":7.6,"winddirection":278,"is_day":0,"weathercode":0}} 
+[2024-09-10 10:45:52] local.INFO: API Response Status Code: {"status":200} 
+[2024-09-10 10:45:52] local.INFO: API Response Headers: {"headers":{"Date":["Tue, 10 Sep 2024 05:15:51 GMT"],"Content-Type":["application/json; charset=utf-8"],"Transfer-Encoding":["chunked"],"Connection":["keep-alive"]}} 
+[2024-09-10 10:45:52] local.INFO: API Response Body: {"body":"{\"latitude\":41.305393,\"longitude\":-72.932014,\"generationtime_ms\":0.051021575927734375,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbreviation\":\"GMT\",\"elevation\":9.0,\"current_weather_units\":{\"time\":\"iso8601\",\"interval\":\"seconds\",\"temperature\":\"°C\",\"windspeed\":\"km/h\",\"winddirection\":\"°\",\"is_day\":\"\",\"weathercode\":\"wmo code\"},\"current_weather\":{\"time\":\"2024-09-10T05:15\",\"interval\":900,\"temperature\":15.8,\"windspeed\":7.6,\"winddirection\":278,\"is_day\":0,\"weathercode\":0}}"} 
+[2024-09-10 10:46:00] local.INFO: Stored session ID: zw87l09IleJSMqbwKrWo8Nig4fINQcNYC40LJf6W  
+[2024-09-10 10:46:00] local.INFO: Existing session ID: None  
+[2024-09-10 10:46:00] local.INFO: Session updated {"user_id":"XSS-0488","session_id":"zw87l09IleJSMqbwKrWo8Nig4fINQcNYC40LJf6W","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-10 10:46:00] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Inkzc0p4NkZSd2NjcFVHV0ZEVmIvNUE9PSIsInZhbHVlIjoiU1BmcEtvcXFLNVloalh3eTBxSENWemVTa1FsNjlzcTlORDZQL2kwZGJJZFhIUE9yRFJyZHZydXJiNkFhK0VoWitpWXpNYU5TMk9iWUNlSFRJV2RMNEFhenpBUGliOTRJVHE0WHo5ay9rcDRwUWk5SWNBby9MVmVXV0hsQ1BTb3UiLCJtYWMiOiI2ZTU1MjBmNmI4NWU2Nzk2NDA3MmVkNmE0Y2NjZDYyZGVkMjFkYjQxZDFmMDRiNDc3NjRlYzQ0YmNhNWNkNzhlIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkcvWWh2ZzMya1RuWmlYOGJMcUlhOFE9PSIsInZhbHVlIjoiMWd4ZEFHZlI2TGF1L2Q1MVVUd1RwcE1EZTgwNFF5Sm9nYWUvbjJJV1hnZUNoaUgrcFBCNVlUM2R1YVRWMDhVUEI3WFBIamFrWVBSNXl0MlhaSmhYdTNYZm5VUHNhNnNDQW8rWW5pSEhjMUJUZDFDelV4QXhFaUFhdW51WkhObHkiLCJtYWMiOiJhZmNkYmI1MmE3NzBiZTJiZmZmZTIyOTIwNzc3YzlkYmJhZDRkNjIyNDdlZTZjNjQ1NjMyODFiYTg0MDcxNTAyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=zXtSQ4oVlDC3N9HNUVOQj2le5HoyEY2mRWdUwFLG; laravel_session=zw87l09IleJSMqbwKrWo8Nig4fINQcNYC40LJf6W
+
+
+
+"}} 
+[2024-09-10 10:46:00] local.INFO: Request URL: https://api.open-meteo.com/v1/forecast?latitude=41.31&longitude=-72.92&current_weather=true  
+[2024-09-10 10:46:02] local.INFO: API Response: {"latitude":41.305393,"longitude":-72.932014,"generationtime_ms":0.08308887481689453,"utc_offset_seconds":0,"timezone":"GMT","timezone_abbreviation":"GMT","elevation":9.0,"current_weather_units":{"time":"iso8601","interval":"seconds","temperature":"°C","windspeed":"km/h","winddirection":"°","is_day":"","weathercode":"wmo code"},"current_weather":{"time":"2024-09-10T05:15","interval":900,"temperature":15.8,"windspeed":7.6,"winddirection":278,"is_day":0,"weathercode":0}} 
+[2024-09-10 10:46:02] local.INFO: API Response Status Code: {"status":200} 
+[2024-09-10 10:46:02] local.INFO: API Response Headers: {"headers":{"Date":["Tue, 10 Sep 2024 05:16:01 GMT"],"Content-Type":["application/json; charset=utf-8"],"Transfer-Encoding":["chunked"],"Connection":["keep-alive"]}} 
+[2024-09-10 10:46:02] local.INFO: API Response Body: {"body":"{\"latitude\":41.305393,\"longitude\":-72.932014,\"generationtime_ms\":0.08308887481689453,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbreviation\":\"GMT\",\"elevation\":9.0,\"current_weather_units\":{\"time\":\"iso8601\",\"interval\":\"seconds\",\"temperature\":\"°C\",\"windspeed\":\"km/h\",\"winddirection\":\"°\",\"is_day\":\"\",\"weathercode\":\"wmo code\"},\"current_weather\":{\"time\":\"2024-09-10T05:15\",\"interval\":900,\"temperature\":15.8,\"windspeed\":7.6,\"winddirection\":278,\"is_day\":0,\"weathercode\":0}}"} 
+[2024-09-10 10:46:18] local.INFO: Received coordinates: Latitude: 17.406498, Longitude: 78.4772439  
+[2024-09-10 11:30:02] local.INFO: Session has timed out  
+[2024-09-10 11:34:55] local.INFO: Session has timed out  
+[2024-09-10 11:35:02] local.INFO: Session has timed out  

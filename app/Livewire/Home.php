@@ -887,7 +887,7 @@ class Home extends Component
     #[On('post-created')]
     public function updatePostList()
     {
-        dd('called');
+        // dd('called');
     }
 
     protected $listeners = ['sendCoordinates'];
