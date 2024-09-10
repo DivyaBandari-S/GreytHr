@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @guest
-        @livewireStyles
         <link rel="icon" type="image/x-icon" href="{{ asset('public/images/hr_expert.png') }}">
         <title>
             HR Strategies Pro
@@ -33,6 +32,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/employee.css?v=' . filemtime(public_path('css/employee.css'))) }}">
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . filemtime(public_path('css/app.css'))) }}">
+    @livewireStyles
 </head>
 
 <body>
@@ -46,7 +46,6 @@
             </main>
         </section>
     @endguest
-    @livewireScripts
     <script src="{{ asset('js/admin-dash.js?v=' . filemtime(public_path('js/admin-dash.js'))) }}"></script>
     <!-- Custom Scripts -->
 
@@ -61,6 +60,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('js/get-location.js') }}"></script>
+    @livewireScripts
 </body>
 
 </html>
