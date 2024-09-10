@@ -208,10 +208,11 @@ class Regularisation extends Component
     }
     public function submitShifts($date)
     {
+        $this->isdatesApplied=false;
         $selectedDate = Carbon::parse($date);
         $selecteddateyear = $selectedDate->year;
         $selecteddatemonth = $selectedDate->month;
-      
+        
         if($selecteddateyear<=(Carbon::today()->year)&&$selecteddatemonth<(Carbon::today()->month))
         {
               // Throw a validation error or set a message for the user
@@ -475,6 +476,7 @@ public function nextMonth()
             'shift_times.*.reason.required' => 'Please enter the reason',
         ]);
         $this->isdatesApplied = true;
+
         $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
         $emp_id = $employeeDetails->emp_id;
         $regularisationEntriesJson = json_encode($this->shift_times);
@@ -498,6 +500,7 @@ public function nextMonth()
         $this->remarks='';
         $regularisationEntriesJson = [];
         $this->regularisationEntries = [];
+        $this->shift_times=[];
     } catch (\Exception $e) {
         // Log the error or handle it as needed
         Log::error('Error in storearraydates method: ' . $e->getMessage());

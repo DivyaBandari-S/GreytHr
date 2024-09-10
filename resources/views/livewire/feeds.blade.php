@@ -1310,18 +1310,28 @@
                         <img src="{{ asset('images/New_team_members_gif.gif') }}" alt="Image Description" style="width: 120px;">
                     </div>
                     <div class="col-md-8 m-auto">
-                        <p style="font-size:12px;color:#778899;font-weight:normal;margin-top:10px;padding-left:10px">
-                            @php
-                            $hireDate = $data['employee']->hire_date;
-                            $yearsSinceHire = date('Y') - date('Y', strtotime($hireDate));
-                            $yearText = $yearsSinceHire == 1 ? 'year' : 'years';
-                            @endphp
+                    @php
+$hireDate = $data['employee']->hire_date;
+$currentDate = date('Y-m-d');
+$hireDateTimestamp = strtotime($hireDate);
+$diffInDays = (strtotime($currentDate) - $hireDateTimestamp) / (60 * 60 * 24);
+$diffInYears = $diffInDays / 365;
+$yearsSinceHire = floor($diffInYears);
+$yearText = $yearsSinceHire == 1 ? 'year' : 'years';
+@endphp
 
-                            Our congratulations to {{ ucwords(strtoupper($data['employee']->first_name)) }}
-                            {{ ucwords(strtoupper($data['employee']->last_name)) }},on completing {{ $yearsSinceHire }} successful {{$yearText}}.
+@if ($yearsSinceHire < 1)
+    <p style="font-size:12px;color:#778899;font-weight:normal;margin-top:10px;padding-left:10px">
+        {{ ucwords(strtoupper($data['employee']->first_name)) }} {{ ucwords(strtoupper($data['employee']->last_name)) }} has joined us in the company on {{ date('d M Y', strtotime($hireDate)) }},
+        Please join us in welcoming our newest team member.
+    </p>
+@else
+    <p style="font-size:12px;color:#778899;font-weight:normal;margin-top:10px;padding-left:10px">
+        Our congratulations to {{ ucwords(strtoupper($data['employee']->first_name)) }} {{ ucwords(strtoupper($data['employee']->last_name)) }},
+        on completing {{ $yearsSinceHire }} successful {{ $yearText }}.
+    </p>
+@endif
 
-
-                        </p>
                         <div style="display: flex; align-items: center;">
                             @if(($data['employee']->image) &&$data['employee']->image !== 'null')
                             <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{$data['employee']->image_url }}" alt="Employee Image">

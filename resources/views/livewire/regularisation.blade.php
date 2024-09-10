@@ -790,7 +790,7 @@
         }
 
         .calendar-date.selected-date {
-            background-color: #f8f8f8;
+            background-color: #e8f6ff;;
             border: 1px solid #24a7f8;
             padding: 10px;
             height: 25px;
@@ -798,6 +798,7 @@
             justify-content: center;
             display: flex;
             margin: 0 auto;
+            margin-top: 5px;
             align-items: center;
         }
 
