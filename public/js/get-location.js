@@ -1,14 +1,20 @@
-document.addEventListener("DOMContentLoaded", function () {
+function initialize() {
     console.log("Page loaded, requesting location...");
 
     // Call the getLocation function when the page loads
     getLocation();
 
-    // Add an event listener to the button to open Google Maps
-    document
-        .getElementById("openMap")
-        .addEventListener("click", openGoogleMaps);
-});
+    // Check if the element exists before adding the event listener
+    var openMapButton = document.getElementById("openMap");
+    if (openMapButton) {
+        openMapButton.addEventListener("click", openGoogleMaps);
+    } else {
+        console.error("Button with ID 'openMap' not found.");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", initialize);
+window.addEventListener("load", initialize);
 
 var latitude, longitude;
 
