@@ -1,6 +1,10 @@
 <div>
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/document">Document Center</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Documents</li>
 
-    <button class="back-button mb-2"><a class="a-back" href="/document">Back</a></button>
+    </ul>
+    <!-- <button class="back-button mb-2"><a class="a-back" href="/document">Back</a></button> -->
     <div class="row m-1 d-flex flex-row">
         <div style="color: rgb(2,17,79);">Forms</div>
         <hr style="width: 40px; text-align: start; border: 2px solid rgb(2, 12, 53); color: blue; margin-top: 5px; border-radius: 5px;">
@@ -18,21 +22,26 @@
                         <div><strong style="color: grey;">General Forms</strong></div>
                     </h6>
                     <hr style="background-color: black; border-color: black; width: 100%; border-radius: 5px; margin: 0;">
-                    <div class="row mt-2 mb-2 confirmation-letterr">
-                        <div onclick="toggleDetails('manualDetails')" class="col-md-6">
+                    <div class="row mt-2 mb-2 confirmation-letterr d-flex"  onclick="toggleDetails('manualDetails')" style="cursor: pointer;" >
+                        <div _ngcontent-etd-c530="" class="card-left " style="width: fit-content;">
+                            <i _ngcontent-etd-c530="" class="fa fa-caret-right"  style="cursor: pointer; font-size: 20px; padding-right:5px"></i>
+                        </div>
+                        <div style="width: fit-content;padding-left:0px">
                             <div class="test m-0" style="font-size:0.8rem">Employee Induction Manual</div>
                             <div style="color: gray;font-size:10px;font-size:0.7rem">Employee Induction Manual</div>
                         </div>
-                        <div class="col-md-6" style="color: gray;text-align:end;font-size:10px">
+                        <div  style="color: gray;font-size:10px;width:fit-content;margin-left:auto;padding-right: 0px;">
                             Last updated on 17 Nov, 2023
                         </div>
-                        <div id="manualDetails" style="display:none;color: gray; font-size: 10px; font-size: 0.7rem;padding:5px">
-                            <button onclick="downloadPdf()" class="emp-manual" style="background-color: white; color: black; border: none; border-radius: 5px; margin-left: 10px; padding: 5px; border: 1px solid lightgrey;">
+
+                    </div>
+                    <div id="manualDetails" style="display:none;color: gray; font-size: 10px; font-size: 0.7rem;padding:5px">
+                            <button  class="emp-manual" style="background-color: white; color: black; border: none; border-radius: 5px; margin-left: 10px; padding: 5px; border: 1px solid lightgrey;">
                                 Employee Induction Manual 1 (2) (1) .pdf
-                                <i class="fas fa-download" style="margin-left: 5px;"></i>
+                                <i class="fas fa-eye" style=" font-size: 16px; margin-left: 10px;cursor: pointer;"></i>
+                                <i class="fas fa-download" onclick="downloadPdf()" style="margin-left: 5px;cursor: pointer;font-size: 16px;"></i>
                             </button>
                         </div>
-                    </div>
                     <script>
                         function downloadPdf() {
                             const pdfPath = '/storage/Employee Induction Manual  1 (2) (1) (1).pdf';
