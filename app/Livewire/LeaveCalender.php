@@ -41,6 +41,7 @@ class LeaveCalender extends Component
     public $showLocations = false;
     public $showDepartment = false;
     public $selectedLocations = [];
+    public $filterType;
     public $selectedDepartments = [];
 
 
@@ -167,7 +168,7 @@ class LeaveCalender extends Component
         $this->searchTerm = '';
         $this->selectedLocations = ['All'];
         $this->selectedDepartments = ['All'];
-        $this->loadLeaveTransactions(now()->toDateString());
+        $this->loadLeaveTransactions(now()->toDateString(),$this->filterType);
         $this->generateCalendar();
     }
     public function generateCalendar()
@@ -244,7 +245,6 @@ class LeaveCalender extends Component
                             'leaveCountMe' => $leaveCountMe,
                             'leaveCountMyTeam' => $leaveCountMyTeam,
                         ];
-
                         $dayCount++;
                     } else {
                         // Add the days of the next month
@@ -332,10 +332,10 @@ class LeaveCalender extends Component
     }
     public function searchData()
     {
-        $this->loadLeaveTransactions($this->date);
+        $this->loadLeaveTransactions($this->date,$this->filterType);
     }
 
-    public function loadLeaveTransactions($date)
+    public function loadLeaveTransactions($date,$filterType)
     {
         try {
             // Retrieve the authenticated employee's ID and company ID
@@ -386,7 +386,6 @@ class LeaveCalender extends Component
                             });
                     })
                     ->get();
-
                 $leaveCount = $leaveTransactionsOfTeam->count();
                 $this->leaveTransactions = $leaveTransactionsOfTeam;
             }
@@ -401,14 +400,6 @@ class LeaveCalender extends Component
             Log::error('General Error: ' . $e->getMessage());
             session()->flash('error', 'An unexpected error occurred. Please try again later.');
         }
-    }
-    public function resetFilter()
-    {
-        $this->reset(['selectedLocations', 'selectedDepartments', 'searchTerm']);
-        $this->loadLeaveTransactions($this->selectedDate); // Update this to pass the selected date
-
-        // Optionally, you can close the sidebar after resetting filters
-        $this->close(); // Assuming you have a method to close the sidebar
     }
 
 
@@ -432,7 +423,7 @@ class LeaveCalender extends Component
             $this->showAccordion = true;
             $date = (int) $date;
             $this->selectedDate = Carbon::createFromDate($this->year, $this->month, $date)->format('Y-m-d');
-            $this->loadLeaveTransactions($this->selectedDate);
+            $this->loadLeaveTransactions($this->selectedDate, $this->filterType);
         } catch (\Exception $e) {
             // Store the error message in the session
             session()->flash('error', 'An error occurred while processing your request. Please try again later.');
