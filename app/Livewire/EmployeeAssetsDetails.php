@@ -128,36 +128,36 @@ class EmployeeAssetsDetails extends Component
 
         return $query;
     }
-    public function downloadExcelForAssetDetails()
-    {
-        // Fetch asset details from the AssetModel table
-        // Get the fields (column names) of the AssetModel table
-        $fields = AssetModel::first()->getAttributes();
+    // public function downloadExcelForAssetDetails()
+    // {
+    //     // Fetch asset details from the AssetModel table
+    //     // Get the fields (column names) of the AssetModel table
+    //     $fields = AssetModel::first()->getAttributes();
 
-        // Prepare data for Excel export
-        $data = [array_keys($fields)]; // Set the headings using the field names
+    //     // Prepare data for Excel export
+    //     $data = [array_keys($fields)]; // Set the headings using the field names
 
-        // Fetch asset details from the AssetModel table
-        $assetDetails = AssetModel::all();
+    //     // Fetch asset details from the AssetModel table
+    //     $assetDetails = AssetModel::all();
 
-        foreach ($assetDetails as $asset) {
-            // Extract values of each field from the model instance
-            $rowData = [];
-            foreach ($fields as $fieldName => $fieldValue) {
-                $rowData[] = $asset->$fieldName;
-            }
-            $data[] = $rowData; // Add row data to the data array
-        }
+    //     foreach ($assetDetails as $asset) {
+    //         // Extract values of each field from the model instance
+    //         $rowData = [];
+    //         foreach ($fields as $fieldName => $fieldValue) {
+    //             $rowData[] = $asset->$fieldName;
+    //         }
+    //         $data[] = $rowData; // Add row data to the data array
+    //     }
 
-        // Specify the file path where the Excel file will be stored
-        $filePath = storage_path('app/asset_details.xlsx');
+    //     // Specify the file path where the Excel file will be stored
+    //     $filePath = storage_path('app/asset_details.xlsx');
 
-        // Create Excel file and add rows
-        SimpleExcelWriter::create($filePath)->addRows($data);
+    //     // Create Excel file and add rows
+    //     SimpleExcelWriter::create($filePath)->addRows($data);
 
-        // Download the Excel file
-        return response()->download($filePath, 'asset_details.xlsx');
-    }
+    //     // Download the Excel file
+    //     return response()->download($filePath, 'asset_details.xlsx');
+    // }
 
     public function resetDateFilters()
     {

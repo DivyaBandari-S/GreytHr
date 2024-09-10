@@ -1,6 +1,6 @@
 <div>
     @if($showAlert)
-    <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.1s="hideAlert" style="font-size: 12px; right: 25%;top:15%;" id="success-alert">
+    <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.1s="hideAlert" style="font-size: 12px; right: 25%;top:13%;" id="success-alert">
         {{ session('message') }}
         <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
             <span>X</span>
@@ -212,7 +212,7 @@
                             @endif
                         </div>
                         <div class="content1">
-                            <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" style="color:#007BFF;font-size:11px;">View Details</a>
+                            <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" class="anchorTagDetails" >View Details</a>
                             @if($leaveRequest['leaveRequest']->category_type === 'Leave')
                             <button class="rejectBtn" wire:click="rejectLeave({{ $loop->index }})">Reject</button>
                             @else

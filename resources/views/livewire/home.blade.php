@@ -173,11 +173,11 @@
                                 updateTime();
                                 setInterval(updateTime, 1000);
                             </script>
-                            <div class="A"
+                            <div wire:ignore class="A"
                                 style="display: flex;flex-direction:row;justify-content:space-between; align-items:center;margin-top:2em">
                                 <a style="width:50%;font-size:11px;cursor: pointer;color:blue" wire:click="open">View
                                     Swipes</a>
-                                <button id="signButton"
+                                <button wire:ignore  id="signButton"
                                     style="color: white; width: 80px; height: 26px;font-size:10px; background-color: rgb(2, 17, 79); border: 1px solid #CFCACA; border-radius: 5px; "
                                     wire:click="toggleSignState">
                                     @if ($swipes)
@@ -276,7 +276,7 @@
                     <p class="payslip-card-title">Review</p>
                     @if ($this->count > 0)
                     <div class="notify d-flex justify-content-between">
-                        <p class="payslip-small-desc" style="font-size: 12px; font-weight: 500;">
+                        <p class="payslip-small-desc">
                             {{ $count }} <br>
                             <span class="normalTextValue">Things to review</span>
                         </p>
@@ -307,8 +307,8 @@
                         // Use the first leave request to get employee details
                         $firstLeaveRequest = $leaveRequests[0];
                         if ($firstLeaveRequest && $firstLeaveRequest->employee) {
-                        $firstName = $firstLeaveRequest->employee->first_name;
-                        $lastName = $firstLeaveRequest->employee->last_name;
+                        $firstName = ucwords(strtolower($firstLeaveRequest->employee->first_name));
+                        $lastName = ucwords(strtolower($firstLeaveRequest->employee->last_name));
                         $initials =
                         strtoupper(substr($firstName, 0, 1)) .
                         strtoupper(substr($lastName, 0, 1));
@@ -318,21 +318,24 @@
                         $initials = '?';
                         }
                         @endphp
-                        <div
-                            class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
-                            <div class="thisCircle d-flex align-items-center justify-content-center"
-                                style="border: 2px solid {{ getRandomColor() }}" data-toggle="tooltip"
-                                data-placement="top" title="{{ $firstName }} {{ $lastName }}">
-                                <span>{{ $initials }}</span>
+                        <a wire:ignore href="/employees-review">
+                            <div
+                                class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
+                                <div class="thisCircle d-flex align-items-center justify-content-center"
+                                    style="border: 2px solid {{ getRandomColor() }}" data-toggle="tooltip"
+                                    data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                    <span>{{ $initials }}</span>
+                                </div>
+                                @if ($count > 1)
+                                <span
+                                    class="badge badge-pill badge-info position-absolute translate-middle badge-count">
+                                    {{ $count }}
+                                </span>
+                                @endif
+                                <span class="leaveText">Leave</span>
                             </div>
-                            @if ($count > 1)
-                            <span
-                                class="badge badge-pill badge-info position-absolute translate-middle badge-count">
-                                {{ $count }}
-                            </span>
-                            @endif
-                            <span class="leaveText">Leave</span>
-                        </div>
+                        </a>
+
                         @endforeach
 
                         @if ($totalRequests > 3)
@@ -623,85 +626,51 @@
             <div class="payslip-card">
                 <p class="payslip-card-title">Payslip</p>
 
-                @if ($salaryRevision->isEmpty())
-                <p class="payslip-small-desc">
-                    We are working on your payslip!
-                </p>
-                @else
-                @foreach ($salaryRevision as $salaries)
-                <div wire:ignore class="d-flex justify-content-between align-items-center mt-3">
+                <div class="d-flex justify-content-between align-items-center mt-3">
                     <div style="position: relative;">
-                        <!-- {{-- <canvas id="outerPieChart" width="120" height="120"></canvas>
-                                                    <canvas id="innerPieChart" width="60" height="60" style="position: absolute; top: 5px;"></canvas> --}} -->
-                        <canvas id="combinedPieChart" width="100" height="100"></canvas>
+                    <canvas id="combinedPieChart" width="100" height="100"></canvas>
                     </div>
                     <div class="c"
-                        style="font-size: 12px; font-weight: normal; font-weight: 500; color: #9E9696;display:flex; flex-direction:column;justify-content:flex-end;">
+                        style="font-size: 12px; font-weight: 500; color: #9E9696; display: flex; flex-direction: column; justify-content: flex-end;">
                         <p style="color:#333;">{{ date('M Y', strtotime('-1 month')) }}</p>
-                        <p
-                            style="display:flex;justify-content:end;flex-direction:column;align-items:end; color:#333;">
+                        <p style="display: flex; justify-content: end; flex-direction: column; align-items: end; color: #333;">
                             {{ date('t', strtotime('-1 month')) }} <br>
                             <span style="color:#778899;">Paid days</span>
                         </p>
                     </div>
                 </div>
 
-                <div style="display:flex ;flex-direction:column; margin-top:20px;  ">
+                <div style="display: flex; flex-direction: column; margin-top: 20px;">
                     <div class="net-salary">
-                        <div style="display:flex;gap:10px;">
-                            <div
-                                style="padding:2px;width:2px;height:17px;background:#000000;border-radius:2px;">
-                            </div>
-                            <p style="font-size:11px;margin-bottom:10px;">Gross Pay</p>
+                        <div style="display: flex; gap: 10px;">
+                            <div style="padding: 2px; width: 2px; height: 17px; background: #000000; border-radius: 2px;"></div>
+                            <p style="font-size: 11px; margin-bottom: 10px;">Gross Pay</p>
                         </div>
-                        <p style="font-size:12px;">
-                            {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalAllowance(), 2) : '*********' }}
-                        </p>
+                        <p style="font-size: 12px;">₹ 50,000.00</p>
                     </div>
                     <div class="net-salary">
-                        <div style="display:flex;gap:10px;">
-                            <div
-                                style="padding:2px;width:2px;height:17px;background:#B9E3C6;border-radius:2px;">
-                            </div>
-                            <p style="font-size:11px;margin-bottom:10px;">Deduction</p>
+                        <div style="display: flex; gap: 10px;">
+                            <div style="padding: 2px; width: 2px; height: 17px; background: #B9E3C6; border-radius: 2px;"></div>
+                            <p style="font-size: 11px; margin-bottom: 10px;">Deduction</p>
                         </div>
-                        <p style="font-size:12px;">
-                            {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalDeductions() ?? 0, 2) : '*********' }}
-                        </p>
-
+                        <p style="font-size: 12px;">₹ 5,000.00</p>
                     </div>
                     <div class="net-salary">
-                        <div style="display:flex;gap:10px;">
-                            <div
-                                style="padding:2px;width:2px;height:17px;background:#1C9372;border-radius:2px;">
-                            </div>
-                            <p style="font-size:11px;margin-bottom:10px;">Net Pay</p>
+                        <div style="display: flex; gap: 10px;">
+                            <div style="padding: 2px; width: 2px; height: 17px; background: #1C9372; border-radius: 2px;"></div>
+                            <p style="font-size: 11px; margin-bottom: 10px;">Net Pay</p>
                         </div>
-                        @if ($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions() > 0)
-                        <p style="font-size:12px;">
-                            {{ $showSalary ? '₹ ' . number_format(max($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions(), 0), 2) : '*********' }}
-                        </p>
-                        @endif
+                        <p style="font-size: 12px;">₹ 45,000.00</p>
                     </div>
                 </div>
 
                 <div class="show-salary"
-                    style="display: flex; color: #1090D8; justify-content:space-between;font-size: 12px;  margin-top: 20px; font-weight: 100;">
-                    <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download"
-                        download>Download PDF</a>
-                    <a wire:click="toggleSalary" class="showHideSalary">
-                        {{ $showSalary ? 'Hide Salary' : 'Show Salary' }}
+                    style="display: flex; color: #1090D8; justify-content: space-between; font-size: 12px; margin-top: 20px; font-weight: 100;">
+                    <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download PDF</a>
+                    <a class="showHideSalary">
+                        Hide Salary
                     </a>
                 </div>
-                @endforeach
-                @endif
-
-                <a href="/slip">
-                    <div class="payslip-go-corner">
-                        <div class="payslip-go-arrow">→</div>
-                    </div>
-                </a>
-
             </div>
         </div>
         <!-- TEAM ON LEAVE -->
@@ -763,14 +732,14 @@
                             <p class="payslip-small-desc">
                                 This month ({{ $upcomingLeaveApplications }}) </p>
                             @if ($upcomingLeaveRequests)
-                            <div wire:ignore class="mt-2 d-flex align-items-center gap-2 mb-3">
+                            <div class="mt-2 d-flex align-items-center gap-2 mb-3">
                                 @foreach ($upcomingLeaveRequests->take(3) as $requests)
                                 @php
                                 $randomColorList =
                                 '#' .
                                 str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0', STR_PAD_LEFT);
                                 @endphp
-                                <div wire:ignore class="d-flex align-items-center">
+                                <div class="d-flex align-items-center">
                                     <div class="thisCircle"
                                         style="border: 1px solid {{ $randomColorList }}">
                                         <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
@@ -1078,60 +1047,39 @@
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Page loaded, requesting location...');
-
-        // Call the getLocation function when the page loads
-        getLocation();
-
-        // Add an event listener to the button to open Google Maps
-        document.getElementById('openMap').addEventListener('click', openGoogleMaps);
-    });
-
-    var latitude, longitude;
-
-    function getLocation() {
-        if (navigator.geolocation) {
-            console.log('Requesting location...');
-
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    latitude = position.coords.latitude;
-                    longitude = position.coords.longitude;
-
-                    // Log the latitude and longitude to the console
-                    console.log("Latitude: " + latitude);
-                    console.log("Longitude: " + longitude);
-                    console.log("Coordinates: (" + latitude + ", " + longitude + ")");
-
-                    // Dispatch a Livewire event with the coordinates
-                    Livewire.dispatch('sendCoordinates', {
-                        latitude: latitude,
-                        longitude: longitude
-                    });
+    // Initial check on page load
+    document.addEventListener('DOMContentLoaded', function () {
+    var ctx = document.getElementById('combinedPieChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Gross Pay', 'Deduction', 'Net Pay'],
+            datasets: [{
+                label: 'Salary Breakdown',
+                data: [50000, 5000, 45000],
+                backgroundColor: ['#000000', '#B9E3C6', '#1C9372'],
+                borderColor: '#fcfcfc', // Set border color for the segments
+                borderWidth: 3, // Normal border width
+                hoverBorderWidth: 5 // Border width on hover
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: '55%', // Adjust this to increase thickness (lower cutout value for thicker ring)
+            plugins: {
+                legend: {
+                    display: false // Hide labels
                 },
-                function(error) {
-                    console.error("Error occurred. Error code: " + error.code);
-                    // Handle geolocation errors
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ₹ ' + tooltipItem.raw;
+                        }
+                    }
                 }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
+            }
         }
-    }
+    });
+});
 
-    function openGoogleMaps() {
-        if (latitude && longitude) {
-            // Build the Google Maps URL
-            var googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-
-            // Open the Google Maps URL in a new tab
-            window.open(googleMapsUrl, '_blank');
-        } else {
-            alert("Location not available yet. Please try again.");
-        }
-    }
 </script>
