@@ -282,7 +282,6 @@
                                     </div>
                                     @endif
                                     @endif
-
                                     <div class="center mb-2 mt-2">
                                         <p class="mb-0 empCcName">{{ ucwords(strtolower($employee['full_name'])) }}</p>
                                         <p class="mb-0 empIdStyle">#{{ $employee['emp_id'] }}</p>
