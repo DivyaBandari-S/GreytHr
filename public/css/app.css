@@ -61,6 +61,8 @@
 }
 .modal-header{
     background-color: rgb(2, 17, 79);
+    color: white;
+    height: 50px;
 }
 
 .swiper-container {
@@ -232,6 +234,27 @@
 .globe{
     border-radius: 10px; background-color: #02114f; text-align: -webkit-center; position: relative;
 }
+.attendanceRegularization{
+    display: block;font-size:10px;color:#778899;text-align:center;overflow: hidden; text-overflow: ellipsis;max-width:30px;white-space:nowrap;
+}
+.leaveNodata{
+    display:flex;justify-content:center;flex-direction:column;align-items:center;
+}
+.quickAccessNoData{
+    text-align: center; background-color: #FFF8F0; padding: 5px 10px; border-radius: 10px; font-size: 8px; font-family: montserrat; bottom: 0; right: 0;
+}
+.btn-closeModal{
+    background-color: white; height:10px;width:10px;
+}
+.smallTextMin{
+    font-size: 10px; font-weight: normal;
+}
+.smallTextMax{
+    font-size: 11px; font-weight: normal;
+}
+.signInButton{
+    color: white; width: 80px; height: 26px;font-size:10px; background-color: rgb(2, 17, 79); border: 1px solid #CFCACA; border-radius: 5px;
+}
 .leaveCustom-btn {
     width: 100px;
     border: 1px solid #058383;
@@ -338,6 +361,40 @@
         box-shadow 0.3s ease;
     border-radius: 5px;
 }
+.swipes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+.swipes-table th {
+    background-color: #e9f5f7;
+    text-align: center;
+    padding: 10px;
+    font-weight: 500;
+    font-size: var(--normal-font-size);
+    border-bottom: 2px solid #ddd;
+}
+
+.swipes-table td {
+    padding: 10px;
+    text-align: center;
+    font-size: var(--normal-font-size);
+    color: var(--main-heading-color);
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s;
+}
+
+.swipes-table tr:hover {
+    background-color: #f1f9fb;
+}
+
+.swipes-table .homeText {
+    padding: 15px;
+    text-align: center;
+    color: #777;
+}
+
 .custom-alert {
     background-color: #a6d9a9;
     width: 35%;
@@ -2787,7 +2844,6 @@ input[type="radio"] {
 }
 .canvasBorder{
     position: relative;border-radius:50%;
-    border: 0.2rem solid #272626;
     padding: 2px 2px;
     display: flex;
     align-items: center;
@@ -3548,6 +3604,15 @@ l
     gap: 0.625rem;
     margin-bottom: 0.3125rem;
 }
+.sickLeaveCircle{
+    width: 20px; height: 20px; border-radius: 50%; background-color: #e6e6fa; display: flex; align-items: center; justify-content: center; margin-left:15px;
+}
+.sickLeaveBal{
+    font-size: 10px; color: #50327c;font-weight:500;
+}
+.sickLeaveValue{
+    font-size: 11px; font-weight: 500; color: #50327c; margin-left: 5px;
+}
 .approveBtn {
     background: rgb(2, 17, 79);
     border: 1px solid rgb(2, 17, 79);
@@ -3556,6 +3621,15 @@ l
     font-size: var(--normal-font-size);
     font-weight: 500;
     border-radius: 5px;
+}
+.approvedStatus{
+    margin-top:0.625rem; font-size: var(--normal-font-size); font-weight: 500; color:#32CD32;
+}
+.rejectedStatus{
+    margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#FF0000;
+}
+.withDrawnStatus{
+    margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#778899;
 }
 .rejectBtn {
     background: #fff;
@@ -5459,8 +5533,9 @@ option {
     /* position: absolute;
     bottom: 10px;
     left: 10px; */
-    padding: 10px 10px 10px 15px;
+    padding: 10px 10px 15px 15px;
     text-align: left;
+    font-size: var(--normal-font-size);
 }
 .track-text {
     font-size: 12px !important;
