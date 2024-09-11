@@ -508,7 +508,7 @@
 
         </div>
     </div>
-    <div class="col m-0" style="max-height: 100vh; overflow-y: auto;scroll-behavior: smooth;">
+    <div class="col m-0" style="height:67vh ; max-height:67vh;overflow-y: auto;scroll-behavior: smooth;">
                     <div class="row align-items-center ">
                         <div class="col-md-5" style=" justify-content: flex-start;display:flex">
                             <div style="width: 2px; height: 40px; background-color: #97E8DF; margin-right: 10px;"></div>
@@ -526,7 +526,7 @@
                     <div id="eventsSection" style=" display: flex; flex-direction: column; align-items: center; justify-content: center; ">
                         @if($posts->isEmpty())
                         <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png" alt="Empty Image" style="width: 300px; height: auto; display: block;">
-                        <p style="font-size:20px;font-weight:500; text-align: center;color:#3b4452">It feels empty here!</p>
+                        <p style="font-size:15px;font-weight:400; text-align: center;color:#3b4452">It feels empty here!</p>
                         <p style="font-size:12px;color:#778899; text-align: center;">Your feed is still in making as there's no post to show.</p>
                         <button style="background-color:rgb(2, 17, 79); width:110px; height:30px; border:1px solid grey; border-radius:5px; color:white;" wire:click="addFeeds">Create Post</button>
 

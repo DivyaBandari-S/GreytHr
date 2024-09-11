@@ -519,8 +519,8 @@
                     @if($isManager)    
                     @if($posts->where('status', 'Pending')->isEmpty())
                         <img src="https://freesvg.org/img/request.png" alt="Empty Image" style="width: 250px; height: auto; display: block;">
-                        <p style="font-size:20px;font-weight:500; text-align: center;color:#3b4452">It feels empty here!</p>
-                        <p style="font-size:12px;color:#778899; text-align: center;">Your feed is still in making as there's no post requeststo show.</p>
+                        <p style="font-size:15px;font-weight:400; text-align: center;color:#3b4452">It feels empty here!</p>
+                        <p style="font-size:12px;color:#778899; text-align: center;">Your feed is still in making as there's no post requests to show.</p>
                   
 
                     </div>
