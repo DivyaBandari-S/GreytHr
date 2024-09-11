@@ -316,11 +316,11 @@
                               </div>
                         </div>
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
-                        <p style="font-size:10px;font-weight:600;">Mail Address:<span style="display:flex;font-weight:500;">{{$s1->email}}</span></p>
-                        <p style="font-size:10px;font-weight:600;">Phone Number:<span style="display:flex;font-weight:500;">{{$s1->mobile_number}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Email&nbsp;ID:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->email}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->mobile_number}}</span></p>
                         <p style="font-size:12px;font-weight:700;">Categories Details</p>
-                        <p style="font-size:10px;font-weight:600;">Designation:<span style="display:flex;font-weight:500;">{{$s1->job_role}}</span></p>
-                        <p style="font-size:10px;font-weight:600;">Location:<span style="display:flex;font-weight:500;">{{$s1->job_location}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Designation:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->job_role}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Location:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->job_location}}</span></p>
                         
                     </div>
                 </td>
@@ -406,7 +406,7 @@
                         </div>
                         <!-- Add more details here -->
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
-                        <p style="font-size:10px;font-weight:600;">Mail Address:<span style="display:flex;font-weight:500;">{{$s1->email}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Email ID:<span style="display:flex;font-weight:500;">{{$s1->email}}</span></p>
                         <p style="font-size:10px;font-weight:600;">Phone Number:<span style="display:flex;font-weight:500;">{{$s1->mobile_number}}</span></p>
                         <p style="font-size:12px;font-weight:700;">Categories Details</p>
                         <p style="font-size:10px;font-weight:600;">Designation:<span style="display:flex;font-weight:500;">{{$s1->job_role}}</span></p>

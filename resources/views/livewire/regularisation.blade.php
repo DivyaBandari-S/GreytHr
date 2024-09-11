@@ -871,6 +871,10 @@
  color: white;
  background-color: rgb(2, 17, 79);
 }
+.next-month-date
+{
+    color: #a3b2c7;;
+}
 .prevMonth:active{
  
  border: 1px solid rgb(2, 17, 79);
@@ -978,13 +982,17 @@ border: 1px solid #778899;
                     @foreach($calendar as $week)
                     <div class="calendar-week">
                         @foreach($week as $day)
-                        <div class="calendar-date {{ $day['isCurrentDate'] ? 'current-date' : '' }} {{ in_array($day['date'], $selectedDates) ? 'selected-date' : '' }}{{ $day['isCurrentMonth'] ? '' : 'other-month-date' }}{{$day['isAfterToday'] ? 'after-today' : '' }}" wire:click="submitShifts('{{ $day['date'] }}')">
-                             {{ $day['day'] }}
-                             @if($day['isRegularised'])
-                                  <div class="down-arrow-reg"></div>
-                             @endif
+                             <div class="calendar-date {{ $day['isCurrentDate'] ? 'current-date' : '' }} 
+                                        {{ in_array($day['date'], $selectedDates) ? 'selected-date' : '' }} 
+                                        {{ $day['isCurrentMonth'] ? '' : ($day['isNextMonth'] ? 'next-month-date' : 'other-month-date') }} 
+                                        {{ $day['isAfterToday'] ? 'after-today' : '' }}" 
+                                                    wire:click="submitShifts('{{ $day['date'] }}')">
+                                                    {{ $day['day'] }}
+                                                    @if($day['isRegularised'])
+                                                        <div class="down-arrow-reg"></div>
+                                                    @endif
+                             </div>
 
-                        </div>
                         @endforeach
                     </div>
                     @endforeach

@@ -322,6 +322,7 @@ class Regularisation extends Component
                             'isRegularised' => false,
                             'isCurrentDate' => false,
                             'isCurrentMonth' => false,
+                            'isNextMonth'=>false,
                             'isPreviousMonth' => true,
                             'isAfterToday' => $previousMonthDays->isAfter($today),
                         ];
@@ -336,12 +337,15 @@ class Regularisation extends Component
                             'isCurrentDate' => $isToday,
                             'isCurrentMonth' => true,
                             'isPreviousMonth' => false,
+                             'isNextMonth'=>false,
                             'isRegularised' => $isregularised,
                             'isAfterToday' => $date->isAfter($today),
                         ];
                         $dayCount++;
                     } else {
-                        $nextMonthDays = Carbon::create($this->year, $this->month, $dayCount - $daysInMonth);
+                        $nextMonth = $this->month % 12 + 1;
+                        $nextYear = $this->year + ($this->month == 12 ? 1 : 0);
+                        $nextMonthDays = Carbon::create($nextYear, $nextMonth, $dayCount - $daysInMonth);
                         $week[] = [
                             'day' => $nextMonthDays->day,
                             'date' => $nextMonthDays->toDateString(),
