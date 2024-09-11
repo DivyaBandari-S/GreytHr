@@ -152,7 +152,7 @@ class WhoIsInChart extends Component
                         ->groupBy('swipe_records.emp_id');
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->join('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
+                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
                 ->select('swipe_records.*', 'employee_details.*', 'emp_personal_infos.mobile_number')
                 ->get();
             $data = [
@@ -218,7 +218,7 @@ class WhoIsInChart extends Component
                         ->groupBy('swipe_records.emp_id');
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->join('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
+                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
                 ->select('swipe_records.*', 'employee_details.*', 'emp_personal_infos.mobile_number')
                 ->get();
             $data = [
@@ -321,7 +321,7 @@ class WhoIsInChart extends Component
                 });
 
                 $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-                ->join('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
+                ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
                 ->select(
                     'employee_details.*',
                     'emp_personal_infos.mobile_number' // Selecting the mobile number from emp_personal_infos
@@ -412,10 +412,7 @@ class WhoIsInChart extends Component
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
         $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status','active')->get();
-        $employees2 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-                    ->join('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join the emp_personal_infos table
-                    ->where('employee_details.employee_status', 'active') // Filter by active status
-                    ->select('employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'emp_personal_infos.mobile_number') // Select the desired fields
+        $employees2 = EmployeeDetails::where('manager_id', $loggedInEmpId)
                     ->count(); // Count the results
 
         if ($this->isdatepickerclicked == 0) {
@@ -424,7 +421,7 @@ class WhoIsInChart extends Component
             $currentDate = $this->from_date;
         }
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-    ->join('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id') // Joining with emp_personal_infos
+    ->leftjoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id') // Joining with emp_personal_infos
     ->where('leave_applications.status', 'approved')
     ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
     ->whereDate('from_date', '<=', $currentDate)
@@ -458,7 +455,7 @@ class WhoIsInChart extends Component
 
 
     $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-    ->join('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id')  // Join with emp_personal_infos
+    ->leftJoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id')  // Join with emp_personal_infos
     ->where('leave_applications.status', 'approved')
     ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
     ->whereDate('leave_applications.from_date', '<=', $currentDate)
@@ -481,23 +478,21 @@ class WhoIsInChart extends Component
             // dd($approvedLeaveRequests1List);
 
             $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-    ->join('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
-    ->select(
-        'employee_details.*',
-        'emp_personal_infos.mobile_number' // Selecting the mobile number from emp_personal_infos
-    )
-    ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
-        $query->select('emp_id')
-            ->from('swipe_records')
-            ->where('manager_id', $loggedInEmpId)
-            ->whereDate('created_at', $currentDate);
-    })
-    ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
-    ->where('employee_details.employee_status', 'active')
-    ->get();
-
-            
-
+            ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Use leftJoin here
+            ->select(
+                'employee_details.*',
+                'emp_personal_infos.mobile_number' // Selecting the mobile number from emp_personal_infos, will be null if no match
+            )
+            ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
+                $query->select('emp_id')
+                    ->from('swipe_records')
+                    ->where('manager_id', $loggedInEmpId)
+                    ->whereDate('created_at', $currentDate);
+            })
+            ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+            ->where('employee_details.employee_status', 'active')
+            ->get();
+        
        
             
             $swipes = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
@@ -509,7 +504,7 @@ class WhoIsInChart extends Component
                     ->groupBy('swipe_records.emp_id');
             })
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->join('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
+            ->leftjoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
             ->select('swipe_records.*', 'employee_details.*', 'emp_personal_infos.mobile_number')
             ->get();
     
@@ -523,7 +518,7 @@ class WhoIsInChart extends Component
                     ->groupBy('swipe_records.emp_id');
             })
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->join('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')  // Join with emp_personal_infos table
+            ->leftjoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')  // Join with emp_personal_infos table
             ->select(
                 'swipe_records.*', 
                 'employee_details.first_name', 
@@ -561,7 +556,7 @@ class WhoIsInChart extends Component
                     ->groupBy('swipe_records.emp_id');
             })
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->join('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Joining emp_personal_infos
+            ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Joining emp_personal_infos
             ->select(
                 'swipe_records.*', 
                 'employee_details.first_name', 
