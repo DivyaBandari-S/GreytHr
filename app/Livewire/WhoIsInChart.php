@@ -230,7 +230,7 @@ class WhoIsInChart extends Component
                 $swipeTime = Carbon::parse($employee->swipe_time);
                 $shiftStartTime = (new DateTime($employee->shift_start_time))->format('H:i');
 
-                $swipeTime1 = Carbon::parse($employee['created_at'])->format('H:i:s');
+                $swipeTime1 = Carbon::parse($employee['CalculateAbsenteescreated_at'])->format('H:i:s');
                 $earlyArrivalTime = $swipeTime->diff(Carbon::parse($shiftStartTime))->format('%H:%I');
                 $isEarlyBy10AM = $swipeTime->format('H:i') < $shiftStartTime;
                 if($isEarlyBy10AM)
@@ -412,7 +412,12 @@ class WhoIsInChart extends Component
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
         $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status','active')->get();
-        $employees2 = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status','active')->count();
+        $employees2 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
+                    ->join('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join the emp_personal_infos table
+                    ->where('employee_details.employee_status', 'active') // Filter by active status
+                    ->select('employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'emp_personal_infos.mobile_number') // Select the desired fields
+                    ->count(); // Count the results
+
         if ($this->isdatepickerclicked == 0) {
             $currentDate = now()->toDateString();
         } else {
