@@ -235,7 +235,7 @@ class WhoIsInChart extends Component
                 $isEarlyBy10AM = $swipeTime->format('H:i') < $shiftStartTime;
                 if($isEarlyBy10AM)
                 {
-                    $data[] = [$employee['emp_id'], ucwords(strtolower($employee['first_name'])).' '. ucwords(strtolower($employee['last_name'])), $swipeTime1, $earlyArrivalTime];
+                    $data[] = [$employee['emp_id'], ucwords(strtolower($employee['first_name'])).' '. ucwords(strtolower($employee['last_name'])), $employee['swipe_time'], $earlyArrivalTime];
                 }
             }
             $filePath = storage_path('app/employees_on_time.xlsx');
