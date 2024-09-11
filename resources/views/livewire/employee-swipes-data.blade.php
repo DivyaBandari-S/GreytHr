@@ -60,14 +60,14 @@
                             <th>In/Out</th>
                             <th>Received&nbsp;On</th>
                             <th>Door/Address</th>
-                            <th>Status</th>
+                            <th>Status{{$notFound}}</th>
                         </tr>
                     </thead>
                     <div>
                     <tbody>
-                    @if($notFound)
-                         <td colspan="12" class="record-not-found-who-is-in">Record not found</td>
-                    @else
+                  
+                         
+                   
     <!-- Display the filtered collection or any other content -->
                         @foreach($SignedInEmployees as $swipe)
         <!-- Display swipe details -->
@@ -104,57 +104,10 @@
                         </tr>
                         @endif
                         @endforeach
-                    @endif
+                   
                     </tbody>
                 </table>
             </div>
-            @if($searchtest == 1)
-            <div class="table-responsive bg-white rounded p-0 m-0">
-                <table class="employee-swipes-table bg-white ">
-                    <thead>
-                        <tr>
-                            <th>Employee&nbsp;Name</th>
-                            <th>Swipe&nbsp;Time&nbsp;&&nbsp;Date</th>
-                            <th>Shift</th>
-                            <th>In/Out</th>
-                            <th>Received&nbsp;On</th>
-                            <th>Door/Address</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <div>
-                    <tbody>
-                    @if($notFound)
-                         <td colspan="12" class="record-not-found-who-is-in">Record not found</td>
-                    @else
-                    <!-- Display the filtered collection or any other content -->
-                        @foreach($SWIPES as $swipe)
-                     <!-- Display swipe details -->
-                       <tr class="employee-swipes-table-container">
-                              <td  class="employee-swipes-name-and-id">
-                              <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" 
-                              wire:click="checkboxClicked('{{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}')">
-
-                                        <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ ucwords(strtolower($swipe->first_name)) }} {{ ucwords(strtolower($swipe->last_name)) }}">
-                                            {{ ucwords(strtolower($swipe->first_name)) }} {{ ucwords(strtolower($swipe->last_name)) }}
-                                        </span>
-
-                                        <br />
-                                               <span class="text-muted employee-swipes-emp-id">#{{$swipe->emp_id}}</span>
-                              </td>
-                              <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date">{{ \Carbon\Carbon::parse($swipe->created_at)->format('d M, Y') }}</span></td>
-                              <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->shift_start_time}} to {{$swipe->shift_end_time}}</td>
-                              <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->in_or_out}}</td>
-                              <td class="employee-swipes-swipe-details-for-signed-employees">{{$swipe->swipe_time}}<br /><span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe->created_at)->format('d M, Y') }}</span></td>
-                              <td class="empty-text">-</td>
-                              <td class="empty-text">-</td>
-                        </tr>
-                        @endforeach
-                    @endif
-                    </tbody>
-                </table>
-            </div>
-            @endif
            </div>
         </div>
         <div class="green-and-white-section-for-employee-swipes col-md-3 p-0 bg-white rounded border">

@@ -261,9 +261,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/regularisation', Regularisation::class)->name('regularisation');
     Route::get('/regularisation-pending/{id}', RegularisationPending::class)->name('regularisation-pending');
     Route::get('/regularisation-history/{id}', RegularisationHistory::class)->name('regularisation-history');
-    Route::get('/employee-swipes', EmployeeSwipes::class)->name('employee-swipes');
     Route::get('/employee-swipes-data', EmployeeSwipesData::class)->name('employee-swipes-data');
-    Route::get('/attendance-muster', AttendanceMuster::class)->name('attendance-muster');
     Route::get('/attendance-muster-data', AttendenceMasterDataNew::class)->name('attendance-muster-data');
     Route::get('/shift-roaster-data', ShiftRoaster::class)->name('shift-roaster-data');
     Route::get('/ProfileInfo', ProfileInfo::class)->name('profile.info');

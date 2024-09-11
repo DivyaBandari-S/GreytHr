@@ -122,22 +122,22 @@ class EmployeeSwipesData extends Component
          $currentDate = now()->toDateString();
          $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
          $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
-         $this->swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
-             $query->selectRaw('MIN(id)')
-                 ->from('swipe_records')
-                 ->whereIn('emp_id', $employees->pluck('emp_id'))
-                 ->whereDate('created_at', $currentDate)
-                 ->groupBy('emp_id');
-         })
-             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-             ->when($this->search, function ($query) {
-                 $query->where(function ($subQuery) {
-                     $subQuery->where('first_name', 'like', '%' . $this->search . '%')
-                         ->orWhere('last_name', 'like', '%' . $this->search . '%');
-                 });
-             })
-             ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
-             ->get();
+        //  $this->swipes = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
+        //      $query->selectRaw('MIN(id)')
+        //          ->from('swipe_records')
+        //          ->whereIn('emp_id', $employees->pluck('emp_id'))
+        //          ->whereDate('created_at', $currentDate)
+        //          ->groupBy('emp_id');
+        //  })
+        //      ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+        //      ->when($this->search, function ($query) {
+        //          $query->where(function ($subQuery) {
+        //              $subQuery->where('first_name', 'like', '%' . $this->search . '%')
+        //                  ->orWhere('last_name', 'like', '%' . $this->search . '%');
+        //          });
+        //      })
+        //      ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+        //      ->get();
          }catch (\Exception $e) {
              // Handle the exception and provide a user-friendly message
              Log::error('Error in test method: ' . $e->getMessage());
@@ -262,84 +262,10 @@ class EmployeeSwipesData extends Component
                 return $leaveRequest;
             });
 
-        if ($this->startDate && $this->endDate) {
-            $this->startDate = Carbon::parse($this->startDate)->toDateString();
-            $this->endDate = Carbon::parse($this->endDate)->toDateString();
-            $managedEmployees = EmployeeDetails::where('manager_id', $userId)->where('employee_status','active')->get();
-        foreach ($managedEmployees as $employee) {
-            $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
-
-            // Fetch the first swipe log for each employee, if it exists
-            $employeeSwipeLog = DB::connection('sqlsrv')
-                ->table($tableName)
-                ->select('UserId', 'logDate', 'Direction')
-                ->where('UserId', $normalizedEmployeeId)
-                ->whereDate('logDate','>=' ,$this->startDate)
-                ->whereDate('logDate','<=' ,$this->endDate)
-                ->orderBy('logDate')
-                ->get(); // Get only the first entry for the day
-               
-            
-            
-            // Add the employee and their swipe log (if any) to the results
-            $swipeData[] = [
-                'employee' => $employee,
-                'swipe_log' => $employeeSwipeLog,
-            ];
-
-        }
-        $this->swipes=$swipeData;
-     
-            
-        } else {
-            $managedEmployees = EmployeeDetails::where('manager_id', $userId)->where('employee_status','active')->get();
-        foreach ($managedEmployees as $employee) {
-            $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
-
-            // Fetch the first swipe log for each employee, if it exists
-            $employeeSwipeLog = DB::connection('sqlsrv')
-                ->table($tableName)
-                ->select('UserId', 'logDate', 'Direction')
-                ->where('UserId', $normalizedEmployeeId)
-                ->whereDate('logDate', $today)
-                ->orderBy('logDate')
-                ->first(); // Get only the first entry for the day
-               
-            
-            
-            // Add the employee and their swipe log (if any) to the results
-            $swipeData[] = [
-                'employee' => $employee,
-                'swipe_log' => $employeeSwipeLog,
-            ];
-
-        }
-        $this->swipes=$swipeData;
-                
-        }
-
-       if($this->searching==1)
-       {
-            $this->swipes = SwipeRecord::select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time')
-            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id')) // Specify swipe_records.emp_id
-            ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id')) // Specify swipe_records.emp_id
-            ->whereDate('swipe_records.created_at', $currentDate)
-            ->orderBy('employee_details.first_name')
-            ->where(function ($query) {
-                $query->where('swipe_records.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('swipe_records.swipe_time', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('swipe_records.in_or_out', 'LIKE', '%' . $this->searchQuery . '%')
-                    ->orWhere('swipe_records.created_at', 'LIKE', '%' . $this->searchQuery . '%');
-                    
-            })
-            ->get();
-       }
-       else
-       {
+       
         $managedEmployees = EmployeeDetails::where('manager_id', $userId)->where('employee_status','active')->get();
+        $employeeIds=EmployeeDetails::where('manager_id', $userId)->pluck('emp_id')->toArray();
+     
         foreach ($managedEmployees as $employee) {
             $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
 
@@ -360,18 +286,18 @@ class EmployeeSwipesData extends Component
                 'swipe_log' => $employeeSwipeLog,
             ];
 
-        }
+        
         $this->swipes=$swipeData;
         
-        // $this->swipes = DB::connection('sqlsrv')
-        // ->table($tableName)
-        // ->select('UserId', 'logDate', 'Direction')
-        // ->whereIn('UserId', $employeeIds)
-        // ->whereDate('logDate', $today)
-        // ->orderBy('logDate')
-        // ->get()
-        // ->unique('UserId')
-        // ->values();
+        $swipes21345 = DB::connection('sqlsrv')
+        ->table($tableName)
+        ->select('UserId', 'logDate', 'Direction')
+        ->whereIn('UserId', $employeeIds)
+        ->whereDate('logDate', $today)
+        ->orderBy('logDate')
+        ->get()
+        ->unique('UserId')
+        ->values();
        
     
       
@@ -389,7 +315,7 @@ class EmployeeSwipesData extends Component
             'LoggedInEmpId1' => $this->loggedInEmpId1,
             'SignedInEmployees' => $this->swipes,
             'SwipeTime' => $this->swipeTime,
-            'SWIPES' => $this->swipes
+            // 'SWIPES' => $this->swipes
         ]);
     } catch (\Exception $e) {
         // Handle the exception (e.g., log it, set a default value, or show an error message)
@@ -402,7 +328,7 @@ class EmployeeSwipesData extends Component
             'LoggedInEmpId1' => $this->loggedInEmpId1,
             'SignedInEmployees' => $this->swipes,
             'SwipeTime' => $this->swipeTime,
-            'SWIPES' => $this->swipes
+            // 'SWIPES' => $this->swipes
         ]);
     }
 }
