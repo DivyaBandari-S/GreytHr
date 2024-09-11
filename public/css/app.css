@@ -1325,13 +1325,13 @@ input:checked + .slider:before {
 }
 .save-selectshift-button-who-is-in {
     background-color: transparent;
-    border: 1px solid #007bff;
-    color: #007bff;
+    border: 1px solid rgb(2, 17, 79);
+    color: rgb(2, 17, 79);
 }
 
 .save-selectshift-button-who-is-in:hover {
-    background-color: #007bff;
-    border: 1px solid #007bff;
+    background-color: rgb(2, 17, 79);
+    border: 1px solid rgb(2, 17, 79);;
     color: white;
 }
 
