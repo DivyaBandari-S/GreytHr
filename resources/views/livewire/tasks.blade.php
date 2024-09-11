@@ -39,7 +39,7 @@
                 <div class="form-inline row task-filter-container">
                     <!-- Search Box -->
                     <div class="input-group task-input-group-container">
-                        <input wire:model="search" type="text" class="form-control task-search-input"
+                        <input wire:input="searchActiveTasks" wire:model="search" type="text" class="form-control task-search-input"
                             placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="searchActiveTasks" class="task-search-btn" type="button">
@@ -211,14 +211,14 @@
                                                                     @endif --}}
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         @if (strpos($record->mime_type, 'image') !== false)
-                                                                            <a href="#" class="task-open-view-img"
+                                                                            <a href="#" class="anchorTagDetails"
                                                                                 wire:click.prevent="showViewFile('{{ $record->id }}')">
                                                                                 View Image
                                                                             </a>
                                                                         @else
                                                                             <a href="{{ route('files.showTask', $record->id) }}"
                                                                                 download="{{ $record->file_name }}"
-                                                                                class="task-open-download-file">
+                                                                                class="anchorTagDetails">
                                                                                 Download file
                                                                             </a>
                                                                         @endif
@@ -255,7 +255,7 @@
                 <div class="form-inline row task-filter-container">
                     <!-- Search Box -->
                     <div class="input-group task-input-group-container">
-                        <input wire:model="closedSearch" type="text" class="form-control task-search-input"
+                        <input wire:input="searchCompletedTasks" wire:model="closedSearch" type="text" class="form-control task-search-input"
                             placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="searchCompletedTasks" class="task-search-btn" type="button">
@@ -431,13 +431,13 @@
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         @if (strpos($record->mime_type, 'image') !== false)
                                                                             <a href="#"
-                                                                                class="task-open-view-img"
+                                                                                class="anchorTagDetails"
                                                                                 wire:click.prevent="showViewFile('{{ $record->id }}')">
                                                                                 View Image
                                                                             </a>
                                                                         @else
                                                                             <a href="{{ route('files.showTask', $record->id) }}"
-                                                                                class="task-open-download-file"
+                                                                                class="anchorTagDetails"
                                                                                 download="{{ $record->file_name }}">
                                                                                 Download file
                                                                             </a>
@@ -517,24 +517,24 @@
                                                     placeholder="Search employee name / Id" aria-label="Search"
                                                     aria-describedby="basic-addon1">
                                                 <div class="input-group-append">
-                                                    <button wire:change="autoValidate" wire:click="filter"
+                                                    <button  wire:click="filter"
                                                         class="task-search-btn" type="button">
                                                         <i class="fa fa-search task-search-icon"></i>
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div wire:change="autoValidate" wire:click="closeAssignee"
+                                            <div wire:click="closeAssignee"
                                                 aria-label="Close">
                                                 <i class="fa fa-times task-modal-close-assignee"
                                                     aria-hidden="true"></i>
                                             </div>
                                         </div>
-                                        @if ($peopleData->isEmpty())
+                                        @if ($peopleAssigneeData->isEmpty())
                                             <div class="container task-modal-no-assignee">No People
                                                 Found
                                             </div>
                                         @else
-                                            @foreach ($peopleData as $people)
+                                            @foreach ($peopleAssigneeData as $people)
                                                 <div wire:click="selectPerson('{{ $people->emp_id }}')"
                                                     class="container task-assignee-people-container">
                                                     <div class="row align-items-center">
@@ -715,12 +715,12 @@
                                     <div class="task-modal-followerlist-container">
                                         <div class="input-group d-flex task-follower-filter-container">
                                             <div class="input-group task-input-group-container task-follower-search-container">
-                                                <input wire:input="filter" wire:model.debounce.0ms="searchTerm"
+                                                <input wire:input="filterFollower" wire:model.debounce.0ms="searchTermFollower"
                                                     type="text" class="form-control task-search-input"
                                                     placeholder="Search employee name / Id" aria-label="Search"
                                                     aria-describedby="basic-addon1">
                                                 <div class="input-group-append">
-                                                    <button wire:change="autoValidate" wire:click="filter"
+                                                    <button wire:change="autoValidate" wire:click="filterFollower"
                                                         class="task-search-btn" type="button">
                                                         <i class="fa fa-search task-search-icon"></i>
                                                     </button>
@@ -732,12 +732,12 @@
                                                     aria-hidden="true"></i>
                                             </div>
                                         </div>
-                                        @if ($peopleData->isEmpty())
+                                        @if ($peopleFollowerData->isEmpty())
                                             <div class="container task-no-follower">No People
                                                 Found
                                             </div>
                                         @else
-                                            @foreach ($peopleData as $people)
+                                            @foreach ($peopleFollowerData as $people)
                                                 <div wire:click="togglePersonSelection('{{ $people->emp_id }}')"
                                                     class="container task-modal-follower-peoples-container">
                                                     <div class="row align-items-center">

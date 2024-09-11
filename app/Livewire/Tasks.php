@@ -22,6 +22,7 @@ class Tasks extends Component
     use WithFileUploads;
     public $status = false;
     public $searchTerm = '';
+    public $searchTermFollower = '';
     public $showDialog = false;
     public $showViewFileDialog = false;
     public $showModal = false;
@@ -236,6 +237,7 @@ class Tasks extends Component
 
     public function forAssignee()
     {
+        $this->searchTerm='';
         $this->assigneeList = true;
     }
     public function closeAssignee()
@@ -245,6 +247,7 @@ class Tasks extends Component
 
     public function forFollowers()
     {
+        $this->searchTermFollower='';        
         $this->followersList = true;
     }
     public function closeFollowers()
@@ -532,6 +535,22 @@ public function updateFollowers()
 
         $this->peopleFound = count($this->filteredPeoples) > 0;
     }
+    public $filteredFollowers;
+    public function filterFollower()
+    {
+        $companyId = Auth::user()->company_id;
+
+        $trimmedSearchTerm = trim($this->searchTermFollower);
+
+        $this->filteredFollowers = EmployeeDetails::where('company_id', $companyId)
+            ->where(function ($query) use ($trimmedSearchTerm) {
+                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
+                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+            })
+            ->get();
+
+        $this->peopleFound = count($this->filteredFollowers) > 0;
+    }
     public function openAddCommentModal($taskId)
     {
         $this->taskId = $taskId;
@@ -686,7 +705,8 @@ public function updateFollowers()
             ->orderBy('last_name')
             ->get();
 
-        $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+        $peopleAssigneeData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+        $peopleFollowerData = $this->filteredFollowers ? $this->filteredFollowers : $this->peoples;
 
         $this->record = Task::all();
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
@@ -699,7 +719,8 @@ public function updateFollowers()
             ->get();
         $searchData = $this->filterData ?: $this->records;
         return view('livewire.tasks', [
-            'peopleData' => $peopleData,
+            'peopleAssigneeData' => $peopleAssigneeData,
+            'peopleFollowerData' => $peopleFollowerData,
             'searchData' => $searchData,
             'taskComments' => $this->taskComments,
         ]);

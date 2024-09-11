@@ -595,6 +595,9 @@ body {
     margin-right: 20px;
     cursor: pointer;
 }
+input[type="radio"] {
+    accent-color: #888; 
+}
 
 .priority-circle {
     width: 20px;
