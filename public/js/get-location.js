@@ -1,20 +1,19 @@
-function initialize() {
+document.addEventListener("DOMContentLoaded", function () {
     console.log("Page loaded, requesting location...");
 
     // Call the getLocation function when the page loads
     getLocation();
 
-    // Check if the element exists before adding the event listener
-    var openMapButton = document.getElementById("openMap");
-    if (openMapButton) {
-        openMapButton.addEventListener("click", openGoogleMaps);
-    } else {
-        console.error("Button with ID 'openMap' not found.");
-    }
-}
+    // Check if the openMapIcon exists before adding the event listener
+    var openMapIcon = document.getElementById("openMapIcon");
 
-document.addEventListener("DOMContentLoaded", initialize);
-window.addEventListener("load", initialize);
+    if (openMapIcon) {
+        // Add event listener only if the element exists
+        openMapIcon.addEventListener("click", openMap);
+    } else {
+        console.log("Element with ID 'openMapIcon' not found on this page.");
+    }
+});
 
 var latitude, longitude;
 
@@ -27,12 +26,9 @@ function getLocation() {
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
 
-                // Log the latitude and longitude to the console
                 console.log("Latitude: " + latitude);
                 console.log("Longitude: " + longitude);
-                console.log(
-                    "Coordinates: (" + latitude + ", " + longitude + ")"
-                );
+                console.log("Coordinates: (" + latitude + ", " + longitude + ")");
 
                 // Dispatch a Livewire event with the coordinates
                 Livewire.dispatch("sendCoordinates", {
@@ -42,7 +38,6 @@ function getLocation() {
             },
             function (error) {
                 console.error("Error occurred. Error code: " + error.code);
-                // Handle geolocation errors
             }
         );
     } else {
@@ -50,12 +45,9 @@ function getLocation() {
     }
 }
 
-function openGoogleMaps() {
+function openMap() {
     if (latitude && longitude) {
-        // Build the Google Maps URL
         var googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-
-        // Open the Google Maps URL in a new tab
         window.open(googleMapsUrl, "_blank");
     } else {
         alert("Location not available yet. Please try again.");
