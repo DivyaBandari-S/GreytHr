@@ -8,8 +8,8 @@
         </a>
     </div>
     <div>
-        <div class="nav-link" onclick="window.location.href='{{ url('/users') }}'">
-            <i class='fas fa-comment-dots icon' style="cursor:pointer;"></i>
+        <div class="nav-link" onclick="window.location.href='{{ url('/users');}}'">
+            <i class='fas fa-comment-dots icon notifications-pointer '></i>
             @if ($chatNotificationCount > 0)
             <span class="badge">
                 {{ $chatNotificationCount }}
@@ -17,7 +17,7 @@
             @endif
         </div>
     </div>
-    <div class="offcanvas offcanvas-end notification-detail-container " style="width: 300px;" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas offcanvas-end notification-detail-container "  tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header d-flex justify-content-between align-items-center">
             <h6 id="offcanvasRightLabel" class="offcanvasRightLabel">Notifications <span class="lableCount" id="notificationCount">
                     ({{$totalnotificationscount}})</span> </h6>
@@ -44,8 +44,8 @@
                         <p class="mb-0 notification-text-para"> Has assigned 10+ tasks to you.</p>
                         @else
                         <p class="mb-0 notification-text-para">Has assigned task to you. </p>
-                        <div style="display: flex; justify-content:end">
-                           <p style="margin-bottom: 0px;font-size:xx-small;color: #535f6b;">{{$notification->notify_time}}</p>
+                        <div class="notify-time" >
+                           <p class="notify-time-para" >{{$notification->notify_time}}</p>
                         </div>
                     @endif
                 </div>
@@ -65,8 +65,8 @@
                         <p class="mb-0 notification-text-para"> Sent 10+ leave requests.</p>
                         @else
                         <p class="mb-0 notification-text-para"> Sent a leave request.</p>
-                        <div style="display: flex; justify-content:end">
-                           <p style="margin-bottom: 0px;font-size:xx-small;color: #535f6b;">{{$notification->notify_time}}</p>
+                        <div class="notify-time" >
+                           <p class="notify-time-para" >{{$notification->notify_time}}</p>
                         </div>
                      @endif
                 </div>
@@ -86,8 +86,8 @@
                         <p class="mb-0 notification-text-para"> Sent 10+ leave cancel requests.</p>
                         @else
                         <p class="mb-0 notification-text-para"> Sent a leave cancel request.</p>
-                        <div style="display: flex; justify-content:end">
-                           <p style="margin-bottom: 0px;font-size:xx-small;color: #535f6b;">{{$notification->notify_time}}</p>
+                        <div class="notify-time" >
+                           <p class="notify-time-para" >{{$notification->notify_time}}</p>
                         </div>
                      @endif
                 </div>
@@ -110,8 +110,8 @@
                     <p class="mb-0 notification-text-para"> sent a message.</p>
                     @endif
 
-                    <div style="display: flex; justify-content:end">
-                        <p style="margin-bottom: 0px;font-size:xx-small;color: #535f6b;">{{$notification->notify_time}}</p>
+                    <div class="notify-time" >
+                        <p class="notify-time-para" >{{$notification->notify_time}}</p>
                     </div>
             </div>
 
