@@ -1330,7 +1330,16 @@ input:checked + .slider:before {
     border: 1px solid #ccc;
     /* Border style for the container */
 }
+.container5-who-is-in-absent
+{
+    background-color: #ffffff;
+    margin-top: 30px;
 
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width:230px;
+    margin-left: -18px;
+}
 .container5-who-is-in {
     /* Adjust the width as needed */
 
