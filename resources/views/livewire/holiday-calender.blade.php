@@ -55,29 +55,4 @@
             @endif
         </div>
     </div>
-    <div style="text-align: center; margin: 30px auto;">
-        @if($selectedYear == $nextYear && $calendarData->where('year', $nextYear)->isEmpty())
-        <div class="bg-white rounded border p-3" style="margin: 50px auto; width:80%;">
-            <p style="font-size: 16px; color: #721c24; font-weight: bold;">It’s lonely here!</p>
-            <p style="font-size: 12px; color:#778899;">HR department is yet to publish the holiday list for the year {{ $nextYear }}, check again later.</p>
-        </div>
-        @endif
-    </div>
-
-
-    <script>
-        $(document).ready(function() {
-            // Initially, show the calendar for the selected year
-            var selectedYear = $("#yearSelect").val();
-            $("#calendar" + selectedYear).show();
-
-            $("#yearSelect").change(function() {
-                var selectedYear = $(this).val();
-                // Hide all calendars
-                $(".hol-container").hide();
-                // Show the calendar based on the selected year
-                $("#calendar" + selectedYear).show();
-            });
-        });
-    </script>
 </div>

@@ -75,14 +75,10 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="pt-4"
-                    style="border-radius: 10px; background-color: #02114f; text-align: -webkit-center; position: relative">
-
+                <div class="globe pt-4">
                     <div class="section-banner">
                         <div id="star-1">
                             <div class="curved-corner-star">
@@ -133,7 +129,7 @@
                     <div class="homeCard4">
                         <div class="p-3">
                             <p class="payslip-card-title ">{{ $currentDate }}</p>
-                            <p style="margin-top: 10px; font-size: 11px;">
+                            <p class="normalText mt-2">
                                 @php
                                 // Fetch shift times
                                 $EmployeeStartshiftTime = $employeeShiftDetails->shift_start_time;
@@ -173,12 +169,11 @@
                                 updateTime();
                                 setInterval(updateTime, 1000);
                             </script>
-                            <div class="A"
-                                style="display: flex;flex-direction:row;justify-content:space-between; align-items:center;margin-top:2em">
-                                <a style="width:50%;font-size:11px;cursor: pointer;color:blue" wire:click="open">View
+                            <div  class="A d-flex justify-content-between align-items-center flex-row" style="margin-top:2em">
+                                <a class="viewSwipesList" wire:click="open">View
                                     Swipes</a>
                                 <button id="signButton"
-                                    style="color: white; width: 80px; height: 26px;font-size:10px; background-color: rgb(2, 17, 79); border: 1px solid #CFCACA; border-radius: 5px; "
+                                    class="signInButton"
                                     wire:click="toggleSignState">
                                     @if ($swipes)
                                     @if ($swipes->in_or_out == 'OUT')
@@ -211,14 +206,11 @@
                             @foreach ($calendarData as $entry)
                             @if (!empty($entry->festivals))
                             <div>
-                                <p class="payslip-small-desc mt-3" style=" font-size:0.75rem;">
-                                    <span
-                                        style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }}
-                                        <span
-                                            style="font-size: 10px; font-weight: normal;">{{ date('l', strtotime($entry->date)) }}</span></span>
+                                <p class="payslip-small-desc mt-3">
+                                    <span class="payslip-small-desc" style="font-weight:500;">{{ date('d M', strtotime($entry->date)) }}
+                                        <span class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
                                     <br>
-                                    <span
-                                        style="font-size: 11px; font-weight: normal;">{{ ucfirst($entry->festivals) }}</span>
+                                    <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
                                 </p>
                             </div>
                             @php
@@ -276,7 +268,7 @@
                     <p class="payslip-card-title">Review</p>
                     @if ($this->count > 0)
                     <div class="notify d-flex justify-content-between">
-                        <p class="payslip-small-desc" style="font-size: 12px; font-weight: 500;">
+                        <p class="payslip-small-desc">
                             {{ $count }} <br>
                             <span class="normalTextValue">Things to review</span>
                         </p>
@@ -307,8 +299,8 @@
                         // Use the first leave request to get employee details
                         $firstLeaveRequest = $leaveRequests[0];
                         if ($firstLeaveRequest && $firstLeaveRequest->employee) {
-                        $firstName = $firstLeaveRequest->employee->first_name;
-                        $lastName = $firstLeaveRequest->employee->last_name;
+                        $firstName = ucwords(strtolower($firstLeaveRequest->employee->first_name));
+                        $lastName = ucwords(strtolower($firstLeaveRequest->employee->last_name));
                         $initials =
                         strtoupper(substr($firstName, 0, 1)) .
                         strtoupper(substr($lastName, 0, 1));
@@ -318,26 +310,28 @@
                         $initials = '?';
                         }
                         @endphp
-                        <div
-                            class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
-                            <div class="thisCircle d-flex align-items-center justify-content-center"
-                                style="border: 2px solid {{ getRandomColor() }}" data-toggle="tooltip"
-                                data-placement="top" title="{{ $firstName }} {{ $lastName }}">
-                                <span>{{ $initials }}</span>
+                        <a  href="/employees-review">
+                            <div
+                                class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
+                                <div class="thisCircle d-flex align-items-center justify-content-center"
+                                    style="border: 2px solid {{ getRandomColor() }}" data-toggle="tooltip"
+                                    data-placement="top" title="{{ $firstName }} {{ $lastName }}">
+                                    <span>{{ $initials }}</span>
+                                </div>
+                                @if ($count > 1)
+                                <span
+                                    class="badge badge-pill badge-info position-absolute translate-middle badge-count">
+                                    {{ $count }}
+                                </span>
+                                @endif
+                                <span class="leaveText">Leave</span>
                             </div>
-                            @if ($count > 1)
-                            <span
-                                class="badge badge-pill badge-info position-absolute translate-middle badge-count">
-                                {{ $count }}
-                            </span>
-                            @endif
-                            <span class="leaveText">Leave</span>
-                        </div>
+                        </a>
+
                         @endforeach
 
                         @if ($totalRequests > 3)
-                        <div
-                            class="remainContent d-flex flex-column justify-content-center align-items-center">
+                        <div class="remainContent d-flex flex-column justify-content-center align-items-center">
                             <a href="#" wire:click="reviewLeaveAndAttendance">
                                 <span>+{{ $totalRequests - 3 }}</span>
                                 <p class="mb-0" style="margin-top:-5px;">More</p>
@@ -362,13 +356,12 @@
                 <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
                                     <b>Review</b>
                                 </h5>
-                                <button type="button" class="btn-close btn-primary" aria-label="Close"
-                                    wire:click="closereviewLeaveAndAttendance"
-                                    style="background-color: white; height:10px;width:10px;">
+                                <button type="button" class="btn-closeModal btn-primary" aria-label="Close"
+                                    wire:click="closereviewLeaveAndAttendance">
                                 </button>
                             </div>
                             <div class="modal-body">
@@ -432,8 +425,7 @@
                                             title="{{ $firstName }} {{ $lastName }}">
                                             <span>{{ $initials }}</span>
                                         </div>
-                                        <span
-                                            style="display: block;font-size:10px;color:#778899;text-align:center;overflow: hidden; text-overflow: ellipsis;max-width:30px;white-space:nowrap;">Attendance
+                                        <span class="attendanceRegularization">Attendance
                                             Regularisation</span>
                                 </div>
 
@@ -567,7 +559,6 @@
                 </div>
 
                 <!-- /third row -->
-
                 <div class="who-is-in d-flex flex-column justify-content-start">
                     <p class="mb-2 mt-2 section-name mt-1 payslip-small-desc">
                         On Time ({{ $CountEarlySwipes }})
@@ -621,87 +612,53 @@
             </div>
             @endif
             <div class="payslip-card">
-                <p class="payslip-card-title">Payslip</p>
-
-                @if ($salaryRevision->isEmpty())
-                <p class="payslip-small-desc">
-                    We are working on your payslip!
-                </p>
-                @else
-                @foreach ($salaryRevision as $salaries)
-                <div wire:ignore class="d-flex justify-content-between align-items-center mt-3">
-                    <div style="position: relative;">
-                        <!-- {{-- <canvas id="outerPieChart" width="120" height="120"></canvas>
-                                                    <canvas id="innerPieChart" width="60" height="60" style="position: absolute; top: 5px;"></canvas> --}} -->
-                        <canvas id="combinedPieChart" width="100" height="100"></canvas>
+                <div class="px-3 py-2">
+                    <p class="payslip-card-title">Payslip</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="canvasBorder">
+                            <canvas id="combinedPieChart" width="100" height="100"></canvas>
+                        </div>
+                        <div class="c d-flex justify-content-end flex-column">
+                            <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}</p>
+                            <p class=" payslip-small-desc align-items-end d-flex justify-content-end flex-column">
+                                {{ date('t', strtotime('-1 month')) }} <br>
+                                <span class="payslip-small-desc">Paid days</span>
+                            </p>
+                        </div>
                     </div>
-                    <div class="c"
-                        style="font-size: 12px; font-weight: normal; font-weight: 500; color: #9E9696;display:flex; flex-direction:column;justify-content:flex-end;">
-                        <p style="color:#333;">{{ date('M Y', strtotime('-1 month')) }}</p>
-                        <p
-                            style="display:flex;justify-content:end;flex-direction:column;align-items:end; color:#333;">
-                            {{ date('t', strtotime('-1 month')) }} <br>
-                            <span style="color:#778899;">Paid days</span>
-                        </p>
+
+                    <div class="d-flex flex-column mt-3 ">
+                        <div class="net-salary">
+                            <div class="d-flex gap-4">
+                                <div class="grossPay"></div>
+                                <p class="payslip-small-desc">Gross Pay</p>
+                            </div>
+                            <p class="payslip-small-desc">₹ 50,000.00</p>
+                        </div>
+                        <div class="net-salary">
+                            <div class="d-flex gap-4">
+                                <div class="deductionsPay"></div>
+                                <p class="payslip-small-desc">Deduction</p>
+                            </div>
+                            <p class="payslip-small-desc">₹ 5,000.00</p>
+                        </div>
+                        <div class="net-salary">
+                            <div class="d-flex gap-4">
+                                <div class="netPay"></div>
+                                <p class="payslip-small-desc">Net Pay</p>
+                            </div>
+                            <p class="payslip-small-desc">₹ 45,000.00</p>
+                        </div>
+                        </divclas>
+
+                        <div class="show-salary">
+                            <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download PDF</a>
+                            <a class="showHideSalary">
+                                Hide Salary
+                            </a>
+                        </div>
                     </div>
                 </div>
-
-                <div style="display:flex ;flex-direction:column; margin-top:20px;  ">
-                    <div class="net-salary">
-                        <div style="display:flex;gap:10px;">
-                            <div
-                                style="padding:2px;width:2px;height:17px;background:#000000;border-radius:2px;">
-                            </div>
-                            <p style="font-size:11px;margin-bottom:10px;">Gross Pay</p>
-                        </div>
-                        <p style="font-size:12px;">
-                            {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalAllowance(), 2) : '*********' }}
-                        </p>
-                    </div>
-                    <div class="net-salary">
-                        <div style="display:flex;gap:10px;">
-                            <div
-                                style="padding:2px;width:2px;height:17px;background:#B9E3C6;border-radius:2px;">
-                            </div>
-                            <p style="font-size:11px;margin-bottom:10px;">Deduction</p>
-                        </div>
-                        <p style="font-size:12px;">
-                            {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalDeductions() ?? 0, 2) : '*********' }}
-                        </p>
-
-                    </div>
-                    <div class="net-salary">
-                        <div style="display:flex;gap:10px;">
-                            <div
-                                style="padding:2px;width:2px;height:17px;background:#1C9372;border-radius:2px;">
-                            </div>
-                            <p style="font-size:11px;margin-bottom:10px;">Net Pay</p>
-                        </div>
-                        @if ($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions() > 0)
-                        <p style="font-size:12px;">
-                            {{ $showSalary ? '₹ ' . number_format(max($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions(), 0), 2) : '*********' }}
-                        </p>
-                        @endif
-                    </div>
-                </div>
-
-                <div class="show-salary"
-                    style="display: flex; color: #1090D8; justify-content:space-between;font-size: 12px;  margin-top: 20px; font-weight: 100;">
-                    <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download"
-                        download>Download PDF</a>
-                    <a wire:click="toggleSalary" class="showHideSalary">
-                        {{ $showSalary ? 'Hide Salary' : 'Show Salary' }}
-                    </a>
-                </div>
-                @endforeach
-                @endif
-
-                <a href="/slip">
-                    <div class="payslip-go-corner">
-                        <div class="payslip-go-arrow">→</div>
-                    </div>
-                </a>
-
             </div>
         </div>
         <!-- TEAM ON LEAVE -->
@@ -763,14 +720,14 @@
                             <p class="payslip-small-desc">
                                 This month ({{ $upcomingLeaveApplications }}) </p>
                             @if ($upcomingLeaveRequests)
-                            <div wire:ignore class="mt-2 d-flex align-items-center gap-2 mb-3">
+                            <div class="mt-2 d-flex align-items-center gap-2 mb-3">
                                 @foreach ($upcomingLeaveRequests->take(3) as $requests)
                                 @php
                                 $randomColorList =
                                 '#' .
                                 str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0', STR_PAD_LEFT);
                                 @endphp
-                                <div wire:ignore class="d-flex align-items-center">
+                                <div class="d-flex align-items-center">
                                     <div class="thisCircle"
                                         style="border: 1px solid {{ $randomColorList }}">
                                         <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
@@ -797,8 +754,7 @@
                         </div>
                     </div>
                     @else
-                    <div
-                        style="display:flex;justify-content:center;flex-direction:column;align-items:center;">
+                    <div class="leaveNodata">
                         <img src="{{ asset('images/no data.png') }}" name="noData" id="noData"
                             alt="Image Description" style="width: 120px; height:100px;">
                         <p class="homeText">
@@ -824,8 +780,6 @@
                         </select>
                     </div>
                 </div>
-
-
                 <div class="row text-center mt-3">
                     <div class="col-4">
                         <h3 class="mb-1 track-text">{{ $TaskAssignedToCount }}</h3>
@@ -856,8 +810,7 @@
                     <a href="#" class="quick-link">YTD Reports</a>
                     <a href="#" class="quick-link">Loan Statement</a>
                 </div>
-                <div class="col-md-5"
-                    style="text-align: center; background-color: #FFF8F0; padding: 5px 10px; border-radius: 10px; font-size: 8px; font-family: montserrat; bottom: 0; right: 0;">
+                <div class="col-md-5 quickAccessNoData">
                     <img src="images/quick_access.png" style="padding-top: 2em; width: 6em">
                     <p class="pt-4">Use quick access to view important salary details.</p>
                 </div>
@@ -871,8 +824,8 @@
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                <div class="modal-header">
+                    <h5 class="modal-title">
                         <b>Swipes</b>
                     </h5>
                     <button type="button" class="btn-close btn-primary" data-dismiss="modal"
@@ -882,31 +835,26 @@
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
                     <div class="row">
-                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Date :
-                            <span style="color: #333;">{{ $currentDate }}</span>
+                        <div class="col normalTextValue" >Date :
+                            <span class="normalText">{{ $currentDate }}</span>
                         </div>
-                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Shift
-                            Time : <span style="color: #333;">10:00 to 19:00</span></div>
+                        <div class="col normalTextValue" >Shift
+                            Time : <span class="normalText">10:00 to 19:00</span></div>
                     </div>
                     <table class="swipes-table mt-2 border" style="width: 100%;">
-                        <tr style="background-color: #f6fbfc;">
-                            <th
-                                style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">
+                        <tr >
+                            <th>
                                 Swipe Time</th>
-                            <th
-                                style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">
+                            <th >
                                 Sign-In / Sign-Out</th>
                         </tr>
-
                         @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
                         @foreach ($swipeDetails as $swipe)
-                        <tr style="border:1px solid #ccc;">
-                            <td
-                                style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">
+                        <tr >
+                            <td>
                                 {{ $swipe->swipe_time }}
                             </td>
-                            <td
-                                style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">
+                            <td>
                                 {{ $swipe->in_or_out }}
                             </td>
                         </tr>
@@ -928,13 +876,13 @@
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                <div class="modal-header" >
+                    <h5 class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
-                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                    <button type="button" class="btn-closeModal btn-primary" data-dismiss="modal"
                         aria-label="Close" wire:click="closeAllAbsentEmployees"
-                        style="background-color: white; height:10px;width:10px;">
+                        >
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -964,19 +912,18 @@
         </div>
     </div>
     <div class="modal-backdrop fade show blurred-backdrop"></div>
-
     @endif
     @if ($showAllLateEmployees)
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                <div class="modal-header" >
+                    <h5  class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
-                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                    <button type="button" class="btn-closeModal btn-primary" data-dismiss="modal"
                         aria-label="Close" wire:click="closeAllLateEmployees"
-                        style="background-color: white; height:10px;width:10px;">
+                        >
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -998,9 +945,8 @@
                             </div>
                             </a>
                             @endif
-                            @endfor
+                        @endfor
                     </div>
-
                 </div>
             </div>
         </div>
@@ -1012,13 +958,13 @@
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                <div class="modal-header" >
+                    <h5  class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
-                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                    <button type="button" class="btn-closeModal btn-primary" data-dismiss="modal"
                         aria-label="Close" wire:click="closeAllEarlyEmployees"
-                        style="background-color: white; height:10px;width:10px;">
+                        >
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -1042,7 +988,6 @@
                             @endif
                             @endfor
                     </div>
-
                 </div>
             </div>
         </div>
@@ -1078,60 +1023,38 @@
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
-</script>
-
-<script>
+    // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('Page loaded, requesting location...');
-
-        // Call the getLocation function when the page loads
-        getLocation();
-
-        // Add an event listener to the button to open Google Maps
-        document.getElementById('openMap').addEventListener('click', openGoogleMaps);
-    });
-
-    var latitude, longitude;
-
-    function getLocation() {
-        if (navigator.geolocation) {
-            console.log('Requesting location...');
-
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    latitude = position.coords.latitude;
-                    longitude = position.coords.longitude;
-
-                    // Log the latitude and longitude to the console
-                    console.log("Latitude: " + latitude);
-                    console.log("Longitude: " + longitude);
-                    console.log("Coordinates: (" + latitude + ", " + longitude + ")");
-
-                    // Dispatch a Livewire event with the coordinates
-                    Livewire.dispatch('sendCoordinates', {
-                        latitude: latitude,
-                        longitude: longitude
-                    });
-                },
-                function(error) {
-                    console.error("Error occurred. Error code: " + error.code);
-                    // Handle geolocation errors
+        var ctx = document.getElementById('combinedPieChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Gross Pay', 'Deduction', 'Net Pay'],
+                datasets: [{
+                    label: 'Salary Breakdown',
+                    data: [50000, 5000, 45000],
+                    backgroundColor: ['#000000', '#B9E3C6', '#1C9372'],
+                    borderColor: '#f2f8f9', // Set border color for the segments
+                    borderWidth: 2, // Normal border width
+                    hoverBorderWidth: 3 // Border width on hover
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '55%', // Adjust this to increase thickness (lower cutout value for thicker ring)
+                plugins: {
+                    legend: {
+                        display: false // Hide labels
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ₹ ' + tooltipItem.raw;
+                            }
+                        }
+                    }
                 }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
-
-    function openGoogleMaps() {
-        if (latitude && longitude) {
-            // Build the Google Maps URL
-            var googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-
-            // Open the Google Maps URL in a new tab
-            window.open(googleMapsUrl, '_blank');
-        } else {
-            alert("Location not available yet. Please try again.");
-        }
-    }
+            }
+        });
+    });
 </script>

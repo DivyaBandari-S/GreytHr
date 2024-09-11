@@ -27,18 +27,18 @@
             <div class="heading mb-2
             ">
                 <div class="heading-2">
-                    <div style="display:flex; flex-direction:row; justify-content:space-between;">
+                    <div class="d-flex justify-content-between flex-row">
                         <div class="field">
-                            <span style="color: #778899; font-size: 12px; font-weight: 500;">
+                            <span class="normalTextValue">
                                 Applied by
                             </span>
                             <br>
                             @if(strtoupper($leaveRequest->status) == 'APPROVED')
-                            <span style="color: #333;  font-size: 12px;font-weight: 500; text-transform: uppercase;">
+                            <span class="normalText uppercase-text">
                                 {{ $this->leaveRequest->employee->first_name }} {{ $this->leaveRequest->employee->last_name }}
                             </span>
                             @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
-                            <span style="color: #333; font-weight: 500; text-transform: uppercase;">
+                            <span class="normalText uppercase-text">
                                 {{ $this->leaveRequest->employee->first_name }} {{ $this->leaveRequest->employee->last_name }}
                             </span>
                             @endif
@@ -46,34 +46,34 @@
 
                         <div>
                             @if($leaveRequest->category_type == 'Leave')
-                            <span style="color: #32CD32; font-size: 12px; font-weight: 500; text-transform:uppercase;">
+                            <span >
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="approvedStatus">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
 
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#FF0000;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="rejectedStatus" >{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @else
 
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#778899;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="withDrawnStatus">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @endif
                             </span>
                             @else
-                            <span style="color: #32CD32; font-size: 12px; font-weight: 500; text-transform:uppercase;">
+                            <span>
                                 @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
 
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="approvedStatus">{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                                 @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
 
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#FF0000;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="rejectedStatus">{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                                 @else
 
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#778899;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="withDrawnStatus">{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                                 @endif
                             </span>
@@ -85,18 +85,18 @@
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
                                     <span class="normalTextValue">From Date</span> <br>
-                                    <span class="normalText" style="font-weight:600;"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->from_session }}</span></span>
+                                    <span class="normalText bold-text"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
-                                    <span class="normalTextValue">To Date</span> <br>
-                                    <span class="normalText" style="font-weight:600;">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->to_session }}</span></span>
+                                    <span class="normalTextValue ">To Date</span> <br>
+                                    <span class="normalText bold-text">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
                             </div>
-                            <div class="box" style="display:flex; text-align:center; padding:5px;">
+                            <div class="box d-flex text-center p-2">
                                 <div class="field p-2">
                                     <span class="normalTextValue">No. of days</span> <br>
-                                    <span class="normalText" style=" font-weight: 600;"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
+                                    <span class="normalText bold-text" > {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -107,17 +107,17 @@
                                 <span class="normalTextValue">Balance:</span>
                                 @if(!empty($this->leaveBalances))
 
-                                <div style=" flex-direction:row; display: flex; align-items: center;justify-content:center;">
+                                <div class="d-flex align-items-center justify-content-center">
 
                                     <!-- Sick Leave -->
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e6e6fa; display: flex; align-items: center; justify-content: center; margin-left:15px;">
+                                    <div class="sickLeaveCircle">
 
-                                        <span style="font-size: 10px; color: #50327c;font-weight:500;">SL</span>
+                                        <span class="sickLeaveBal">SL</span>
 
                                     </div>
 
-                                    <span style="font-size: 11px; font-weight: 500; color: #50327c; margin-left: 5px;">{{ $this->leaveBalances['sickLeaveBalance'] }}</span>
+                                    <span class="sickLeaveValue">{{ $this->leaveBalances['sickLeaveBalance'] }}</span>
 
                                     <!-- Casual Leave  -->
 

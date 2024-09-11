@@ -88,7 +88,7 @@
                 @endif
 
                 <!-- Department -->
-                <span  style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Department</span>
+                <span style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Department</span>
                 <div wire:click="openDept" class="loc-dropdown">
                     <div style="position: relative;">
                         <div style="display: flex;justify-content:space-between; align-items: center;">
@@ -205,7 +205,6 @@
                                         @endphp
                                         @if ($leaveCount > 0)
                                         <div class="circle-greys">
-                                            <!-- Render your grey circle -->
                                             <span style="display: flex; justify-content: center; align-items: center;width:20px;height:20px;border-radius:50%;">
                                                 {{ $leaveCount }}
                                             </span>
@@ -288,7 +287,7 @@
                             <div class="accordion-content ">
                                 <span style="font-size: 14px; font-weight: 500;color:#778899;">Leave transactions({{ count($this->leaveTransactions) }})</span>
                             </div>
-                            <div class="arrow-btn" >
+                            <div class="arrow-btn">
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                         </div>
