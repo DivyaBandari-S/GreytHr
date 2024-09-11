@@ -41,7 +41,7 @@
     @else
         <section>
             @livewire('main-layout')
-            <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
+            <main id="maincontent" style="overflow: auto; height: calc(100vh - 100px);">
                 {{ $slot }}
             </main>
         </section>

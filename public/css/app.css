@@ -3622,6 +3622,60 @@ l
 .sickLeaveValue{
     font-size: 11px; font-weight: 500; color: #50327c; margin-left: 5px;
 }
+.casLeaveCircle{
+    width: 20px; height: 20px; border-radius: 50%; background-color: #e7fae7; display: flex; align-items: center; justify-content: center; margin-left: 15px;
+}
+.casLeaveBal{
+    font-size: 10px; color: #1d421e;font-weight:500;
+}
+.casLeaveValue{
+    font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;
+}
+.probLeave{
+    width: 20px; height: 20px; border-radius: 50%; background-color: #e7fafa; display: flex; align-items: center; justify-content: center; margin-left: 15px;
+}
+.probLeaveBal{
+    font-size: 10px; color: #337878;font-weight:500;
+}
+.probLeaveValue{
+    font-size: 11px; font-weight: 500; color: #337878; margin-left: 5px;
+}
+.lossLeave{
+    width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;
+}
+.lossLeaveBal{
+    font-size: 10px; color: #890000;font-weight:500;
+}
+.lossLeaveValue{
+    font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;
+}
+.marriageLeave{
+    width: 20px; height: 20px; border-radius: 50%; background-color: #e6dec9; display: flex; align-items: center; justify-content: center; margin-left: 15px;
+}
+.marriageLeaveBal{
+    font-size: 10px; color: #b78d24;font-weight:500;
+}
+.marriageLeaveValue{
+    font-size: 11px; font-weight: 500; color: #b78d24; margin-left: 5px;
+}
+.petarnityLeave{
+    width: 20px; height: 20px; border-radius: 50%; background-color: #b4c0e5; display: flex; align-items: center; justify-content: center; margin-left: 15px;
+}
+.petarnityLeaveBal{
+    font-size: 10px; color: #2a438e;font-weight:500;
+}
+.petarnityLeaveValue{
+    font-size: 11px; font-weight: 500; color: #2a438e; margin-left: 5px;
+}
+.maternityLeave{
+    width: 20px; height: 20px; border-radius: 50%; background-color: #f1d5f1; display: flex; align-items: center; justify-content: center; margin-left: 15px;
+}
+.maternityLeaveBal{
+    font-size: 10px; color: #863886;font-weight:500;
+}
+.maternityLeaveValue{
+    font-size: 11px; font-weight: 500; color: #863886; margin-left: 5px;
+}
 .approveBtn {
     background: rgb(2, 17, 79);
     border: 1px solid rgb(2, 17, 79);

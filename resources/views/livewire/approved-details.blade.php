@@ -121,65 +121,65 @@
 
                                     <!-- Casual Leave  -->
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e7fae7; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <div class="casLeaveCircle">
 
-                                        <span style="font-size: 10px; color: #1d421e;font-weight:500;">CL</span>
+                                        <span class="casLeaveBal">CL</span>
 
                                     </div>
 
-                                    <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;">{{ $this->leaveBalances['casualLeaveBalance'] }}</span>
+                                    <span class="casLeaveValue">{{ $this->leaveBalances['casualLeaveBalance'] }}</span>
 
                                     <!-- Casual Leave  Probation-->
                                     @if($leaveRequest->leave_type === 'Casual Leave Probation' && isset($leaveBalances['casualProbationLeaveBalance']))
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e7fae7; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <div class="probLeave">
 
-                                        <span style="font-size: 10px; color: #50327c;font-weight:500;">CLP</span>
+                                        <span class="probLeaveBal">CLP</span>
 
                                     </div>
 
-                                    <span style="font-size: 11px; font-weight: 500; color: #1d421e; margin-left: 5px;">{{ $this->leaveBalances['casualProbationLeaveBalance'] }}</span>
+                                    <span class="probLeaveValue">{{ $this->leaveBalances['casualProbationLeaveBalance'] }}</span>
 
                                     <!-- Loss of Pay -->
 
                                     @elseif($leaveRequest->leave_type === 'Loss Of Pay' && isset($leaveBalances['lossOfPayBalance']))
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <div class="lossLeave">
 
-                                        <span style="font-size: 10px; color: #890000;font-weight:500;">LOP</span>
+                                        <span class="lossLeaveBal">LOP</span>
 
                                     </div>
 
-                                    <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">&minus;{{ $this->leaveBalances['lossOfPayBalance'] }}</span>
+                                    <span class="lossLeaveValue" >&minus;{{ $this->leaveBalances['lossOfPayBalance'] }}</span>
 
                                     @elseif($leaveRequest->leave_type === 'Marriage Leave' && isset($leaveBalances['marriageLeaveBalance']))
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <div class="marriageLeave">
 
-                                        <span style="font-size: 10px; color: #890000;font-weight:500;">MRL</span>
+                                        <span class="marriageLeaveBal">MRL</span>
 
                                     </div>
 
-                                    <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $this->leaveBalances['marriageLeaveBalance'] }}</span>
+                                    <span class="marriageLeaveValue" >{{ $this->leaveBalances['marriageLeaveBalance'] }}</span>
 
                                     @elseif($leaveRequest->leave_type === 'Petarnity Leave' && isset($leaveBalances['paternityLeaveBalance']))
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <div class="petarnityLeave">
 
-                                        <span style="font-size: 10px; color: #890000;font-weight:500;">PL</span>
+                                        <span class="petarnityLeaveBal">PL</span>
 
                                     </div>
 
-                                    <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $this->leaveBalances['paternityLeaveBalance'] }}</span>
+                                    <span class="petarnityLeaveValue">{{ $this->leaveBalances['paternityLeaveBalance'] }}</span>
 
                                     @elseif($leaveRequest->leave_type === 'Maternity Leave' && isset($leaveBalances['maternityLeaveBalance']))
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <div class="maternityLeave">
 
-                                        <span style="font-size: 10px; color: #890000;font-weight:500;">ML</span>
+                                        <span class="maternityLeaveBal">ML</span>
 
                                     </div>
 
-                                    <span style="font-size: 11px; font-weight: 500; color: #890000; margin-left: 5px;">{{ $this->leaveBalances['maternityLeaveBalance'] }}</span>
+                                    <span class="maternityLeaveValue" >{{ $this->leaveBalances['maternityLeaveBalance'] }}</span>
 
                                     @endif
 
@@ -329,7 +329,7 @@
 
                                                                     download="{{ $originalName }}"
 
-                                                                    style="text-decoration: none; color: #007BFF; margin: 10px;">
+                                                                   class="anchorTagDetails">
 
                                                                     {{ $originalName }}
 
@@ -351,12 +351,12 @@
                                         <!-- Trigger Links -->
                                         @if (!empty($images) && count($images) > 1)
                                         <a href="#" wire:click.prevent="showViewImage"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             View Images
                                         </a>
                                         @elseif(!empty($images) && count($images) == 1)
                                         <a href="#" wire:click.prevent="showViewImage"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             View Image
                                         </a>
         
@@ -364,18 +364,15 @@
 
                                         @if (!empty($files) && count($files) > 1)
                                         <a href="#" wire:click.prevent="showViewFile"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             Download Files
                                         </a>
                                         @elseif(!empty($files) && count($files) == 1)
                                         <a href="#" wire:click.prevent="showViewFile"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             Download File
                                         </a>
                                         @endif
-
-
-
                                         @endif
                                     </div>
                                 </div>
@@ -491,9 +488,9 @@
                 </div>
                 @if ($this->leaveApplications !== null && !$this->leaveApplications->isEmpty())
                 <div class="p-3">
-                    <h6 style="font-weight: 600;color:#333;font-size:14px;">{{$employeeName}}'s Leave Transctions</h6>
+                    <h6 class="normalText">{{$employeeName}}'s Leave Transctions</h6>
                     <div class="col-md-4 rounded mt-3 pt-1 pb-1" style="background-color: #ffffe8;">
-                        <span style="margin-bottom: 0;color:#605448;font-size:12px;font-weight:500;">Total leaves taken
+                        <span class="normalTextvalue">Total leaves taken
                         </span> <br>
                         @php
                         $totalDays = 0;
@@ -505,7 +502,7 @@
                         @endphp
                         @endforeach
 
-                        <span style="margin-bottom: 0;font-weight:500;"> {{ $totalDays }}
+                        <span class="normalText"> {{ $totalDays }}
                         </span>
                     </div>
                     <div class="rounded bg-white border mt-4">
@@ -543,7 +540,7 @@
                     </div>
                 </div>
                 @else
-                <span class="p-3" style="color:#778899;font-size:12px;">Your leave transaction list is empty.</span>
+                <span class="p-3" class="normalTextValue">Your leave transaction list is empty.</span>
                 @endif
             </div>
         </div>
