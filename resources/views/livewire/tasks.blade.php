@@ -1,176 +1,108 @@
 <div>
-    <style>
-        .people-input-group-container {
-            width: 230px;
-        }
 
-        .people-search-input {
-            font-size: 0.75rem;
-            border-radius: 5px 0 0 5px;
-            height: 32px;
-        }
-
-
-        .people-search-btn {
-            height: 32px;
-            width: 40px;
-            position: relative;
-            border-radius: 0 5px 5px 0;
-            background-color: rgb(2, 17, 79);
-            color: #fff;
-            border: none;
-            margin-right: 10px;
-        }
-
-        .people-search-icon {
-            position: absolute;
-            top: 9px;
-            left: 11px;
-            color: #fff;
-        }
-
-        .task-date-range-picker {
-            width: 245px;
-            margin-left: -20px;
-        }
-
-        @media (max-width: 548px) {
-            .task-date-range-picker {
-                margin-left: 0px;
-            }
-        }
-
-        .viewfile {
-            color: var(--main-heading-color);
-            font-size: var(--main-headings-font-size);
-            font-weight: 500;
-        }
-  
-    </style>
-
-    <div class="container"
-        style="margin-top:15px;width:100%; height: 600px; border: 1px solid silver; border-radius: 5px;background-color:white; overflow-x: hidden;padding-bottom: 15px; position: relative;">
-        <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
+    <div class="container task-first-container">
+        <div class="nav-buttons d-flex justify-content-center task-tab-button-container">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;"
-                        class="custom-nav-link {{ $activeTab === 'open' ? 'active' : '' }}"
+                    <div class="task-open-tab-container custom-nav-link {{ $activeTab === 'open' ? 'active' : '' }}"
                         wire:click.prevent="setActiveTab('open')">Open</div>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;"
-                        class="custom-nav-link {{ $activeTab === 'completed' ? 'active' : '' }}"
+                    <a href="#"
+                        class="task-closed-tab-container custom-nav-link {{ $activeTab === 'completed' ? 'active' : '' }}"
                         wire:click.prevent="setActiveTab('completed')">Closed</a>
                 </li>
             </ul>
         </div>
 
-        <div id="alert-container" class="d-flex justify-content-center alert-container " wire:poll.5s="hideAlert" style="position: sticky; top: 13%; z-index: 10; width: 100%;" >
+        <div id="alert-container" class="d-flex justify-content-center alert-container task-flash-message-container"
+            wire:poll.5s="hideAlert">
 
             @if ($showAlert)
-                <p class="alert alert-success" role="alert" style=" font-weight: 400;width:fit-content;padding:10px;border-radius:5px" >
+                <p class="alert alert-success task-flash-message-text" role="alert">
                     {{ session('message') }}
-                    <span style="font-weight:500;margin:0px 10px; cursor: pointer; " wire:click='hideAlert'>x</span>
+                    <span class="task-flash-message-icon" wire:click='hideAlert'>x</span>
                 </p>
             @endif
         </div>
 
-        <script>
-            $(document).ready(function() {
-                $('#date_range').datepicker({
-                    format: 'yyyy-mm-dd',
-                    startDate: '-30d',
-                    endDate: '+0d',
-                    todayHighlight: true,
-                    multidateSeparator: ' to ',
-                    inputs: $('#start_date, #end_date'), 
-                    inputs: {
-                        start: $('#start_date'),
-                        end: $('#end_date')
-                    },
-                    clearBtn: true,
-                    autoclose: true,
-                    toggleActive: true
-                }).on('changeDate', function(e) {
-                    var startDate = $('#start_date').val();
-                    var endDate = $('#end_date').val();
-                    @this.set('start_date', startDate);
-                    @this.set('end_date', endDate);
-                });
-            });
-        </script>
 
-        <div style="display:flex; justify-content:flex-end;">
-            <button wire:click="show"
-                style="background-color:rgb(2, 17, 79); border: none; border-radius: 5px; color: white; font-size: 0.75rem; height: 30px; cursor: pointer; margin-top: 15px; margin-right: 20px;width:100px; margin-bottom: 15px;">Add
+
+        <div class="d-flex justify-content-end">
+            <button wire:click="show" class="task-add-new-task-button">Add
                 New Task</button>
         </div>
 
 
         @if ($activeTab == 'open')
-            <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
-                <div class="form-inline row" style="margin-bottom: -15px;">
+            <div class="task-filter-section">
+                <div class="form-inline row task-filter-container">
                     <!-- Search Box -->
-                    <div class="input-group people-input-group-container">
-                        <input wire:model="search" type="text" class="form-control people-search-input"
+                    <div class="input-group task-input-group-container">
+                        <input wire:model="search" type="text" class="form-control task-search-input"
                             placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
-                            <button wire:click="searchActiveTasks" class="people-search-btn" type="button">
-                                <i class="fa fa-search people-search-icon"></i>
+                            <button wire:click="searchActiveTasks" class="task-search-btn" type="button">
+                                <i class="fa fa-search task-search-icon"></i>
                             </button>
                         </div>
                     </div>
 
                     <div class="form-group task-date-range-picker">
-                       
-                            <select class="form-select task-custom-select-width"
-                                wire:model="filterPeriod"
-                               >
-                                <option value="all" selected>All</option>
-                                <option value="this_week">This Week</option>
-                                <option value="this_month">This Month</option>
-                                <option value="last_month">Last Month</option>
-                                <option value="this_year">This Year</option>
-                            </select>
-                        
+
+                        <select class="form-select task-custom-select-width" wire:model="filterPeriod">
+                            <option value="all" selected>All</option>
+                            <option value="this_week">This Week</option>
+                            <option value="this_month">This Month</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="this_year">This Year</option>
+                        </select>
+
                     </div>
                 </div>
             </div>
-            <div class="card-body"
-                style="background-color:white;width:100%;border-radius:5px;max-height:400px;overflow-y:auto;overflow-y:auto;margin-top: 10px;">
+            <div class="card-body task-open-card-body-container">
 
                 <div class="table-cresponsive">
-                    <table style="width: 100%; border-collapse: collapse;">
+                    <table class="task-open-table">
                         <thead>
-                            <tr style="background-color: rgb(2, 17, 79); color: white;">
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%; min-width: 80px;">
-                                    <i class="fa fa-angle-down" style="color: white; padding-left: 8px;"></i>
+                            <tr class="task-open-table-row">
+                                <th class="task-open-table-1-th">
+                                    <i class="fa fa-angle-down task-arrow-icon"></i>
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 120px;">Task Id
+                                <th class="task-open-table-2-th">
+                                    Task Id
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">Task Name
+                                <th class="task-open-table-3-th">
+                                    Task Name
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 170px;">Assigned By
+                                <th class="task-open-table-4-th" style="">
+                                    Assigned By
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">Assignee
+                                <th class="task-open-table-5-th">
+                                    Assignee
                                 </th>
 
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">Assigned
+                                <th class="task-open-table-6-th">
+                                    Assigned
                                     Date
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">Due Date
+                                <th class="task-open-table-7-th">
+                                    Due Date
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">Re-Opened Date
+                                <th class="task-open-table-8-th">
+                                    Re-Opened Date
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 15%; min-width: 200px;">Actions
+                                <th class="task-open-table-9-th">
+                                    Actions
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             @if ($searchData->isEmpty())
                                 <tr>
-                                    <td colspan="8" style="text-align: center;">
-                                        <img style="width: 10em; margin: 20px;"
+                                    <td colspan="8" class="text-center">
+                                        <img class="task-no-items-found"
                                             src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ="
                                             alt="No items found">
                                     </td>
@@ -179,50 +111,43 @@
                                 @foreach ($searchData as $index => $record)
                                     @if ($record->status == 'Open')
                                         <tr>
-                                            <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 10%; min-width: 80px;cursor: pointer;">
-                                                <div class="arrow-btn" wire:click="toggleAccordion('{{ $record->id }}')">
-                                                    <i class="{{ in_array($record->id, $openAccordions) ? 'fa fa-angle-up' : 'fa fa-angle-down' }}"></i>
+                                            <td class="task-open-table-1-td">
+                                                <div class="arrow-btn"
+                                                    wire:click="toggleAccordion('{{ $record->id }}')">
+                                                    <i
+                                                        class="{{ in_array($record->id, $openAccordions) ? 'fa fa-angle-up' : 'fa fa-angle-down' }}"></i>
                                                 </div>
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start;width: 15%; min-width: 120px;">
-                                                T-{{ ($record->id) }}
+                                            <td class="task-open-table-2-td">
+                                                T-{{ $record->id }}
                                             </td>
 
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start;width: 15%; min-width: 150px;">
+                                            <td class="task-open-table-3-td">
                                                 {{ ucfirst($record->task_name) }}
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start;width: 15%; min-width: 170px;">
+                                            <td class="task-open-table-4-td">
                                                 {{ ucwords(strtolower($record->emp->first_name)) }}
                                                 {{ ucwords(strtolower($record->emp->last_name)) }}
 
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none;font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">
+                                            <td class="task-open-table-5-td">
 
                                                 {{ ucwords(strtolower($record->assignee)) }}
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">
+                                            <td class="task-open-table-6-td">
                                                 {{ \Carbon\Carbon::parse($record->created_at)->format('d M, Y') }}
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 15%; min-width: 150px;">
+                                            <td class="task-open-table-7-td">
                                                 {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 15%; min-width: 150px;">
-                                                @if($record->reopened_date)
+                                            <td class="task-open-table-8-td">
+                                                @if ($record->reopened_date)
                                                     {{ \Carbon\Carbon::parse($record->reopened_date)->format('d M, Y') }}
                                                 @else
-                                                <span>-</span>
-
+                                                    <span>-</span>
                                                 @endif
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 15%; min-width: 200px;">
+                                            <td class="task-open-table-9-td">
                                                 @foreach ($record->comments ?? [] as $comment)
                                                     {{ $comment->comment }}
                                                 @endforeach
@@ -232,64 +157,50 @@
                                                     class="submit-btn" data-toggle="modal"
                                                     data-target="#exampleModalCenter">Comment</button>
                                                 <button wire:click="openForTasks('{{ $record->id }}')"
-                                                    style="border:1px solid rgb(2, 17, 79);width:80px; padding: 5px 0.75rem;"
-                                                    class="cancel-btn">Close</button>
-                                                    {{-- <div class="d-flex justify-content-center" style="gap:10px;">
+                                                    class="cancel-btn task-open-close-button">Close</button>
+                                                {{-- <div class="d-flex justify-content-center" style="gap:10px;">
                                                         <i class="fa-solid fa-comment chat-icon" title="Comment" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" data-toggle="modal"  data-target="#exampleModalCenter"></i>
                                                     <i class="fa-solid fa-circle-xmark chat-icon"title="Close" wire:click="openForTasks('{{ $record->id }}')"></i>
                                                     </div> --}}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="9" class="m-0 p-0"
-                                                style="background-color: #fff; padding: 0; margin: 0;">
-                                                <div class="accordion-content mt-0"
-                                                style="display: {{ in_array($record->id, $openAccordions) ? 'block' : 'none' }}; padding: 0 10px; margin-bottom: 20px;">
+                                            <td colspan="9" class="m-0 p-0 bg-white">
+                                                <div
+                                                    class="accordion-content mt-0 task-accordion-content {{ in_array($record->id, $openAccordions) ? 'open' : '' }}">
                                                     <!-- Content for accordion body -->
-                                                    <table class="rounded border"
-                                                        style="margin-top: 20px; width: 100%; border-collapse: collapse;">
-                                                        <thead class="py-0"
-                                                            style="background-color: #ecf9ff; box-shadow: 1px 0px 2px 0px rgba(0, 0, 0, 0.2); border-bottom: 1px solid #ccc; padding: 5px;">
-                                                            <tr style="color: #778899;">
-                                                                <th
-                                                                    style="font-weight: 500; width: 22%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                    <table class="rounded border task-accordion-open-table">
+                                                        <thead class="py-0 task-accordion-open-table-header">
+                                                            <tr class="task-accordion-open-table-tr">
+                                                                <th class="task-accordion-open-table-1-th">
                                                                     Priority</th>
 
-                                                                <th
-                                                                    style="font-weight: 500; width: 18%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <th class="task-accordion-open-table-2-th">
                                                                     Followers</th>
-                                                                <th
-                                                                    style="font-weight: 500; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <th class="task-accordion-open-table-3-th">
                                                                     Subject</th>
-                                                                <th
-                                                                    style="font-weight: 500; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <th class="task-accordion-open-table-4-th">
                                                                     Description</th>
-                                                                <th
-                                                                    style="font-weight: 500; width: 30%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <th class="task-accordion-open-table-5-th">
                                                                     Attach</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td
-                                                                    style="border: none; width: 22%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <td class="task-accordion-open-table-1-td">
                                                                     {{ $record->priority }}
                                                                 </td>
 
-                                                                <td
-                                                                    style="border: none; width: 18%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <td class="task-accordion-open-table-2-td">
                                                                     {{ ucfirst($record->followers) ?: '-' }}
                                                                 </td>
-                                                                <td
-                                                                    style="border: none; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <td class="task-accordion-open-table-3-td">
                                                                     {{ ucfirst($record->subject ?? '-') }}
                                                                 </td>
-                                                                <td
-                                                                    style="border: none; width: 15%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <td class="task-accordion-open-table-4-td">
                                                                     {{ ucfirst($record->description ?? '-') }}
                                                                 </td>
-                                                                <td
-                                                                    style="border: none; width: 30%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <td class="task-accordion-open-table-5-td">
                                                                     {{-- @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         <a href="#"
                                                                             wire:click="showViewFile('{{ $record->id }}')"
@@ -299,20 +210,21 @@
                                                                         N/A
                                                                     @endif --}}
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
-                                                                    @if(strpos($record->mime_type, 'image') !== false)
-                                                                    <a href="#" wire:click.prevent="showViewFile('{{ $record->id }}')"
-                                                                        style="text-decoration: none; color: #007BFF;">
-                                                                        View Image
-                                                                    </a>
+                                                                        @if (strpos($record->mime_type, 'image') !== false)
+                                                                            <a href="#" class="task-open-view-img"
+                                                                                wire:click.prevent="showViewFile('{{ $record->id }}')">
+                                                                                View Image
+                                                                            </a>
+                                                                        @else
+                                                                            <a href="{{ route('files.showTask', $record->id) }}"
+                                                                                download="{{ $record->file_name }}"
+                                                                                class="task-open-download-file">
+                                                                                Download file
+                                                                            </a>
+                                                                        @endif
                                                                     @else
-                                                                    <a href="{{ route('files.showTask', $record->id) }}" download="{{ $record->file_name }}"  style="margin-top: 10px;">
-                                                                        Download file
-                                                                    </a>
-                                        
-                                                                    @endif
-                                                                    @else
-                                                                    {{-- Show this message if no file is attached --}}
-                                                                    <p style="color: gray;">N/A</p>
+                                                                        {{-- Show this message if no file is attached --}}
+                                                                        <p class="text-grey">N/A</p>
                                                                     @endif
                                                                 </td>
 
@@ -339,70 +251,75 @@
         @endif
 
         @if ($activeTab == 'completed')
-            <div class="filter-section" style="padding-bottom: 15px; border-radius: 5px;">
-                <div class="form-inline row" style="margin-bottom: -15px;">
+            <div class="task-filter-section">
+                <div class="form-inline row task-filter-container">
                     <!-- Search Box -->
-                    <div class="input-group people-input-group-container">
-                        <input wire:model="closedSearch" type="text" class="form-control people-search-input"
+                    <div class="input-group task-input-group-container">
+                        <input wire:model="closedSearch" type="text" class="form-control task-search-input"
                             placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
-                            <button wire:click="searchCompletedTasks" class="people-search-btn" type="button">
-                                <i class="fa fa-search people-search-icon"></i>
+                            <button wire:click="searchCompletedTasks" class="task-search-btn" type="button">
+                                <i class="fa fa-search task-search-icon"></i>
                             </button>
                         </div>
                     </div>
 
                     <div class="form-group task-date-range-picker">
-                        <select class="form-select task-custom-select-width"
-                                wire:model="filterPeriod"
-                               >
-                                <option value="all" selected>All</option>
-                                <option value="this_week">This Week</option>
-                                <option value="this_month">This Month</option>
-                                <option value="last_month">Last Month</option>
-                                <option value="this_year">This Year</option>
-                            </select>
+                        <select class="form-select task-custom-select-width" wire:model="filterPeriod">
+                            <option value="all" selected>All</option>
+                            <option value="this_week">This Week</option>
+                            <option value="this_month">This Month</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="this_year">This Year</option>
+                        </select>
                     </div>
 
 
                 </div>
             </div>
-            <div class="card-body"
-                style="background-color:white;width:100%;border-radius:5px;max-height:300px;overflow-y:auto;overflow-x:auto;margin-top: 10px;">
+            <div class="card-body task-closed-card-body">
 
                 <div class="table-responsive">
-                    <table style="width: 100%; border-collapse: collapse;">
+                    <table class="task-open-table">
                         <thead>
-                            <tr style="background-color: rgb(2, 17, 79); color: white;">
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 7%;min-width: 80px;">
+                            <tr class="task-closed-table-row">
+                                <th class="task-closed-table-1-th">
                                     <i class="fa fa-angle-down" style="color: white; padding-left: 8px;"></i>
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 8%;min-width: 120px;">Task Id
+                                <th class="task-closed-table-2-th">
+                                    Task Id
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 10%;min-width: 150px;">Task Name
+                                <th class="task-closed-table-3-th">
+                                    Task Name
                                 </th>
 
 
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">Assigned By
+                                <th class="task-closed-table-4-th">
+                                    Assigned By
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">Assignee
+                                <th class="task-closed-table-5-th">
+                                    Assignee
                                 </th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">Assigned
+                                <th class="task-closed-table-6-th">
+                                    Assigned
                                     Date</th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">Due Date
+                                <th class="task-closed-table-7-th">
+                                    Due Date
                                 </th>
 
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">Closed
+                                <th class="task-closed-table-8-th">
+                                    Closed
                                     Date</th>
-                                <th style="padding: 7px; font-size: 0.75rem; text-align: center; width: 20%;min-width: 200px;">Actions
+                                <th class="task-closed-table-9-th">
+                                    Actions
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             @if ($searchData->isEmpty())
                                 <tr>
-                                    <td colspan="9" style="text-align: center;">
-                                        <img style="width: 10em; margin: 20px;"
+                                    <td colspan="9" class="text-center">
+                                        <img class="task-no-items-found"
                                             src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ="
                                             alt="No items found">
                                     </td>
@@ -411,46 +328,45 @@
                                 @foreach ($searchData as $record)
                                     @if ($record->status == 'Completed')
                                         <tr>
-                        
-                                            <td style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 7%;min-width: 80px;cursor: pointer;">
-                                                <div class="arrow-btn" wire:click="toggleAccordion('{{ $record->id }}')">
-                                                    <i class="{{ in_array($record->id, $openAccordions) ? 'fa fa-angle-up' : 'fa fa-angle-down' }}"></i>
+
+                                            <td class="task-closed-table-1-td">
+                                                <div class="arrow-btn"
+                                                    wire:click="toggleAccordion('{{ $record->id }}')">
+                                                    <i
+                                                        class="{{ in_array($record->id, $openAccordions) ? 'fa fa-angle-up' : 'fa fa-angle-down' }}"></i>
                                                 </div>
                                             </td>
-                                            <td
-                                            style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 8%;min-width: 120px;">
-                                            T-{{($record->id) }}
-                                        </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
+                                            <td class="task-closed-table-2-td">
+                                                T-{{ $record->id }}
+                                            </td>
+                                            <td class="task-closed-table-3-td">
                                                 {{ ucfirst($record->task_name) }}
                                             </td>
 
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
+                                            <td class="task-closed-table-4-td">
                                                 {{ ucwords(strtolower($record->emp->first_name)) }}
                                                 {{ ucwords(strtolower($record->emp->last_name)) }}
                                             </td>
 
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
+                                            <td class="task-closed-table-5-td">
                                                 {{ ucwords(strtolower($record->assignee)) }}
                                             </td>
 
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
+                                            <td class="task-closed-table-6-td">
                                                 {{ \Carbon\Carbon::parse($record->created_at)->format('d M, Y') }}
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px; color: {{ \Carbon\Carbon::parse($record->updated_at)->startOfDay()->gt(\Carbon\Carbon::parse($record->due_date)->startOfDay())? 'red': 'inherit' }};">
+                                            @php
+                                                $isOverdue = \Carbon\Carbon::parse($record->updated_at)
+                                                    ->startOfDay()
+                                                    ->gt(\Carbon\Carbon::parse($record->due_date)->startOfDay());
+                                            @endphp
+                                            <td class="task-closed-table-7-td {{ $isOverdue ? 'overdue' : '' }}">
                                                 {{ \Carbon\Carbon::parse($record->due_date)->format('d M, Y') }}
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: start; width: 9%;min-width: 150px;">
+                                            <td class="task-closed-table-8-td">
                                                 {{ \Carbon\Carbon::parse($record->updated_at)->format('d M, Y') }}
                                             </td>
-                                            <td
-                                                style="padding: 10px; border:none; font-size: 0.75rem; text-align: center; width: 20%;min-width: 200px;">
+                                            <td class="task-closed-table-9-td">
                                                 @foreach ($record->comments ?? [] as $comment)
                                                     {{ $comment->comment }}
                                                 @endforeach
@@ -460,58 +376,50 @@
                                                     class="submit-btn" data-toggle="modal"
                                                     data-target="#exampleModalCenter">Comment</button>
                                                 <button wire:click="closeForTasks('{{ $record->id }}')"
-                                                    style="border:1px solid rgb(2,17,79); width: 80px;  padding: 5px 0.75rem;"
-                                                    class="cancel-btn1">Reopen</button>
+                                                    class="cancel-btn1 task-closed-reopen-button">Reopen</button>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="9" class="m-0 p-0"
-                                                style="background-color: #fff; padding: 0; margin: 0;">
-                                                <div class="accordion-content mt-0"
-                                                style="display: {{ in_array($record->id, $openAccordions) ? 'block' : 'none' }}; padding: 0 10px; margin-bottom: 20px;">
+                                            <td colspan="9" class="m-0 p-0 bg-white">
+                                                <div
+                                                    class="accordion-content mt-0 task-accordion-content {{ in_array($record->id, $openAccordions) ? 'open' : '' }}">
                                                     <!-- Content for accordion body -->
-                                                    <table class="rounded border"
-                                                        style="margin-top: 20px; width: 100%; border-collapse: collapse;">
-                                                        <thead class="py-0"
-                                                            style="background-color: #ecf9ff; box-shadow: 1px 0px 2px 0px rgba(0, 0, 0, 0.2); border-bottom: 1px solid #ccc; padding: 5px;">
-                                                            <tr style="color: #778899;">
-                                                                <th
-                                                                    style="font-weight: 500; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                    <table class="rounded border task-accordion-closed-table">
+                                                        <thead class="py-0 task-accordion-closed-table-header">
+                                                            <tr class="task-accordion-closed-row">
+                                                                <th class="task-accordion-closed-table-1-th">
                                                                     Priority</th>
-                                                                <th
-                                                                    style="font-weight: 500; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <th class="task-accordion-closed-table-2-th">
                                                                     Followers</th>
-                                                                <th
-                                                                    style="font-weight: 500; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <th class="task-accordion-closed-table-3-th"
+                                                                    style="">
                                                                     Subject</th>
-                                                                <th
-                                                                    style="font-weight: 500; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <th class="task-accordion-closed-table-4-th">
                                                                     Description</th>
-                                                                <th
-                                                                    style="font-weight: 500; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <th class="task-accordion-closed-table-5-th">
                                                                     Attach</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td
-                                                                    style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <td class="task-accordion-closed-table-1-td">
                                                                     {{ $record->priority }}
                                                                 </td>
-                                                                <td
-                                                                    style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: {{ $record->followers ? 'start' : 'center' }};">
+                                                                @php
+                                                                    $textAlignClass = $record->followers
+                                                                        ? 'task-accordion-text-start'
+                                                                        : 'task-accordion-text-center';
+                                                                @endphp
+                                                                <td class="task-accordion-closed-table-2-td">
                                                                     {{ ucfirst($record->followers) ?: '-' }}
                                                                 </td>
-                                                                <td
-                                                                    style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <td class="task-accordion-closed-table-3-td">
                                                                     {{ ucfirst($record->subject ?? '-') }}
                                                                 </td>
-                                                                <td
-                                                                    style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <td class="task-accordion-closed-table-4-td">
                                                                     {{ ucfirst($record->description ?? '-') }}
                                                                 </td>
-                                                                <td
-                                                                    style="border: none; width: 20%; padding: 10px; font-size: 0.75rem; text-align: center;">
+                                                                <td class="task-accordion-closed-table-5-td">
                                                                     {{-- @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         <a href="#"
                                                                             wire:click="showViewFile('{{ $record->id }}')"
@@ -521,20 +429,22 @@
                                                                         N/A
                                                                     @endif --}}
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
-                                                                    @if(strpos($record->mime_type, 'image') !== false)
-                                                                    <a href="#" wire:click.prevent="showViewFile('{{ $record->id }}')"
-                                                                        style="text-decoration: none; color: #007BFF;">
-                                                                        View Image
-                                                                    </a>
+                                                                        @if (strpos($record->mime_type, 'image') !== false)
+                                                                            <a href="#"
+                                                                                class="task-open-view-img"
+                                                                                wire:click.prevent="showViewFile('{{ $record->id }}')">
+                                                                                View Image
+                                                                            </a>
+                                                                        @else
+                                                                            <a href="{{ route('files.showTask', $record->id) }}"
+                                                                                class="task-open-download-file"
+                                                                                download="{{ $record->file_name }}">
+                                                                                Download file
+                                                                            </a>
+                                                                        @endif
                                                                     @else
-                                                                    <a href="{{ route('files.showTask', $record->id) }}" download="{{ $record->file_name }}"  style="margin-top: 10px;">
-                                                                        Download file
-                                                                    </a>
-                                        
-                                                                    @endif
-                                                                    @else
-                                                                    {{-- Show this message if no file is attached --}}
-                                                                    <p style="color: gray;">N/A</p>
+                                                                        {{-- Show this message if no file is attached --}}
+                                                                        <p class="text-grey">N/A</p>
                                                                     @endif
                                                                 </td>
                                                             </tr>
@@ -553,15 +463,13 @@
             </div>
         @endif
         @if ($showDialog)
-            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+            <div class="modal d-block" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                     <div class="modal-content">
-                        <div class="modal-header d-flex justify-content-between"
-                            style="background-color: rgb(2, 17, 79); color: white; height: 40px; padding: 8px;">
-                            <h5 class="modal-title" style="font-size: 15px; margin: 0;"><b>Add Task</b></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                wire:click="close"
-                                style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
+                        <div class="modal-header d-flex justify-content-between task-add-new-container">
+                            <h5 class="modal-title m-0 task-modal-title"><b>Add Task</b></h5>
+                            <button type="button" class="close task-modal-close-icon" data-dismiss="modal" aria-label="Close"
+                                wire:click="close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -569,13 +477,12 @@
                         <div class="modal-body">
                             <div class="task-container">
                                 <!-- Task Name -->
-                                <div class="form-group" style="margin-bottom: 10px;">
-                                    <label for="task_name" style="font-size: 13px; color: #778899;">Task Name<span
-                                        style="color: var(--requiredAlert);">*</span></label>
+                                <div class="form-group task-modal-name-container">
+                                    <label for="task_name" class="task-modal-name-label">Task Name<span class="task-star-icon"
+                                        >*</span></label>
                                     <input type="text" wire:model.debounce.0ms="task_name"
-                                        wire:input="autoValidate" class="placeholder-small"
-                                        placeholder="Enter task name"
-                                        style="width: 100%; font-size: 0.75rem; padding: 5px; outline: none; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;">
+                                        wire:input="autoValidate" class="placeholder-small task-modal-name-value"
+                                        placeholder="Enter task name">
                                     @error('task_name')
                                         <span class="text-danger">Task name is required</span>
                                     @enderror
@@ -583,18 +490,18 @@
 
 
                                 <!-- Assignee -->
-                                <div class="form-group"
-                                    style="color:grey;font-size:0.75rem;cursor:pointer; margin-bottom: 10px;">
-                                    <label for="assignee"
-                                        style="font-size: 13px;color:#778899; margin-bottom: 10px;">Assignee<span
-                                        style="color: var(--requiredAlert);">*</span></label>
+                                <div class="form-group task-modal-assignee-container">
+                                    <label for="assignee" class="task-modal-assignee-label">Assignee<span
+                                            style="color: var(--requiredAlert);">*</span></label>
                                     <br>
-                                    <i wire:click="forAssignee"  wire:change="autoValidate" class="fa fa-user icon" id="profile-icon"></i>
+                                    <i wire:click="forAssignee" wire:change="autoValidate" class="fa fa-user icon"
+                                        id="profile-icon"></i>
                                     @if ($showRecipients)
-                                        <strong style="font-size: 12;" >Selected assignee:
+                                        <strong class="task-modal-selected-assignee">Selected assignee:
                                         </strong><span>{{ $selectedPeopleName }}</span>
                                     @else
-                                        <a wire:click="forAssignee"  class="hover-link" style="color:black;cursor:pointer"> Add Assignee</a>
+                                        <a wire:click="forAssignee" class="hover-link task-modal-add-assignee"
+                                        > Add Assignee</a>
                                     @endif <br>
                                     @error('assignee')
                                         <span class="text-danger">Assignee is required</span>
@@ -602,42 +509,36 @@
                                 </div>
 
                                 @if ($assigneeList)
-                                    <div
-                                        style="border-radius:5px;background-color:grey;padding:8px;width:350px;max-height:250px;overflow-y:auto; ">
-                                        <div class="input-group d-flex" style="margin-bottom: 10px;">
-                                            <div class="input-group people-input-group-container"
-                                                style="width: 300px;padding-left: 10px;">
+                                    <div class="task-modal-assignee-list-container">
+                                        <div class="input-group d-flex task-modal-filter-container">
+                                            <div class="input-group task-input-group-container task-modal-search-container">
                                                 <input wire:input="filter" wire:model.debounce.0ms="searchTerm"
-                                                    type="text" class="form-control people-search-input"
+                                                    type="text" class="form-control task-search-input"
                                                     placeholder="Search employee name / Id" aria-label="Search"
                                                     aria-describedby="basic-addon1">
                                                 <div class="input-group-append">
                                                     <button wire:change="autoValidate" wire:click="filter"
-                                                        class="people-search-btn" type="button">
-                                                        <i class="fa fa-search people-search-icon"></i>
+                                                        class="task-search-btn" type="button">
+                                                        <i class="fa fa-search task-search-icon"></i>
                                                     </button>
                                                 </div>
                                             </div>
                                             <div wire:change="autoValidate" wire:click="closeAssignee"
                                                 aria-label="Close">
-                                                <i class="fa fa-times"
-                                                    style="font-size: 20px;margin-top: 5px;color: #fff; cursor: pointer;"
+                                                <i class="fa fa-times task-modal-close-assignee"
                                                     aria-hidden="true"></i>
                                             </div>
                                         </div>
                                         @if ($peopleData->isEmpty())
-                                            <div class="container"
-                                                style="text-align: center; color: white; font-size: 0.75rem;">No People
+                                            <div class="container task-modal-no-assignee">No People
                                                 Found
                                             </div>
                                         @else
                                             @foreach ($peopleData as $people)
                                                 <div wire:click="selectPerson('{{ $people->emp_id }}')"
-                                                    class="container"
-                                                    style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
+                                                    class="container task-assignee-people-container">
                                                     <div class="row align-items-center">
-                                                        <label for="person-{{ $people->emp_id }}"
-                                                            style="width: 100%; display: flex; align-items: center; margin: 0;">
+                                                        <label for="person-{{ $people->emp_id }}" class="task-assignee-people-label">
                                                             <div class="col-auto">
                                                                 <input type="radio"
                                                                     id="person-{{ $people->emp_id }}"
@@ -646,23 +547,22 @@
                                                             </div>
                                                             <div class="col-auto">
                                                                 @if (!empty($people->image) && $people->image !== 'null')
-                                                                    <img class="profile-image"
-                                                                        style="margin-left: 10px;"
+                                                                    <img class="profile-image task-assignee-people-img"
                                                                         src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
                                                                 @else
                                                                     @if ($people && $people->gender == 'Male')
-                                                                        <img style="margin-left: 10px;"
-                                                                            class="profile-image"
+                                                                        <img 
+                                                                            class="profile-image task-assignee-people-img"
                                                                             src="{{ asset('images/male-default.png') }}"
                                                                             alt="Default Male Image">
                                                                     @elseif($people && $people->gender == 'Female')
-                                                                        <img style="margin-left: 10px;"
-                                                                            class="profile-image"
+                                                                        <img 
+                                                                            class="profile-image task-assignee-people-img"
                                                                             src="{{ asset('images/female-default.jpg') }}"
                                                                             alt="Default Female Image">
                                                                     @else
-                                                                        <img style="margin-left: 10px;"
-                                                                            class="profile-image"
+                                                                        <img 
+                                                                            class="profile-image task-assignee-people-img"
                                                                             src="{{ asset('images/user.jpg') }}"
                                                                             alt="Default Image">
                                                                     @endif
@@ -670,13 +570,11 @@
 
                                                             </div>
                                                             <div class="col">
-                                                                <h6 class="username"
-                                                                    style="font-size: 0.75rem; color: white;">
+                                                                <h6 class="username task-assignee-people-username">
                                                                     {{ ucwords(strtolower($people->first_name)) }}
                                                                     {{ ucwords(strtolower($people->last_name)) }}
                                                                 </h6>
-                                                                <p class="mb-0"
-                                                                    style="font-size: 0.75rem; color: white;">
+                                                                <p class="mb-0 task-assignee-people-empid">
                                                                     (#{{ $people->emp_id }})
                                                                 </p>
                                                             </div>
@@ -689,18 +587,18 @@
                                 @endif
                                 <div class="row">
                                     <div class="col-md-6">
-                                        @if (empty($selectedPersonClients) || (is_array($selectedPersonClients) && !count($selectedPersonClients)) || ($selectedPersonClients instanceof \Illuminate\Support\Collection && $selectedPersonClients->isEmpty()))
+                                        @if (empty($selectedPersonClients) ||
+                                                (is_array($selectedPersonClients) && !count($selectedPersonClients)) ||
+                                                ($selectedPersonClients instanceof \Illuminate\Support\Collection && $selectedPersonClients->isEmpty()))
                                         @else
-                                            <div style="margin-bottom: 10px;">
-                                                <label style="font-size: 13px;color:#778899" for="clientSelect">Select
-                                                    Client<span
-                                                    style="color: var(--requiredAlert);">*</span></label>
-                                                <select wire:change="showProjects"
-                                                    style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"
+                                            <div class="task-modal-client-container">
+                                                <label class="task-client-label" for="clientSelect">Select
+                                                    Client<span class="text-danger">*</span></label>
+                                                <select wire:change="showProjects" class="task-client-select-container"
                                                     id="clientSelect" wire:model="client_id">
                                                     <option value="">Select client</option>
                                                     @foreach ($selectedPersonClients as $client)
-                                                        <option style="color:#778899;"
+                                                        <option class="task-client-select-options"
                                                             value="{{ $client->client->client_id }}">
                                                             {{ $client->client->client_name }}
                                                         </option>
@@ -714,20 +612,19 @@
 
                                     </div>
                                     <div class="col-md-6">
-                                        @if (is_null($selectedPersonClientsWithProjects) || 
-                                        empty($selectedPersonClientsWithProjects) || 
-                                        ($selectedPersonClientsWithProjects instanceof \Illuminate\Support\Collection && $selectedPersonClientsWithProjects->isEmpty()))
+                                        @if (is_null($selectedPersonClientsWithProjects) ||
+                                                empty($selectedPersonClientsWithProjects) ||
+                                                ($selectedPersonClientsWithProjects instanceof \Illuminate\Support\Collection &&
+                                                    $selectedPersonClientsWithProjects->isEmpty()))
                                         @else
-                                            <div style="margin-bottom: 10px;">
-                                                <label style="font-size: 13px;color:#778899" for="clientSelect">Select
-                                                    Project<span
-                                                    style="color: var(--requiredAlert);">*</span></label>
-                                                <select wire:change="autoValidate"
-                                                    style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"
+                                            <div class="task-modal-project-container">
+                                                <label class="task-project-label" for="clientSelect">Select
+                                                    Project<span class="text-danger">*</span></label>
+                                                <select wire:change="autoValidate" class="task-project-select-container"
                                                     id="clientSelect" wire:model="project_name">
                                                     <option value="">Select project</option>
                                                     @foreach ($selectedPersonClientsWithProjects as $project)
-                                                        <option style="color:#778899;"
+                                                        <option class="task-project-select-options"
                                                             value="{{ $project->project_name }}">
                                                             {{ $project->project_name }}
                                                         </option>
@@ -744,56 +641,45 @@
                                 </div>
 
                                 <!-- Priority -->
-                                <div class="priority-container" style="margin-top: 0px;">
+                                <div class="priority-container task-modal-priority-container">
                                     <div class="row ">
                                         <div class="col-md-4">
-                                            <label for="priority"
-                                                style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Priority</label>
+                                            <label for="priority" class="task-priority-label">Priority</label>
                                         </div>
                                         <div class="col-md-8 mt-1">
-                                            <div id="priority"
-                                                style="display: flex; align-items: center; margin-top: 0px;">
-                                                <div class="priority-option" style="margin-left: 0px; padding: 0;">
+                                            <div id="priority" class="task-priority-options-container">
+                                                <div class="priority-option task-priority-low-container">
                                                     <input type="radio" id="low-priority" name="priority"
-                                                       wire:model="priority"
-                                                        value="Low">
-                                                    <span
-                                                        style="font-size: 0.75rem;color:#778899; padding: 0;margin-left:5px"
+                                                        wire:model="priority" value="Low">
+                                                    <span class="task-priority-options-value"
                                                         class="text-xs">Low</span>
                                                 </div>
-                                                <div class="priority-option" style="margin-left: 20px; padding: 0;">
+                                                <div class="priority-option task-priority-options-medium-high-containers">
                                                     <input type="radio" id="medium-priority" name="priority"
-                                                        wire:model="priority"
-                                                        value="Medium">
-                                                    <span
-                                                        style="font-size: 0.75rem;color:#778899; padding: 0;margin-left:5px"
+                                                        wire:model="priority" value="Medium">
+                                                    <span class="task-priority-options-value"
                                                         class="text-xs">Medium</span>
                                                 </div>
-                                                <div class="priority-option" style="margin-left: 20px; padding: 0;">
+                                                <div class="priority-option task-priority-options-medium-high-containers">
                                                     <input type="radio" id="high-priority" name="priority"
-                                                        wire:model="priority"
-                                                        value="High">
-                                                    <span
-                                                        style="font-size: 0.75rem;color:#778899; padding: 0;margin-left:5px"
+                                                        wire:model="priority" value="High">
+                                                    <span class="task-priority-options-value"
                                                         class="text-xs">High</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                               
+
                                 <!-- Due Date -->
-                                <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+                                <div class="row task-modal-duedate-container">
                                     <div class="col">
                                         <div class="form-group">
-                                            <label class="form-label"
-                                                style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Due
-                                                Date<span
-                                                style="color: var(--requiredAlert);">*</span></label>
+                                            <label class="form-label task-duedate-label">Due
+                                                Date<span class="text-danger">*</span></label>
                                             <br>
                                             <input wire:change="autoValidate" type="date" wire:model="due_date"
-                                                class="placeholder-small"
-                                                style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;"
+                                                class="placeholder-small task-duedate-input"
                                                 min="<?= date('Y-m-d') ?>" value="<?= date('Y-m-d') ?>">
                                             @error('due_date')
                                                 <span class="text-danger">Due date is required</span>
@@ -804,73 +690,62 @@
                                     <div class="col">
                                         <!-- Tags -->
                                         <div class="form-group">
-                                            <label for="tags"
-                                                style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Tags</label>
+                                            <label for="tags" class="task-tags-label">Tags</label>
 
                                             <input wire:change="autoValidate" type="text" wire:model="tags"
-                                                placeholder="Enter tags" class="placeholder-small"
-                                                style="width: 100%;font-size:0.75rem;padding:6px;outline:none;border:1px solid #ccc;border-radius:5px;margin-top: 5px;">
+                                                placeholder="Enter tags" class="placeholder-small task-tags-input">
                                         </div>
                                     </div>
                                 </div>
 
-                                <div  class="form-group"
-                                    style=" color: grey; font-size: 0.75rem">
-                                    <label for="assignee"
-                                        style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">Followers</label>
+                                <div class="form-group task-modal-followers-container">
+                                    <label for="assignee" class="task-follower-label">Followers</label>
                                     <br>
-                                    <i wire:click="forFollowers" wire:change="autoValidate" style="margin-top: 10px; cursor: pointer"
-                                        class="fas fa-user icon" id="profile-icon"></i>
+                                    <i wire:click="forFollowers" wire:change="autoValidate"
+                                       class="fas fa-user icon task-follower-user-icon"
+                                        id="profile-icon"></i>
                                     @if ($showFollowers)
-                                        <strong style="font-size: 12;">Selected Followers:
+                                        <strong class="task-selected-follower">Selected Followers:
                                         </strong><span>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</span>
                                     @else
-                                        <a wire:click="forFollowers" class="hover-link" style="color:black;cursor:pointer"> Add Followers</a>
+                                        <a wire:click="forFollowers" class="hover-link task-add-followers"> Add Followers</a>
                                     @endif
                                 </div>
                                 @if ($followersList)
-                                    <div
-                                        style="border-radius:5px;background-color:grey;padding:8px;width:350px;max-height:250px;overflow-y:auto; ">
-                                        <div class="input-group d-flex" style="margin-bottom: 10px;">
-                                            <div class="input-group people-input-group-container"
-                                                style="width: 300px;padding-left: 10px;">
+                                    <div class="task-modal-followerlist-container">
+                                        <div class="input-group d-flex task-follower-filter-container">
+                                            <div class="input-group task-input-group-container task-follower-search-container">
                                                 <input wire:input="filter" wire:model.debounce.0ms="searchTerm"
-                                                    type="text" class="form-control people-search-input"
+                                                    type="text" class="form-control task-search-input"
                                                     placeholder="Search employee name / Id" aria-label="Search"
                                                     aria-describedby="basic-addon1">
                                                 <div class="input-group-append">
                                                     <button wire:change="autoValidate" wire:click="filter"
-                                                        class="people-search-btn" type="button">
-                                                        <i class="fa fa-search people-search-icon"></i>
+                                                        class="task-search-btn" type="button">
+                                                        <i class="fa fa-search task-search-icon"></i>
                                                     </button>
                                                 </div>
                                             </div>
                                             <div wire:change="autoValidate" wire:click="closeFollowers"
                                                 aria-label="Close">
-                                                <i class="fa fa-times"
-                                                    style="font-size: 20px;margin-top: 5px;color: #fff; cursor: pointer;"
+                                                <i class="fa fa-times task-follower-close-icon"
                                                     aria-hidden="true"></i>
                                             </div>
                                         </div>
                                         @if ($peopleData->isEmpty())
-                                            <div class="container"
-                                                style="text-align: center; color: white; font-size: 0.75rem;">No People
+                                            <div class="container task-no-follower">No People
                                                 Found
                                             </div>
                                         @else
                                             @foreach ($peopleData as $people)
-                                            <div
-                                            wire:click="togglePersonSelection('{{ $people->emp_id }}')"
-                                            class="container"
-                                            style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px;">
-                                            <div class="row align-items-center">
-                                                <div class="col-auto">
-                                                    <input 
-                                                        type="checkbox"
-                                                        value="{{ $people->emp_id }}"
-                                                        id="checkbox-{{ $people->emp_id }}"
-                                                        {{ in_array($people->emp_id, $selectedPeopleForFollowers) ? 'checked' : '' }}>
-                                                </div>
+                                                <div wire:click="togglePersonSelection('{{ $people->emp_id }}')"
+                                                    class="container task-modal-follower-peoples-container">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-auto">
+                                                            <input type="checkbox" value="{{ $people->emp_id }}"
+                                                                id="checkbox-{{ $people->emp_id }}"
+                                                                {{ in_array($people->emp_id, $selectedPeopleForFollowers) ? 'checked' : '' }}>
+                                                        </div>
                                                         <div class="col-auto">
                                                             @if (!empty($people->image) && $people->image !== 'null')
                                                                 <img class="profile-image"
@@ -892,13 +767,11 @@
                                                             @endif
                                                         </div>
                                                         <div class="col">
-                                                            <h6 class="username"
-                                                                style="font-size: 0.75rem; color: white;">
+                                                            <h6 class="username task-follower-people-username">
                                                                 {{ ucwords(strtolower($people->first_name)) }}
                                                                 {{ ucwords(strtolower($people->last_name)) }}
                                                             </h6>
-                                                            <p class="mb-0"
-                                                                style="font-size: 0.75rem; color: white;">
+                                                            <p class="mb-0 task-follower-people-empid">
                                                                 (#{{ $people->emp_id }})
                                                             </p>
                                                         </div>
@@ -912,25 +785,21 @@
 
 
                                 <div class="form-group">
-                                    <label for="Subject"
-                                        style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 10px; padding: 0 10px 0 0;">Subject</label>
+                                    <label for="Subject" class="task-modal-subject-label">Subject</label>
                                     <br>
-                                    <input wire:change="autoValidate" wire:model="subject" class="placeholder-small"
-                                        placeholder="Enter subject" rows="4"
-                                        style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;margin-top: 5px;"></input>
+                                    <input wire:change="autoValidate" wire:model="subject" class="placeholder-small task-subject-input"
+                                        placeholder="Enter subject" rows="4"></input>
                                 </div>
                                 <!-- Description -->
                                 <div class="form-group">
-                                    <label for="description"
-                                        style="font-size: 13px;color:#778899; margin-left: 0px; margin-top: 10px; padding: 0 10px 0 0;">Description</label>
+                                    <label for="description" class="task-description-label">Description</label>
                                     <br>
-                                    <textarea wire:change="autoValidate" wire:model="description" class="placeholder-small"
-                                        placeholder="Add description" rows="4"
-                                        style="width: 100%;font-size:0.75rem;padding:5px;outline:none;border:1px solid #ccc;border-radius:5px;margin-top: 5px;"></textarea>
+                                    <textarea wire:change="autoValidate" wire:model="description" class="placeholder-small task-description-textarea"
+                                        placeholder="Add description" rows="4"></textarea>
                                 </div>
 
                                 <!-- File Input -->
-                                
+
                                 <div class="row">
                                     {{-- <div class="col">
                                         <label for="fileInput"
@@ -939,27 +808,31 @@
                                         </label>
                                     </div> --}}
                                     <div class="col">
-                                        <label for="fileInput" style="cursor: pointer; font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">
+                                        <label for="fileInput" class="task-file-input-label">
                                             <i class="fa fa-paperclip"></i> Attach Image
                                         </label>
                                     </div>
-                                   
-                                </div>
-                                
-                            <div>
-                                <input type="file" style="font-size: 0.75rem;" wire:model="file_path" id="file_path" wire:change="autoValidate" class="form-control" onchange="handleImageChange()">
-                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
 
-                            </div>
-                            <div id="flash-message-container" style="display: none; margin-top: 10px;" class="alert alert-success"
-                                    role="alert"></div>
+                                </div>
+
+                                <div>
+                                    <input type="file" wire:model="file_path"
+                                        id="file_path" wire:change="autoValidate" class="form-control task-modal-filepath"
+                                        onchange="handleImageChange()">
+                                    @error('file_path')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+
+                                </div>
+                                <div id="flash-message-container"
+                                    class="alert alert-success task-fileinput-success" role="alert"></div>
 
 
                                 {{-- <input wire:change="autoValidate" style="font-size: 0.75rem;" wire:model="image"
                                     type="file" accept="image/*" onchange="handleImageChange()"> --}}
 
-                                <div style="text-align: center;margin-bottom:10px">
-                                    <button style="margin-top: 20px;" wire:click="submit" class="submit-btn"
+                                <div class="task-modal-save-container">
+                                    <button wire:click="submit" class="submit-btn task-modal-save-button"
                                         type="button" name="link">Save
                                     </button>
                                 </div>
@@ -973,7 +846,7 @@
     @endif
     {{-- view file popup --}}
     @if ($showViewFileDialog)
-        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal d-block" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -981,8 +854,7 @@
                     </div>
                     <div class="modal-body text-center">
                         <img src="{{ 'data:image/jpeg;base64,' . base64_encode($viewrecord->file_path) }}"
-                            class="img-fluid" alt="Image preview"
-                            >
+                            class="img-fluid" alt="Image preview">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="submit-btn"
@@ -996,31 +868,32 @@
     @endif
     <!-- Add Comment Modal -->
     @if ($showModal)
-        <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
+        <div wire:ignore.self class="modal fade show d-block" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header d-flex justify-content-between" style="background-color: rgb(2, 17, 79); color: white; height: 40px; padding: 8px; position: relative;">
+                    <div class="modal-header d-flex justify-content-between task-comment-modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Add Comment</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            wire:click="closeModal" style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
+                        <button type="button" class="close task-comment-modal-close-icon" data-dismiss="modal" aria-label="Close"
+                            wire:click="closeModal">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div id="alert-container" class="d-flex justify-content-center alert-container " wire:poll.5s="hideAlert" style="position: sticky; top: 12%; z-index: 10; width: 100%;" >
+                    <div id="alert-container" class="d-flex justify-content-center alert-container task-comment-modal-flash-message"
+                        wire:poll.5s="hideAlert">
 
                         @if ($showAlert)
-                            <p class="alert alert-success" role="alert" style=" font-weight: 400;width:fit-content;padding:10px;border-radius:5px; margin-top: 20px;" >
+                            <p class="alert alert-success task-comment-flash-text" role="alert">
                                 {{ session('comment_message') }}
-                                <span style="font-weight:500;margin:0px 10px; cursor: pointer; " wire:click='hideAlert'>x</span>
+                                <span class="task-comment-flash-close-icon"
+                                    wire:click='hideAlert'>x</span>
                             </p>
                         @endif
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="addComment">
                             <div class="form-group">
-                                <label for="comment"
-                                    style="color: #778899;font-size:13px;font-weight:500;">Comment:</label>
+                                <label for="comment" class="task-comment-label">Comment:</label>
                                 <p>
                                     <textarea class="form-control" id="comment" wire:model.lazy="newComment"
                                         wire:keydown.debounce.500ms="validateField('newComment')"></textarea>
@@ -1030,36 +903,33 @@
                                 @enderror
                             </div>
                             <div class="d-flex justify-content-center">
-                                <button type="submit" class="submit-btn" style="font-size:0.75rem;">Submit</button>
+                                <button type="submit" class="submit-btn task-comment-submit-btn">Submit</button>
                             </div>
                         </form>
-                        <div style="max-height: 300px;overflow-y:auto;">
+                        <div class="task-comment-list-container">
                             @if ($taskComments->count() > 0)
                                 @foreach ($taskComments as $comment)
                                     <div class="comment mb-4 mt-2">
                                         <div class="d-flex align-items-center gap-5">
                                             <div class="col-md-4 p-0 comment-details">
-                                                <p style="color: #000;font-size:0.75rem;font-weight:500;margin-bottom:0;"
-                                                    class="truncate-text"
+                                                <p
+                                                    class="truncate-text task-comment-emp-name"
                                                     title="{{ $comment->employee->full_name }}">
                                                     {{ $comment->employee->full_name }}
                                                 </p>
                                             </div>
                                             <div class=" col-md-3 p-0 comment-time">
-                                                <span
-                                                    style="color: #778899;font-size:10px;font-weight:normal;margin-left:15px;">{{ $comment->created_at->diffForHumans() }}</span>
+                                                <span class="task-comment-time">{{ $comment->created_at->diffForHumans() }}</span>
                                             </div>
                                             @if (Auth::guard('emp')->user()->emp_id == $comment->emp_id)
                                                 <div class="col-md-2 p-0 comment-actions">
                                                     <button class="comment-btn"
                                                         wire:click="openEditCommentModal({{ $comment->id }})">
-                                                        <i class="fas fa-edit"
-                                                            style="color: #778899;height:7px;width:7px;"></i>
+                                                        <i class="fas fa-edit task-comment-edit-icon"></i>
                                                     </button>
                                                     <button class="comment-btn"
                                                         wire:click="deleteComment({{ $comment->id }})">
-                                                        <i class="fas fa-trash"
-                                                            style="color: #778899;height:7px;width:7px;"></i>
+                                                        <i class="fas fa-trash task-comment-trash-icon"></i>
                                                     </button>
                                                 </div>
                                             @endif
@@ -1072,11 +942,10 @@
                                                 <!-- Button to update comment -->
                                                 <button class="update-btn p-1"
                                                     wire:click="updateComment({{ $comment->id }})">Update</button>
-                                                <button class="btn btn-secondary p-1 m-0" wire:click="cancelEdit"
-                                                    style="font-size: 0.75rem;">Cancel</button>
+                                                <button class="btn btn-secondary p-1 m-0 task-comment-edit-cancel-btn" wire:click="cancelEdit">Cancel</button>
                                             @else
                                                 <!-- Display comment content -->
-                                                <p style="margin-bottom: 0;font-size:0.75rem;color:#515963;">
+                                                <p class="task-comment-text-value">
                                                     {{ ucfirst($comment->comment) }}
                                                 </p>
                                             @endif
@@ -1097,7 +966,6 @@
 
 
 <script>
-
     function handleImageChange() {
         // Display a flash message
         showFlashMessage('File uploaded successfully!');
@@ -1121,7 +989,5 @@
             modalImage.src = imageSrc;
         }
     }
-
-
 </script>
 </div>
