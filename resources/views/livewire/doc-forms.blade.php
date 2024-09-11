@@ -55,6 +55,17 @@
 
                         function toggleDetails(elementId) {
                             $('#' + elementId).toggle();
+
+                            // const icon = iconElement.querySelector('.fa');
+                            var icon = event.currentTarget.querySelector('.fa');
+                            // var icon = document.querySelector(`[onclick="toggleDetails('${containerId}')"]`);
+                            if (icon.classList.contains('fa-caret-right')) {
+                                icon.classList.remove('fa-caret-right');
+                                icon.classList.add('fa-caret-down');
+                            } else {
+                                icon.classList.remove('fa-caret-down');
+                                icon.classList.add('fa-caret-right');
+                            }
                         }
                     </script>
                 </div>
