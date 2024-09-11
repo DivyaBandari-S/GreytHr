@@ -1554,12 +1554,12 @@ color: #fff;
                             <div class="form-row" style="display: flex; justify-content: center;">
                                 <div class="form-group col-md-3 col-sm-6 start-date-for-attend-period">
                                     <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
-                                        date</label>
+                                        Date</label>
                                     <input type="date" class="form-control" id="fromDate" wire:model="from_date" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                                 <div class="form-group col-md-3 col-sm-6">
                                     <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To
-                                        date</label>
+                                        Date</label>
                                     <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                             </div>
