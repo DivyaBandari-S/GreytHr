@@ -33,11 +33,12 @@ class ViewPendingDetails extends Component
     public $selectedYear;
     public $filter = '';
     public $showAlert = false;
+    public $index;
     public function mount()
     {
         //for year selection
         $this->selectedYear = Carbon::now()->format('Y');
-        $this->fetchPendingLeaveApplications();
+        $this->fetchPendingLeaveApplications($this->filter = null);
     }
     public function hideAlert()
     {

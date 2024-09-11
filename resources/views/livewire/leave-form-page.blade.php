@@ -136,7 +136,7 @@
          @endif
          @elseif($activeSection === 'pendingButton')
          @if ($showAlert)
-         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.20s="hideAlert" style="font-size: 12px; right: 25%;top:-12%;" id="success-alert">
+         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.20s="hideAlert" style="font-size: 12px; right: 25%;top:-10%;" id="success-alert">
             {{ session('cancelMessage') }}
             <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close" wire:click="hideAlert">
                <span>X</span>
@@ -274,9 +274,8 @@
 
                               <a href="{{ route('leave-history', ['leaveRequestId' => $leaveRequest->id]) }}">
 
-                                 <span style="color: rgb(2,17,53); font-size: 12px; font-weight: 500;">View
+                                 <span class="anchorTagDetails">View
                                     Details</span>
-
                               </a>
                               @if($leaveRequest->category_type === 'Leave')
                               <button class="withdraw" wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
@@ -438,7 +437,7 @@
 
                            <div class="content px-1 ">
                               <a href="{{ route('leave-pending', ['leaveRequestId' => $leaveRequest->id]) }}">
-                                 <span class="viewDetails">View
+                                 <span class="anchorTagDetails">View
                                     Details</span>
                               </a>
 

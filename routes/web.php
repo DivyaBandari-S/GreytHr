@@ -331,7 +331,6 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
     Route::get('/leave-pending/{leaveRequestId}', LeavePending::class)->name('leave-pending');
-    Route::get('/team-on-leave', TeamOnLeave::class);
     Route::get('/team-on-leave-chart', TeamOnLeaveChart::class)->name('team-on-leave');
     Route::get('/testing', Test::class);
     // Route::get('/leaveBalChart', LeaveBalancesChart::class)->name('leave-details');
