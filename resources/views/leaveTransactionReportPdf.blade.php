@@ -205,9 +205,12 @@
                             <td>{{ $transaction['leave_type'] }}</td>
                            <td> @if ($transaction['leave_status'] === 'approved')
                                 Availed
-                            @else
+                            @elseif($transaction['leave_status'] === 'rejected')
+                                Rejected
+                                @else
                                 {{ $transaction['leave_status'] }}
                             @endif
+                            
                         </td>
                             <td>{{ \Carbon\Carbon::parse($transaction['created_at'])->format('d M Y H:i') }}</td>
                             <td>{{ \Carbon\Carbon::parse($transaction['leave_from_date'])->format('d M Y') }}</td>

@@ -1456,11 +1456,37 @@ color: #fff;
 
         <div class="row m-0 mt-3">
             <div class="row m-0 d-flex justify-content-center" style="display:flex;justify-content:center;">
-                <div class="penalty-and-average-work-hours-card mb-3 col-md-3">
-                    <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
-                        <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
+            
+                <div class="penalty-and-average-work-hours-card col-md-3 mb-3">
+                    <div class="insight-card bg-white pt-2 pb-2"style="{{ $percentageinworkhrsforattendance == 0 ? 'height: 135px;' : '' }}">
+                        <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
+                        </h6>
                         <section class="text-center">
-                            <p class="text-2" style="margin-top:30px;"> 0 </p>
+                            
+                            <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
+                            
+                          
+                            <div>
+                            @if($avgWorkHoursPreviousMonth==0)
+                                   <span class="text-success ng-star-inserted" style="font-size:10px;">
+                                            </span>
+                                            <span class="text-muted" style="font-size:10px;margin-left:0px;">
+                                            </span>
+                              
+                            @elseif($percentageinworkhrsforattendance>0)
+                                            <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
+                                            </span>
+                                            <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                            </span>
+                                   @elseif($percentageinworkhrsforattendance<0)
+                                       <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageinworkhrsforattendance)}}%
+                                        </span>
+                                        <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                        </span> 
+                                    @endif
+                                     
+                            </div>
+
                         </section>
                     </div>
                 </div>
@@ -1496,36 +1522,12 @@ color: #fff;
                         </section>
                     </div>
                 </div>
-                <div class="penalty-and-average-work-hours-card col-md-3 mb-3">
-                    <div class="insight-card bg-white pt-2 pb-2"style="{{ $percentageinworkhrsforattendance == 0 ? 'height: 135px;' : '' }}">
-                        <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">Avg. Work Hrs
-                        </h6>
-                        <section class="text-center">
-                            
-                            <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
-                            
-                          
-                            <div>
-                            @if($avgWorkHoursPreviousMonth==0)
-                                   <span class="text-success ng-star-inserted" style="font-size:10px;">
-                                            </span>
-                                            <span class="text-muted" style="font-size:10px;margin-left:0px;">
-                                            </span>
-                              
-                            @elseif($percentageinworkhrsforattendance>0)
-                                            <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
-                                            </span>
-                                            <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                            </span>
-                                   @elseif($percentageinworkhrsforattendance<0)
-                                       <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageinworkhrsforattendance)}}%
-                                        </span>
-                                        <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                        </span> 
-                                    @endif
-                                     
-                            </div>
 
+                <div class="penalty-and-average-work-hours-card mb-3 col-md-3">
+                    <div class="insight-card  bg-white pt-2 pb-2" style="height: 135px;">
+                        <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;"> Penalty Days </h6>
+                        <section class="text-center">
+                            <p class="text-2" style="margin-top:30px;"> 0 </p>
                         </section>
                     </div>
                 </div>

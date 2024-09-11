@@ -75,12 +75,10 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="globe pt-4" >
+                <div class="globe pt-4">
                     <div class="section-banner">
                         <div id="star-1">
                             <div class="curved-corner-star">
@@ -131,7 +129,7 @@
                     <div class="homeCard4">
                         <div class="p-3">
                             <p class="payslip-card-title ">{{ $currentDate }}</p>
-                            <p style="margin-top: 10px; font-size: 11px;">
+                            <p class="normalText mt-2">
                                 @php
                                 // Fetch shift times
                                 $EmployeeStartshiftTime = $employeeShiftDetails->shift_start_time;
@@ -171,11 +169,11 @@
                                 updateTime();
                                 setInterval(updateTime, 1000);
                             </script>
-                            <div wire:ignore class="A d-flex justify-content-between align-items-center flex-row" style="margin-top:2em">
+                            <div  class="A d-flex justify-content-between align-items-center flex-row" style="margin-top:2em">
                                 <a class="viewSwipesList" wire:click="open">View
                                     Swipes</a>
-                                <button wire:ignore id="signButton"
-                                    style="color: white; width: 80px; height: 26px;font-size:10px; background-color: rgb(2, 17, 79); border: 1px solid #CFCACA; border-radius: 5px; "
+                                <button id="signButton"
+                                    class="signInButton"
                                     wire:click="toggleSignState">
                                     @if ($swipes)
                                     @if ($swipes->in_or_out == 'OUT')
@@ -208,14 +206,11 @@
                             @foreach ($calendarData as $entry)
                             @if (!empty($entry->festivals))
                             <div>
-                                <p class="payslip-small-desc mt-3" style=" font-size:0.75rem;">
-                                    <span
-                                        style="font-weight: 500;">{{ date('d M', strtotime($entry->date)) }}
-                                        <span
-                                            style="font-size: 10px; font-weight: normal;">{{ date('l', strtotime($entry->date)) }}</span></span>
+                                <p class="payslip-small-desc mt-3">
+                                    <span class="payslip-small-desc" style="font-weight:500;">{{ date('d M', strtotime($entry->date)) }}
+                                        <span class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
                                     <br>
-                                    <span
-                                        style="font-size: 11px; font-weight: normal;">{{ ucfirst($entry->festivals) }}</span>
+                                    <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
                                 </p>
                             </div>
                             @php
@@ -315,7 +310,7 @@
                         $initials = '?';
                         }
                         @endphp
-                        <a wire:ignore href="/employees-review">
+                        <a  href="/employees-review">
                             <div
                                 class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
                                 <div class="thisCircle d-flex align-items-center justify-content-center"
@@ -336,8 +331,7 @@
                         @endforeach
 
                         @if ($totalRequests > 3)
-                        <div
-                            class="remainContent d-flex flex-column justify-content-center align-items-center">
+                        <div class="remainContent d-flex flex-column justify-content-center align-items-center">
                             <a href="#" wire:click="reviewLeaveAndAttendance">
                                 <span>+{{ $totalRequests - 3 }}</span>
                                 <p class="mb-0" style="margin-top:-5px;">More</p>
@@ -362,13 +356,12 @@
                 <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
-                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                                <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
                                     <b>Review</b>
                                 </h5>
-                                <button type="button" class="btn-close btn-primary" aria-label="Close"
-                                    wire:click="closereviewLeaveAndAttendance"
-                                    style="background-color: white; height:10px;width:10px;">
+                                <button type="button" class="btn-closeModal btn-primary" aria-label="Close"
+                                    wire:click="closereviewLeaveAndAttendance">
                                 </button>
                             </div>
                             <div class="modal-body">
@@ -432,8 +425,7 @@
                                             title="{{ $firstName }} {{ $lastName }}">
                                             <span>{{ $initials }}</span>
                                         </div>
-                                        <span
-                                            style="display: block;font-size:10px;color:#778899;text-align:center;overflow: hidden; text-overflow: ellipsis;max-width:30px;white-space:nowrap;">Attendance
+                                        <span class="attendanceRegularization">Attendance
                                             Regularisation</span>
                                 </div>
 
@@ -762,8 +754,7 @@
                         </div>
                     </div>
                     @else
-                    <div
-                        style="display:flex;justify-content:center;flex-direction:column;align-items:center;">
+                    <div class="leaveNodata">
                         <img src="{{ asset('images/no data.png') }}" name="noData" id="noData"
                             alt="Image Description" style="width: 120px; height:100px;">
                         <p class="homeText">
@@ -791,15 +782,15 @@
                 </div>
                 <div class="row text-center mt-3">
                     <div class="col-4">
-                        <h3 class="text-primary mb-1 track-text">{{ $TaskAssignedToCount }}</h3>
+                        <h3 class="mb-1 track-text">{{ $TaskAssignedToCount }}</h3>
                         <p class="mb-0 track-text">Tasks Assigned</p>
                     </div>
                     <div class="col-4">
-                        <h3 class="text-success mb-1 track-text">{{ $TasksCompletedCount }}</h3>
+                        <h3 class="mb-1 track-text">{{ $TasksCompletedCount }}</h3>
                         <p class="mb-0 track-text">Tasks Completed</p>
                     </div>
                     <div class="col-4">
-                        <h3 class="text-warning mb-1 track-text">{{ $TasksInProgressCount }}</h3>
+                        <h3 class="mb-1 track-text">{{ $TasksInProgressCount }}</h3>
                         <p class="mb-0 track-text">Tasks In Progress</p>
                     </div>
                 </div>
@@ -819,8 +810,7 @@
                     <a href="#" class="quick-link">YTD Reports</a>
                     <a href="#" class="quick-link">Loan Statement</a>
                 </div>
-                <div class="col-md-5"
-                    style="text-align: center; background-color: #FFF8F0; padding: 5px 10px; border-radius: 10px; font-size: 8px; font-family: montserrat; bottom: 0; right: 0;">
+                <div class="col-md-5 quickAccessNoData">
                     <img src="images/quick_access.png" style="padding-top: 2em; width: 6em">
                     <p class="pt-4">Use quick access to view important salary details.</p>
                 </div>
@@ -834,8 +824,8 @@
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                <div class="modal-header">
+                    <h5 class="modal-title">
                         <b>Swipes</b>
                     </h5>
                     <button type="button" class="btn-close btn-primary" data-dismiss="modal"
@@ -845,31 +835,26 @@
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
                     <div class="row">
-                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Date :
-                            <span style="color: #333;">{{ $currentDate }}</span>
+                        <div class="col normalTextValue" >Date :
+                            <span class="normalText">{{ $currentDate }}</span>
                         </div>
-                        <div class="col" style="font-size: 12px;color:#778899;font-weight:500;">Shift
-                            Time : <span style="color: #333;">10:00 to 19:00</span></div>
+                        <div class="col normalTextValue" >Shift
+                            Time : <span class="normalText">10:00 to 19:00</span></div>
                     </div>
                     <table class="swipes-table mt-2 border" style="width: 100%;">
-                        <tr style="background-color: #f6fbfc;">
-                            <th
-                                style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">
+                        <tr >
+                            <th>
                                 Swipe Time</th>
-                            <th
-                                style="width:50%;font-size: 12px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;">
+                            <th >
                                 Sign-In / Sign-Out</th>
                         </tr>
-
                         @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
                         @foreach ($swipeDetails as $swipe)
-                        <tr style="border:1px solid #ccc;">
-                            <td
-                                style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">
+                        <tr >
+                            <td>
                                 {{ $swipe->swipe_time }}
                             </td>
-                            <td
-                                style="width:50%;font-size: 10px; color: #778899;text-align:start;padding:5px 10px">
+                            <td>
                                 {{ $swipe->in_or_out }}
                             </td>
                         </tr>
@@ -891,13 +876,13 @@
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                <div class="modal-header" >
+                    <h5 class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
-                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                    <button type="button" class="btn-closeModal btn-primary" data-dismiss="modal"
                         aria-label="Close" wire:click="closeAllAbsentEmployees"
-                        style="background-color: white; height:10px;width:10px;">
+                        >
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -927,19 +912,18 @@
         </div>
     </div>
     <div class="modal-backdrop fade show blurred-backdrop"></div>
-
     @endif
     @if ($showAllLateEmployees)
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                <div class="modal-header" >
+                    <h5  class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
-                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                    <button type="button" class="btn-closeModal btn-primary" data-dismiss="modal"
                         aria-label="Close" wire:click="closeAllLateEmployees"
-                        style="background-color: white; height:10px;width:10px;">
+                        >
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -961,9 +945,8 @@
                             </div>
                             </a>
                             @endif
-                            @endfor
+                        @endfor
                     </div>
-
                 </div>
             </div>
         </div>
@@ -975,13 +958,13 @@
     <div class="modal" tabindex="-1" role="dialog" style="display: block;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                    <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
+                <div class="modal-header" >
+                    <h5  class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
-                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                    <button type="button" class="btn-closeModal btn-primary" data-dismiss="modal"
                         aria-label="Close" wire:click="closeAllEarlyEmployees"
-                        style="background-color: white; height:10px;width:10px;">
+                        >
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -1005,7 +988,6 @@
                             @endif
                             @endfor
                     </div>
-
                 </div>
             </div>
         </div>

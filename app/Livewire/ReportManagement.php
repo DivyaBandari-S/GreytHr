@@ -402,6 +402,7 @@ public  function updateTransactionType($event){
 public function leaveBalanceAsOnADayReport()
 {
 
+
     // Validate the 'toDate' input
     $this->validate([
         'toDate' => 'required|date',
@@ -422,9 +423,11 @@ public function leaveBalanceAsOnADayReport()
             ->whereIn('emp_id', $this->leaveBalance)
             ->select('emp_id', 'first_name', 'last_name')
             ->get();
+   
           
             $combinedData = $employees->map(function ($employee) {
                 $leaveBalances = ReportManagement::getLeaveBalances($employee->emp_id, $this->toDate);
+               
       
                 return [
                     'emp_id' => $employee->emp_id,
@@ -605,6 +608,7 @@ public function leaveBalanceAsOnADayReport()
     
     public function downloadNegativeLeaveBalanceReport()
     {
+
         $this->validate([
             'toDate' => 'required|date',
         ], [
@@ -649,7 +653,8 @@ public function leaveBalanceAsOnADayReport()
             $query->whereJsonContains('applying_to', [['manager_id' => $loggedInEmpId]])
                 ->orWhereJsonContains('cc_to', [['emp_id' => $loggedInEmpId]]);
         })
-        ->where('to_date', '<=', $this->toDate);
+        ->where('to_date', '<=', $this->toDate)
+        ->where('leave_applications.status', 'approved');
 
        
     
@@ -681,6 +686,7 @@ public function leaveBalanceAsOnADayReport()
         )
         ->orderBy('date_only', 'asc')
         ->get();
+        
 
        
 
@@ -716,7 +722,7 @@ public function leaveBalanceAsOnADayReport()
                 })
             ];
         });
-
+     
 
     
         $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
@@ -801,6 +807,7 @@ public function leaveBalanceAsOnADayReport()
     public static function getLeaveBalances($employeeId, $selectedYear)
     {
         try {
+         
           
             // $selectedYear = now()->year;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
