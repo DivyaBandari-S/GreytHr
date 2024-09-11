@@ -782,15 +782,15 @@
                 </div>
                 <div class="row text-center mt-3">
                     <div class="col-4">
-                        <h3 class="text-primary mb-1 track-text">{{ $TaskAssignedToCount }}</h3>
+                        <h3 class="mb-1 track-text">{{ $TaskAssignedToCount }}</h3>
                         <p class="mb-0 track-text">Tasks Assigned</p>
                     </div>
                     <div class="col-4">
-                        <h3 class="text-success mb-1 track-text">{{ $TasksCompletedCount }}</h3>
+                        <h3 class="mb-1 track-text">{{ $TasksCompletedCount }}</h3>
                         <p class="mb-0 track-text">Tasks Completed</p>
                     </div>
                     <div class="col-4">
-                        <h3 class="text-warning mb-1 track-text">{{ $TasksInProgressCount }}</h3>
+                        <h3 class="mb-1 track-text">{{ $TasksInProgressCount }}</h3>
                         <p class="mb-0 track-text">Tasks In Progress</p>
                     </div>
                 </div>

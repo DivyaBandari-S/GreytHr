@@ -142,11 +142,13 @@ class LeaveHelper
     public static function getApprovedLeaveDaysOnSelectedDay($employeeId, $selectedYear)
     {
         // Fetch approved leave requests
+     
         $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where('status', 'approved')
             ->whereIn('leave_type', ['Casual Leave Probation', 'Loss Of Pay', 'Sick Leave', 'Casual Leave', 'Maternity Leave', 'Marriage Leave', 'Petarnity Leave'])
-            ->whereDate('to_date', '>=', $selectedYear)
+            ->whereDate('to_date', '<=', $selectedYear)
             ->get();
+      
         $totalCasualDays = 0;
         $totalCasualLeaveProbationDays = 0;
         $totalSickDays = 0;
