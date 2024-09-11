@@ -128,7 +128,7 @@ class Catalog extends Component
     }
     public function ItRequest()
     {
-        $this->ItRequestaceessDialog = true; // Open the Medical (Sec 80D) modal
+        $this->ItRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = ' Request For IT';
@@ -136,7 +136,7 @@ class Catalog extends Component
     public function AddRequest()
     {
 
-        $this->AddRequestaceessDialog = true; // Open the Medical (Sec 80D) modal
+        $this->AddRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'Distribution List Request';
@@ -151,7 +151,7 @@ class Catalog extends Component
     }
     public function DistributionRequest()
     {
-        $this->DistributionRequestaceessDialog = true; // Open the Medical (Sec 80D) modal
+        $this->DistributionRequestaceessDialog = true; 
         $this->reset(['category']);
         $this->showModal = true;
 
@@ -159,7 +159,7 @@ class Catalog extends Component
     }
     public function MailRequest()
     {
-        $this->MailRequestaceessDialog = true; // Open the Medical (Sec 80D) modal
+        $this->MailRequestaceessDialog = true; 
         $this->reset(['category']);
         $this->showModal = true;
 
@@ -167,8 +167,7 @@ class Catalog extends Component
     }
     public function DevopsRequest()
     {
-        $this->DevopsRequestaceessDialog = true; // Open the Medical (Sec 80D) modal
-
+        $this->DevopsRequestaceessDialog = true; 
         $this->reset(['category']);
         $this->showModal = true;
 
@@ -176,7 +175,7 @@ class Catalog extends Component
     }
     public function IdRequest()
     {
-        $this->IdRequestaceessDialog = true; // Open the Medical (Sec 80D) modal
+        $this->IdRequestaceessDialog = true; 
         $this->reset(['category']);
         $this->showModal = true;
 
@@ -184,7 +183,7 @@ class Catalog extends Component
     }
     public function MmsRequest()
     {
-        $this->MmsRequestaceessDialog = true; // Open the Medical (Sec 80D) modal
+        $this->MmsRequestaceessDialog = true;
         $this->reset(['category']);
         $this->showModal = true;
 
