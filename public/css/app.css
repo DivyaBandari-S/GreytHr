@@ -171,7 +171,6 @@
 /* Ending of letter request module (Kumar Asapu)*/
 
 /* Starting of home module (Kumar Asapu,Archana Goud,Divya Bandari,Pranita Priyadarshi & Siva)*/
-
 .greet {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     tab-size: 4;
@@ -229,6 +228,9 @@
     color: var(--main-heading-color);
     text-align: center;
     font-size: var(--normal-font-size);
+}
+.globe{
+    border-radius: 10px; background-color: #02114f; text-align: -webkit-center; position: relative;
 }
 .leaveCustom-btn {
     width: 100px;
@@ -2783,7 +2785,14 @@ input[type="radio"] {
     display: none;
     background-color: #fff;
 }
-
+.canvasBorder{
+    position: relative;border-radius:50%;
+    border: 0.2rem solid #272626;
+    padding: 2px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .accordion-content {
     display: flex;
     flex-direction: column;
@@ -3688,6 +3697,13 @@ l
     color: rgb(2,17,79);
     text-decoration: underline;
     font-weight: 500;
+    cursor: pointer;
+}
+.viewSwipesList{
+    font-size: var(--normal-font-size);
+    color: rgb(2,17,79);
+    font-weight: 500;
+    cursor: pointer;
 }
 
 .center {
@@ -5367,7 +5383,18 @@ option {
     line-height: 1.5em;
     color: #452c2c;
 }
-
+.show-salary{
+    display: flex; color: #1090D8; justify-content: space-between; font-size: 12px; margin-top: 20px; font-weight: 100;
+}
+.grossPay{
+    padding: 2px; width: 2px; height: 17px; background: #000000; border-radius: 2px;
+}
+.netPay{
+    padding: 2px; width: 2px; height: 17px; background: #1C9372; border-radius: 2px;
+}
+.deductionsPay{
+    padding: 2px; width: 2px; height: 17px; background: #B9E3C6; border-radius: 2px;
+}
 .payslip-small-desc {
     font-size: var(--normal-font-size);
 }
@@ -5706,3 +5733,5 @@ option {
     }
 
 }
+
+
