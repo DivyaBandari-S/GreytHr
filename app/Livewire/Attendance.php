@@ -235,18 +235,21 @@ class Attendance extends Component
 
         $currentMonthTotalMinutes = ($currentMonthHours * 60) + $currentMonthMinutes;
         $previousMonthTotalMinutes = ($previousMonthHours * 60) + $previousMonthMinutes;
-
+        
         // Calculate the difference in minutes
         $differenceInMinutes = $currentMonthTotalMinutes - $previousMonthTotalMinutes;
-        if ($previousMonthTotalMinutes != 0) {
+        
+       if ($previousMonthTotalMinutes != 0) {
             $this->percentageDifference = ($differenceInMinutes / $previousMonthTotalMinutes) * 100;
-        } else {
-            $this->percentageDifference = 0; // Handle the case where the previous month's total minutes is zero to avoid division by zero error
+        } 
+        else
+        {
+            $this->percentageDifference = 0;
         }
         // Convert the difference back to hours and minutes
         $hoursDifference = intdiv($differenceInMinutes, 60);
         $minutesDifference = $differenceInMinutes % 60;
-
+        
         return $this->percentageDifference;
     }
     public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)

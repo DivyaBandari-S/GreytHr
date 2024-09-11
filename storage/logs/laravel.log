@@ -1,0 +1,595 @@
+[2024-09-11 10:57:07] local.INFO: Stored session ID: 1ToMUakhbTsPQCHteuKOjpCSSuSHxzdtp3G6KREg  
+[2024-09-11 10:57:07] local.INFO: Existing session ID: None  
+[2024-09-11 10:57:07] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"1ToMUakhbTsPQCHteuKOjpCSSuSHxzdtp3G6KREg","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-11 10:57:07] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /whoisinchart HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkZFTElnVnJCa0JlNE5EczBkd2RGTkE9PSIsInZhbHVlIjoiY1NMbzZXZ3hEeXRkZ2xuTkVITXkzdE5TYmlRK1Zlb1p1NzRKTWdNMFA2STJNRGxNaFR6bmJMWHlWSlpiVVVZYU04c3E1MExXcmNWY0pVRThQTXFuT1Byb3ZHVGVveHJPVkV3QWdZWWNETXRpYmV4bG94UmVicUpIK1NNTXdYeksiLCJtYWMiOiJlNWE1M2UzNDc2M2E5OTg1NTk5MWExMjZmMDE1NDJiNzJkNDYxNzcyODY4YThhNzNhYjhhNDk4OTJhZGY0NGZmIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Im5iOHFoSU9ReHJOOXpYd3pQSmtMMUE9PSIsInZhbHVlIjoieUxuc0tXVWhocXBCS29Hem5zLzRyaytobDkrcFgrV0twY3RTZFRtcW1qTEo1a0J3ckFCOXdxQzdoOC85bGl0V2VZcVFlcjljYnR0SzVsV0owL2FWK3VScHNZbGRuNDJObktjMWxMN1dKdkEyYjdTazFDdEoxNmFZZG1ZTnVkWWIiLCJtYWMiOiJiOTViYzM1NWU5MDc2YTY4M2VhM2UzNDA3MmRjOGViYTcxMDU4MTE1NWE2ZWY3Y2M2MThmZWVmOTA5ODQyM2MzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Microsoft Edge\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0
+
+Cookie: XSRF-TOKEN=sNyZxYAWZGaTY8zYMCl3umq0zNiQfoj54tOAIiGt; laravel_session=1ToMUakhbTsPQCHteuKOjpCSSuSHxzdtp3G6KREg
+
+
+
+"}} 
+[2024-09-11 11:00:13] local.INFO: Stored session ID: 1ToMUakhbTsPQCHteuKOjpCSSuSHxzdtp3G6KREg  
+[2024-09-11 11:00:13] local.INFO: Existing session ID: None  
+[2024-09-11 11:00:13] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"1ToMUakhbTsPQCHteuKOjpCSSuSHxzdtp3G6KREg","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-11 11:00:13] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /whoisinchart HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InNJSnd5MXdCZUVSY05CUGFHZzF2OEE9PSIsInZhbHVlIjoiYWplU2xjczRZMDIwRjQ5b0puaXRJL2NpV2pJNHZ6ZUNuRkpXK0dyL0VUTUNNM1hyem0wZkJRajlWcnBTWVFtTEVQSU1WVG1ZN3ZLMVRzYmVWSXlKQWZ5dkFDVnJjQnpCTUZrUTVBZjgxeXdGZkFJVk9vRi81WmtHbGlXVUpLdFUiLCJtYWMiOiIwNDQ4NjJjNzdmM2M4OGQ0OGQ3NmQ5M2RiODJmODNlOWYwZGY3N2Q4ZGZmOGZlNWZmNjljODcyOGI0N2IzNjU1IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InZaNFBVbFY4NjFRd0FyMVlZYTVuY3c9PSIsInZhbHVlIjoiak8xOUtjZitvd2Rmbkxyc05yWkNlYWFYY2lTemhJZkt0TFUvQ05vWXk5VThYZDdJcUk4S1Q5NjJPOUpiK1loTTRmaW9sU1BaMzZQR0pxeXF2SkRMWGQyT2hDUjRLUy84SzJpeWNxRHJCUG1tazdENkJBaTdQbjZDUW5nYUtRSjEiLCJtYWMiOiI2NTRlYzhlNDU4NTlhOTVmZGNhOWQ3YjIxY2QyYzhiZjE4ZTc4NTRmYmYyNGM3ZjYzYmY2ODE2YjgyNWQzMTAxIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Microsoft Edge\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0
+
+Cookie: XSRF-TOKEN=sNyZxYAWZGaTY8zYMCl3umq0zNiQfoj54tOAIiGt; laravel_session=1ToMUakhbTsPQCHteuKOjpCSSuSHxzdtp3G6KREg
+
+
+
+"}} 
+[2024-09-11 11:11:08] local.INFO: Session has timed out  
+[2024-09-11 11:11:24] local.INFO: Stored session ID:   
+[2024-09-11 11:11:24] local.INFO: Existing session ID: None  
+[2024-09-11 11:11:24] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"Ai5zqrMkhMt9uIlj6L5w8V9fTs80OL4mDczsa02d","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-11 11:11:24] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET / HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImpLYkFNdnUwcStOZmZuWCtBK1ZtOEE9PSIsInZhbHVlIjoiSmdPMEJwdmZMb3hpM25STWZnWWxwbk13VSswa21FNE5hallSVlBOWndXV3pzMHk0L3BBYjlHQTgybjM3ODZRNHNoU1pBYjI4SjZLUjVCblBITTdmNkk3cmNxdHJXdlZnSjRTZDNkTmc4NEZRRUhLbFZNTVZEbWhlbmx1cWpiN3AiLCJtYWMiOiIxODM2ODJlYjNjMWFjNzY4ZGU3NmJjYWUwN2VmMTVjN2E1OWQ1NzFlNWVhMWQ3MDk2NzA4MDU0MzA4ZmMyOTAwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImtyUzJYMW1FYVZEZTNzT1V3MGo3QVE9PSIsInZhbHVlIjoiaFFEdy9OaDBldnkxSWhOeDNxWVQ5YURsS2pJMjJwUDF1d1FZRng1MW5JYzNJYThBZVVDcEdleHpXQTdNOTg0RVlJN2pJN0dTVEtqbzNtWW1POXIxeWZjalRsamowb1V6VFFvaE1YY0xWTkkyMzExemR0OVNINzNzVk1oa2FObWsiLCJtYWMiOiJkZGU0NTNkM2VjZGUzZjcwOTA5Nzk3MWU5NzAwN2M0MDJiNzJlZGVjYWYwYWQ1ZGMyOGQ5NmZhZjdiODMyOTg4IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=rAnbN5YF8E0v0mzl8mdBabXXGUGMmiOsfIHSMnUJ; laravel_session=Ai5zqrMkhMt9uIlj6L5w8V9fTs80OL4mDczsa02d
+
+
+
+"}} 
+[2024-09-11 11:11:24] local.INFO: Request URL: https://api.open-meteo.com/v1/forecast?latitude=41.31&longitude=-72.92&current_weather=true  
+[2024-09-11 11:11:26] local.INFO: API Response: {"latitude":41.305393,"longitude":-72.932014,"generationtime_ms":0.07808208465576172,"utc_offset_seconds":0,"timezone":"GMT","timezone_abbreviation":"GMT","elevation":9.0,"current_weather_units":{"time":"iso8601","interval":"seconds","temperature":"°C","windspeed":"km/h","winddirection":"°","is_day":"","weathercode":"wmo code"},"current_weather":{"time":"2024-09-11T05:30","interval":900,"temperature":13.3,"windspeed":7.0,"winddirection":325,"is_day":0,"weathercode":0}} 
+[2024-09-11 11:11:26] local.INFO: API Response Status Code: {"status":200} 
+[2024-09-11 11:11:26] local.INFO: API Response Headers: {"headers":{"Date":["Wed, 11 Sep 2024 05:41:25 GMT"],"Content-Type":["application/json; charset=utf-8"],"Transfer-Encoding":["chunked"],"Connection":["keep-alive"]}} 
+[2024-09-11 11:11:26] local.INFO: API Response Body: {"body":"{\"latitude\":41.305393,\"longitude\":-72.932014,\"generationtime_ms\":0.07808208465576172,\"utc_offset_seconds\":0,\"timezone\":\"GMT\",\"timezone_abbreviation\":\"GMT\",\"elevation\":9.0,\"current_weather_units\":{\"time\":\"iso8601\",\"interval\":\"seconds\",\"temperature\":\"°C\",\"windspeed\":\"km/h\",\"winddirection\":\"°\",\"is_day\":\"\",\"weathercode\":\"wmo code\"},\"current_weather\":{\"time\":\"2024-09-11T05:30\",\"interval\":900,\"temperature\":13.3,\"windspeed\":7.0,\"winddirection\":325,\"is_day\":0,\"weathercode\":0}}"} 
+[2024-09-11 11:11:30] local.INFO: Received coordinates: Latitude: 17.421265, Longitude: 78.3477604  
+[2024-09-11 11:11:32] local.ERROR: Failed to fetch address. Error: <html>
+<head>
+<title>Access blocked</title>
+</head>
+<body>
+<h1>Access blocked</h1>
+
+<p>You have been blocked because you have violated the
+<a href="https://operations.osmfoundation.org/policies/nominatim/">usage policy</a>
+of OSM's Nominatim geocoding service. Please be aware that OSM's resources are
+limited and shared between many users. The usage policy is there to ensure that
+the service remains usable for everybody.</p>
+
+<p>Please review the terms and make sure that your
+software adheres to the terms. You should in particular verify that you have set a
+<b>custom HTTP referrer or HTTP user agent</b> that identifies your application, and
+that you are not overusing the service with massive bulk requests.</p>
+
+<p>If you feel that this block is unjustified or remains after you have adopted
+your usage, you may contact the Nominatim system administrator at
+nominatim@openstreetmap.org to have this block lifted.</p>
+</body>
+</head>
+  
+[2024-09-11 11:11:44] local.INFO: Stored session ID: Ai5zqrMkhMt9uIlj6L5w8V9fTs80OL4mDczsa02d  
+[2024-09-11 11:11:44] local.INFO: Existing session ID: None  
+[2024-09-11 11:11:44] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"Ai5zqrMkhMt9uIlj6L5w8V9fTs80OL4mDczsa02d","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-11 11:11:44] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /whoisinchart HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Iks1TGNkdnVrQnZZLzVVbW9WRVhJeGc9PSIsInZhbHVlIjoicHlNdDQwNkF1T0RUbERvaWl4bzdjKzJ1Q0dkT0xHVTc5dXlHdXllMDdIek5pUk9tUDFGSVVINTR2YkdSOU1hYTI3d08waUtycmQyY0xwem9TdFppMGhnTlBlRTdTdldxNm8vbWw0eVB1WlBhYW1IU2Qxa20rL0lidmxjSjZubHoiLCJtYWMiOiJlNDliMmViYmJlYWJkODc5OWZmZWE3MWQ0YjY0NWFjZDU1OTNkNDZkOGE5MDZjMTY1MDQ3N2IzZGQwNmRhYzI0IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InRUL00yck4zZ1BkMWszVmxjSWVNVGc9PSIsInZhbHVlIjoiekx0T05NNGhsemZTQVRJZ1BsQWdXK3ArYWNyV3FRbjZDdzhvZENETm1lRURadmpJVzRNeTBaNTJQUUlHb1JOSTVMYW9LQTZqM013NlVxaTk1dWVLWXBDQ2p5TE51SU8xZ1p3bG9FcVJVRjZhb3dmdXJzb1F5UEx2RmIrUmlPTVgiLCJtYWMiOiI1OTdmMmVjNTFkMzkzNjg3MjY5Yzc5ZTc3YTJmYjk5M2U1ZGFkNzBlY2NiMGUzNmViYWU5MGI0ODRjYzFlYjdiIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=rAnbN5YF8E0v0mzl8mdBabXXGUGMmiOsfIHSMnUJ; laravel_session=Ai5zqrMkhMt9uIlj6L5w8V9fTs80OL4mDczsa02d
+
+
+
+"}} 
+[2024-09-11 11:12:54] local.INFO: Stored session ID: Ai5zqrMkhMt9uIlj6L5w8V9fTs80OL4mDczsa02d  
+[2024-09-11 11:12:54] local.INFO: Existing session ID: None  
+[2024-09-11 11:12:54] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"Ai5zqrMkhMt9uIlj6L5w8V9fTs80OL4mDczsa02d","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-09-11 11:12:54] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /whoisinchart HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImR1SHU2eUcvY2lPNVg2Qm56NkRCOEE9PSIsInZhbHVlIjoicFdJbHhvbDFldmlib0ZaSDNlSndKaFpmZVhNcmFMTFBwOStlUHF4N1ZBLzJVOU9QZG5RUVhTVUUrSTYvQjVTSFMrd2R0Y2djT0d5MjEyN0pENGVKc1lpWnZTRjVqVUhIY2dCZnZYaHFDUTE4SmwwSFBoamkrOGZicUJzNXo4b2IiLCJtYWMiOiIyNDczNjUyMzE0YzkxY2UwZDMxNjk1ODU5NmI3OWRlYzY4MzYxMDYxNjk3OGI3YTNhOGFjMzRmOGQ4ZjJmNzE5IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImtDVlRoZDNUNU1mTGcwUE5ObTV3S1E9PSIsInZhbHVlIjoiL1lSemZmeFZJQWJyN1MyMFlPUVBvRU5oQWZIOWtEYS8xUk1ESWd2Vit3YmpXZzRZckpMdDBpTnFYenFuNlgxak5nWkhvaVd4dzhqZThiQmpFTmhGUGpkdWNxTkV2cCtpbWNsVmU2L0x0WlhFK3NaM28vV09HalV1MWpnSElVS1MiLCJtYWMiOiI5M2YzODBmZThiYWJlZGFjZDk1NDFjNDNmNmI0ZmNlNjBjZTY4ODJkNmYwZmYwMDBkYzYzM2E1YzZhZTI3MWRkIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"128\", \"Not;A=Brand\";v=\"24\", \"Google Chrome\";v=\"128\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=rAnbN5YF8E0v0mzl8mdBabXXGUGMmiOsfIHSMnUJ; laravel_session=Ai5zqrMkhMt9uIlj6L5w8V9fTs80OL4mDczsa02d
+
+
+
+"}} 
+[2024-09-11 11:46:43] local.ERROR: include(C:\xampp\htdocs\GreytHr\vendor\composer/../../app/Livewire/EmployeeSwipesData.php): Failed to open stream: No such file or directory {"exception":"[object] (ErrorException(code: 0): include(C:\\xampp\\htdocs\\GreytHr\\vendor\\composer/../../app/Livewire/EmployeeSwipesData.php): Failed to open stream: No such file or directory at C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php:576)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): include('C:\\\\xampp\\\\htdocs...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure}('C:\\\\xampp\\\\htdocs...')
+#4 [internal function]: Composer\\Autoload\\ClassLoader->loadClass('App\\\\Livewire\\\\Em...')
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(91): method_exists('App\\\\Livewire\\\\Em...', '__invoke')
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(47): Illuminate\\Routing\\RouteAction::makeInvokable('App\\\\Livewire\\\\Em...')
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(191): Illuminate\\Routing\\RouteAction::parse('employee-swipes...', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(172): Illuminate\\Routing\\Route->parseAction(Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(669): Illuminate\\Routing\\Route->__construct(Array, 'employee-swipes...', Array)
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(561): Illuminate\\Routing\\Router->newRoute(Array, 'employee-swipes...', Array)
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(541): Illuminate\\Routing\\Router->createRoute(Array, '/employee-swipe...', Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(159): Illuminate\\Routing\\Router->addRoute(Array, '/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Routing\\Router->get('/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#14 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(265): Illuminate\\Support\\Facades\\Facade::__callStatic('get', Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(509): Illuminate\\Routing\\RouteFileRegistrar->{closure}(Object(Illuminate\\Routing\\Router))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes(Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, Object(Closure))
+#18 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(248): Illuminate\\Routing\\RouteRegistrar->group(Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteFileRegistrar.php(35): require('C:\\\\xampp\\\\htdocs...')
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(511): Illuminate\\Routing\\RouteFileRegistrar->register('C:\\\\xampp\\\\htdocs...')
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes('C:\\\\xampp\\\\htdocs...')
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, 'C:\\\\xampp\\\\htdocs...')
+#23 C:\\xampp\\htdocs\\GreytHr\\app\\Providers\\RouteServiceProvider.php(37): Illuminate\\Routing\\RouteRegistrar->group('C:\\\\xampp\\\\htdocs...')
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\RouteServiceProvider->App\\Providers\\{closure}()
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(120): Illuminate\\Container\\Container->call(Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(45): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->loadRoutes()
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->Illuminate\\Foundation\\Support\\Providers\\{closure}()
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\ServiceProvider.php(119): Illuminate\\Container\\Container->call(Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1037): Illuminate\\Support\\ServiceProvider->callBootedCallbacks()
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\RouteServiceProvider))
+#39 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\RouteServiceProvider), 34)
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#45 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#46 {main}
+"} 
+[2024-09-11 11:47:14] local.ERROR: include(C:\xampp\htdocs\GreytHr\vendor\composer/../../app/Livewire/EmployeeSwipesData.php): Failed to open stream: No such file or directory {"exception":"[object] (ErrorException(code: 0): include(C:\\xampp\\htdocs\\GreytHr\\vendor\\composer/../../app/Livewire/EmployeeSwipesData.php): Failed to open stream: No such file or directory at C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php:576)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): include('C:\\\\xampp\\\\htdocs...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure}('C:\\\\xampp\\\\htdocs...')
+#4 [internal function]: Composer\\Autoload\\ClassLoader->loadClass('App\\\\Livewire\\\\Em...')
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(91): method_exists('App\\\\Livewire\\\\Em...', '__invoke')
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(47): Illuminate\\Routing\\RouteAction::makeInvokable('App\\\\Livewire\\\\Em...')
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(191): Illuminate\\Routing\\RouteAction::parse('employee-swipes...', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(172): Illuminate\\Routing\\Route->parseAction(Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(669): Illuminate\\Routing\\Route->__construct(Array, 'employee-swipes...', Array)
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(561): Illuminate\\Routing\\Router->newRoute(Array, 'employee-swipes...', Array)
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(541): Illuminate\\Routing\\Router->createRoute(Array, '/employee-swipe...', Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(159): Illuminate\\Routing\\Router->addRoute(Array, '/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Routing\\Router->get('/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#14 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(265): Illuminate\\Support\\Facades\\Facade::__callStatic('get', Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(509): Illuminate\\Routing\\RouteFileRegistrar->{closure}(Object(Illuminate\\Routing\\Router))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes(Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, Object(Closure))
+#18 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(248): Illuminate\\Routing\\RouteRegistrar->group(Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteFileRegistrar.php(35): require('C:\\\\xampp\\\\htdocs...')
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(511): Illuminate\\Routing\\RouteFileRegistrar->register('C:\\\\xampp\\\\htdocs...')
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes('C:\\\\xampp\\\\htdocs...')
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, 'C:\\\\xampp\\\\htdocs...')
+#23 C:\\xampp\\htdocs\\GreytHr\\app\\Providers\\RouteServiceProvider.php(37): Illuminate\\Routing\\RouteRegistrar->group('C:\\\\xampp\\\\htdocs...')
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\RouteServiceProvider->App\\Providers\\{closure}()
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(120): Illuminate\\Container\\Container->call(Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(45): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->loadRoutes()
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->Illuminate\\Foundation\\Support\\Providers\\{closure}()
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\ServiceProvider.php(119): Illuminate\\Container\\Container->call(Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1037): Illuminate\\Support\\ServiceProvider->callBootedCallbacks()
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\RouteServiceProvider))
+#39 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\RouteServiceProvider), 34)
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#45 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#46 {main}
+"} 
+[2024-09-11 11:48:26] local.ERROR: include(C:\xampp\htdocs\GreytHr\vendor\composer/../../app/Livewire/EmployeeSwipesData.php): Failed to open stream: No such file or directory {"exception":"[object] (ErrorException(code: 0): include(C:\\xampp\\htdocs\\GreytHr\\vendor\\composer/../../app/Livewire/EmployeeSwipesData.php): Failed to open stream: No such file or directory at C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php:576)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): include('C:\\\\xampp\\\\htdocs...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure}('C:\\\\xampp\\\\htdocs...')
+#4 [internal function]: Composer\\Autoload\\ClassLoader->loadClass('App\\\\Livewire\\\\Em...')
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(91): method_exists('App\\\\Livewire\\\\Em...', '__invoke')
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(47): Illuminate\\Routing\\RouteAction::makeInvokable('App\\\\Livewire\\\\Em...')
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(191): Illuminate\\Routing\\RouteAction::parse('employee-swipes...', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(172): Illuminate\\Routing\\Route->parseAction(Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(669): Illuminate\\Routing\\Route->__construct(Array, 'employee-swipes...', Array)
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(561): Illuminate\\Routing\\Router->newRoute(Array, 'employee-swipes...', Array)
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(541): Illuminate\\Routing\\Router->createRoute(Array, '/employee-swipe...', Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(159): Illuminate\\Routing\\Router->addRoute(Array, '/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Routing\\Router->get('/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#14 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(265): Illuminate\\Support\\Facades\\Facade::__callStatic('get', Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(509): Illuminate\\Routing\\RouteFileRegistrar->{closure}(Object(Illuminate\\Routing\\Router))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes(Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, Object(Closure))
+#18 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(248): Illuminate\\Routing\\RouteRegistrar->group(Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteFileRegistrar.php(35): require('C:\\\\xampp\\\\htdocs...')
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(511): Illuminate\\Routing\\RouteFileRegistrar->register('C:\\\\xampp\\\\htdocs...')
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes('C:\\\\xampp\\\\htdocs...')
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, 'C:\\\\xampp\\\\htdocs...')
+#23 C:\\xampp\\htdocs\\GreytHr\\app\\Providers\\RouteServiceProvider.php(37): Illuminate\\Routing\\RouteRegistrar->group('C:\\\\xampp\\\\htdocs...')
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\RouteServiceProvider->App\\Providers\\{closure}()
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(120): Illuminate\\Container\\Container->call(Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(45): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->loadRoutes()
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->Illuminate\\Foundation\\Support\\Providers\\{closure}()
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\ServiceProvider.php(119): Illuminate\\Container\\Container->call(Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1037): Illuminate\\Support\\ServiceProvider->callBootedCallbacks()
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\RouteServiceProvider))
+#39 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\RouteServiceProvider), 34)
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#45 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#46 {main}
+"} 
+[2024-09-11 11:51:59] local.ERROR: include(C:\xampp\htdocs\GreytHr\vendor\composer/../../app/Livewire/EmployeeSwipesData.php): Failed to open stream: No such file or directory {"exception":"[object] (ErrorException(code: 0): include(C:\\xampp\\htdocs\\GreytHr\\vendor\\composer/../../app/Livewire/EmployeeSwipesData.php): Failed to open stream: No such file or directory at C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php:576)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): include('C:\\\\xampp\\\\htdocs...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure}('C:\\\\xampp\\\\htdocs...')
+#4 [internal function]: Composer\\Autoload\\ClassLoader->loadClass('App\\\\Livewire\\\\Em...')
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(91): method_exists('App\\\\Livewire\\\\Em...', '__invoke')
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(47): Illuminate\\Routing\\RouteAction::makeInvokable('App\\\\Livewire\\\\Em...')
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(191): Illuminate\\Routing\\RouteAction::parse('employee-swipes...', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(172): Illuminate\\Routing\\Route->parseAction(Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(669): Illuminate\\Routing\\Route->__construct(Array, 'employee-swipes...', Array)
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(561): Illuminate\\Routing\\Router->newRoute(Array, 'employee-swipes...', Array)
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(541): Illuminate\\Routing\\Router->createRoute(Array, '/employee-swipe...', Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(159): Illuminate\\Routing\\Router->addRoute(Array, '/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Routing\\Router->get('/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#14 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(265): Illuminate\\Support\\Facades\\Facade::__callStatic('get', Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(509): Illuminate\\Routing\\RouteFileRegistrar->{closure}(Object(Illuminate\\Routing\\Router))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes(Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, Object(Closure))
+#18 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(248): Illuminate\\Routing\\RouteRegistrar->group(Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteFileRegistrar.php(35): require('C:\\\\xampp\\\\htdocs...')
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(511): Illuminate\\Routing\\RouteFileRegistrar->register('C:\\\\xampp\\\\htdocs...')
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes('C:\\\\xampp\\\\htdocs...')
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, 'C:\\\\xampp\\\\htdocs...')
+#23 C:\\xampp\\htdocs\\GreytHr\\app\\Providers\\RouteServiceProvider.php(37): Illuminate\\Routing\\RouteRegistrar->group('C:\\\\xampp\\\\htdocs...')
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\RouteServiceProvider->App\\Providers\\{closure}()
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(120): Illuminate\\Container\\Container->call(Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(45): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->loadRoutes()
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->Illuminate\\Foundation\\Support\\Providers\\{closure}()
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\ServiceProvider.php(119): Illuminate\\Container\\Container->call(Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1037): Illuminate\\Support\\ServiceProvider->callBootedCallbacks()
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\RouteServiceProvider))
+#39 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\RouteServiceProvider), 34)
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#45 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#46 {main}
+"} 
+[2024-09-11 11:54:11] local.ERROR: include(C:\xampp\htdocs\GreytHr\vendor\composer/../../app/Livewire/EmployeeSwipes.php): Failed to open stream: No such file or directory {"exception":"[object] (ErrorException(code: 0): include(C:\\xampp\\htdocs\\GreytHr\\vendor\\composer/../../app/Livewire/EmployeeSwipes.php): Failed to open stream: No such file or directory at C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php:576)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): include('C:\\\\xampp\\\\htdocs...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure}('C:\\\\xampp\\\\htdocs...')
+#4 [internal function]: Composer\\Autoload\\ClassLoader->loadClass('App\\\\Livewire\\\\Em...')
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(91): method_exists('App\\\\Livewire\\\\Em...', '__invoke')
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(47): Illuminate\\Routing\\RouteAction::makeInvokable('App\\\\Livewire\\\\Em...')
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(191): Illuminate\\Routing\\RouteAction::parse('employee-swipes', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(172): Illuminate\\Routing\\Route->parseAction(Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(669): Illuminate\\Routing\\Route->__construct(Array, 'employee-swipes', Array)
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(561): Illuminate\\Routing\\Router->newRoute(Array, 'employee-swipes', Array)
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(541): Illuminate\\Routing\\Router->createRoute(Array, '/employee-swipe...', Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(159): Illuminate\\Routing\\Router->addRoute(Array, '/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Routing\\Router->get('/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#14 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(264): Illuminate\\Support\\Facades\\Facade::__callStatic('get', Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(509): Illuminate\\Routing\\RouteFileRegistrar->{closure}(Object(Illuminate\\Routing\\Router))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes(Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, Object(Closure))
+#18 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(248): Illuminate\\Routing\\RouteRegistrar->group(Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteFileRegistrar.php(35): require('C:\\\\xampp\\\\htdocs...')
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(511): Illuminate\\Routing\\RouteFileRegistrar->register('C:\\\\xampp\\\\htdocs...')
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes('C:\\\\xampp\\\\htdocs...')
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, 'C:\\\\xampp\\\\htdocs...')
+#23 C:\\xampp\\htdocs\\GreytHr\\app\\Providers\\RouteServiceProvider.php(37): Illuminate\\Routing\\RouteRegistrar->group('C:\\\\xampp\\\\htdocs...')
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\RouteServiceProvider->App\\Providers\\{closure}()
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(120): Illuminate\\Container\\Container->call(Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(45): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->loadRoutes()
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->Illuminate\\Foundation\\Support\\Providers\\{closure}()
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\ServiceProvider.php(119): Illuminate\\Container\\Container->call(Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1037): Illuminate\\Support\\ServiceProvider->callBootedCallbacks()
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\RouteServiceProvider))
+#39 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\RouteServiceProvider), 34)
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#45 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#46 {main}
+"} 
+[2024-09-11 11:54:25] local.ERROR: include(C:\xampp\htdocs\GreytHr\vendor\composer/../../app/Livewire/EmployeeSwipes.php): Failed to open stream: No such file or directory {"exception":"[object] (ErrorException(code: 0): include(C:\\xampp\\htdocs\\GreytHr\\vendor\\composer/../../app/Livewire/EmployeeSwipes.php): Failed to open stream: No such file or directory at C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php:576)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): include('C:\\\\xampp\\\\htdocs...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure}('C:\\\\xampp\\\\htdocs...')
+#4 [internal function]: Composer\\Autoload\\ClassLoader->loadClass('App\\\\Livewire\\\\Em...')
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(91): method_exists('App\\\\Livewire\\\\Em...', '__invoke')
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(47): Illuminate\\Routing\\RouteAction::makeInvokable('App\\\\Livewire\\\\Em...')
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(191): Illuminate\\Routing\\RouteAction::parse('employee-swipes', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(172): Illuminate\\Routing\\Route->parseAction(Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(669): Illuminate\\Routing\\Route->__construct(Array, 'employee-swipes', Array)
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(561): Illuminate\\Routing\\Router->newRoute(Array, 'employee-swipes', Array)
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(541): Illuminate\\Routing\\Router->createRoute(Array, '/employee-swipe...', Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(159): Illuminate\\Routing\\Router->addRoute(Array, '/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Routing\\Router->get('/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#14 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(264): Illuminate\\Support\\Facades\\Facade::__callStatic('get', Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(509): Illuminate\\Routing\\RouteFileRegistrar->{closure}(Object(Illuminate\\Routing\\Router))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes(Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, Object(Closure))
+#18 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(248): Illuminate\\Routing\\RouteRegistrar->group(Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteFileRegistrar.php(35): require('C:\\\\xampp\\\\htdocs...')
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(511): Illuminate\\Routing\\RouteFileRegistrar->register('C:\\\\xampp\\\\htdocs...')
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes('C:\\\\xampp\\\\htdocs...')
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, 'C:\\\\xampp\\\\htdocs...')
+#23 C:\\xampp\\htdocs\\GreytHr\\app\\Providers\\RouteServiceProvider.php(37): Illuminate\\Routing\\RouteRegistrar->group('C:\\\\xampp\\\\htdocs...')
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\RouteServiceProvider->App\\Providers\\{closure}()
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(120): Illuminate\\Container\\Container->call(Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(45): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->loadRoutes()
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->Illuminate\\Foundation\\Support\\Providers\\{closure}()
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\ServiceProvider.php(119): Illuminate\\Container\\Container->call(Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1037): Illuminate\\Support\\ServiceProvider->callBootedCallbacks()
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\RouteServiceProvider))
+#39 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\RouteServiceProvider), 34)
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#45 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#46 {main}
+"} 
+[2024-09-11 12:00:43] local.ERROR: include(C:\xampp\htdocs\GreytHr\vendor\composer/../../app/Livewire/EmployeeSwipes.php): Failed to open stream: No such file or directory {"exception":"[object] (ErrorException(code: 0): include(C:\\xampp\\htdocs\\GreytHr\\vendor\\composer/../../app/Livewire/EmployeeSwipes.php): Failed to open stream: No such file or directory at C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php:576)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}(2, 'include(C:\\\\xamp...', 'C:\\\\xampp\\\\htdocs...', 576)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(576): include('C:\\\\xampp\\\\htdocs...')
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure}('C:\\\\xampp\\\\htdocs...')
+#4 [internal function]: Composer\\Autoload\\ClassLoader->loadClass('App\\\\Livewire\\\\Em...')
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(91): method_exists('App\\\\Livewire\\\\Em...', '__invoke')
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteAction.php(47): Illuminate\\Routing\\RouteAction::makeInvokable('App\\\\Livewire\\\\Em...')
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(191): Illuminate\\Routing\\RouteAction::parse('employee-swipes', Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(172): Illuminate\\Routing\\Route->parseAction(Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(669): Illuminate\\Routing\\Route->__construct(Array, 'employee-swipes', Array)
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(561): Illuminate\\Routing\\Router->newRoute(Array, 'employee-swipes', Array)
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(541): Illuminate\\Routing\\Router->createRoute(Array, '/employee-swipe...', Array)
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(159): Illuminate\\Routing\\Router->addRoute(Array, '/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Facades\\Facade.php(355): Illuminate\\Routing\\Router->get('/employee-swipe...', 'App\\\\Livewire\\\\Em...')
+#14 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(264): Illuminate\\Support\\Facades\\Facade::__callStatic('get', Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(509): Illuminate\\Routing\\RouteFileRegistrar->{closure}(Object(Illuminate\\Routing\\Router))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes(Object(Closure))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, Object(Closure))
+#18 C:\\xampp\\htdocs\\GreytHr\\routes\\web.php(248): Illuminate\\Routing\\RouteRegistrar->group(Object(Closure))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteFileRegistrar.php(35): require('C:\\\\xampp\\\\htdocs...')
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(511): Illuminate\\Routing\\RouteFileRegistrar->register('C:\\\\xampp\\\\htdocs...')
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(465): Illuminate\\Routing\\Router->loadRoutes('C:\\\\xampp\\\\htdocs...')
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteRegistrar.php(194): Illuminate\\Routing\\Router->group(Array, 'C:\\\\xampp\\\\htdocs...')
+#23 C:\\xampp\\htdocs\\GreytHr\\app\\Providers\\RouteServiceProvider.php(37): Illuminate\\Routing\\RouteRegistrar->group('C:\\\\xampp\\\\htdocs...')
+#24 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Providers\\RouteServiceProvider->App\\Providers\\{closure}()
+#25 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#26 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#27 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#28 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#29 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(120): Illuminate\\Container\\Container->call(Object(Closure))
+#30 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider.php(45): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->loadRoutes()
+#31 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): Illuminate\\Foundation\\Support\\Providers\\RouteServiceProvider->Illuminate\\Foundation\\Support\\Providers\\{closure}()
+#32 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#33 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(81): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#34 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Object(Closure), Object(Closure))
+#35 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Object(Closure), Array, NULL)
+#36 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\ServiceProvider.php(119): Illuminate\\Container\\Container->call(Object(Closure))
+#37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1037): Illuminate\\Support\\ServiceProvider->callBootedCallbacks()
+#38 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1015): Illuminate\\Foundation\\Application->bootProvider(Object(App\\Providers\\RouteServiceProvider))
+#39 [internal function]: Illuminate\\Foundation\\Application->Illuminate\\Foundation\\{closure}(Object(App\\Providers\\RouteServiceProvider), 34)
+#40 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1014): array_walk(Array, Object(Closure))
+#41 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\BootProviders.php(17): Illuminate\\Foundation\\Application->boot()
+#42 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(263): Illuminate\\Foundation\\Bootstrap\\BootProviders->bootstrap(Object(Illuminate\\Foundation\\Application))
+#43 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(447): Illuminate\\Foundation\\Application->bootstrapWith(Array)
+#44 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(199): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#45 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#46 {main}
+"} 

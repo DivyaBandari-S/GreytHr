@@ -1391,8 +1391,7 @@ color: #fff;
         <div class="col-md-6"></div>
     </div>
     <div class="m-auto">
-        <div class="table-container scrollable-table" style=" width: 100%;
-    overflow-x: auto;">
+        <div class="table-container scrollable-table" style=" width: 100%;">
             <table>
                 <tr class="first-header-row" style="background-color:#ebf5ff;border-bottom: 1px solid #cbd5e1;">
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px; position: relative;color:#778899;border-right:1px solid #cbd5e1;">General&nbsp;Details</th>
@@ -1463,7 +1462,7 @@ color: #fff;
                 $currentMonthRep = $fromDate->format('M');
                 $currentYear = $fromDate->year;
                 @endphp
-
+                
                 @for ($date = $fromDate; $date->lte($toDate); $date->addDay())
                 @php
                 $dateKey = $date->format('d M Y');
@@ -1495,7 +1494,7 @@ color: #fff;
                     }
 
                     @endphp
-
+                   
                     <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isPresent || $swipeRecordExists ? '#edfaed' : '#fcf0f0'))) : 'white'}};">
                         <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">
                             <p style="white-space:nowrap;">
@@ -1683,8 +1682,8 @@ color: #fff;
 
                     </tr>
                     @endfor
-
-
+                    
+                    
                     <tr style="border-bottom: 1px solid #cbd5e1;background-color:white;">
                         <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Total </td>
                         <td></td>

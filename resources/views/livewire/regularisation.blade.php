@@ -266,6 +266,14 @@
             margin: 0 auto;
 
         }
+        .down-arrow-reg {
+            width: 0;
+            height: 0;
+            /* border-left: 20px solid transparent; */
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid #f09541;
+            margin-right: 5px;
+        }
 
         
 
@@ -837,7 +845,8 @@
         width: 500px;  /* Adjust width as needed */
         height: 50px;  /* Adjust height as needed */
         padding: 10px;  /* Adds some inner spacing */
-        font-size: 16px;  /* Increases font size */
+        font-size: 12px;  /* Increases font size */
+        color:#778899;
     }
 .nextMonth
 {
@@ -969,7 +978,13 @@ border: 1px solid #778899;
                     @foreach($calendar as $week)
                     <div class="calendar-week">
                         @foreach($week as $day)
-                        <div class="calendar-date {{ $day['isCurrentDate'] ? 'current-date' : '' }} {{ in_array($day['date'], $selectedDates) ? 'selected-date' : '' }}{{ $day['isCurrentMonth'] ? '' : 'other-month-date' }}{{$day['isAfterToday'] ? 'after-today' : '' }}" wire:click="submitShifts('{{ $day['date'] }}')">{{ $day['day'] }}</div>
+                        <div class="calendar-date {{ $day['isCurrentDate'] ? 'current-date' : '' }} {{ in_array($day['date'], $selectedDates) ? 'selected-date' : '' }}{{ $day['isCurrentMonth'] ? '' : 'other-month-date' }}{{$day['isAfterToday'] ? 'after-today' : '' }}" wire:click="submitShifts('{{ $day['date'] }}')">
+                             {{ $day['day'] }}
+                             @if($day['isRegularised'])
+                                  <div class="down-arrow-reg"></div>
+                             @endif
+
+                        </div>
                         @endforeach
                     </div>
                     @endforeach
@@ -1201,7 +1216,7 @@ border: 1px solid #778899;
             </footer>
 
         </div>
-        @elseif($year<=$todayYear&&$month<$todayMonth)
+        @elseif($year<=$todayYear&&$todayMonth-$month>1)
         <div class="apply-box">
             <img src="{{ asset('images/Attendance-Period-Locked.png') }}" style="margin-top:50px;" height="250" width="250">
            
