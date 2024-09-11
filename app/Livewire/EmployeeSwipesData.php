@@ -177,13 +177,16 @@ class EmployeeSwipesData extends Component
             ->first(); // Get only the first entry for the day
 
         // Add the employee and their swipe log (if any) to the results
-        $swipeData[] = [
-            'Employee ID' => $employee->emp_id,
-            'Employee Name' => ucfirst(strtolower($employee->first_name)).' '.ucfirst(strtolower($employee->last_name)), // Assuming you have a `name` field
-            'Swipe Date' => $employeeSwipeLog ? \Carbon\Carbon::parse($employeeSwipeLog->logDate)->format('d-M-Y') : 'No Swipe Log',
-            'Swipe Time' => $employeeSwipeLog ? \Carbon\Carbon::parse($employeeSwipeLog->logDate)->format('h:i A') : 'No Swipe Log',
-            'Direction' => $employeeSwipeLog->Direction ?? 'No Swipe Log',
-        ];
+        if(!empty($employeeSwipeLog))
+        {
+            $swipeData[] = [
+                'Employee ID' => $employee->emp_id,
+                'Employee Name' => ucfirst(strtolower($employee->first_name)).' '.ucfirst(strtolower($employee->last_name)), // Assuming you have a `name` field
+                'Swipe Date' => \Carbon\Carbon::parse($employeeSwipeLog->logDate)->format('d-M-Y') ,
+                'Swipe Time' => \Carbon\Carbon::parse($employeeSwipeLog->logDate)->format('h:i A'),
+                'Direction' => $employeeSwipeLog->Direction ,
+            ];
+        }
     }
 
     // Define header columns
@@ -289,15 +292,7 @@ class EmployeeSwipesData extends Component
         
         $this->swipes=$swipeData;
         
-        $swipes21345 = DB::connection('sqlsrv')
-        ->table($tableName)
-        ->select('UserId', 'logDate', 'Direction')
-        ->whereIn('UserId', $employeeIds)
-        ->whereDate('logDate', $today)
-        ->orderBy('logDate')
-        ->get()
-        ->unique('UserId')
-        ->values();
+        
        
     
       

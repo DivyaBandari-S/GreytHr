@@ -232,7 +232,7 @@ class WhoIsInChart extends Component
 
                 $swipeTime1 = Carbon::parse($employee['CalculateAbsenteescreated_at'])->format('H:i:s');
                 $earlyArrivalTime = $swipeTime->diff(Carbon::parse($shiftStartTime))->format('%H:%I');
-                $isEarlyBy10AM = $swipeTime->format('H:i') < $shiftStartTime;
+                $isEarlyBy10AM = $swipeTime->format('H:i') <=$shiftStartTime;
                 if($isEarlyBy10AM)
                 {
                     $data[] = [$employee['emp_id'], ucwords(strtolower($employee['first_name'])).' '. ucwords(strtolower($employee['last_name'])), $employee['swipe_time'], $earlyArrivalTime];
@@ -457,14 +457,28 @@ class WhoIsInChart extends Component
 
 
 
-        $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->where('leave_applications.status', 'approved')
-            ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-            ->whereDate('from_date', '<=', $currentDate)
-            ->whereDate('to_date', '>=', $currentDate)
-            ->count();
+    $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+    ->join('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id')  // Join with emp_personal_infos
+    ->where('leave_applications.status', 'approved')
+    ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+    ->whereDate('leave_applications.from_date', '<=', $currentDate)
+    ->whereDate('leave_applications.to_date', '>=', $currentDate)
+    ->select(
+        'leave_applications.*', 
+        'employee_details.*', 
+        'emp_personal_infos.mobile_number'  // Include fields from emp_personal_infos
+    )
+    ->count();
 
+            // dd($approvedLeaveRequests1);
 
+            // $approvedLeaveRequests1List = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            // ->where('leave_applications.status', 'approved')
+            // ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+            // ->whereDate('from_date', '<=', '2024-09-04')
+            // ->whereDate('to_date', '>=', '2024-09-04')
+            // ->get();
+            // dd($approvedLeaveRequests1List);
 
             $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
     ->join('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
@@ -500,35 +514,65 @@ class WhoIsInChart extends Component
             ->get();
     
        
-        $lateSwipesCount = SwipeRecord::whereIn('id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
-            $query->selectRaw('MIN(id)')
-                ->from('swipe_records')
-                ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
-                ->whereIn('emp_id', $employees->pluck('emp_id'))
-                ->whereDate('created_at', $currentDate)
-                ->groupBy('emp_id');
-        })
+            $lateSwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
+                $query->selectRaw('MIN(swipe_records.id)')
+                    ->from('swipe_records')
+                    ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                    ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id'))
+                    ->whereDate('swipe_records.created_at', $currentDate)
+                    ->groupBy('swipe_records.emp_id');
+            })
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time')
+            ->join('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')  // Join with emp_personal_infos table
+            ->select(
+                'swipe_records.*', 
+                'employee_details.first_name', 
+                'employee_details.last_name',
+                'employee_details.shift_start_time', 
+                'employee_details.shift_end_time',
+                'emp_personal_infos.mobile_number'  // Include fields from emp_personal_infos
+            )
             ->where(function ($query) {
                 $query->whereRaw("swipe_records.swipe_time > employee_details.shift_start_time");
-           })
+            })
             ->count();
-        
-        $earlySwipesCount = SwipeRecord::whereIn('id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
-            $query->selectRaw('MIN(id)')
-                ->from('swipe_records')
-                ->whereIn('emp_id', $employees->pluck('emp_id'))
-                ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
-                ->whereDate('created_at', $currentDate)
-                ->groupBy('emp_id');
-        })
+    
+            // $lateSwipesList = SwipeRecord::whereIn('id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
+            //     $query->selectRaw('MIN(id)')
+            //         ->from('swipe_records')
+            //         ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
+            //         ->whereIn('emp_id', $employees->pluck('emp_id'))
+            //         ->whereDate('created_at', '2024-09-09')
+            //         ->groupBy('emp_id');
+            // })
+            //     ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+            //     ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.shift_start_time','employee_details.shift_end_time')
+            //     ->where(function ($query) {
+            //         $query->whereRaw("swipe_records.swipe_time > employee_details.shift_start_time");
+            //    })
+            //     ->get();
+            //     dd($lateSwipesList);
+            $earlySwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
+                $query->selectRaw('MIN(swipe_records.id)')
+                    ->from('swipe_records')
+                    ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id'))
+                    ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                    ->whereDate('swipe_records.created_at', $currentDate)
+                    ->groupBy('swipe_records.emp_id');
+            })
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
+            ->join('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Joining emp_personal_infos
+            ->select(
+                'swipe_records.*', 
+                'employee_details.first_name', 
+                'employee_details.last_name', 
+                'emp_personal_infos.mobile_number' // Selecting fields from emp_personal_infos
+            )
             ->where(function ($query) {
                 $query->whereRaw("swipe_records.swipe_time <= employee_details.shift_start_time");
-           })
+            })
             ->count();
+    
            
         $swipes2 = SwipeRecord::whereIn('id', function ($query) use ($employees, $currentDate) {
             $query->selectRaw('MIN(id)')

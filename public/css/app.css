@@ -179,6 +179,16 @@
     font-weight: 500;
     font-size: var(--normal-font-size);
 }
+.normalTextSubheading{
+    color: var(--main-heading-color);
+    font-weight: 500;
+    font-size: var(--sub-headings-font-size);
+}
+.normalTextSmall{
+    color: var(--label-color);
+    font-weight: 500;
+    font-size: 0.65rem;
+}
 .approvedColor {
     font-size: var(--normal-font-size);
     font-weight: 500;
@@ -3670,6 +3680,45 @@ l
     font-weight: 500;
     border-radius: 5px;
 }
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.reviewTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.reviewTable th, .reviewTable td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.reviewTable th {
+    background-color: #ecf5ff;
+    text-align: left;
+}
+.dateContainer {
+    display: flex;
+    gap: 15px;
+}
+
+.dateContainer .session-info {
+    color: #778899;
+    font-size: 10px;
+    display: block;
+}
+.sessionFont{
+    color: #494F55;font-size: 9px;
+}
+.horizontalLine{
+    width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;
+}
+.employeeName{
+    font-size: 12px; font-weight: 500; text-align: center; margin: auto; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
 /* end of view pending details */
 
 /* //catalog */
@@ -3729,7 +3778,7 @@ l
 
 .header-style {
     background-color: #ecf5ff;
-    font-weight: normal;
+    font-weight: 500;
     font-size: var(--normal-font-size);
     color: var(--label-color);
     text-align: start;
