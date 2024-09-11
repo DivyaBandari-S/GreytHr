@@ -261,9 +261,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/regularisation', Regularisation::class)->name('regularisation');
     Route::get('/regularisation-pending/{id}', RegularisationPending::class)->name('regularisation-pending');
     Route::get('/regularisation-history/{id}', RegularisationHistory::class)->name('regularisation-history');
-    Route::get('/employee-swipes', EmployeeSwipes::class)->name('employee-swipes');
     Route::get('/employee-swipes-data', EmployeeSwipesData::class)->name('employee-swipes-data');
-    Route::get('/attendance-muster', AttendanceMuster::class)->name('attendance-muster');
     Route::get('/attendance-muster-data', AttendenceMasterDataNew::class)->name('attendance-muster-data');
     Route::get('/shift-roaster-data', ShiftRoaster::class)->name('shift-roaster-data');
     Route::get('/ProfileInfo', ProfileInfo::class)->name('profile.info');
@@ -333,7 +331,6 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
     Route::get('/leave-pending/{leaveRequestId}', LeavePending::class)->name('leave-pending');
-    Route::get('/team-on-leave', TeamOnLeave::class);
     Route::get('/team-on-leave-chart', TeamOnLeaveChart::class)->name('team-on-leave');
     Route::get('/testing', Test::class);
     // Route::get('/leaveBalChart', LeaveBalancesChart::class)->name('leave-details');

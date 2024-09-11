@@ -8,6 +8,7 @@ use App\Models\LeaveRequest;
 use App\Models\RegularisationDates;
 
 use App\Models\Regularisations;
+use App\Models\SwipeRecord;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -213,7 +214,7 @@ class Regularisation extends Component
         $selecteddateyear = $selectedDate->year;
         $selecteddatemonth = $selectedDate->month;
         
-        if($selecteddateyear<=(Carbon::today()->year)&&$selecteddatemonth<(Carbon::today()->month))
+        if($selecteddateyear<=(Carbon::today()->year)&&(Carbon::today()->month)-$selecteddatemonth>1)
         {
               // Throw a validation error or set a message for the user
               session()->flash('error', 'Attendance Period is locked');
@@ -286,6 +287,17 @@ class Regularisation extends Component
     {
         dd($this->shift_times);
     }
+    private function isEmployeeRegularisedOnDate($date)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularised', 1)->exists();
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while checking employee presence. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
+    }
     //This function is used to create calendar
     public function generateCalendar()
     {
@@ -307,6 +319,7 @@ class Regularisation extends Component
                             'day' => $previousMonthDays->day,
                             'date' => $previousMonthDays->toDateString(),
                             'isToday' => false,
+                            'isRegularised' => false,
                             'isCurrentDate' => false,
                             'isCurrentMonth' => false,
                             'isPreviousMonth' => true,
@@ -315,6 +328,7 @@ class Regularisation extends Component
                     } elseif ($dayCount <= $daysInMonth) {
                         $date = Carbon::create($this->year, $this->month, $dayCount);
                         $isToday = $date->isSameDay($today);
+                        $isregularised = $this->isEmployeeRegularisedOnDate($date);
                         $week[] = [
                             'day' => $dayCount,
                             'date' => $date->toDateString(),
@@ -322,6 +336,7 @@ class Regularisation extends Component
                             'isCurrentDate' => $isToday,
                             'isCurrentMonth' => true,
                             'isPreviousMonth' => false,
+                            'isRegularised' => $isregularised,
                             'isAfterToday' => $date->isAfter($today),
                         ];
                         $dayCount++;
@@ -334,6 +349,7 @@ class Regularisation extends Component
                             'isCurrentDate' => false,
                             'isCurrentMonth' => false,
                             'isNextMonth' => true,
+                            'isRegularised' => false,
                             'isAfterToday' => $nextMonthDays->isAfter($today),
                         ];
                         $dayCount++;
@@ -360,8 +376,13 @@ class Regularisation extends Component
                 $this->year = $this->date->year;
                 
                 $this->month = $this->date->month;
+                if($this->year==Carbon::now()->year&&Carbon::now()->month-$this->month==1)
+                {
+                    $this->isdatesApplied=true;
+                }
                 $daysInMonth1 = $this->getDaysInMonth($this->year, $this->month);
                 $this->generateCalendar();
+                $this->selectedDates=[];
             } catch (\Exception $e) {
                 Log::error('Error in previousMonth method: ' . $e->getMessage());
                 // Handle the error as needed, such as displaying a message to the user
@@ -380,6 +401,7 @@ public function nextMonth()
         $this->month = $this->date->month;
         $daysInMonth2 = $this->getDaysInMonth($this->year, $this->month);
         $this->generateCalendar();
+        $this->selectedDates=[];
     } catch (\Exception $e) {
         Log::error('Error in nextMonth method: ' . $e->getMessage());
         // Handle the error as needed, such as displaying a message to the user

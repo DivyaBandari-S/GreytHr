@@ -1,13 +1,13 @@
 <div>
     @if($showAlert)
-    <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.1s="hideAlert" style="font-size: 12px; right: 25%;top:13%;" id="success-alert">
+    <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.1s="hideAlert" style="right: 25%;top:18%;" id="success-alert">
         {{ session('message') }}
         <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
             <span>X</span>
         </button>
     </div>
     @endif
-    <div class="col" id="leavePending" style="width: 95%; padding: 0;border-radius: 5px; ">
+    <div class="col" id="leavePending">
         <div class="row m-0 p-0 mt-3">
             <div class="reviewCountShow p-0">
                 <div class="d-flex align-items-center gap-2">
@@ -21,7 +21,7 @@
                 </div>
                 <div class="search-container d-flex align-items-end justify-content-end p-2" style="position: relative;">
                     <input type="text" wire:model.debounce.500ms="filter" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded" style="padding-right: 40px;">
-                    <button wire:click="fetchPendingLeaveApplications" id="searchButtonReview" >
+                    <button wire:click="fetchPendingLeaveApplications" id="searchButtonReview">
                         <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
                     </button>
                 </div>
@@ -30,7 +30,7 @@
         </div>
         @if(!empty($this->leaveApplications))
         @foreach($this->leaveApplications as $leaveRequest)
-        <div class="approved-leave-container mt-1 px-1" style="border-radius: 5px; ">
+        <div class="approved-leave-container mt-1 px-1 rounded">
             <div class="accordion rounded mb-4 p-0">
                 <div class="accordion-heading rounded m-0 p-0" onclick="toggleAccordion(this)">
                     <div class="accordion-title rounded m-0">
@@ -41,43 +41,43 @@
                                 <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['leaveRequest']->image)}}" style="border-radius: 50%;">
                                 @else
                                 @if($leaveRequest['leaveRequest']->gender === 'Female')
-                                <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                <img src="{{ asset('images/female-default.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
                                 @elseif($leaveRequest['leaveRequest']->gender === 'Male')
-                                <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                <img src="{{ asset('images/male-default.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
                                 @else
                                 <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
                                 @endif
                                 @endif
                                 <div>
                                     @if(isset($leaveRequest['leaveRequest']->first_name))
-                                    <p class="mb-0" style="font-size: 12px; font-weight: 500; text-align: center; margin: auto; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ ucwords(strtolower($leaveRequest['leaveRequest']->first_name)) }} {{ ucwords(strtolower($leaveRequest['leaveRequest']->last_name)) }}">
+                                    <p class="mb-0 employeeName" title="{{ ucwords(strtolower($leaveRequest['leaveRequest']->first_name)) }} {{ ucwords(strtolower($leaveRequest['leaveRequest']->last_name)) }}">
                                         {{ ucwords(strtolower($leaveRequest['leaveRequest']->first_name)) }} {{ ucwords(strtolower($leaveRequest['leaveRequest']->last_name)) }}
                                         <br>
                                         @if(isset($leaveRequest['leaveRequest']->emp_id))
-                                        <span style="color: #778899; font-size: 11px; text-align: start;">#{{ $leaveRequest['leaveRequest']->emp_id }} </span>
+                                        <span class="normalTextSmall text-start">#{{ $leaveRequest['leaveRequest']->emp_id }} </span>
                                         @endif
                                     </p>
                                     @else
-                                    <p class="mb-0" style="font-size: 12px; font-weight: 500;">Name Not Available</p>
+                                    <p class="mb-0 normalTextSmall">Name Not Available</p>
                                     @endif
                                 </div>
                             </div>
                         </div>
                         <div class="col accordion-content d-flex align-items-center">
-                            <p style="color: #778899; font-size: 12px; font-weight: 500; margin-bottom:0;">Category <br>
+                            <p class="normalTextValue mb-0">Category <br>
                                 @if(isset($leaveRequest['leaveRequest']->category_type))
-                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest['leaveRequest']->category_type }}</span>
+                                <span class="normalText">{{ $leaveRequest['leaveRequest']->category_type }}</span>
                                 @else
-                                <span style="color: #778899; font-size: 10px;">Leave Type Not Available</span>
+                                <span class="normalTextSmall">Leave Type Not Available</span>
                                 @endif
                             </p>
                         </div>
                         <div class="col accordion-content d-flex align-items-center">
-                            <p style="color: #778899; font-size: 12px; font-weight: 500; margin-bottom:0;">Leave Type <br>
+                            <p class="mb-0 normalTextValue">Leave Type <br>
                                 @if(isset($leaveRequest['leaveRequest']->leave_type))
-                                <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ $leaveRequest['leaveRequest']->leave_type }}</span>
+                                <span class="normalText">{{ $leaveRequest['leaveRequest']->leave_type }}</span>
                                 @else
-                                <span style="color: #778899; font-size: 10px;">Leave Type Not Available</span>
+                                <span class="normalTextSmall">Leave Type Not Available</span>
                                 @endif
                             </p>
                         </div>
@@ -97,23 +97,23 @@
                                     <span>Date Not Available</span>
                                     @endif
                                 </span> <br>
-                                <span style="color: #778899; font-size: 10px;">Full Day</span>
+                                <span class="normalTextSmall">Full Day</span>
                                 @elseif($numberOfDays == 0.5)
                                 <span class="normalText">
                                     @if(isset($leaveRequest['leaveRequest']->from_date))
-                                    <span style="font-size: 12px; font-weight: 600;"> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span style="color: #494F55;font-size:10px;font-weight:normal; ">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
+                                    <span class="normalText fw-bold"> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span class="normalTextSmall">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
                                     @else
                                     <span>Date Not Available</span>
                                     @endif
                                 </span> <br>
-                                <span style="color: #778899; font-size: 10px;">Half Day</span>
+                                <span class="normalTextSmall">Half Day</span>
                                 @else
                                 <span class="normalText">
                                     @if(isset($leaveRequest['leaveRequest']->from_date))
                                     <div class="d-flex gap-2">
-                                        <span style="font-size: 12px; font-weight: 600;"> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span style="color: #494F55;font-size:10px;font-weight:normal; ">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
+                                        <span class="normalText fw-bold"> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span class="normalTextSmall">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
                                         <span>-</span>
-                                        <span style="font-size: 12px; font-weight: 600;"> {{ $leaveRequest['leaveRequest']->to_date->format('d M Y') }}<br><span style="color: #494F55;font-size:10px;font-weight:normal; ">{{$leaveRequest['leaveRequest']->to_session }}</span></span>
+                                        <span class="normalText fw-bold"> {{ $leaveRequest['leaveRequest']->to_date->format('d M Y') }}<br><span class="normalTextSmall">{{$leaveRequest['leaveRequest']->to_session }}</span></span>
                                     </div>
                                     @else
                                     <span> Date Not Available</span>
@@ -129,9 +129,8 @@
                     </div>
                 </div>
 
-
                 <div class="accordion-body m-0 p-0">
-                    <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
+                    <div class="horizontalLine"></div>
                     <div class="content1 px-4">
                         <span class="normalTextValue">No. of days :</span>
                         @if(isset($leaveRequest['leaveRequest']->from_date))
@@ -150,7 +149,7 @@
                         <span class="normalText font-weight-400">Reason Not Available</span>
                         @endif
                     </div>
-                    <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
+                    <div class="horizontalLine"></div>
                     <div class="approvedLeaveDetails d-flex justify-content-between align-items-center px-3">
                         <div class="content1">
                             <span class="normalTextValue">Applied On <br>
@@ -159,60 +158,95 @@
                                     {{ $leaveRequest['leaveRequest']->created_at->format('d M, Y') }}
                                 </span>
                                 @else
-                                <span class="normalText font-weight-400">No. of days not available</span>
+                                <span class="normalText fw-400">No. of days not available</span>
                                 @endif
                             </span>
                         </div>
                         <div class="content2">
                             <span class="normalTextValue">Leave Balance:</span>
                             @if(!empty($leaveRequest['leaveBalances']))
-                            <div style=" flex-direction:row; display: flex; align-items: center;justify-content:center;">
-                                <!-- Sick Leave -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e6e6fa; display: flex; align-items: center; justify-content: center; margin-left:15px;">
-                                    <span style="font-size:10px; color: #50327c;font-weight:500;">SL</span>
-                                </div>
-                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['sickLeaveBalance'] }}</span>
+                            <div class="d-flex align-items-center justify-content-center">
 
-                                <!-- Casual Leave -->
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e7fae7; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
-                                    <span style="font-size:10px; color: #1d421e;font-weight:500;">CL</span>
+                                <!-- Sick Leave -->
+
+                                <div class="sickLeaveCircle">
+
+                                    <span class="sickLeaveBal">SL</span>
+
                                 </div>
-                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['casualLeaveBalance'] }}</span>
+
+                                <span class="sickLeaveValue">{{ $leaveRequest['leaveBalances']['sickLeaveBalance'] }}</span>
+
+                                <!-- Casual Leave  -->
+
+                                <div class="casLeaveCircle">
+
+                                    <span class="casLeaveBal">CL</span>
+
+                                </div>
+
+                                <span class="casLeaveValue">{{ $leaveRequest['leaveBalances']['casualLeaveBalance'] }}</span>
+
+                                <!-- Casual Leave  Probation-->
+                                @if($leaveRequest['leaveRequest']->leave_type === 'Casual Leave Probation' && isset($leaveRequest['leaveBalances']['casualProbationLeaveBalance']))
+                                <div class="probLeave">
+
+                                    <span class="probLeaveBal">CLP</span>
+
+                                </div>
+                                <span class="probLeaveValue">{{ $leaveRequest['leaveBalances']['casualProbationLeaveBalance'] }}</span>
+
                                 <!-- Loss of Pay -->
-                                @if($leaveRequest['leaveRequest']->leave_type === 'Loss Of Pay')
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
-                                    <span style="font-size:10px; color: #890000;font-weight:500;">LOP</span>
+
+                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Loss Of Pay' && isset($leaveRequest['leaveBalances']['lossOfPayBalance']))
+
+                                <div class="lossLeave">
+
+                                    <span class="lossLeaveBal">LOP</span>
+
                                 </div>
-                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">&minus;{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
-                                <!-- Casual Leave Probation-->
-                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Casual Leave Probation')
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #FDEBD0  ; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
-                                    <span style="font-size:10px; color: #F39C12  ;font-weight:500;">CLP</span>
+                                @if(($leaveRequest['leaveBalances']['lossOfPayBalance'])>0)
+                                <span class="lossLeaveValue">&minus;{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
+                                @else
+                                <span class="lossLeaveValue">{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
+                                @endif
+                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Marriage Leave' && isset($leaveRequest['leaveBalances']['marriageLeaveBalance']))
+
+                                <div class="marriageLeave">
+
+                                    <span class="marriageLeaveBal">MRL</span>
+
                                 </div>
-                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['casualProbationLeaveBalance'] }}</span>
-                                <!-- marriage leave -->
-                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Marriage Leave')
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
-                                    <span style="font-size:10px; color: #890000;font-weight:500;">MRL</span>
+
+                                <span class="marriageLeaveValue">{{ $leaveRequest['leaveBalances']['marriageLeaveBalance'] }}</span>
+
+                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Petarnity Leave' && isset($leaveRequest['leaveBalances']['paternityLeaveBalance']))
+
+                                <div class="petarnityLeave">
+
+                                    <span class="petarnityLeaveBal">PL</span>
+
                                 </div>
-                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['marriageLeaveBalance'] }}</span>
-                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Maternity Leave')
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
-                                    <span style="font-size:10px; color: #890000;font-weight:500;">ML</span>
+
+                                <span class="petarnityLeaveValue">{{ $leaveRequest['leaveBalances']['paternityLeaveBalance'] }}</span>
+
+                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Maternity Leave' && isset($leaveRequest['leaveBalances']['maternityLeaveBalance']))
+
+                                <div class="maternityLeave">
+
+                                    <span class="maternityLeaveBal">ML</span>
+
                                 </div>
-                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['maternityLeaveBalance'] }}</span>
-                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Petarnity Leave')
-                                <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
-                                    <span style="font-size:10px; color: #890000;font-weight:500;">PL</span>
-                                </div>
-                                <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['paternityLeaveBalance'] }}</span>
+
+                                <span class="maternityLeaveValue">{{ $leaveRequest['leaveBalances']['maternityLeaveBalance'] }}</span>
 
                                 @endif
+
                             </div>
                             @endif
                         </div>
                         <div class="content1">
-                            <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" class="anchorTagDetails" >View Details</a>
+                            <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" class="anchorTagDetails">View Details</a>
                             @if($leaveRequest['leaveRequest']->category_type === 'Leave')
                             <button class="rejectBtn" wire:click="rejectLeave({{ $loop->index }})">Reject</button>
                             @else
@@ -231,9 +265,9 @@
         </div>
         @endforeach
         @else
-        <div class="leave-pending" style="margin-top:30px; background:#fff; margin-left:120px; display:flex; width:75%;flex-direction:column; text-align:center;justify-content:center; border:1px solid #ccc; padding:20px;gap:10px;">
-            <img src="/images/pending.png" alt="Pending Image" style="width:60%; margin:0 auto;">
-            <p style="color:#969ea9; font-size:12px; font-weight:400; ">There are no pending records of any leave transaction to Review</p>
+        <div class="leave-pending">
+            <img src="/images/pending.png" alt="Pending Image" class="m-auto" width="100">
+            <p class="normalTextValue fw-normal">There are no pending records of any leave transaction to Review</p>
         </div>
         @endif
     </div>

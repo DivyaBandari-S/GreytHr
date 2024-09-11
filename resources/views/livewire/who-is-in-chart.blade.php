@@ -165,20 +165,21 @@
 <div class="row m-0 p-0" style=" display:flex;">
 
   <div class="col-md-3">
-    <div class="container5-who-is-in">
+    <div class="container5-who-is-in-absent">
       <div class="heading-who-is-in">
-        <h3>Absent&nbsp;({{ str_pad($employeesCount1, 2, '0', STR_PAD_LEFT) }})</h3>
+        <h3>Absent&nbsp;({{ str_pad($absentEmployeesCount, 2, '0', STR_PAD_LEFT) }})</h3>
 
         <i class="fas fa-download" wire:click="downloadExcelForAbsent" style="cursor:pointer;"></i>
 
-      </div>
-
+      </div >
+        <div class="table-responsive">
         <table class="who-is-in-table-for-late-employee" style="width: 100%;">
           <thead>
             <tr>
-            <th style="padding-right:53px;">Employee</th>
+            <th>Employee</th>
             <th>Expected InTime</th>
             <th></th>
+           
             </tr>
           </thead>
           <tbody>
@@ -190,7 +191,7 @@
               </td>
             </tr>
             @else
-            @foreach($Employees1 as $e1)
+            @foreach($Employees1 as $index=>$e1)
             <tr style="border-bottom: 1px solid #ddd;">
               <td style="font-size:10px;font-weight:700;max-width:120px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;"data-toggle="tooltip"
               data-placement="top" title="{{ ucwords(strtolower($e1->first_name)) }} {{ ucwords(strtolower($e1->last_name)) }}">
@@ -199,14 +200,46 @@
               </td>
               <td style="font-weight:700;font-size:10px;">{{$e1->shift_start_time}}</td>
               
-               <td></td>
+              <td style="text-align:right;">
+              <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899'}}" wire:click="toggleAccordionForAbsent({{ $index }})">
+                          <i class="fa fa-angle-{{ $openAccordionForAbsent === $index ? 'down' : 'up' }}"style="color:{{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899' }}"></i>
+                    </button>
+                </td>
+
             </tr>
-            
+            @if($openAccordionForAbsent === $index)
+            <tr>
+                <td colspan="4">
+                    <div style="padding: 10px;">
+                    <div style="height: 50px; background-color: #f0f0f0; padding: 5px; width: 100%;">
+                            <div style="font-size: 10px;">
+                              <span style="font-size: 10px;">{{ \Carbon\Carbon::parse($e1->shift_start_time)->format('h:i A') }} to 
+                              {{ \Carbon\Carbon::parse($e1->shift_end_time)->format('h:i A') }}</span>
+                            </div>  
+                              <div style="font-size: 8px; margin-top: 5px;">
+                                        <span style="display: inline-block;">{{ \Carbon\Carbon::parse($e1->shift_start_time)->format('H:i') }}</span>
+                                        <span class="time-separator-who-is-in"style="display: inline-block;width:60%;"></span>
+                                        <span style="display: inline-block;">{{ \Carbon\Carbon::parse($e1->shift_end_time)->format('H:i') }}</span>
+                              </div>
+                        </div>
+                        <!-- Add more details here -->
+                        <p style="font-size:12px;font-weight:700;">Contact Details</p>
+                        <p style="font-size:10px;font-weight:600;">Email ID:<span style="display:flex;font-weight:500;">{{$e1->email}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:<span style="display:flex;font-weight:500;">{{$e1->mobile_number}}</span></p>
+                        <p style="font-size:12px;font-weight:700;">Categories Details</p>
+                        <p style="font-size:10px;font-weight:600;">Designation:<span style="display:flex;font-weight:500;">{{$e1->job_role}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Location:<span style="display:flex;font-weight:500;">{{$e1->job_location}}</span></p>
+                        
+                    </div>
+                </td>
+            </tr>
+            @endif
           
             @endforeach
             @endif
           </tbody><!-- Add table rows (tbody) and data here if needed -->
         </table>
+        </div>
     </div>
   </div>
   <div class="col-md-3">
@@ -218,18 +251,19 @@
 
       </div>
 
-      <div>
+      <div class="table-responsive">
         <table class="who-is-in-table-for-late-employee" style="width:100%;">
           
           <thead>
             <tr>
               <th style="padding-right:53px;">Employee</th>
-              <th style="padding-right:23px;">Late By</th>
+              <th>Late By</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             @if($lateArrival > 0)
-            @foreach($Swipes as $s1)
+            @foreach($Swipes as $index=>$s1)
 
             @php
             $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
@@ -258,9 +292,42 @@
                 <br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span>
               </td>
               <td style="font-weight:700;font-size:10px;padding-left:12px;">{{$lateArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
+              <td style="text-align:right;">
+              <button class="arrow-btn" style="background-color:#fff;cursor:pointer;color:{{ $openAccordionForLate === $index ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForLate === $index ? '#3a9efd' : '#778899'}}" wire:click="toggleAccordionForLate({{ $index }})">
+                          <i class="fa fa-angle-{{ $openAccordionForLate === $index ? 'down' : 'up' }}"style="color:{{ $openAccordionForLate === $index ? '#3a9efd' : '#778899' }}"></i>
+                    </button>
+                </td>
             </tr>
-
             @endif
+            @if($openAccordionForLate === $index)
+            <tr>
+                <td colspan="4">
+                    <div>
+                        <!-- Add more details here -->
+                        <div style="height: 50px; background-color: #f0f0f0; padding: 5px; margin-top: 10px; width: 100%;">
+                            <div style="font-size: 10px;">
+                              <span>{{ \Carbon\Carbon::parse($s1->shift_start_time)->format('h:i A') }} to 
+                              {{ \Carbon\Carbon::parse($s1->shift_end_time)->format('h:i A') }}</span>
+                            </div>  
+                              <div style="font-size: 8px; margin-top: 5px;">
+                                        <span style="display: inline-block;">{{ \Carbon\Carbon::parse($s1->shift_start_time)->format('H:i') }}</span>
+                                        <span class="time-separator-who-is-in"style="display: inline-block;width:60%;"></span>
+                                        <span style="display: inline-block;">{{ \Carbon\Carbon::parse($s1->shift_end_time)->format('H:i') }}</span>
+                              </div>
+                        </div>
+                        <p style="font-size:12px;font-weight:700;">Contact Details</p>
+                        <p style="font-size:10px;font-weight:600;">Mail Address:<span style="display:flex;font-weight:500;">{{$s1->email}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:<span style="display:flex;font-weight:500;">{{$s1->mobile_number}}</span></p>
+                        <p style="font-size:12px;font-weight:700;">Categories Details</p>
+                        <p style="font-size:10px;font-weight:600;">Designation:<span style="display:flex;font-weight:500;">{{$s1->job_role}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Location:<span style="display:flex;font-weight:500;">{{$s1->job_location}}</span></p>
+                        
+                    </div>
+                </td>
+            </tr>
+            @endif
+  
+            
 
             @endforeach
              @else
@@ -288,21 +355,22 @@
 
       </div>
 
-      <div>
+      <div class="table-responsive">
         <!-- <table class="who-is-in-table-for-early-employee" style="width:100%;"> -->
         <table class="who-is-in-table-for-late-employee" style="width:100%;">
         
         <thead>
             <tr>
-              <th style="padding-right:73px;">Employee</th>
-              <th style="padding-right:8px;">Early By</th>
+              <th style="padding-right:30px;">Employee</th>
+              <th>Early By</th>
+              <th></th>
             </tr>
           </thead>
 
          
           <tbody>
              @if($onTime > 0)
-            @foreach($Swipes as $s1)
+            @foreach($Swipes as $index=>$s1)
             @php
             $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
             $earlyArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I');
@@ -313,9 +381,42 @@
               <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;"data-toggle="tooltip"
               data-placement="top" title="{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}">{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}<br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span></td>
               <td style="font-weight:700;font-size:10px;">{{$earlyArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
+              <td style="text-align:right;">
+              <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ $openAccordionForEarly === $index ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForEarly === $index ? '#3a9efd' : '#778899'}}" wire:click="toggleAccordionForEarly({{ $index }})">
+                          <i class="fa fa-angle-{{ $openAccordionForEarly === $index ? 'down' : 'up' }}"style="color:{{ $openAccordionForEarly === $index ? '#3a9efd' : '#778899' }}"></i>
+                    </button>
+                </td>
             </tr>
 
               @endif
+              @if($openAccordionForEarly === $index)
+            <tr>
+                <td colspan="4">
+                    <div>
+                    <div style="height: 50px; background-color: #f0f0f0; padding: 5px; margin-top: 5px;margin-bottom: 5px; width: 100%;">
+                            <div style="font-size: 10px;">
+                              <span>{{ \Carbon\Carbon::parse($s1->shift_start_time)->format('h:i A') }} to 
+                              {{ \Carbon\Carbon::parse($s1->shift_end_time)->format('h:i A') }}</span>
+                            </div>  
+                              <div style="font-size: 8px; margin-top: 5px;">
+                                        <span style="display: inline-block;">{{ \Carbon\Carbon::parse($s1->shift_start_time)->format('H:i') }}</span>
+                                        <span class="time-separator-who-is-in"style="display: inline-block;width:60%;"></span>
+                                        <span style="display: inline-block;">{{ \Carbon\Carbon::parse($s1->shift_end_time)->format('H:i') }}</span>
+                              </div>
+                        </div>
+                        <!-- Add more details here -->
+                        <p style="font-size:12px;font-weight:700;">Contact Details</p>
+                        <p style="font-size:10px;font-weight:600;">Mail Address:<span style="display:flex;font-weight:500;">{{$s1->email}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:<span style="display:flex;font-weight:500;">{{$s1->mobile_number}}</span></p>
+                        <p style="font-size:12px;font-weight:700;">Categories Details</p>
+                        <p style="font-size:10px;font-weight:600;">Designation:<span style="display:flex;font-weight:500;">{{$s1->job_role}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Location:<span style="display:flex;font-weight:500;">{{$s1->job_location}}</span></p>
+                        
+                    </div>
+                </td>
+            </tr>
+            @endif
+
               @endforeach
               @else
           <tr>
@@ -334,36 +435,39 @@
   <div class="col-md-3">
     <div class="container5-who-is-in">
       <div class="heading-who-is-in">
-        <h3>On&nbsp;Leave&nbsp;({{ str_pad($ApprovedLeaveRequestsCount, 2, '0', STR_PAD_LEFT) }})</h3>
+        <h3>On&nbsp;Leave&nbsp;({{ str_pad($employeesOnLeaveCount, 2, '0', STR_PAD_LEFT) }})</h3>
 
         <i class="fas fa-download" wire:click="downloadExcelForLeave" style="cursor: pointer;"></i>
 
       </div>
 
-      <div>
-        <table class="who-is-in-table" >
+      <div class="table-responsive">
+      <table class="who-is-in-table-for-late-employee" style="width:100%;">
         
-          <thead>
+        <thead>
             <tr>
-              <th style="padding-right:18px;">Employee</th>
-              <th >Number&nbsp;of&nbsp;days</th>
+              <th>Employee</th>
+              <th>Number of days</th>
+              <th></th>
             </tr>
           </thead>
+
+         
           <tbody>
-            @if($notFound3)
+          @if($notFound3)
             <tr>
               <td colspan="2" style="text-align: center;">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi7kQkKftvg3JCfA63d_BWJbSNrTwsX9QQPRUS7Okm5iTciCkig3wOxRUQB59BO6AM0Ng&usqp=CAU" style="width: 30px;">
-                <p style="font-weight: normal; font-size: 12px; color:#778899;margin-top:5px;">No employees are on leave today</p>
+                <p style="font-weight: normal; font-size: 10px; color:#778899;margin-top:5px;">No employees are on leave today</p>
               </td>
             </tr>
-
+ 
             @else
             @if($ApprovedLeaveRequestsCount > 0)
-
-            @foreach($ApprovedLeaveRequests as $alr)
-
-
+ 
+            @foreach($ApprovedLeaveRequests as $index=>$alr)
+ 
+ 
             <tr style="border-bottom: 1px solid #ddd;">
               <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;"data-toggle="tooltip"
               data-placement="top" title="{{ ucwords(strtolower($alr->first_name)) }} {{ ucwords(strtolower($alr->last_name)) }}">
@@ -374,7 +478,7 @@
                 @foreach($firstNameParts as $part)
                 {{ ucfirst(strtolower($part)) }}
                 @endforeach
-
+ 
                 @foreach($lastNameParts as $part)
                 {{ ucfirst(strtolower($part)) }}
                 @endforeach
@@ -385,8 +489,45 @@
                   Approved
                 </div>
               </td>
-
+              <td style="text-align:right;">
+                    <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ $openAccordionForLeave === $index ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForLeave === $index ? '#3a9efd' : '#778899'}}" wire:click="toggleAccordionForLeave({{ $index }})">
+                          <i class="fa fa-angle-{{ $openAccordionForLeave === $index ? 'down' : 'up' }}"style="color:{{ $openAccordionForLeave === $index ? '#3a9efd' : '#778899' }}"></i>
+                    </button>
+                </td>
             </tr>
+            @if($openAccordionForLeave === $index)
+            <tr>
+                <td colspan="4">
+                    <div>
+                        <!-- Add more details here -->
+                        <p style="font-size:10px;display:flex;font-weight:600;">Leave Dates:<span style="margin-left:5px;font-weight:500;">
+                                                  {{ implode(', ', array_map(function($date) {
+                                      return \Carbon\Carbon::parse($date)->format('jS M Y');
+                                  }, $alr->leave_dates)) }}
+                        </span></p> 
+                        <p style="font-size:10px;font-weight:600;">Leave Type:<span style="margin-left:5px;font-weight:500;">{{$alr->leave_type}}</span></p> 
+                        <div style="height: 50px; background-color: #f0f0f0; padding: 5px; margin-top: 10px; width: 100%;">
+                            <div style="font-size: 8px;">
+                              <span style="font-size: 8px;">{{ \Carbon\Carbon::parse($alr->shift_start_time)->format('h:i A') }} to 
+                              {{ \Carbon\Carbon::parse($alr->shift_end_time)->format('h:i A') }}</span>
+                            </div>  
+                              <div style="font-size: 8px; margin-top: 5px;">
+                                        <span style="display: inline-block;">{{ \Carbon\Carbon::parse($alr->shift_start_time)->format('H:i') }}</span>
+                                        <span class="time-separator-who-is-in"style="display: inline-block;width:60%;"></span>
+                                        <span style="display: inline-block;">{{ \Carbon\Carbon::parse($alr->shift_end_time)->format('H:i') }}</span>
+                              </div>
+                        </div>
+                        <p style="font-size:12px;font-weight:700;">Contact Details</p>
+                        <p style="font-size:10px;font-weight:600;">Email ID<span style="margin-left:5px;font-weight:500;">{{$alr->email}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:<span style="margin-left:5px;font-weight:500;">{{$alr->mobile_number}}</span></p>
+                        <p style="font-size:12px;font-weight:700;">Categories Details</p>
+                        <p style="font-size:10px;font-weight:600;">Designation:<span style="margin-left:5px;font-weight:500;">{{$alr->job_role}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Location:<span style="margin-left:5px;font-weight:500;">{{$alr->job_location}}</span></p>
+                        
+                    </div>
+                </td>
+            </tr>
+            @endif
             @endforeach
             @else
           <tr>
@@ -397,10 +538,10 @@
           </tr>
           @endif
             @endif
-          </tbody>
-          <!-- Add table rows (tbody) and data here if needed -->
-         
+          </tbody><!-- Add table rows (tbody) and data here if needed -->
+     
         </table>
+ 
       </div>
     </div>
   </div>

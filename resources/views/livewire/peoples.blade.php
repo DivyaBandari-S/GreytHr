@@ -1,218 +1,8 @@
 <!-- resources/views/livewire/people-lists.blade.php -->
 
 <div>
-    <style>
-        .people-left-side-container {
-            margin-right: 20px;
-            padding: 20px;
-            border-radius: 5px;
-            height: 450px;
-            margin-left: 0px;
-        }
 
-        .people-input-group-container {
-            margin-bottom: 20px;
-        }
-
-        .people-search-input {
-            font-size: 0.75rem !important;
-            border-radius: 5px 0 0 5px;
-            height: 32px;
-        }
-
-
-        .people-search-btn {
-            height: 32px;
-            width: 40px;
-            position: relative;
-            border-radius: 0 5px 5px 0;
-            background-color: rgb(2, 17, 79);
-            color: #fff;
-            border: none;
-        }
-
-        .people-search-icon {
-            position: absolute;
-            top: 9px;
-            left: 11px;
-        }
-
-
-        .people-starred-list-container {
-            max-height: 350px;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-
-        .people-empty-text {
-            text-align: center;
-            color: var(--label-color);
-            font-size: 12px;
-        }
-
-        .people-detail-container {
-            height: auto;
-            cursor: pointer;
-            padding: 5px;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            background-color: white;
-        }
-
-        .people-detail-container.selected {
-            background-color: #f3faff;
-        }
-
-        .people-default-container-name {
-            font-size: 12px;
-            color: var(--main-heading-color);
-            margin-right: 5px;
-        }
-
-        .people-default-container-name.inactive {
-            color: var(--requiredAlert);
-        }
-
-        .people-default-container-empid {
-            font-size: 12px;
-            color: var(--main-heading-color);
-            white-space: nowrap;
-        }
-
-        .people-default-container-empid.inactive {
-            color: var(--requiredAlert);
-        }
-
-        .people-text-blue {
-            color: #f3c20f;
-        }
-
-        .people-default-star-icon {
-            cursor: pointer;
-            font-size: 12px;
-            padding-left: 6px;
-            color: #f3c20f;
-        }
-
-        .people-selectedperson-container {
-            border-radius: 5px;
-            padding: 20px;
-            height: 450px;
-            margin-top: 0px;
-        }
-
-        @media (max-width: 767px) {
-            .people-selectedperson-container {
-                margin-top: 10px;
-                height: 490px;
-            }
-        }
-
-        .people-selectedperson-detail-container {
-            background: #e0e0e0;
-            padding: 10px;
-        }
-
-        .people-selectedperson-name {
-            font-size: 16px;
-            margin-right: 5px;
-            color: var(--main-heading-color);
-            font-weight: 500;
-        }
-
-        .people-selectedperson-anchortag {
-            text-decoration: none;
-        }
-
-        .people-selectedperson-star-icon {
-            cursor: pointer;
-            color: #f3c20f;
-            margin-bottom: 10px;
-        }
-
-        .people-selectedperson-empid {
-            color: var(--label-color);
-            font-size: 14px;
-        }
-
-        .people-headings {
-            margin-right: 10px;
-            font-weight: 500;
-            color: var(--label-color);
-            font-size: 12px;
-        }
-
-        .people-horizontal-line {
-            flex-grow: 1;
-            width: 50px;
-            color: var(--main-heading-color);
-            border: 1px solid var(--label-color);
-            margin: 0;
-        }
-
-        .people-label {
-            color: var(--label-color);
-            font-size: 13px;
-        }
-
-        .people-value {
-            font-weight: 500;
-            color: var(--main-heading-color);
-            font-size: 13px;
-        }
-
-        .people-first-person-container {
-            font-size: 13px;
-            padding: 10px;
-            height: 450px;
-        }
-
-        .people-starred-nodata-container {
-            margin-top: 140px
-        }
-
-        .people-starred-nodata-img {
-            height: 150px;
-            width: 150px;
-        }
-
-        .people-text-white {
-            text-shadow: 0 0 2px rgb(2, 17, 79);
-        }
-
-        .people-selected-person-star {
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .people-nodata-container {
-            margin-top: 100px
-        }
-
-        .people-nodata-img {
-            height: 200px;
-            width: 200px;
-        }
-        @media (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
-            .people-employee-detail-container {
-            margin-left: 35px;
-        }
-        .people-left-side-container {
-        flex: 0 0 41.66667%; 
-        max-width: 41.66667%; 
-    }
-
-    .people-selectedperson-container {
-        flex: 0 0 50%; 
-        max-width: 50%; 
-    }
-        }
-
-        
-    </style>
-    <div class="container mt-3">
+    <div class="container">
         @if (session()->has('emp_error'))
             <div class="alert alert-danger">
                 {{ session('emp_error') }}
@@ -228,50 +18,45 @@
                 ->first();
         @endphp
         @if ($mangerid)
-            <div class="row justify-content-center" style="width: 316px; position: relative; padding-left: 2px;">
-                <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
-                    <a id="starred-tab-link"
-                        style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}"
+            <div class="row justify-content-center people-tab-container">
+                <div class="col-4 text-center people-starred-tab-container">
+                    <a id="starred-tab-link" class="people-manager-tab-link {{ $activeTab === 'starred' ? 'active' : '' }}"
+                    
                         wire:click="$set('activeTab', 'starred')" class="links">
                         Starred
                     </a>
                 </div>
-                <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
-                    <a id="myteam-tab-link"
-                        style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'myteam' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}"
+                <div class="col-4 text-center people-starred-tab-container">
+                    <a id="myteam-tab-link" class="people-manager-tab-link {{ $activeTab === 'myteam' ? 'active' : '' }}"
+                      
                         wire:click="$set('activeTab', 'myteam')" class="links">
                         My Team
                     </a>
                 </div>
-                <div class="col-4 text-center" style="border-radius: 5px; cursor: pointer;">
-                    <a id="everyone-tab-link"
-                        style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}"
+                <div class="col-4 text-center people-starred-tab-container">
+                    <a id="everyone-tab-link" class="people-manager-tab-link {{ $activeTab === 'everyone' ? 'active' : '' }}"
                         wire:click="$set('activeTab', 'everyone')" class="links">
                         Everyone
                     </a>
                 </div>
-                <div
-                    style="transition: left 0.3s ease-in-out; position: absolute; bottom: -11px; left: {{ $activeTab === 'starred' ? '4px' : ($activeTab === 'myteam' ? '111px' : '219px') }}; width: 92px; height: 4px; background-color: rgb(2, 17, 79); border-radius: 5px;">
+                <div class="people-manager-tab-line {{ $activeTab === 'starred' ? 'tab-position-starred' : ($activeTab === 'myteam' ? 'tab-position-myteam' : 'tab-position-everyone') }}">
                 </div>
             </div>
         @else
-            <div class="row justify-content-start" style="width: 316px; position: relative; padding-left: 7px;">
-                <div class="col-3 text-start" style="border-radius: 5px; cursor: pointer;">
-                    <a id="starred-tab-link"
-                        style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'starred' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}"
+            <div class="row justify-content-start people-emp-tab-container">
+                <div class="col-3 text-start people-starred-tab-container">
+                    <a id="starred-tab-link" class="people-manager-tab-link {{ $activeTab === 'starred' ? 'active' : '' }}"
                         wire:click="$set('activeTab', 'starred')" class="links">
                         Starred
                     </a>
                 </div>
-                <div class="col-3 text-start" style="border-radius: 5px; cursor: pointer;">
-                    <a id="everyone-tab-link"
-                        style="text-decoration: none; font-size: 13px; color: {{ $activeTab === 'everyone' ? 'rgb(2, 17, 79);' : 'var(--main-heading-color)' }}"
+                <div class="col-3 text-start people-starred-tab-container">
+                    <a id="everyone-tab-link" class="people-manager-tab-link {{ $activeTab === 'everyone' ? 'active' : '' }}"
                         wire:click="$set('activeTab', 'everyone')" class="links">
                         Everyone
                     </a>
                 </div>
-                <div
-                    style="transition: left 0.3s ease-in-out; position: absolute; bottom: -11px; left: {{ $activeTab === 'starred' ? '2px' : '83px' }}; width: 86px; height: 4px; background-color: rgb(2, 17, 79); border-radius: 5px;">
+                <div class="people-emp-tab-line {{ $activeTab === 'starred' ? 'tab-position-emp-starred' : 'tab-position-emp-everyone' }}">
                 </div>
             </div>
         @endif
@@ -287,7 +72,7 @@
                             placeholder="Search for Employee Name or ID" aria-label="Search"
                             aria-describedby="basic-addon1">
                         <div class="input-group-append">
-                            <button wire:click="starredFilter" class="people-search-btn" type="button">
+                            <button wire:click="starredFilter" class="people-search-button" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
                             </button>
                         </div>
@@ -303,7 +88,7 @@
                             @endphp
                             @foreach ($starredPeoples->where('starred_status', 'starred') as $people)
                                 <div wire:click="starredPersonById('{{ $people->id }}')"
-                                    class="container people-detail-container {{ ($selectStarredPeoples && $selectStarredPeoples->id == $people->id) || (!$selectStarredPeoples && $defaultSelection->id == $people->id) ? 'selected' : ''}}">
+                                    class="container people-details-container {{ ($selectStarredPeoples && $selectStarredPeoples->id == $people->id) || (!$selectStarredPeoples && $defaultSelection->id == $people->id) ? 'selected' : ''}}">
                                     <div class="row align-items-center">
                                         <div class="col-3">
                                             @if (!empty($people->profile) && $people->profile !== 'null')
@@ -590,7 +375,7 @@
                 <input wire:model="searchTerm" type="text" class="form-control people-search-input"
                     placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                 <div class="input-group-append">
-                    <button wire:click="filter" class="people-search-btn" type="button">
+                    <button wire:click="filter" class="people-search-button" type="button">
                         <i class="fa fa-search people-search-icon"></i>
                     </button>
                 </div>
@@ -607,7 +392,7 @@
 
                         @foreach ($peopleData as $people)
                             <div wire:click="selectPerson('{{ $people->emp_id }}')"
-                                class="container people-detail-container {{ ($selectedPerson && $selectedPerson->emp_id == $people->emp_id) || (!$selectedPerson && $defaultSelection && $defaultSelection->emp_id == $people->emp_id) ? 'selected' : ''  }}">
+                                class="container people-details-container {{ ($selectedPerson && $selectedPerson->emp_id == $people->emp_id) || (!$selectedPerson && $defaultSelection && $defaultSelection->emp_id == $people->emp_id) ? 'selected' : ''  }}">
                                 <div class="row align-items-center">
                                     <div class="col-3">
                                         @if (!empty($people->image) && $people->image !== 'null')
@@ -885,7 +670,7 @@
                 <input wire:model="searchValue" type="text" class="form-control people-search-input"
                     placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                 <div class="input-group-append">
-                    <button wire:click="filterMyTeam" class="people-search-btn" type="button">
+                    <button wire:click="filterMyTeam" class="people-search-button" type="button">
                         <i class="fa fa-search people-search-icon"></i>
                     </button>
                 </div>
@@ -902,7 +687,7 @@
                         @endphp
                         @foreach ($myTeamData as $people)
                             <div wire:click="selectMyTeamPerson('{{ $people->emp_id }}')"
-                                class="container people-detail-container {{ ($selectedMyTeamPerson && $selectedMyTeamPerson->emp_id == $people->emp_id) || (!$selectedMyTeamPerson && $defaultSelection && $defaultSelection->emp_id == $people->emp_id) ? 'selected' : '' }}">
+                                class="container people-details-container {{ ($selectedMyTeamPerson && $selectedMyTeamPerson->emp_id == $people->emp_id) || (!$selectedMyTeamPerson && $defaultSelection && $defaultSelection->emp_id == $people->emp_id) ? 'selected' : '' }}">
                                 <div class="row align-items-center">
                                     <div class="col-3">
                                         @if (!empty($people->image) && $people->image !== 'null')
