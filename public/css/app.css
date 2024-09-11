@@ -81,20 +81,7 @@
     font-size: var(--normal-font-size);
     padding: 4px;
 }
-.task-custom-select-width {
 
-    width: 150px;
-
-    font-size: var(--normal-font-size);
-
-    padding: 7px;
-
-}
-.task-custom-select-width {
-    width: 150px;
-    font-size: var(--normal-font-size);
-    padding: 7px;
-}
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
     background-color: white;
@@ -104,21 +91,7 @@
     margin-top: 30px;
     border-radius: 5px;
 }
-.settings-birthday-value{
-    flex: 1;
-    margin-left: 5px;
-    font-weight: 500;
-    color: #000;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 60px;
-}
-@media (max-width: 991px) {
-    .settings-birthday-value {
-        max-width: 150px;
-    }
-}
+
 .primarySideBar {
     font-family: "Montserrat", sans-serif;
 }
@@ -205,6 +178,16 @@
     color: var(--main-heading-color);
     font-weight: 500;
     font-size: var(--normal-font-size);
+}
+.normalTextSubheading{
+    color: var(--main-heading-color);
+    font-weight: 500;
+    font-size: var(--sub-headings-font-size);
+}
+.normalTextSmall{
+    color: var(--label-color);
+    font-weight: 500;
+    font-size: 0.65rem;
 }
 .approvedColor {
     font-size: var(--normal-font-size);
@@ -510,13 +493,7 @@
 /* end of home blade */
 /* Ending of home module (Kumar Asapu,Archana Goud,Divya Bandari,Pranita Priyadarshi & Siva)*/
 
-/* Starting of settings module (Kumar Asapu)*/
-.settings-profile-image {
-    border-radius: 50%;
-    height: 90px;
-    width: 90px;
-}
-/* Ending of settings module (Kumar Asapu)*/
+
 
 /* Starting of tasks module (Kumar Asapu)*/
 body {
@@ -2683,6 +2660,7 @@ input[type="radio"] {
     font-size: var(--normal-font-size);
     padding: 7px 10px;
     display: flex;
+    font-size: var(--normal-font-size);
     align-items: center;
     justify-content: space-between;
 }
@@ -2726,6 +2704,12 @@ input[type="radio"] {
     color: var(--main-heading-color);
     font-size: var(--normal-font-size);
     font-weight: 500;
+}
+.reviewActiveButtons{
+    border-top-left-radius:5px;border-bottom-left-radius:5px;
+}
+.reviewClosedButtons{
+    border-top-right-radius:5px;border-bottom-right-radius:5px;
 }
 
 @media (max-width: 460px) {
@@ -2947,6 +2931,8 @@ input[type="radio"] {
     justify-content: center;
     border: 1px solid #ccc;
     padding: 20px;
+    width: 65%;
+    margin: 0 auto;
     gap: 10px;
 }
 .accordionContentSpan {
@@ -3676,6 +3662,10 @@ l
 .maternityLeaveValue{
     font-size: 11px; font-weight: 500; color: #863886; margin-left: 5px;
 }
+.normalTextValueSmall{
+    font-size: 11px; font-weight: 500;
+    color: var(--main-heading-color);
+}
 .approveBtn {
     background: rgb(2, 17, 79);
     border: 1px solid rgb(2, 17, 79);
@@ -3702,6 +3692,50 @@ l
     font-size: var(--normal-font-size);
     font-weight: 500;
     border-radius: 5px;
+}
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.reviewTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.reviewTable th, .reviewTable td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.reviewTable th {
+    background-color: #ecf5ff;
+    text-align: left;
+}
+.dateContainer {
+    display: flex;
+    gap: 15px;
+}
+
+.dateContainer .session-info {
+    color: #778899;
+    font-size: 10px;
+    display: block;
+}
+.sessionFont{
+    color: #494F55;font-size: 9px;
+}
+.horizontalLine{
+    width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;
+}
+.employeeName{
+    font-size: 12px; font-weight: 500; text-align: center; margin: auto; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pending-leavves-container{
+    width:100%; max-height:100vh; overflow-y:auto; margin-top:50px
+}
+.closed-leaves-container{
+    width:100%; max-height:100vh; overflow-y:auto; margin:20px auto;
 }
 /* end of view pending details */
 
@@ -3762,7 +3796,7 @@ l
 
 .header-style {
     background-color: #ecf5ff;
-    font-weight: normal;
+    font-weight: 500;
     font-size: var(--normal-font-size);
     color: var(--label-color);
     text-align: start;
@@ -4989,7 +5023,210 @@ select .yearSelect {
 }
 /* end of styles */
 
+
+.teamOnLeavetable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.teamOnLeavetable th {
+    background-color: #ecf9ff;
+    /* Header background color */
+    color: #778899;
+    /* Text color for headers */
+    padding: 8px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-align: left;
+}
+
+.teamOnLeavetable td {
+    background-color: #fff;
+    /* Body background color */
+    color: #3b4452;
+    /* Text color for body cells */
+    padding: 8px;
+    border: 1px solid #ddd;
+    /* Optional: border for table cells */
+}
+
+.teamOnLeavetable tbody tr:nth-child(even) td {
+    background-color: #fcfcfc;
+    /* Optional: alternate row color */
+}
+.team-on-leave-main-div{
+    width: 90%;
+    margin:0 auto;
+}
+.team-on-leave-label{
+    font-size:0.85rem;
+}
+.team-on-label-div{
+    padding:10px 15px;
+    width:80%;
+    margin:0;
+}
+.team-on-leave-chart-div{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    margin:0 auto;
+    border:1px solid #ccc;
+}
+.team-on-leave-duration-div{
+    display:flex;
+    flex-direction:row;
+    background:white;
+    padding:10px 15px;
+    border-bottom:1px solid #ccc;
+    gap:10px;
+}
+.team-on-leave-duration{
+    font-size: 0.75rem;
+}
+.team-on-leave-duration-select{
+    font-size:0.8rem;
+}
+.team-on-leave-to{
+    color:#ccc;
+    margin:0 10px;
+}
+.team-on-leave-application{
+    color:#778899;
+    font-size:0.925rem;
+}
+.team-on-leave-search{
+    padding:10px 15px;
+    margin:0;
+}
+.team-on-leave-search-input{
+    width:150px;
+    border:none;
+    outline:none;
+}
+.team-on-leave-type{
+    padding:10px 15px;
+    margin:0;
+}
+.team-on-leave-type-select{
+    width:130px;outline:none;
+}
 /* team on leave */
+/* leave details,sick,causal,probation */
+.custom-table-wrapper-leave-details {
+    position: relative;
+    /* max-height: 130px; */
+    overflow-y: auto;
+    border-collapse: collapse;
+}
+
+.custom-table-wrapper-leave-details .balance-table {
+    width: 100%;
+    margin: 0 auto;
+    /* table-layout: fixed; */
+    border-collapse: collapse;
+}
+
+.custom-table-wrapper-leave-details th {
+    background-color: #ecf5ff;
+    padding: 10px;
+    color: #778899;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    /* Remove left and right borders */
+    border-left: none;
+    border-right: none;
+}
+
+.custom-table-wrapper-leave-details td {
+    padding: 10px;
+    font-size: 12px;
+    text-align: center;
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    /* Remove left and right borders */
+    border-left: none;
+    border-right: none;
+}
+
+.custom-table-wrapper-leave-details thead {
+    position: sticky;
+    top: 0;
+    font-size: 12px;
+    z-index: 1;
+}
+
+.info-container {
+    background-color: #ffffe8;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    width: 60%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.info-item {
+    flex: 1;
+    text-align: center;
+}
+
+.info-item:not(:last-child) {
+    border-right: 1px solid #e0e0e0;
+}
+
+.info-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.info-title {
+    color: #778899;
+    font-size: 11px;
+}
+.select-year-dropdown{
+    margin-right:5px;
+    width:fit-content
+}
+.leave-details-col-md-12{
+    max-height: 100px;
+}
+.leave-details-card{
+    height: 100%;
+}
+.leave-details-card-body{
+    height: 100%;
+}
+.leave-details-canvas{
+    background-color: transparent;
+    width:300px;
+    height:200px;
+}
+.breadcrumb-item a{
+    color: grey;
+
+
+}
+@media only screen and (max-width: 600px) {
+    .info-container {
+        width:80%;
+    }
+
+}
+@media only screen and (max-width: 400px) {
+    .info-container {
+        width:95%;
+    }
+
+}
+
+/*end leave details,sick,causal,probation */
+
+
 .text {
     --tw-text-opacity: 1;
     color: rgba(23, 30, 37);
@@ -5162,7 +5399,7 @@ option {
 }
 
 .notification-detail-container {
-    width: 290px;
+    width: 300px;
     background: #f5f8f9;
 }
 
@@ -5200,7 +5437,18 @@ option {
     font-weight: 600;
     border-radius: 5px;
 }
-
+.notifications-pointer{
+    cursor: pointer;
+}
+.notify-time-para{
+    margin-bottom: 0px;
+    font-size:xx-small;
+    color: #535f6b;
+}
+.notify-time{
+    display: flex;
+    justify-content:end;
+}
 /* //log out */
 .logout-icon-container {
     display: inline-block;
@@ -5871,6 +6119,8 @@ option {
     }
 
 }
+
+
 /* 
 peoples module styles started */
 
@@ -7249,4 +7499,292 @@ max-width: 50%;
     color:#515963;
 }
 
+.task-custom-select-width {
+
+    width: 150px;
+
+    font-size: var(--normal-font-size);
+
+    padding: 7px;
+
+}
+.task-custom-select-width {
+    width: 150px;
+    font-size: var(--normal-font-size);
+    padding: 7px;
+}
+
 /* task module styles ended */
+
+/* settings module styles started */
+
+.settings-custom-placeholder::placeholder {
+    font-size: 12px;
+}
+.setting-login-history-text{
+    font-size:12px;
+    font-weight:500;
+    cursor:pointer;
+    text-align:end;
+}
+.setting-password-container{
+    background-color: pink;
+}
+.setting-password-btn{
+    background-color:rgb(2, 17, 79);
+    color:white;
+    font-size:12px;
+}
+.setting-password-icon{
+    color: white;
+    height:10px;
+    width:10px;
+    font-size:12px;
+}
+.setting-flash-message-container{
+    position: fixed; 
+    top: 15%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 999;
+}
+.setting-flash-msg-text{
+    font-size: 12px;
+}
+.setting-history-modal-header{
+    background-color: rgb(2, 17, 79);
+    color: white; 
+    height: 40px; 
+    padding: 8px; 
+    position: relative;
+}
+.setting-history-modal-close{
+    background: none; 
+    border: none; 
+    color: white; 
+    font-size: 30px; 
+    cursor: pointer;
+}
+.setting-history-modal-text{
+    font-size: 10px;
+}
+.setting-history-modal-table{
+    margin-top: 10px;
+    width:100%
+}
+.setting-history-modal-table-label{
+    font-size: 12px; 
+    color: grey;
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+    background-color:#f2f2f2
+}
+.setting-history-modal-table-value{
+    font-size: 10px; 
+    color: black; 
+    border: 1px solid black; 
+    padding: 8px; 
+    text-align: center;
+}
+.setting-password-modal-header{
+    background-color: rgb(2, 17, 79);
+    color: white; 
+    height: 40px; 
+    padding: 8px; 
+    position: relative;
+}
+.setting-password-modal-close{
+    background: none; 
+    border: none; 
+    color: white; 
+    font-size: 30px; 
+    cursor: pointer;
+}
+.setting-password-flash-msg{
+    font-size: 12px;
+}
+.setting-password-modal-body{
+    background-color: #f0f0f0;
+}
+.setting-password-card{
+    padding: 20px; 
+    text-align: left;
+}
+.setting-password-modal-label{
+    font-size: 12px;
+    color:#778899;
+    font-weight:500;
+}
+.setting-password-modal-input{
+    font-size: 12px;
+}
+.setting-password-error-msg{
+    font-size:10px;
+}
+.setting-password-submit-container{
+    margin-top: 20px; 
+    text-align: center;
+}
+.setting-empname-text{
+    font-size: 13px; 
+    font-weight: 600; 
+    color: #000; 
+    white-space: nowrap; 
+    margin-bottom: 15px;
+}
+.setting-empid-container{
+    font-size: 12px; 
+    color: #000; 
+    margin-bottom: 15px;
+}
+.setting-empid-label{
+    width: 60px; 
+    font-size: 11px; 
+    color: #778899; 
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.setting-empid-value{
+    flex: 1; 
+    margin-left: 5px; 
+    font-size: 12px; 
+    font-weight: 500; 
+    white-space: normal;
+}
+.setting-bday-container{
+    font-size: 12px; 
+    color: #000; 
+    margin-bottom: 15px;
+}
+.setting-bday-label{
+    width: 95px; 
+    color: #778899; 
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.settings-birthday-value{
+    flex: 1;
+    margin-left: 5px;
+    font-weight: 500;
+    color: #000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60px;
+}
+@media (max-width: 991px) {
+    .settings-birthday-value {
+        max-width: 150px;
+    }
+}
+.setting-department-value{
+    flex: 1; 
+    margin-left: 5px; 
+    font-weight: 500; 
+    color: #000; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 200px;
+}
+.setting-location-label{
+    width: 80px; 
+    color: #778899; 
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.setting-location-value{
+    flex: 1; 
+    margin-left: 10px; 
+    font-weight: 500; 
+    color: #000; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 200px; 
+}
+.setting-designation-label{
+    width: 80px; 
+    color: #778899; 
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.setting-designation-value{
+    flex: 1; 
+    margin-left: 10px; 
+    font-weight: 500; 
+    color: #000; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 200px;
+}
+.setting-myprofile-container{
+    margin-top: 20px;
+    height:auto;
+    margin-bottom:10px
+}
+.setting-myprofile-text{
+    background-color: rgb(2, 17, 79);
+    color:white;
+    font-size: 15px
+}
+.setting-profile-text{
+    color:#778899;
+    font-size:12px;
+}
+.setting-edit-delete-icon{
+    text-align: end; 
+    cursor: pointer;
+}
+.setting-nickname-container{
+    margin-top: 20px;
+}
+.setting-nickname-label{
+    color: #778899;
+    font-size: 12px;
+}
+.setting-nickname-input{
+    font-size:12px; 
+    margin-top: 5px;
+}
+.setting-nickname-value{
+    color: black; 
+    font-size: 12px;
+}
+.setting-timezone-container{
+    font-size: 12px;
+}
+.setting-timezone-text{
+    color:#778899;
+}
+.setting-timezone-icons-container{
+    margin-top: 10px;
+}
+.setting-timezone-select{
+    width: 150px; 
+    font-size: 12px;
+}
+.setting-timezone-value{
+    color: black; 
+    font-size: 12px;
+}
+.setting-biography-textarea{
+    width:100%;
+    font-size:12px
+}
+.setting-socialmedia-container{
+    margin-top: 20px;
+}
+.setting-facebook-text{
+    color: #778899; 
+    font-size: 12px;
+}
+.settings-profile-image {
+    border-radius: 50%;
+    height: 90px;
+    width: 90px;
+}
+
+/* settings module styles ended */

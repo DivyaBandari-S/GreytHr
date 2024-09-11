@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\LeaveRequest;
 use App\Models\SwipeRecord;
 use App\Models\Chating;
+use Carbon\Carbon;
 
 class EmployeeDetails extends Authenticatable
 {
@@ -117,5 +118,9 @@ class EmployeeDetails extends Authenticatable
     public function getImageUrlAttribute()
     {
         return 'data:image/jpeg;base64,' . base64_encode($this->attributes['image']);
+    }
+    public function getHireDateAttribute($value)
+    {
+        return $value ? Carbon::parse($value) : null;
     }
 }
