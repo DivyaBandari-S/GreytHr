@@ -40,6 +40,7 @@ class Feeds extends Component
    public $file_path;
     public $category;
     public $description;
+    public $search;
 
   
     public $showEmojiPicker = false;
