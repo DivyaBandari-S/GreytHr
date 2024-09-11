@@ -2660,7 +2660,6 @@ input[type="radio"] {
     font-size: var(--normal-font-size);
     padding: 7px 10px;
     display: flex;
-    font-size: var(--normal-font-size);
     align-items: center;
     justify-content: space-between;
 }
@@ -2711,6 +2710,7 @@ input[type="radio"] {
 .reviewClosedButtons{
     border-top-right-radius:5px;border-bottom-right-radius:5px;
 }
+
 
 @media (max-width: 460px) {
     .custom-nav-link {
@@ -2826,7 +2826,7 @@ input[type="radio"] {
     display: flex;justify-content:start;align-items: center;gap:7px;margin-bottom: 3px;
 }
 .historyContent {
-    max-height: 80vh;
+    max-height: 70vh;
     overflow-y: auto;
 }
 
@@ -3253,6 +3253,12 @@ input[type="radio"] {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+}
+.pendingCustomStyles{
+    border-left:1px solid #ccc; border-right:1px solid #ccc;
+}
+.pendingContent{
+    max-height: 70vh;overflow-y: auto;
 }
 
 .LeaveCancelTable th,

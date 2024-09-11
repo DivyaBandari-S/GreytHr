@@ -1,8 +1,21 @@
-<div>
+<div class="position-relative">
+    @if(session()->has('message'))
+    <div class="alert alert-success w-50 position-absolute m-auto p-2 " style="right: 25%;top:-19%;" id="success-alert">
+        {{ session('message') }}
+        <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
+            <span>X</span>
+        </button>
+    </div>
+    <script>
+        setTimeout(function() {
+            $('#success-alert').fadeOut('slow');
+        }, 3000); // 3 seconds
+    </script>
+    @endif
     @if($showerrorMessage)
     <div id="errorMessage" class="alert alert-danger" wire:poll.2s="hideAlert">
         {{ $errorMessage }}
-        <button type="button" wire:click="hideAlert" class="close" style="background:none;border:none;" data-dismiss="alert" aria-label="Close">
+        <button type="button" wire:click="hideAlert" class="close bg-none border-none"  data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">x</span>
         </button>
     </div>
