@@ -108,7 +108,7 @@
 
                     </div>
                     <div class="locationGlobe">
-                        <i class="fa-solid fa-location-dot me-2" id="openMap"
+                        <i class="fa-solid fa-location-dot me-2" id="openMapIcon"
                             style="color: red;cursor: pointer;"></i>
                         {{ !empty($formattedAddress['village']) ? $formattedAddress['village'] . ', ' : '' }}
                         {{ !empty($formattedAddress['county']) ? $formattedAddress['county'] . ', ' : '' }}
