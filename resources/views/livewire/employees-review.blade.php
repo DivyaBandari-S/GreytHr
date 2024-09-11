@@ -428,7 +428,7 @@
                                     @endif
                                     <div>
                                         @if(isset($leaveRequest['approvedLeaveRequest']->first_name))
-                                        <p class="mb-0 normalText m-auto text-start" >
+                                        <p class="mb-0 normalText m-auto text-start">
                                             <span style="display: inline-block; width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->first_name)) }} {{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->last_name)) }}">
                                                 {{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->first_name)) }}
                                                 {{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->last_name)) }}
@@ -485,18 +485,15 @@
                                 @endif
                             </div>
                             @endif
-
-
                             <div class="arrow-btn px-1">
                                 <i class="fa fa-angle-down"></i>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="accordion-body m-0 p-0">
-                    <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
-                        <div class="review-content px-3" >
+                        <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
+                        <div class="review-content px-3">
 
                             <span class="normalTextValue">Duration:</span>
 
@@ -514,7 +511,7 @@
 
                         </div>
 
-                        <div class="review-content px-3" >
+                        <div class="review-content px-3">
 
                             <span class="normalTextValue">Reason:</span>
 
@@ -524,17 +521,17 @@
                         <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
                         <div class="approvedLeaveDetails d-flex justify-content-between align-items-center">
 
-                            <div class="review-content px-3" >
+                            <div class="review-content px-3">
 
                                 <span class="normalTextValue">Applied on:</span>
 
                                 <span class="normalText">{{ $leaveRequest['approvedLeaveRequest']->created_at->format('d M, Y') }}</span>
 
                             </div>
-                            <div class="review-content px-3" >
+                            <div class="review-content px-3">
                                 <span class="normalTextValue">Leave Balance:</span>
                                 @if(!empty($leaveRequest['leaveBalances']))
-                                <div class="d-flex align-items-center flex-row justify-content-center" >
+                                <div class="d-flex align-items-center flex-row justify-content-center">
                                     @if(isset($leaveRequest['leaveBalances']['sickLeaveBalance']))
                                     <!-- Sick Leave -->
                                     <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e6e6fa; display: flex; align-items: center; justify-content: center; margin-left:15px;">
@@ -584,8 +581,7 @@
                                 @endif
                             </div>
 
-                            <div class="review-content px-3" >
-
+                            <div class="review-content px-3">
                                 <a href="{{ route('approved-details', ['leaveRequestId' => $leaveRequest['approvedLeaveRequest']->id]) }}">
                                     <span style="color: #3a9efd; font-size: 11px; font-weight: 500;">View Details</span>
                                 </a>
@@ -608,10 +604,172 @@
             @endif
             <!-- if loginid is a normal employee they can view their leave history -->
             @else
-            <div class="leave-pending">
-                <img src="/images/pending.png" alt="Pending Image" style="width:50%; margin:0 auto;">
-                <p class="normalTextValue text-center">There are no records to view</p>
+            @if($empLeaveRequests->isNotEmpty())
+
+            @foreach($empLeaveRequests as $leaveRequest)
+
+            <div class="containerWidth mt-4">
+
+                <div class="accordion rounded ">
+
+                    <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
+
+                        <div class="accordion-title">
+
+                            <!-- Display leave details here based on $leaveRequest -->
+
+                            <div class="col accordion-content">
+
+                                <span class="normalTextValue">Category</span>
+
+                                <span class="normalText">{{ $leaveRequest->category_type}}</span>
+
+                            </div>
+
+                            <div class="col accordion-content">
+
+                                <span class="normalTextValue">Leave Type</span>
+
+                                <span class="normalText">{{ $leaveRequest->leave_type}}</span>
+
+                            </div>
+
+                            <div class="col accordion-content">
+
+                                <span class="normalTextValue">No. of Days</span>
+
+                                <span class="normalText">
+
+                                    {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}
+
+                                </span>
+
+                            </div>
+
+
+
+                            <!-- Add other details based on your leave request structure -->
+                            @if($leaveRequest->category_type == 'Leave Cancel')
+                            <div class="col accordion-content">
+
+                                @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+
+                                <span class="accordionContentSpanValue" style="color:#32CD32 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
+
+                                <span class="accordionContentSpanValue" style="color:#FF0000 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @else
+
+                                <span class="accordionContentSpanValue" style="color:#778899 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @endif
+
+                            </div>
+
+                            @else
+                            <div class="col accordion-content">
+
+                                @if(strtoupper($leaveRequest->status) == 'APPROVED')
+
+                                <span class="accordionContentSpanValue" style="color:#32CD32 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+
+                                @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
+
+                                <span class="accordionContentSpanValue" style="color:#FF0000 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+
+                                @else
+
+                                <span class="accordionContentSpanValue" style="color:#778899 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+
+                                @endif
+
+                            </div>
+                            @endif
+
+                            <div class="arrow-btn">
+                                <i class="fa fa-chevron-down"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="accordion-body m-0 p-0">
+
+                        <div class="verticalLine"></div>
+
+                        <div class="content pt-1 px-3">
+
+                            <span class="headerText">Duration:</span>
+
+                            <span >
+
+                                <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }}</span>
+
+                                ({{ $leaveRequest->from_session }} ) to
+
+                                <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
+
+                                ( {{ $leaveRequest->to_session }} )
+
+                            </span>
+
+                        </div>
+
+                        <div class="content  pb-1 px-3">
+
+                            <span class="headerText">Reason:</span>
+
+                            <span style="font-size: 11px;">{{ ucfirst($leaveRequest->reason) }}</span>
+
+                        </div>
+
+                        <div class="verticalLine"></div>
+
+                        <div class="d-flex flex-row justify-content-between px-3 py-2">
+
+                            <div class="content px-1 ">
+
+                                <span class="headerText">Applied on:</span>
+
+                                <span class="paragraphContent">{{ $leaveRequest->created_at->format('d M, Y') }}</span>
+
+                            </div>
+
+                            <div class="content px-1 ">
+                            <a href="{{ route('approved-details', ['leaveRequestId' => $leaveRequest->id]) }}">
+                                    <span class="anchorTagDetails">View
+                                        Details</span>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>v
+
+            @endforeach
+
+            @else
+
+            <div class="containerWidth">
+                <div class="leave-pending rounded">
+
+                    <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
+
+                    <p class="restrictedHoliday">There are no  records of any leave
+                        transaction</p>
+
+                </div>
             </div>
+
+            @endif
 
             @endif
 
