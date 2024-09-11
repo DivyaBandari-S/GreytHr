@@ -1,10 +1,4 @@
 <div>
-    <style>
-        .custom-placeholder::placeholder {
-            font-size: 12px;
-            /* Adjust this value as needed */
-        }
-    </style>
     @if (session()->has('emp_error'))
         <div class="alert alert-danger">
             {{ session('emp_error') }}
@@ -13,17 +7,14 @@
     <div class="row m-0">
         <div class="d-flex align-items-center justify-content-end gap-3">
             <div class=" p-0">
-                <div wire:click="loginfo" class="col text-primary"
-                    style="font-size:12px;font-weight:500;cursor:pointer;text-align:end;">
+                <div wire:click="loginfo" class="col text-primary setting-login-history-text">
                     View Login History
                 </div>
 
             </div>
 
-            <div class="ps-0" style="background-color: pink;">
-                <button wire:click="show" class="btn btn-primary"
-                    style="background-color:rgb(2, 17, 79);color:white;font-size:12px;"><i
-                        style="color: white;height:10px;width:10px;font-size:12px;" class="fas fa-cog "></i>
+            <div class="ps-0 setting-password-container">
+                <button wire:click="show" class="submit-btn setting-password-btn"><i class="fas fa-cog setting-password-icon"></i>
                     &nbsp;Change Password</button>
 
                 {{-- <div>
@@ -36,10 +27,9 @@
 
                 </div> --}}
 
-                <div style="position: fixed; top: 15%; left: 50%; transform: translate(-50%, -50%); z-index: 999;">
+                <div class="setting-flash-message-container">
                     @if (session()->has('password'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert"
-                            style="font-size: 12px;">
+                        <div class="alert alert-success alert-dismissible fade show setting-flash-msg-text" role="alert">
                             <strong>{{ session('password') }}</strong>
                             <button type="button" class="btn-close btn-xs" data-bs-dismiss="alert"
                                 aria-label="Close"></button>
@@ -50,41 +40,36 @@
         </div>
     </div>
     @if ($showAlertDialog)
-        .
-        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+        
+        <div class="modal d-block" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header d-flex justify-content-between"
-                        style="background-color: rgb(2, 17, 79);color: white; height: 40px; padding: 8px; position: relative;">
+                    <div class="modal-header d-flex justify-content-between setting-history-modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Login
                             History</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="close"
-                            style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
+                        <button type="button" class="close setting-history-modal-close" data-dismiss="modal" aria-label="Close" wire:click="close">
                             <span aria-hidden="true">&times;</span>
                         </button>
 
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col" style="font-size: 10px;"><b>Last Login</b></div>
-                            <div class="col" style="font-size: 10px;"><b>Last Login Failure</b></div>
-                            <div class="col" style="font-size: 10px;"><b>Last Password Changed</b></div>
+                            <div class="col setting-history-modal-text"><b>Last Login</b></div>
+                            <div class="col setting-history-modal-text"><b>Last Login Failure</b></div>
+                            <div class="col setting-history-modal-text"><b>Last Password Changed</b></div>
                         </div>
                         <div class="row">
-                            <div class="col" style="font-size: 10px;">{{ $lastLogin }}</div>
-                            <div class="col" style="font-size: 10px;">{{ $lastLoginFailure }}</div>
-                            <div class="col" style="font-size: 10px;">{{ $lastPasswordChanged }}</div>
+                            <div class="col setting-history-modal-text">{{ $lastLogin }}</div>
+                            <div class="col setting-history-modal-text">{{ $lastLoginFailure }}</div>
+                            <div class="col setting-history-modal-text">{{ $lastPasswordChanged }}</div>
                         </div>
-                        <table class="table-s" border="1" style="margin-top: 10px;width:100%">
+                        <table class="table-s setting-history-modal-table" border="1">
                             <tr class="tr-s">
-                                <th class="th-s"
-                                    style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
+                                <th class="th-s setting-history-modal-table-label">
                                     Login Location</th>
-                                <th class="th-s"
-                                    style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
+                                <th class="th-s setting-history-modal-table-label">
                                     Device</th>
-                                <th class="th-s"
-                                    style="font-size: 12px; color: grey;border: 1px solid black;padding: 8px;text-align: center;background-color:#f2f2f2">
+                                <th class="th-s setting-history-modal-table-label">
                                     IP Address</th>
 
 
@@ -92,14 +77,11 @@
 
                             @foreach ($loginHistory as $history)
                                 <tr class="tr-s">
-                                    <td class="th-d"
-                                        style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                    <td class="th-d setting-history-modal-table-value">
                                         {{ $history->location }}</td>
-                                    <td class="th-d"
-                                        style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                    <td class="th-d setting-history-modal-table-value">
                                         {{ $history->device_type }}<br>{{ $history->user_agent }}</td>
-                                    <td class="th-d"
-                                        style="font-size: 10px; color: black; border: 1px solid black; padding: 8px; text-align: center;">
+                                    <td class="th-d setting-history-modal-table-value">
                                         {{ $history->ip_address }}</td>
                                 </tr>
                             @endforeach
@@ -111,15 +93,13 @@
         <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
     @if ($showDialog)
-        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal d-block" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header d-flex justify-content-between"
-                        style="background-color: rgb(2, 17, 79);color: white; height: 40px; padding: 8px; position: relative;">
+                    <div class="modal-header d-flex justify-content-between setting-password-modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Change Password</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            wire:click="remove"
-                            style="background: none; border: none; color: white; font-size: 30px; cursor: pointer;">
+                        <button type="button" class="close setting-password-modal-close" data-dismiss="modal" aria-label="Close"
+                            wire:click="remove">
                             <span aria-hidden="true">&times;</span>
                         </button>
 
@@ -127,53 +107,53 @@
                     <form wire:submit.prevent="changePassword">
                         @if ($error)
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong style="font-size: 12px;">{{ $error }}</strong>
+                                <strong class="setting-password-flash-msg">{{ $error }}</strong>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <div class="modal-body" style="background-color: #f0f0f0;">
+                        <div class="modal-body setting-password-modal-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="card" style="padding: 20px; text-align: left;">
+                                    <div class="card setting-password-card">
                                         <div class="form-group">
-                                            <label style="font-size: 12px;color:#778899;font-weight:500;"
+                                            <label class="setting-password-modal-label"
                                                 for="oldPassword">Old Password</label>
-                                            <br><input class="form-control" style="font-size: 12px;" type="password"
+                                            <br><input class="form-control setting-password-modal-input" type="password"
                                                 id="oldPassword" name="oldPassword"
                                                 placeholder="Enter your old password" wire:model.lazy="oldPassword">
                                             @error('oldPassword')
-                                                <p class="pt-2 px-1 text-danger" style="font-size:10px">
+                                                <p class="pt-2 px-1 text-danger setting-password-error-msg">
                                                     {{ str_replace('oldPassword', 'Password', $message) }}</p>
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label style="font-size: 12px;color:#778899;font-weight:500;"
+                                            <label class="setting-password-modal-label" 
                                                 for="newPassword">New Password</label>
-                                            <br><input class="form-control" style="font-size: 12px;" type="password"
+                                            <br><input class="form-control setting-password-modal-input" type="password"
                                                 id="newPassword" name="newPassword"
                                                 placeholder="Enter your new password" wire:model.lazy="newPassword">
                                             @error('newPassword')
-                                                <p class="pt-2 px-1 text-danger" style="font-size:10px">
+                                                <p class="pt-2 px-1 text-danger setting-password-error-msg">
                                                     {{ str_replace('newPassword', 'Password', $message) }}</p>
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label style="font-size: 12px;color:#778899;font-weight:500;"
+                                            <label class="setting-password-modal-label"
                                                 for="confirmNewPassword">Confirm New Password</label>
-                                            <br><input class="form-control" style="font-size: 12px;" type="password"
+                                            <br><input class="form-control setting-password-modal-input" type="password"
                                                 id="confirmNewPassword" name="confirmNewPassword"
                                                 placeholder="Enter your new password again"
                                                 wire:model.lazy="confirmNewPassword">
                                             @error('confirmNewPassword')
-                                                <p class="pt-2 px-1 text-danger" style="font-size:10px">
+                                                <p class="pt-2 px-1 text-danger setting-password-error-msg">
                                                     {{ str_replace('newPassword', 'Password', $message) }}</p>
                                             @enderror
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div style="margin-top: 20px; text-align: center;">
+                            <div class="setting-password-submit-container">
                                 <button class="submit-btn">Save Password</button>
                             </div>
                         </div>
@@ -209,23 +189,20 @@
                     </div>
                     <div class="col-lg-3 col-6 text-start mt-2 p-0">
                         <!-- Name -->
-                        <div
-                            style="font-size: 13px; font-weight: 600; color: #000; white-space: nowrap; margin-bottom: 15px;">
+                        <div class="setting-empname-text">
                             {{ ucwords(strtolower($employee->first_name)) }}
                             {{ ucwords(strtolower($employee->last_name)) }}
                         </div>
 
                         <!-- Emp ID -->
-                        <div style="font-size: 12px; color: #000; margin-bottom: 15px;">
-                            <div style="display: flex; align-items: flex-start;">
+                        <div class="setting-empid-container">
+                            <div class="d-flex align-items-start">
                                 <!-- Fixed width for the label -->
-                                <div
-                                    style="width: 60px; font-size: 11px; color: #778899; flex-shrink: 0;white-space: nowrap;">
+                                <div class="setting-empid-label">
                                     Emp ID
                                 </div>
                                 <!-- Increased width for the value, allowing wrapping if needed -->
-                                <div
-                                    style="flex: 1; margin-left: 5px; font-size: 12px; font-weight: 500; white-space: normal;">
+                                <div class="setting-empid-value">
                                     @if ($employee->emp_id)
                                         : {{ $employee->emp_id }}
                                     @else
@@ -237,9 +214,9 @@
                     </div>
                     <div class="col-lg-3 col-6 text-start mt-2 p-0">
                         <!-- Official Birthday -->
-                        <div style="font-size: 12px; color: #000; margin-bottom: 15px;">
-                            <div style="display: flex; align-items: flex-start;">
-                                <div style="width: 95px; color: #778899; flex-shrink: 0;white-space: nowrap;">
+                        <div class="setting-bday-container">
+                            <div class="d-flex align-items-start">
+                                <div class="setting-bday-label">
                                     Official Birthday
                                 </div>
                                 <div class="settings-birthday-value" 
@@ -255,12 +232,12 @@
                         </div>
 
                         <!-- Department -->
-                        <div style="font-size: 12px; color: #000; margin-bottom: 15px;">
-                            <div style="display: flex; align-items: flex-start;">
-                                <div style="width: 95px; color: #778899; flex-shrink: 0;white-space: nowrap;">
+                        <div class="setting-bday-container">
+                            <div class="d-flex align-items-start">
+                                <div class="setting-bday-label">
                                     Department
                                 </div>
-                                <div style="flex: 1; margin-left: 5px; font-weight: 500; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;"
+                                <div class="setting-department-value"
                                     title="{{ ucwords(strtolower($employee->empDepartment->department)) ?? '-' }}">
                                     : {{ ucwords(strtolower($employee->empDepartment->department)) ?? '-' }}
                                 </div>
@@ -269,14 +246,14 @@
                     </div>
                     <div class="col-lg-4 col-6 text-start mt-2 p-0">
                         <!-- Location -->
-                        <div style="font-size: 12px; color: #000; margin-bottom: 15px;">
-                            <div style="display: flex; align-items: flex-start;">
+                        <div class="setting-bday-container">
+                            <div class="d-flex align-items-start">
                                 <!-- Decreased width for the label -->
-                                <div style="width: 80px; color: #778899; flex-shrink: 0;white-space: nowrap;">
+                                <div class="setting-location-label">
                                     Location
                                 </div>
                                 <!-- Increased width for the value -->
-                                <div style="flex: 1; margin-left: 10px; font-weight: 500; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;"
+                                <div class="setting-location-value"
                                     title="{{ !empty($employee->job_location) ? ucwords(strtolower($employee->job_location)) : '-' }}">
                                     :
                                     {{ !empty($employee->job_location) ? ucwords(strtolower($employee->job_location)) : '-' }}
@@ -285,14 +262,14 @@
                         </div>
 
                         <!-- Designation -->
-                        <div style="font-size: 12px; color: #000; margin-bottom: 15px;">
-                            <div style="display: flex; align-items: flex-start;">
+                        <div class="setting-bday-container">
+                            <div class="d-flex align-items-start">
                                 <!-- Decreased width for the label -->
-                                <div style="width: 80px; color: #778899; flex-shrink: 0;white-space: nowrap;">
+                                <div class="setting-designation-label">
                                     Designation
                                 </div>
                                 <!-- Increased width for the value -->
-                                <div style="flex: 1; margin-left: 10px; font-weight: 500; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;"
+                                <div class="setting-designation-value"
                                     title="@if (!empty($employee->job_role)) {{ ucwords(strtolower($employee->job_role)) }} @else - @endif">
                                     @if (!empty($employee->job_role))
                                         : {{ ucwords(strtolower($employee->job_role)) }}
@@ -311,16 +288,16 @@
         </div>
         <div class="row m-0">
             <div class="col-md-1"></div>
-            <div class="card col-md-9 p-0" style="margin-top: 20px;height:auto;margin-bottom:10px">
-                <div class="card-header" style="background-color: rgb(2, 17, 79);color:white;font-size: 15px">
+            <div class="card col-md-9 p-0 setting-myprofile-container">
+                <div class="card-header setting-myprofile-text">
                     My Profile
                 </div>
                 <div class="container mt-3">
-                    <div class="row m-0" style="font-size: 12px;">
-                        <div class="col-6 mb-3" style="color:#778899;font-size:12px;">
+                    <div class="row m-0 setting-timezone-container">
+                        <div class="col-6 mb-3 setting-profile-text">
                             <strong>Profile</strong>
                         </div>
-                        <div class="col-6 mb-3" style="text-align: end; cursor: pointer;">
+                        <div class="col-6 mb-3 setting-edit-delete-icon">
                             @if ($editingNickName)
                                 <i wire:click="cancelProfile" class="fas fa-times me-3"></i>
                                 <i wire:click="saveProfile" class="fa fa-save"></i>
@@ -329,27 +306,27 @@
                             @endif
                         </div>
                     </div>
-                    <div class="row m-0" style="margin-top: 20px;">
+                    <div class="row m-0 setting-nickname-container">
                         <div class="col-md-4 mb-3 d-flex flex-column">
-                            <span class="label-text" style="color: #778899;font-size: 12px;">Nick Name</span>
+                            <span class="label-text setting-nickname-label">Nick Name</span>
                             @if ($editingNickName)
-                                <input style="font-size:12px; margin-top: 5px;" type="text"
-                                    class="form-control custom-placeholder" wire:model="nickName"
+                                <input type="text"
+                                    class="form-control settings-custom-placeholder setting-nickname-input" wire:model="nickName"
                                     placeholder="Enter Nick Name">
                             @else
-                                <span class="value-text" style="color: black; font-size: 12px;">
+                                <span class="value-text setting-nickname-value">
                                     {{ $employee->empPersonalInfo ? ucwords(strtolower($employee->empPersonalInfo->nick_name ?? '-')) : '-' }}
                                 </span>
                             @endif
                         </div>
                         <div class="col-md-4 mb-3 d-flex flex-column">
-                            <span class="label-text" style="color: #778899;font-size: 12px;">Wish Me On</span>
+                            <span class="label-text setting-nickname-label">Wish Me On</span>
                             @if ($editingNickName)
-                                <input style="font-size: 12px; margin-top: 5px;" class="form-control" type="date"
+                                <input class="form-control setting-nickname-input" type="date"
                                     id="date_of_birth" placeholder="Select Wish Me On" name="date_of_birth"
                                     wire:model="wishMeOn" max="{{ date('Y-m-d') }}">
                             @else
-                                <span class="value-text" style="color: black; font-size: 12px;">
+                                <span class="value-text setting-nickname-value">
                                     {{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
                                         ? date('d M, Y', strtotime($employee->empPersonalInfo->date_of_birth))
                                         : '-' }}
@@ -362,9 +339,9 @@
 
                 <hr>
                 <div class="container">
-                    <div class="row m-0" style="font-size: 12px;">
-                        <div class="col-6 mb-3" style="color:#778899;"><strong>Time Zone</strong></div>
-                        <div class="col-6 mb-3" style="text-align: end; cursor: pointer;">
+                    <div class="row m-0 setting-timezone-container">
+                        <div class="col-6 mb-3 setting-timezone-text"><strong>Time Zone</strong></div>
+                        <div class="col-6 mb-3 setting-edit-delete-icon">
                             @if ($editingTimeZone)
                                 <!-- <i wire:click="editTimeZone" class="fas fa-edit"></i> -->
                                 <i wire:click="cancelTimeZone" class="fas fa-times me-3"></i>
@@ -376,17 +353,17 @@
                     </div>
                     <!-- <div class="row" style="margin-top: 20px;">
                     </div> -->
-                    <div class="row m-0" style="margin-top: 10px;">
+                    <div class="row m-0 setting-timezone-icons-container">
                         <div class="col-md-12 mb-3">
                             @if ($editingTimeZone)
                                 <select id="time_zone" name="time_zone" wire:model="selectedTimeZone"
-                                    class="form-control" style="width: 150px; font-size: 12px;">
+                                    class="form-control setting-timezone-select">
                                     @foreach ($timeZones as $tz)
                                         <option value="{{ $tz }}">{{ $tz }}</option>
                                     @endforeach
                                 </select>
                             @else
-                                <div style="color: black; font-size: 12px;">{{ $employee->time_zone ?? '-' }}</div>
+                                <div class="setting-timezone-value">{{ $employee->time_zone ?? '-' }}</div>
                             @endif
                         </div>
                     </div>
@@ -394,9 +371,9 @@
                 </div>
                 <hr>
                 <div class="container">
-                    <div class="row m-0" style="font-size: 12px;">
-                        <div class="col-6 mb-3" style="color:#778899;"><strong>Biography</strong></div>
-                        <div class="col-6 mb-3" style="text-align: end;  cursor: pointer;">
+                    <div class="row m-0 setting-timezone-container">
+                        <div class="col-6 mb-3 setting-timezone-text"><strong>Biography</strong></div>
+                        <div class="col-6 mb-3 setting-edit-delete-icon">
                             @if ($editingBiography)
                                 <!-- <i wire:click="editBiography" class="fas fa-edit"></i> -->
                                 <i wire:click="cancelBiography" class="fas fa-times me-3"></i>
@@ -410,15 +387,15 @@
                     <!-- <div class="row" style="color: grey;margin-top: 20px;">
                     </div> -->
                     @if ($editingBiography)
-                        <div class="row m-0" style="margin-top: 10px;">
-                            <div class="col-md-12 mb-3" style="color: black; font-size: 12px;">
-                                <textarea style="width:100%;font-size:12px" wire:model="biography" id="biography" class="form-control"
+                        <div class="row m-0 setting-timezone-icons-container">
+                            <div class="col-md-12 mb-3 setting-timezone-value">
+                                <textarea wire:model="biography" id="biography" class="form-control setting-biography-textarea"
                                     placeholder="Enter Biography" rows="4"></textarea>
                             </div>
                         </div>
                     @else
-                        <div class="row m-0" style="margin-top: 10px;">
-                            <div class="col-md-12 mb-3" style="color: black; font-size: 12px;">
+                        <div class="row m-0 setting-timezone-icons-container">
+                            <div class="col-md-12 mb-3 setting-timezone-value">
                                 {{ $employee->empPersonalInfo && !empty($employee->empPersonalInfo->biography)
                                     ? ucwords(strtolower($employee->empPersonalInfo->biography))
                                     : '-' }}
@@ -429,9 +406,9 @@
                 </div>
                 <hr>
                 <div class="container">
-                    <div class="row m-0" style="font-size: 12px;">
-                        <div class="col-6 " style="color:#778899;"><strong>Social Media</strong></div>
-                        <div class="col-6 " style="text-align: end; cursor: pointer;">
+                    <div class="row m-0 setting-timezone-container">
+                        <div class="col-6 setting-timezone-text"><strong>Social Media</strong></div>
+                        <div class="col-6 setting-edit-delete-icon">
                             @if ($editingSocialMedia)
                                 <!-- <i wire:click="editSocialMedia" class="fas fa-edit"></i> -->
                                 <i wire:click="cancelSocialMedia" class="fas fa-times me-3"></i>
@@ -443,48 +420,48 @@
                         </div>
                     </div>
                     <div class="container mt-3 mb-2">
-                        <div class="row m-0" style="margin-top: 20px;">
+                        <div class="row m-0 setting-socialmedia-container">
                             <div class="col-md-4 mb-3 d-flex flex-column">
-                                <span class="label-text" style="color: #778899; font-size: 12px;">Facebook</span>
+                                <span class="label-text setting-facebook-text">Facebook</span>
                                 @if ($editingSocialMedia)
-                                    <input style="font-size: 12px; margin-top: 5px;" type="text"
-                                        class="form-control custom-placeholder" wire:model.lazy="facebook"
+                                    <input  type="text"
+                                        class="form-control settings-custom-placeholder setting-nickname-input" wire:model.lazy="facebook"
                                         placeholder="Enter Facebook URL">
                                     @error('facebook')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 @else
-                                    <span class="value-text" style="color: black; font-size: 12px;">
+                                    <span class="value-text setting-timezone-value">
                                         {{ !empty($employee->empPersonalInfo->facebook) ? $employee->empPersonalInfo->facebook : '-' }}
                                     </span>
                                 @endif
                             </div>
                             <div class="col-md-4 mb-3 d-flex flex-column">
-                                <span class="label-text" style="color: #778899; font-size: 12px;">Twitter</span>
+                                <span class="label-text setting-facebook-text">Twitter</span>
                                 @if ($editingSocialMedia)
-                                    <input style="font-size: 12px; margin-top: 5px;" type="text"
-                                        class="form-control custom-placeholder" wire:model.lazy="twitter"
+                                    <input  type="text"
+                                        class="form-control settings-custom-placeholder setting-nickname-input" wire:model.lazy="twitter"
                                         placeholder="Enter Twitter URL">
                                     @error('twitter')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 @else
-                                    <span class="value-text" style="color: black; font-size: 12px;">
+                                    <span class="value-text setting-timezone-value">
                                         {{ !empty($employee->empPersonalInfo->twitter) ? $employee->empPersonalInfo->twitter : '-' }}
                                     </span>
                                 @endif
                             </div>
                             <div class="col-md-4 mb-3 d-flex flex-column">
-                                <span class="label-text" style="color: #778899; font-size: 12px;">LinkedIn</span>
+                                <span class="label-text setting-facebook-text">LinkedIn</span>
                                 @if ($editingSocialMedia)
-                                    <input style="font-size: 12px; margin-top: 5px;" type="text"
-                                        class="form-control custom-placeholder" wire:model.lazy="linkedIn"
+                                    <input  type="text"
+                                        class="form-control settings-custom-placeholder setting-nickname-input" wire:model.lazy="linkedIn"
                                         placeholder="Enter LinkedIn URL">
                                     @error('linkedIn')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 @else
-                                    <span class="value-text" style="color: black; font-size: 12px;">
+                                    <span class="value-text setting-timezone-value">
                                         {{ !empty($employee->empPersonalInfo->linked_in) ? $employee->empPersonalInfo->linked_in : '-' }}
                                     </span>
                                 @endif
