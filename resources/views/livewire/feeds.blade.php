@@ -5,7 +5,7 @@
 
     @else
     <div class="px-4" style="position: relative;">
-
+   
         @if ($message)
                 <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
                 {{ $message }}
@@ -13,7 +13,7 @@
                         style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
                 </div>
                 @endif
-        <div class="col-md-12  mt-3" style="height:60px;margin-top:10px">
+        <div class="col-md-12  mt-1" style="height:60px;">
 
             <div class="row bg-white rounded border d-flex" style="height:80px; ">
                 <div style="display:flex; flex-direction:row;">
@@ -2081,6 +2081,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> -->
 <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+
 @push('scripts')
 <script>
     Livewire.on('updateSortType', sortType => {
@@ -2133,7 +2134,15 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
             });
         });
     });
-
+    document.addEventListener('livewire:update', function() {
+        document.querySelectorAll('.emoji-trigger').forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                var index = this.dataset.index;
+                var emojiList = document.getElementById('emoji-list-' + index);
+                emojiList.style.display = (emojiList.style.display === "none" || emojiList.style.display === "") ? "block" : "none";
+            });
+        });
+});
     function showEmojiList(index, cardId) {
         var emojiList = document.getElementById('emoji-list-' + index);
         if (emojiList.style.display === "none" || emojiList.style.display === "") {
@@ -2167,7 +2176,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
     }
 
 
-    document.querySelector('emoji-picker').addEventListener('emoji-click', event => console.log(event.detail));
+
     // JavaScript function to toggle arrow icon visibility
     // JavaScript function to toggle arrow icon and dropdown content visibility
     // JavaScript function to toggle dropdown content visibility and arrow rotation
@@ -2231,14 +2240,20 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
     }
 </script>
 <script>
-    $(document).ready(function() {
-        $('input[name="radio"]').on('change', function() {
-            var url = $(this).data('url');
-            window.location.href = url;
-        });
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get all radio buttons with name="radio"
+    var radios = document.querySelectorAll('input[name="radio"]');
 
-        // Ensures the corresponding radio button is selected based on current URL
-        var currentUrl = window.location.pathname;
+    // Add change event listener to each radio button
+    radios.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            var url = this.dataset.url; // Get the data-url attribute
+            if (url) {
+                window.location.href = url; // Redirect to the URL
+            }
+        });
+    });
+    var currentUrl = window.location.pathname;
         $('input[name="radio"]').each(function() {
             if ($(this).data('url') === currentUrl) {
                 $(this).prop('checked', true);
@@ -2249,7 +2264,12 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
         $('.custom-radio-label').on('click', function() {
             $(this).find('input[type="radio"]').prop('checked', true).trigger('change');
         });
-    });
+  
+});
+
+
+        // Ensures the corresponding radio button is selected based on current URL
+     
 </script>
 @push('scripts')
 <script>

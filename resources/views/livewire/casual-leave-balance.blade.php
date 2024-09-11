@@ -1,94 +1,5 @@
 <div>
-    <style>
-        .custom-table-wrapper {
-            position: relative;
-            /* max-height: 100px; */
-            overflow-y: auto;
-            border-collapse: collapse;
-        }
 
-        .custom-table-wrapper .balance-table {
-            width: 100%;
-            margin: 0 auto;
-            /* table-layout: fixed; */
-            border-collapse: collapse;
-        }
-
-        .custom-table-wrapper th {
-            background-color: #ecf5ff;
-            padding: 10px;
-            color: #778899;
-            text-align: center;
-            border-top: 1px solid #ccc;
-            border-bottom: 1px solid #ccc;
-            /* Remove left and right borders */
-            border-left: none;
-            border-right: none;
-        }
-
-        .custom-table-wrapper td {
-            padding: 10px;
-            font-size: 12px;
-            text-align: center;
-            background-color: #fff;
-            border-top: 1px solid #ccc;
-            border-bottom: 1px solid #ccc;
-            /* Remove left and right borders */
-            border-left: none;
-            border-right: none;
-        }
-
-        .custom-table-wrapper thead {
-            position: sticky;
-            top: 0;
-            font-size: 12px;
-            z-index: 1;
-        }
-
-        .info-container {
-            background-color: #ffffe8;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 10px;
-            display: flex;
-            width: 60%;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .info-item {
-            flex: 1;
-            text-align: center;
-        }
-
-        .info-item:not(:last-child) {
-            border-right: 1px solid #e0e0e0;
-        }
-
-        .info-value {
-            font-size: 14px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .info-title {
-            color: #778899;
-            font-size: 11px;
-        }
-
-        @media only screen and (max-width: 600px) {
-            .info-container {
-                width:80%;
-            }
-
-        }
-        @media only screen and (max-width: 400px) {
-            .info-container {
-                width:95%;
-            }
-
-        }
-    </style>
     <div class="row m-0 px-2 py-1 ">
         @if(session()->has('emp_error'))
         <div class="alert alert-danger">
@@ -108,7 +19,7 @@
                     @if($year==$currentYear)
                     <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-form-page'">Apply</button>
                     @endif
-                    <select class="dropdown bg-white rounded " wire:change='changeYear($event.target.value)' wire:model='year' style="margin-right:5px;width:fit-content">
+                    <select class="dropdown bg-white rounded select-year-dropdown " wire:change='changeYear($event.target.value)' wire:model='year'>
                         <?php
                         // Get the current year
                         $currentYear = date('Y');
@@ -123,9 +34,9 @@
             </div>
             @if($employeeLeaveBalances == 0)
             <div class="row m-0 p-0">
-                <div class="col-md-12" style="max-height: 100px;">
-                    <div class="card" style="height: 100%;">
-                        <div class="card-body" style="height: 100%;">
+                <div class="col-md-12 leave-details-col-md-12" >
+                    <div class="card leave-details-card">
+                        <div class="card-body leave-details-card-body" >
                             <h6 class="card-title">Information</h6>
                             @if($year <= $currentYear)
                                 <p class="card-text">No information found</p>
@@ -167,7 +78,7 @@
                 <div class="row m-0 p-0">
                     <div class=" p-2 bg-white border">
                         <div class="col-md-10">
-                            <canvas id="casualLeaveChart" style="background-color: transparent;width:300px;height:200px;">
+                            <canvas class="leave-details-canvas" id="casualLeaveChart" >
                             </canvas>
                         </div>
                     </div>
@@ -175,16 +86,16 @@
             </div>
             <div class="row p-0 m-0">
                 <div class="col-md-12 mt-4">
-                    <div class="custom-table-wrapper bg-white border rounded ">
+                    <div class="custom-table-wrapper-leave-details bg-white border rounded ">
                         <table class="balance-table table-responsive ">
                             <thead class="thead">
                                 <tr>
-                                    <th style="width:13.66%; padding: 5px 7px;">Transaction Type</th>
-                                    <th style="width: 16.66%; padding: 5px 7px;">Posted On</th>
-                                    <th style="width: 18.66%; padding: 5px 7px;">From</th>
-                                    <th style="width: 18.66%; padding: 5px 7px;">To</th>
-                                    <th style="width: 5%; padding: 5px 7px;">Days</th>
-                                    <th style="width: 27.36%; padding: 5px 7px;">Reason</th>
+                                    <th>Transaction Type</th>
+                                    <th>Posted On</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Days</th>
+                                    <th>Reason</th>
                                 </tr>
                             </thead>
                             <tbody>

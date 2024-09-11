@@ -302,14 +302,13 @@
         @if($showleave)
 
         <div class="col-md-9 col-lg-9 py-2x ml-3x">
-
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
                     <li class="custom-item m-0 p-0 flex-grow-1">
-                        <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'active')">Active</div>
+                        <div class="reviewActiveButtons custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'active')">Active</div>
                     </li>
                     <li class="custom-item m-0 p-0 flex-grow-1">
-                        <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'closed')">Closed</a>
+                        <div  class="reviewClosedButtons custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'closed')">Closed</div>
                     </li>
                 </ul>
             </div>
@@ -322,8 +321,8 @@
                 </div>
                 @else
                 <div class="leave-pending bg-white rounded border text-center">
-                    <div class="d-flex flex-column justify-content-center">
-                        <img src="/images/pending.png" alt="Pending Image" width="100">
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        <img src="/images/pending.png" alt="Pending Image" width="200">
                         <p class="normalTextValue fw-normal">Hey, you have no leave records to view
                         </p>
                     </div>
@@ -568,7 +567,7 @@
 
                             <div class="review-content px-3">
                                 <a href="{{ route('approved-details', ['leaveRequestId' => $leaveRequest['approvedLeaveRequest']->id]) }}">
-                                    <span style="color: #3a9efd; font-size: 11px; font-weight: 500;">View Details</span>
+                                    <span class="anchorTagDetails">View Details</span>
                                 </a>
 
                             </div>
@@ -593,9 +592,9 @@
 
             @foreach($empLeaveRequests as $leaveRequest)
 
-            <div class="containerWidth mt-4">
+            <div class="mt-4">
 
-                <div class="accordion rounded ">
+                <div class="accordion rounded">
 
                     <div class="accordion-heading rounded" onclick="toggleAccordion(this)">
 
@@ -639,15 +638,15 @@
 
                                 @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
 
-                                <span class="accordionContentSpanValue" style="color:#32CD32 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="approvedColor" >{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                                 @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
 
-                                <span class="accordionContentSpanValue" style="color:#FF0000 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="rejectColor">{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                                 @else
 
-                                <span class="accordionContentSpanValue" style="color:#778899 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="normalTextValue" >{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                                 @endif
 
@@ -658,15 +657,15 @@
 
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
-                                <span class="accordionContentSpanValue" style="color:#32CD32 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="approvedColor" >{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
 
-                                <span class="accordionContentSpanValue" style="color:#FF0000 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="rejectColor" >{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @else
 
-                                <span class="accordionContentSpanValue" style="color:#778899 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="normalTextValue" >{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @endif
 
@@ -691,11 +690,11 @@
 
                             <span>
 
-                                <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }}</span>
+                                <span class="normalTextValueSmall"> {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }}</span>
 
                                 ({{ $leaveRequest->from_session }} ) to
 
-                                <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
+                                <span class="normalTextValueSmall"> {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
 
                                 ( {{ $leaveRequest->to_session }} )
 
@@ -707,7 +706,7 @@
 
                             <span class="headerText">Reason:</span>
 
-                            <span style="font-size: 11px;">{{ ucfirst($leaveRequest->reason) }}</span>
+                            <span class="normalTextValueSmall">{{ ucfirst($leaveRequest->reason) }}</span>
 
                         </div>
 
