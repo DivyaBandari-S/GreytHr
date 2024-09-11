@@ -5013,7 +5013,210 @@ select .yearSelect {
 }
 /* end of styles */
 
+
+.teamOnLeavetable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.teamOnLeavetable th {
+    background-color: #ecf9ff;
+    /* Header background color */
+    color: #778899;
+    /* Text color for headers */
+    padding: 8px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-align: left;
+}
+
+.teamOnLeavetable td {
+    background-color: #fff;
+    /* Body background color */
+    color: #3b4452;
+    /* Text color for body cells */
+    padding: 8px;
+    border: 1px solid #ddd;
+    /* Optional: border for table cells */
+}
+
+.teamOnLeavetable tbody tr:nth-child(even) td {
+    background-color: #fcfcfc;
+    /* Optional: alternate row color */
+}
+.team-on-leave-main-div{
+    width: 90%;
+    margin:0 auto;
+}
+.team-on-leave-label{
+    font-size:0.85rem;
+}
+.team-on-label-div{
+    padding:10px 15px;
+    width:80%;
+    margin:0;
+}
+.team-on-leave-chart-div{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    margin:0 auto;
+    border:1px solid #ccc;
+}
+.team-on-leave-duration-div{
+    display:flex;
+    flex-direction:row;
+    background:white;
+    padding:10px 15px;
+    border-bottom:1px solid #ccc;
+    gap:10px;
+}
+.team-on-leave-duration{
+    font-size: 0.75rem;
+}
+.team-on-leave-duration-select{
+    font-size:0.8rem;
+}
+.team-on-leave-to{
+    color:#ccc;
+    margin:0 10px;
+}
+.team-on-leave-application{
+    color:#778899;
+    font-size:0.925rem;
+}
+.team-on-leave-search{
+    padding:10px 15px;
+    margin:0;
+}
+.team-on-leave-search-input{
+    width:150px;
+    border:none;
+    outline:none;
+}
+.team-on-leave-type{
+    padding:10px 15px;
+    margin:0;
+}
+.team-on-leave-type-select{
+    width:130px;outline:none;
+}
 /* team on leave */
+/* leave details,sick,causal,probation */
+.custom-table-wrapper-leave-details {
+    position: relative;
+    /* max-height: 130px; */
+    overflow-y: auto;
+    border-collapse: collapse;
+}
+
+.custom-table-wrapper-leave-details .balance-table {
+    width: 100%;
+    margin: 0 auto;
+    /* table-layout: fixed; */
+    border-collapse: collapse;
+}
+
+.custom-table-wrapper-leave-details th {
+    background-color: #ecf5ff;
+    padding: 10px;
+    color: #778899;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    /* Remove left and right borders */
+    border-left: none;
+    border-right: none;
+}
+
+.custom-table-wrapper-leave-details td {
+    padding: 10px;
+    font-size: 12px;
+    text-align: center;
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    /* Remove left and right borders */
+    border-left: none;
+    border-right: none;
+}
+
+.custom-table-wrapper-leave-details thead {
+    position: sticky;
+    top: 0;
+    font-size: 12px;
+    z-index: 1;
+}
+
+.info-container {
+    background-color: #ffffe8;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    width: 60%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.info-item {
+    flex: 1;
+    text-align: center;
+}
+
+.info-item:not(:last-child) {
+    border-right: 1px solid #e0e0e0;
+}
+
+.info-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.info-title {
+    color: #778899;
+    font-size: 11px;
+}
+.select-year-dropdown{
+    margin-right:5px;
+    width:fit-content
+}
+.leave-details-col-md-12{
+    max-height: 100px;
+}
+.leave-details-card{
+    height: 100%;
+}
+.leave-details-card-body{
+    height: 100%;
+}
+.leave-details-canvas{
+    background-color: transparent;
+    width:300px;
+    height:200px;
+}
+.breadcrumb-item a{
+    color: grey;
+
+
+}
+@media only screen and (max-width: 600px) {
+    .info-container {
+        width:80%;
+    }
+
+}
+@media only screen and (max-width: 400px) {
+    .info-container {
+        width:95%;
+    }
+
+}
+
+/*end leave details,sick,causal,probation */
+
+
 .text {
     --tw-text-opacity: 1;
     color: rgba(23, 30, 37);
@@ -5186,7 +5389,7 @@ option {
 }
 
 .notification-detail-container {
-    width: 290px;
+    width: 300px;
     background: #f5f8f9;
 }
 
@@ -5224,7 +5427,18 @@ option {
     font-weight: 600;
     border-radius: 5px;
 }
-
+.notifications-pointer{
+    cursor: pointer;
+}
+.notify-time-para{
+    margin-bottom: 0px;
+    font-size:xx-small;
+    color: #535f6b;
+}
+.notify-time{
+    display: flex;
+    justify-content:end;
+}
 /* //log out */
 .logout-icon-container {
     display: inline-block;

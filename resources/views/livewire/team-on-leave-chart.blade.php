@@ -1,51 +1,20 @@
-<div style="width: 90%;margin:0 auto;">
-    <style>
-        .teamOnLeavetable {
-            width: 100%;
-            border-collapse: collapse;
-        }
+<div>
 
-        .teamOnLeavetable th {
-            background-color: #ecf9ff;
-            /* Header background color */
-            color: #778899;
-            /* Text color for headers */
-            padding: 8px;
-            font-weight: 500;
-            font-size: 0.8rem;
-            text-align: left;
-        }
 
-        .teamOnLeavetable td {
-            background-color: #fff;
-            /* Body background color */
-            color: #3b4452;
-            /* Text color for body cells */
-            padding: 8px;
-            border: 1px solid #ddd;
-            /* Optional: border for table cells */
-        }
-
-        .teamOnLeavetable tbody tr:nth-child(even) td {
-            background-color: #fcfcfc;
-            /* Optional: alternate row color */
-        }
-    </style>
-
-    <div style="padding:10px 15px; width:80%; margin:0;">
-        <label for="duration" class="normalTextValue" style="font-size:0.85rem;">Select Duration:</label>
-        <select class="normalTextValue"wire:model='duration' id="duration" wire:change="updateDuration($event.target.value)" style="font-size:0.8rem;">
+    <div >
+        <label for="duration" class="normalTextValue team-on-leave-label " >Select Duration:</label>
+        <select class="normalTextValue team-on-leave-duration-select"wire:model='duration' id="duration" wire:change="updateDuration($event.target.value)" >
             <option value="this_month">This Month</option>
             <option value="last_month">Last Month</option>
             <option value="today">Today</option>
         </select>
     </div>
 
-    <div style="width:100%;display:flex; flex-direction:column;margin:0 auto;border:1px solid #ccc;">
+    <div class="team-on-leave-chart-div" >
         <!-- Other HTML content -->
-        <div style="display:flex; flex-direction:row; background:white;padding:10px 15px; border-bottom:1px solid #ccc; gap:10px;">
-            <p class="mb-0 normalTextValue" style="font-size: 0.75rem;">Duration Selected:</p>
-            <p class="mb-0 normalText">{{ $fromDateFormatted  }} <span style="color:#ccc;margin:0 10px;">TO </span> {{$toDateFormatted }}</p>
+        <div class="team-on-leave-duration-div">
+            <p class="mb-0 normalTextValue team-on-leave-duration" >Duration Selected:</p>
+            <p class="mb-0 normalText">{{ $fromDateFormatted  }} <span class="team-on-leave-to" >TO </span> {{$toDateFormatted }}</p>
         </div>
 
 
@@ -103,7 +72,7 @@
     </div>
 
     <div class="mt-3">
-        <h6 class="normalText" style="color:#778899;font-size:0.925rem;">Leave Applications</h6>
+        <h6 class="normalText team-on-leave-application" >Leave Applications</h6>
 
 
         @if(empty($leaveApplications))
@@ -111,13 +80,13 @@
         <p class="normalTextValue">No leave applications for the selected duration.</p>
         @else
         <div class="row">
-            <div class="col-md-6" style="padding:10px 15px;  margin:0;">
+            <div class="col-md-6 team-on-leave-search" >
                 <label for="search" class="normalTextValue">Search Employee:</label>
-                <input class="rounded placeholder-small p-1 border" style="width:150px;border:none;outline:none;" type="text" id="search" wire:model='search' wire:input="updateSearch($event.target.value)" placeholder="Search...">
+                <input class="rounded placeholder-small p-1 border " type="text" id="search" wire:model='search' wire:input="updateSearch($event.target.value)" placeholder="Search...">
             </div>
-            <div class="col-md-6" style="padding:10px 15px;  margin:0;">
-                <label for="leaveTypeFilter" class="normalTextValue">Select Leave Type:</label>
-                <select class="rounded border normalText p-1" style="width:130px;outline:none;" id="leaveTypeFilter" wire:model="leaveTypeFilter" wire:change=updateLeaveTypeFilter($event.target.value)>
+            <div class="col-md-6 team-on-leave-type" >
+                <label for="leaveTypeFilter" class="normalTextValue ">Select Leave Type:</label>
+                <select class="rounded border normalText p-1 team-on-leave-type-select"  id="leaveTypeFilter" wire:model="leaveTypeFilter" wire:change=updateLeaveTypeFilter($event.target.value)>
                     <option value="">All</option>
                     @foreach($this->leaveTypes as $leaveType)
                     <option value="{{ $leaveType }}">{{ $leaveType }}</option>
