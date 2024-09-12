@@ -201,7 +201,7 @@
               <td style="font-weight:700;font-size:10px;">{{$e1->shift_start_time}}</td>
               
               <td style="text-align:right;">
-              <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899'}}" wire:click="toggleAccordionForAbsent({{ $index }})">
+                     <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899'}}" wire:click="toggleAccordionForAbsent({{ $index }})">
                           <i class="fa fa-angle-{{ $openAccordionForAbsent === $index ? 'down' : 'up' }}"style="color:{{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899' }}"></i>
                     </button>
                 </td>
@@ -224,11 +224,11 @@
                         </div>
                         <!-- Add more details here -->
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
-                        <p style="font-size:10px;font-weight:600;">Email ID:<span style="display:flex;font-weight:500;">{{$e1->email}}</span></p>
-                        <p style="font-size:10px;font-weight:600;">Phone Number:<span style="display:flex;font-weight:500;">{{$e1->mobile_number}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Email&nbsp;ID:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->email}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->mobile_number}}</span></p>
                         <p style="font-size:12px;font-weight:700;">Categories Details</p>
-                        <p style="font-size:10px;font-weight:600;">Designation:<span style="display:flex;font-weight:500;">{{$e1->job_role}}</span></p>
-                        <p style="font-size:10px;font-weight:600;">Location:<span style="display:flex;font-weight:500;">{{$e1->job_location}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Designation:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->job_role}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Location:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->job_location}}</span></p>
                         
                     </div>
                 </td>
@@ -406,11 +406,11 @@
                         </div>
                         <!-- Add more details here -->
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
-                        <p style="font-size:10px;font-weight:600;">Email ID:<span style="display:flex;font-weight:500;">{{$s1->email}}</span></p>
-                        <p style="font-size:10px;font-weight:600;">Phone Number:<span style="display:flex;font-weight:500;">{{$s1->mobile_number}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Email&nbsp;ID:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->email}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->mobile_number}}</span></p>
                         <p style="font-size:12px;font-weight:700;">Categories Details</p>
-                        <p style="font-size:10px;font-weight:600;">Designation:<span style="display:flex;font-weight:500;">{{$s1->job_role}}</span></p>
-                        <p style="font-size:10px;font-weight:600;">Location:<span style="display:flex;font-weight:500;">{{$s1->job_location}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Designation:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->job_role}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Location:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->job_location}}</span></p>
                         
                     </div>
                 </td>
@@ -518,7 +518,7 @@
                               </div>
                         </div>
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
-                        <p style="font-size:10px;font-weight:600;">Email ID<span style="margin-left:5px;font-weight:500;">{{$alr->email}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Email&nbsp;ID:<span style="margin-left:5px;font-weight:500;">{{$alr->email}}</span></p>
                         <p style="font-size:10px;font-weight:600;">Phone Number:<span style="margin-left:5px;font-weight:500;">{{$alr->mobile_number}}</span></p>
                         <p style="font-size:12px;font-weight:700;">Categories Details</p>
                         <p style="font-size:10px;font-weight:600;">Designation:<span style="margin-left:5px;font-weight:500;">{{$alr->job_role}}</span></p>
@@ -549,18 +549,6 @@
 
 <!-- third col -->
 
-<script>
-  document.addEventListener('livewire:load', function() {
-    Livewire.on('updatePlaceholder', value => {
-      const input = document.getElementById('fromDate');
-      if (value) {
-        input.setAttribute('placeholder', value);
-      } else {
-        input.setAttribute('placeholder', 'Select Date Range');
-      }
-    });
-  });
-</script>
 
 
 </div>

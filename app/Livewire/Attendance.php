@@ -822,6 +822,18 @@ class Attendance extends Component
                                 case 'Loss Of Pay':
                                     $status = 'LOP'; // Loss of Pay
                                     break;
+                                case 'Casual Leave':
+                                    $status = 'CL'; // Loss of Pay
+                                    break;
+                                case 'Marriage Leave':
+                                    $status = 'ML'; // Loss of Pay
+                                    break;
+                                case 'Paternity Leave':
+                                    $status = 'PL'; // Loss of Pay
+                                    break;
+                                case 'Maternity Leave':
+                                    $status = 'MTL'; // Loss of Pay
+                                    break;        
                                 default:
                                     $status = 'L'; // Default to 'L' if the leave type is not recognized
                                     break;
@@ -842,6 +854,7 @@ class Attendance extends Component
                             'isRegularised' => $isregularised,
                             'isPreviousMonth' => false,
                             'backgroundColor' => $backgroundColor,
+                            'onleave'=>$isonLeave,
                             'status' => $status,
                         ];
 
@@ -855,6 +868,7 @@ class Attendance extends Component
                             'isRegularised' => false,
                             'isNextMonth' => true,
                             'backgroundColor' => '',
+                            'onleave'=>'false',
                             'status' => '',
                         ];
                         $dayCount++;

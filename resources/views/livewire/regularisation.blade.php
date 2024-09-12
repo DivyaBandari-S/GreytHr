@@ -757,7 +757,7 @@
         .remarks-container {
         width: 100%;  /* This will make the container take the full width */
         max-width: 1200px;  /* Adjust to set a specific large width */
-        height: 210px;  /* A smaller height */
+        height: 150px;  /* A smaller height */
         background-color: #fff;  /* Light background color for visibility */
         border:1px solid #ccc;
         padding: 20px;
@@ -843,7 +843,7 @@
 }
 .remarks-input {
         width: 500px;  /* Adjust width as needed */
-        height: 50px;  /* Adjust height as needed */
+        height: 30px;  /* Adjust height as needed */
         padding: 10px;  /* Adds some inner spacing */
         font-size: 12px;  /* Increases font size */
         color:#778899;
