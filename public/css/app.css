@@ -521,7 +521,7 @@ body {
 .cancel-btn {
     background-color: #fff;
     color: rgb(2, 17, 79);
-
+    border:1px solid rgb(2,17,79) !important;
     font-weight: 500;
     border-radius: 5px;
     padding: 7px 12px;
@@ -533,7 +533,7 @@ body {
     color: rgb(2, 17, 79);
     font-weight: 500;
     border-radius: 5px;
-    padding: 6px 12px;
+    padding: 7px 12px;
     font-size: var(--normal-font-size);
     border: 1px solid rgb(2, 17, 79) !important;
 }
@@ -1018,7 +1018,14 @@ button.close-button {
 .employee-item {
     display: inline-block;
     min-width: 120px;
+    flex: 1 1 auto;
     margin-bottom: 7px;
+}
+#contactDetails{
+    width: 50%;
+}
+#file{
+    font-size: var(--normal-font-size);
 }
 .info-button {
     background-color: transparent;
@@ -3275,6 +3282,9 @@ input[type="radio"] {
 .pendingContent{
     max-height: 70vh;overflow-y: auto;
 }
+.downArrow{
+    cursor: pointer;
+}
 
 .LeaveCancelTable th,
 .LeaveCancelTable td {
@@ -3887,6 +3897,9 @@ input[type="radio"] {
     align-items: center;
     height: 250px;
 }
+.control-wrapper{
+    gap: 10px;cursor:pointer;
+}
 
 .leave-bal {
     border-radius: 10px;
@@ -4034,10 +4047,10 @@ input[type="radio"] {
     font-size: 0.9rem;
 }
 .noDataAvailable{
-    font-size: 14px; color: #721c24; font-weight: bold;"
+    font-size: 14px; color: #721c24; font-weight: bold;
 }
 .searchBar{
-    font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;
+    font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:100%;
 }
 
 #aloneContainer {
@@ -6732,7 +6745,7 @@ max-width: 50%;
 .task-open-close-button {
     border: 1px solid rgb(2, 17, 79);
     width: 80px;
-    padding: 5px 0.75rem;
+    padding: 6px 0.75rem;
 }
 
 .task-accordion-content {
@@ -7029,7 +7042,7 @@ max-width: 50%;
 .task-closed-reopen-button {
     border: 1px solid rgb(2, 17, 79);
     width: 80px;
-    padding: 5px 0.75rem;
+    padding: 6px 0.75rem;
 }
 
 .task-accordion-closed-table {

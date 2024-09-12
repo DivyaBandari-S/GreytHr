@@ -1,5 +1,5 @@
 <div class="leavePageContent position-relative">
-   <div class="d-flex mt-2 mb-3 gap-4 align-items-center ">
+   <div class="d-flex mt-1 gap-4 align-items-center ">
       @if(session()->has('error'))
       <div class="alert alert-danger position-absolute p-1" style="right: 25%;top:-3%;"  id="error-alert">
          {{ session('error') }}
@@ -15,7 +15,7 @@
       @endif
    </div>
 
-   <div class="toggle-container mt-3">
+   <div class="toggle-container">
       <!-- Navigation Buttons -->
       <div class="nav-buttons d-flex justify-content-center">
          <ul class="nav custom-nav-tabs border">
