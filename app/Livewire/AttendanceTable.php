@@ -71,9 +71,10 @@ class AttendanceTable extends Component
         // First initialize
         $this->year = Carbon::now()->format('Y');
         $this->start = Carbon::now()->year($this->year)->firstOfMonth()->format('Y-m-d');
+
         $this->end = Carbon::now()->year($this->year)->lastOfMonth()->format('Y-m-d');
         $this->fromDate=$this->start;
-        $this->toDate=$this->endDate;
+        $this->toDate=$this->end;
         $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
         $ip = request()->ip();
         $location = GeoIP::getLocation($ip);

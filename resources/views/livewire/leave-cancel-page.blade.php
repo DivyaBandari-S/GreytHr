@@ -12,7 +12,7 @@
     <div class="applyContainer">
         @if($LeaveShowinfoMessage)
         <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
-            <p class="mb-0" style="font-size:11px;">Leave Cancel enables you to apply for cancellation of approved leave applications. Please select a leave type to get started..</p>
+            <p class="mb-0 normalTextSmall" >Leave Cancel enables you to apply for cancellation of approved leave applications. Please select a leave type to get started..</p>
             <p class="mb-0 hideInfo" wire:click="toggleInfoLeave">Hide</p>
         </div>
         @endif
@@ -63,8 +63,8 @@
                     @if($showApplyingTo)
                     <div class="form-group mt-3">
                         <div class="d-flex " wire:click="applyingTo" >
-                            <span class="normalTextValue" style="cursor: pointer;">
-                                <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
+                            <span class="normalTextValue cursor-pointer" >
+                                <img class="rounded-circle" src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px">
                                 Applying To <span class="requiredMark">*</span>
                             </span>
                         </div>
@@ -79,25 +79,25 @@
                         @if($selectedManagerDetails)
                         @if($selectedManagerDetails->image)
                         <div class="employee-profile-image-container">
-                            <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedManagerDetails->image)}}" style="border-radius:50%;">
+                            <img class="rounded-circle" height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedManagerDetails->image)}}">
                         </div>
                         @else
                         <div class="employee-profile-image-container">
-                            <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                            <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="40" width="40" alt="Default Image">
                         </div>
                         @endif
                         <div class="center p-0 m-0">
                             <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($selectedManagerDetails->first_name)) }} {{ ucwords(strtolower($selectedManagerDetails->last_name)) }}</p>
-                            <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#{{$selectedManagerDetails->emp_id}}</span></p>
+                            <p class="mb-0 normalTextSmall"  id="managerIdText"><span class="remaining">#{{$selectedManagerDetails->emp_id}}</span></p>
                         </div>
                         @else
                         <div class="center p-0 m-0">
-                            <p class="mb-0" style="font-size:10px;">N/A</p>
-                            <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText">#(N/A)</p>
+                            <p class="mb-0 normalTextSmall" >N/A</p>
+                            <p class="mb-0 normalTextSmall"  id="managerIdText">#(N/A)</p>
                         </div>
                         @endif
                         <div class="downArrow" wire:click="toggleApplyingto">
-                            <i class="fas fa-chevron-down" style="cursor:pointer"></i>
+                            <i class="fas fa-chevron-down cursor-pointer" ></i>
                         </div>
                     </div>
                     @endif
@@ -114,25 +114,25 @@
                                             wire:model="searchQuery"
                                             id="searchInput"
                                             type="text"
-                                            class="form-control placeholder-small"
+                                            class="form-control searchBar placeholder-small"
                                             placeholder="Search...."
                                             aria-label="Search"
                                             aria-describedby="basic-addon1"
-                                            style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;">
+                                            >
                                         <div class="input-group-append searchBtnBg d-flex align-items-center">
                                             <button
                                                 type="button"
                                                 class="search-btn"
                                                 wire:click="getFilteredManagers">
-                                                <i style="color:#fff;margin-left:10px;" class="fas fa-search"></i>
+                                                <i class="fas fa-search ms-2"></i>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-2 m-0 p-0">
-                                    <button wire:click="toggleApplyingto" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #ccc;border:#ccc;height:33px;width:33px;">
-                                        <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i>
+                                    <button wire:click="toggleApplyingto" type="button" class="close rounded px-1 py-0" aria-label="Close" >
+                                        <span aria-hidden="true" class="closeIcon"><i class="fas fa-times "></i>
                                         </span>
                                     </button>
                                 </div>
@@ -148,16 +148,16 @@
                                 wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                                 @if($employee['image'])
                                 <div class="employee-profile-image-container">
-                                    <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius:50%;">
+                                    <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" >
                                 </div>
                                 @else
                                 <div class="employee-profile-image-container">
-                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="35px" width="35px" alt="Default Image">
                                 </div>
                                 @endif
                                 <div class="center d-flex flex-column mt-2 mb-2">
                                     <span class="ellipsis mb-0">{{ $employee['full_name'] }}</span>
-                                    <span class="mb-0 normalTextValue" style="font-size:10px;"> #{{ $employee['emp_id'] }} </span>
+                                    <span class="mb-0 normalTextSmall" > #{{ $employee['emp_id'] }} </span>
                                 </div>
                             </div>
                             @endforeach
@@ -176,7 +176,7 @@
                     <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
                         <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
                             <div class="icon-container">
-                                <i class="fa fa-plus" style="color: #778899;"></i>
+                                <i class="fa fa-plus"></i>
                             </div>
                         </a>
                         <!-- Blade Template: your-component.blade.php -->
@@ -189,12 +189,12 @@
                         $hiddenEmployees = $employeesCollection->slice(3);
                         @endphp
 
-                        <ul class="d-flex align-items-center mb-0" style="list-style-type: none; gap:10px;">
+                        <ul class="d-flex align-items-center list-unstyled mb-0 gap-3">
                             @foreach($visibleEmployees as $recipient)
                             <li>
-                                <div class="px-2 py-1 d-flex justify-content-between align-items-center" style="border-radius: 25px; border: 2px solid #adb7c1; gap:10px;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
-                                    <span style="color: #778899; font-size:12px;">{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}</span>
-                                    <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer; color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
+                                <div class="px-2 py-1 d-flex justify-content-between align-items-center rounded-pill border-2 gap-3" style="border-color:#adb7c1;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
+                                    <span class="normalTextValue fw-normal">{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}</span>
+                                    <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end cursor-pointer" style="color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
                                 </div>
                             </li>
                             @endforeach
@@ -208,13 +208,13 @@
 
                         <!-- Popup Modal -->
                         @if($showCCEmployees)
-                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                        <div class="modal d-block" tabindex="-1" role="dialog" >
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" style="color:white;">More Recipients</h5>
+                                        <h5 class="modal-title" >More Recipients</h5>
                                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
-                                            wire:click="openModal" style="background-color: white; height:10px;width:10px;">
+                                            wire:click="openModal" >
                                         </button>
                                     </div>
                                     <div class="modal-body">
@@ -222,7 +222,7 @@
                                             @foreach($hiddenEmployees as $recipient)
                                             <li>
                                                 <div class="px-2 py-1 d-flex justify-content-between align-items-center" style="border-radius: 25px; border: 2px solid #adb7c1; gap:10px;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
-                                                    <span style="color: #778899; font-size:12px;">{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}</span>
+                                                    <span class="normalTextValue">{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}</span>
                                                     <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer; color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
                                                 </div>
                                             </li>
@@ -282,7 +282,6 @@
                                     </div>
                                     @endif
                                     @endif
-
                                     <div class="center mb-2 mt-2">
                                         <p class="mb-0 empCcName">{{ ucwords(strtolower($employee['full_name'])) }}</p>
                                         <p class="mb-0 empIdStyle">#{{ $employee['emp_id'] }}</p>
