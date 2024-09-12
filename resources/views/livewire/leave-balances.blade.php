@@ -3,7 +3,7 @@
     <div class="buttons-container d-flex justify-content-end mt-2 px-3 ">
         <button class="submit-btn  py-2 px-4  rounded" onclick="window.location.href='/leave-form-page'">Apply</button>
         <button type="button" class="submit-btn mx-2 px-4 rounded " wire:click="showPopupModal">
-            <i class="fas fa-download" style="color: white;"></i>
+            <i class="fas fa-download"></i>
         </button>
 
         <select class="dropdown bg-white rounded" wire:model="selectedYear" wire:change="yearDropDown">
@@ -21,13 +21,13 @@
 
     <!-- modal -->
     @if($showModal)
-    <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
+    <div wire:ignore.self class="modal fade show d-block" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title">Download Leave Transaction Report</h6>
-                    <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
-                     wire:click="closeModal" style="background-color: white; height:10px;width:10px;">
+                    <button type="button" class="btn-close" aria-label="Close"
+                     wire:click="closeModal" >
                                     </button>
                 </div>
                 <form novalidate class="ng-valid ng-touched ng-dirty" wire:submit.prevent="generatePdf">
@@ -43,7 +43,7 @@
                                 <div class="form-group">
                                     <label class="required-field label-style">From date</label>
                                     <div class="input-group date">
-                                        <input type="date" wire:model="fromDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate" style="color: #778899;">
+                                        <input type="date" wire:model="fromDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate" >
                                     </div>
                                     @error('fromDateModal') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -52,7 +52,7 @@
                                 <div class="form-group">
                                     <label class="required-field label-style">To date</label>
                                     <div class="input-group date">
-                                        <input type="date" wire:model="toDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate" style="color: #778899;">
+                                        <input type="date" wire:model="toDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate" >
                                     </div>
                                     @error('toDateModal') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -206,7 +206,7 @@
                     @if($casualLeavePerYear > 0)
                     <div class="px-3">
                         <div class="tube-container">
-                            <p class="mb-0" style="color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;">
+                            <p class="consumedContent mb-0">
                                 @if($consumedCasualLeaves > 0)
                                 {{ $consumedCasualLeaves }} of {{ $casualLeavePerYear }} Consumed
                                 @else
@@ -239,7 +239,7 @@
                     @if($sickLeavePerYear > 0)
                     <div class="px-3">
                     <div class="tube-container">
-                        <p class="mb-0" style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
+                        <p class="mb-0 consumedContent" >
                             @if($consumedSickLeaves > 0)
                             {{ $consumedSickLeaves }} of {{ $sickLeavePerYear }} Consumed
                             @else
@@ -272,7 +272,7 @@
                     </div>
                     <div class="px-3">
                     <div class="tube-container">
-                        <p class="mb-0" style="color: #778899; font-size: 10px; text-align: start; margin-top: -15px; font-weight: 400;">
+                        <p class="mb-0 consumedContent" >
                             @if($consumedProbationLeaveBalance > 0)
                             {{ $consumedProbationLeaveBalance }} of {{ $casualProbationLeavePerYear }} Consumed
                             @else
