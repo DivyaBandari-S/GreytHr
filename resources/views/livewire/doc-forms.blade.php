@@ -38,20 +38,20 @@
                     <div id="manualDetails" style="display:none;color: gray; font-size: 10px; font-size: 0.7rem;padding:5px">
                             <button  class="emp-manual" style="background-color: white; color: black; border: none; border-radius: 5px; margin-left: 10px; padding: 5px; border: 1px solid lightgrey;">
                                 Employee Induction Manual 1 (2) (1) .pdf
-                                <i class="fas fa-eye" style=" font-size: 16px; margin-left: 10px;cursor: pointer;"></i>
-                                <i class="fas fa-download" onclick="downloadPdf()" style="margin-left: 5px;cursor: pointer;font-size: 16px;"></i>
+                                <i class="fas fa-eye" wire:click="downloadPdf()" style=" font-size: 16px; margin-left: 10px;cursor: pointer;"></i>
+                                <i class="fas fa-download" wire:click="downloadPdf() " style="margin-left: 5px;cursor: pointer;font-size: 16px;"></i>
                             </button>
                         </div>
                     <script>
-                        function downloadPdf() {
-                            const pdfPath = '/storage/Employee Induction Manual  1 (2) (1) (1).pdf';
-                            const link = document.createElement('a');
-                            link.download = 'Employee_Induction_Manual.pdf';
-                            link.href = pdfPath;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                        }
+                        // function downloadPdf() {
+                        //     const pdfPath = '/storage/Employee Induction Manual  1 (2) (1) (1).pdf';
+                        //     const link = document.createElement('a');
+                        //     link.download = 'Employee_Induction_Manual.pdf';
+                        //     link.href = pdfPath;
+                        //     document.body.appendChild(link);
+                        //     link.click();
+                        //     document.body.removeChild(link);
+                        // }
 
                         function toggleDetails(elementId) {
                             $('#' + elementId).toggle();
@@ -72,4 +72,21 @@
             </div>
         </div>
     </div>
+    @if( $showPopup == true)
+    <div class="modal" id="logoutModal" tabindex="4" style="display: block;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-body text-center" style="font-size: 16px;">
+                   Currently working on  functionality.
+                </div>
+                <div class="d-flex justify-content-center p-3" style="gap: 10px;">
+                    <!-- <button type="button" class="submit-btn mr-3" wire:click="confirmLogout">Logout</button> -->
+                    <button type="button" class="cancel-btn1" wire:click="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+    @endif
 </div>

@@ -16,6 +16,7 @@ class Payroll extends Component
     public $showDetails = true;
     public $selectedMonth;
     public $netPay;
+    public $showPopup=false;
     public function toggleDetails()
     {
         $this->showDetails = !$this->showDetails;
@@ -32,32 +33,40 @@ class Payroll extends Component
 
         return $totalGrossPay - $totalDeductions;
     }
-    public function downloadPdf()
-    {
-       
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
-        $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
-        $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
-    
-        $data = [
-            'employees' => $this->employeeDetails,
-            'salaryRevision' => $this->salaryRevision,
-            'empBankDetails' => $this->empBankDetails,
-            'netPay' => $this->calculateNetPay()
-        ];
-  
-             // Generate PDF using the fetched data
-             $pdf = Pdf::loadView('download-pdf', [
-              $data
-            ]);
-        return response()->streamDownload(function() use($pdf){
-            echo $pdf->stream();
-        }, 'payslip.pdf');
-    
-       
-    }
-    
+    // public function downloadPdf()
+    // {
+
+    //     $employeeId = auth()->guard('emp')->user()->emp_id;
+    //     $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
+    //     $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
+    //     $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
+
+    //     $data = [
+    //         'employees' => $this->employeeDetails,
+    //         'salaryRevision' => $this->salaryRevision,
+    //         'empBankDetails' => $this->empBankDetails,
+    //         'netPay' => $this->calculateNetPay()
+    //     ];
+
+    //          // Generate PDF using the fetched data
+    //          $pdf = Pdf::loadView('download-pdf', [
+    //           $data
+    //         ]);
+    //     return response()->streamDownload(function() use($pdf){
+    //         echo $pdf->stream();
+    //     }, 'payslip.pdf');
+
+
+    // }
+    public function downloadPdf(){
+        $this->showPopup=true;
+        // $this->text=$text;
+        // dd($text);
+        }
+        public function cancel(){
+            $this->showPopup=false;
+            }
+
 
 
 
@@ -134,13 +143,13 @@ class Payroll extends Component
     {
         $currentYear = date('Y');
         $lastMonth = date('n')-1;
-    
+
         // Generate options for months from January of the previous year to the current month of the current year
         $options = [];
         for ($year = $currentYear; $year >= $currentYear - 1; $year--) {
             $startMonth = ($year == $currentYear) ? $lastMonth : 12; // Start from the current month or December
             $endMonth = ($year == $currentYear - 1) ? 1 : 1; // End at January
-    
+
             for ($month = $startMonth; $month >= $endMonth; $month--) {
                 // Format the month and year to display
                 $dateObj = DateTime::createFromFormat('!m', $month);
@@ -148,7 +157,7 @@ class Payroll extends Component
                 $options["$year-$month"] = "$monthName $year";
             }
         }
-    
+
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::select('employee_details.*', 'emp_departments.department')
         ->leftJoin('emp_departments', 'employee_details.dept_id', '=', 'emp_departments.dept_id')
@@ -156,16 +165,16 @@ class Payroll extends Component
         ->get();
         $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
         $salaryRevision = new SalaryRevision();
-    
+
         // Calculate total allowance and deductions
         $totalGrossPay = 0;
         $totalDeductions = 0;
-    
+
         foreach ($this->salaryRevision as $revision) {
             $totalGrossPay += $revision->calculateTotalAllowance();
             $totalDeductions += $revision->calculateTotalDeductions();
         }
-    
+
         $this->netPay = $totalGrossPay - $totalDeductions;
         $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
         $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
