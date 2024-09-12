@@ -843,7 +843,7 @@
 }
 .remarks-input {
         width: 500px;  /* Adjust width as needed */
-        height: 50px;  /* Adjust height as needed */
+        height: 30px;  /* Adjust height as needed */
         padding: 10px;  /* Adds some inner spacing */
         font-size: 12px;  /* Increases font size */
         color:#778899;
