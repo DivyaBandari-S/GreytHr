@@ -1577,8 +1577,10 @@ color: #fff;
                                  ML 
                               @elseif($leaveType=='Paternity Leave') 
                                  PL 
+                              @elseif($leaveType=='Maternity Leave') 
+                                 MTL    
                               @elseif($leaveType=='Sick Leave') 
-                                 PL
+                                 SL
                               @endif
                             @php $leaveCount++; @endphp
                             @elseif($distinctDates->has($dateKeyForLookup))
