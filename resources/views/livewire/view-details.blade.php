@@ -106,7 +106,7 @@
                         <div class="view-container m-0 p-0">
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
-                                    <span class="normalTextValue">From Date</span> <br>
+                                    <span class="normalTextValue">From Date</span> <br>e
                                     <span class="normalText fw-bold"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
