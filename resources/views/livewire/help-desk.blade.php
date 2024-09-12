@@ -484,8 +484,8 @@
         <div class="input-group">
         <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
                         <div class="input-group-append">
-                            <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
-                                <i class="fa fa-search people-search-icon"></i>
+                            <button wire:click="searchActiveHelpDesk" class="submit-btn " type="button" style="height:32px">
+                                <i class="fa fa-search people-search-icon" ></i>
                             </button>
                         </div>
 

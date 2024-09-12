@@ -513,6 +513,7 @@ body {
     padding: 7px 12px;
     font-size: var(--normal-font-size);
     border: none;
+  
 }
 .submit-btn:hover {
     background-color: #272d48;
@@ -690,8 +691,12 @@ button.close-button {
     margin-top: 30px;
     border-radius: 5px;
 }
+
 .people-search-btn {
     color: #fff;
+}
+.people-search-icon{
+    background-color: #fff; 
 }
 
 .text-danger {
@@ -2111,6 +2116,19 @@ td {
     margin-bottom: 32px;
     transition: opacity 0.2s;
 }
+.emoji-list{
+    display: none;
+    background:white; 
+    border-radius:5px; 
+    border:1px solid silver; 
+    max-height:170px;width:220px; 
+    overflow-y: auto;
+}
+
+.emoji-option{
+    font-size: 14px;
+    cursor:pointer 
+}
 
 .hidden {
     opacity: 0;
@@ -2120,6 +2138,22 @@ td {
     text-align: center;
     font-size: 24px;
     padding: 8px;
+}
+.custom-height-30 {
+    height: 30px;
+}
+.custom-radio-label{
+    display: flex; 
+    align-items: center; 
+    padding: 5px; 
+    height: 100%;
+}
+.feeds-left-menu{
+
+    font-weight: 500;
+    color:#47515b;
+    cursor:pointer;
+    font-size: 0.8rem;
 }
 
 .emoji:hover {
@@ -2443,6 +2477,11 @@ td {
 .menu-item {
     transition: background-color 0.3s ease;
     text-decoration: none;
+    margin-top: 5px; 
+    display: block;  
+    padding: 5px 10px;
+     transition: background-color 0.3s ease; 
+     color:#3b4452;
 }
 
 /* Define CSS for the menu items on hover */
@@ -2514,18 +2553,22 @@ input[type="radio"] {
 }
 
 .activities,
-.posts {
-    height: 60px; /* Fixed height */
+.posts,.post-requests {
+    height: 30px; /* Fixed height */
     display: flex;
     align-items: center;
     padding: 5px;
+    font-size: 12px;
     width: 100%;
     border-radius: 5px;
 }
 
 .activities:hover,
-.posts:hover {
+.posts:hover ,.post-requests:hover{
     background-color: #edf3ff;
+}
+.custom-radio-content{
+    color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;
 }
 
 .medium-header {
@@ -2539,11 +2582,22 @@ input[type="radio"] {
     margin-top: 5px;
 }
 /* CSS for radio-wrapper */
+.alert-success{
+    max-width: 500px; margin: auto;
+}
+.drive-in{
+    color:#3b4452; display:flex;flex-direction:column;justify-content:center;margin-left:10px
+}
 .radio-wrapper {
     display: inline-block;
     margin-right: 10px;
     /* Adjust margin as needed */
     cursor: pointer;
+}
+.btn-post{
+    background-color: #F1ECFC;
+    border:1px solid purple;
+    border-radius:5px;width:130px
 }
 
 /* CSS for labels */

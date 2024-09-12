@@ -4,22 +4,22 @@
     <p>No employee details found.</p>
 
     @else
-    <div class="px-4" style="position: relative;">
+    <div class="px-4 position-relative">
    
-        @if ($message)
-                <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
-                {{ $message }}
-                    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"
-                        style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
-                </div>
-                @endif
-        <div class="col-md-12  mt-1" style="height:60px;">
+    @if (session()->has('message'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('message') }}
+        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
+    </div>
+@endif
 
-            <div class="row bg-white rounded border d-flex" style="height:80px; ">
-                <div style="display:flex; flex-direction:row;">
+        <div class="col-md-12  mt-1 h-60" >
+
+            <div class="row bg-white rounded border d-flex h-80" >
+            <div class="d-flex flex-row">
 
 
-                    <div class=" mt-3" style="height:60px">
+                    <div class=" mt-2 h-60">
                         @if(auth('emp')->check() || auth('hr')->check())
                         @php
                         // Determine the employee ID based on the authentication guard
@@ -44,7 +44,7 @@
                         <p>User is not authenticated.</p>
                         @endif
                     </div>
-                    <div style="color:#3b4452; display:flex;flex-direction:column;justify-content:center;margin-left:10px">
+                    <div class="drive-in">
                         @if(auth()->guard('emp')->check())
                         <span class="text-base">Hey {{ ucwords(strtolower(auth()->guard('emp')->user()->first_name)) }} {{ ucwords(strtolower(auth()->guard('emp')->user()->last_name)) }}</span>
                         @elseif(auth()->guard('hr')->check())
@@ -53,39 +53,39 @@
                         <p>No employee details available.</p>
                         @endif
 
-                        <div class="text-xs" style="color:#3b4452;">Ready to dive in?</div>
+                        <div class="text-xs" >Ready to dive in?</div>
                     </div>
-                    <div style="margin-left:auto; display:flex;align-items:center">
-                        <button wire:click="addFeeds" class="flex flex-col justify-between items-start group w-20  p-1 rounded-md border border-purple-200" style="background-color: #F1ECFC;border:1px solid purple;border-radius:5px;width:130px">
+                    <div class="d-flex align-items-center ms-auto createpost">
+                        <button  wire:click="addFeeds" class="btn-post flex flex-col justify-between items-start group w-20  p-1 rounded-md border border-purple-200" >
                             <div class="w-6 h-6 rounded bg-purple-200">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
                                     <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                                     <polyline points="13 2 13 9 20 9"></polyline>
                                 </svg>
                             </div>
-                            <div class="row  mt-1">
-                                <div class="text-left text-xs" style="margin-left:5px" wire:click="addFeeds">Create Posts</div>
+                            <div class="row mt-1">
+    <div class="text-left text-xs ms-1" wire:click="addFeeds">Create Posts</div>
+</div>
 
-                            </div>
                         </button>
                     </div>
                 </div>
                 <div class=" mt-2 bg-white d-flex align-items-center ">
 
-                    <div style="display:flex;margin-left:auto">
+                <div class="d-flex ms-auto">
 
 
                         @if($showFeedsDialog)
-                        <div class="modal" tabindex="-1" role="dialog" style="display: block; color: #3b4452; font-family: Montserrat, sans-serif;">
-                            <div class="modal-dialog modal-dialog-centered" role="document" style="color: #3b4452;">
-                                <div class="modal-content" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                                    <div class="modal-header" style="border-bottom: 1px solid #ccc; padding: 15px; height: 40px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
-                                        <!-- <h5 class="modal-title" style="font-weight: 500; font-size: 1.25rem; color: #3b4452;">Creating a Post</h5> -->
-                                        <p style="font-weight:600px">Create a post</p>
-                                        <span style="margin-left: auto;margin-top:-5px">
-                                            <img src="{{ asset('images/Posts.jpg') }}" style="height: 30px; border-radius: 5px;">
-                                        </span>
-                                    </div>
+                        <div class="modal" tabindex="-1" role="dialog" style="display: block; ">
+                            <div class="modal-dialog modal-dialog-centered" role="document" >
+                                <div class="modal-content" >
+                                <div class="modal-header d-flex justify-content-between align-items-center">
+    <p class="mb-0">Create a post</p>
+    <span class="img d-flex align-items-end">
+        <img src="{{ asset('images/Posts.jpg') }}" class="img rounded custom-height-30">
+    </span>
+</div>
+
 
 
                                     @if(Session::has('error'))
@@ -98,8 +98,8 @@
                                     <form wire:submit.prevent="submit" enctype="multipart/form-data">
     <div class="modal-body" style="padding: 20px;">
         <!-- Category Selection -->
-        <div class="form-group" style="margin-bottom: 15px;">
-            <label for="category" style="font-weight: 600; color: #3b4452;">You are posting in:</label>
+        <div class="form-group mb-15">
+            <label for="category" >You are posting in:</label>
             <select wire:model.lazy="category" class="form-select" id="category" style="border: 1px solid #ccc; border-radius: 4px; padding: 5px; font-size: 0.75rem; color: #3b4452; margin-top: 5px; height: 30px;">
                 <option value="">Select Category</option>
                 <option value="Appreciations">Appreciations</option>
@@ -114,8 +114,8 @@
         </div>
 
         <!-- Description Input -->
-        <div class="form-group">
-            <label for="content" style="font-weight: 600; color: #3b4452;">Write something here:</label>
+        <div class="form-group mt-1">
+            <label for="content" >Write something here:</label>
             <textarea wire:model.lazy="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
@@ -123,8 +123,8 @@
        <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
                                     role="alert"></div>
         <!-- File Upload -->
-        <div class="form-group" style="margin-top: 5px;">
-            <label for="file_path" style="font-weight: 600; color: #3b4452;">Upload Attachment:</label>
+        <div class="form-group mt-1" >
+            <label for="file_path" >Upload Attachment:</label>
             <div style="text-align: start;">
            
 
@@ -139,10 +139,10 @@
     </div>
 
     <!-- Submit & Cancel Buttons -->
-    <div class="modal-footer" style="border-top: 1px solid #ccc;">
-    <div class="d-flex justify-content-center" style="width: 100%;">
+    <div class="modal-footer border-top" >
+    <div class="d-flex justify-content-center w-100" >
             <button type="submit" wire:target="file_path" wire:loading.attr="disabled" class="submit-btn">Submit</button>
-            <button wire:click="closeFeeds" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79); margin-left: 10px">Cancel</button>
+            <button wire:click="closeFeeds" type="button" class="cancel-btn1 ms-2">Cancel</button>
         </div>
     </div>
 </form>
@@ -161,17 +161,18 @@
                 </div>
             </div>
             <!-- Additional row -->
-            <div class="row mt-2 d-flex">
+            <div class="row mt-2 d-flex" >
 
-                <div class="col-md-4 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:fit-content">
+                <div class="col-md-4 bg-white p-3" style="border-radius:5px;border:1px solid silver;height:fit-content;">
 
-                    <p style="font-weight: 500;font-size:13px;color:#47515b;">Filters</p>
+                <p class ="feeds-left-menu">Filters</p>
                     <hr style="width: 100%;border-bottom: 1px solid grey;">
 
 
-                    <p style="font-weight: 500;font-size:13px;color:#47515b;cursor:pointer">Activities</p>
-                    <div class="activities" style="width: 100%; height: 30px;">
-                        <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
+                    <p class ="feeds-left-menu" >Activities</p> 
+
+                    <div class="activities" >
+                        <label class="custom-radio-label" >
                             <input type="radio" name="radio" value="activities" checked data-url="/Feeds" onclick="handleRadioChange(this)">
                             <div class="feed-icon-container" style="margin-left: 10px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
@@ -180,47 +181,42 @@
                                     <rect x="14" y="7" width="3" height="5"></rect>
                                 </svg>
                             </div>
-                            <span class="custom-radio-button bg-blue" style="margin-left: 10px; font-size: 8px;"></span>
-                            <span style="color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;">All Activities</span>
+                            <span class="custom-radio-button bg-blue me-2" ></span>
+                            <span class="custom-radio-content " >All Activities</span>
                         </label>
                     </div>
 
 
-                    <div class="posts" style="width: 100%; height: 30px;">
-                        <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
-                            @if(auth()->guard('emp')->check())
-                            <input type="radio" id="radio-emp" name="radio" value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
-                            @elseif(auth()->guard('hr')->check())
-                            <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/hreveryone" onclick="handleRadioChange(this)">
-                            @else
-                            <p>No employee details available.</p>
-                            @endif
-                            <div class="feed-icon-container" style="margin-left: 10px;">
+                    <div class="posts" >
+                        <label class="custom-radio-label" >
+                           
+                            <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
+                         
+                         
+                            <div class="feed-icon-container " style="margin-left: 10px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
                                     <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                                     <polyline points="13 2 13 9 20 9"></polyline>
                                 </svg>
                             </div>
-                            <span class="custom-radio-button bg-blue" style="margin-left: 10px; font-size: 10px;"></span>
-                            <span style="color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;">Posts</span>
+                            <span class="custom-radio-button bg-blue me-2"></span>
+                            <span class="custom-radio-content ">Posts</span>
                         </label>
                     </div>
                     @if($isManager)
-    <div class="post-requests" style="width: 100%; height: 30px;">
-        <label class="custom-radio-label" style="display: flex; align-items: center; padding: 5px; height: 100%;">
-            @if(auth()->guard('emp')->check())
-                <input type="radio" id="radio-emp" name="radio" style="margin-left:5px" value="post-requests" data-url="/emp-post-requests" onclick="handleRadioChange(this)">
-            @elseif(auth()->guard('hr')->check())
-                <input type="radio" id="radio-hr" name="radio" style="margin-left:5px" value="post-requests" data-url="/hr-post-requests" onclick="handleRadioChange(this)">
-            @endif
+    <div class="post-requests" >
+        <label class="custom-radio-label" >
+           
+                <input type="radio" id="radio-hr" name="radio"  value="post-requests" data-url="/emp-post-requests" onclick="handleRadioChange(this)">
+           
             <div class="feed-icon-container" style="margin-left: 10px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
                     <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                     <polyline points="13 2 13 9 20 9"></polyline>
                 </svg>
             </div>
-            <span class="custom-radio-button bg-blue" style="margin-left: 10px; font-size: 10px;"></span>
-            <span style="color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;">Post Requests</span>
+            <span class="custom-radio-button bg-blue me-2" ></span>
+            <span class="custom-radio-content ">Post Requests</span>
         </label>
     </div>
 @endif
@@ -229,10 +225,10 @@
                     <hr style="width: 100%;border-bottom: 1px solid grey;">
                     <div>
                         <div class="row" style="max-height:auto">
-                            <div class="col " style="margin: 0px;">
+                            <div class="col m-0">
                                 <div class="input-group">
                                     <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" style="width:80%;font-size: 10px; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search...." aria-label="Search" aria-describedby="basic-addon1">
-                                    <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
+                                    <button class="search-btn" class="search-btn" type="button">
                                         <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
                                     </button>
                                 </div>
@@ -249,32 +245,22 @@
                             </div>
                             <div id="dropdownContent1" style="display: none;">
                                 <ul class="d-flex flex-column" style="font-size: 12px; line-height: 1; text-decoration: none; color:black;text-align: left; padding-left: 0;overflow-y:auto;max-height:200px;overflow-x: hidden;">
-                                    <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">All Feeds</a>
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Every One</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/Feeds" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Events</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Company News</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Appreciation</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Buy/Sell/Rent</a>
-                                    @endif
+                                    <a class="menu-item" href="/Feeds" >All Feeds</a>
+ 
+                                 
+                                    <a class="menu-item" href="/events">Every One</a>
+                                 
+                             
+                                    <a class="menu-item" href="/Feeds" >Events</a>
+
+                                    
+                                    <a class="menu-item" href="/events" >Company News</a>
+                            
+                              
+                                    <a class="menu-item" href="/events" >Appreciation</a>
+                                    
+                                    <a class="menu-item" href="/events" >Buy/Sell/Rent</a>
+                                   
                                 </ul>
                             </div>
                         </div>
@@ -293,166 +279,55 @@
                                 <ul class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
                                     <a class="menu-item" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight :700;">India</a>
 
-                                    @if (Auth::guard('hr')->check())
+                                   
+                                    <a class="menu-item" href="/events" >Adilabad</a>
+                                   
+                                    <a class="menu-item" href="/events" >Doddaballapur</a>
+                                    
+                                    <a class="menu-item" href="/events" >Guntur</a>
 
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Adilabad</a>
-                                    @endif
-
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Doddaballapur</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Doddaballapur</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Guntur</a>
-
-                                    @endif
-
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hoskote</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hoskote</a>
-                                    @endif
-
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hyderabad</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Hyderabad</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mandya
+                        
+                                    <a class="menu-item" href="/events" >Hoskote</a>
+                                  
+                                    <a class="menu-item" href="/events" >Hyderabad</a>
+                                    
+                                    <a class="menu-item" href="/events">Mandya
                                     </a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mandya
+                                    
+                                    <a class="menu-item" href="/events" >Mangalore
                                     </a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mangalore
+                                   
+                                    <a class="menu-item" href="/events" >Mumbai
                                     </a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mangalore
+                                  
+                                    <a class="menu-item" href="/events">Mysore
                                     </a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mumbai
+                                    
+                                    <a class="menu-item" href="/events" >Pune
                                     </a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mumbai
+                                   
+                                    <a class="menu-item" href="/events" >Sirsi</a>
+                                    
+                                    <a class="menu-item" href="/events">Thumkur
                                     </a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mysore
-                                    </a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Mysore
-                                    </a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Pune
-                                    </a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Pune
-                                    </a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Sirsi
-                                    </a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Sirsi
-                                    </a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Thumkur
-                                    </a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Thumkur
-                                    </a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Tirupati</a>
-                                    @endif
-
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Trivandrum</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Udaipur</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Udaipur</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Vijayawada</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">Vijayawada</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item"  style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;font-weight:700">USA</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item"  style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;font-weight:700">USA</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">California</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">California</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">New York</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease;color:#3b4452;">New York</a>
-                                    @endif
-
-                                    @if (Auth::guard('hr')->check())
-
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
-
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block;  padding: 5px 10px; transition: background-color 0.3s ease; color:#3b4452;">Hawaii</a>
-                                    @endif
+                                   
+                                    <a class="menu-item" href="/events">Tirupati</a>
+                                    
+                                    <a class="menu-item" href="/events" >Trivandrum</a>
+                                   
+                                    <a class="menu-item" href="/events" >Udaipur</a>
+                                  
+                                   
+                                    <a class="menu-item" href="/events" >Vijayawada</a>
+                                    
+                                    <a class="menu-item"  >USA</a>
+                                   
+                                    <a class="menu-item" href="/events" >California</a>
+                                    
+                                    <a class="menu-item" href="/events" >New York</a>
+                                    
+                                    <a class="menu-item" href="/events" >Hawaii</a>
+                                  
 
                                 </ul>
                             </div>
@@ -468,37 +343,20 @@
                             </div>
                             <div id="dropdownContent3" style="font-size: 12px; line-height: 1; text-decoration: none; color: black; text-align: left; padding-left: 0; display: none;">
                                 <ul class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">HR</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">HR</a>
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations Team</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Operations</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Production Team</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Production Team</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">QA</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">QA</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Sales Team</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Sales Team</a>
-                                    @endif
-                                    @if (Auth::guard('hr')->check())
-                                    <a class="menu-item" href="/hrevents" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Testing Team</a>
-                                    @elseif (Auth::guard('emp')->check())
-                                    <a class="menu-item" href="/events" style="margin-top: 5px; display: block; padding: 5px 10px; transition: background-color 0.3s ease; color: #3b4452;">Testing Team</a>
-                                    @endif
+                                  
+                                    <a class="menu-item" href="/events" >HR</a>
+                                    <a class="menu-item" href="/events" >Operations Team</a>
+                                    
+                                    <a class="menu-item" href="/events" >Operations</a>
+                                  
+                                    <a class="menu-item" href="/events" >Production Team</a>
+                                    
+                                    <a class="menu-item" href="/events" >QA</a>
+                                   
+                                    <a class="menu-item" href="/events" >Sales Team</a>
+                                    
+                                    <a class="menu-item" href="/events" >Testing Team</a>
+                                   
                                 </ul>
                             </div>
                         </div>
@@ -654,106 +512,106 @@
 
 
                                                     <!-- List of emojis -->
-                                                    <div id="emoji-list-{{ $index }}" class="emoji-list" style="display: none;background:white; border-radius:5px; border:1px solid silver; max-height:170px;width:220px; overflow-y: auto;">
+                                                    <div id="emoji-list-{{ $index }}" class="emoji-list" style="display: none;" >
                                                         <div class="emoji-row">
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128512','{{ $data['employee']->emp_id }}')">😀</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128513','{{ $data['employee']->emp_id }}')">😁</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128514','{{ $data['employee']->emp_id }}')">😂</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128515','{{ $data['employee']->emp_id }}')">😃</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128516','{{ $data['employee']->emp_id }}')">😄</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128517','{{ $data['employee']->emp_id }}')">😅</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128518','{{ $data['employee']->emp_id }}')">😆</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128519','{{ $data['employee']->emp_id }}')">😇</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128512','{{ $data['employee']->emp_id }}')">😀</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128513','{{ $data['employee']->emp_id }}')">😁</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128514','{{ $data['employee']->emp_id }}')">😂</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128515','{{ $data['employee']->emp_id }}')">😃</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128516','{{ $data['employee']->emp_id }}')">😄</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128517','{{ $data['employee']->emp_id }}')">😅</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128518','{{ $data['employee']->emp_id }}')">😆</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128519','{{ $data['employee']->emp_id }}')">😇</span>
 
                                                         </div>
                                                         <div class="emoji-row">
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128520','{{ $data['employee']->emp_id }}')">😈</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128521','{{ $data['employee']->emp_id }}')">😉</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128522','{{ $data['employee']->emp_id }}')">😊</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128523','{{ $data['employee']->emp_id }}')">😋</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128525','{{ $data['employee']->emp_id }}')">😍</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128524','{{ $data['employee']->emp_id }}')">😌</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128526','{{ $data['employee']->emp_id }}'))">😎</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128527','{{ $data['employee']->emp_id }}'))">😏</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#128520','{{ $data['employee']->emp_id }}')">😈</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128521','{{ $data['employee']->emp_id }}')">😉</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128522','{{ $data['employee']->emp_id }}')">😊</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128523','{{ $data['employee']->emp_id }}')">😋</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128525','{{ $data['employee']->emp_id }}')">😍</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128524','{{ $data['employee']->emp_id }}')">😌</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#128526','{{ $data['employee']->emp_id }}'))">😎</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#128527','{{ $data['employee']->emp_id }}'))">😏</span>
 
                                                         </div>
                                                         <div class="emoji-row">
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128528','{{ $data['employee']->emp_id }}')">😐</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128529','{{ $data['employee']->emp_id }}')">😑 </span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128530','{{ $data['employee']->emp_id }}')">😒</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128531','{{ $data['employee']->emp_id }}')">😓</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128532','{{ $data['employee']->emp_id }}')">😔</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128533','{{ $data['employee']->emp_id }}')">😕</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128534','{{ $data['employee']->emp_id }}')">😖</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128535','{{ $data['employee']->emp_id }}')">😗</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128528','{{ $data['employee']->emp_id }}')">😐</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128529','{{ $data['employee']->emp_id }}')">😑 </span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128530','{{ $data['employee']->emp_id }}')">😒</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128531','{{ $data['employee']->emp_id }}')">😓</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128532','{{ $data['employee']->emp_id }}')">😔</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128533','{{ $data['employee']->emp_id }}')">😕</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128534','{{ $data['employee']->emp_id }}')">😖</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128535','{{ $data['employee']->emp_id }}')">😗</span>
 
                                                         </div>
                                                         <div class="emoji-row">
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128537')">😙</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128541','{{ $data['employee']->emp_id }}')">😝</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128542','{{ $data['employee']->emp_id }}')">😞</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128543','{{ $data['employee']->emp_id }}')">😟</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#128537')">😙</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128541','{{ $data['employee']->emp_id }}')">😝</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128542','{{ $data['employee']->emp_id }}')">😞</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128543','{{ $data['employee']->emp_id }}')">😟</span>
 
                                                         </div>
                                                         <div class="emoji-row">
                                                             <!-- Add more emojis here -->
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128544','{{ $data['employee']->emp_id }}')">😠</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128545','{{ $data['employee']->emp_id }}')">😡 </span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128546','{{ $data['employee']->emp_id }}')">😢</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128547','{{ $data['employee']->emp_id }}')">😣</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128548','{{ $data['employee']->emp_id }}')">😤</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128549','{{ $data['employee']->emp_id }}')">😥</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128550','{{ $data['employee']->emp_id }}')">😦</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128551','{{ $data['employee']->emp_id }}')">😧</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128544','{{ $data['employee']->emp_id }}')">😠</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128545','{{ $data['employee']->emp_id }}')">😡 </span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128546','{{ $data['employee']->emp_id }}')">😢</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128547','{{ $data['employee']->emp_id }}')">😣</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128548','{{ $data['employee']->emp_id }}')">😤</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128549','{{ $data['employee']->emp_id }}')">😥</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#128550','{{ $data['employee']->emp_id }}')">😦</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128551','{{ $data['employee']->emp_id }}')">😧</span>
 
                                                         </div>
                                                         <div class="emoji-row">
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128552','{{ $data['employee']->emp_id }}')">😨</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128553','{{ $data['employee']->emp_id }}')">😩</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128554','{{ $data['employee']->emp_id }}')">😪</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128555','{{ $data['employee']->emp_id }}')">😫</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128556','{{ $data['employee']->emp_id }}')">😬</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128557','{{ $data['employee']->emp_id }}')">😭</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128558','{{ $data['employee']->emp_id }}')">😮</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128559','{{ $data['employee']->emp_id }}')">😯</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128552','{{ $data['employee']->emp_id }}')">😨</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#128553','{{ $data['employee']->emp_id }}')">😩</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128554','{{ $data['employee']->emp_id }}')">😪</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128555','{{ $data['employee']->emp_id }}')">😫</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128556','{{ $data['employee']->emp_id }}')">😬</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128557','{{ $data['employee']->emp_id }}')">😭</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128558','{{ $data['employee']->emp_id }}')">😮</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128559','{{ $data['employee']->emp_id }}')">😯</span>
 
                                                         </div>
                                                         <div class="emoji-row">
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128560','{{ $data['employee']->emp_id }}')">😰</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128561','{{ $data['employee']->emp_id }}')">😱</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128562','{{ $data['employee']->emp_id }}')">😲</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128563','{{ $data['employee']->emp_id }}')">😳</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128564','{{ $data['employee']->emp_id }}')">😴</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128565','{{ $data['employee']->emp_id }}')">😵</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128566','{{ $data['employee']->emp_id }}')">😶</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128567','{{ $data['employee']->emp_id }}')">😷</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128560','{{ $data['employee']->emp_id }}')">😰</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128561','{{ $data['employee']->emp_id }}')">😱</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128562','{{ $data['employee']->emp_id }}')">😲</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128563','{{ $data['employee']->emp_id }}')">😳</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128564','{{ $data['employee']->emp_id }}')">😴</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128565','{{ $data['employee']->emp_id }}')">😵</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128566','{{ $data['employee']->emp_id }}')">😶</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128567','{{ $data['employee']->emp_id }}')">😷</span>
 
                                                         </div>
                                                         <div class="emoji-row">
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128075','{{ $data['employee']->emp_id }}')">👋</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#9995','{{ $data['employee']->emp_id }}')">✋</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128400','{{ $data['employee']->emp_id }}')">🖐</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128406','{{ $data['employee']->emp_id }}'))">🖖</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#129306','{{ $data['employee']->emp_id }}'))">🤚</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#9757','{{ $data['employee']->emp_id }}'))">☝</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128070','{{ $data['employee']->emp_id }}')">👆</span>
-                                                            <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128071','{{ $data['employee']->emp_id }}')">👇</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128075','{{ $data['employee']->emp_id }}')">👋</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#9995','{{ $data['employee']->emp_id }}')">✋</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128400','{{ $data['employee']->emp_id }}')">🖐</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#128406','{{ $data['employee']->emp_id }}'))">🖖</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#129306','{{ $data['employee']->emp_id }}'))">🤚</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#9757','{{ $data['employee']->emp_id }}'))">☝</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128070','{{ $data['employee']->emp_id }}')">👆</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128071','{{ $data['employee']->emp_id }}')">👇</span>
 
 
                                                         </div>
                                                         <div class="emoji-row">
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128072','{{ $data['employee']->emp_id }}')">👈</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128073','{{ $data['employee']->emp_id }}')">👉</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128405','{{ $data['employee']->emp_id }}')">🖕</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#9994','{{ $data['employee']->emp_id }}')">✊</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128074','{{ $data['employee']->emp_id }}'))">👊</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128077','{{ $data['employee']->emp_id }}'))">👍 </span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128078','{{ $data['employee']->emp_id }}')">👎</span>
-                                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128072','{{ $data['employee']->emp_id }}')">👈</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128073','{{ $data['employee']->emp_id }}')">👉</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128405','{{ $data['employee']->emp_id }}')">🖕</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#9994','{{ $data['employee']->emp_id }}')">✊</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128074','{{ $data['employee']->emp_id }}'))">👊</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128077','{{ $data['employee']->emp_id }}'))">👍 </span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#128078','{{ $data['employee']->emp_id }}')">👎</span>
+                                                            <span class="emoji-option" wire:click="addEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
 
                                                         </div>
 
@@ -812,7 +670,7 @@
                                                         wire:model="newComment"
                                                         placeholder="Post your comments here.."
                                                         name="comment"
-                                                        class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none"
+                                                        class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border  text-xs outline-none"
                                                         style="overflow: hidden; height: 60px;margin-left:30px">
                     </textarea>
                                                     <input
@@ -1019,106 +877,106 @@
 
 
                                             <!-- List of emojis -->
-                                            <div id="emoji-list-{{ $index }}" class="emoji-list" style="display: none;background:white; border-radius:5px; border:1px solid silver; max-height:170px;width:220px; overflow-y: auto;">
+                                            <div id="emoji-list-{{ $index }}" class="emoji-list" style="display: none;">
                                                 <div class="emoji-row">
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128512','{{ $data['employee']->emp_id }}')">😀</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128513','{{ $data['employee']->emp_id }}')">😁</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128514','{{ $data['employee']->emp_id }}')">😂</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128515','{{ $data['employee']->emp_id }}')">😃</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128516','{{ $data['employee']->emp_id }}')">😄</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128517','{{ $data['employee']->emp_id }}')">😅</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128518','{{ $data['employee']->emp_id }}')">😆</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128519','{{ $data['employee']->emp_id }}')">😇</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128512','{{ $data['employee']->emp_id }}')">😀</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128513','{{ $data['employee']->emp_id }}')">😁</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128514','{{ $data['employee']->emp_id }}')">😂</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128515','{{ $data['employee']->emp_id }}')">😃</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128516','{{ $data['employee']->emp_id }}')">😄</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128517','{{ $data['employee']->emp_id }}')">😅</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128518','{{ $data['employee']->emp_id }}')">😆</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128519','{{ $data['employee']->emp_id }}')">😇</span>
 
                                                 </div>
                                                 <div class="emoji-row">
-                                                    <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128520','{{ $data['employee']->emp_id }}')">😈</span>
-                                                    <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128521','{{ $data['employee']->emp_id }}')">😉</span>
-                                                    <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128522','{{ $data['employee']->emp_id }}')">😊</span>
-                                                    <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128523','{{ $data['employee']->emp_id }}')">😋</span>
-                                                    <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128525','{{ $data['employee']->emp_id }}')">😍</span>
-                                                    <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128524','{{ $data['employee']->emp_id }}')">😌</span>
-                                                    <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128526','{{ $data['employee']->emp_id }}'))">😎</span>
-                                                    <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128527','{{ $data['employee']->emp_id }}'))">😏</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128520','{{ $data['employee']->emp_id }}')">😈</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128521','{{ $data['employee']->emp_id }}')">😉</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128522','{{ $data['employee']->emp_id }}')">😊</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128523','{{ $data['employee']->emp_id }}')">😋</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128525','{{ $data['employee']->emp_id }}')">😍</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128524','{{ $data['employee']->emp_id }}')">😌</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128526','{{ $data['employee']->emp_id }}'))">😎</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128527','{{ $data['employee']->emp_id }}'))">😏</span>
 
                                                 </div>
                                                 <div class="emoji-row">
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128528','{{ $data['employee']->emp_id }}')">😐</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128529','{{ $data['employee']->emp_id }}')">😑 </span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128530','{{ $data['employee']->emp_id }}')">😒</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128531','{{ $data['employee']->emp_id }}')">😓</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128532','{{ $data['employee']->emp_id }}')">😔</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128533','{{ $data['employee']->emp_id }}')">😕</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128534','{{ $data['employee']->emp_id }}')">😖</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128535','{{ $data['employee']->emp_id }}')">😗</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128528','{{ $data['employee']->emp_id }}')">😐</span>
+                                                    <span class="emoji-option" wire:click="addEmoji('&#128529','{{ $data['employee']->emp_id }}')">😑 </span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128530','{{ $data['employee']->emp_id }}')">😒</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128531','{{ $data['employee']->emp_id }}')">😓</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128532','{{ $data['employee']->emp_id }}')">😔</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128533','{{ $data['employee']->emp_id }}')">😕</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128534','{{ $data['employee']->emp_id }}')">😖</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128535','{{ $data['employee']->emp_id }}')">😗</span>
 
                                                 </div>
                                                 <div class="emoji-row">
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128537')">😙</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128541','{{ $data['employee']->emp_id }}')">😝</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128542','{{ $data['employee']->emp_id }}')">😞</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128543','{{ $data['employee']->emp_id }}')">😟</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128537')">😙</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128541','{{ $data['employee']->emp_id }}')">😝</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128542','{{ $data['employee']->emp_id }}')">😞</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128543','{{ $data['employee']->emp_id }}')">😟</span>
 
                                                 </div>
                                                 <div class="emoji-row">
                                                     <!-- Add more emojis here -->
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128544','{{ $data['employee']->emp_id }}')">😠</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128545','{{ $data['employee']->emp_id }}')">😡 </span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128546','{{ $data['employee']->emp_id }}')">😢</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128547','{{ $data['employee']->emp_id }}')">😣</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128548','{{ $data['employee']->emp_id }}')">😤</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128549','{{ $data['employee']->emp_id }}')">😥</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128550','{{ $data['employee']->emp_id }}')">😦</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128551','{{ $data['employee']->emp_id }}')">😧</span>
+                                                    <span class="emoji-option" wire:click="addEmoji('&#128544','{{ $data['employee']->emp_id }}')">😠</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128545','{{ $data['employee']->emp_id }}')">😡 </span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128546','{{ $data['employee']->emp_id }}')">😢</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128547','{{ $data['employee']->emp_id }}')">😣</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128548','{{ $data['employee']->emp_id }}')">😤</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128549','{{ $data['employee']->emp_id }}')">😥</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128550','{{ $data['employee']->emp_id }}')">😦</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128551','{{ $data['employee']->emp_id }}')">😧</span>
 
                                                 </div>
                                                 <div class="emoji-row">
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128552','{{ $data['employee']->emp_id }}')">😨</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128553','{{ $data['employee']->emp_id }}')">😩</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128554','{{ $data['employee']->emp_id }}')">😪</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128555','{{ $data['employee']->emp_id }}')">😫</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128556','{{ $data['employee']->emp_id }}')">😬</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128557','{{ $data['employee']->emp_id }}')">😭</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128558','{{ $data['employee']->emp_id }}')">😮</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128559','{{ $data['employee']->emp_id }}')">😯</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128552','{{ $data['employee']->emp_id }}')">😨</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128553','{{ $data['employee']->emp_id }}')">😩</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128554','{{ $data['employee']->emp_id }}')">😪</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128555','{{ $data['employee']->emp_id }}')">😫</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128556','{{ $data['employee']->emp_id }}')">😬</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128557','{{ $data['employee']->emp_id }}')">😭</span>
+                                                    <span class="emoji-option" wire:click="addEmoji('&#128558','{{ $data['employee']->emp_id }}')">😮</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128559','{{ $data['employee']->emp_id }}')">😯</span>
 
                                                 </div>
                                                 <div class="emoji-row">
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128560','{{ $data['employee']->emp_id }}')">😰</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128561','{{ $data['employee']->emp_id }}')">😱</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128562','{{ $data['employee']->emp_id }}')">😲</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128563','{{ $data['employee']->emp_id }}')">😳</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128564','{{ $data['employee']->emp_id }}')">😴</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128565','{{ $data['employee']->emp_id }}')">😵</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128566','{{ $data['employee']->emp_id }}')">😶</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128567','{{ $data['employee']->emp_id }}')">😷</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128560','{{ $data['employee']->emp_id }}')">😰</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128561','{{ $data['employee']->emp_id }}')">😱</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128562','{{ $data['employee']->emp_id }}')">😲</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128563','{{ $data['employee']->emp_id }}')">😳</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128564','{{ $data['employee']->emp_id }}')">😴</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128565','{{ $data['employee']->emp_id }}')">😵</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128566','{{ $data['employee']->emp_id }}')">😶</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128567','{{ $data['employee']->emp_id }}')">😷</span>
 
                                                 </div>
                                                 <div class="emoji-row">
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128075','{{ $data['employee']->emp_id }}')">👋</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#9995','{{ $data['employee']->emp_id }}')">✋</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128400','{{ $data['employee']->emp_id }}')">🖐</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128406','{{ $data['employee']->emp_id }}'))">🖖</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#129306','{{ $data['employee']->emp_id }}'))">🤚</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#9757','{{ $data['employee']->emp_id }}'))">☝</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128070','{{ $data['employee']->emp_id }}')">👆</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128071','{{ $data['employee']->emp_id }}')">👇</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128075','{{ $data['employee']->emp_id }}')">👋</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#9995','{{ $data['employee']->emp_id }}')">✋</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128400','{{ $data['employee']->emp_id }}')">🖐</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128406','{{ $data['employee']->emp_id }}'))">🖖</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#129306','{{ $data['employee']->emp_id }}'))">🤚</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#9757','{{ $data['employee']->emp_id }}'))">☝</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128070','{{ $data['employee']->emp_id }}')">👆</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128071','{{ $data['employee']->emp_id }}')">👇</span>
 
 
                                                 </div>
                                                 <div class="emoji-row">
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128072','{{ $data['employee']->emp_id }}')">👈</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128073','{{ $data['employee']->emp_id }}')">👉</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128405','{{ $data['employee']->emp_id }}')">🖕</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#9994','{{ $data['employee']->emp_id }}')">✊</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128074','{{ $data['employee']->emp_id }}'))">👊</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128077','{{ $data['employee']->emp_id }}'))">👍 </span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#128078','{{ $data['employee']->emp_id }}')">👎</span>
-                                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="addEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128072','{{ $data['employee']->emp_id }}')">👈</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128073','{{ $data['employee']->emp_id }}')">👉</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128405','{{ $data['employee']->emp_id }}')">🖕</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#9994','{{ $data['employee']->emp_id }}')">✊</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128074','{{ $data['employee']->emp_id }}'))">👊</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128077','{{ $data['employee']->emp_id }}'))">👍 </span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#128078','{{ $data['employee']->emp_id }}')">👎</span>
+                                                    <span class="emoji-option"  wire:click="addEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
 
 
                                                 </div>
@@ -1407,112 +1265,112 @@ $yearText = $yearsSinceHire == 1 ? 'year' : 'years';
 
 
                                     <!-- List of emojis -->
-                                    <div id="emoji-list-{{ $index }}" class="emoji-list" style="display: none;background:white; border-radius:5px; border:1px solid silver; max-height:170px;width:220px; overflow-y: auto;">
+                                    <div id="emoji-list-{{ $index }}" class="emoji-list" style="display: none">
                                         <div class="emoji-row">
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128512','{{ $data['employee']->emp_id }}')">😀</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128513','{{ $data['employee']->emp_id }}')">😁</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128514','{{ $data['employee']->emp_id }}')">😂</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128515','{{ $data['employee']->emp_id }}')">😃</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128516','{{ $data['employee']->emp_id }}')">😄</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128517','{{ $data['employee']->emp_id }}')">😅</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128518','{{ $data['employee']->emp_id }}')">😆</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128519','{{ $data['employee']->emp_id }}')">😇</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128512','{{ $data['employee']->emp_id }}')">😀</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128513','{{ $data['employee']->emp_id }}')">😁</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128514','{{ $data['employee']->emp_id }}')">😂</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128515','{{ $data['employee']->emp_id }}')">😃</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128516','{{ $data['employee']->emp_id }}')">😄</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128517','{{ $data['employee']->emp_id }}')">😅</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128518','{{ $data['employee']->emp_id }}')">😆</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128519','{{ $data['employee']->emp_id }}')">😇</span>
 
                                         </div>
                                         <div class="emoji-row">
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128520','{{ $data['employee']->emp_id }}')">😈</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128521','{{ $data['employee']->emp_id }}')">😉</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128522','{{ $data['employee']->emp_id }}')">😊</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128523','{{ $data['employee']->emp_id }}')">😋</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128525','{{ $data['employee']->emp_id }}')">😍</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128524','{{ $data['employee']->emp_id }}')">😌</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128526','{{ $data['employee']->emp_id }}'))">😎</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128527','{{ $data['employee']->emp_id }}'))">😏</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128520','{{ $data['employee']->emp_id }}')">😈</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128521','{{ $data['employee']->emp_id }}')">😉</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128522','{{ $data['employee']->emp_id }}')">😊</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128523','{{ $data['employee']->emp_id }}')">😋</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128525','{{ $data['employee']->emp_id }}')">😍</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128524','{{ $data['employee']->emp_id }}')">😌</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128526','{{ $data['employee']->emp_id }}'))">😎</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128527','{{ $data['employee']->emp_id }}'))">😏</span>
 
                                         </div>
                                         <div class="emoji-row">
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128528','{{ $data['employee']->emp_id }}')">😐</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128529','{{ $data['employee']->emp_id }}')">😑 </span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128530','{{ $data['employee']->emp_id }}')">😒</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128531','{{ $data['employee']->emp_id }}')">😓</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128532','{{ $data['employee']->emp_id }}')">😔</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128533','{{ $data['employee']->emp_id }}')">😕</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128534','{{ $data['employee']->emp_id }}')">😖</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128535','{{ $data['employee']->emp_id }}')">😗</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128528','{{ $data['employee']->emp_id }}')">😐</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128529','{{ $data['employee']->emp_id }}')">😑 </span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128530','{{ $data['employee']->emp_id }}')">😒</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128531','{{ $data['employee']->emp_id }}')">😓</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128532','{{ $data['employee']->emp_id }}')">😔</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128533','{{ $data['employee']->emp_id }}')">😕</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128534','{{ $data['employee']->emp_id }}')">😖</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128535','{{ $data['employee']->emp_id }}')">😗</span>
 
                                         </div>
                                         <div class="emoji-row">
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128537')">😙</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128541','{{ $data['employee']->emp_id }}')">😝</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128542','{{ $data['employee']->emp_id }}')">😞</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128543','{{ $data['employee']->emp_id }}')">😟</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128537')">😙</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128541','{{ $data['employee']->emp_id }}')">😝</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128542','{{ $data['employee']->emp_id }}')">😞</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128543','{{ $data['employee']->emp_id }}')">😟</span>
 
                                         </div>
                                         <div class="emoji-row">
                                             <!-- Add more emojis here -->
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128544','{{ $data['employee']->emp_id }}')">😠</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128545','{{ $data['employee']->emp_id }}')">😡 </span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128546','{{ $data['employee']->emp_id }}')">😢</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128547','{{ $data['employee']->emp_id }}')">😣</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128548','{{ $data['employee']->emp_id }}')">😤</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128549','{{ $data['employee']->emp_id }}')">😥</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128550','{{ $data['employee']->emp_id }}')">😦</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128551','{{ $data['employee']->emp_id }}')">😧</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128544','{{ $data['employee']->emp_id }}')">😠</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128545','{{ $data['employee']->emp_id }}')">😡 </span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128546','{{ $data['employee']->emp_id }}')">😢</span>
+                                            <span class="emoji-option" wire:click="selectEmoji('&#128547','{{ $data['employee']->emp_id }}')">😣</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128548','{{ $data['employee']->emp_id }}')">😤</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128549','{{ $data['employee']->emp_id }}')">😥</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128550','{{ $data['employee']->emp_id }}')">😦</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128551','{{ $data['employee']->emp_id }}')">😧</span>
 
                                         </div>
                                         <div class="emoji-row">
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128552','{{ $data['employee']->emp_id }}')">😨</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128553','{{ $data['employee']->emp_id }}')">😩</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128554','{{ $data['employee']->emp_id }}')">😪</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128555','{{ $data['employee']->emp_id }}')">😫</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128556','{{ $data['employee']->emp_id }}')">😬</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128557','{{ $data['employee']->emp_id }}')">😭</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128558','{{ $data['employee']->emp_id }}')">😮</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128559','{{ $data['employee']->emp_id }}')">😯</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128552','{{ $data['employee']->emp_id }}')">😨</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128553','{{ $data['employee']->emp_id }}')">😩</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128554','{{ $data['employee']->emp_id }}')">😪</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128555','{{ $data['employee']->emp_id }}')">😫</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128556','{{ $data['employee']->emp_id }}')">😬</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128557','{{ $data['employee']->emp_id }}')">😭</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128558','{{ $data['employee']->emp_id }}')">😮</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128559','{{ $data['employee']->emp_id }}')">😯</span>
 
                                         </div>
                                         <div class="emoji-row">
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128560','{{ $data['employee']->emp_id }}')">😰</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128561','{{ $data['employee']->emp_id }}')">😱</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128562','{{ $data['employee']->emp_id }}')">😲</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128563','{{ $data['employee']->emp_id }}')">😳</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128564','{{ $data['employee']->emp_id }}')">😴</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128565','{{ $data['employee']->emp_id }}')">😵</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128566','{{ $data['employee']->emp_id }}')">😶</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128567','{{ $data['employee']->emp_id }}')">😷</span>
+                                            <span class="emoji-option" wire:click="selectEmoji('&#128560','{{ $data['employee']->emp_id }}')">😰</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128561','{{ $data['employee']->emp_id }}')">😱</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128562','{{ $data['employee']->emp_id }}')">😲</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128563','{{ $data['employee']->emp_id }}')">😳</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128564','{{ $data['employee']->emp_id }}')">😴</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128565','{{ $data['employee']->emp_id }}')">😵</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128566','{{ $data['employee']->emp_id }}')">😶</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128567','{{ $data['employee']->emp_id }}')">😷</span>
 
                                         </div>
                                         <div class="emoji-row">
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128075','{{ $data['employee']->emp_id }}')">👋</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#9995','{{ $data['employee']->emp_id }}')">✋</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128400','{{ $data['employee']->emp_id }}')">🖐</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128406','{{ $data['employee']->emp_id }}'))">🖖</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#129306','{{ $data['employee']->emp_id }}'))">🤚</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#9757','{{ $data['employee']->emp_id }}'))">☝</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128070','{{ $data['employee']->emp_id }}')">👆</span>
-                                            <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128071','{{ $data['employee']->emp_id }}')">👇</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128075','{{ $data['employee']->emp_id }}')">👋</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#9995','{{ $data['employee']->emp_id }}')">✋</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128400','{{ $data['employee']->emp_id }}')">🖐</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128406','{{ $data['employee']->emp_id }}'))">🖖</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#129306','{{ $data['employee']->emp_id }}'))">🤚</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#9757','{{ $data['employee']->emp_id }}'))">☝</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128070','{{ $data['employee']->emp_id }}')">👆</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128071','{{ $data['employee']->emp_id }}')">👇</span>
 
 
                                         </div>
                                         <div class="emoji-row">
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128072','{{ $data['employee']->emp_id }}')">👈</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128073','{{ $data['employee']->emp_id }}')">👉</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128405','{{ $data['employee']->emp_id }}')">🖕</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#9994','{{ $data['employee']->emp_id }}')">✊</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128074','{{ $data['employee']->emp_id }}'))">👊</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128077','{{ $data['employee']->emp_id }}'))">👍 </span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128078','{{ $data['employee']->emp_id }}')">👎</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128072','{{ $data['employee']->emp_id }}')">👈</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128073','{{ $data['employee']->emp_id }}')">👉</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128405','{{ $data['employee']->emp_id }}')">🖕</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#9994','{{ $data['employee']->emp_id }}')">✊</span>
+                                            <span class="emoji-option" wire:click="selectEmoji('&#128074','{{ $data['employee']->emp_id }}'))">👊</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128077','{{ $data['employee']->emp_id }}'))">👍 </span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128078','{{ $data['employee']->emp_id }}')">👎</span>
 
                                         </div>
                                         <div class="emoji-row">
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#129307','{{ $data['employee']->emp_id }}')">🤛</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#9996','{{ $data['employee']->emp_id }}')">✌</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128076','{{ $data['employee']->emp_id }}')">👌</span>
-                                            <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#129307','{{ $data['employee']->emp_id }}')">🤛</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#9996','{{ $data['employee']->emp_id }}')">✌</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#128076','{{ $data['employee']->emp_id }}')">👌</span>
+                                            <span class="emoji-option"  wire:click="selectEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
 
 
                                         </div>
@@ -1788,110 +1646,110 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
                             <!-- List of emojis -->
                             <div id="emoji-list-{{ $index }}" class="emoji-list" style="display: none;background:white; border-radius:5px; border:1px solid silver; max-height:170px;width:220px; overflow-y: auto;">
                                 <div class="emoji-row">
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128512','{{ $data['employee']->emp_id }}')">😀</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128513','{{ $data['employee']->emp_id }}')">😁</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128514','{{ $data['employee']->emp_id }}')">😂</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128515','{{ $data['employee']->emp_id }}')">😃</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128516','{{ $data['employee']->emp_id }}')">😄</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128517','{{ $data['employee']->emp_id }}')">😅</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128518','{{ $data['employee']->emp_id }}')">😆</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128519','{{ $data['employee']->emp_id }}')">😇</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128512','{{ $data['employee']->emp_id }}')">😀</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128513','{{ $data['employee']->emp_id }}')">😁</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128514','{{ $data['employee']->emp_id }}')">😂</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128515','{{ $data['employee']->emp_id }}')">😃</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128516','{{ $data['employee']->emp_id }}')">😄</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128517','{{ $data['employee']->emp_id }}')">😅</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128518','{{ $data['employee']->emp_id }}')">😆</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128519','{{ $data['employee']->emp_id }}')">😇</span>
 
                                 </div>
                                 <div class="emoji-row">
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128520','{{ $data['employee']->emp_id }}')">😈</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128521','{{ $data['employee']->emp_id }}')">😉</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128522','{{ $data['employee']->emp_id }}')">😊</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128523','{{ $data['employee']->emp_id }}')">😋</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128525','{{ $data['employee']->emp_id }}')">😍</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128524','{{ $data['employee']->emp_id }}')">😌</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128526','{{ $data['employee']->emp_id }}'))">😎</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128527','{{ $data['employee']->emp_id }}'))">😏</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128520','{{ $data['employee']->emp_id }}')">😈</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128521','{{ $data['employee']->emp_id }}')">😉</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128522','{{ $data['employee']->emp_id }}')">😊</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128523','{{ $data['employee']->emp_id }}')">😋</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128525','{{ $data['employee']->emp_id }}')">😍</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128524','{{ $data['employee']->emp_id }}')">😌</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128526','{{ $data['employee']->emp_id }}'))">😎</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128527','{{ $data['employee']->emp_id }}'))">😏</span>
 
                                 </div>
                                 <div class="emoji-row">
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128528','{{ $data['employee']->emp_id }}')">😐</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128529','{{ $data['employee']->emp_id }}')">😑 </span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128530','{{ $data['employee']->emp_id }}')">😒</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128531','{{ $data['employee']->emp_id }}')">😓</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128532','{{ $data['employee']->emp_id }}')">😔</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128533','{{ $data['employee']->emp_id }}')">😕</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128534','{{ $data['employee']->emp_id }}')">😖</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128535','{{ $data['employee']->emp_id }}')">😗</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128528','{{ $data['employee']->emp_id }}')">😐</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128529','{{ $data['employee']->emp_id }}')">😑 </span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128530','{{ $data['employee']->emp_id }}')">😒</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128531','{{ $data['employee']->emp_id }}')">😓</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128532','{{ $data['employee']->emp_id }}')">😔</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128533','{{ $data['employee']->emp_id }}')">😕</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128534','{{ $data['employee']->emp_id }}')">😖</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128535','{{ $data['employee']->emp_id }}')">😗</span>
 
                                 </div>
                                 <div class="emoji-row">
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128537')">😙</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128541','{{ $data['employee']->emp_id }}')">😝</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128542','{{ $data['employee']->emp_id }}')">😞</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128543','{{ $data['employee']->emp_id }}')">😟</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128537')">😙</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128541','{{ $data['employee']->emp_id }}')">😝</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128542','{{ $data['employee']->emp_id }}')">😞</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128543','{{ $data['employee']->emp_id }}')">😟</span>
 
                                 </div>
                                 <div class="emoji-row">
                                     <!-- Add more emojis here -->
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128544','{{ $data['employee']->emp_id }}')">😠</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128545','{{ $data['employee']->emp_id }}')">😡 </span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128546','{{ $data['employee']->emp_id }}')">😢</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128547','{{ $data['employee']->emp_id }}')">😣</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128548','{{ $data['employee']->emp_id }}')">😤</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128549','{{ $data['employee']->emp_id }}')">😥</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128550','{{ $data['employee']->emp_id }}')">😦</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128551','{{ $data['employee']->emp_id }}')">😧</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128544','{{ $data['employee']->emp_id }}')">😠</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128545','{{ $data['employee']->emp_id }}')">😡 </span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128546','{{ $data['employee']->emp_id }}')">😢</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128547','{{ $data['employee']->emp_id }}')">😣</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128548','{{ $data['employee']->emp_id }}')">😤</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128549','{{ $data['employee']->emp_id }}')">😥</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128550','{{ $data['employee']->emp_id }}')">😦</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128551','{{ $data['employee']->emp_id }}')">😧</span>
 
                                 </div>
                                 <div class="emoji-row">
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128552','{{ $data['employee']->emp_id }}')">😨</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128553','{{ $data['employee']->emp_id }}')">😩</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128554','{{ $data['employee']->emp_id }}')">😪</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128555','{{ $data['employee']->emp_id }}')">😫</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128556','{{ $data['employee']->emp_id }}')">😬</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128557','{{ $data['employee']->emp_id }}')">😭</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128558','{{ $data['employee']->emp_id }}')">😮</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128559','{{ $data['employee']->emp_id }}')">😯</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128552','{{ $data['employee']->emp_id }}')">😨</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128553','{{ $data['employee']->emp_id }}')">😩</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128554','{{ $data['employee']->emp_id }}')">😪</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128555','{{ $data['employee']->emp_id }}')">😫</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128556','{{ $data['employee']->emp_id }}')">😬</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128557','{{ $data['employee']->emp_id }}')">😭</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128558','{{ $data['employee']->emp_id }}')">😮</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128559','{{ $data['employee']->emp_id }}')">😯</span>
 
                                 </div>
                                 <div class="emoji-row">
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128560','{{ $data['employee']->emp_id }}')">😰</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128561','{{ $data['employee']->emp_id }}')">😱</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128562','{{ $data['employee']->emp_id }}')">😲</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128563','{{ $data['employee']->emp_id }}')">😳</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128564','{{ $data['employee']->emp_id }}')">😴</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128565','{{ $data['employee']->emp_id }}')">😵</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128566','{{ $data['employee']->emp_id }}')">😶</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128567','{{ $data['employee']->emp_id }}')">😷</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128560','{{ $data['employee']->emp_id }}')">😰</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128561','{{ $data['employee']->emp_id }}')">😱</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128562','{{ $data['employee']->emp_id }}')">😲</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128563','{{ $data['employee']->emp_id }}')">😳</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128564','{{ $data['employee']->emp_id }}')">😴</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128565','{{ $data['employee']->emp_id }}')">😵</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128566','{{ $data['employee']->emp_id }}')">😶</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128567','{{ $data['employee']->emp_id }}')">😷</span>
 
                                 </div>
                                 <div class="emoji-row">
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128075','{{ $data['employee']->emp_id }}')">👋</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#9995','{{ $data['employee']->emp_id }}')">✋</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128400','{{ $data['employee']->emp_id }}')">🖐</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128406','{{ $data['employee']->emp_id }}'))">🖖</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#129306','{{ $data['employee']->emp_id }}'))">🤚</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#9757','{{ $data['employee']->emp_id }}'))">☝</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128070','{{ $data['employee']->emp_id }}')">👆</span>
-                                    <span class="emoji-option" style="font-size: 14px;" wire:click="selectEmoji('&#128071','{{ $data['employee']->emp_id }}')">👇</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128075','{{ $data['employee']->emp_id }}')">👋</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#9995','{{ $data['employee']->emp_id }}')">✋</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128400','{{ $data['employee']->emp_id }}')">🖐</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128406','{{ $data['employee']->emp_id }}'))">🖖</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#129306','{{ $data['employee']->emp_id }}'))">🤚</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#9757','{{ $data['employee']->emp_id }}'))">☝</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128070','{{ $data['employee']->emp_id }}')">👆</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128071','{{ $data['employee']->emp_id }}')">👇</span>
 
 
                                 </div>
                                 <div class="emoji-row">
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128072','{{ $data['employee']->emp_id }}')">👈</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128073','{{ $data['employee']->emp_id }}')">👉</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128405','{{ $data['employee']->emp_id }}')">🖕</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#9994','{{ $data['employee']->emp_id }}')">✊</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128074','{{ $data['employee']->emp_id }}'))">👊</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128077','{{ $data['employee']->emp_id }}'))">👍 </span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128078','{{ $data['employee']->emp_id }}')">👎</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128072','{{ $data['employee']->emp_id }}')">👈</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128073','{{ $data['employee']->emp_id }}')">👉</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128405','{{ $data['employee']->emp_id }}')">🖕</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#9994','{{ $data['employee']->emp_id }}')">✊</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128074','{{ $data['employee']->emp_id }}'))">👊</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128077','{{ $data['employee']->emp_id }}'))">👍 </span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128078','{{ $data['employee']->emp_id }}')">👎</span>
 
                                 </div>
                                 <div class="emoji-row">
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#129307','{{ $data['employee']->emp_id }}')">🤛</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#9996','{{ $data['employee']->emp_id }}')">✌</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#128076','{{ $data['employee']->emp_id }}')">👌</span>
-                                    <span class="emoji-option" style="font-size: 14px;cursor:pointer" wire:click="selectEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#129307','{{ $data['employee']->emp_id }}')">🤛</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#9996','{{ $data['employee']->emp_id }}')">✌</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#128076','{{ $data['employee']->emp_id }}')">👌</span>
+                                    <span class="emoji-option"  wire:click="selectEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
 
 
                                 </div>
