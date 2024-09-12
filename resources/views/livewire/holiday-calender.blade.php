@@ -37,11 +37,10 @@
                                 <p class="mb-0" style="font-size: 10px;">{{ substr($entry->day, 0, 3) }}</p>
                             </div>
                             <div class="grid-item festivals">
-                                <p class="mb-0" style="font-size: 12px;">{{ $entry->festivals }}</p>
+                                <p class="mb-0 normalTextValue fw-500">{{ $entry->festivals }}</p>
                             </div>
                         </div>
                         @endforeach
-
                     </div>
                     @endif
                 </div>
@@ -49,8 +48,8 @@
             @endforeach
             @else
             <div class="bg-white rounded border p-3 d-flex flex-column align-items-center" style="margin: 50px auto; width:80%;">
-                <p style="font-size: 14px; color: #721c24; font-weight: bold;">No Data Available</p>
-                <p style="font-size: 12px; color:#778899;">There is no data available for the selected year. Please check again later.</p>
+                <p class="noDataAvailable">No Data Available</p>
+                <p class="normalTextValue">There is no data available for the selected year. Please check again later.</p>
             </div>
             @endif
         </div>
