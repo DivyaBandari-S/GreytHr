@@ -1360,6 +1360,7 @@ color: #fff;
     $offCount=0;
     $presentCount=0;
     $absentCount=0;
+    $leaveCount=0;
     $holidaycountforcontainer=0;
     $totalShortFallHoursWorked=0;
     $totalshortfallMinutesWorked=0;
@@ -1470,7 +1471,8 @@ color: #fff;
                 $dayName = $date->format('D');
                 $isWeekend = ($dayName == 'Sat' || $dayName == 'Sun');
                 $isPresent = $distinctDates->has($dateKeyForLookup);
-
+                $isOnLeave=$this->isEmployeeLeaveOnDate($date,$employeeIdForTable);
+                $leaveType=$this->detectEmployeeLeaveType($date,$employeeIdForTable);
                 $holidayNote = in_array($dateKeyForLookup, $holiday);
                 $isDate = ($dateKeyForLookup < $todaysDate);
                     $swipeRecordExists=$swiperecord->contains(function ($record) use ($dateKeyForLookup) {
@@ -1495,7 +1497,7 @@ color: #fff;
 
                     @endphp
                    
-                    <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isPresent || $swipeRecordExists ? '#edfaed' : '#fcf0f0'))) : 'white'}};">
+                    <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave ? 'rgb(252, 242, 255)':($isPresent || $swipeRecordExists ? '#edfaed' : '#fcf0f0')))) : 'white'}};">
                         <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">
                             <p style="white-space:nowrap;">
                                 {{ $date->format('d') }}&nbsp;&nbsp;{{$currentMonthRep}}&nbsp;{{$currentYear}}({{$dayName}})
@@ -1556,7 +1558,7 @@ color: #fff;
                         <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
                         @endif
 
-                        <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666'))) : 'black'}}">
+                        <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($isOnLeave ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666')))) : 'black'}}">
                             @if($isDate)
                             @if($isWeekend)
                             O
@@ -1564,6 +1566,23 @@ color: #fff;
                             @elseif($holidayNote)
                             H
                             @php $holidaycountforcontainer++; @endphp
+                            @elseif($isOnLeave)
+                              @if($leaveType=='Casual Leave')
+                                 CL
+                              @elseif($leaveType=='Casual Leave Probation')
+                                 CLP   
+                              @elseif($leaveType=='Loss Of Pay')   
+                                 LOP
+                              @elseif($leaveType=='Marriage Leave') 
+                                 ML 
+                              @elseif($leaveType=='Paternity Leave') 
+                                 PL 
+                              @elseif($leaveType=='Maternity Leave') 
+                                 MTL    
+                              @elseif($leaveType=='Sick Leave') 
+                                 SL
+                              @endif
+                            @php $leaveCount++; @endphp
                             @elseif($distinctDates->has($dateKeyForLookup))
                             P
                             @php $presentCount++; @endphp
@@ -1868,7 +1887,7 @@ color: #fff;
     <div class="custom-container">
         <div class="row">
             <div class="col p-0 m-2" style="white-space:nowrap;background-color:#edfaed;color:#778899;text-align:center;font-size:12px;">Present:<span style="font-weight:600;"> {{$presentCount}}</span></div>
-            <div class="col p-0 m-2" style="white-space:nowrap;background-color:rgb(252, 242, 255);color:#778899;text-align:center;font-size:12px;">Leave:<span style="font-weight:600;"> 0</span></div>
+            <div class="col p-0 m-2" style="white-space:nowrap;background-color:rgb(252, 242, 255);color:#778899;text-align:center;font-size:12px;">Leave:<span style="font-weight:600;"> {{$leaveCount}}</span></div>
             <div class="col p-0 m-2" style="white-space:nowrap;background-color:#f3faff;color:#778899;text-align:center;font-size:12px;">Holiday:<span style="font-weight:600;"> {{$holidaycountforcontainer}}</span></div>
             <div class="col p-0 m-2" style="white-space:nowrap;background-color:#f8f8f8;color:#778899;text-align:center;font-size:12px;">Rest Day:<span style="font-weight:600;"> 0</span></div>
             <div class="col p-0 m-2" style="white-space:nowrap;background-color: #fcf0f0;color:#778899;text-align:center;font-size:12px;">Absent:<span style="font-weight:600;"> {{$absentCount}}</span></div>

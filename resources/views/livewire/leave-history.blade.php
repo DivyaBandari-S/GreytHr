@@ -4,7 +4,7 @@
             <div class="col-md-4 p-0 m-0 mb-2 ">
                 <div aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center ">
-                        <li class="breadcrumb-item"><a type="button" style="color:#fff !important;" class="submit-btn"
+                        <li class="breadcrumb-item"><a type="button" class="submit-btn"
                                 href="{{ route('leave-form-page') }}">Back</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Leave - View Details</li>
                     </ol>
@@ -60,23 +60,23 @@
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
                                     <span class="normalTextValue">From Date</span> <br>
-                                    <span class="normalText" style="font-weight:600;">
+                                    <span class="normalText fw-600" >
                                         {{ $leaveRequest->from_date->format('d M, Y') }}<br><span
-                                            style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->from_session }}</span></span>
+                                            class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
                                     <span class="normalTextValue">To Date</span> <br>
-                                    <span class="normalText"
-                                        style="font-weight:600;">{{ $leaveRequest->to_date->format('d M, Y') }}
+                                    <span class="normalText fw-600"
+                                        >{{ $leaveRequest->to_date->format('d M, Y') }}
                                         <br><span
-                                            style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->to_session }}</span></span>
+                                            class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
                             </div>
-                            <div class="box" style="display:flex; text-align:center; padding:5px;">
+                            <div class="box d-flex align-items-center text-center p-1" >
                                 <div class="field p-2">
                                     <span class="normalTextValue">No. of days</span> <br>
-                                    <span class="normalText" style=" font-weight: 600;">
+                                    <span class="normalText fw-600" >
                                         {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                 <hr>
                 <div class="pending-details">
                     <div class="data">
-                        <span class="normalText" style="font-size:0.8rem;">Details</span>
+                        <span class="normalText" \="font-size:0.8rem;">Details</span>
                         <div class="row m-0 p-0">
                             <div class="col-md-8 m-0 p-0">
                                 <div class="custom-grid-container text-start">
@@ -190,7 +190,7 @@
 
                                         {{-- view file popup --}}
                                         @if ($showViewImageDialog)
-                                        <div class="modal custom-modal" tabindex="-1" role="dialog" style="display: block;">
+                                        <div class="modal custom-modal d-block" tabindex="-1" role="dialog" >
                                             <div class="modal-dialog custom-modal-dialog custom-modal-dialog-centered custom-modal-lg" role="document">
                                                 <div class="modal-content custom-modal-content">
                                                     <div class="modal-header custom-modal-header">
@@ -222,7 +222,7 @@
                                         <div class="modal-backdrop fade show blurred-backdrop"></div>
                                         @endif
                                         @if ($showViewFileDialog)
-                                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                                        <div class="modal d-block" tabindex="-1" role="dialog">
                                             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -248,7 +248,7 @@
 
                                                                     download="{{ $originalName }}"
 
-                                                                    style="text-decoration: none; color: #007BFF; margin: 10px;">
+                                                               class="anchorTagDetails">
 
                                                                     {{ $originalName }}
 
@@ -270,24 +270,24 @@
                                         <!-- Trigger Links -->
                                         @if (!empty($images) && count($images) > 1)
                                         <a href="#" wire:click.prevent="showViewImage"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             View Images
                                         </a>
                                         @elseif(!empty($images) && count($images) == 1)
                                         <a href="#" wire:click.prevent="showViewImage"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             View Image
                                         </a>
                                         @endif
 
                                         @if (!empty($files) && count($files) > 1)
                                         <a href="#" wire:click.prevent="showViewFile"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             Download Files
                                         </a>
                                         @elseif(!empty($files) && count($files) == 1)
                                         <a href="#" wire:click.prevent="showViewFile"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             Download File
                                         </a>
                                         @endif
@@ -348,8 +348,8 @@
                             <div class="d-flex flex-column">
                                 <h5 class="mb-0 normalText text-start">Submitted
                                 </h5>
-                                <span class="normalTextValue text-start"
-                                    style="font-size:0.625rem;">{{ $leaveRequest->created_at->format('d M, Y g:i A') }}</span>
+                                <span class="normalTextSmall text-start"
+                                >{{ $leaveRequest->created_at->format('d M, Y g:i A') }}</span>
                             </div>
                         </div>
                     </div>
