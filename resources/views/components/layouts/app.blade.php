@@ -35,7 +35,7 @@
     @livewireStyles
 </head>
 
-<body>
+<body >
     @guest
         <livewire:emplogin />
     @else
