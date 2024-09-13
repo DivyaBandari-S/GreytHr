@@ -192,7 +192,12 @@
                                 @if($isRotated)
                                 <div style="border-radius: 5px; background-color: grey; padding: 8px; width: 330px; margin-top: 10px; height: 200px; overflow-y: auto;">
                                     <div class="input-group3" style="display: flex; align-items: center; width: 100%;">
-                                        <input
+                                 
+                                    <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
+                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                                    </button>
+                                    
+                                    <input
                                             wire:model="searchTerm"
                                             style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;"
                                             type="text"
@@ -201,13 +206,10 @@
                                             aria-label="Search"
                                             aria-describedby="basic-addon1">
                                         <div class="input-group-append" style="display: flex; align-items: center;">
-                                            <button
-                                                wire:click="filter"
-                                                style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;"
-                                                class="btn"
-                                                type="button">
-                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                            </button>
+                                             <button  wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
+                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                                    </button>
+                                        
 
                                             <button
                                                 wire:click="closePeoples"
@@ -488,16 +490,6 @@
                             <i class="fa fa-search people-search-icon"></i>
                         </button>
                     </div>
-            @if ($activeTab == "active")
-            <div class="row mt-2">
-    <div class="col-12 col-md-3 mb-2 mb-md-0">
-        <div class="input-group">
-        <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                        <div class="input-group-append">
-                            <button wire:click="searchActiveHelpDesk" class="submit-btn " type="button" style="height:32px">
-                                <i class="fa fa-search people-search-icon" ></i>
-                            </button>
-                        </div>
 
                 </div>
             </div>

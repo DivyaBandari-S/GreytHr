@@ -2183,12 +2183,19 @@ td {
     border: 1px solid silver;
     height: fit-content;
 }
-.feeds-custom-dropdown{
-    margin-top:20px;display:block
+.custom-dropdown{
+    margin-top:20px;
+    display:block
+}
+.eventsSection{
+    display: flex;
+     flex-direction: column;
+      align-items: center; 
+      justify-content: center;
 }
 .feeds-main-content{
-    height:67vh ;
-     max-height:67vh;
+    height:75vh ;
+     max-height:75vh;
      overflow-y: auto;
      scroll-behavior: smooth;
 }
@@ -2327,8 +2334,13 @@ td {
 .text-base {
     /* Font size */
     font-size: 12px;
-    color: #3b4452;
+    color: #778899;
     font-weight: 600;
+}
+.text-feed{
+    font-size: 13px;
+    color: #3b4452;
+    font-weight: 600; 
 }
 .custom-feed {
     margin-left: -80px;
@@ -2359,6 +2371,7 @@ td {
     right: -60px;
     border-radius: 4px;
     border: 1px solid #ddd;
+
 }
 
 .custom-feed .custom-feed-item {
@@ -2369,14 +2382,10 @@ td {
 }
 
 .Feeds-Dropdown{
-    font-size: 12px; 
-    line-height: 1; 
-    text-decoration: none; 
-    color:  #47515b;
-    cursor: pointer;
-     text-align: left; 
-     padding-left: 0; 
-     display: none;
+    display: none;
+    overflow-y:auto;
+    max-height:120px;
+    overflow-x: hidden;
 }
 .custom-list {
     font-size: 13px;
@@ -2389,7 +2398,7 @@ td {
     max-height: 200px;
     overflow-x: hidden;
 }
-.arrow-cus-button{
+.cus-button{
     display: flex; 
     justify-content: space-between; 
     width: 100%; 
@@ -2613,6 +2622,7 @@ td {
     margin-top: 5px; 
     display: block;  
     padding: 5px 10px;
+    font-size: 11px;
      transition: background-color 0.3s ease; 
      color:#3b4452;
 }
@@ -2622,7 +2632,7 @@ td {
     background-color: #edf3ff;
     border-radius: 5px;
     height: auto;
-    width: 130%;
+    width: 100%;
     text-decoration: none;
 }
 
@@ -2650,6 +2660,7 @@ input[type="radio"] {
 /* Define the blue background color for the checked state */
 .input[type="radio"]:checked + .custom-radio-button {
     background-color: blue;
+    
 }
 
 .feather {
@@ -2696,14 +2707,23 @@ input[type="radio"] {
     width: 100%;
     border-radius: 5px;
 }
-
+.post-button{
+    background-color: rgb(2, 17, 79);
+     color: white; 
+     height:30px;
+     margin-left: 20px;
+    border-radius: 5px; 
+    width:70px;
+    font-size:12px; 
+    border: 1px solid silver;
+}
 .activities:hover,
 .posts:hover ,.post-requests:hover{
     background-color: #edf3ff;
     cursor: pointer;
 }
 .custom-radio-content{
-    color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;
+    color: #778899; font-size: 12px; font-weight: 500; margin-left: 10px;
 }
 
 .medium-header {
@@ -2712,9 +2732,17 @@ input[type="radio"] {
     font-size: 0.875rem;
     line-height: 1.25rem;
     color: var(--e-color-emoji-text);
+    margin-top: 5px;
+    color:#3b4452;
 
     margin-left: 20px;
-    margin-top: 5px;
+  
+}
+.group-events{
+    color: #677A8E;
+     font-size: 13px;
+     font-weight: 100px; 
+     text-align: center;
 }
 /* CSS for radio-wrapper */
 .alert-success{
