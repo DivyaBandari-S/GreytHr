@@ -1,6 +1,6 @@
 <div class="position-relative">
     @if(session()->has('message'))
-    <div class="alert alert-success w-50 position-absolute m-auto p-2 " style="right: 25%;top:-15%;" id="success-alert">
+    <div class="alert alert-success w-50 position-absolute m-auto p-2 " style="right: 25%;top:-17%;" id="success-alert" wire:poll.20s="hideSuccessAlert">
         {{ session('message') }}
         <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
             <span>X</span>
