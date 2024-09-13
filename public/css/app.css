@@ -81,20 +81,7 @@
     font-size: var(--normal-font-size);
     padding: 4px;
 }
-.task-custom-select-width {
 
-    width: 150px;
-
-    font-size: var(--normal-font-size);
-
-    padding: 7px;
-
-}
-.task-custom-select-width {
-    width: 150px;
-    font-size: var(--normal-font-size);
-    padding: 7px;
-}
 /* Staring of auth checking module (Kumar Asapu)*/
 .card-body {
     background-color: white;
@@ -104,21 +91,7 @@
     margin-top: 30px;
     border-radius: 5px;
 }
-.settings-birthday-value{
-    flex: 1;
-    margin-left: 5px;
-    font-weight: 500;
-    color: #000;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 60px;
-}
-@media (max-width: 991px) {
-    .settings-birthday-value {
-        max-width: 150px;
-    }
-}
+
 .primarySideBar {
     font-family: "Montserrat", sans-serif;
 }
@@ -253,7 +226,7 @@
 .quickAccessNoData{
     text-align: center; background-color: #FFF8F0; padding: 5px 10px; border-radius: 10px; font-size: 8px; font-family: montserrat; bottom: 0; right: 0;
 }
-.btn-closeModal{
+.btn-close{
     background-color: white; height:10px;width:10px;
 }
 .smallTextMin{
@@ -520,13 +493,7 @@
 /* end of home blade */
 /* Ending of home module (Kumar Asapu,Archana Goud,Divya Bandari,Pranita Priyadarshi & Siva)*/
 
-/* Starting of settings module (Kumar Asapu)*/
-.settings-profile-image {
-    border-radius: 50%;
-    height: 90px;
-    width: 90px;
-}
-/* Ending of settings module (Kumar Asapu)*/
+
 
 /* Starting of tasks module (Kumar Asapu)*/
 body {
@@ -539,7 +506,7 @@ body {
 }
 .submit-btn {
     background-color: rgb(2, 17, 79);
-    color: #fff;
+    color: #fff !important;
     border: 1px solid rgb(2, 17, 79);
     font-weight: 500;
     border-radius: 5px;
@@ -554,7 +521,7 @@ body {
 .cancel-btn {
     background-color: #fff;
     color: rgb(2, 17, 79);
-
+    border:1px solid rgb(2,17,79) !important;
     font-weight: 500;
     border-radius: 5px;
     padding: 7px 12px;
@@ -566,7 +533,7 @@ body {
     color: rgb(2, 17, 79);
     font-weight: 500;
     border-radius: 5px;
-    padding: 6px 12px;
+    padding: 7px 12px;
     font-size: var(--normal-font-size);
     border: 1px solid rgb(2, 17, 79) !important;
 }
@@ -627,6 +594,9 @@ body {
     align-items: center;
     margin-right: 20px;
     cursor: pointer;
+}
+input[type="radio"] {
+    accent-color: #888; 
 }
 
 .priority-circle {
@@ -1048,7 +1018,14 @@ button.close-button {
 .employee-item {
     display: inline-block;
     min-width: 120px;
+    flex: 1 1 auto;
     margin-bottom: 7px;
+}
+#contactDetails{
+    width: 50%;
+}
+#file{
+    font-size: var(--normal-font-size);
 }
 .info-button {
     background-color: transparent;
@@ -1325,13 +1302,13 @@ input:checked + .slider:before {
 }
 .save-selectshift-button-who-is-in {
     background-color: transparent;
-    border: 1px solid #007bff;
-    color: #007bff;
+    border: 1px solid rgb(2, 17, 79);
+    color: rgb(2, 17, 79);
 }
 
 .save-selectshift-button-who-is-in:hover {
-    background-color: #007bff;
-    border: 1px solid #007bff;
+    background-color: rgb(2, 17, 79);
+    border: 1px solid rgb(2, 17, 79);;
     color: white;
 }
 
@@ -2688,7 +2665,18 @@ input[type="radio"] {
 .custom-item a {
     text-decoration: none !important;
 }
-
+.alert-container{
+    position: absolute; top: 3%; z-index: 10; width: 100%;
+}
+.successContainer{
+    font-weight: 400;width:fit-content;padding:10px;border-radius:5px;margin-bottom:0px
+}
+.closeMsg{
+    font-weight:500;margin:0px 10px 0px 20px; cursor: pointer;
+}
+.welcomeContainer{
+    border-radius: 10px; background-color: #02114f;
+}
 .alert-success {
     font-size: var(--normal-font-size);
     padding: 7px 10px;
@@ -2737,6 +2725,13 @@ input[type="radio"] {
     font-size: var(--normal-font-size);
     font-weight: 500;
 }
+.reviewActiveButtons{
+    border-top-left-radius:5px;border-bottom-left-radius:5px;
+}
+.reviewClosedButtons{
+    border-top-right-radius:5px;border-bottom-right-radius:5px;
+}
+
 
 @media (max-width: 460px) {
     .custom-nav-link {
@@ -2825,7 +2820,7 @@ input[type="radio"] {
 .search-btn {
     background-color: rgb(2, 17, 79);
     border-radius: 0 5px 5px 0;
-    color: #fff;
+    color: #fff !important;
     width: 40px;
     border: none;
     align-items: center;
@@ -2852,7 +2847,7 @@ input[type="radio"] {
     display: flex;justify-content:start;align-items: center;gap:7px;margin-bottom: 3px;
 }
 .historyContent {
-    max-height: 80vh;
+    max-height: 70vh;
     overflow-y: auto;
 }
 
@@ -2957,6 +2952,8 @@ input[type="radio"] {
     justify-content: center;
     border: 1px solid #ccc;
     padding: 20px;
+    width: 65%;
+    margin: 0 auto;
     gap: 10px;
 }
 .accordionContentSpan {
@@ -3224,6 +3221,7 @@ input[type="radio"] {
     border-radius: 50%;
     display: flex;
     gap: 10px;
+    color: var(--label-color);
     justify-content: center;
     align-items: center;
 }
@@ -3278,6 +3276,15 @@ input[type="radio"] {
     border-collapse: collapse;
     table-layout: fixed;
 }
+.pendingCustomStyles{
+    border-left:1px solid #ccc; border-right:1px solid #ccc;
+}
+.pendingContent{
+    max-height: 70vh;overflow-y: auto;
+}
+.downArrow{
+    cursor: pointer;
+}
 
 .LeaveCancelTable th,
 .LeaveCancelTable td {
@@ -3311,13 +3318,19 @@ input[type="radio"] {
     font-weight: 500;
     font-size: 0.75rem;
 }
+.close{
+    background-color: #ccc;border:#ccc;height:33px;width:33px;
+}
+.closeIcon{
+    color: white; font-size: 18px;
+}
 
 @media screen and (max-width: 768px) {
     .LeaveCancelTable {
         table-layout: auto;
     }
 }
-l
+
 
 /* end of leave apply */
 
@@ -3686,6 +3699,10 @@ l
 .maternityLeaveValue{
     font-size: 11px; font-weight: 500; color: #863886; margin-left: 5px;
 }
+.normalTextValueSmall{
+    font-size: 11px; font-weight: 500;
+    color: var(--main-heading-color);
+}
 .approveBtn {
     background: rgb(2, 17, 79);
     border: 1px solid rgb(2, 17, 79);
@@ -3751,7 +3768,12 @@ l
 .employeeName{
     font-size: 12px; font-weight: 500; text-align: center; margin: auto; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-
+.pending-leavves-container{
+    width:100%; max-height:100vh; overflow-y:auto; margin-top:50px
+}
+.closed-leaves-container{
+    width:100%; max-height:100vh; overflow-y:auto; margin:20px auto;
+}
 /* end of view pending details */
 
 /* //catalog */
@@ -3844,7 +3866,9 @@ l
     border: 1px solid #ccc;
     border-radius: 10px;
 }
-
+.consumedContent{
+    color: #778899; font-size: 10px; text-align:start; margin-top:-15px;font-weight: 400;
+}
 .tube {
     position: absolute;
     bottom: 0;
@@ -3872,6 +3896,9 @@ l
     justify-content: center;
     align-items: center;
     height: 250px;
+}
+.control-wrapper{
+    gap: 10px;cursor:pointer;
 }
 
 .leave-bal {
@@ -4018,6 +4045,12 @@ l
 
 .date {
     font-size: 0.9rem;
+}
+.noDataAvailable{
+    font-size: 14px; color: #721c24; font-weight: bold;
+}
+.searchBar{
+    font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:100%;
 }
 
 #aloneContainer {
@@ -5038,7 +5071,210 @@ select .yearSelect {
 }
 /* end of styles */
 
+
+.teamOnLeavetable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.teamOnLeavetable th {
+    background-color: #ecf9ff;
+    /* Header background color */
+    color: #778899;
+    /* Text color for headers */
+    padding: 8px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-align: left;
+}
+
+.teamOnLeavetable td {
+    background-color: #fff;
+    /* Body background color */
+    color: #3b4452;
+    /* Text color for body cells */
+    padding: 8px;
+    border: 1px solid #ddd;
+    /* Optional: border for table cells */
+}
+
+.teamOnLeavetable tbody tr:nth-child(even) td {
+    background-color: #fcfcfc;
+    /* Optional: alternate row color */
+}
+.team-on-leave-main-div{
+    width: 90%;
+    margin:0 auto;
+}
+.team-on-leave-label{
+    font-size:0.85rem;
+}
+.team-on-label-div{
+    padding:10px 15px;
+    width:80%;
+    margin:0;
+}
+.team-on-leave-chart-div{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    margin:0 auto;
+    border:1px solid #ccc;
+}
+.team-on-leave-duration-div{
+    display:flex;
+    flex-direction:row;
+    background:white;
+    padding:10px 15px;
+    border-bottom:1px solid #ccc;
+    gap:10px;
+}
+.team-on-leave-duration{
+    font-size: 0.75rem;
+}
+.team-on-leave-duration-select{
+    font-size:0.8rem;
+}
+.team-on-leave-to{
+    color:#ccc;
+    margin:0 10px;
+}
+.team-on-leave-application{
+    color:#778899;
+    font-size:0.925rem;
+}
+.team-on-leave-search{
+    padding:10px 15px;
+    margin:0;
+}
+.team-on-leave-search-input{
+    width:150px;
+    border:none;
+    outline:none;
+}
+.team-on-leave-type{
+    padding:10px 15px;
+    margin:0;
+}
+.team-on-leave-type-select{
+    width:130px;outline:none;
+}
 /* team on leave */
+/* leave details,sick,causal,probation */
+.custom-table-wrapper-leave-details {
+    position: relative;
+    /* max-height: 130px; */
+    overflow-y: auto;
+    border-collapse: collapse;
+}
+
+.custom-table-wrapper-leave-details .balance-table {
+    width: 100%;
+    margin: 0 auto;
+    /* table-layout: fixed; */
+    border-collapse: collapse;
+}
+
+.custom-table-wrapper-leave-details th {
+    background-color: #ecf5ff;
+    padding: 10px;
+    color: #778899;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    /* Remove left and right borders */
+    border-left: none;
+    border-right: none;
+}
+
+.custom-table-wrapper-leave-details td {
+    padding: 10px;
+    font-size: 12px;
+    text-align: center;
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    /* Remove left and right borders */
+    border-left: none;
+    border-right: none;
+}
+
+.custom-table-wrapper-leave-details thead {
+    position: sticky;
+    top: 0;
+    font-size: 12px;
+    z-index: 1;
+}
+
+.info-container {
+    background-color: #ffffe8;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    width: 60%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.info-item {
+    flex: 1;
+    text-align: center;
+}
+
+.info-item:not(:last-child) {
+    border-right: 1px solid #e0e0e0;
+}
+
+.info-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.info-title {
+    color: #778899;
+    font-size: 11px;
+}
+.select-year-dropdown{
+    margin-right:5px;
+    width:fit-content
+}
+.leave-details-col-md-12{
+    max-height: 100px;
+}
+.leave-details-card{
+    height: 100%;
+}
+.leave-details-card-body{
+    height: 100%;
+}
+.leave-details-canvas{
+    background-color: transparent;
+    width:300px;
+    height:200px;
+}
+.breadcrumb-item a{
+    color: grey;
+
+
+}
+@media only screen and (max-width: 600px) {
+    .info-container {
+        width:80%;
+    }
+
+}
+@media only screen and (max-width: 400px) {
+    .info-container {
+        width:95%;
+    }
+
+}
+
+/*end leave details,sick,causal,probation */
+
+
 .text {
     --tw-text-opacity: 1;
     color: rgba(23, 30, 37);
@@ -5211,7 +5447,7 @@ option {
 }
 
 .notification-detail-container {
-    width: 290px;
+    width: 300px;
     background: #f5f8f9;
 }
 
@@ -5249,7 +5485,18 @@ option {
     font-weight: 600;
     border-radius: 5px;
 }
-
+.notifications-pointer{
+    cursor: pointer;
+}
+.notify-time-para{
+    margin-bottom: 0px;
+    font-size:xx-small;
+    color: #535f6b;
+}
+.notify-time{
+    display: flex;
+    justify-content:end;
+}
 /* //log out */
 .logout-icon-container {
     display: inline-block;
@@ -5920,6 +6167,8 @@ option {
     }
 
 }
+
+
 /* 
 peoples module styles started */
 
@@ -5936,7 +6185,7 @@ peoples module styles started */
 }
 
 .people-search-input {
-    font-size: 0.75rem !important;
+    font-size: var( --normal-font-size);
     border-radius: 5px 0 0 5px;
     height: 32px;
 }
@@ -5969,7 +6218,7 @@ peoples module styles started */
 .people-empty-text {
     text-align: center;
     color: var(--label-color);
-    font-size: 12px;
+    font-size: var( --normal-font-size);
 }
 
 .people-details-container {
@@ -5987,7 +6236,7 @@ peoples module styles started */
 }
 
 .people-default-container-name {
-    font-size: 12px;
+    font-size: var( --normal-font-size);
     color: var(--main-heading-color);
     margin-right: 5px;
 }
@@ -5997,7 +6246,7 @@ peoples module styles started */
 }
 
 .people-default-container-empid {
-    font-size: 12px;
+    font-size: var( --normal-font-size);
     color: var(--main-heading-color);
     white-space: nowrap;
 }
@@ -6012,7 +6261,7 @@ peoples module styles started */
 
 .people-default-star-icon {
     cursor: pointer;
-    font-size: 12px;
+    font-size: var( --normal-font-size);
     padding-left: 6px;
     color: #f3c20f;
 }
@@ -6062,7 +6311,7 @@ peoples module styles started */
     margin-right: 10px;
     font-weight: 500;
     color: var(--label-color);
-    font-size: 12px;
+    font-size: var( --normal-font-size);
 }
 
 .people-horizontal-line {
@@ -6205,7 +6454,7 @@ max-width: 50%;
 }
 
 .task-search-input {
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     border-radius: 5px 0 0 5px;
     height: 32px;
 }
@@ -6291,7 +6540,7 @@ max-width: 50%;
     border: none;
     border-radius: 5px;
     color: white;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     height: 30px;
     cursor: pointer;
     margin-top: 15px;
@@ -6331,7 +6580,7 @@ max-width: 50%;
 
 .task-open-table-1-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 10%;
     min-width: 80px;
@@ -6344,7 +6593,7 @@ max-width: 50%;
 
 .task-open-table-2-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 120px;
@@ -6352,7 +6601,7 @@ max-width: 50%;
 
 .task-open-table-3-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 150px;
@@ -6360,7 +6609,7 @@ max-width: 50%;
 
 .task-open-table-4-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 170px;
@@ -6368,7 +6617,7 @@ max-width: 50%;
 
 .task-open-table-5-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 150px;
@@ -6376,7 +6625,7 @@ max-width: 50%;
 
 .task-open-table-6-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 150px;
@@ -6384,7 +6633,7 @@ max-width: 50%;
 
 .task-open-table-7-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 150px;
@@ -6392,7 +6641,7 @@ max-width: 50%;
 
 .task-open-table-8-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 150px;
@@ -6400,7 +6649,7 @@ max-width: 50%;
 
 .task-open-table-9-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: center;
     width: 15%;
     min-width: 200px;
@@ -6414,7 +6663,7 @@ max-width: 50%;
 .task-open-table-1-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 10%;
     min-width: 80px;
@@ -6424,7 +6673,7 @@ max-width: 50%;
 .task-open-table-2-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 120px;
@@ -6433,7 +6682,7 @@ max-width: 50%;
 .task-open-table-3-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 150px;
@@ -6442,7 +6691,7 @@ max-width: 50%;
 .task-open-table-4-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 170px;
@@ -6451,7 +6700,7 @@ max-width: 50%;
 .task-open-table-5-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 150px;
@@ -6460,7 +6709,7 @@ max-width: 50%;
 .task-open-table-6-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 150px;
@@ -6469,7 +6718,7 @@ max-width: 50%;
 .task-open-table-7-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var( --normal-font-size);
     text-align: start;
     width: 15%;
     min-width: 150px;
@@ -6478,7 +6727,7 @@ max-width: 50%;
 .task-open-table-8-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
     width: 15%;
     min-width: 150px;
@@ -6487,7 +6736,7 @@ max-width: 50%;
 .task-open-table-9-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
     width: 15%;
     min-width: 200px;
@@ -6496,7 +6745,7 @@ max-width: 50%;
 .task-open-close-button {
     border: 1px solid rgb(2, 17, 79);
     width: 80px;
-    padding: 5px 0.75rem;
+    padding: 6px 0.75rem;
 }
 
 .task-accordion-content {
@@ -6523,14 +6772,14 @@ max-width: 50%;
 }
 
 .task-accordion-open-table-tr {
-    color: #778899;
+    color: var(--label-color);
 }
 
 .task-accordion-open-table-1-th {
     font-weight: 500;
     width: 22%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6538,7 +6787,7 @@ max-width: 50%;
     font-weight: 500;
     width: 18%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6546,7 +6795,7 @@ max-width: 50%;
     font-weight: 500;
     width: 15%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6554,7 +6803,7 @@ max-width: 50%;
     font-weight: 500;
     width: 15%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6562,7 +6811,7 @@ max-width: 50%;
     font-weight: 500;
     width: 30%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6570,7 +6819,7 @@ max-width: 50%;
     border: none;
     width: 22%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6578,7 +6827,7 @@ max-width: 50%;
     border: none;
     width: 18%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6586,7 +6835,7 @@ max-width: 50%;
     border: none;
     width: 15%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6594,7 +6843,7 @@ max-width: 50%;
     border: none;
     width: 15%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6602,7 +6851,7 @@ max-width: 50%;
     border: none;
     width: 30%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6632,7 +6881,7 @@ max-width: 50%;
 
 .task-closed-table-1-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 7%;
     min-width: 80px;
@@ -6640,7 +6889,7 @@ max-width: 50%;
 
 .task-closed-table-2-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 8%;
     min-width: 120px;
@@ -6648,7 +6897,7 @@ max-width: 50%;
 
 .task-closed-table-3-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 10%;
     min-width: 150px;
@@ -6656,7 +6905,7 @@ max-width: 50%;
 
 .task-closed-table-4-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6664,7 +6913,7 @@ max-width: 50%;
 
 .task-closed-table-5-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6672,7 +6921,7 @@ max-width: 50%;
 
 .task-closed-table-6-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6680,7 +6929,7 @@ max-width: 50%;
 
 .task-closed-table-7-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6688,7 +6937,7 @@ max-width: 50%;
 
 .task-closed-table-8-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6696,7 +6945,7 @@ max-width: 50%;
 
 .task-closed-table-9-th {
     padding: 7px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
     width: 20%;
     min-width: 200px;
@@ -6705,7 +6954,7 @@ max-width: 50%;
 .task-closed-table-1-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 7%;
     min-width: 80px;
@@ -6715,7 +6964,7 @@ max-width: 50%;
 .task-closed-table-2-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 8%;
     min-width: 120px;
@@ -6724,7 +6973,7 @@ max-width: 50%;
 .task-closed-table-3-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6733,7 +6982,7 @@ max-width: 50%;
 .task-closed-table-4-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6742,7 +6991,7 @@ max-width: 50%;
 .task-closed-table-5-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6751,7 +7000,7 @@ max-width: 50%;
 .task-closed-table-6-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6760,7 +7009,7 @@ max-width: 50%;
 .task-closed-table-7-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6775,7 +7024,7 @@ max-width: 50%;
 .task-closed-table-8-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: start;
     width: 9%;
     min-width: 150px;
@@ -6784,7 +7033,7 @@ max-width: 50%;
 .task-closed-table-9-td {
     padding: 10px;
     border: none;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
     width: 20%;
     min-width: 200px;
@@ -6793,7 +7042,7 @@ max-width: 50%;
 .task-closed-reopen-button {
     border: 1px solid rgb(2, 17, 79);
     width: 80px;
-    padding: 5px 0.75rem;
+    padding: 6px 0.75rem;
 }
 
 .task-accordion-closed-table {
@@ -6810,14 +7059,14 @@ max-width: 50%;
 }
 
 .task-accordion-closed-row {
-    color: #778899;
+    color: var(--label-color);
 }
 
 .task-accordion-closed-table-1-th {
     font-weight: 500;
     width: 20%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6825,7 +7074,7 @@ max-width: 50%;
     font-weight: 500;
     width: 20%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6833,7 +7082,7 @@ max-width: 50%;
     font-weight: 500;
     width: 20%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6841,7 +7090,7 @@ max-width: 50%;
     font-weight: 500;
     width: 20%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6849,7 +7098,7 @@ max-width: 50%;
     font-weight: 500;
     width: 20%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6857,7 +7106,7 @@ max-width: 50%;
     border: none;
     width: 20%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6865,7 +7114,7 @@ max-width: 50%;
     border: none;
     width: 20%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
 }
 
 .task-accordion-text-start {
@@ -6882,7 +7131,7 @@ max-width: 50%;
     border: none;
     width: 20%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6890,7 +7139,7 @@ max-width: 50%;
     border: none;
     width: 20%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 
@@ -6898,7 +7147,7 @@ max-width: 50%;
     border: none;
     width: 20%;
     padding: 10px;
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
     text-align: center;
 }
 .task-add-new-container{
@@ -6925,7 +7174,7 @@ max-width: 50%;
 }
 .task-modal-name-value{
     width: 100%; 
-    font-size: 0.75rem; 
+    font-size: var(--normal-font-size); 
     padding: 5px; 
     outline: none; 
     border: 1px solid #ccc; 
@@ -6934,7 +7183,7 @@ max-width: 50%;
 }
 .task-modal-name-label{
     font-size: 13px; 
-    color: #778899;
+    color: var(--label-color);
 }
 .task-modal-assignee-container{
     color:grey;
@@ -6944,15 +7193,16 @@ max-width: 50%;
 }
 .task-modal-assignee-label{
     font-size: 13px;
-    color:#778899; 
+    color: var(--label-color); 
     margin-bottom: 10px;
 }
 .task-modal-selected-assignee{
-    font-size: 12px;
+    font-size: var(--normal-font-size);
 }
 .task-modal-add-assignee{
-    color:black;
-    cursor:pointer
+    color: var(--sub-heading-color);
+    cursor: pointer;
+    font-weight: 500;
 }
 .task-modal-assignee-list-container{
     border-radius:5px;
@@ -6978,7 +7228,7 @@ max-width: 50%;
 .task-modal-no-assignee{
     text-align: center; 
     color: white; 
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
 }
 .task-assignee-people-container{
     cursor: pointer; 
@@ -6998,11 +7248,11 @@ max-width: 50%;
     margin-left: 10px;
 }
 .task-assignee-people-username{
-    font-size: 0.75rem; 
+    font-size: var(--normal-font-size); 
     color: white;
 }
 .task-assignee-people-empid{
-    font-size: 0.75rem; 
+    font-size: var(--normal-font-size); 
     color: white;
 }
 .task-modal-client-container{
@@ -7010,7 +7260,7 @@ max-width: 50%;
 }
 .task-client-label{
     font-size: 13px;
-    color:#778899
+    color: var(--label-color);
 }
 .task-client-select-container{
     width: 100%;
@@ -7021,14 +7271,14 @@ max-width: 50%;
     border-radius:5px;
 }
 .task-client-select-options{
-    color:#778899;
+    color: var(--label-color);
 }
 .task-modal-project-container{
     margin-bottom: 10px;
 }
 .task-project-label{
     font-size: 13px;
-    color:#778899
+    color: var(--label-color);
 }
 .task-project-select-container{
     width: 100%;
@@ -7039,17 +7289,18 @@ max-width: 50%;
     border-radius:5px;
 }
 .task-project-select-options{
-    color:#778899;
+    color: var(--label-color);
 }
 .task-modal-priority-container{
     margin-top: 0px;
 }
 .task-priority-label{
-    font-size: 13px;
-    color:#778899; 
+    font-size: var(--normal-font-size);
+    color: var(--label-color); 
     margin-left: 0px; 
     margin-top: 0px; 
     padding: 0 10px 0 0;
+    font-weight: 500;
 }
 .task-priority-options-container{
     display: flex; 
@@ -7061,8 +7312,8 @@ max-width: 50%;
     padding: 0;
 }
 .task-priority-options-value{
-    font-size: 0.75rem;
-    color:#778899; 
+    font-size: var(--normal-font-size);
+    color: var(--label-color); 
     padding: 0;
     margin-left:5px
 }
@@ -7076,7 +7327,7 @@ max-width: 50%;
 }
 .task-duedate-label{
     font-size: 13px;
-    color:#778899; 
+    color: var(--label-color); 
     margin-left: 0px; 
     margin-top: 0px; 
     padding: 0 10px 0 0;
@@ -7091,7 +7342,7 @@ max-width: 50%;
 }
 .task-tags-label{
     font-size: 13px;
-    color:#778899; 
+    color: var(--label-color); 
     margin-left: 0px; 
     margin-top: 0px; 
     padding: 0 10px 0 0;
@@ -7111,7 +7362,7 @@ max-width: 50%;
 }
 .task-follower-label{
     font-size: 13px;
-    color:#778899; 
+    color: var(--label-color); 
     margin-left: 0px; 
     margin-top: 0px; 
     padding: 0 10px 0 0;
@@ -7121,11 +7372,12 @@ max-width: 50%;
     cursor: pointer
 }
 .task-selected-follower{
-    font-size: 12px;
+    font-size: var(--normal-font-size);
 }
 .task-add-followers{
-    color:black;
-    cursor:pointer
+    color: var(--sub-heading-color);
+    cursor:pointer;
+    font-weight: 500;
 }
 .task-modal-followerlist-container{
     border-radius:5px;
@@ -7151,7 +7403,7 @@ max-width: 50%;
 .task-no-follower{
     text-align: center; 
     color: white; 
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
 }
 .task-modal-follower-peoples-container{
     cursor: pointer; 
@@ -7162,16 +7414,16 @@ max-width: 50%;
     border-radius: 5px;
 }
 .task-follower-people-username{
-    font-size: 0.75rem; 
+    font-size: var(--normal-font-size); 
     color: white;
 }
 .task-follower-people-empid{
-    font-size: 0.75rem; 
+    font-size: var(--normal-font-size); 
     color: white;
 }
 .task-modal-subject-label{
     font-size: 13px;
-    color:#778899; 
+    color: var(--label-color); 
     margin-left: 0px; 
     margin-top: 10px; 
     padding: 0 10px 0 0;
@@ -7187,7 +7439,7 @@ max-width: 50%;
 }
 .task-description-label{
     font-size: 13px;
-    color:#778899; 
+    color: var(--label-color); 
     margin-left: 0px; 
     margin-top: 10px; 
     padding: 0 10px 0 0;
@@ -7204,13 +7456,13 @@ max-width: 50%;
 .task-file-input-label{
     cursor: pointer; 
     font-size: 13px;
-    color:#778899;
+    color: var(--label-color);
     margin-left: 0px; 
     margin-top: 0px; 
     padding: 0 10px 0 0;
 }
 .task-modal-filepath{
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
 }
 .task-fileinput-success{
     display: none; 
@@ -7256,7 +7508,7 @@ max-width: 50%;
     cursor: pointer;
 }
 .task-comment-label{
-    color: #778899;
+    color: var(--label-color);
     font-size:13px;
     font-weight:500;
 }
@@ -7268,34 +7520,327 @@ max-width: 50%;
     overflow-y:auto;
 }
 .task-comment-emp-name{
-    color: #000;
-    font-size:0.75rem;
+    color: var(--sub-heading-color);
+    font-size: var(--normal-font-size);
     font-weight:500;
     margin-bottom:0;
 }
 .task-comment-time{
-    color: #778899;
+    color: var(--label-color);
     font-size:10px;
     font-weight:normal;
     margin-left:15px;
 }
 .task-comment-edit-icon{
-    color: #778899;
+    color: var(--label-color);
     height:7px;
     width:7px;
 }
 .task-comment-trash-icon{
-    color: #778899;
+    color: var(--label-color);
     height:7px;
     width:7px;
 }
 .task-comment-edit-cancel-btn{
-    font-size: 0.75rem;
+    font-size: var(--normal-font-size);
 }
 .task-comment-text-value{
     margin-bottom: 0;
-    font-size:0.75rem;
+    font-size: var(--normal-font-size);
     color:#515963;
 }
 
+.task-custom-select-width {
+
+    width: 150px;
+
+    font-size: var(--normal-font-size);
+
+    padding: 7px;
+
+}
+.task-custom-select-width {
+    width: 150px;
+    font-size: var(--normal-font-size);
+    padding: 7px;
+}
+
 /* task module styles ended */
+
+/* settings module styles started */
+
+.settings-custom-placeholder::placeholder {
+    font-size: var(--normal-font-size);
+}
+.setting-login-history-text{
+    font-size: var(--normal-font-size);
+    font-weight:500;
+    cursor:pointer;
+    text-align:end;
+}
+.setting-password-container{
+    background-color: pink;
+}
+.setting-password-btn{
+    background-color:rgb(2, 17, 79);
+    color:white;
+    font-size: var(--normal-font-size);
+}
+.setting-password-icon{
+    color: white;
+    height:10px;
+    width:10px;
+    font-size: var(--normal-font-size);
+}
+.setting-flash-message-container{
+    position: fixed; 
+    top: 15%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 999;
+}
+.setting-flash-msg-text{
+    font-size: var(--normal-font-size);
+}
+.setting-history-modal-header{
+    background-color: rgb(2, 17, 79);
+    color: white; 
+    height: 40px; 
+    padding: 8px; 
+    position: relative;
+}
+.setting-history-modal-close{
+    background: none; 
+    border: none; 
+    color: white; 
+    font-size: 30px; 
+    cursor: pointer;
+}
+.setting-history-modal-text{
+    font-size: 10px;
+    color: var(--sub-heading-color);
+}
+.setting-history-modal-table{
+    margin-top: 10px;
+    width:100%
+}
+.setting-history-modal-table-label{
+    font-size: var(--normal-font-size); 
+    color: grey;
+    border: 1px solid var(--sub-heading-color);
+    padding: 8px;
+    text-align: center;
+    background-color:#f2f2f2
+}
+.setting-history-modal-table-value{
+    font-size: 10px; 
+    color: var(--sub-heading-color); 
+    border: 1px solid var(--sub-heading-color); 
+    padding: 8px; 
+    text-align: center;
+    font-weight: 500;
+}
+.setting-password-modal-header{
+    background-color: rgb(2, 17, 79);
+    color: white; 
+    height: 40px; 
+    padding: 8px; 
+    position: relative;
+}
+.setting-password-modal-close{
+    background: none; 
+    border: none; 
+    color: white; 
+    font-size: 30px; 
+    cursor: pointer;
+}
+.setting-password-flash-msg{
+    font-size: var(--normal-font-size);
+}
+.setting-password-modal-body{
+    background-color: #f0f0f0;
+}
+.setting-password-card{
+    padding: 20px; 
+    text-align: left;
+}
+.setting-password-modal-label{
+    font-size: var(--normal-font-size);
+    color: var(--label-color);
+    font-weight:500;
+}
+.setting-password-modal-input{
+    font-size: var(--normal-font-size);
+}
+.setting-password-error-msg{
+    font-size:10px;
+}
+.setting-password-submit-container{
+    margin-top: 20px; 
+    text-align: center;
+}
+.setting-empname-text{
+    font-size: 13px; 
+    font-weight: 600; 
+    color: var(--sub-heading-color); 
+    white-space: nowrap; 
+    margin-bottom: 15px;
+}
+.setting-empid-container{
+    font-size: var(--normal-font-size); 
+    color: var(--sub-heading-color); 
+    margin-bottom: 15px;
+}
+.setting-empid-label{
+    width: 60px; 
+    font-size: 11px; 
+    color: var(--label-color); 
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.setting-empid-value{
+    flex: 1; 
+    margin-left: 5px; 
+    font-size: var(--normal-font-size); 
+    font-weight: 500; 
+    white-space: normal;
+    color: var(--sub-heading-color);
+}
+.setting-bday-container{
+    font-size: var(--normal-font-size); 
+    color: var(--sub-heading-color); 
+    margin-bottom: 15px;
+}
+.setting-bday-label{
+    width: 95px; 
+    color: var(--label-color); 
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.settings-birthday-value{
+    flex: 1;
+    margin-left: 5px;
+    font-weight: 500;
+    color: var(--sub-heading-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60px;
+}
+@media (max-width: 991px) {
+    .settings-birthday-value {
+        max-width: 150px;
+    }
+}
+.setting-department-value{
+    flex: 1; 
+    margin-left: 5px; 
+    font-weight: 500; 
+    color: var(--sub-heading-color); 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 200px;
+}
+.setting-location-label{
+    width: 80px; 
+    color: var(--label-color); 
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.setting-location-value{
+    flex: 1; 
+    margin-left: 10px; 
+    font-weight: 500; 
+    color: var(--sub-heading-color); 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 200px; 
+}
+.setting-designation-label{
+    width: 80px; 
+    color: var(--label-color); 
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.setting-designation-value{
+    flex: 1; 
+    margin-left: 10px; 
+    font-weight: 500; 
+    color: var(--sub-heading-color); 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 200px;
+}
+.setting-myprofile-container{
+    margin-top: 20px;
+    height:auto;
+    margin-bottom:10px
+}
+.setting-myprofile-text{
+    background-color: rgb(2, 17, 79);
+    color:white;
+    font-size: 15px
+}
+.setting-profile-text{
+    color: var(--label-color);
+    font-size: var(--normal-font-size);
+}
+.setting-edit-delete-icon{
+    text-align: end; 
+    cursor: pointer;
+}
+.setting-nickname-container{
+    margin-top: 20px;
+}
+.setting-nickname-label{
+    color: var(--label-color);
+    font-size: var(--normal-font-size);
+}
+.setting-nickname-input{
+    font-size: var(--normal-font-size); 
+    margin-top: 5px;
+}
+.setting-nickname-value{
+    color: var(--sub-heading-color); 
+    font-size: var(--normal-font-size);
+    font-weight: 500;
+}
+.setting-timezone-container{
+    font-size: var(--normal-font-size);
+}
+.setting-timezone-text{
+    color: var(--label-color);
+}
+.setting-timezone-icons-container{
+    margin-top: 10px;
+}
+.setting-timezone-select{
+    width: 150px; 
+    font-size: var(--normal-font-size);
+}
+.setting-timezone-value{
+    color: var(--sub-heading-color); 
+    font-size: var(--normal-font-size);
+    font-weight: 500;
+}
+.setting-biography-textarea{
+    width:100%;
+    font-size: var(--normal-font-size);
+}
+.setting-socialmedia-container{
+    margin-top: 20px;
+}
+.setting-facebook-text{
+    color: var(--label-color); 
+    font-size: var(--normal-font-size);
+}
+.settings-profile-image {
+    border-radius: 50%;
+    height: 90px;
+    width: 90px;
+}
+
+/* settings module styles ended */

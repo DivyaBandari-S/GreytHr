@@ -106,19 +106,19 @@
                         <div class="view-container m-0 p-0">
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
-                                    <span class="normalTextValue">From Date</span> <br>
-                                    <span class="normalText" style="font-weight:600;"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->from_session }}</span></span>
+                                    <span class="normalTextValue">From Date</span> <br>e
+                                    <span class="normalText fw-bold"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
                                     <span class="normalTextValue">To Date</span> <br>
-                                    <span class="normalText" style="font-weight:600;">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span style="color: #494F55;font-size: 9px; ">{{ $leaveRequest->to_session }}</span></span>
+                                    <span class="normalText fw-bold">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
                             </div>
-                            <div class="box" style="display:flex; text-align:center; padding:5px;">
+                            <div class="box d-flex text-center p-2">
                                 <div class="field p-2">
                                     <span class="normalTextValue">No. of days</span> <br>
-                                    <span class="normalText" style=" font-weight: 600;"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
+                                    <span class="normalText fw-bold"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -126,97 +126,90 @@
                     <div class="row m-0 p-0 d-flex align-items-center">
                         <div class="col-md-7 m-0 p-0">
                             <div class="pay-bal">
-
                                 <span class="normalTextValue">Balance:</span>
 
                                 @if(!empty($leaveRequest['leaveBalances']))
-
-                                <div style=" flex-direction:row; display: flex; align-items: center;justify-content:center;">
+                                <div class="d-flex align-items-center justify-content-center">
 
                                     <!-- Sick Leave -->
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e6e6fa; display: flex; align-items: center; justify-content: center; margin-left:15px;">
+                                    <div class="sickLeaveCircle">
 
-                                        <span style="font-size:10px; color: #50327c;font-weight:500;">SL</span>
-
-                                    </div>
-
-                                    <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['sickLeaveBalance'] }}</span>
-
-
-
-                                    <!-- Casual Leave -->
-
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #e7fae7; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
-
-                                        <span style="font-size:10px; color: #1d421e;font-weight:500;">CL</span>
+                                        <span class="sickLeaveBal">SL</span>
 
                                     </div>
 
-                                    <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['casualLeaveBalance'] }}</span>
+                                    <span class="sickLeaveValue">{{ $leaveRequest['leaveBalances']['sickLeaveBalance'] }}</span>
 
-                                    <!-- Casual Leave Probation-->
-                                    @if($leaveRequest->leave_type === 'Casual Leave Probation')
+                                    <!-- Casual Leave  -->
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #FDEBD0  ; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <div class="casLeaveCircle">
 
-                                        <span style="font-size:10px; color: #F39C12  ;font-weight:500;">CLP</span>
+                                        <span class="casLeaveBal">CL</span>
 
                                     </div>
 
-                                    <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['casualProbationLeaveBalance'] }}</span>
+                                    <span class="casLeaveValue">{{ $leaveRequest['leaveBalances']['casualLeaveBalance'] }}</span>
+
+                                    <!-- Casual Leave  Probation-->
+                                    @if($leaveRequest->leave_type === 'Casual Leave Probation' && isset($leaveRequest['leaveBalances']['casualProbationLeaveBalance']))
+                                    <div class="probLeave">
+
+                                        <span class="probLeaveBal">CLP</span>
+
+                                    </div>
+
+                                    <span class="probLeaveValue">{{ $leaveRequest['leaveBalances']['casualProbationLeaveBalance'] }}</span>
 
                                     <!-- Loss of Pay -->
 
-                                    @elseif($leaveRequest->leave_type === 'Loss Of Pay')
+                                    @elseif($leaveRequest->leave_type === 'Loss Of Pay' && isset($leaveRequest['leaveBalances']['lossOfPayBalance']))
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <div class="lossLeave">
 
-                                        <span style="font-size:10px; color: #890000;font-weight:500;">LOP</span>
+                                        <span class="lossLeaveBal">LOP</span>
+
+                                    </div>
+                                    @if(($leaveRequest['leaveBalances']['lossOfPayBalance'])>0)
+                                    <span class="lossLeaveValue">&minus;{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
+                                    @else
+                                    <span class="lossLeaveValue">{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
+                                    @endif
+                                    @elseif($leaveRequest->leave_type === 'Marriage Leave' && isset($leaveRequest['leaveBalances']['marriageLeaveBalance']))
+
+                                    <div class="marriageLeave">
+
+                                        <span class="marriageLeaveBal">MRL</span>
 
                                     </div>
 
-                                    <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">&minus;{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
+                                    <span class="marriageLeaveValue">{{ $leaveRequest['leaveBalances']['marriageLeaveBalance'] }}</span>
 
-                                    <!-- marriage leave -->
+                                    @elseif($leaveRequest->leave_type === 'Petarnity Leave' && isset($leaveRequest['leaveBalances']['paternityLeaveBalance']))
 
-                                    @elseif($leaveRequest->leave_type === 'Marriage Leave')
+                                    <div class="petarnityLeave">
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
-
-                                        <span style="font-size:10px; color: #890000;font-weight:500;">MRL</span>
+                                        <span class="petarnityLeaveBal">PL</span>
 
                                     </div>
 
-                                    <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['marriageLeaveBalance'] }}</span>
+                                    <span class="petarnityLeaveValue">{{ $leaveRequest['leaveBalances']['paternityLeaveBalance'] }}</span>
 
-                                    @elseif($leaveRequest->leave_type === 'Maternity Leave')
+                                    @elseif($leaveRequest->leave_type === 'Maternity Leave' && isset($leaveRequest['leaveBalances']['maternityLeaveBalance']))
 
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <div class="maternityLeave">
 
-                                        <span style="font-size:10px; color: #890000;font-weight:500;">ML</span>
-
-                                    </div>
-
-                                    <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['maternityLeaveBalance'] }}</span>
-
-                                    @elseif($leaveRequest->leave_type === 'Petarnity Leave')
-
-                                    <div style="width: 20px; height: 20px; border-radius: 50%; background-color: #ffebeb; display: flex; align-items: center; justify-content: center; margin-left: 15px;">
-
-                                        <span style="font-size:10px; color: #890000;font-weight:500;">PL</span>
+                                        <span class="maternityLeaveBal">ML</span>
 
                                     </div>
 
-                                    <span style="font-size: 12px; font-weight: 500; color: #333; margin-left: 5px;">{{ $leaveRequest['leaveBalances']['paternityLeaveBalance'] }}</span>
-
-
+                                    <span class="maternityLeaveValue">{{ $leaveRequest['leaveBalances']['maternityLeaveBalance'] }}</span>
 
                                     @endif
 
                                 </div>
-
                                 @endif
+
 
                             </div>
                         </div>
@@ -228,7 +221,7 @@
                 <hr>
                 <div class="pending-details">
                     <div class="data">
-                        <span class="normalText" style="font-size:0.8rem;">Details</span>
+                        <span class="normalTextSubheading" >Details</span>
                         <div class="row m-0 p-0">
                             <div class="col-md-8 m-0 p-0">
                                 <div class="custom-grid-container text-start">
@@ -285,7 +278,7 @@
                                         $fileDataArray = is_string($leaveRequest->file_paths)
                                         ? json_decode($leaveRequest->file_paths, true)
                                         : $leaveRequest->file_paths;
-  
+
 
                                         // Separate images and files
                                         $images = array_filter(
@@ -360,7 +353,7 @@
 
                                                                     download="{{ $originalName }}"
 
-                                                                    style="text-decoration: none; color: #007BFF; margin: 10px;">
+                                                                    class="anchorTagDetails">
 
                                                                     {{ $originalName }}
 
@@ -382,30 +375,27 @@
                                         <!-- Trigger Links -->
                                         @if (!empty($images) && count($images) > 1)
                                         <a href="#" wire:click.prevent="showViewImage"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             View Images
                                         </a>
                                         @elseif(!empty($images) && count($images) == 1)
                                         <a href="#" wire:click.prevent="showViewImage"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             View Image
                                         </a>
                                         @endif
 
                                         @if (!empty($files) && count($files) > 1)
                                         <a href="#" wire:click.prevent="showViewFile"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             Download Files
                                         </a>
                                         @elseif(!empty($files) && count($files) == 1)
                                         <a href="#" wire:click.prevent="showViewFile"
-                                            style="text-decoration: none; color: #007BFF;font-size: 12px; color: #007BFF; text-transform: capitalize;">
+                                            class="anchorTagDetails">
                                             Download File
                                         </a>
                                         @endif
-
-
-
                                         @endif
                                     </div>
                                 </div>
@@ -426,8 +416,8 @@
                     <div class="mt-4 d-flex flex-column" style="gap: 60px;">
                         <div class="group">
                             <div>
-                               @if($leaveRequest->category_type == 'Leave')
-                               <h5 class="normalText text-start">
+                                @if($leaveRequest->category_type == 'Leave')
+                                <h5 class="normalText text-start">
                                     @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                                     Withdrawn <br><span class="normalText text-start">by</span>
                                     <span class="normalTextValue text-start">
@@ -448,8 +438,8 @@
                                     @endif
                                     <br>
                                 </h5>
-                               @else
-                               <h5 class="normalText text-start">
+                                @else
+                                <h5 class="normalText text-start">
                                     @if(strtoupper($leaveRequest->cancel_status) == 'WITHDRAWN')
                                     Withdrawn <br><span class="normalText text-start">by</span>
                                     <span class="normalTextValue text-start">
@@ -470,7 +460,7 @@
                                     @endif
                                     <br>
                                 </h5>
-                               @endif
+                                @endif
                             </div>
 
                         </div>
@@ -478,13 +468,11 @@
                             <div class="d-flex flex-column">
                                 <h5 class="mb-0 normalText text-start">Submitted
                                 </h5>
-                                <span class="normalTextValue text-start" style="font-size:0.625rem;">{{ $leaveRequest->created_at->format('d M, Y g:i A') }}</span>
+                                <span class="normalTextSmall text-start" >{{ $leaveRequest->created_at->format('d M, Y g:i A') }}</span>
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>

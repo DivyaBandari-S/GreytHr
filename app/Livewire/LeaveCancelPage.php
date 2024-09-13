@@ -464,6 +464,7 @@ class LeaveCancelPage extends Component
         $this->showApplyingTo = true;
         $this->selectedCCEmployees = [];
         $this->leave_cancel_reason = null;
+        $this->applying_to = null;
     }
     public function render()
     {

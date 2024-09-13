@@ -85,18 +85,18 @@
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
                                     <span class="normalTextValue">From Date</span> <br>
-                                    <span class="normalText bold-text"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
+                                    <span class="normalText fw-bold"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
                                     <span class="normalTextValue ">To Date</span> <br>
-                                    <span class="normalText bold-text">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
+                                    <span class="normalText fw-bold">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
                             </div>
                             <div class="box d-flex text-center p-2">
                                 <div class="field p-2">
                                     <span class="normalTextValue">No. of days</span> <br>
-                                    <span class="normalText bold-text"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
+                                    <span class="normalText fw-bold"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
 
                                     </div>
 
-                                    <span class="sickLeaveValue">{{ $this->leaveBalances['sickLeaveBalance'] }}</span>
+                                    <span class="sickLeaveValue">{{ $leaveBalances['sickLeaveBalance'] }}</span>
 
                                     <!-- Casual Leave  -->
 
@@ -127,7 +127,7 @@
 
                                     </div>
 
-                                    <span class="casLeaveValue">{{ $this->leaveBalances['casualLeaveBalance'] }}</span>
+                                    <span class="casLeaveValue">{{ $leaveBalances['casualLeaveBalance'] }}</span>
 
                                     <!-- Casual Leave  Probation-->
                                     @if($leaveRequest->leave_type === 'Casual Leave Probation' && isset($leaveBalances['casualProbationLeaveBalance']))
@@ -137,7 +137,7 @@
 
                                     </div>
 
-                                    <span class="probLeaveValue">{{ $this->leaveBalances['casualProbationLeaveBalance'] }}</span>
+                                    <span class="probLeaveValue">{{ $leaveBalances['casualProbationLeaveBalance'] }}</span>
 
                                     <!-- Loss of Pay -->
 
@@ -148,8 +148,11 @@
                                         <span class="lossLeaveBal">LOP</span>
 
                                     </div>
-
-                                    <span class="lossLeaveValue">&minus;{{ $this->leaveBalances['lossOfPayBalance'] }}</span>
+                                    @if(($leaveBalances['lossOfPayBalance'])>0)
+                                    <span class="lossLeaveValue">&minus;{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                                    @else
+                                    <span class="lossLeaveValue">{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                                    @endif
 
                                     @elseif($leaveRequest->leave_type === 'Marriage Leave' && isset($leaveBalances['marriageLeaveBalance']))
 
@@ -159,7 +162,7 @@
 
                                     </div>
 
-                                    <span class="marriageLeaveValue">{{ $this->leaveBalances['marriageLeaveBalance'] }}</span>
+                                    <span class="marriageLeaveValue">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
 
                                     @elseif($leaveRequest->leave_type === 'Petarnity Leave' && isset($leaveBalances['paternityLeaveBalance']))
 
@@ -169,7 +172,7 @@
 
                                     </div>
 
-                                    <span class="petarnityLeaveValue">{{ $this->leaveBalances['paternityLeaveBalance'] }}</span>
+                                    <span class="petarnityLeaveValue">{{ $leaveBalances['paternityLeaveBalance'] }}</span>
 
                                     @elseif($leaveRequest->leave_type === 'Maternity Leave' && isset($leaveBalances['maternityLeaveBalance']))
 
@@ -179,7 +182,7 @@
 
                                     </div>
 
-                                    <span class="maternityLeaveValue">{{ $this->leaveBalances['maternityLeaveBalance'] }}</span>
+                                    <span class="maternityLeaveValue">{{ $leaveBalances['maternityLeaveBalance'] }}</span>
 
                                     @endif
 

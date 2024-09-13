@@ -1,8 +1,16 @@
-<div>
+<div class="position-relative">
+    @if(session()->has('message'))
+    <div class="alert alert-success w-50 position-absolute m-auto p-2 " style="right: 25%;top:-15%;" id="success-alert">
+        {{ session('message') }}
+        <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
+            <span>X</span>
+        </button>
+    </div>
+    @endif
     @if($showerrorMessage)
     <div id="errorMessage" class="alert alert-danger" wire:poll.2s="hideAlert">
         {{ $errorMessage }}
-        <button type="button" wire:click="hideAlert" class="close" style="background:none;border:none;" data-dismiss="alert" aria-label="Close">
+        <button type="button" wire:click="hideAlert" class="close bg-none border-none"  data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">x</span>
         </button>
     </div>
@@ -11,7 +19,7 @@
     <div class="applyContainer bg-white position-relative">
         @if($showinfoMessage)
         <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex gap-2 align-items-center">
-            <p class="mb-0" style="font-size:10px;">Leave is earned by an employee and granted by the employer to take time off work. The employee is free to
+            <p class="mb-0 normalTextSmall" >Leave is earned by an employee and granted by the employer to take time off work. The employee is free to
                 avail this leave in accordance with the company policy.</p>
             <p class="mb-0 hideInfo" wire:click="toggleInfo">Hide</p>
         </div>
@@ -27,7 +35,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="leave_type">Leave Type <span class="requiredMark">*</span> </label> <br>
-                        <div class="custom-select-wrapper" style="width: 65%;">
+                        <div class="custom-select-wrapper mb-2" style="width: 65%;">
                             <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leave_type">
                                 <option value="default">Select Type</option>
                                 <option value="Casual Leave">Casual Leave</option>
@@ -57,7 +65,7 @@
                             <span class="normalTextValue">Balance :</span>
 
                             @if(isset($leaveBalances) && !empty($leaveBalances))
-                            <div class="d-flex align-items-center justify-content-center" style="cursor:pointer;">
+                            <div class="downArrow d-flex align-items-center justify-content-center" >
                                 @if($leave_type == 'Sick Leave')
                                 <span class="sickLeaveBalance" title="Sick Leave">
                                     {{ ($leaveBalances['sickLeaveBalance']) ?? '0' }}
@@ -249,8 +257,8 @@
                 @if($showApplyingTo)
                 <div class="form-group mt-3">
                     <div class="d-flex " wire:click="applyingTo">
-                        <span class="normalTextValue" style="cursor: pointer;">
-                            <img src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" style="border-radius:50%;color:#778899;">
+                        <span class="normalTextValue downArrow" >
+                            <img class="rounded-circle" src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px" >
                             Applying To
                         </span>
                     </div>
@@ -265,35 +273,35 @@
                     @if($selectedManagerDetails)
                     @if($selectedManagerDetails->image && $selectedManagerDetails->image !=='null')
                     <div class="employee-profile-image-container">
-                        <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedManagerDetails->image)}}" style="border-radius:50%;">
+                        <img class="rounded-circle" height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedManagerDetails->image)}} " >
                     </div>
                     @else
                     @if($selectedManagerDetails->gender=='Female')
                     <div class="employee-profile-image-container">
-                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="40" width="40" alt="Default Image">
                     </div>
                     @elseif($selectedManagerDetails->gender=='Male')
                     <div class="employee-profile-image-container">
-                        <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                        <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle"  height="40" width="40" alt="Default Image">
                     </div>
                     @else
                     <div class="employee-profile-image-container">
-                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
+                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="40" width="40" alt="Default Image">
                     </div>
                     @endif
                     @endif
-                    <div class="center p-0 m-0">
+                    <div class="p-0 m-0">
                         <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($selectedManagerDetails->first_name)) }} {{ ucwords(strtolower($selectedManagerDetails->last_name)) }}</p>
-                        <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText"><span class="remaining">#{{$selectedManagerDetails->emp_id}}</span></p>
+                        <p class="mb-0 normalTextSmall" id="managerIdText"><span class="remaining">#{{$selectedManagerDetails->emp_id}}</span></p>
                     </div>
                     @else
-                    <div class="center p-0 m-0">
-                        <p class="mb-0" style="font-size:10px;">N/A</p>
-                        <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText">#(N/A)</p>
+                    <div class="p-0 m-0">
+                        <p class="mb-0 normalTextSmall" >N/A</p>
+                        <p class="mb-0 normalTextSmall" id="managerIdText">#(N/A)</p>
                     </div>
                     @endif
                     <div class="downArrow" wire:click="applyingTo">
-                        <i class="fas fa-chevron-down" style="cursor:pointer"></i>
+                        <i class="fas fa-chevron-down" ></i>
                     </div>
                 </div>
                 @endif
@@ -304,8 +312,8 @@
                     <!-- Content for the search container -->
                     <div class="row mb-2 py-0 px-2">
                         <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
-                            <div class="col p-0 m-0">
-                                <div class="input-group" style="width:180px;">
+                            <div class="col-md-10 p-0 m-0">
+                                <div class="input-group">
                                     <input
                                         wire:model="searchQuery"
                                         id="searchInput"
@@ -314,21 +322,21 @@
                                         placeholder="Search...."
                                         aria-label="Search"
                                         aria-describedby="basic-addon1"
-                                        style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:120px;">
+                                      >
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button
                                             type="button"
                                             class="search-btn"
                                             wire:click="getFilteredManagers">
-                                            <i style="color:#fff;margin-left:10px;" class="fas fa-search"></i>
+                                            <i class="fas fa-search ms-2"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col m-0 p-0 d-flex justify-content-end">
-                                <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #ccc;border:#ccc;height:33px;width:33px;">
-                                    <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i>
+                                <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close">
+                                    <span aria-hidden="true" class="closeIcon"><i class="fas fa-times "></i>
                                     </span>
                                 </button>
                             </div>
@@ -344,26 +352,26 @@
                             wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             @if($employee['image'] && $employee['image'] !== 'null' )
                             <div class="employee-profile-image-container">
-                                <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius:50%;">
+                                <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" >
                             </div>
                             @else
                             @if($employee['gender'] == 'Female')
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="35px" width="35px" alt="Default Image">
                             </div>
                             @elseif($employee['gender'] == 'Male')
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle"  height="35px" width="35px" alt="Default Image">
                             </div>
                             @else
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
+                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="35px" width="35px" alt="Default Image">
                             </div>
                             @endif
                             @endif
                             <div class="d-flex flex-column mt-2 mb-2">
                                 <span class="ellipsis mb-0">{{ $employee['full_name'] }}</span>
-                                <span class="mb-0 normalTextValue" style="font-size:10px;"> #{{ $employee['emp_id'] }} </span>
+                                <span class="mb-0 normalTextSmall" > #{{ $employee['emp_id'] }} </span>
                             </div>
                         </div>
                         @endforeach
@@ -379,10 +387,10 @@
                 <span class="normalTextValue">
                     CC To
                 </span>
-                <div class="control-wrapper d-flex align-items-center" style="gap: 10px;cursor:pointer;">
-                    <a class="text-3 text-secondary control" aria-haspopup="true" wire:click="openCcRecipientsContainer" style="text-decoration: none;">
+                <div class="control-wrapper d-flex align-items-center">
+                    <a class="text-3 text-secondary no-underline control" aria-haspopup="true" wire:click="openCcRecipientsContainer">
                         <div class="icon-container">
-                            <i class="fa fa-plus" style="color: #778899;"></i>
+                            <i class="fa fa-plus"></i>
                         </div>
                     </a>
                     <!-- Blade Template: your-component.blade.php -->
@@ -395,10 +403,10 @@
                     $hiddenEmployees = $employeesCollection->slice(3);
                     @endphp
 
-                    <ul class="d-flex align-items-center mb-0 employee-list" style="list-style-type: none; gap:10px;">
+                    <ul class="d-flex align-items-center list-unstyled mb-0 gap-3 employee-list" >
                         @foreach($visibleEmployees as $recipient)
-                        <li class="employee-item" style="flex: 1 1 auto;">
-                            <div class="px-2 py-1 d-flex justify-content-between align-items-center" style="border-radius: 25px; border: 2px solid #adb7c1; gap:10px;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
+                        <li class="employee-item">
+                            <div class="px-2 py-1 d-flex justify-content-between align-items-center rounded-pill gap-3" style=" border: 2px solid #adb7c1;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
                                 <span class="text-container normalTextValue font-weight-normal">
                                     {{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}
                                 </span>
@@ -410,27 +418,27 @@
 
                         @if(count($selectedCCEmployees) > 3)
                         <li>
-                            <span type="button" wire:click="openModal" class="normalText"><a href="#">View More</a></span>
+                            <span type="button" wire:click="openModal" class="anchorTagDetails" >View More</span>
                         </li>
                         @endif
                     </ul>
 
                     <!-- Popup Modal -->
                     @if($showCCEmployees)
-                    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal d-block" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" style="color:white;">More Recipients</h5>
+                                    <h5 class="modal-title" >More Recipients</h5>
                                     <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
-                                        wire:click="openModal" style="background-color: white; height:10px;width:10px;">
+                                        wire:click="openModal">
                                     </button>
                                 </div>
                                 <div class="modal-body d-flex align-items-center" style="max-width:100%;overflow-x:auto;">
-                                    <ul class="d-flex align-items-center mb-0" style="list-style-type: none; gap:10px;">
+                                    <ul class="d-flex align-items-center mb-0 list-unstyled gap-3" >
                                         @foreach($hiddenEmployees as $recipient)
-                                        <li class="employee-item" style="flex: 1 1 auto;">
-                                            <div class="px-2 py-1 d-flex justify-content-between align-items-center" style="border-radius: 25px; border: 2px solid #adb7c1; gap:10px;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
+                                        <li class="employee-item" >
+                                            <div class="px-2 py-1 d-flex justify-content-between align-items-center rounded-pill gap-3" style=" border: 2px solid #adb7c1; " title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
                                                 <span class="text-container normalTextValue font-weight-normal">
                                                     {{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}
                                                 </span>
@@ -451,20 +459,20 @@
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
-                        <div class="col m-0 p-0">
-                            <div class="input-group" style="width:180px;">
-                                <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" style="font-size: 12px; border-radius: 5px 0 0 5px; cursor: pointer; width:50%;" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                        <div class="col-md-10 m-0 p-0">
+                            <div class="input-group" >
+                                <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
                                     <button type="button" wire:click="searchCCRecipients" class="search-btn">
-                                        <i style="margin-left: 10px;" class="fas fa-search"></i>
+                                        <i class="fas fa-search ms-2"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col m-0 p-0 d-flex justify-content-end">
-                            <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: #ccc;border:#ccc;height:33px;width:33px;">
-                                <span aria-hidden="true" style="color: white; font-size: 18px;"><i class="fas fa-times "></i></span>
+                            <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close" >
+                                <span aria-hidden="true" class="closeIcon"><i class="fas fa-times "></i></span>
                             </button>
                         </div>
                     </div>
@@ -472,24 +480,24 @@
                         @if(!empty($ccRecipients))
                         @foreach($ccRecipients as $employee)
                         <div wire:key="{{ $employee['emp_id'] }}">
-                            <div class="d-flex align-items-center mt-2 align-items-center" style=" gap: 10px; text-transform: capitalize; cursor: pointer;" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
-                                <input type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" style="margin-right: 10px; cursor:pointer;" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
+                            <div class="downArrow d-flex align-items-center mt-2 align-items-center gap-3 text-capitalize"  wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
+                                <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}"  wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
                                 @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
                                 <div class="employee-profile-image-container">
-                                    <img height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}" style="border-radius: 50%;">
+                                    <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}">
                                 </div>
                                 @else
                                 @if($employee['gender'] === "Male")
                                 <div class="employee-profile-image-container">
-                                    <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="33" width="33">
+                                    <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle"  height="33" width="33">
                                 </div>
                                 @elseif($employee['gender'] === "Female")
                                 <div class="employee-profile-image-container">
-                                    <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="33" width="33">
+                                    <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="33" width="33">
                                 </div>
                                 @else
                                 <div class="employee-profile-image-container">
-                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius: 50%;" height="35px" width="35px">
+                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="35px" width="35px">
                                 </div>
                                 @endif
                                 @endif
@@ -513,7 +521,7 @@
             </div>
             <div class="form-group mt-3">
                 <label for="contactDetails">Contact Details <span class="requiredMark">*</span> </label>
-                <input id="contactDetails" type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" style="width:50%;">
+                <input id="contactDetails" type="text" wire:model.lazy="contact_details" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('contact_details')" name="contactDetails" >
                 @error('contact_details') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group mt-3">
@@ -523,14 +531,14 @@
             </div>
             <div class="form-group mt-3">
                 <label for="file">Attachments</label> <br>
-                <input id="file" type="file" wire:model="file_paths" wire:loading.attr="disabled" multiple style="font-size: 12px;" /> <br>
+                <input id="file" type="file" wire:model="file_paths" wire:loading.attr="disabled" multiple /> <br>
                 @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror
-                <span class="normalTextValue mt-2" style="font-weight: normal;">File type : xls,csv,xlsx,pdf,jpeg,png,jpg,gif</span>
+                <span class="normalTextValue mt-2 fw-normal" >File type : xls,csv,xlsx,pdf,jpeg,png,jpg,gif</span>
             </div>
 
             <div class="buttons-leave">
                 <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
-                <button type="button" class=" cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2, 17, 79);">Cancel</button>
+                <button type="button" class=" cancel-btn" wire:click="resetFields" >Cancel</button>
             </div>
         </form>
     </div>
