@@ -481,15 +481,16 @@
         @endif
 
         @if ($activeTab == "active")
-        <div class="row mt-2">
-            <div class="col-12 col-md-3 mb-2 mb-md-0">
+        <div class="row ">
+            <div class="col-12 col-md-3  mt-1">
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                    <div class="input-group-append">
-                        <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
-                            <i class="fa fa-search people-search-icon"></i>
-                        </button>
-                    </div>
+                   
+    
+                            <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
+                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                                    </button>
+                 
 
                 </div>
             </div>
@@ -653,16 +654,14 @@
 
 
         @if ($activeTab == "closed")
-        <div class="row mt-2">
-            <div class="col-12 col-md-3 mb-2 mb-md-0">
+        <div class="row ">
+            <div class="col-12 col-md-3 mt-1">
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                    <div class="input-group-append">
-                        <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
-                            <i class="fa fa-search people-search-icon"></i>
-                        </button>
-                    </div>
-
+               
+                    <button  wire:click="searchCloseHelpDesk" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
+                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                                    </button>
                 </div>
             </div>
             <div class="col-12 col-md-3">
@@ -798,15 +797,13 @@
 
 
         @if ($activeTab == "pending")
-        <div class="row mt-2">
-            <div class="col-12 col-md-3 mb-2 mb-md-0">
+        <div class="row ">
+            <div class="col-12 col-md-3 mt-1">
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                    <div class="input-group-append">
-                        <button wire:click="searchActiveHelpDesk" class="submit-btn" type="button">
-                            <i class="fa fa-search people-search-icon"></i>
-                        </button>
-                    </div>
+                    <button  wire:click="searchPendingHelpDesk" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
+                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                                    </button>
 
                 </div>
             </div>
