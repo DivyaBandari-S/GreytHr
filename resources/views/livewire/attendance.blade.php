@@ -1554,12 +1554,12 @@ color: #fff;
                             <div class="form-row" style="display: flex; justify-content: center;">
                                 <div class="form-group col-md-3 col-sm-6 start-date-for-attend-period">
                                     <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
-                                        date</label>
+                                        Date</label>
                                     <input type="date" class="form-control" id="fromDate" wire:model="from_date" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                                 <div class="form-group col-md-3 col-sm-6">
                                     <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To
-                                        date</label>
+                                        Date</label>
                                     <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                             </div>
@@ -1681,7 +1681,7 @@ color: #fff;
 
 
                                 @if ($day)
-                                @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP' ) @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1) rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
+                                @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='L') @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1) rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
                                     <div>
 
 
@@ -1715,6 +1715,14 @@ color: #fff;
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">SL</span>
                                                 @elseif($day['status'] == 'LOP')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">LOP</span>
+                                                @elseif($day['status'] == 'CL')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">CL</span>
+                                                @elseif($day['status'] == 'ML')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">ML</span>
+                                                @elseif($day['status'] == 'PL')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">PL</span>
+                                                @elseif($day['status'] == 'L')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">L</span>
                                                 @elseif($day['status'] == 'A')
                                                 <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
                                                 @elseif($day['status'] == 'P')
@@ -1724,7 +1732,7 @@ color: #fff;
 
                                                 </span>
                                                 @endif
-                                                @if($day['isRegularised']==true)
+                                                @if($day['isRegularised']==true&&($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='MTL'||$day['status']=='L'))
                                                 @php
                                                 $Regularised=true;
                                                 @endphp
@@ -2299,71 +2307,11 @@ color: #fff;
 
 
 
-    <script>
-        document.getElementById("myButton").onclick = function() {
-            // Replace 'destination-page.html' with the URL of the page you want to navigate to
-            window.location.href = 'das.html';
-        };
-    </script>
 
 
 
 
-    <script>
-        $(document).ready(function() {
-            $('.toggle-box i.fas.fa-calendar').click(function() {
-                // Toggle the 'active' class on the calendar icon
-                $(this).toggleClass('active');
-
-                // Reset the bars icon to its initial styles
-                $('.toggle-box i.fas.fa-bars').removeClass('active');
-            });
-
-            $('.toggle-box i.fas.fa-bars').click(function() {
-                // Toggle the 'active' class on the bars icon
-                $(this).toggleClass('active');
-
-                // Reset the calendar icon to its initial styles
-                $('.toggle-box i.fas.fa-calendar').removeClass('active');
-            });
-        });
-    </script>
-    <script>
-        function toggleBoxContainer() {
-            const boxContainer = document.getElementById('box-container');
-            if (boxContainer.style.display === 'none') {
-                boxContainer.style.display = 'block';
-            } else {
-                boxContainer.style.display = 'none';
-            }
-        }
-
-        function hideBoxContainer() {
-            const boxContainer = document.getElementById('box-container');
-            boxContainer.style.display = 'none';
-        }
-
-        // Event listener for the bars-icon click event
-        const barsIcon = document.getElementById('bars-icon');
-        barsIcon.addEventListener('click', toggleBoxContainer);
-
-        // Event listener for the calendar-icon click event (to hide the box-container)
-        const calendarIcon = document.getElementById('calendar-icon');
-        calendarIcon.addEventListener('click', hideBoxContainer);
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('.attendance-calendar-date').click(function() {
-                // Remove the 'clicked' class from all elements
-                $('.attendance-calendar-date').removeClass('clicked');
-
-                // Add the 'clicked' class to the clicked element
-                $(this).addClass('clicked');
-            });
-        });
-    </script>
-
+   
 
 
 </div>

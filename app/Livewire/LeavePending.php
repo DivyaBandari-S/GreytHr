@@ -209,7 +209,6 @@ class LeavePending extends Component
             // Attempt to decode applying_to
             $applyingToJson = trim($this->leaveRequest->applying_to);
             $this->leaveRequest->applying_to = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
-
             // Attempt to decode cc_to
             $ccToJson = trim($this->leaveRequest->cc_to);
             $this->leaveRequest->cc_to = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);

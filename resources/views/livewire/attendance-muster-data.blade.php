@@ -26,8 +26,7 @@
                         <!-- Add table rows and data for Summary -->
                         @foreach($Employees as $emp)
                           <tr>
-
-                                <td>{{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<br/>#{{ $emp->emp_id }}</td>
+                            <td>{{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<br/>#{{ $emp->emp_id }}</td>
                                @foreach($DistinctDatesMapCount as $empId=>$d1)
                                    @if($empId ==$emp->emp_id)
 

@@ -1,13 +1,11 @@
-<div style="position:relative;">
+<div class="position-relative">
     <div class="msg-container">
         @if ($showAlert)
-        <div id="alert-container" class="d-flex justify-content-center alert-container mb-3" wire:poll.1s="hideAlert"
-            style="position: absolute; top: 3%; z-index: 10; width: 100%;">
+        <div id="alert-container" class="d-flex justify-content-center alert-container mb-3" wire:poll.1s="hideAlert">
             <!-- wire:poll.5s="hideAlert" -->
-            <p class="alert alert-success" role="alert"
-                style=" font-weight: 400;width:fit-content;padding:10px;border-radius:5px;margin-bottom:0px">
+            <p class="alert alert-success successContainer" role="alert">
                 {{ session('success') }} 😀
-                <span class="ml-5" style="font-weight:500;margin:0px 10px 0px 20px; cursor: pointer; "
+                <span class="closeMsg ml-5"
                     wire:click='hideAlert'>x</span>
             </p>
         </div>
@@ -16,7 +14,7 @@
     <div class="content">
         <div class="row m-0 p-0 mb-3">
             <div class="col-md-6 mb-3">
-                <div class="row m-0" style="border-radius: 10px; background-color: #02114f;">
+                <div class="row m-0 welcomeContainer">
                     <div class="col-6 p-0 ps-3 pt-4">
                         @if ($this->greetingText)
                         <p class="morning-city">{{ $greetingText }}</p>
@@ -124,11 +122,11 @@
         <!-- main content -->
 
         <div class="row m-0">
-            <div class="col-md-3 mb-4 ">
+            <div class="col-md-3 mb-4">
                 <div class="">
                     <div class="homeCard4">
                         <div class="p-3">
-                            <p class="payslip-card-title ">{{ $currentDate }}</p>
+                            <p class="payslip-card-title">{{ $currentDate }}</p>
                             <p class="normalText mt-2">
                                 @php
                                 // Fetch shift times
@@ -151,27 +149,23 @@
                                 {{ substr($currentDay, 0, 3) }} | {{ $formattedStartShiftTime }} to
                                 {{ $formattedEndShiftTime }}
                             </p>
-                            <div class="d-flex" style="font-size: 14px;margin-top:2em;">
-                                <img src="/images/stopwatch.png" class="me-4" alt="Image Description"
-                                    style="width: 2.7em;">
-                                <p id="current-time" style="margin: auto 0;"></p>
+                            <div class="d-flex" style="font-size: 14px; margin-top: 2em;"
+                                x-data="{
+                         time: '',
+                         updateTime() {
+                             const now = new Date();
+                             const hours = String(now.getHours()).padStart(2, '0');
+                             const minutes = String(now.getMinutes()).padStart(2, '0');
+                             const seconds = String(now.getSeconds()).padStart(2, '0');
+                             this.time = `${hours} : ${minutes} : ${seconds}`;
+                         }
+                     }"
+                                x-init="setInterval(() => updateTime(), 1000)">
+                                <img src="/images/stopwatch.png" class="me-4" alt="Image Description" style="width: 2.7em;">
+                                <p x-text="time" class="showTimer"></p>
                             </div>
-                            <script>
-                                function updateTime() {
-                                    const currentTimeElement = document.getElementById('current-time');
-                                    const now = new Date();
-                                    const hours = String(now.getHours()).padStart(2, '0');
-                                    const minutes = String(now.getMinutes()).padStart(2, '0');
-                                    const seconds = String(now.getSeconds()).padStart(2, '0');
-                                    const currentTime = `${hours} : ${minutes} : ${seconds}`;
-                                    currentTimeElement.textContent = currentTime;
-                                }
-                                updateTime();
-                                setInterval(updateTime, 1000);
-                            </script>
-                            <div  class="A d-flex justify-content-between align-items-center flex-row" style="margin-top:2em">
-                                <a class="viewSwipesList" wire:click="open">View
-                                    Swipes</a>
+                            <div class="A d-flex justify-content-between align-items-center flex-row" style="margin-top: 2em">
+                                <a class="viewSwipesList" wire:click="open">View Swipes</a>
                                 <button id="signButton"
                                     class="signInButton"
                                     wire:click="toggleSignState">
@@ -191,6 +185,7 @@
                 </div>
             </div>
 
+
             <div class="col-md-3 mb-4 ">
                 <div class="payslip-card" style="height: 195px;">
                     <p class="payslip-card-title mb-0">Upcoming Holidays</p>
@@ -207,7 +202,7 @@
                             @if (!empty($entry->festivals))
                             <div>
                                 <p class="payslip-small-desc mt-3">
-                                    <span class="payslip-small-desc" style="font-weight:500;">{{ date('d M', strtotime($entry->date)) }}
+                                    <span class="payslip-small-desc fw-500">{{ date('d M', strtotime($entry->date)) }}
                                         <span class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
                                     <br>
                                     <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
@@ -273,7 +268,7 @@
                             <span class="normalTextValue">Things to review</span>
                         </p>
                         <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg"
-                            alt="" style="height: 40px; width: 40px;">
+                            alt="" width="40" height="40">
                     </div>
                     <div class="leave-display d-flex align-items-center border-top pt-3 gap-3">
                         @php
@@ -310,7 +305,7 @@
                         $initials = '?';
                         }
                         @endphp
-                        <a  href="/employees-review">
+                        <a href="/employees-review">
                             <div
                                 class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
                                 <div class="thisCircle d-flex align-items-center justify-content-center"
@@ -353,14 +348,14 @@
                     </a>
                 </div>
                 @if ($showReviewLeaveAndAttendance)
-                <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                <div class="modal d-block" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">
                                     <b>Review</b>
                                 </h5>
-                                <button type="button" class="btn-closeModal btn-primary" aria-label="Close"
+                                <button type="button" class="btn-close btn-primary" aria-label="Close"
                                     wire:click="closereviewLeaveAndAttendance">
                                 </button>
                             </div>
@@ -756,7 +751,7 @@
                     @else
                     <div class="leaveNodata">
                         <img src="{{ asset('images/no data.png') }}" name="noData" id="noData"
-                            alt="Image Description" style="width: 120px; height:100px;">
+                            alt="Image Description" width="120" height="100">
                         <p class="homeText">
                             Wow! No leaves planned today.
                         </p>
@@ -821,7 +816,7 @@
         </div>
     </div>
     @if ($showAlertDialog)
-    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal d-block" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -829,28 +824,27 @@
                         <b>Swipes</b>
                     </h5>
                     <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="close"
-                        style="background-color: white; height:10px;width:10px;">
+                        aria-label="Close" wire:click="close">
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
                     <div class="row">
-                        <div class="col normalTextValue" >Date :
+                        <div class="col normalTextValue">Date :
                             <span class="normalText">{{ $currentDate }}</span>
                         </div>
-                        <div class="col normalTextValue" >Shift
+                        <div class="col normalTextValue">Shift
                             Time : <span class="normalText">10:00 to 19:00</span></div>
                     </div>
-                    <table class="swipes-table mt-2 border" style="width: 100%;">
-                        <tr >
+                    <table class="swipes-table mt-2 border w-100">
+                        <tr>
                             <th>
                                 Swipe Time</th>
-                            <th >
+                            <th>
                                 Sign-In / Sign-Out</th>
                         </tr>
                         @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
                         @foreach ($swipeDetails as $swipe)
-                        <tr >
+                        <tr>
                             <td>
                                 {{ $swipe->swipe_time }}
                             </td>
@@ -873,16 +867,15 @@
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
     @if ($showAllAbsentEmployees)
-    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal d-block" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" >
+                <div class="modal-header">
                     <h5 class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
-                    <button type="button" class="btn-closeModal btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="closeAllAbsentEmployees"
-                        >
+                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                        aria-label="Close" wire:click="closeAllAbsentEmployees">
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -914,16 +907,15 @@
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
     @if ($showAllLateEmployees)
-    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal d-block" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" >
-                    <h5  class="modal-title">
+                <div class="modal-header">
+                    <h5 class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
-                    <button type="button" class="btn-closeModal btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="closeAllLateEmployees"
-                        >
+                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                        aria-label="Close" wire:click="closeAllLateEmployees">
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -945,7 +937,7 @@
                             </div>
                             </a>
                             @endif
-                        @endfor
+                            @endfor
                     </div>
                 </div>
             </div>
@@ -955,16 +947,15 @@
 
     @endif
     @if ($showAllEarlyEmployees)
-    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal d-block" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" >
-                    <h5  class="modal-title">
+                <div class="modal-header">
+                    <h5 class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
-                    <button type="button" class="btn-closeModal btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="closeAllEarlyEmployees"
-                        >
+                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                        aria-label="Close" wire:click="closeAllEarlyEmployees">
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">

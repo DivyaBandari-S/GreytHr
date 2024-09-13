@@ -73,6 +73,11 @@ class LeaveApplyPage extends Component
     public $selectedCCEmployees = [];
     public $showerrorMessage = false;
     public $showCasualLeaveProbation, $showCasualLeaveProbationYear;
+    public $showAlert = false;
+    public function hideSuccessAlert()
+    {
+        $this->showAlert = false;
+    }
     protected $rules = [
         'leave_type' => 'required',
         'from_date' => 'required|date',
@@ -314,8 +319,8 @@ class LeaveApplyPage extends Component
                             ->where('to_date', '<=', $this->to_date);
                     });
                 })
+                ->whereIn('status', ['approved', 'pending'])
                 ->get();
-
             foreach ($overlappingLeave as $leave) {
                 $carbonFromDate = $leave->from_date->format('Y-m-d');
                 $carbonToDate = $leave->to_date->format('Y-m-d');
@@ -463,9 +468,9 @@ class LeaveApplyPage extends Component
             ]);
 
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
-
             session()->flash('message', 'Leave application submitted successfully!');
-            return redirect()->to('/leave-form-page');
+            $this->resetFields();
+            $this->showAlert = true;
         } catch (\Exception $e) {
             Log::error("Error: " . $e->getMessage());
             session()->flash('error', 'Failed to submit leave application. Please try again later.');

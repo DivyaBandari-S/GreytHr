@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
+use App\Models\LeaveRequest;
 use App\Models\SwipeRecord;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -48,6 +49,7 @@ class AttendanceTable extends Component
     public $totalMinutesWorked;
     public $startDate;
 
+    public $employeeIdForTable;
     public $endDate;
     public $legend=true;
     public $showSR = false;
@@ -71,9 +73,10 @@ class AttendanceTable extends Component
         // First initialize
         $this->year = Carbon::now()->format('Y');
         $this->start = Carbon::now()->year($this->year)->firstOfMonth()->format('Y-m-d');
+
         $this->end = Carbon::now()->year($this->year)->lastOfMonth()->format('Y-m-d');
         $this->fromDate=$this->start;
-        $this->toDate=$this->endDate;
+        $this->toDate=$this->end;
         $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
         $ip = request()->ip();
         $location = GeoIP::getLocation($ip);
@@ -91,6 +94,44 @@ class AttendanceTable extends Component
     public function updatetoDate()
     {
         $this->toDate=$this->toDate;
+    }
+    private function isEmployeeLeaveOnDate($date, $employeeId)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+
+            return LeaveRequest::where('emp_id', $employeeId)
+                ->where('status', 'approved')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>=', $date);
+                })
+                ->exists();
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while checking employee leave. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
+    }
+    private function detectEmployeeLeaveType($date, $employeeId)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+
+            return LeaveRequest::where('emp_id', $employeeId)
+                ->where('status', 'approved')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>=', $date);
+                })
+                ->value('leave_type');
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while checking employee leave. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
     }
     public function openlegend()
     {
@@ -137,7 +178,7 @@ class AttendanceTable extends Component
     {
         $this->todaysDate = date('Y-m-d');
         $employeeId = auth()->guard('emp')->user()->emp_id;
-
+        $this->employeeIdForTable = auth()->guard('emp')->user()->emp_id;
         $this->swiperecord = SwipeRecord::where('emp_id', $employeeId)->where('is_regularised', 1)->get();
         $currentMonth = date('F');
         $currentYear = date('Y');

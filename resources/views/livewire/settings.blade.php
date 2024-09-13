@@ -40,7 +40,7 @@
         </div>
     </div>
     @if ($showAlertDialog)
-        
+
         <div class="modal d-block" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -118,17 +118,17 @@
                                     <div class="card setting-password-card">
                                         <div class="form-group">
                                             <label class="setting-password-modal-label"
-                                                for="oldPassword">Old Password</label>
+                                                for="oldPassword">Current Password</label>
                                             <br><input class="form-control setting-password-modal-input" type="password"
                                                 id="oldPassword" name="oldPassword"
-                                                placeholder="Enter your old password" wire:model.lazy="oldPassword">
+                                                placeholder="Enter your current password" wire:model.lazy="oldPassword">
                                             @error('oldPassword')
                                                 <p class="pt-2 px-1 text-danger setting-password-error-msg">
                                                     {{ str_replace('oldPassword', 'Password', $message) }}</p>
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label class="setting-password-modal-label" 
+                                            <label class="setting-password-modal-label"
                                                 for="newPassword">New Password</label>
                                             <br><input class="form-control setting-password-modal-input" type="password"
                                                 id="newPassword" name="newPassword"
@@ -143,7 +143,7 @@
                                                 for="confirmNewPassword">Confirm New Password</label>
                                             <br><input class="form-control setting-password-modal-input" type="password"
                                                 id="confirmNewPassword" name="confirmNewPassword"
-                                                placeholder="Enter your new password again"
+                                                placeholder="Enter your confirm new password"
                                                 wire:model.lazy="confirmNewPassword">
                                             @error('confirmNewPassword')
                                                 <p class="pt-2 px-1 text-danger setting-password-error-msg">
@@ -219,7 +219,7 @@
                                 <div class="setting-bday-label">
                                     Official Birthday
                                 </div>
-                                <div class="settings-birthday-value" 
+                                <div class="settings-birthday-value"
                                     title="{{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
                                         ? date('d M, Y', strtotime($employee->empPersonalInfo->date_of_birth))
                                         : '-' }}">

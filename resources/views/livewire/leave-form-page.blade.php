@@ -1,21 +1,7 @@
 <div class="leavePageContent position-relative">
-   <div class="d-flex mt-2 mb-3 gap-4 align-items-center ">
-      @if(session()->has('message'))
-      <div class="alert alert-success w-50 position-absolute m-auto p-2" style="font-size: 12px; right: 25%;" id="success-alert">
-         {{ session('message') }}
-         <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
-            <span>X</span>
-         </button>
-      </div>
-      <script>
-         setTimeout(function() {
-            $('#success-alert').fadeOut('slow');
-         }, 3000); // 3 seconds
-      </script>
-      @endif
-
+   <div class="d-flex mt-2 gap-4 align-items-center ">
       @if(session()->has('error'))
-      <div class="alert alert-danger position-absolute p-1" style="font-size: 12px; right: 25%;" id="error-alert">
+      <div class="alert alert-danger position-absolute p-1" style="right: 25%;top:-3%;"  id="error-alert">
          {{ session('error') }}
          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span>X</span>
@@ -29,18 +15,18 @@
       @endif
    </div>
 
-   <div class="toggle-container mt-3">
+   <div class="toggle-container">
       <!-- Navigation Buttons -->
-      <div class="nav-buttons d-flex justify-content-center">
+      <div class="nav-buttons mt-2 d-flex justify-content-center">
          <ul class="nav custom-nav-tabs border">
             <li class="custom-item m-0 p-0 flex-grow-1">
-               <div style="border-top-left-radius:5px; border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</div>
+               <div class="reviewActiveButtons custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</div>
             </li>
-            <li class="custom-item m-0 p-0 flex-grow-1" style="border-left:1px solid #ccc; border-right:1px solid #ccc;">
-               <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
+            <li class="pendingCustomStyles custom-item m-0 p-0 flex-grow-1">
+               <a href="#" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
             </li>
             <li class="custom-item m-0 p-0 flex-grow-1">
-               <a href="#" style="border-top-right-radius:5px; border-bottom-right-radius:5px;" class="custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
+               <a href="#" class="reviewClosedButtons custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
             </li>
          </ul>
       </div>
@@ -70,7 +56,7 @@
 
          <!-- Sub-Section Content -->
          @if($activeSubSection === 'leave')
-         <div class="apply-section  ">
+         <div class="apply-section ">
             <div class="containerWidth">
                @livewire('leave-apply-page')
             </div>
@@ -78,10 +64,10 @@
          @elseif($activeSubSection === 'restricted')
          <div class="restricted-section">
             <div class="containerWidth">
-               <div class="leave-pending rounded">
+               <div class="leave-pending rounded w-100">
                   @if($resShowinfoMessage)
                   <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
-                     <p class="mb-0" style="font-size:10px;">Restricted Holidays (RH) are a set of holidays allocated by the
+                     <p class="mb-0 normalTextSmall" >Restricted Holidays (RH) are a set of holidays allocated by the
                         company that are optional for the employee to utilize. The company sets a limit on the
                         amount of holidays that can be used.</p>
                      <p class="mb-0 hideInfo" wire:click="toggleInfoRes">Hide</p>
@@ -110,10 +96,10 @@
          <div class="comp-off-section">
             <div class="containerWidth">
                <div>
-                  <div class="leave-pending rounded">
+                  <div class="leave-pending rounded w-100">
                      @if($compOffShowinfoMessage)
                      <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
-                        <p class="mb-0" style="font-size:11px;">Compensatory Off is additional leave granted as a compensation for working overtime or on
+                        <p class="mb-0 normalTextSmall">Compensatory Off is additional leave granted as a compensation for working overtime or on
                            an off day.</p>
                         <p class="mb-0 hideInfo" wire:click="toggleInfoCompOff">Hide</p>
                      </div>
@@ -136,7 +122,7 @@
          @endif
          @elseif($activeSection === 'pendingButton')
          @if ($showAlert)
-         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.20s="hideAlert" style="font-size: 12px; right: 25%;top:-10%;" id="success-alert">
+         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.20s="hideAlert" style="right: 25%;top:-12%;" id="success-alert">
             {{ session('cancelMessage') }}
             <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close" wire:click="hideAlert">
                <span>X</span>
@@ -144,10 +130,10 @@
          </div>
          @endif
          <div class="pending-section">
-            <div id="pendingButton" class="row rounded mt-4" style="{{ $activeSection === 'pendingButton' ? '' : 'display:none;' }}; max-height: 70vh;overflow-y: auto;">
+            <div id="pendingButton" class="pendingContent {{ $activeSection === 'pendingButton' ? '' : 'd-none' }} row rounded mt-3 ">
                @if(empty($combinedRequests) || $combinedRequests->isEmpty())
-               <div class="mt-2">
-                  <div class="leave-pending rounded" style="width:80%;margin:0 auto;">
+               <div class="containerWidth">
+                  <div class="leave-pending rounded">
 
                      <img src="{{asset('/images/pending.png')}}" alt="Pending Image" class="imgContainer">
 
@@ -209,15 +195,12 @@
                               </span>
 
                            </div>
-
-
                            <!-- Add other details based on your leave request structure -->
                            @if(($leaveRequest->category_type === 'Leave') )
                            <div class="col accordion-content">
                               <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($leaveRequest->status) }}</span>
                            </div>
                            @endif
-
                            <div class="arrow-btn">
                               <i class="fa fa-chevron-down"></i>
                            </div>
@@ -228,20 +211,20 @@
 
                      <div class="accordion-body m-0 p-0">
 
-                        <div style="width:100%; height:1px; border-bottom:1px solid #ccc;"></div>
+                        <div class="horizontalLine"></div>
 
                         <div class="content pt-1 px-3">
 
                            <span class="normalTextValue">Duration:</span>
 
-                           <span style="font-size: 11px;">
+                           <span class="normalTextValueSmall">
 
-                              <span style="font-size: 11px; font-weight: 500;">
+                              <span class="normalTextValueSmall">
                                  {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }} </span>
 
                               ( {{ $leaveRequest->from_session }} ) to
 
-                              <span style="font-size: 11px; font-weight: 500;">
+                              <span class="normalTextValueSmall">
                                  {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
 
                               ( {{ $leaveRequest->to_session }} )
@@ -254,11 +237,11 @@
 
                            <span class="normalTextValue">Reason:</span>
 
-                           <span style="font-size: 11px;">{{ ucfirst( $leaveRequest->reason) }}</span>
+                           <span class="normalTextValueSmall">{{ ucfirst( $leaveRequest->reason) }}</span>
 
                         </div>
 
-                        <div style="width:100%; height:1px; border-bottom:1px solid #ccc;"></div>
+                        <div class="horizontalLine"></div>
 
                         <div class="d-flex justify-content-between align-items-center py-2 px-3">
 
@@ -300,7 +283,7 @@
          </div>
          @elseif($activeSection === 'historyButton')
          <div class="history-section">
-            <div id="historyButton" class="row historyContent rounded mt-4" style="{{ $activeSection === 'historyButton' ? '' : 'display:none;' }}; max-height:70vh;overflow-y:auto;">
+            <div id="historyButton" class="historyContent {{ $activeSection === 'historyButton' ? '' : 'd-none;' }} row rounded mt-3">
                @if($this->leaveRequests->isNotEmpty())
 
                @foreach($this->leaveRequests->whereIn('status', ['approved', 'rejected','Withdrawn']) as $leaveRequest)
@@ -351,15 +334,15 @@
 
                               @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
 
-                              <span class="accordionContentSpanValue" style="color:#32CD32 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                              <span class="approvedColor" >{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                               @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
 
-                              <span class="accordionContentSpanValue" style="color:#FF0000 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                              <span class="rejectColor">{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                               @else
 
-                              <span class="accordionContentSpanValue" style="color:#778899 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                              <span class="normalTextValue">{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                               @endif
 
@@ -370,15 +353,15 @@
 
                               @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
-                              <span class="accordionContentSpanValue" style="color:#32CD32 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+                              <span class="approvedColor" >{{ strtoupper($leaveRequest->status) }}</span>
 
                               @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
 
-                              <span class="accordionContentSpanValue" style="color:#FF0000 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+                              <span class="rejectColor" >{{ strtoupper($leaveRequest->status) }}</span>
 
                               @else
 
-                              <span class="accordionContentSpanValue" style="color:#778899 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+                              <span class="normalTextValue" >{{ strtoupper($leaveRequest->status) }}</span>
 
                               @endif
 
@@ -401,13 +384,13 @@
 
                            <span class="headerText">Duration:</span>
 
-                           <span style="font-size: 11px;">
+                           <span class="normalTextValueSmall">
 
-                              <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }}</span>
+                              <span class="normalTextValueSmall"> {{ \Carbon\Carbon::parse($leaveRequest->from_date)->format('d-m-Y') }}</span>
 
                               ({{ $leaveRequest->from_session }} ) to
 
-                              <span style="font-size: 11px; font-weight: 500;"> {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
+                              <span class="normalTextValueSmall"> {{ \Carbon\Carbon::parse($leaveRequest->to_date)->format('d-m-Y') }}</span>
 
                               ( {{ $leaveRequest->to_session }} )
 
@@ -419,7 +402,7 @@
 
                            <span class="headerText">Reason:</span>
 
-                           <span style="font-size: 11px;">{{ ucfirst($leaveRequest->reason) }}</span>
+                           <span class="normalTextValueSmall">{{ ucfirst($leaveRequest->reason) }}</span>
 
                         </div>
 

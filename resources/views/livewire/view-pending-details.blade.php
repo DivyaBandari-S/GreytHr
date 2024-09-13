@@ -266,7 +266,7 @@
         @endforeach
         @else
         <div class="leave-pending">
-            <img src="/images/pending.png" alt="Pending Image" class="m-auto" width="100">
+            <img src="/images/pending.png" alt="Pending Image" class="m-auto" width="200">
             <p class="normalTextValue fw-normal">There are no pending records of any leave transaction to Review</p>
         </div>
         @endif
