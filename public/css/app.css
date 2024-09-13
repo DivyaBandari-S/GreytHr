@@ -2145,8 +2145,31 @@ td {
 .custom-radio-label{
     display: flex; 
     align-items: center; 
+    cursor: pointer;
     padding: 5px; 
     height: 100%;
+}
+.feeds-custom-menu {
+    border-radius: 5px;
+    border: 1px solid silver;
+    height: fit-content;
+}
+.feeds-custom-dropdown{
+    margin-top:20px;display:block
+}
+.feeds-main-content{
+    height:67vh ;
+     max-height:67vh;
+     overflow-y: auto;
+     scroll-behavior: smooth;
+}
+.cards{
+    padding: 15px; 
+    background-color: white; 
+    border-radius: 5px; 
+    border: 1px solid #CFCACA;
+     color: #3b4452;
+      margin-top: 5px
 }
 .feeds-left-menu{
 
@@ -2163,8 +2186,19 @@ td {
     position: relative;
     padding-top: 10px; /* Adjust based on button height */
     padding-left: 10px;
+    overflow: hidden; 
+    height: 60px;
+    margin-left:30px
 }
-
+.form-select{
+    border: 1px solid #ccc;
+     border-radius: 4px; 
+     padding: 5px; 
+     font-size: 0.75rem;
+      color: #3b4452; 
+      margin-top: 5px; 
+      height: 30px;
+}
 .addcomment {
     position: absolute;
     bottom: 15px; /* Move up by increasing this value */
@@ -2263,9 +2297,78 @@ td {
 
 .text-base {
     /* Font size */
-    font-size: 14px;
-    color: #47515b;
+    font-size: 12px;
+    color: #3b4452;
     font-weight: 600;
+}
+.custom-feed {
+    margin-left: -80px;
+}
+
+.custom-feed .sort-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.custom-feed .custom-feed-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #3b4452;
+}
+
+.custom-feed .custom-feed-menu {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    min-width: 190px;
+    right: -60px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.custom-feed .custom-feed-item {
+    padding: 8px 16px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #3b4452;
+}
+
+.Feeds-Dropdown{
+    font-size: 12px; 
+    line-height: 1; 
+    text-decoration: none; 
+    color:  #47515b;
+    cursor: pointer;
+     text-align: left; 
+     padding-left: 0; 
+     display: none;
+}
+.custom-list {
+    font-size: 13px;
+    line-height: 1;
+    text-decoration: none;
+    color: black;
+    text-align: left;
+    padding-left: 0;
+    overflow-y: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+.arrow-cus-button{
+    display: flex; 
+    justify-content: space-between; 
+    width: 100%; 
+    padding: 0.5rem;
+    overflow-y:auto;
+    max-height:fit-content;
+    cursor: pointer;
+    overflow-x: hidden
 }
 
 .font-semibold {
@@ -2280,8 +2383,9 @@ td {
 
 .text-xs {
     /* Font size */
-    font-size: var(--normal-font-size);
-    color: black;
+    font-size: 12px;
+    color: #47515b;
+   
 }
 
 .font-normal {
@@ -2557,6 +2661,7 @@ input[type="radio"] {
     height: 30px; /* Fixed height */
     display: flex;
     align-items: center;
+    cursor: pointer;
     padding: 5px;
     font-size: 12px;
     width: 100%;
@@ -2566,6 +2671,7 @@ input[type="radio"] {
 .activities:hover,
 .posts:hover ,.post-requests:hover{
     background-color: #edf3ff;
+    cursor: pointer;
 }
 .custom-radio-content{
     color: #778899; font-size: 12px; font-weight: 500; margin-left: 5px;
@@ -2585,8 +2691,14 @@ input[type="radio"] {
 .alert-success{
     max-width: 500px; margin: auto;
 }
-.drive-in{
-    color:#3b4452; display:flex;flex-direction:column;justify-content:center;margin-left:10px
+.drive-in {
+    color: #3b4452; 
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+    justify-content: center; /* Centers items vertically */
+    margin-left: 10px;
+     /* Full viewport height to center vertically */
 }
 .radio-wrapper {
     display: inline-block;
