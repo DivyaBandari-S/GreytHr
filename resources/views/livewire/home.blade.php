@@ -611,8 +611,8 @@
                     <p class="payslip-card-title">Payslip</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="canvasBorder">
-                            <canvas id="combinedPieChart" width="100" height="100"></canvas>
-                        </div>
+                            <canvas id="combinedPieChart" width="117" height="117"></canvas>
+                        </div>/
                         <div class="c d-flex justify-content-end flex-column">
                             <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}</p>
                             <p class=" payslip-small-desc align-items-end d-flex justify-content-end flex-column">
@@ -1032,7 +1032,7 @@
             },
             options: {
                 responsive: true,
-                cutout: '55%', // Adjust this to increase thickness (lower cutout value for thicker ring)
+                cutout: '60%', // Adjust this to increase thickness (lower cutout value for thicker ring)
                 plugins: {
                     legend: {
                         display: false // Hide labels

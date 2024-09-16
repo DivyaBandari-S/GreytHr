@@ -107,8 +107,7 @@
             @if ($managerId)
             <li>
                 <a href="/reports">
-
-                    <i class="fas fa-file-alt icon" style="color:#6c7e90"></i> Reports
+                    <i class="fas fa-file-alt icon" ></i> Reports
                 </a>
             </li>
             @endif

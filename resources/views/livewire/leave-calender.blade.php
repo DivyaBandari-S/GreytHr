@@ -46,8 +46,8 @@
                 <div class="filter-container">
                     <label for="filterType" class="normalTextValueSubheading">Filter Type:</label>
                     <select class="filterDropdown rounded border" wire:model.lazy="filterCriteria" id="filterType" class="filter-dropdown" wire:change="filterBy($event.target.value)">
-                        <option value="Me" @if($filterCriteria==='Me' ) selected @endif>Me</option>
-                        <option value="MyTeam" @if($filterCriteria==='MyTeam' ) selected @endif>My Team</option>
+                        <option class="option" value="Me" @if($filterCriteria==='Me' ) selected @endif>Me</option>
+                        <option class="option" value="MyTeam" @if($filterCriteria==='MyTeam' ) selected @endif>My Team</option>
                         <!-- Add more options as needed -->
                     </select>
                 </div>

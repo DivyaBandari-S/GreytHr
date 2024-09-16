@@ -5559,9 +5559,7 @@ select .yearSelect {
     outline: none;
     margin-bottom: 16px;
 }
-option {
-    background: #fff;
-}
+
 .employee-profile-image {
     margin-top: -8px;
     height: 100px;
