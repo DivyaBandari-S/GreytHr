@@ -558,6 +558,7 @@ body {
     padding: 7px 12px;
     font-size: var(--normal-font-size);
     border: none;
+  
 }
 .submit-btn:hover {
     background-color: #272d48;
@@ -738,8 +739,12 @@ button.close-button {
     margin-top: 30px;
     border-radius: 5px;
 }
+
 .people-search-btn {
     color: #fff;
+}
+.people-search-icon{
+    background-color: #fff; 
 }
 
 .text-danger {
@@ -2140,6 +2145,19 @@ td {
     margin-bottom: 32px;
     transition: opacity 0.2s;
 }
+.emoji-list{
+    display: none;
+    background:white; 
+    border-radius:5px; 
+    border:1px solid silver; 
+    max-height:170px;width:220px; 
+    overflow-y: auto;
+}
+
+.emoji-option{
+    font-size: 14px;
+    cursor:pointer 
+}
 
 .hidden {
     opacity: 0;
@@ -2150,6 +2168,52 @@ td {
     font-size: 24px;
     padding: 8px;
 }
+.custom-height-30 {
+    height: 30px;
+}
+.custom-radio-label{
+    display: flex; 
+    align-items: center; 
+    cursor: pointer;
+    padding: 5px; 
+    height: 100%;
+}
+.feeds-custom-menu {
+    border-radius: 5px;
+    border: 1px solid silver;
+    height: fit-content;
+}
+.custom-dropdown{
+    margin-top:20px;
+    display:block
+}
+.eventsSection{
+    display: flex;
+     flex-direction: column;
+      align-items: center; 
+      justify-content: center;
+}
+.feeds-main-content{
+    height:75vh ;
+     max-height:75vh;
+     overflow-y: auto;
+     scroll-behavior: smooth;
+}
+.cards{
+    padding: 15px; 
+    background-color: white; 
+    border-radius: 5px; 
+    border: 1px solid #CFCACA;
+     color: #3b4452;
+      margin-top: 5px
+}
+.feeds-left-menu{
+
+    font-weight: 500;
+    color:#47515b;
+    cursor:pointer;
+    font-size: 0.8rem;
+}
 
 .emoji:hover {
     cursor: pointer;
@@ -2158,8 +2222,19 @@ td {
     position: relative;
     padding-top: 10px; /* Adjust based on button height */
     padding-left: 10px;
+    overflow: hidden; 
+    height: 60px;
+    margin-left:30px
 }
-
+.form-select{
+    border: 1px solid #ccc;
+     border-radius: 4px; 
+     padding: 5px; 
+     font-size: 0.75rem;
+      color: #3b4452; 
+      margin-top: 5px; 
+      height: 30px;
+}
 .addcomment {
     position: absolute;
     bottom: 15px; /* Move up by increasing this value */
@@ -2258,9 +2333,80 @@ td {
 
 .text-base {
     /* Font size */
-    font-size: 14px;
-    color: #47515b;
+    font-size: 12px;
+    color: #778899;
     font-weight: 600;
+}
+.text-feed{
+    font-size: 13px;
+    color: #3b4452;
+    font-weight: 600; 
+}
+.custom-feed {
+    margin-left: -80px;
+}
+
+.custom-feed .sort-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.custom-feed .custom-feed-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #3b4452;
+}
+
+.custom-feed .custom-feed-menu {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    min-width: 190px;
+    right: -60px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+
+}
+
+.custom-feed .custom-feed-item {
+    padding: 8px 16px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #3b4452;
+}
+
+.Feeds-Dropdown{
+    display: none;
+    overflow-y:auto;
+    max-height:120px;
+    overflow-x: hidden;
+}
+.custom-list {
+    font-size: 13px;
+    line-height: 1;
+    text-decoration: none;
+    color: black;
+    text-align: left;
+    padding-left: 0;
+    overflow-y: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+.cus-button{
+    display: flex; 
+    justify-content: space-between; 
+    width: 100%; 
+    padding: 0.5rem;
+    overflow-y:auto;
+    max-height:fit-content;
+    cursor: pointer;
+    overflow-x: hidden
 }
 
 .font-semibold {
@@ -2275,8 +2421,9 @@ td {
 
 .text-xs {
     /* Font size */
-    font-size: var(--normal-font-size);
-    color: black;
+    font-size: 12px;
+    color: #47515b;
+   
 }
 
 .font-normal {
@@ -2472,6 +2619,12 @@ td {
 .menu-item {
     transition: background-color 0.3s ease;
     text-decoration: none;
+    margin-top: 5px; 
+    display: block;  
+    padding: 5px 10px;
+    font-size: 11px;
+     transition: background-color 0.3s ease; 
+     color:#3b4452;
 }
 
 /* Define CSS for the menu items on hover */
@@ -2479,7 +2632,7 @@ td {
     background-color: #edf3ff;
     border-radius: 5px;
     height: auto;
-    width: 130%;
+    width: 100%;
     text-decoration: none;
 }
 
@@ -2507,6 +2660,7 @@ input[type="radio"] {
 /* Define the blue background color for the checked state */
 .input[type="radio"]:checked + .custom-radio-button {
     background-color: blue;
+    
 }
 
 .feather {
@@ -2543,18 +2697,33 @@ input[type="radio"] {
 }
 
 .activities,
-.posts {
-    height: 60px; /* Fixed height */
+.posts,.post-requests {
+    height: 30px; /* Fixed height */
     display: flex;
     align-items: center;
+    cursor: pointer;
     padding: 5px;
+    font-size: 12px;
     width: 100%;
     border-radius: 5px;
 }
-
+.post-button{
+    background-color: rgb(2, 17, 79);
+     color: white; 
+     height:30px;
+     margin-left: 20px;
+    border-radius: 5px; 
+    width:70px;
+    font-size:12px; 
+    border: 1px solid silver;
+}
 .activities:hover,
-.posts:hover {
+.posts:hover ,.post-requests:hover{
     background-color: #edf3ff;
+    cursor: pointer;
+}
+.custom-radio-content{
+    color: #778899; font-size: 12px; font-weight: 500; margin-left: 10px;
 }
 
 .medium-header {
@@ -2563,16 +2732,41 @@ input[type="radio"] {
     font-size: 0.875rem;
     line-height: 1.25rem;
     color: var(--e-color-emoji-text);
+    margin-top: 5px;
+    color:#3b4452;
 
     margin-left: 20px;
-    margin-top: 5px;
+  
+}
+.group-events{
+    color: #677A8E;
+     font-size: 13px;
+     font-weight: 100px; 
+     text-align: center;
 }
 /* CSS for radio-wrapper */
+.alert-success{
+    max-width: 500px; margin: auto;
+}
+.drive-in {
+    color: #3b4452; 
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+    justify-content: center; /* Centers items vertically */
+    margin-left: 10px;
+     /* Full viewport height to center vertically */
+}
 .radio-wrapper {
     display: inline-block;
     margin-right: 10px;
     /* Adjust margin as needed */
     cursor: pointer;
+}
+.btn-post{
+    background-color: #F1ECFC;
+    border:1px solid purple;
+    border-radius:5px;width:130px
 }
 
 /* CSS for labels */
