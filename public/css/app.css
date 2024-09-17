@@ -743,9 +743,6 @@ button.close-button {
 .people-search-btn {
     color: #fff;
 }
-.people-search-icon{
-    background-color: #fff; 
-}
 
 .text-danger {
     font-size: var(--normal-font-size);
