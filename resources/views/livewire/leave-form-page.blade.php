@@ -1,5 +1,5 @@
 <div class="leavePageContent position-relative">
-   <div class="d-flex mt-2 mb-3 gap-4 align-items-center ">
+   <div class="d-flex mt-2 gap-4 align-items-center ">
       @if(session()->has('error'))
       <div class="alert alert-danger position-absolute p-1" style="right: 25%;top:-3%;"  id="error-alert">
          {{ session('error') }}
@@ -15,9 +15,9 @@
       @endif
    </div>
 
-   <div class="toggle-container mt-3">
+   <div class="toggle-container">
       <!-- Navigation Buttons -->
-      <div class="nav-buttons d-flex justify-content-center">
+      <div class="nav-buttons mt-2 d-flex justify-content-center">
          <ul class="nav custom-nav-tabs border">
             <li class="custom-item m-0 p-0 flex-grow-1">
                <div class="reviewActiveButtons custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</div>
@@ -122,7 +122,7 @@
          @endif
          @elseif($activeSection === 'pendingButton')
          @if ($showAlert)
-         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.2s="hideAlert" style="right: 25%;top:-9%;" id="success-alert">
+         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.20s="hideAlert" style="right: 25%;top:-12%;" id="success-alert">
             {{ session('cancelMessage') }}
             <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close" wire:click="hideAlert">
                <span>X</span>
@@ -130,7 +130,7 @@
          </div>
          @endif
          <div class="pending-section">
-            <div id="pendingButton" class="pendingContent {{ $activeSection === 'pendingButton' ? '' : 'd-none' }} row rounded mt-4 ">
+            <div id="pendingButton" class="pendingContent {{ $activeSection === 'pendingButton' ? '' : 'd-none' }} row rounded mt-3 ">
                @if(empty($combinedRequests) || $combinedRequests->isEmpty())
                <div class="containerWidth">
                   <div class="leave-pending rounded">
@@ -283,7 +283,7 @@
          </div>
          @elseif($activeSection === 'historyButton')
          <div class="history-section">
-            <div id="historyButton" class="historyContent {{ $activeSection === 'historyButton' ? '' : 'd-none;' }} row rounded mt-4">
+            <div id="historyButton" class="historyContent {{ $activeSection === 'historyButton' ? '' : 'd-none;' }} row rounded mt-3">
                @if($this->leaveRequests->isNotEmpty())
 
                @foreach($this->leaveRequests->whereIn('status', ['approved', 'rejected','Withdrawn']) as $leaveRequest)

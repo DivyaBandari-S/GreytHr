@@ -4,7 +4,7 @@
             <div class="col-md-4 p-0 m-0 mb-2 ">
                 <div aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center ">
-                        <li class="breadcrumb-item"><a type="button"  class="submit-btn" href="{{ route('leave-form-page') }}">Back</a></li>
+                        <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('leave-form-page') }}">Back</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Leave - View Details</li>
                     </ol>
                 </div>
@@ -64,18 +64,18 @@
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
                                     <span class="normalTextValue">From Date</span> <br>
-                                    <span class="normalText fw-600" > {{ $leaveRequest->from_date->format('d M, Y') }}<br><span class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
+                                    <span class="normalText fw-600"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
                                     <span class="normalTextValue">To Date</span> <br>
-                                    <span class="normalText fw-600" >{{ $leaveRequest->to_date->format('d M, Y') }} <br><span class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
+                                    <span class="normalText fw-600">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
                             </div>
                             <div class="box d-flex text-center p-1">
                                 <div class="field p-2">
                                     <span class="normalTextValue">No. of days</span> <br>
-                                    <span class="normalText fw-600" > {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
+                                    <span class="normalText fw-600"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +92,11 @@
                                 @elseif($leaveRequest->leave_type === 'Casual Leave' && isset($leaveBalances['casualLeaveBalance']))
                                 <span class="normalText">{{ $leaveBalances['casualLeaveBalance'] }}</span>
                                 @elseif($leaveRequest->leave_type === 'Loss Of Pay' && isset($leaveBalances['lossOfPayBalance']))
+                                @if(($leaveBalances['lossOfPayBalance'])>0)
                                 <span class="normalText">&minus;{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                                @else
+                                <span class="normalText">{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                                @endif
                                 @elseif($leaveRequest->leave_type === 'Marriage Leave' && isset($leaveBalances['marriageLeaveBalance']))
                                 <span class="normalText">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
                                 @elseif($leaveRequest->leave_type === 'Maternity Leave' && isset($leaveBalances['maternityLeaveBalance']))
@@ -111,7 +115,7 @@
                 <hr>
                 <div class="pending-details">
                     <div class="data">
-                        <span class="normalTextSubheading" >Details</span>
+                        <span class="normalTextSubheading">Details</span>
                         <div class="row m-0 p-0">
                             <div class="col-md-8 m-0 p-0">
                                 <div class="custom-grid-container text-start">
@@ -127,11 +131,12 @@
                                         @endif
                                     </div>
                                     <div class="custom-grid-item">
-                                        @if (!empty($leaveRequest['applying_to']) && is_array($applyingTo) && isset($applyingTo['report_to']))
-                                        <span class="custom-value">{{ ucwords(strtolower($applyingTo['report_to'])) }}</span>
+                                        @if (!empty($leaveRequest->applying_to) && is_array($leaveRequest->applying_to) && isset($leaveRequest->applying_to[0]['report_to']))
+                                        <span class="custom-value">{{ ucwords(strtolower($leaveRequest->applying_to[0]['report_to'])) }}</span>
                                         @else
                                         <span class="custom-value">-</span>
                                         @endif
+
                                         <span class="custom-value">{{ ucfirst($leaveRequest->reason) }}</span>
                                         <span class="custom-value">{{ ucfirst($leaveRequest->contact_details) }}</span>
 
@@ -181,7 +186,7 @@
 
                                         {{-- view file popup --}}
                                         @if ($showViewImageDialog)
-                                        <div class="modal custom-modal d-block" tabindex="-1" role="dialog" >
+                                        <div class="modal custom-modal d-block" tabindex="-1" role="dialog">
                                             <div class="modal-dialog custom-modal-dialog custom-modal-dialog-centered custom-modal-lg" role="document">
                                                 <div class="modal-content custom-modal-content">
                                                     <div class="modal-header custom-modal-header">
@@ -239,7 +244,7 @@
 
                                                                     download="{{ $originalName }}"
 
-                                                                   class="anchorTagDetails">
+                                                                    class="anchorTagDetails">
 
                                                                     {{ $originalName }}
 
@@ -322,7 +327,7 @@
                                     <span class="normalText text-start">
                                         {{ ucwords(strtolower($applyingTo['report_to'] ))}}
                                     </span> <br>
-                                    <span class="normalTextSmall text-start" >{{ $leaveRequest->updated_at->format('d M, Y g:i a') }}</span>
+                                    <span class="normalTextSmall text-start">{{ $leaveRequest->updated_at->format('d M, Y g:i a') }}</span>
 
                                     @endforeach
                                     @endif
@@ -339,7 +344,7 @@
                             <div class="d-flex flex-column">
                                 <h5 class="mb-0 normalText text-start">Submitted
                                 </h5>
-                                <span class="normalTextSmall text-start" >{{ $leaveRequest->created_at->format('d M, Y g:i a') }}</span>
+                                <span class="normalTextSmall text-start">{{ $leaveRequest->created_at->format('d M, Y g:i a') }}</span>
                             </div>
                         </div>
                     </div>

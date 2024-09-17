@@ -107,8 +107,7 @@
             @if ($managerId)
             <li>
                 <a href="/reports">
-
-                    <i class="fas fa-file-alt icon" style="color:#6c7e90"></i> Reports
+                    <i class="fas fa-file-alt icon" ></i> Reports
                 </a>
             </li>
             @endif
@@ -121,7 +120,6 @@
     <section id="content">
         <!-- NAVBAR -->
         <nav>
-
             <i class='fas fa-bars toggle-sidebar'></i>
             <h6 class="mx-0 my-0 page-title"> @livewire('page-title')</h6>
             <div class="d-flex">
@@ -177,4 +175,3 @@
 
     <!-- NAVBAR -->
 </div>
-l
