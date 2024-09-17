@@ -387,8 +387,9 @@
     justify-content: start;
 }
 .home-hover {
-    transition: transform 0.3s ease, background-color 0.3s ease,
-        box-shadow 0.3s ease;
+    transition: transform 0.3s ease;
+    background-color: 0.3s ease;
+    box-shadow :0.3s ease;
     border-radius: 5px;
 }
 .swipes-table {
@@ -1196,14 +1197,11 @@ button.close-button {
         margin-top: 15px;
     }
 }
-@media screen and (max-width:320px){
-    .shift-time-for-regularisation
-    {
+@media screen and (min-width: 320px) and (max-width: 404px) {
+    .shift-time-for-regularisation {
         width: 200%;
     }
-    
 }
-
 
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
