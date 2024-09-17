@@ -302,15 +302,7 @@
 
 
 
-        .accordion-content {
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-        }
+        
 
         .calendar-box {
 
@@ -1133,7 +1125,7 @@ border: 1px solid #778899;
                             </p>
                         </div>
                         <div class="col-5 pb-1 pt-1">
-                            <p class="text-overflow mb-1" style="white-space: nowrap;font-weight: 600;text-align:center;    background: #ececec;font-size:14px;color:#7f8fa4;">
+                            <p class="shift-time-for-regularisation text-overflow mb-1">
                                 10:00 am to 07:00 pm<span><i class="fas fa-caret-down"></i></span></p>
 
                         </div>
@@ -1416,7 +1408,7 @@ $lastEntry = end($regularisationEntries);
 @if(($hr->status=='pending'&&$hr->is_withdraw==1)||$hr->status=='approved'||$hr->status=='rejected')
 <div class="accordion-heading rounded"style="margin-top:10px;">
 
-    <div class="accordion-title p-2 rounded">
+    <div class="row align-items-center accordion-title p-2 rounded">
 
         <!-- Display leave details here based on $leaveRequest -->
 

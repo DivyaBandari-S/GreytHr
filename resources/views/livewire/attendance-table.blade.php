@@ -514,7 +514,7 @@ width: 170px; */
             /* White background */
             width: 100%;
             /* Adjust width as needed */
-            height: 100px;
+            height: auto;
             /* Adjust height as needed */
             padding: 20px;
             /* Optional padding for content spacing */
@@ -526,12 +526,7 @@ width: 170px; */
 
         @media screen and (max-height:320px) {
 
-            .custom-container {
-                /* Adjust width as needed */
-                height: 220px;
-                /* Adjust height as needed */
-
-            }
+          
 
         }
 
