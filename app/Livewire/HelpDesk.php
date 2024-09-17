@@ -444,6 +444,7 @@ class HelpDesk extends Component
     }
     public $recordId;
     public $viewrecord;
+
     public function showViewFile($id)
     {
         $this->records = HelpDesks::findOrFail($id);

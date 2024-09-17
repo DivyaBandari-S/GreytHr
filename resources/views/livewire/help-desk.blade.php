@@ -18,26 +18,31 @@
             @endif
 
             <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
-
                 <div class="nav-buttons d-flex justify-content-center">
-                    <ul class="nav custom-nav-tabs border">
+                    <ul class="nav custom-nav-tabs ">
+                        <li class="custom-item m-0 p-0 flex-grow-1">
+                            <div href="#"
+                                wire:click="$set('activeTab', 'active')"
+                                class="reviewActiveButtons custom-nav-link  {{ $activeTab === 'active' ? 'active left-radius' : '' }}">
+                                Active
+                            </div>
+
+                        </li>
+
                         <li class="custom-item m-0 p-0 flex-grow-1">
                             <a href="#"
-                                wire:click="$set('activeTab', 'active')"
-                                style="border-top-left-radius: 5px; border-bottom-left-radius: 5px;
-              background-color: @if($activeTab === 'active' || !$activeTab) rgb(2, 17, 79) @else #f8f9fa @endif;
-              color: @if($activeTab === 'active' || !$activeTab) #fff @else #000 @endif;"
-                                class="custom-nav-link @if($activeTab === 'active' || !$activeTab) active @else btn-light @endif">
-                                Active
+                                wire:click="$set('activeTab', 'pending')"
+                                class="custom-nav-link {{ $activeTab === 'pending' ? 'active' : '' }}">
+                                Pending
                             </a>
                         </li>
 
-
-                        <li class="custom-item m-0 p-0 flex-grow-1" style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
-                            <a href="#" style="border-radius:none;" wire:click="$set('activeTab', 'pending')" class="custom-nav-link @if($activeTab === 'pending') active @else btn-light @endif">Pending</a>
-                        </li>
                         <li class="custom-item m-0 p-0 flex-grow-1">
-                            <a href="#" wire:click="$set('activeTab', 'closed')" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link  @if($activeTab === 'closed') active @else btn-light @endif">Closed</a>
+                            <a href="#"
+                                wire:click="$set('activeTab', 'closed')"
+                                class="reviewClosedButtons custom-nav-link {{ $activeTab === 'closed' ? 'active' : '' }}">
+                                Closed
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -192,12 +197,12 @@
                                 @if($isRotated)
                                 <div style="border-radius: 5px; background-color: grey; padding: 8px; width: 330px; margin-top: 10px; height: 200px; overflow-y: auto;">
                                     <div class="input-group3" style="display: flex; align-items: center; width: 100%;">
-                                 
-                                    <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
-                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                                    </button>
-                                    
-                                    <input
+
+                                        <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
+                                            <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                                        </button>
+
+                                        <input
                                             wire:model="searchTerm"
                                             style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;"
                                             type="text"
@@ -206,10 +211,10 @@
                                             aria-label="Search"
                                             aria-describedby="basic-addon1">
                                         <div class="input-group-append" style="display: flex; align-items: center;">
-                                             <button  wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
-                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                                    </button>
-                                        
+                                            <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
+                                                <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                                            </button>
+
 
                                             <button
                                                 wire:click="closePeoples"
@@ -485,12 +490,12 @@
             <div class="col-12 col-md-3  mt-1">
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                   
-    
-                            <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
-                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                                    </button>
-                 
+
+
+                    <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
+                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                    </button>
+
 
                 </div>
             </div>
@@ -551,12 +556,11 @@
 
                             @if ($record->file_path)
                             @if(strpos($record->mime_type, 'image') !== false)
-                            <a href="#" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')"
-                                style="text-decoration: none; color: #007BFF;">
+                            <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
                                 View Image
                             </a>
                             @else
-                            <a href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
+                            <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
                                 Download file
                             </a>
 
@@ -567,28 +571,25 @@
                             @endif
 
                             @if ($showImageDialog)
-                            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                            <div class="modal fade show d-block" tabindex="-1" role="dialog">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title viewfile">View File</h5>
+                                            <h5 class="modal-title">View File</h5>
                                         </div>
                                         <div class="modal-body text-center">
-                                            @if ($imageUrl)
-                                            <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
-                                            @endif
+                                            <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="submit-btn"
-                                                wire:click.prevent="downloadImage">Download</button>
+                                            <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
                                             <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-backdrop fade show blurred-backdrop"></div>
-
+                            <div class="modal-backdrop fade show"></div>
                             @endif
+
 
 
 
@@ -658,10 +659,10 @@
             <div class="col-12 col-md-3 mt-1">
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-               
-                    <button  wire:click="searchCloseHelpDesk" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
-                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                                    </button>
+
+                    <button wire:click="searchCloseHelpDesk" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
+                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                    </button>
                 </div>
             </div>
             <div class="col-12 col-md-3">
@@ -717,22 +718,15 @@
 
 
                             @if ($record->file_path)
-                            {{-- Check if the file path is an image --}}
-                            @if ($record->getImageUrlAttribute())
-                            <a href="#" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')"
-                                style="text-decoration: none; color: #007BFF;">
+                            @if(strpos($record->mime_type, 'image') !== false)
+                            <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
                                 View Image
                             </a>
-                            @elseif (Str::endsWith($record->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx']))
-                            {{-- Display a button for PDF or document files --}}
-                            <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-primary" style="margin-top: 10px;">
-                                <span style="font-size: 30px; color: black;">&#8595;</span> Download {{ pathinfo($record->file_path, PATHINFO_EXTENSION) }}
-                            </a>
                             @else
-                            {{-- Generic download link for other file types --}}
-                            <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-secondary" style="margin-top: 10px;">
-                                <span style="font-size: 30px; color: black;">&#8595;</span> Download File
+                            <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
+                                Download file
                             </a>
+
                             @endif
                             @else
                             {{-- Show this message if no file is attached --}}
@@ -740,28 +734,51 @@
                             @endif
 
                             @if ($showImageDialog)
-                            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                            <div class="modal fade show d-block" tabindex="-1" role="dialog">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title viewfile">View File</h5>
+                                            <h5 class="modal-title">View File</h5>
                                         </div>
                                         <div class="modal-body text-center">
-                                            @if ($imageUrl)
-                                            <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
-                                            @endif
+                                            <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="submit-btn"
-                                                wire:click.prevent="downloadImage">Download</button>
+                                            <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
                                             <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-backdrop fade show blurred-backdrop"></div>
-
+                            <div class="modal-backdrop fade show"></div>
                             @endif
+
+
+
+
+
+
+
+
+
+
+
+
+                            {{-- Generic download link for other file types --}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; border-top: none;">
                             @php
@@ -801,9 +818,9 @@
             <div class="col-12 col-md-3 mt-1">
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                    <button  wire:click="searchPendingHelpDesk" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
-                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                                    </button>
+                    <button wire:click="searchPendingHelpDesk" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
+                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                    </button>
 
                 </div>
             </div>
@@ -860,22 +877,15 @@
 
 
                             @if ($record->file_path)
-                            {{-- Check if the file path is an image --}}
-                            @if ($record->getImageUrlAttribute())
-                            <a href="#" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')"
-                                style="text-decoration: none; color: #007BFF;">
+                            @if(strpos($record->mime_type, 'image') !== false)
+                            <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
                                 View Image
                             </a>
-                            @elseif (Str::endsWith($record->file_path, ['.pdf', '.doc', '.docx', '.ppt', '.pptx']))
-                            {{-- Display a button for PDF or document files --}}
-                            <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-primary" style="margin-top: 10px;">
-                                <span style="font-size: 30px; color: black;">&#8595;</span> Download {{ pathinfo($record->file_path, PATHINFO_EXTENSION) }}
-                            </a>
                             @else
-                            {{-- Generic download link for other file types --}}
-                            <a href="{{ route('your_download_route', ['id' => $record->id]) }}" class="btn btn-secondary" style="margin-top: 10px;">
-                                <span style="font-size: 30px; color: black;">&#8595;</span> Download File
+                            <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
+                                Download file
                             </a>
+
                             @endif
                             @else
                             {{-- Show this message if no file is attached --}}
@@ -883,28 +893,50 @@
                             @endif
 
                             @if ($showImageDialog)
-                            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                            <div class="modal fade show d-block" tabindex="-1" role="dialog">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title viewfile">View File</h5>
+                                            <h5 class="modal-title">View File</h5>
                                         </div>
                                         <div class="modal-body text-center">
-                                            @if ($imageUrl)
-                                            <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
-                                            @endif
+                                            <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="submit-btn"
-                                                wire:click.prevent="downloadImage">Download</button>
+                                            <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
                                             <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-backdrop fade show blurred-backdrop"></div>
-
+                            <div class="modal-backdrop fade show"></div>
                             @endif
+
+
+
+
+
+
+
+
+
+
+
+
+                            {{-- Generic download link for other file types --}}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; border-top: none;">
