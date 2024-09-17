@@ -1204,7 +1204,7 @@ button.close-button {
     {
         width: 200%;
     }
-    
+
 }
 
 
@@ -2030,7 +2030,7 @@ td {
     }
     .dropdown-container1-employee-swipes-for-date-type
     {
-       
+
         margin-left: 60px;
     }
     .dropdown-container1-employee-swipes-for-search-employee
@@ -8082,6 +8082,7 @@ peoples module styles started */
     font-size: var(--normal-font-size);
 }
 .setting-login-history-text {
+    cursor: pointer; /* Ensure pointer cursor */
     font-size: var(--normal-font-size);
     font-weight: 500;
     cursor: pointer;
