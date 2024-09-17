@@ -755,19 +755,23 @@ class Attendance extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
+            
             $firstDay = Carbon::create($this->year, $this->month, 1);
+           
             $daysInMonth = $firstDay->daysInMonth;
+            
             $today = now();
+            
             $calendar = [];
             $dayCount = 1;
             $publicHolidays = $this->getPublicHolidaysForMonth($this->year, $this->month);
-
+        
             // Calculate the first day of the week for the current month
             $firstDayOfWeek = $firstDay->dayOfWeek;
-
+           
             // Calculate the starting date of the previous month
             $startOfPreviousMonth = $firstDay->copy()->subMonth();
-
+            
             // Fetch holidays for the previous month
             $publicHolidaysPreviousMonth = $this->getPublicHolidaysForMonth(
                 $startOfPreviousMonth->year,
@@ -779,6 +783,7 @@ class Attendance extends Component
 
             for ($i = 0; $i < ceil(($firstDayOfWeek + $daysInMonth) / 7); $i++) {
                 $week = [];
+            
                 for ($j = 0; $j < 7; $j++) {
                     if ($i === 0 && $j < $firstDay->dayOfWeek) {
                         // Add the days of the previous month
