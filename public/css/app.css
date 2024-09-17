@@ -5753,9 +5753,7 @@ select .yearSelect {
     outline: none;
     margin-bottom: 16px;
 }
-option {
-    background: #fff;
-}
+
 .employee-profile-image {
     margin-top: -8px;
     height: 100px;
@@ -6356,7 +6354,7 @@ option {
     right: -16px;
     background: linear-gradient(135deg, #364a60, #384c6c);
     height: 33px;
-    width: 41px;
+    width: 47px;
     border-radius: 32px;
     transform: scale(1);
     transform-origin: 50% 50%;
@@ -8307,3 +8305,40 @@ peoples module styles started */
 }
 
 /* settings module styles ended */
+
+.avatarImgDiv {
+    position: relative;
+    height: 4em;
+}
+
+.firstImg {
+    width: 3.7em;
+    left: 68px;
+    cursor: pointer;
+}
+.secondImg {
+    width: 3.7em;
+    left: 40px;
+    cursor: pointer;
+}
+.thirdImg {
+    width: 3.7em;
+    left: 14px;
+    cursor: pointer;
+}
+.moreImgTxt {
+    background-color: black;
+    color: #fff;
+    border-radius: 50%;
+    padding: 10px 10px;
+    position: absolute;
+    left: 0px;
+    font-size: 12px;
+    height: 3em;
+    width: 3em;
+    margin: 0px;
+    cursor: pointer;
+}
+.avtHoverClass:hover {
+    z-index: 300;
+}
