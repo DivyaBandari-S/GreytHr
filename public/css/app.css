@@ -560,7 +560,7 @@ body {
     padding: 7px 12px;
     font-size: var(--normal-font-size);
     border: none;
-  
+
 }
 .submit-btn:hover {
     background-color: #272d48;
@@ -745,9 +745,9 @@ button.close-button {
 .people-search-btn {
     color: #fff;
 }
-/* .people-search-icon{
-    background-color: #fff; 
-} */
+.people-search-icon{
+    background-color: #fff;
+}
 
 .text-danger {
     font-size: var(--normal-font-size);
@@ -1205,6 +1205,7 @@ button.close-button {
     .shift-time-for-regularisation {
         width: 200%;
     }
+
 }
 
 
@@ -2029,7 +2030,7 @@ td {
     }
     .dropdown-container1-employee-swipes-for-date-type
     {
-       
+
         margin-left: 60px;
     }
     .dropdown-container1-employee-swipes-for-search-employee
@@ -2194,16 +2195,16 @@ td {
 }
 .emoji-list{
     display: none;
-    background:white; 
-    border-radius:5px; 
-    border:1px solid silver; 
-    max-height:170px;width:220px; 
+    background:white;
+    border-radius:5px;
+    border:1px solid silver;
+    max-height:170px;width:220px;
     overflow-y: auto;
 }
 
 .emoji-option{
     font-size: 14px;
-    cursor:pointer 
+    cursor:pointer
 }
 
 .hidden {
@@ -2219,10 +2220,10 @@ td {
     height: 30px;
 }
 .custom-radio-label{
-    display: flex; 
-    align-items: center; 
+    display: flex;
+    align-items: center;
     cursor: pointer;
-    padding: 5px; 
+    padding: 5px;
     height: 100%;
 }
 .feeds-custom-menu {
@@ -2237,7 +2238,7 @@ td {
 .eventsSection{
     display: flex;
      flex-direction: column;
-      align-items: center; 
+      align-items: center;
       justify-content: center;
 }
 .feeds-main-content{
@@ -2247,9 +2248,9 @@ td {
      scroll-behavior: smooth;
 }
 .cards{
-    padding: 15px; 
-    background-color: white; 
-    border-radius: 5px; 
+    padding: 15px;
+    background-color: white;
+    border-radius: 5px;
     border: 1px solid #CFCACA;
      color: #3b4452;
       margin-top: 5px
@@ -2269,17 +2270,17 @@ td {
     position: relative;
     padding-top: 10px; /* Adjust based on button height */
     padding-left: 10px;
-    overflow: hidden; 
+    overflow: hidden;
     height: 60px;
     margin-left:30px
 }
 /* .form-select{
     border: 1px solid #ccc;
-     border-radius: 4px; 
-     padding: 5px; 
+     border-radius: 4px;
+     padding: 5px;
      font-size: 0.75rem;
-      color: #3b4452; 
-      margin-top: 5px; 
+      color: #3b4452;
+      margin-top: 5px;
       height: 30px;
 } */
 .addcomment {
@@ -2387,7 +2388,7 @@ td {
 .text-feed{
     font-size: 13px;
     color: #3b4452;
-    font-weight: 600; 
+    font-weight: 600;
 }
 .custom-feed {
     margin-left: -80px;
@@ -2446,9 +2447,9 @@ td {
     overflow-x: hidden;
 }
 .cus-button{
-    display: flex; 
-    justify-content: space-between; 
-    width: 100%; 
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
     padding: 0.5rem;
     overflow-y:auto;
     max-height:fit-content;
@@ -2470,7 +2471,7 @@ td {
     /* Font size */
     font-size: 12px;
     color: #47515b;
-   
+
 }
 
 .font-normal {
@@ -2666,11 +2667,11 @@ td {
 .menu-item {
     transition: background-color 0.3s ease;
     text-decoration: none;
-    margin-top: 5px; 
-    display: block;  
+    margin-top: 5px;
+    display: block;
     padding: 5px 10px;
     font-size: 11px;
-     transition: background-color 0.3s ease; 
+     transition: background-color 0.3s ease;
      color:#3b4452;
 }
 
@@ -2707,7 +2708,7 @@ input[type="radio"] {
 /* Define the blue background color for the checked state */
 .input[type="radio"]:checked + .custom-radio-button {
     background-color: blue;
-    
+
 }
 
 .feather {
@@ -2756,12 +2757,12 @@ input[type="radio"] {
 }
 .post-button{
     background-color: rgb(2, 17, 79);
-     color: white; 
+     color: white;
      height:30px;
      margin-left: 20px;
-    border-radius: 5px; 
+    border-radius: 5px;
     width:70px;
-    font-size:12px; 
+    font-size:12px;
     border: 1px solid silver;
 }
 .activities:hover,
@@ -2783,12 +2784,12 @@ input[type="radio"] {
     color:#3b4452;
 
     margin-left: 20px;
-  
+
 }
 .group-events{
     color: #677A8E;
      font-size: 13px;
-     font-weight: 100px; 
+     font-weight: 100px;
      text-align: center;
 }
 /* CSS for radio-wrapper */
@@ -2796,7 +2797,7 @@ input[type="radio"] {
     max-width: 500px; margin: auto;
 }
 .drive-in {
-    color: #3b4452; 
+    color: #3b4452;
     display: flex;
     flex-direction: column;
     margin-top: 5px;
@@ -6689,7 +6690,7 @@ select .yearSelect {
     }
 }
 
-/* 
+/*
 peoples module styles started */
 
 .people-left-side-container {
@@ -8075,6 +8076,7 @@ peoples module styles started */
     font-size: var(--normal-font-size);
 }
 .setting-login-history-text {
+    cursor: pointer; /* Ensure pointer cursor */
     font-size: var(--normal-font-size);
     font-weight: 500;
     cursor: pointer;
@@ -8246,13 +8248,13 @@ peoples module styles started */
     max-width: 200px;
 }
 .setting-designation-value{
-    flex: 1; 
-    margin-left: 10px; 
-    font-weight: 500; 
-    color: var(--sub-heading-color); 
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
+    flex: 1;
+    margin-left: 10px;
+    font-weight: 500;
+    color: var(--sub-heading-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     max-width: 200px;
 }
 @media (max-width: 768px) {
@@ -8267,24 +8269,24 @@ peoples module styles started */
     }
 }
 .setting-location-label{
-    width: 80px; 
-    color: var(--label-color); 
+    width: 80px;
+    color: var(--label-color);
     flex-shrink: 0;
     white-space: nowrap;
 }
 .setting-location-value{
-    flex: 1; 
-    margin-left: 10px; 
-    font-weight: 500; 
-    color: var(--sub-heading-color); 
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    max-width: 200px; 
+    flex: 1;
+    margin-left: 10px;
+    font-weight: 500;
+    color: var(--sub-heading-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
 }
 .setting-designation-label{
-    width: 80px; 
-    color: var(--label-color); 
+    width: 80px;
+    color: var(--label-color);
     flex-shrink: 0;
     white-space: nowrap;
 }

@@ -466,12 +466,11 @@
             <div class="modal d-block" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                     <div class="modal-content">
-                        <div class="modal-header d-flex justify-content-between task-add-new-container">
-                            <h5 class="modal-title m-0 task-modal-title"><b>Add Task</b></h5>
-                            <button type="button" class="close task-modal-close-icon" data-dismiss="modal" aria-label="Close"
-                                wire:click="close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                        <div class="modal-header">
+                            <h5 class="modal-title"><b>Add Task</b></h5>
+                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            aria-label="Close" wire:click="close">
+                        </button>
                         </div>
 
                         <div class="modal-body">
@@ -872,12 +871,14 @@
             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header d-flex justify-content-between task-comment-modal-header">
+                    <div class="modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Add Comment</h6>
-                        <button type="button" class="close task-comment-modal-close-icon" data-dismiss="modal" aria-label="Close"
+                        {{-- <button type="button" class="close task-comment-modal-close-icon" data-dismiss="modal" aria-label="Close"
                             wire:click="closeModal">
                             <span aria-hidden="true">&times;</span>
-                        </button>
+                        </button> --}}
+                        <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                        aria-label="Close" wire:click="closeModal">
                     </div>
                     <div id="alert-container" class="d-flex justify-content-center alert-container task-comment-modal-flash-message"
                         wire:poll.5s="hideAlert">
