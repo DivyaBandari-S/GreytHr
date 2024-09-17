@@ -1,8 +1,7 @@
 <div class="position-relative">
     <div class="msg-container">
         @if ($showAlert)
-        <div id="alert-container" class="d-flex justify-content-center alert-container mb-3" wire:poll.1s="hideAlert"
-            >
+        <div id="alert-container" class="d-flex justify-content-center alert-container mb-3" wire:poll.1s="hideAlert">
             <!-- wire:poll.5s="hideAlert" -->
             <p class="alert alert-success successContainer" role="alert">
                 {{ session('success') }} 😀
@@ -15,8 +14,8 @@
     <div class="content">
         <div class="row m-0 p-0 mb-3">
             <div class="col-md-6 mb-3">
-                <div class="row m-0 welcomeContainer" >
-                    <div class="col-6 p-0 ps-3 pt-4">
+                <div class="row m-0 welcomeContainer">
+                    <div class="col-md-6 p-0 ps-3 pt-4">
                         @if ($this->greetingText)
                         <p class="morning-city">{{ $greetingText }}</p>
                         @endif
@@ -26,7 +25,7 @@
                         </p>
                     </div>
 
-                    <div class="col-6 p-0">
+                    <div class="col-md-6 p-0">
                         <div class="morning-cardContainer w-100">
                             <div class="morning-card w-100">
 
@@ -76,7 +75,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
                 <div class="globe pt-4">
                     <div class="section-banner">
                         <div id="star-1">
@@ -115,7 +114,7 @@
 
                 </div>
 
-            </div>
+            </div> -->
 
         </div>
 
@@ -123,11 +122,11 @@
         <!-- main content -->
 
         <div class="row m-0">
-            <div class="col-md-3 mb-4 ">
+            <div class="col-md-3 mb-4">
                 <div class="">
                     <div class="homeCard4">
                         <div class="p-3">
-                            <p class="payslip-card-title ">{{ $currentDate }}</p>
+                            <p class="payslip-card-title">{{ $currentDate }}</p>
                             <p class="normalText mt-2">
                                 @php
                                 // Fetch shift times
@@ -150,27 +149,23 @@
                                 {{ substr($currentDay, 0, 3) }} | {{ $formattedStartShiftTime }} to
                                 {{ $formattedEndShiftTime }}
                             </p>
-                            <div class="d-flex" style="font-size: 14px;margin-top:2em;">
-                                <img src="/images/stopwatch.png" class="me-4" alt="Image Description"
-                                    style="width: 2.7em;">
-                                <p id="current-time" style="margin: auto 0;"></p>
+                            <div class="d-flex" style="font-size: 14px; margin-top: 2em;"
+                                x-data="{
+                         time: '',
+                         updateTime() {
+                             const now = new Date();
+                             const hours = String(now.getHours()).padStart(2, '0');
+                             const minutes = String(now.getMinutes()).padStart(2, '0');
+                             const seconds = String(now.getSeconds()).padStart(2, '0');
+                             this.time = `${hours} : ${minutes} : ${seconds}`;
+                         }
+                     }"
+                                x-init="setInterval(() => updateTime(), 1000)">
+                                <img src="/images/stopwatch.png" class="me-4" alt="Image Description" style="width: 2.7em;">
+                                <p x-text="time" class="showTimer"></p>
                             </div>
-                            <script>
-                                function updateTime() {
-                                    const currentTimeElement = document.getElementById('current-time');
-                                    const now = new Date();
-                                    const hours = String(now.getHours()).padStart(2, '0');
-                                    const minutes = String(now.getMinutes()).padStart(2, '0');
-                                    const seconds = String(now.getSeconds()).padStart(2, '0');
-                                    const currentTime = `${hours} : ${minutes} : ${seconds}`;
-                                    currentTimeElement.textContent = currentTime;
-                                }
-                                updateTime();
-                                setInterval(updateTime, 1000);
-                            </script>
-                            <div  class="A d-flex justify-content-between align-items-center flex-row" style="margin-top:2em">
-                                <a class="viewSwipesList" wire:click="open">View
-                                    Swipes</a>
+                            <div class="A d-flex justify-content-between align-items-center flex-row" style="margin-top: 2em">
+                                <a class="viewSwipesList" wire:click="open">View Swipes</a>
                                 <button id="signButton"
                                     class="signInButton"
                                     wire:click="toggleSignState">
@@ -190,41 +185,21 @@
                 </div>
             </div>
 
+
             <div class="col-md-3 mb-4 ">
-                <div class="payslip-card" style="height: 195px;">
-                    <p class="payslip-card-title mb-0">Upcoming Holidays</p>
-                    @if ($calendarData->isEmpty())
-                    <p class="payslip-small-desc mt-3">Uh oh! No holidays to show.</p>
-                    @else
-                    @php
-                    $count = 0;
-                    @endphp
 
-                    <div class="row m-0">
-                        <div class="col-12 p-0">
-                            @foreach ($calendarData as $entry)
-                            @if (!empty($entry->festivals))
-                            <div>
-                                <p class="payslip-small-desc mt-3">
-                                    <span class="payslip-small-desc fw-500" >{{ date('d M', strtotime($entry->date)) }}
-                                        <span class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
-                                    <br>
-                                    <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
-                                </p>
-                            </div>
-                            @php
-                            $count++;
-                            @endphp
-                            @endif
-
-                            @if ($count >= 2)
-                            @break
-                            @endif
-                            @endforeach
-                        </div>
+                <div class="payslip-card mb-4" style="height: 195px;" >
+                    <div class="row m-0 avatarImgDiv">
+                        <img src="images/gamer.png" class="firstImg position-absolute" />
+                        <img src="images/agent.png" class="secondImg position-absolute" />
+                        <img src="images/woman.png" class="thirdImg position-absolute" />
+                        <p class="moreImgTxt">+3</p>
                     </div>
-                    @endif
-                    <a href="/holiday-calendar">
+                    <p class="payslip-card-title">Connect</p>
+                    <p class="payslip-small-desc">
+                        Wanted to connect with you
+                    </p>
+                    <a href="#">
                         <div class="payslip-go-corner">
                             <div class="payslip-go-arrow">→</div>
                         </div>
@@ -309,7 +284,7 @@
                         $initials = '?';
                         }
                         @endphp
-                        <a  href="/employees-review">
+                        <a href="/employees-review">
                             <div
                                 class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
                                 <div class="thisCircle d-flex align-items-center justify-content-center"
@@ -352,7 +327,7 @@
                     </a>
                 </div>
                 @if ($showReviewLeaveAndAttendance)
-                <div class="modal d-block" tabindex="-1" role="dialog" >
+                <div class="modal d-block" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -444,6 +419,45 @@
             <div class="modal-backdrop fade show blurred-backdrop"></div>
             @endif
             @endif
+            <div class="payslip-card mb-4" style="height: 195px;">
+                    <p class="payslip-card-title mb-0">Upcoming Holidays</p>
+                    @if ($calendarData->isEmpty())
+                    <p class="payslip-small-desc mt-3">Uh oh! No holidays to show.</p>
+                    @else
+                    @php
+                    $count = 0;
+                    @endphp
+
+                    <div class="row m-0">
+                        <div class="col-12 p-0">
+                            @foreach ($calendarData as $entry)
+                            @if (!empty($entry->festivals))
+                            <div>
+                                <p class="payslip-small-desc mt-3">
+                                    <span class="payslip-small-desc fw-500">{{ date('d M', strtotime($entry->date)) }}
+                                        <span class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
+                                    <br>
+                                    <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
+                                </p>
+                            </div>
+                            @php
+                            $count++;
+                            @endphp
+                            @endif
+
+                            @if ($count >= 2)
+                            @break
+                            @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+                    <a href="/holiday-calendar">
+                        <div class="payslip-go-corner">
+                            <div class="payslip-go-arrow">→</div>
+                        </div>
+                    </a>
+                </div>
             <div class="payslip-card mb-4">
                 <p class="payslip-card-title">IT Declaration</p>
                 <p class="payslip-small-desc">
@@ -615,7 +629,7 @@
                     <p class="payslip-card-title">Payslip</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="canvasBorder">
-                            <canvas id="combinedPieChart" width="100" height="100"></canvas>
+                            <canvas id="combinedPieChart" width="117" height="117"></canvas>
                         </div>
                         <div class="c d-flex justify-content-end flex-column">
                             <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}</p>
@@ -658,6 +672,11 @@
                         </div>
                     </div>
                 </div>
+                <a href="#">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
+                    </div>
+                </a>
             </div>
         </div>
         <!-- TEAM ON LEAVE -->
@@ -818,9 +837,10 @@
                 <div class="payslip-go-arrow">→</div>
             </div>
         </div>
+
     </div>
     @if ($showAlertDialog)
-    <div class="modal d-block" tabindex="-1" role="dialog" >
+    <div class="modal d-block" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -828,28 +848,27 @@
                         <b>Swipes</b>
                     </h5>
                     <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="close"
-                        >
+                        aria-label="Close" wire:click="close">
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
                     <div class="row">
-                        <div class="col normalTextValue" >Date :
+                        <div class="col normalTextValue">Date :
                             <span class="normalText">{{ $currentDate }}</span>
                         </div>
-                        <div class="col normalTextValue" >Shift
+                        <div class="col normalTextValue">Shift
                             Time : <span class="normalText">10:00 to 19:00</span></div>
                     </div>
-                    <table class="swipes-table mt-2 border w-100" >
-                        <tr >
+                    <table class="swipes-table mt-2 border w-100">
+                        <tr>
                             <th>
                                 Swipe Time</th>
-                            <th >
+                            <th>
                                 Sign-In / Sign-Out</th>
                         </tr>
                         @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
                         @foreach ($swipeDetails as $swipe)
-                        <tr >
+                        <tr>
                             <td>
                                 {{ $swipe->swipe_time }}
                             </td>
@@ -872,16 +891,15 @@
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
     @if ($showAllAbsentEmployees)
-    <div class="modal d-block" tabindex="-1" role="dialog" >
+    <div class="modal d-block" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" >
+                <div class="modal-header">
                     <h5 class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
                     <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="closeAllAbsentEmployees"
-                        >
+                        aria-label="Close" wire:click="closeAllAbsentEmployees">
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -913,16 +931,15 @@
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
     @if ($showAllLateEmployees)
-    <div class="modal d-block" tabindex="-1" role="dialog" >
+    <div class="modal d-block" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" >
-                    <h5  class="modal-title">
+                <div class="modal-header">
+                    <h5 class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
                     <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="closeAllLateEmployees"
-                        >
+                        aria-label="Close" wire:click="closeAllLateEmployees">
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -944,7 +961,7 @@
                             </div>
                             </a>
                             @endif
-                        @endfor
+                            @endfor
                     </div>
                 </div>
             </div>
@@ -954,16 +971,15 @@
 
     @endif
     @if ($showAllEarlyEmployees)
-    <div class="modal d-block" tabindex="-1" role="dialog" >
+    <div class="modal d-block" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" >
-                    <h5  class="modal-title">
+                <div class="modal-header">
+                    <h5 class="modal-title">
                         <b>{{ $whoisinTitle }}</b>
                     </h5>
                     <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="closeAllEarlyEmployees"
-                        >
+                        aria-label="Close" wire:click="closeAllEarlyEmployees">
                     </button>
                 </div>
                 <div class="modal-body" style="max-height:300px;overflow-y:auto">
@@ -1040,7 +1056,7 @@
             },
             options: {
                 responsive: true,
-                cutout: '55%', // Adjust this to increase thickness (lower cutout value for thicker ring)
+                cutout: '60%', // Adjust this to increase thickness (lower cutout value for thicker ring)
                 plugins: {
                     legend: {
                         display: false // Hide labels

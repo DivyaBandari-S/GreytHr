@@ -95,7 +95,11 @@
                                 @elseif($leaveRequest->leave_type === 'Casual Leave' && isset($leaveBalances['casualLeaveBalance']))
                                 <span class="normalText">{{ $leaveBalances['casualLeaveBalance'] }}</span>
                                 @elseif($leaveRequest->leave_type === 'Loss Of Pay' && isset($leaveBalances['lossOfPayBalance']))
+                                @if(($leaveBalances['lossOfPayBalance'])>0)
                                 <span class="normalText">&minus;{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                                @else
+                                <span class="normalText">{{ $leaveBalances['lossOfPayBalance'] }}</span>
+                                @endif
                                 @elseif($leaveRequest->leave_type === 'Marriage Leave' && isset($leaveBalances['marriageLeaveBalance']))
                                 <span class="normalText">{{ $leaveBalances['marriageLeaveBalance'] }}</span>
                                 @elseif($leaveRequest->leave_type === 'Maternity Leave' && isset($leaveBalances['maternityLeaveBalance']))

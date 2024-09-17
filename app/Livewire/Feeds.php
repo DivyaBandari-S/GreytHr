@@ -517,8 +517,8 @@ public function loadaddComments()
     
             // Reset form fields and display success message
             $this->reset(['category', 'description']);
-            $this->message = 'Post created successfully!';
-            session()->flash('showAlert', true);
+            session()->flash('message', 'Post created successfully!');
+          
             $this->showFeedsDialog = false;
     
         } catch (\Illuminate\Validation\ValidationException $e) {

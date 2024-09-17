@@ -40,121 +40,26 @@
     </style>
 
     <div class="container-leave">
-        <div class="sidebar-cal" style="width: {{ $showDialog ? '250px' : '0' }};display: flex; flex-direction: column; height: 100vh;">
-            <div class="header">
-                <a href="javascript:void(0)" class="closebtn" wire:click="close" style="margin-right: 10px;">×</a>
-                <h6>Apply Filter</h6>
-            </div>
-            <div class="main-content">
-                <span style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Location</span>
-                <div wire:click="openLocations" class="loc-dropdown">
-                    <div style="position: relative;">
-                        <div style="display: flex;justify-content:space-between; align-items: center;">
-                            <p>
-                                @if($this->isSelectedAll())
-                                All
-                                @elser
-                                {{ implode(', ', $selectedLocations) }}
-                                @endif
-                            </p>
-                            <!-- Solid down arrow -->
-                            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M10 13L6 9H14L10 13Z" fill="#778899" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                @if($showLocations)
-                <div class="locations">
-                    <div style="display: flex;justify-content:space-between; text-align:center;align-items: center;padding:0;height:40px;position:relative;">
-                        <p style="font-size:0.725rem; padding:0;color:#148aff;font-weight:500;">Select Location</p>
-                        <a href="#" wire:click="closeLocations" style="top:-5px; right:5px;position:absolute;">×</a>
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:10px;">
-                        <label for="All">
-                            <input id="All" type="checkbox" wire:click="toggleSelection('All')" wire:model="selectedLocations" value="All"> All
-                        </label>
-                        <label for="Hyderabad">
-                            <input id="Hyderabad" type="checkbox" wire:click="toggleSelection('Hyderabad')" wire:model="selectedLocations" value="Hyderabad"> Hyderabad
-                        </label>
-                        <label for="Udaipur">
-                            <input id="Udaipur" type="checkbox" wire:click="toggleSelection('Udaipur')" wire:model="selectedLocations" value="Udaipur"> Udaipur
-                        </label>
-                        <label for="Rajasthan">
-                            <input id="Rajasthan" type="checkbox" wire:click="toggleSelection('Rajasthan')" wire:model="selectedLocations" value="Rajasthan"> Rajasthan
-                        </label>
-                    </div>
-                </div>
-                @endif
-
-                <!-- Department -->
-                <span style="font-size: 0.825rem; color: #778899; font-weight: 500; margin-top: 20px; margin-right: 10px;">Department</span>
-                <div wire:click="openDept" class="loc-dropdown">
-                    <div style="position: relative;">
-                        <div style="display: flex;justify-content:space-between; align-items: center;">
-                            <p>
-                                @if($this->isSelectedAllDept())
-                                All
-                                @else
-                                {{ implode(', ', $selectedDepartments) }}
-                                @endif
-                            </p>
-                            <!-- Solid down arrow -->
-                            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M10 13L6 9H14L10 13Z" fill="#778899" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                @if($showDepartment)
-                <div class="departments">
-                    <div style="display: flex;justify-content:space-between; text-align:center;align-items: center;padding:0;height:40px;position:relative">
-                        <p style="font-size:0.725rem;padding:0;color:#148aff;font-weight:500;">Select Department</p>
-                        <a href="#" wire:click="closeDept" style="top:-5px; right:5px;position:absolute;">×</a>
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:10px;">
-                        <label for="All">
-                            <input id="All" type="checkbox" wire:click="toggleDeptSelection('All')" wire:model="selectedDepartments" value="All"> All
-                        </label>
-                        <label for="Development">
-                            <input id="Development" type="checkbox" wire:click="toggleDeptSelection('Development')" wire:model="selectedDepartments" value="Development"> Development
-                        </label>
-                        <label for="Sales">
-                            <input id="Sales" type="checkbox" wire:click="toggleDeptSelection('Sales')" wire:model="selectedDepartments" value="Sales"> Sales
-                        </label>
-                        <label for="IT">
-                            <input id="IT" type="checkbox" wire:click="toggleDeptSelection('IT')" wire:model="selectedDepartments" value="IT"> IT
-                        </label>
-                    </div>
-                </div>
-                @endif
-
-
-                <!-- Buttons -->
-                <div style="margin-top: 30px;">
-                    <button class="btn-1" wire:click="searchData">Apply</button>
-                    <button class="btn-2" wire:click="resetFilter">Reset</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="button-container">
+        <div class="button-container row">
             <!-- Dropdown for filter selection -->
-            <div class="filter-container">
-                <label for="filterType" style="color: #778899; font-size: 0.825rem;font-weight:500;">Filter Type:</label>
-                <select style="font-size:0.855rem;padding:2px 10px;cursor:pointer;outline:none;" wire:model.lazy="filterCriteria" id="filterType" class="filter-dropdown" wire:change="filterBy($event.target.value)">
-                    <option style="font-size:0.825rem;padding:10px 15px;" value="Me" @if($filterCriteria==='Me' ) selected @endif>Me</option>
-                    <option style="font-size:0.825rem;padding:10px 15px;" value="MyTeam" @if($filterCriteria==='MyTeam' ) selected @endif>My Team</option>
-                    <!-- Add more options as needed -->
-                </select>
+            <div class="col-md-4">
+                <div class="filter-container">
+                    <label for="filterType" class="normalTextValueSubheading">Filter Type:</label>
+                    <select class="filterDropdown rounded border" wire:model.lazy="filterCriteria" id="filterType" class="filter-dropdown" wire:change="filterBy($event.target.value)">
+                        <option class="option" value="Me" @if($filterCriteria==='Me' ) selected @endif>Me</option>
+                        <option class="option" value="MyTeam" @if($filterCriteria==='MyTeam' ) selected @endif>My Team</option>
+                        <!-- Add more options as needed -->
+                    </select>
+                </div>
             </div>
-
-
-            <button class="submit-btn px-4">
-                <i class="fa fa-download" aria-hidden="true" wire:click="downloadexcelforLeave" style="font-size:16px;"></i>
-            </button>
+            <div class="col-md-5"></div>
+            <div class="col-md-3 d-flex justify-content-end">
+                <button class="submit-btn">
+                    <i class="fa fa-download" aria-hidden="true" wire:click="downloadexcelforLeave" style="font-size:16px;"></i>
+                </button>
+            </div>
         </div>
-        <div class="row" style="margin:0;padding:0;">
+        <div class="row m-0 p-0">
             <div class="col-md-7">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="calendar-heading-container">
@@ -191,7 +96,7 @@
                                     @if ($day)
                                     <div>
                                         @if ($day['isToday'])
-                                        <div style="background-color: rgb(2,17,79); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px; ">
+                                        <div class="isToday">
                                             {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
                                         </div>
                                         @else
@@ -205,7 +110,7 @@
                                         @endphp
                                         @if ($leaveCount > 0)
                                         <div class="circle-greys">
-                                            <span style="display: flex; justify-content: center; align-items: center;width:20px;height:20px;border-radius:50%;">
+                                            <span class="d-flex justify-content-center align-items-center rounded-circle" style="width:20px;height:20px;">
                                                 {{ $leaveCount }}
                                             </span>
                                         </div>
@@ -231,11 +136,11 @@
                     </div>
                     <div>
                         Restricted Holiday
-                        <span class="legend-circle circle-pale-yellow" style="vertical-align: middle; display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span>
+                        <span class="legend-circle circle-pale-yellow"></span>
                     </div>
                     <div>
                         General Holiday
-                        <span class="legend-circle circle-pale-pink" style="vertical-align: middle; display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span>
+                        <span class="legend-circle circle-pale-pink"></span>
                     </div>
                 </div>
             </div>
@@ -244,15 +149,15 @@
                 <div class="event-details">
                     @if($holidays->count() > 0)
                     <div class="date-day">
-                        <span style="font-weight:500;">{{ \Carbon\Carbon::parse($selectedDate)->format('D') }} <br>
-                            <span style="font-weight:normal;font-size:0.825rem;margin-top:-5px;">{{ \Carbon\Carbon::parse($selectedDate)->format('d') }}</span>
+                        <span class="fw-500">{{ \Carbon\Carbon::parse($selectedDate)->format('D') }} <br>
+                            <span class="fw-normal normalTextValueSubheading" style="margin-top:-5px;">{{ \Carbon\Carbon::parse($selectedDate)->format('d') }}</span>
                         </span>
 
                     </div>
                     <div class="holiday-con">
                         @foreach($holidays as $holiday)
-                        <span style="font-weight:normal;font-size:0.825rem; color:#778899;">General Holiday <br>
-                            <span style="font-weight:500;font-size:0.895rem;color:#333;">{{ $holiday->festivals }}</span>
+                        <span class="normalTextValue">General Holiday <br>
+                            <span class="normalTextValueSubheading">{{ $holiday->festivals }}</span>
                         </span>
 
                         @endforeach
@@ -265,7 +170,7 @@
                         <div class="form-group">
                             <div class="search-input-leave">
                                 <div class="search-cont d-flex align-items-center gap-2">
-                                    <input wire:model.debounce.500ms="searchTerm" type="text" placeholder="Search..." class="placeholder-small" style="font-size:12px;padding: 0.37rem 0.2rem;">
+                                    <input wire:model.debounce.500ms="searchTerm" type="text" placeholder="Search..." class="placeholder-small" style="padding: 0.37rem 0.2rem;">
                                     <!-- Search button -->
                                     <button class="btn-3" wire:click="searchData"><i class="fa fa-search"></i></button>
                                 </div>
@@ -285,7 +190,7 @@
                     <div class="accordion-heading active rounded">
                         <div class="accordion-title p-2">
                             <div class="accordion-content ">
-                                <span style="font-size: 14px; font-weight: 500;color:#778899;">Leave transactions({{ count($this->leaveTransactions) }})</span>
+                                <span class="normalTextSubheading">Leave transactions({{ count($this->leaveTransactions) }})</span>
                             </div>
                             <div class="arrow-btn">
                                 <i class="fas fa-chevron-down"></i>
@@ -293,13 +198,13 @@
                         </div>
                     </div>
                     <div class="accordion-body rounded p-0 m-0">
-                        <div class="col-md-12 scroll-tabel" style="overflow-y:auto;max-height:320px; min-height:320px;padding:0;">
-                            <table class="leave-table p-2" style="width: 100%; border-collapse: collapse; ;overflow: auto;">
-                                <thead style="background-color: #ecf7fc; text-align:start;  width:100%;">
+                        <div class="col-md-12 scroll-table">
+                            <table class="leave-table p-2">
+                                <thead>
                                     <tr>
-                                        <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 30%;">Employee ID</th>
-                                        <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 30%;">No of days</th>
-                                        <th style="padding:7px 5px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;color:#778899;font-size:12px;font-weight:normal;width: 40%;">From-To </th>
+                                        <th class="employee-id">Employee ID</th>
+                                        <th class="num-days">No of days</th>
+                                        <th class="from-to">From-To</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -308,43 +213,37 @@
                                         <td colspan="3">
                                             <p>No data found</p>
                                         </td>
-                                    </tr>`
+                                    </tr>
                                     @else
                                     @if (!empty($selectedDate))
                                     @forelse($this->leaveTransactions as $transaction)
-                                    <tr style="border-bottom: 1px solid #ccc; font-size:12px;text-align:start;">
-                                        <td style="padding: 10px 5px; border-top: 1px solid #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;width: 30%;">
-                                            <span style="color: black; font-size: 12px; font-weight: 500;cursor:pointer;" title="{{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }}: {{ $transaction->emp_id }}">
+                                    <tr>
+                                        <td class="employee-info">
+                                            <span title="{{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }}: {{ $transaction->emp_id }}">
                                                 {{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }} <span style="font-size: 11px; color: #778899;">(#{{ $transaction->emp_id }})</span>
                                             </span> <br>
-                                            <span style="font-size: 11px; color: #778899;white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;cursor:pointer;" title="{{ $transaction->employee->job_location }}, {{ $transaction->employee->job_title }}">
-                                                {{ ($transaction->employee->job_location),}} {{ $transaction->employee->job_role }}
+                                            <span title="{{ $transaction->employee->job_location }}, {{ $transaction->employee->job_title }}" class="normalTextSmall">
+                                                {{ $transaction->employee->job_location }}, {{ $transaction->employee->job_role }}
                                             </span>
                                         </td>
 
-                                        <td style=" padding:10px 5px;border-top: 1px solid #ccc;font-weight:500;width: 30%;text-align:center;">{{ $this->calculateNumberOfDays($transaction->from_date, $transaction->from_session, $transaction->to_date, $transaction->to_session) }}</td>
-                                        <td style=" padding:10px 5px;border-top: 1px solid #ccc;width: 40%;">
-
+                                        <td class="num-days">{{ $this->calculateNumberOfDays($transaction->from_date, $transaction->from_session, $transaction->to_date, $transaction->to_session) }}</td>
+                                        <td class="date-range">
                                             @if($transaction->from_date === $transaction->to_date)
-                                            <span style="color:black;font-size:12px;font-weight:500;">{{ \Carbon\Carbon::parse($transaction->from_date)->format('d M') }}</span>
+                                            <span>{{ \Carbon\Carbon::parse($transaction->from_date)->format('d M') }}</span>
                                             @else
-                                            <span style="color:black;font-size:12px;font-weight:500;">
-                                                {{ \Carbon\Carbon::parse($transaction->from_date)->format('d M') }} - {{ \Carbon\Carbon::parse($transaction->to_date)->format('d M') }}
-                                            </span><br>
-                                            <span style="font-size:10px;color:#778899;">
-                                                {{$transaction->from_session}}&nbsp;&nbsp;&nbsp;&nbsp;{{$transaction->to_session}}
-                                            </span>
+                                            <span>{{ \Carbon\Carbon::parse($transaction->from_date)->format('d M') }} - {{ \Carbon\Carbon::parse($transaction->to_date)->format('d M') }}</span><br>
+                                            <span class="session-info">{{$transaction->from_session}}&nbsp;&nbsp;&nbsp;&nbsp;{{$transaction->to_session}}</span>
                                             @endif
-
                                         </td>
                                     </tr>
 
                                     @empty
                                     <tr>
                                         <td colspan="3">
-                                            <div class="leave-trans" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                                <img src="/images/pending.png" alt="Pending Image" style=" margin: 0 auto;" height="100" width="100">
-                                                <span class="normalTextValue">No Employees are on leave</span>
+                                            <div class="no-data">
+                                                <img src="/images/pending.png" alt="Pending Image" height="100" width="100">
+                                                <span>No Employees are on leave</span>
                                             </div>
                                         </td>
                                     </tr>
@@ -354,9 +253,9 @@
                                     @else
                                     <tr>
                                         <td colspan="3">
-                                            <div class="leave-trans" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                                <img src="/images/pending.png" alt="Pending Image" style="width: 100%; margin: 0 auto;">
-                                                <span class="normalTextValue">No Employees are on leave</span>
+                                            <div class="no-data">
+                                                <img src="/images/pending.png" alt="Pending Image" style="width: 100%;">
+                                                <span>No Employees are on leave</span>
                                             </div>
                                         </td>
                                     </tr>
@@ -365,6 +264,7 @@
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
                 </div>
                 @endif
