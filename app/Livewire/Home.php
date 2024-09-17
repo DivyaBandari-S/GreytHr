@@ -908,7 +908,6 @@ class Home extends Component
                 'lon' => $longitude,
                 'format' => 'json'
             ]);
-
             if ($response->successful()) {
                 $data = $response->json();
                 // Extract address details

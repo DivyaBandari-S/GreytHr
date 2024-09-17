@@ -558,7 +558,7 @@ body {
     padding: 7px 12px;
     font-size: var(--normal-font-size);
     border: none;
-  
+
 }
 .submit-btn:hover {
     background-color: #272d48;
@@ -744,7 +744,7 @@ button.close-button {
     color: #fff;
 }
 .people-search-icon{
-    background-color: #fff; 
+    background-color: #fff;
 }
 
 .text-danger {
@@ -2147,16 +2147,16 @@ td {
 }
 .emoji-list{
     display: none;
-    background:white; 
-    border-radius:5px; 
-    border:1px solid silver; 
-    max-height:170px;width:220px; 
+    background:white;
+    border-radius:5px;
+    border:1px solid silver;
+    max-height:170px;width:220px;
     overflow-y: auto;
 }
 
 .emoji-option{
     font-size: 14px;
-    cursor:pointer 
+    cursor:pointer
 }
 
 .hidden {
@@ -2172,10 +2172,10 @@ td {
     height: 30px;
 }
 .custom-radio-label{
-    display: flex; 
-    align-items: center; 
+    display: flex;
+    align-items: center;
     cursor: pointer;
-    padding: 5px; 
+    padding: 5px;
     height: 100%;
 }
 .feeds-custom-menu {
@@ -2190,7 +2190,7 @@ td {
 .eventsSection{
     display: flex;
      flex-direction: column;
-      align-items: center; 
+      align-items: center;
       justify-content: center;
 }
 .feeds-main-content{
@@ -2200,9 +2200,9 @@ td {
      scroll-behavior: smooth;
 }
 .cards{
-    padding: 15px; 
-    background-color: white; 
-    border-radius: 5px; 
+    padding: 15px;
+    background-color: white;
+    border-radius: 5px;
     border: 1px solid #CFCACA;
      color: #3b4452;
       margin-top: 5px
@@ -2222,17 +2222,17 @@ td {
     position: relative;
     padding-top: 10px; /* Adjust based on button height */
     padding-left: 10px;
-    overflow: hidden; 
+    overflow: hidden;
     height: 60px;
     margin-left:30px
 }
 .form-select{
     border: 1px solid #ccc;
-     border-radius: 4px; 
-     padding: 5px; 
+     border-radius: 4px;
+     padding: 5px;
      font-size: 0.75rem;
-      color: #3b4452; 
-      margin-top: 5px; 
+      color: #3b4452;
+      margin-top: 5px;
       height: 30px;
 }
 .addcomment {
@@ -2340,7 +2340,7 @@ td {
 .text-feed{
     font-size: 13px;
     color: #3b4452;
-    font-weight: 600; 
+    font-weight: 600;
 }
 .custom-feed {
     margin-left: -80px;
@@ -2399,9 +2399,9 @@ td {
     overflow-x: hidden;
 }
 .cus-button{
-    display: flex; 
-    justify-content: space-between; 
-    width: 100%; 
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
     padding: 0.5rem;
     overflow-y:auto;
     max-height:fit-content;
@@ -2423,7 +2423,7 @@ td {
     /* Font size */
     font-size: 12px;
     color: #47515b;
-   
+
 }
 
 .font-normal {
@@ -2619,11 +2619,11 @@ td {
 .menu-item {
     transition: background-color 0.3s ease;
     text-decoration: none;
-    margin-top: 5px; 
-    display: block;  
+    margin-top: 5px;
+    display: block;
     padding: 5px 10px;
     font-size: 11px;
-     transition: background-color 0.3s ease; 
+     transition: background-color 0.3s ease;
      color:#3b4452;
 }
 
@@ -2660,7 +2660,7 @@ input[type="radio"] {
 /* Define the blue background color for the checked state */
 .input[type="radio"]:checked + .custom-radio-button {
     background-color: blue;
-    
+
 }
 
 .feather {
@@ -2709,12 +2709,12 @@ input[type="radio"] {
 }
 .post-button{
     background-color: rgb(2, 17, 79);
-     color: white; 
+     color: white;
      height:30px;
      margin-left: 20px;
-    border-radius: 5px; 
+    border-radius: 5px;
     width:70px;
-    font-size:12px; 
+    font-size:12px;
     border: 1px solid silver;
 }
 .activities:hover,
@@ -2736,12 +2736,12 @@ input[type="radio"] {
     color:#3b4452;
 
     margin-left: 20px;
-  
+
 }
 .group-events{
     color: #677A8E;
      font-size: 13px;
-     font-weight: 100px; 
+     font-weight: 100px;
      text-align: center;
 }
 /* CSS for radio-wrapper */
@@ -2749,7 +2749,7 @@ input[type="radio"] {
     max-width: 500px; margin: auto;
 }
 .drive-in {
-    color: #3b4452; 
+    color: #3b4452;
     display: flex;
     flex-direction: column;
     margin-top: 5px;
@@ -6354,7 +6354,7 @@ select .yearSelect {
     right: -16px;
     background: linear-gradient(135deg, #364a60, #384c6c);
     height: 33px;
-    width: 41px;
+    width: 47px;
     border-radius: 32px;
     transform: scale(1);
     transform-origin: 50% 50%;
@@ -6642,7 +6642,7 @@ select .yearSelect {
     }
 }
 
-/* 
+/*
 peoples module styles started */
 
 .people-left-side-container {
@@ -8305,3 +8305,40 @@ peoples module styles started */
 }
 
 /* settings module styles ended */
+
+.avatarImgDiv {
+    position: relative;
+    height: 4em;
+}
+
+.firstImg {
+    width: 3.7em;
+    left: 68px;
+    cursor: pointer;
+}
+.secondImg {
+    width: 3.7em;
+    left: 40px;
+    cursor: pointer;
+}
+.thirdImg {
+    width: 3.7em;
+    left: 14px;
+    cursor: pointer;
+}
+.moreImgTxt {
+    background-color: black;
+    color: #fff;
+    border-radius: 50%;
+    padding: 10px 10px;
+    position: absolute;
+    left: 0px;
+    font-size: 12px;
+    height: 3em;
+    width: 3em;
+    margin: 0px;
+    cursor: pointer;
+}
+.avtHoverClass:hover {
+    z-index: 300;
+}
