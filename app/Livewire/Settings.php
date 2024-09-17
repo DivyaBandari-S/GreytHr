@@ -310,7 +310,7 @@ class Settings extends Component
             'newPassword.min' => 'Your password must be at least 8 characters long.',
             'newPassword.regex' => 'Your password must contain at least one capital letter, one lowercase letter, one digit, and one special character.',
             'newPassword.different' => 'The new password must be different from the old password.',
-            'confirmNewPassword.required' => 'Please confirm your new password.',
+            'confirmNewPassword.required' => 'Please enter confirm new password.',
             'confirmNewPassword.same' => 'The new password and confirmation do not match.',
         ];
     }

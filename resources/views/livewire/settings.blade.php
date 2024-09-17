@@ -7,7 +7,7 @@
     <div class="row m-0">
         <div class="d-flex align-items-center justify-content-end gap-3">
             <div class=" p-0">
-                <div wire:click="loginfo" class="col text-primary setting-login-history-text">
+                <div wire:click="loginfo" class="col anchorTagDetails">
                     View Login History
                 </div>
 
@@ -143,7 +143,7 @@
                                                 for="confirmNewPassword">Confirm New Password</label>
                                             <br><input class="form-control setting-password-modal-input" type="password"
                                                 id="confirmNewPassword" name="confirmNewPassword"
-                                                placeholder="Enter your new password again"
+                                                placeholder="Enter your confirm new password"
                                                 wire:model.lazy="confirmNewPassword">
                                             @error('confirmNewPassword')
                                                 <p class="pt-2 px-1 text-danger setting-password-error-msg">
