@@ -264,8 +264,9 @@
 }
 .btn-close {
     background-color: white;
-    height: 10px;
-    width: 10px;
+    height: 7px;
+    width: 7px;
+    font-size: var(--normal-font-size);
 }
 .smallTextMin {
     font-size: 10px;
