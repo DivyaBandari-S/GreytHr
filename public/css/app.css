@@ -743,9 +743,9 @@ button.close-button {
 .people-search-btn {
     color: #fff;
 }
-.people-search-icon{
+/* .people-search-icon{
     background-color: #fff; 
-}
+} */
 
 .text-danger {
     font-size: var(--normal-font-size);
@@ -2274,7 +2274,7 @@ td {
     height: 60px;
     margin-left:30px
 }
-.form-select{
+/* .form-select{
     border: 1px solid #ccc;
      border-radius: 4px; 
      padding: 5px; 
@@ -2282,7 +2282,7 @@ td {
       color: #3b4452; 
       margin-top: 5px; 
       height: 30px;
-}
+} */
 .addcomment {
     position: absolute;
     bottom: 15px; /* Move up by increasing this value */
