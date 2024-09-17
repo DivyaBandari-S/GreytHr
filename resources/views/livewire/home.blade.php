@@ -15,7 +15,7 @@
         <div class="row m-0 p-0 mb-3">
             <div class="col-md-6 mb-3">
                 <div class="row m-0 welcomeContainer">
-                    <div class="col-6 p-0 ps-3 pt-4">
+                    <div class="col-md-6 p-0 ps-3 pt-4">
                         @if ($this->greetingText)
                         <p class="morning-city">{{ $greetingText }}</p>
                         @endif
@@ -25,7 +25,7 @@
                         </p>
                     </div>
 
-                    <div class="col-6 p-0">
+                    <div class="col-md-6 p-0">
                         <div class="morning-cardContainer w-100">
                             <div class="morning-card w-100">
 
@@ -75,7 +75,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
                 <div class="globe pt-4">
                     <div class="section-banner">
                         <div id="star-1">
@@ -114,7 +114,7 @@
 
                 </div>
 
-            </div>
+            </div> -->
 
         </div>
 
@@ -187,40 +187,19 @@
 
 
             <div class="col-md-3 mb-4 ">
-                <div class="payslip-card" style="height: 195px;">
-                    <p class="payslip-card-title mb-0">Upcoming Holidays</p>
-                    @if ($calendarData->isEmpty())
-                    <p class="payslip-small-desc mt-3">Uh oh! No holidays to show.</p>
-                    @else
-                    @php
-                    $count = 0;
-                    @endphp
 
-                    <div class="row m-0">
-                        <div class="col-12 p-0">
-                            @foreach ($calendarData as $entry)
-                            @if (!empty($entry->festivals))
-                            <div>
-                                <p class="payslip-small-desc mt-3">
-                                    <span class="payslip-small-desc fw-500">{{ date('d M', strtotime($entry->date)) }}
-                                        <span class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
-                                    <br>
-                                    <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
-                                </p>
-                            </div>
-                            @php
-                            $count++;
-                            @endphp
-                            @endif
-
-                            @if ($count >= 2)
-                            @break
-                            @endif
-                            @endforeach
-                        </div>
+                <div class="payslip-card mb-4" style="height: 195px;" >
+                    <div class="row m-0 avatarImgDiv">
+                        <img src="images/gamer.png" class="firstImg position-absolute" />
+                        <img src="images/agent.png" class="secondImg position-absolute" />
+                        <img src="images/woman.png" class="thirdImg position-absolute" />
+                        <p class="moreImgTxt">+3</p>
                     </div>
-                    @endif
-                    <a href="/holiday-calendar">
+                    <p class="payslip-card-title">Connect</p>
+                    <p class="payslip-small-desc">
+                        Wanted to connect with you
+                    </p>
+                    <a href="#">
                         <div class="payslip-go-corner">
                             <div class="payslip-go-arrow">→</div>
                         </div>
@@ -440,6 +419,45 @@
             <div class="modal-backdrop fade show blurred-backdrop"></div>
             @endif
             @endif
+            <div class="payslip-card mb-4" style="height: 195px;">
+                    <p class="payslip-card-title mb-0">Upcoming Holidays</p>
+                    @if ($calendarData->isEmpty())
+                    <p class="payslip-small-desc mt-3">Uh oh! No holidays to show.</p>
+                    @else
+                    @php
+                    $count = 0;
+                    @endphp
+
+                    <div class="row m-0">
+                        <div class="col-12 p-0">
+                            @foreach ($calendarData as $entry)
+                            @if (!empty($entry->festivals))
+                            <div>
+                                <p class="payslip-small-desc mt-3">
+                                    <span class="payslip-small-desc fw-500">{{ date('d M', strtotime($entry->date)) }}
+                                        <span class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
+                                    <br>
+                                    <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
+                                </p>
+                            </div>
+                            @php
+                            $count++;
+                            @endphp
+                            @endif
+
+                            @if ($count >= 2)
+                            @break
+                            @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+                    <a href="/holiday-calendar">
+                        <div class="payslip-go-corner">
+                            <div class="payslip-go-arrow">→</div>
+                        </div>
+                    </a>
+                </div>
             <div class="payslip-card mb-4">
                 <p class="payslip-card-title">IT Declaration</p>
                 <p class="payslip-small-desc">
@@ -612,7 +630,7 @@
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="canvasBorder">
                             <canvas id="combinedPieChart" width="117" height="117"></canvas>
-                        </div>/
+                        </div>
                         <div class="c d-flex justify-content-end flex-column">
                             <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}</p>
                             <p class=" payslip-small-desc align-items-end d-flex justify-content-end flex-column">
@@ -654,6 +672,11 @@
                         </div>
                     </div>
                 </div>
+                <a href="#">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
+                    </div>
+                </a>
             </div>
         </div>
         <!-- TEAM ON LEAVE -->
@@ -814,6 +837,7 @@
                 <div class="payslip-go-arrow">→</div>
             </div>
         </div>
+
     </div>
     @if ($showAlertDialog)
     <div class="modal d-block" tabindex="-1" role="dialog">
