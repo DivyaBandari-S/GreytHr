@@ -1737,9 +1737,7 @@ color: #fff;
                                                 $Regularised=true;
                                                 @endphp
                                                 <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
-                                                    <p class="me-2 mb-0">
-                                                    <div class="down-arrow-reg"></div>
-                                                    </p>
+                                                   fdghj
                                                 </span>
                                                 @endif
                                                 @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))

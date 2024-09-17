@@ -1179,14 +1179,32 @@ button.close-button {
     border: 1px solid #ccc;
     display: block;
 }
-@media screen and (max-height: 320px) {
-    .container-for-adding-regularisation-entries {
+.shift-time-for-regularisation
+{
+    white-space: nowrap;
+    font-weight: 600;
+    text-align:center;
+    background: #ececec;
+    font-size:14px;
+    color:#7f8fa4;
+}
+@media  screen and (max-height:320px) {
+    .container-for-adding-regularisation-entries{
         width: 100%;
         display: block;
         height: 195px;
         margin-top: 15px;
     }
 }
+@media screen and (max-width:320px){
+    .shift-time-for-regularisation
+    {
+        width: 200%;
+    }
+    
+}
+
+
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
@@ -1584,6 +1602,7 @@ input[type="date"]::before {
 .search-input-who-is-in {
     border: none;
     position: relative;
+    margin-top:50px;
 }
 
 .search-input-who-is-in input[type="text"] {
@@ -1988,8 +2007,37 @@ td {
     height: 30px;
     font-size: var(--normal-font-size);
 }
-@media screen and (max-height: 320px) {
+@media screen and (max-height: 320px) and (max-width: 364px) {
     .content-who-is-in {
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media screen and (max-height: 360px)  {
+    .content-who-is-in {
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media screen and (max-width:320px){
+    .employee-swipes-fields
+    {
+        display: flex;
+        flex-direction: column;
+    }
+    .dropdown-container1-employee-swipes-for-date-type
+    {
+       
+        margin-left: 60px;
+    }
+    .dropdown-container1-employee-swipes-for-search-employee
+    {
+        margin-left:80px;
+    }
+}
+@media screen and (max-height:320px){
+
+    .content-who-is-in{
         display: flex;
         flex-direction: column;
     }
