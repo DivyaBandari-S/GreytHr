@@ -743,9 +743,9 @@ button.close-button {
 .people-search-btn {
     color: #fff;
 }
-.people-search-icon{
+/* .people-search-icon{
     background-color: #fff; 
-}
+} */
 
 .text-danger {
     font-size: var(--normal-font-size);
@@ -2274,7 +2274,7 @@ td {
     height: 60px;
     margin-left:30px
 }
-.form-select{
+/* .form-select{
     border: 1px solid #ccc;
      border-radius: 4px; 
      padding: 5px; 
@@ -2282,7 +2282,7 @@ td {
       color: #3b4452; 
       margin-top: 5px; 
       height: 30px;
-}
+} */
 .addcomment {
     position: absolute;
     bottom: 15px; /* Move up by increasing this value */
@@ -8061,13 +8061,7 @@ peoples module styles started */
     color: #515963;
 }
 
-.task-custom-select-width {
-    width: 150px;
 
-    font-size: var(--normal-font-size);
-
-    padding: 7px;
-}
 .task-custom-select-width {
     width: 150px;
     font-size: var(--normal-font-size);
@@ -8162,6 +8156,7 @@ peoples module styles started */
     color: white;
     font-size: 30px;
     cursor: pointer;
+    margin-bottom: 10px
 }
 .setting-password-flash-msg {
     font-size: var(--normal-font-size);
@@ -8251,39 +8246,51 @@ peoples module styles started */
     text-overflow: ellipsis;
     max-width: 200px;
 }
-.setting-location-label {
-    width: 80px;
-    color: var(--label-color);
+.setting-designation-value{
+    flex: 1; 
+    margin-left: 10px; 
+    font-weight: 500; 
+    color: var(--sub-heading-color); 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 200px;
+}
+@media (max-width: 768px) {
+    .settings-birthday-value,
+    .setting-department-value,
+    .setting-location-value,
+    .setting-designation-value {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        max-width: none;
+    }
+}
+.setting-location-label{
+    width: 80px; 
+    color: var(--label-color); 
     flex-shrink: 0;
     white-space: nowrap;
 }
-.setting-location-value {
-    flex: 1;
-    margin-left: 10px;
-    font-weight: 500;
-    color: var(--sub-heading-color);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
+.setting-location-value{
+    flex: 1; 
+    margin-left: 10px; 
+    font-weight: 500; 
+    color: var(--sub-heading-color); 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 200px; 
 }
-.setting-designation-label {
-    width: 80px;
-    color: var(--label-color);
+.setting-designation-label{
+    width: 80px; 
+    color: var(--label-color); 
     flex-shrink: 0;
     white-space: nowrap;
 }
-.setting-designation-value {
-    flex: 1;
-    margin-left: 10px;
-    font-weight: 500;
-    color: var(--sub-heading-color);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
-}
-.setting-myprofile-container {
+
+.setting-myprofile-container{
     margin-top: 20px;
     height: auto;
     margin-bottom: 10px;
