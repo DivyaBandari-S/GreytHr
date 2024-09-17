@@ -387,8 +387,9 @@
     justify-content: start;
 }
 .home-hover {
-    transition: transform 0.3s ease, background-color 0.3s ease,
-        box-shadow 0.3s ease;
+    transition: transform 0.3s ease;
+    background-color: 0.3s ease;
+    box-shadow :0.3s ease;
     border-radius: 5px;
 }
 .swipes-table {
@@ -1199,14 +1200,12 @@ button.close-button {
         margin-top: 15px;
     }
 }
-@media screen and (max-width:320px){
-    .shift-time-for-regularisation
-    {
+@media screen and (min-width: 320px) and (max-width: 500px) {
+    .shift-time-for-regularisation {
         width: 200%;
     }
 
 }
-
 
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
@@ -2274,7 +2273,7 @@ td {
     height: 60px;
     margin-left:30px
 }
-.form-select{
+/* .form-select{
     border: 1px solid #ccc;
      border-radius: 4px;
      padding: 5px;
@@ -2282,7 +2281,7 @@ td {
       color: #3b4452;
       margin-top: 5px;
       height: 30px;
-}
+} */
 .addcomment {
     position: absolute;
     bottom: 15px; /* Move up by increasing this value */
@@ -8061,13 +8060,7 @@ peoples module styles started */
     color: #515963;
 }
 
-.task-custom-select-width {
-    width: 150px;
 
-    font-size: var(--normal-font-size);
-
-    padding: 7px;
-}
 .task-custom-select-width {
     width: 150px;
     font-size: var(--normal-font-size);
@@ -8163,6 +8156,7 @@ peoples module styles started */
     color: white;
     font-size: 30px;
     cursor: pointer;
+    margin-bottom: 10px
 }
 .setting-password-flash-msg {
     font-size: var(--normal-font-size);
@@ -8252,13 +8246,7 @@ peoples module styles started */
     text-overflow: ellipsis;
     max-width: 200px;
 }
-.setting-location-label {
-    width: 80px;
-    color: var(--label-color);
-    flex-shrink: 0;
-    white-space: nowrap;
-}
-.setting-location-value {
+.setting-designation-value{
     flex: 1;
     margin-left: 10px;
     font-weight: 500;
@@ -8268,13 +8256,24 @@ peoples module styles started */
     text-overflow: ellipsis;
     max-width: 200px;
 }
-.setting-designation-label {
+@media (max-width: 768px) {
+    .settings-birthday-value,
+    .setting-department-value,
+    .setting-location-value,
+    .setting-designation-value {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        max-width: none;
+    }
+}
+.setting-location-label{
     width: 80px;
     color: var(--label-color);
     flex-shrink: 0;
     white-space: nowrap;
 }
-.setting-designation-value {
+.setting-location-value{
     flex: 1;
     margin-left: 10px;
     font-weight: 500;
@@ -8284,7 +8283,14 @@ peoples module styles started */
     text-overflow: ellipsis;
     max-width: 200px;
 }
-.setting-myprofile-container {
+.setting-designation-label{
+    width: 80px;
+    color: var(--label-color);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.setting-myprofile-container{
     margin-top: 20px;
     height: auto;
     margin-bottom: 10px;

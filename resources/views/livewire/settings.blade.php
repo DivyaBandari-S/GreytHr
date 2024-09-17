@@ -7,7 +7,7 @@
     <div class="row m-0">
         <div class="d-flex align-items-center justify-content-end gap-3">
             <div class=" p-0">
-                <div wire:click="loginfo" class="col text-primary setting-login-history-text">
+                <div wire:click="loginfo" class="col anchorTagDetails">
                     View Login History
                 </div>
 
