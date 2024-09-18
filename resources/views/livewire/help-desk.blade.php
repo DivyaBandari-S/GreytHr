@@ -486,8 +486,8 @@
         @endif
 
         @if ($activeTab == "active")
-        <div class="row ">
-            <div class="col-12 col-md-3  mt-1">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-3 " >
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
 
@@ -655,8 +655,8 @@
 
 
         @if ($activeTab == "closed")
-        <div class="row ">
-            <div class="col-12 col-md-3 mt-1">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-3 ">
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
 
@@ -815,7 +815,7 @@
 
         @if ($activeTab == "pending")
         <div class="row ">
-            <div class="col-12 col-md-3 mt-1">
+            <div class="col-12 col-md-3 ">
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
                     <button wire:click="searchPendingHelpDesk" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
