@@ -1372,16 +1372,16 @@ color: #fff;
     $totalexcessMinutesWorked=0;
     @endphp
     <div class="date-filters p-0 row d-flex align-items-center mb-2">
-        <div class="col-md-3 m-0 ">
-            <div class="d-flex align-items-center gap-2">
-                <label class="normalTextValue " for="from-date">From Date:</label>
-                <input type="date" id="from-date" wire:model="fromDate" wire:change="updatefromDate" class="form-control" style="width:60%;">
+        <div class="col-md-3 m-0">
+            <div class="fromDatefield d-flex align-items-center gap-2">
+                <label class="normalTextValue" for="from-date">From Date:</label>
+                <input type="date" id="from-date" wire:model="fromDate" wire:change="updatefromDate" class="form-control">
             </div>
         </div>
         <div class="col-md-3 m-0 p-0">
             <div class="toDatefield d-flex gap-2 align-items-center mobile-gap">
                 <label class="normalTextValue" for="to-date">To Date:</label>
-                <input type="date" id="to-date" wire:model="toDate" wire:change="updatetoDate" class="form-control" style="width:65%;">
+                <input type="date" id="to-date" wire:model="toDate" wire:change="updatetoDate" class="form-control">
             </div>
         </div>
         <div class="col-md-6"></div>
