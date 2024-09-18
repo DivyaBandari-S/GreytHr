@@ -7777,14 +7777,17 @@ peoples module styles started */
     margin-bottom: 10px;
 }
 .task-modal-search-container {
-    width: 300px;
+    width: 270px;
     padding-left: 10px;
 }
 .task-modal-close-assignee {
     font-size: 20px;
-    margin-top: 5px;
+    margin-top: 1px;
     color: #fff;
     cursor: pointer;
+    background-color: rgb(2, 17, 79);
+    padding: 5px 10px 6px 10px;
+    border-radius: 5px;
 }
 .task-modal-no-assignee {
     text-align: center;
@@ -7952,14 +7955,17 @@ peoples module styles started */
     margin-bottom: 10px;
 }
 .task-follower-search-container {
-    width: 300px;
+    width: 270px;
     padding-left: 10px;
 }
 .task-follower-close-icon {
     font-size: 20px;
-    margin-top: 5px;
+    margin-top: 1px;
     color: #fff;
     cursor: pointer;
+    background-color: rgb(2, 17, 79);
+    padding: 5px 10px 6px 10px;
+    border-radius: 5px;
 }
 .task-no-follower {
     text-align: center;
