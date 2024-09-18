@@ -16,6 +16,7 @@
 namespace App\Livewire;
 
 use App\Models\Admin;
+use App\Models\Company;
 use App\Models\EmployeeDetails;
 use App\Models\EmpPersonalInfo;
 use App\Models\Finance;
@@ -55,6 +56,8 @@ class Settings extends Component
     public $lastLogin;
     public $lastLoginFailure;
     public $lastPasswordChanged;
+    public $companyName;
+    public $isLoading = false;
     public function editBiography()
     {
         try {
@@ -335,13 +338,18 @@ class Settings extends Component
 
     public function changePassword()
     {
-
+        $this->isLoading = true; // Set loading state to true
         $this->validate();
 
         try {
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $companyId = $this->employeeDetails->company_id;
+            // Fetch the company details using company_id
+            $company = Company::where('company_id', $companyId)->first();
+            $this->companyName = $company->company_name;
+            // Check if company details were found
             if (!Hash::check($this->oldPassword, $this->employeeDetails->password)) {
                 $this->addError('oldPassword', 'The old password is incorrect.');
                 return;
@@ -350,14 +358,16 @@ class Settings extends Component
             // Update the password
             $this->employeeDetails->password = Hash::make($this->newPassword);
             $this->employeeDetails->save();
-
-
+            // Send password change notification
+            $this->employeeDetails->notify(new \App\Notifications\PasswordChangedNotification($this->companyName));
             session()->flash('password', 'Your Password changed successfully.');
             $this->resetForm();
             $this->showDialog = false;
             // $this->passwordChanged = true;
         } catch (\Exception $e) {
             Log::error('Error in changePassword method: ' . $e->getMessage());
+        } finally {
+            $this->isLoading = false; // Set loading state to false after processing
         }
     }
 
