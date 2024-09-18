@@ -214,8 +214,6 @@ class EmpLogin extends Component
             $userInEmployeeDetails = EmpPersonalInfo::where('email', $this->email)
                 ->where('date_of_birth', $this->dob)
                 ->first();
-
-            dd($userInEmployeeDetails);
             if ($userInEmployeeDetails) {
                 $this->verified = true;
                 if ($this->verified) {

@@ -264,9 +264,8 @@
 }
 .btn-close {
     background-color: white;
-    height: 7px;
-    width: 7px;
-    font-size: var(--normal-font-size);
+    height: 10px;
+    width: 10px;
 }
 .smallTextMin {
     font-size: 10px;
@@ -388,9 +387,8 @@
     justify-content: start;
 }
 .home-hover {
-    transition: transform 0.3s ease;
-    background-color: 0.3s ease;
-    box-shadow :0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease,
+        box-shadow 0.3s ease;
     border-radius: 5px;
 }
 .swipes-table {
@@ -1171,64 +1169,6 @@ button.close-button {
 /* end of app.blade */
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
-/*Starting of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
-.fromDatefield input
-{
-    width:60%;
-}
-.toDatefield input
-{
-    width:65%;
-}
-@media screen and (min-width: 320px) and (max-width: 404px)  {
-    .date-filters
-    {
-        row-gap: 1.5rem;
-    }
-    #from-date
-    {
-        max-width: 60%;
-    }
-    #to-date
-    {
-        max-width: 60%;
-
-    }
-    .mobile-gap
-    {
-        gap: 1.5rem !important;
-    }
-    .toDatefield
-    {
-        margin-left:12px;
-    }
-    .accordion-title {
-        display: flex;
-        max-width: 100%;
-        overflow-x: auto;
-        flex-direction: row;
-        align-items: center;
-        border-radius: 5px;
-        gap: 20px;
-    }
-    .accordion-heading {
-        max-width: 100%;
-        overflow-x: auto;
-    }
-    .accordion {
-        width: 100%;
-        top: auto;
-        right: auto;
-        margin-top: 20px;
-    }
-    .col
-    {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-    }
-}
-/*Ending of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 .container-for-adding-regularisation-entries {
     width: 530px;
@@ -1242,30 +1182,14 @@ button.close-button {
     border: 1px solid #ccc;
     display: block;
 }
-.shift-time-for-regularisation
-{
-    white-space: nowrap;
-    font-weight: 600;
-    text-align:center;
-    background: #ececec;
-    font-size:14px;
-    color:#7f8fa4;
-}
-@media  screen and (max-height:320px) {
-    .container-for-adding-regularisation-entries{
+@media screen and (max-height: 320px) {
+    .container-for-adding-regularisation-entries {
         width: 100%;
         display: block;
         height: 195px;
         margin-top: 15px;
     }
 }
-@media screen and (min-width: 320px) and (max-width: 500px) {
-    .shift-time-for-regularisation {
-        width: 200%;
-    }
-
-}
-
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
@@ -1663,7 +1587,6 @@ input[type="date"]::before {
 .search-input-who-is-in {
     border: none;
     position: relative;
-    margin-top:50px;
 }
 
 .search-input-who-is-in input[type="text"] {
@@ -2068,37 +1991,8 @@ td {
     height: 30px;
     font-size: var(--normal-font-size);
 }
-@media screen and (max-height: 320px) and (max-width: 364px) {
+@media screen and (max-height: 320px) {
     .content-who-is-in {
-        display: flex;
-        flex-direction: column;
-    }
-}
-@media screen and (max-height: 360px)  {
-    .content-who-is-in {
-        display: flex;
-        flex-direction: column;
-    }
-}
-@media screen and (max-width:320px){
-    .employee-swipes-fields
-    {
-        display: flex;
-        flex-direction: column;
-    }
-    .dropdown-container1-employee-swipes-for-date-type
-    {
-
-        margin-left: 60px;
-    }
-    .dropdown-container1-employee-swipes-for-search-employee
-    {
-        margin-left:80px;
-    }
-}
-@media screen and (max-height:320px){
-
-    .content-who-is-in{
         display: flex;
         flex-direction: column;
     }
@@ -2332,7 +2226,7 @@ td {
     height: 60px;
     margin-left:30px
 }
-/* .form-select{
+.form-select{
     border: 1px solid #ccc;
      border-radius: 4px;
      padding: 5px;
@@ -2340,7 +2234,7 @@ td {
       color: #3b4452;
       margin-top: 5px;
       height: 30px;
-} */
+}
 .addcomment {
     position: absolute;
     bottom: 15px; /* Move up by increasing this value */
@@ -3002,10 +2896,65 @@ input[type="radio"] {
     margin: 0px 10px 0px 20px;
     cursor: pointer;
 }
-.welcomeContainer {
+/* .welcomeContainer {
     border-radius: 10px;
-    background-color: #02114f;
+    background-color: #b0d8df;
+    border-left: 2px solid #02114f;
+    transition: transform 0.3s ease-in-out;
+} */
+.welcomeContainer p {
+    color: #3b4452 !important;
+    transition: color 0.5s ease;
 }
+/* .welcomeContainer::before {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: #02114f;
+    transition: left 0.5s ease-in-out;
+}
+.welcomeContainer:hover::before {
+    background-color: #02114f;
+    left: 0;
+} */
+
+.welcomeContainer:hover p {
+    color: #fff !important;
+}
+
+.hover-card {
+    position: relative;
+    overflow: hidden;
+    /* width: 300px;
+    height: 200px; */
+    background-color: #b0d8df;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .hover-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -98.5%;
+    width: 100%;
+    height: 100%;
+    background-color: #02114f; /* Your hover background color */
+    transition: left 0.5s ease-in-out;
+  }
+
+  .hover-card:hover::before {
+    left: 0;
+  }
+
+  .card-content {
+    position: relative;
+    z-index: 1;
+    /* padding: 20px; */
+    /* text-align: center; */
+  }
+
 .alert-success {
     font-size: var(--normal-font-size);
     padding: 7px 10px;
@@ -7785,16 +7734,14 @@ peoples module styles started */
     margin-bottom: 10px;
 }
 .task-modal-search-container {
-    width: 270px;
+    width: 300px;
     padding-left: 10px;
 }
 .task-modal-close-assignee {
     font-size: 20px;
+    margin-top: 5px;
     color: #fff;
     cursor: pointer;
-    background-color: rgb(2, 17, 79);
-    padding: 6px 10px;
-    border-radius: 5px;
 }
 .task-modal-no-assignee {
     text-align: center;
@@ -7962,16 +7909,14 @@ peoples module styles started */
     margin-bottom: 10px;
 }
 .task-follower-search-container {
-    width: 270px;
+    width: 300px;
     padding-left: 10px;
 }
 .task-follower-close-icon {
     font-size: 20px;
+    margin-top: 5px;
     color: #fff;
     cursor: pointer;
-    background-color: rgb(2, 17, 79);
-    padding: 6px 10px;
-    border-radius: 5px;
 }
 .task-no-follower {
     text-align: center;
@@ -8123,7 +8068,13 @@ peoples module styles started */
     color: #515963;
 }
 
+.task-custom-select-width {
+    width: 150px;
 
+    font-size: var(--normal-font-size);
+
+    padding: 7px;
+}
 .task-custom-select-width {
     width: 150px;
     font-size: var(--normal-font-size);
@@ -8138,7 +8089,6 @@ peoples module styles started */
     font-size: var(--normal-font-size);
 }
 .setting-login-history-text {
-    cursor: pointer; /* Ensure pointer cursor */
     font-size: var(--normal-font-size);
     font-weight: 500;
     cursor: pointer;
@@ -8219,7 +8169,6 @@ peoples module styles started */
     color: white;
     font-size: 30px;
     cursor: pointer;
-    margin-bottom: 10px
 }
 .setting-password-flash-msg {
     font-size: var(--normal-font-size);
@@ -8309,7 +8258,13 @@ peoples module styles started */
     text-overflow: ellipsis;
     max-width: 200px;
 }
-.setting-designation-value{
+.setting-location-label {
+    width: 80px;
+    color: var(--label-color);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.setting-location-value {
     flex: 1;
     margin-left: 10px;
     font-weight: 500;
@@ -8319,24 +8274,13 @@ peoples module styles started */
     text-overflow: ellipsis;
     max-width: 200px;
 }
-@media (max-width: 768px) {
-    .settings-birthday-value,
-    .setting-department-value,
-    .setting-location-value,
-    .setting-designation-value {
-        white-space: normal;
-        overflow: visible;
-        text-overflow: clip;
-        max-width: none;
-    }
-}
-.setting-location-label{
+.setting-designation-label {
     width: 80px;
     color: var(--label-color);
     flex-shrink: 0;
     white-space: nowrap;
 }
-.setting-location-value{
+.setting-designation-value {
     flex: 1;
     margin-left: 10px;
     font-weight: 500;
@@ -8346,14 +8290,7 @@ peoples module styles started */
     text-overflow: ellipsis;
     max-width: 200px;
 }
-.setting-designation-label{
-    width: 80px;
-    color: var(--label-color);
-    flex-shrink: 0;
-    white-space: nowrap;
-}
-
-.setting-myprofile-container{
+.setting-myprofile-container {
     margin-top: 20px;
     height: auto;
     margin-bottom: 10px;
@@ -8460,42 +8397,3 @@ peoples module styles started */
 .avtHoverClass:hover {
     z-index: 300;
 }
-
-
-/* .submit-btn {
-    position: relative;
-    overflow: hidden;
-    padding: 10px 20px;
-} */
-
-.submit-btn[disabled] {
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.spinner-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 24px; /* Adjust size as needed */
-    height: 24px; /* Adjust size as needed */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10; /* Ensure spinner is on top */
-}
-
-.spinner-container .fa-spinner {
-    font-size: 16px; /* Adjust size as needed */
-    color: #fff; /* Adjust color to fit button text */
-}
-
-.submit-btn .spinner-container {
-    display: none;
-}
-
-.submit-btn[disabled] .spinner-container {
-    display: flex;
-}
-
