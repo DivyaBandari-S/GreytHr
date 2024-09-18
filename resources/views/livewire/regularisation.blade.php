@@ -1026,9 +1026,26 @@ border: 1px solid #778899;
            
             <div class="remarks-container">
             <div class="reporting mb-2">
-                    <div class="employee-profile-image-container">
-                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="40" width="40" alt="Default Image">
-                    </div>
+                @if(!empty($reportingmanagerfullName->image) && ($reportingmanagerfullName->image !== 'null'))
+                                <div class="employee-profile-image-container">
+                                    <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($reportingmanagerfullName->image)}}">
+                                </div>
+                @else    
+                                @if($reportingmanagerfullName->gender === "Male")
+                                            <div class="employee-profile-image-container">
+                                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle"  height="33" width="33">
+                                            </div>
+                                @elseif($reportingmanagerfullName->gender === "Female")
+                                            <div class="employee-profile-image-container">
+                                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="33" width="33">
+                                            </div>
+                                @else
+                                            <div class="employee-profile-image-container">
+                                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="35px" width="35px">
+                                            </div>
+                                @endif  
+
+                @endif
                     <div class="center p-0 m-0">
                             <p class="mb-0" style="font-size:10px;">{{ucwords(strtolower($reportingmanagerfullName->first_name))}}&nbsp;{{ucwords(strtolower($reportingmanagerfullName->last_name))}}</p>
                             <p class="mb-0 normalTextValue" style="font-size: 10px !important;" id="managerIdText">#({{$reportingmanager}})</p>
@@ -1061,9 +1078,26 @@ border: 1px solid #778899;
                         
                             @foreach ($heademployees as $employee)
                                    <div class="highermanager d-flex gap-4 mt-2 align-items-center"wire:click="togglehigherManagers('{{ $employee->emp_id }}')">
-                                        <div class="employee-profile-image-container">
-                                            <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style="border-radius:50%;" height="35px" width="35px" alt="Default Image">
-                                        </div>
+                                        
+                                        @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
+                                                <div class="employee-profile-image-container">
+                                                    <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}">
+                                                </div>
+                                        @else
+                                                @if($employee['gender'] === "Male")
+                                                    <div class="employee-profile-image-container">
+                                                        <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle"  height="33" width="33">
+                                                    </div>
+                                                @elseif($employee['gender'] === "Female")
+                                                    <div class="employee-profile-image-container">
+                                                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="33" width="33">
+                                                    </div>
+                                                @else
+                                                    <div class="employee-profile-image-container">
+                                                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="35px" width="35px">
+                                                    </div>
+                                                @endif
+                                        @endif
 
                                         <div class="center d-flex flex-column mt-3 mb-2">
                                             <span class="ellipsis mb-0">
