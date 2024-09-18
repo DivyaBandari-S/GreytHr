@@ -1981,7 +1981,7 @@ td {
 }
 @media screen and (min-width: 320px) and (max-width: 500px)  {
     .employee-swipes-fields {
-    
+
         flex-direction: column;
     }
     .dropdown-container1-employee-swipes-for-date-type
