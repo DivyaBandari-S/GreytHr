@@ -14,7 +14,8 @@
             </div>
 
             <div class="ps-0 setting-password-container">
-                <button wire:click="show" class="submit-btn setting-password-btn"><i class="fas fa-cog setting-password-icon"></i>
+                <button wire:click="show" class="submit-btn setting-password-btn"><i
+                        class="fas fa-cog setting-password-icon"></i>
                     &nbsp;Change Password</button>
 
                 {{-- <div>
@@ -29,7 +30,8 @@
 
                 <div class="setting-flash-message-container">
                     @if (session()->has('password'))
-                        <div class="alert alert-success alert-dismissible fade show setting-flash-msg-text" role="alert">
+                        <div class="alert alert-success alert-dismissible fade show setting-flash-msg-text"
+                            role="alert">
                             <strong>{{ session('password') }}</strong>
                             <button type="button" class="btn-close btn-xs" data-bs-dismiss="alert"
                                 aria-label="Close"></button>
@@ -47,7 +49,8 @@
                     <div class="modal-header d-flex justify-content-between setting-history-modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Login
                             History</h6>
-                        <button type="button" class="close setting-history-modal-close" data-dismiss="modal" aria-label="Close" wire:click="close">
+                        <button type="button" class="close setting-history-modal-close" data-dismiss="modal"
+                            aria-label="Close" wire:click="close">
                             <span aria-hidden="true">&times;</span>
                         </button>
 
@@ -98,11 +101,10 @@
                 <div class="modal-content">
                     <div class="modal-header d-flex justify-content-between setting-password-modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Change Password</h6>
-                        <button type="button" class="close setting-password-modal-close" data-dismiss="modal" aria-label="Close"
-                            wire:click="remove">
+                        <button type="button" class="close setting-password-modal-close" data-dismiss="modal"
+                            aria-label="Close" wire:click="remove">
                             <span aria-hidden="true">&times;</span>
                         </button>
-
                     </div>
                     <form wire:submit.prevent="changePassword">
                         @if ($error)
@@ -117,9 +119,10 @@
                                 <div class="col-md-12">
                                     <div class="card setting-password-card">
                                         <div class="form-group">
-                                            <label class="setting-password-modal-label"
-                                                for="oldPassword">Current Password</label>
-                                            <br><input class="form-control setting-password-modal-input" type="password"
+                                            <label class="setting-password-modal-label" for="oldPassword">Current
+                                                Password</label>
+                                            <br>
+                                            <input class="form-control setting-password-modal-input" type="password"
                                                 id="oldPassword" name="oldPassword"
                                                 placeholder="Enter your current password" wire:model.lazy="oldPassword">
                                             @error('oldPassword')
@@ -128,9 +131,10 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label class="setting-password-modal-label"
-                                                for="newPassword">New Password</label>
-                                            <br><input class="form-control setting-password-modal-input" type="password"
+                                            <label class="setting-password-modal-label" for="newPassword">New
+                                                Password</label>
+                                            <br>
+                                            <input class="form-control setting-password-modal-input" type="password"
                                                 id="newPassword" name="newPassword"
                                                 placeholder="Enter your new password" wire:model.lazy="newPassword">
                                             @error('newPassword')
@@ -141,7 +145,8 @@
                                         <div class="form-group">
                                             <label class="setting-password-modal-label"
                                                 for="confirmNewPassword">Confirm New Password</label>
-                                            <br><input class="form-control setting-password-modal-input" type="password"
+                                            <br>
+                                            <input class="form-control setting-password-modal-input" type="password"
                                                 id="confirmNewPassword" name="confirmNewPassword"
                                                 placeholder="Enter your confirm new password"
                                                 wire:model.lazy="confirmNewPassword">
@@ -154,7 +159,13 @@
                                 </div>
                             </div>
                             <div class="setting-password-submit-container">
-                                <button class="submit-btn">Save Password</button>
+                                <button class="submit-btn" type="submit" wire:loading.attr="disabled"
+                                    wire:loading.class="btn-loading">
+                                    Save Password
+                                    <span class="spinner-container" wire:loading>
+                                        <i class="fa fa-spinner fa-spin"></i>
+                                    </span>
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -162,6 +173,8 @@
             </div>
         </div>
         <div class="modal-backdrop fade show blurred-backdrop"></div>
+
+
     @endif
 
     @foreach ($employees as $employee)
@@ -311,8 +324,8 @@
                             <span class="label-text setting-nickname-label">Nick Name</span>
                             @if ($editingNickName)
                                 <input type="text"
-                                    class="form-control settings-custom-placeholder setting-nickname-input" wire:model="nickName"
-                                    placeholder="Enter Nick Name">
+                                    class="form-control settings-custom-placeholder setting-nickname-input"
+                                    wire:model="nickName" placeholder="Enter Nick Name">
                             @else
                                 <span class="value-text setting-nickname-value">
                                     {{ $employee->empPersonalInfo ? ucwords(strtolower($employee->empPersonalInfo->nick_name ?? '-')) : '-' }}
@@ -322,9 +335,9 @@
                         <div class="col-md-4 mb-3 d-flex flex-column">
                             <span class="label-text setting-nickname-label">Wish Me On</span>
                             @if ($editingNickName)
-                                <input class="form-control setting-nickname-input" type="date"
-                                    id="date_of_birth" placeholder="Select Wish Me On" name="date_of_birth"
-                                    wire:model="wishMeOn" max="{{ date('Y-m-d') }}">
+                                <input class="form-control setting-nickname-input" type="date" id="date_of_birth"
+                                    placeholder="Select Wish Me On" name="date_of_birth" wire:model="wishMeOn"
+                                    max="{{ date('Y-m-d') }}">
                             @else
                                 <span class="value-text setting-nickname-value">
                                     {{ $employee->empPersonalInfo && $employee->empPersonalInfo->date_of_birth
@@ -424,9 +437,9 @@
                             <div class="col-md-4 mb-3 d-flex flex-column">
                                 <span class="label-text setting-facebook-text">Facebook</span>
                                 @if ($editingSocialMedia)
-                                    <input  type="text"
-                                        class="form-control settings-custom-placeholder setting-nickname-input" wire:model.lazy="facebook"
-                                        placeholder="Enter Facebook URL">
+                                    <input type="text"
+                                        class="form-control settings-custom-placeholder setting-nickname-input"
+                                        wire:model.lazy="facebook" placeholder="Enter Facebook URL">
                                     @error('facebook')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -439,9 +452,9 @@
                             <div class="col-md-4 mb-3 d-flex flex-column">
                                 <span class="label-text setting-facebook-text">Twitter</span>
                                 @if ($editingSocialMedia)
-                                    <input  type="text"
-                                        class="form-control settings-custom-placeholder setting-nickname-input" wire:model.lazy="twitter"
-                                        placeholder="Enter Twitter URL">
+                                    <input type="text"
+                                        class="form-control settings-custom-placeholder setting-nickname-input"
+                                        wire:model.lazy="twitter" placeholder="Enter Twitter URL">
                                     @error('twitter')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -454,9 +467,9 @@
                             <div class="col-md-4 mb-3 d-flex flex-column">
                                 <span class="label-text setting-facebook-text">LinkedIn</span>
                                 @if ($editingSocialMedia)
-                                    <input  type="text"
-                                        class="form-control settings-custom-placeholder setting-nickname-input" wire:model.lazy="linkedIn"
-                                        placeholder="Enter LinkedIn URL">
+                                    <input type="text"
+                                        class="form-control settings-custom-placeholder setting-nickname-input"
+                                        wire:model.lazy="linkedIn" placeholder="Enter LinkedIn URL">
                                     @error('linkedIn')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror

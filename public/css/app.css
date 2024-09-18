@@ -7785,14 +7785,16 @@ peoples module styles started */
     margin-bottom: 10px;
 }
 .task-modal-search-container {
-    width: 300px;
+    width: 270px;
     padding-left: 10px;
 }
 .task-modal-close-assignee {
     font-size: 20px;
-    margin-top: 5px;
     color: #fff;
     cursor: pointer;
+    background-color: rgb(2, 17, 79);
+    padding: 6px 10px;
+    border-radius: 5px;
 }
 .task-modal-no-assignee {
     text-align: center;
@@ -7960,14 +7962,16 @@ peoples module styles started */
     margin-bottom: 10px;
 }
 .task-follower-search-container {
-    width: 300px;
+    width: 270px;
     padding-left: 10px;
 }
 .task-follower-close-icon {
     font-size: 20px;
-    margin-top: 5px;
     color: #fff;
     cursor: pointer;
+    background-color: rgb(2, 17, 79);
+    padding: 6px 10px;
+    border-radius: 5px;
 }
 .task-no-follower {
     text-align: center;
@@ -8456,3 +8460,42 @@ peoples module styles started */
 .avtHoverClass:hover {
     z-index: 300;
 }
+
+
+.submit-btn {
+    position: relative;
+    overflow: hidden; /* Ensure spinner doesn't overflow */
+    padding: 10px 20px; /* Adjust padding as needed */
+}
+
+.submit-btn[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.spinner-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; /* Ensure spinner is on top */
+}
+
+.spinner-container .fa-spinner {
+    font-size: 16px; /* Adjust size as needed */
+    color: #fff; /* Adjust color to fit button text */
+}
+
+.submit-btn .spinner-container {
+    display: none;
+}
+
+.submit-btn[disabled] .spinner-container {
+    display: flex;
+}
+

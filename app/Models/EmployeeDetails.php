@@ -15,7 +15,6 @@ use Carbon\Carbon;
 class EmployeeDetails extends Authenticatable
 {
     use HasFactory, Notifiable;
-    use HasFactory;
     protected $primaryKey = 'emp_id';
     public $incrementing = false;
     protected $table = 'employee_details';
@@ -76,7 +75,7 @@ class EmployeeDetails extends Authenticatable
     }
     public function empDepartment()
     {
-        return $this->hasOne(EmpDepartment::class, 'dept_id', 'dept_id'); 
+        return $this->hasOne(EmpDepartment::class, 'dept_id', 'dept_id');
     }
     public function leaveRequests()
     {
