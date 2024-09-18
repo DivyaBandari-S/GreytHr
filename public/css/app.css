@@ -8454,11 +8454,11 @@ peoples module styles started */
 }
 
 
-.submit-btn {
+/* .submit-btn {
     position: relative;
-    overflow: hidden; /* Ensure spinner doesn't overflow */
-    padding: 10px 20px; /* Adjust padding as needed */
-}
+    overflow: hidden;
+    padding: 10px 20px;
+} */
 
 .submit-btn[disabled] {
     cursor: not-allowed;

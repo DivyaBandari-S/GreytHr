@@ -4,6 +4,7 @@
         {{ session('emp_error') }}
     </div>
     @endif
+
     <div class="row  p-0">
 
 
@@ -35,56 +36,65 @@
                     <div class="row p-3 gx-0" style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
                         <div style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px;margin-bottom: 20px;">
                             PROFILE</div>
+                        @if (session()->has('error'))
+                        <div class="alert alert-danger" wire:poll.20s="hideAlert">
+                            {{ session('error') }}
+                        </div>
+                        @endif
                         <div class="col-12 col-md-4">
-                            @if($image)
-                            <div class="employee-profile-image-container" style="margin-left: 15px;">
-                                <img height="80" src="{{ $image->temporaryUrl() }}" class="employee-profile-image">
-                            </div>
-                            @elseif(!empty($employeeDetails->image) && $employeeDetails->image !== 'null')
+                            @if(!empty($employeeDetails->image) && $employeeDetails->image !== 'null')
                             <div class="employee-profile-image-container" style="margin-left: 15px;">
                                 <img height="80" src="{{ $employeeDetails->image_url }}" class="employee-profile-image">
                             </div>
-                            @else
-                            @if($employeeDetails->gender=='Male')
-                            <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
+                            @elseif(strlen($employeeDetails->image)>10)
+                            <img src="data:image/jpeg;base64,{{ $employeeDetails->image }}" alt=" image" style='height:100px;width:100px' class="img-thumbnail" />
+                            @elseif(strlen($employee->image)<=10 || $employee->image==Null )
+                                @if($employeeDetails->gender=='Male')
+                                <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
 
-                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" height="80" width="80" alt="Default Image">
-                            </div>
-                            @elseif($employeeDetails->gender=='Female')
-                            <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
-                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" height="80" width="80" alt="Default Image">
-                            </div>
-                            @else
-                            <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
-                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" height="80" width="80" alt="Default Image">
-                            </div>
-                            @endif
-                            @endif
-                            @if ($errors->has('image'))
-                            <span class="text-danger">{{ $errors->first('image') }}</span><br>
-                            @endif
-                            <div class="d-flex align-items-center gap-2 " style="margin-left: 15px;">
-                                <button class="submit-btn px-2 py-1" wire:click="updateProfile">
-                                    <span style="font-size: 10px;">Update</span>
-                                </button>
-                                <input type="file" id="imageInput" wire:model="image" class="form-control-small" style="font-size: 0.75rem;">
-                            </div>
-                            @if ($showSuccessMessage)
-                            <span class="alert" style="font-size: 10px;color:green;cursor:pointer;" wire:poll.5s="closeMessage">
-                                Profile updated successfully!
-                            </span>
-                            @endif
-
-                            <div style="font-size: 12px; margin-top: 10px; color: #778899; margin-left: 15px">
-                                Location
-                            </div>
-                            <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                @if ($employeeDetails->job_location)
-                                {{$employeeDetails->job_location }}
+                                    <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" height="80" width="80" alt="Default Image">
+                                </div>
+                                @elseif($employeeDetails->gender=='Female')
+                                <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
+                                    <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" height="80" width="80" alt="Default Image">
+                                </div>
                                 @else
-                                <span style="padding-left: 25px;">-</span>
+                                <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
+                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" height="80" width="80" alt="Default Image">
+                                </div>
                                 @endif
-                            </div>
+                                @endif
+                                @if ($errors->has('image'))
+                                <span class="text-danger">{{ $errors->first('image') }}</span><br>
+                                @endif
+                                <div class="d-flex align-items-center gap-2 " style="margin-left: 15px;">
+                                    <button class="submit-btn px-2 py-1" wire:click="updateProfile" >
+                                        <span style="font-size: 10px;">
+                                            @if($isUploading)
+                                            Uploading...
+                                            @else
+                                            Update
+                                            @endif
+                                        </span>
+                                    </button>
+                                    <input type="file" id="imageInput" wire:model="image" class="form-control-small" style="font-size: 0.75rem;">
+                                </div>
+                                @if ($showSuccessMessage)
+                                <span class="alert" style="font-size: 10px;color:green;cursor:pointer;" wire:poll.5s="closeMessage">
+                                    Profile updated successfully!
+                                </span>
+                                @endif
+
+                                <div style="font-size: 12px; margin-top: 10px; color: #778899; margin-left: 15px">
+                                    Location
+                                </div>
+                                <div style="margin-left: 15px; font-size: 12px;color:#000;">
+                                    @if ($employeeDetails->job_location)
+                                    {{$employeeDetails->job_location }}
+                                    @else
+                                    <span style="padding-left: 25px;">-</span>
+                                    @endif
+                                </div>
                         </div>
                         <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px;">

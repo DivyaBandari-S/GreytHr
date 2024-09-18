@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Services\GoogleDriveService;
+use Livewire\Features\SupportFileUploads\FileNotPreviewableException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
@@ -36,6 +37,7 @@ class ProfileInfo extends Component
     public $comments;
     public $signature;
     public $showAlert = false;
+    public $isUploading = false;
     protected $rules = [
         'resignation_date' => 'required|date|after_or_equal:today',
         'last_working_day' => 'required|date|after_or_equal:resignation_date',
@@ -57,22 +59,31 @@ class ProfileInfo extends Component
     public function updateProfile()
     {
         try {
+            $this->isUploading = true;
             $empId = Auth::guard('emp')->user()->emp_id;
             $employee = EmployeeDetails::where('emp_id', $empId)->first();
 
+            // Validation rules
             $this->validate([
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024', // 1024 kilobytes = 1 megabyte
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
             ]);
-
+            // Proceed with file processing
             if ($this->image) {
                 $imagePath = file_get_contents($this->image->getRealPath());
                 $employee->image = $imagePath;
                 $employee->save();
+                $this->showSuccessMessage = true;
             }
-            $this->showSuccessMessage = true;
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation exceptions
+            session()->flash('error', 'Validation : ' . $e->getMessage());
+            $this->showAlert = true;
         } catch (\Exception $e) {
             Log::error('Error in updateProfile method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while updating the profile. Please try again later.');
+            $this->showAlert = true;
+        } finally {
+            $this->isUploading = false; // Reset uploading state
         }
     }
 
