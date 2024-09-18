@@ -1379,7 +1379,7 @@ color: #fff;
             </div>
         </div>
         <div class="col-md-3 m-0 p-0">
-            <div class="d-flex gap-2 align-items-center ">
+            <div class="toDatefield d-flex gap-2 align-items-center mobile-gap">
                 <label class="normalTextValue" for="to-date">To Date:</label>
                 <input type="date" id="to-date" wire:model="toDate" wire:change="updatetoDate" class="form-control" style="width:65%;">
             </div>
