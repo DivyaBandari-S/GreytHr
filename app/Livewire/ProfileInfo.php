@@ -56,10 +56,14 @@ class ProfileInfo extends Component
     {
         $this->validateOnly($propertyName);
     }
+    public function mount(){
+        $this->updateProfile();
+    }
     public function updateProfile()
     {
         try {
             $this->isUploading = true;
+            Log::info('Upload started.');
             $empId = Auth::guard('emp')->user()->emp_id;
             $employee = EmployeeDetails::where('emp_id', $empId)->first();
 
@@ -84,6 +88,7 @@ class ProfileInfo extends Component
             $this->showAlert = true;
         } finally {
             $this->isUploading = false; // Reset uploading state
+            $this->showAlert = true;
         }
     }
 
