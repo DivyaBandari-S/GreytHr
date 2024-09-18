@@ -469,50 +469,28 @@ class LeaveCalender extends Component
             session()->flash('error', 'An unexpected error occurred. Please try again later.');
         }
     }
-    public  function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
     {
         try {
-
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
-            // Check if the start and end sessions are different on the same day
-            if ($startDate->isSameDay($endDate) && $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 0.5;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
+
+            // Check if the start or end date is a weekend
+            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
             }
+
             // Check if the start and end sessions are different on the same day
-            if (
-
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
-            ) {
-
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
-                    return 0.5;
-                } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
-                }
-            }
-            if (
-                $startDate->isSameDay($endDate) &&
-                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
-            ) {
-
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+            if ($startDate->isSameDay($endDate)) {
+                if ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
                     return 1;
+                } elseif ($this->getSessionNumber($fromSession) == $this->getSessionNumber($toSession)) {
+                    return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
+
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
@@ -520,7 +498,6 @@ class LeaveCalender extends Component
                 if ($startDate->isWeekday()) {
                     $totalDays += 1;
                 }
-
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -537,6 +514,8 @@ class LeaveCalender extends Component
                 // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
+                } else {
+                    $totalDays += 0.5;
                 }
             } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
                 if ($this->getSessionNumber($fromSession) !== 1) {
@@ -551,7 +530,6 @@ class LeaveCalender extends Component
             return 'Error: ' . $e->getMessage();
         }
     }
-
     private function getSessionNumber($session)
     {
         // You might need to customize this based on your actual session values
