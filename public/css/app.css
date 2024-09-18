@@ -1172,6 +1172,14 @@ button.close-button {
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
+.fromDatefield input
+{
+    width:60%;
+}
+.toDatefield input
+{
+    width:65%;
+}
 @media screen and (min-width: 320px) and (max-width: 404px)  {
     .date-filters
     {
@@ -1184,15 +1192,15 @@ button.close-button {
     #to-date
     {
         max-width: 60%;
-    }
-    .toDatefield
-    {
-        margin-left: 13px;
-        
+
     }
     .mobile-gap
     {
         gap: 1.5rem !important;
+    }
+    .toDatefield
+    {
+        margin-left:12px;
     }
     .accordion-title {
         display: flex;
