@@ -70,7 +70,8 @@
                                 <div class="d-flex align-items-center gap-2 " style="margin-left: 15px;">
                                     <button class="submit-btn px-2 py-1" wire:click="updateProfile" >
                                         <span style="font-size: 10px;">
-                                            @if($isUploading)
+
+                                            @if($isUploading == true)
                                             Uploading...
                                             @else
                                             Update
@@ -740,7 +741,7 @@
                                     CURRENT POSITION </div>
                             </div>
                             <div class="col-6 col-md-6">
-                                <div style="margin-top: 2%; font-size: 11px; color: blue; margin-left: 25px" wire:click="showPopupModal">
+                                <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px" wire:click="showPopupModal">
                                     Resign
                                 </div>
                             </div>

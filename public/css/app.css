@@ -1169,6 +1169,64 @@ button.close-button {
 /* end of app.blade */
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
+/*Starting of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
+.fromDatefield input
+{
+    width:60%;
+}
+.toDatefield input
+{
+    width:65%;
+}
+@media screen and (min-width: 320px) and (max-width: 500px)  {
+    .date-filters
+    {
+        row-gap: 1.5rem;
+    }
+    #from-date
+    {
+        max-width: 60%;
+    }
+    #to-date
+    {
+        max-width: 60%;
+
+    }
+    .mobile-gap
+    {
+        gap: 1.5rem !important;
+    }
+    .toDatefield
+    {
+        margin-left:12px;
+    }
+    .accordion-title {
+        display: flex;
+        max-width: 100%;
+        overflow-x: auto;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 5px;
+        gap: 20px;
+    }
+    .accordion-heading {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+    .accordion {
+        width: 100%;
+        top: auto;
+        right: auto;
+        margin-top: 20px;
+    }
+    .col
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+}
+/*Ending of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 .container-for-adding-regularisation-entries {
     width: 530px;
@@ -1693,6 +1751,7 @@ input[type="date"]::before {
 }
 /*Ending of submodule:who is in(Pranita Priyadarshi)*/
 /*Starting of submodule:employee swipes(Pranita Priyadarshi)*/
+
 .container-employee-swipes {
     display: flex;
     justify-content: space-between;
@@ -1918,6 +1977,20 @@ td {
 @media screen and (max-width: 768px) {
     .showHamburger {
         display: none !important;
+    }
+}
+@media screen and (min-width: 320px) and (max-width: 500px)  {
+    .employee-swipes-fields {
+    
+        flex-direction: column;
+    }
+    .dropdown-container1-employee-swipes-for-date-type
+    {
+        margin-left: 60px;
+    }
+    .dropdown-container1-employee-swipes-for-search-employee
+    {
+        margin-left: 75px;
     }
 }
 .search-text::placeholder {
