@@ -121,8 +121,8 @@
         <!-- main content -->
 
         <div class="row m-0">
-            <div class="col-md-3 mb-4">
-                <div class="">
+            <div class="col-md-3 ">
+                <div class="mb-4">
                     <div class="homeCard4">
                         <div class="p-3">
                             <p class="payslip-card-title">{{ $currentDate }}</p>
@@ -184,7 +184,7 @@
             </div>
 
 
-            <div class="col-md-3 mb-4 ">
+            <div class="col-md-3 ">
 
                 <div class="payslip-card mb-4" style="height: 195px;" >
                     <div class="row m-0 avatarImgDiv">
@@ -205,8 +205,8 @@
                 </div>
             </div>
 
-            <div class="col-md-3 mb-4 ">
-                <div class="payslip-card" style="height: 195px;">
+            <div class="col-md-3  ">
+                <div class="payslip-card mb-4 " style="height: 195px;">
                     <p class="payslip-card-title">Time Sheet</p>
                     <p class="payslip-small-desc">
                         Submit your time sheet for this week.
@@ -219,8 +219,8 @@
                 </div>
             </div>
 
-            <div class="col-md-3 mb-4 ">
-                <div class="payslip-card" style="height: 195px;">
+            <div class="col-md-3  ">
+                <div class="payslip-card mb-4" style="height: 195px;">
                     <p class="payslip-card-title">Apply for a Leave</p>
                     <p class="payslip-small-desc">
                         Kindly click on the Arrow button to apply a leave.
@@ -234,7 +234,7 @@
             </div>
         </div>
         <div class="row m-0">
-            <div class="col-md-3 mb-4 ">
+            <div class="col-md-3  ">
                 @if ($ismanager)
                     <div class="payslip-card mb-4" style="height: 195px;">
                         <p class="payslip-card-title">Review</p>

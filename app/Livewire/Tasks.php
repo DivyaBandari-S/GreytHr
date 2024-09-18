@@ -313,10 +313,16 @@ class Tasks extends Component
         if (in_array($personId, $this->selectedPeopleForFollowers)) {
             $this->selectedPeopleForFollowers = array_diff($this->selectedPeopleForFollowers, [$personId]);
         } else {
+           
             $this->selectedPeopleForFollowers[] = $personId;
         }
 
         $this->updateFollowers();
+        if (count($this->selectedPeopleForFollowers) > $this->maxFollowers) {
+            $this->validationFollowerMessage = "You can only select up to 5 followers.";
+        } else {
+            $this->validationFollowerMessage = '';
+        }
     }
 
     public $selectedPeopleForFollowers = [];
@@ -326,23 +332,34 @@ public function togglePersonSelection($personId)
     if (in_array($personId, $this->selectedPeopleForFollowers)) {
         // Deselect the person
         $this->selectedPeopleForFollowers = array_diff($this->selectedPeopleForFollowers, [$personId]);
+
     } else {
+    
         // Select the person
         $this->selectedPeopleForFollowers[] = $personId;
     }
 
     // Ensure state is updated correctly
+
     $this->updateFollowers();
+    if (count($this->selectedPeopleForFollowers) > $this->maxFollowers) {
+        $this->validationFollowerMessage = "You can only select up to 5 followers.";
+    } else {
+        $this->validationFollowerMessage = '';
+    }
 }
+
 
 public function updateFollowers()
 {
+   
     $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
         $selectedPerson = $this->peoples->where('emp_id', $id)->first();
         return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name .' #(' . $selectedPerson->emp_id . ')' : '';
     }, $this->selectedPeopleForFollowers);
 
     $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
+    
     $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
 }
 
@@ -396,6 +413,8 @@ public function updateFollowers()
             }
         }
     }
+    public $maxFollowers = 5;
+public $validationFollowerMessage = '';
 
 
     public function submit()
@@ -403,6 +422,10 @@ public function updateFollowers()
         try {
             $this->validate_tasks = true;
             $this->autoValidate();
+            if (count($this->selectedPeopleForFollowers) > $this->maxFollowers) {
+                session()->flash('error', 'You can only select up to 5 followers.');
+                return;
+            }
 
             // Validate and store the uploaded file
             $this->validate([

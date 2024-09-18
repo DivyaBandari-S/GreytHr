@@ -39,8 +39,9 @@
                 <div class="form-inline row task-filter-container">
                     <!-- Search Box -->
                     <div class="input-group task-input-group-container">
-                        <input wire:input="searchActiveTasks" wire:model="search" type="text" class="form-control task-search-input"
-                            placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
+                        <input wire:input="searchActiveTasks" wire:model="search" type="text"
+                            class="form-control task-search-input" placeholder="Search..." aria-label="Search"
+                            aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="searchActiveTasks" class="task-search-btn" type="button">
                                 <i class="fa fa-search task-search-icon"></i>
@@ -255,8 +256,9 @@
                 <div class="form-inline row task-filter-container">
                     <!-- Search Box -->
                     <div class="input-group task-input-group-container">
-                        <input wire:input="searchCompletedTasks" wire:model="closedSearch" type="text" class="form-control task-search-input"
-                            placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
+                        <input wire:input="searchCompletedTasks" wire:model="closedSearch" type="text"
+                            class="form-control task-search-input" placeholder="Search..." aria-label="Search"
+                            aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="searchCompletedTasks" class="task-search-btn" type="button">
                                 <i class="fa fa-search task-search-icon"></i>
@@ -430,8 +432,7 @@
                                                                     @endif --}}
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         @if (strpos($record->mime_type, 'image') !== false)
-                                                                            <a href="#"
-                                                                                class="anchorTagDetails"
+                                                                            <a href="#" class="anchorTagDetails"
                                                                                 wire:click.prevent="showViewFile('{{ $record->id }}')">
                                                                                 View Image
                                                                             </a>
@@ -469,16 +470,16 @@
                         <div class="modal-header">
                             <h5 class="modal-title"><b>Add Task</b></h5>
                             <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                            aria-label="Close" wire:click="close">
-                        </button>
+                                aria-label="Close" wire:click="close">
+                            </button>
                         </div>
 
                         <div class="modal-body">
                             <div class="task-container">
                                 <!-- Task Name -->
                                 <div class="form-group task-modal-name-container">
-                                    <label for="task_name" class="task-modal-name-label">Task Name<span class="task-star-icon"
-                                        >*</span></label>
+                                    <label for="task_name" class="task-modal-name-label">Task Name<span
+                                            class="task-star-icon">*</span></label>
                                     <input type="text" wire:model.debounce.0ms="task_name"
                                         wire:input="autoValidate" class="placeholder-small task-modal-name-value"
                                         placeholder="Enter task name">
@@ -499,8 +500,8 @@
                                         <strong class="task-modal-selected-assignee">Selected assignee:
                                         </strong><span>{{ $selectedPeopleName }}</span>
                                     @else
-                                        <a wire:click="forAssignee" class="hover-link task-modal-add-assignee"
-                                        > Add Assignee</a>
+                                        <a wire:click="forAssignee" class="hover-link task-modal-add-assignee"> Add
+                                            Assignee</a>
                                     @endif <br>
                                     @error('assignee')
                                         <span class="text-danger">Assignee is required</span>
@@ -510,20 +511,20 @@
                                 @if ($assigneeList)
                                     <div class="task-modal-assignee-list-container">
                                         <div class="input-group d-flex task-modal-filter-container">
-                                            <div class="input-group task-input-group-container task-modal-search-container">
+                                            <div
+                                                class="input-group task-input-group-container task-modal-search-container">
                                                 <input wire:input="filter" wire:model.debounce.0ms="searchTerm"
                                                     type="text" class="form-control task-search-input"
                                                     placeholder="Search employee name / Id" aria-label="Search"
                                                     aria-describedby="basic-addon1">
                                                 <div class="input-group-append">
-                                                    <button  wire:click="filter"
-                                                        class="task-search-btn" type="button">
+                                                    <button wire:click="filter" class="task-search-btn"
+                                                        type="button">
                                                         <i class="fa fa-search task-search-icon"></i>
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div wire:click="closeAssignee"
-                                                aria-label="Close">
+                                            <div wire:click="closeAssignee" aria-label="Close">
                                                 <i class="fa fa-times task-modal-close-assignee"
                                                     aria-hidden="true"></i>
                                             </div>
@@ -537,7 +538,8 @@
                                                 <div wire:click="selectPerson('{{ $people->emp_id }}')"
                                                     class="container task-assignee-people-container">
                                                     <div class="row align-items-center">
-                                                        <label for="person-{{ $people->emp_id }}" class="task-assignee-people-label">
+                                                        <label for="person-{{ $people->emp_id }}"
+                                                            class="task-assignee-people-label">
                                                             <div class="col-auto">
                                                                 <input type="radio"
                                                                     id="person-{{ $people->emp_id }}"
@@ -550,18 +552,15 @@
                                                                         src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
                                                                 @else
                                                                     @if ($people && $people->gender == 'Male')
-                                                                        <img 
-                                                                            class="profile-image task-assignee-people-img"
+                                                                        <img class="profile-image task-assignee-people-img"
                                                                             src="{{ asset('images/male-default.png') }}"
                                                                             alt="Default Male Image">
                                                                     @elseif($people && $people->gender == 'Female')
-                                                                        <img 
-                                                                            class="profile-image task-assignee-people-img"
+                                                                        <img class="profile-image task-assignee-people-img"
                                                                             src="{{ asset('images/female-default.jpg') }}"
                                                                             alt="Default Female Image">
                                                                     @else
-                                                                        <img 
-                                                                            class="profile-image task-assignee-people-img"
+                                                                        <img class="profile-image task-assignee-people-img"
                                                                             src="{{ asset('images/user.jpg') }}"
                                                                             alt="Default Image">
                                                                     @endif
@@ -593,8 +592,9 @@
                                             <div class="task-modal-client-container">
                                                 <label class="task-client-label" for="clientSelect">Select
                                                     Client<span class="text-danger">*</span></label>
-                                                <select wire:change="showProjects" class="task-client-select-container"
-                                                    id="clientSelect" wire:model="client_id">
+                                                <select wire:change="showProjects"
+                                                    class="task-client-select-container" id="clientSelect"
+                                                    wire:model="client_id">
                                                     <option value="">Select client</option>
                                                     @foreach ($selectedPersonClients as $client)
                                                         <option class="task-client-select-options"
@@ -619,8 +619,9 @@
                                             <div class="task-modal-project-container">
                                                 <label class="task-project-label" for="clientSelect">Select
                                                     Project<span class="text-danger">*</span></label>
-                                                <select wire:change="autoValidate" class="task-project-select-container"
-                                                    id="clientSelect" wire:model="project_name">
+                                                <select wire:change="autoValidate"
+                                                    class="task-project-select-container" id="clientSelect"
+                                                    wire:model="project_name">
                                                     <option value="">Select project</option>
                                                     @foreach ($selectedPersonClientsWithProjects as $project)
                                                         <option class="task-project-select-options"
@@ -653,13 +654,15 @@
                                                     <span class="task-priority-options-value"
                                                         class="text-xs">Low</span>
                                                 </div>
-                                                <div class="priority-option task-priority-options-medium-high-containers">
+                                                <div
+                                                    class="priority-option task-priority-options-medium-high-containers">
                                                     <input type="radio" id="medium-priority" name="priority"
                                                         wire:model="priority" value="Medium">
                                                     <span class="task-priority-options-value"
                                                         class="text-xs">Medium</span>
                                                 </div>
-                                                <div class="priority-option task-priority-options-medium-high-containers">
+                                                <div
+                                                    class="priority-option task-priority-options-medium-high-containers">
                                                     <input type="radio" id="high-priority" name="priority"
                                                         wire:model="priority" value="High">
                                                     <span class="task-priority-options-value"
@@ -701,21 +704,23 @@
                                     <label for="assignee" class="task-follower-label">Followers</label>
                                     <br>
                                     <i wire:click="forFollowers" wire:change="autoValidate"
-                                       class="fas fa-user icon task-follower-user-icon"
-                                        id="profile-icon"></i>
+                                        class="fas fa-user icon task-follower-user-icon" id="profile-icon"></i>
                                     @if ($showFollowers)
                                         <strong class="task-selected-follower">Selected Followers:
                                         </strong><span>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</span>
                                     @else
-                                        <a wire:click="forFollowers" class="hover-link task-add-followers"> Add Followers</a>
+                                        <a wire:click="forFollowers" class="hover-link task-add-followers"> Add
+                                            Followers</a>
                                     @endif
                                 </div>
                                 @if ($followersList)
                                     <div class="task-modal-followerlist-container">
                                         <div class="input-group d-flex task-follower-filter-container">
-                                            <div class="input-group task-input-group-container task-follower-search-container">
-                                                <input wire:input="filterFollower" wire:model.debounce.0ms="searchTermFollower"
-                                                    type="text" class="form-control task-search-input"
+                                            <div
+                                                class="input-group task-input-group-container task-follower-search-container">
+                                                <input wire:input="filterFollower"
+                                                    wire:model.debounce.0ms="searchTermFollower" type="text"
+                                                    class="form-control task-search-input"
                                                     placeholder="Search employee name / Id" aria-label="Search"
                                                     aria-describedby="basic-addon1">
                                                 <div class="input-group-append">
@@ -744,6 +749,7 @@
                                                             <input type="checkbox" value="{{ $people->emp_id }}"
                                                                 id="checkbox-{{ $people->emp_id }}"
                                                                 {{ in_array($people->emp_id, $selectedPeopleForFollowers) ? 'checked' : '' }}>
+                    {{-- {{ count($selectedPeopleForFollowers) >= $maxFollowers && !in_array($people->emp_id, $selectedPeopleForFollowers) ? 'disabled' : '' }} --}}
                                                         </div>
                                                         <div class="col-auto">
                                                             @if (!empty($people->image) && $people->image !== 'null')
@@ -782,12 +788,17 @@
                                     </div>
                                 @endif
 
-
+                                @if ($validationFollowerMessage)
+                                <div class="alert alert-danger">
+                                    {{ $validationFollowerMessage }}
+                                </div>
+                            @endif
                                 <div class="form-group">
                                     <label for="Subject" class="task-modal-subject-label">Subject</label>
                                     <br>
-                                    <input wire:change="autoValidate" wire:model="subject" class="placeholder-small task-subject-input"
-                                        placeholder="Enter subject" rows="4"></input>
+                                    <input wire:change="autoValidate" wire:model="subject"
+                                        class="placeholder-small task-subject-input" placeholder="Enter subject"
+                                        rows="4"></input>
                                 </div>
                                 <!-- Description -->
                                 <div class="form-group">
@@ -815,16 +826,16 @@
                                 </div>
 
                                 <div>
-                                    <input type="file" wire:model="file_path"
-                                        id="file_path" wire:change="autoValidate" class="form-control task-modal-filepath"
+                                    <input type="file" wire:model="file_path" id="file_path"
+                                        wire:change="autoValidate" class="form-control task-modal-filepath"
                                         onchange="handleImageChange()">
                                     @error('file_path')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
 
                                 </div>
-                                <div id="flash-message-container"
-                                    class="alert alert-success task-fileinput-success" role="alert"></div>
+                                <div id="flash-message-container" class="alert alert-success task-fileinput-success"
+                                    role="alert"></div>
 
 
                                 {{-- <input wire:change="autoValidate" style="font-size: 0.75rem;" wire:model="image"
@@ -873,21 +884,17 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Add Comment</h6>
-                        {{-- <button type="button" class="close task-comment-modal-close-icon" data-dismiss="modal" aria-label="Close"
+                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
                             wire:click="closeModal">
-                            <span aria-hidden="true">&times;</span>
-                        </button> --}}
-                        <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="closeModal">
                     </div>
-                    <div id="alert-container" class="d-flex justify-content-center alert-container task-comment-modal-flash-message"
+                    <div id="alert-container"
+                        class="d-flex justify-content-center alert-container task-comment-modal-flash-message"
                         wire:poll.5s="hideAlert">
 
                         @if ($showAlert)
                             <p class="alert alert-success task-comment-flash-text" role="alert">
                                 {{ session('comment_message') }}
-                                <span class="task-comment-flash-close-icon"
-                                    wire:click='hideAlert'>x</span>
+                                <span class="task-comment-flash-close-icon" wire:click='hideAlert'>x</span>
                             </p>
                         @endif
                     </div>
@@ -913,14 +920,14 @@
                                     <div class="comment mb-4 mt-2">
                                         <div class="d-flex align-items-center gap-5">
                                             <div class="col-md-4 p-0 comment-details">
-                                                <p
-                                                    class="truncate-text task-comment-emp-name"
+                                                <p class="truncate-text task-comment-emp-name"
                                                     title="{{ $comment->employee->full_name }}">
                                                     {{ $comment->employee->full_name }}
                                                 </p>
                                             </div>
                                             <div class=" col-md-3 p-0 comment-time">
-                                                <span class="task-comment-time">{{ $comment->created_at->diffForHumans() }}</span>
+                                                <span
+                                                    class="task-comment-time">{{ $comment->created_at->diffForHumans() }}</span>
                                             </div>
                                             @if (Auth::guard('emp')->user()->emp_id == $comment->emp_id)
                                                 <div class="col-md-2 p-0 comment-actions">
@@ -943,7 +950,8 @@
                                                 <!-- Button to update comment -->
                                                 <button class="update-btn p-1"
                                                     wire:click="updateComment({{ $comment->id }})">Update</button>
-                                                <button class="btn btn-secondary p-1 m-0 task-comment-edit-cancel-btn" wire:click="cancelEdit">Cancel</button>
+                                                <button class="btn btn-secondary p-1 m-0 task-comment-edit-cancel-btn"
+                                                    wire:click="cancelEdit">Cancel</button>
                                             @else
                                                 <!-- Display comment content -->
                                                 <p class="task-comment-text-value">

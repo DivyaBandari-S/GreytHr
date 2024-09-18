@@ -1406,60 +1406,64 @@ $lastEntry = end($regularisationEntries);
 @endphp
 
 @if(($hr->status=='pending'&&$hr->is_withdraw==1)||$hr->status=='approved'||$hr->status=='rejected')
+
+<div class="mt-4">
 <div class="accordion-heading rounded"style="margin-top:10px;">
 
-    <div class="row align-items-center accordion-title p-2 rounded">
+<div class="accordion-title p-2 rounded">
 
-        <!-- Display leave details here based on $leaveRequest -->
+    <!-- Display leave details here based on $leaveRequest -->
 
-        <div class="col accordion-content">
-            @if($hr->status=='pending')
-            <span style="color: #778899; font-size: 12px; font-weight: 500;">Withdrawn&nbsp;By</span>
-            @elseif($hr->status=='rejected')
-            <span style="color: #778899; font-size: 12px; font-weight: 500;">Rejected&nbsp;By</span>
-            @elseif($hr->status=='approved')
-            <span style="color: #778899; font-size: 12px; font-weight: 500;">Regularized&nbsp;By</span>
-            @endif
-            @if($hr->status=='pending'&&$hr->is_withdraw==1)
-            <span style="color: #36454F; font-size: 12px; font-weight: 500;">Me</span>
-            @else
-            <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ucwords(strtolower($EmployeeDetails->first_name))}}&nbsp;{{ucwords(strtolower($EmployeeDetails->last_name))}}</span>
-            @endif
-        </div>
-
-
-
-        <div class="col accordion-content">
-
-            <span style="color: #778899; font-size: 12px; font-weight: 500;">No. of Days</span>
-
-            <span style="color: #36454F; font-size: 12px; font-weight: 500;">
-
-                {{$numberOfEntries}}
-
-            </span>
-
-        </div>
+    <div class="col accordion-content">
+        @if($hr->status=='pending')
+        <span style="color: #778899; font-size: 12px; font-weight: 500;">Withdrawn&nbsp;By</span>
+        @elseif($hr->status=='rejected')
+        <span style="color: #778899; font-size: 12px; font-weight: 500;">Rejected&nbsp;By</span>
+        @elseif($hr->status=='approved')
+        <span style="color: #778899; font-size: 12px; font-weight: 500;">Regularized&nbsp;By</span>
+        @endif
+        @if($hr->status=='pending'&&$hr->is_withdraw==1)
+        <span style="color: #36454F; font-size: 12px; font-weight: 500;">Me</span>
+        @else
+        <span style="color: #36454F; font-size: 12px; font-weight: 500; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($EmployeeDetails->first_name)) }} {{ ucwords(strtolower($EmployeeDetails->last_name)) }}">{{ ucwords(strtolower($EmployeeDetails->first_name)) }}&nbsp;{{ ucwords(strtolower($EmployeeDetails->last_name)) }}</span>
+        
+        @endif
+    </div>
 
 
-        <!-- Add other details based on your leave request structure -->
 
-        <div class="col accordion-content">
-            @if($hr->status=='approved')
-            <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">closed</span>
-            @elseif($hr->status=='rejected')
-            <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$hr->status}}</span>
-            @elseif($hr->status=='pending'&&$hr->is_withdraw==1)
-            <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#cf9b17;text-transform:uppercase;">withdrawn</span>
-            @endif
-        </div>
+    <div class="col accordion-content">
 
-        <div class="arrow-btn"wire:click="toggleHistoryAccordion({{ $hr->id }})"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}">
-            <i class="fa fa-angle-{{ $openAccordionForHistory === $hr->id ? 'up' : 'down' }}"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}"></i>
-        </div>
+        <span style="color: #778899; font-size: 12px; font-weight: 500;white-space-nowrap;">No. of Days</span>
+
+        <span style="color: #36454F; font-size: 12px; font-weight: 500;">
+
+            {{$numberOfEntries}}
+
+        </span>
 
     </div>
 
+
+    <!-- Add other details based on your leave request structure -->
+
+    <div class="col accordion-content">
+        @if($hr->status=='approved')
+        <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">closed</span>
+        @elseif($hr->status=='rejected')
+        <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$hr->status}}</span>
+        @elseif($hr->status=='pending'&&$hr->is_withdraw==1)
+        <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#cf9b17;text-transform:uppercase;">withdrawn</span>
+        @endif
+    </div>
+
+    <div class="arrow-btn"wire:click="toggleHistoryAccordion({{ $hr->id }})"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}">
+        <i class="fa fa-angle-{{ $openAccordionForHistory === $hr->id ? 'up' : 'down' }}"style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}"></i>
+    </div>
+
+</div>
+
+</div>
 </div>
 <div class="accordion-body m-0 p-0"style="display: {{ $openAccordionForHistory === $hr->id ? 'block' : 'none' }}">
 

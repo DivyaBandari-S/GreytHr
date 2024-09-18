@@ -1171,6 +1171,56 @@ button.close-button {
 /* end of app.blade */
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
+/*Starting of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
+@media screen and (min-width: 320px) and (max-width: 404px)  {
+    .date-filters
+    {
+        row-gap: 1.5rem;
+    }
+    #from-date
+    {
+        max-width: 60%;
+    }
+    #to-date
+    {
+        max-width: 60%;
+    }
+    .toDatefield
+    {
+        margin-left: 13px;
+        
+    }
+    .mobile-gap
+    {
+        gap: 1.5rem !important;
+    }
+    .accordion-title {
+        display: flex;
+        max-width: 100%;
+        overflow-x: auto;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 5px;
+        gap: 20px;
+    }
+    .accordion-heading {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+    .accordion {
+        width: 100%;
+        top: auto;
+        right: auto;
+        margin-top: 20px;
+    }
+    .col
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+}
+/*Ending of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 .container-for-adding-regularisation-entries {
     width: 530px;
@@ -7727,14 +7777,17 @@ peoples module styles started */
     margin-bottom: 10px;
 }
 .task-modal-search-container {
-    width: 300px;
+    width: 270px;
     padding-left: 10px;
 }
 .task-modal-close-assignee {
     font-size: 20px;
-    margin-top: 5px;
+    margin-top: 1px;
     color: #fff;
     cursor: pointer;
+    background-color: rgb(2, 17, 79);
+    padding: 5px 10px 6px 10px;
+    border-radius: 5px;
 }
 .task-modal-no-assignee {
     text-align: center;
@@ -7902,14 +7955,17 @@ peoples module styles started */
     margin-bottom: 10px;
 }
 .task-follower-search-container {
-    width: 300px;
+    width: 270px;
     padding-left: 10px;
 }
 .task-follower-close-icon {
     font-size: 20px;
-    margin-top: 5px;
+    margin-top: 1px;
     color: #fff;
     cursor: pointer;
+    background-color: rgb(2, 17, 79);
+    padding: 5px 10px 6px 10px;
+    border-radius: 5px;
 }
 .task-no-follower {
     text-align: center;

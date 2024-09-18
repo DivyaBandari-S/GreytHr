@@ -3,62 +3,46 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @guest
-        <link rel="icon" type="image/x-icon" href="{{ asset('public/images/hr_expert.png') }}">
-        <title>
-            HR Strategies Pro
-        </title>
-    @endguest
-    @auth('emp')
-        @php
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $employee = DB::table('employee_details')
-                ->join('companies', 'employee_details.company_id', '=', 'companies.company_id')
-                ->where('employee_details.emp_id', $employeeId)
-                ->select('companies.company_logo', 'companies.company_name')
-                ->first();
-        @endphp
-        <link rel="icon" type="image/x-icon" href="{{ asset($employee->company_logo) }}">
-        <title>
-            {{ $employee->company_name }}
-        </title>
-    @endauth
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        crossorigin="anonymous">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
-    <!-- Date range picker links -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/employee.css?v=' . filemtime(public_path('css/employee.css'))) }}">
-    <link rel="stylesheet" href="{{ asset('css/app.css?v=' . filemtime(public_path('css/app.css'))) }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Document</title>
     @livewireStyles
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    crossorigin="anonymous">
+    <!-- <script src="https://kit.fontawesome.com/YOUR_KIT_URL.js" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/app.css?v=' . filemtime(public_path('css/app.css'))) }}">
 </head>
 
-<body >
-    @guest
-        <livewire:emplogin />
-    @else
-        <section>
-            @livewire('main-layout')
-            <main id="maincontent" style="overflow: auto; height: calc(100vh - 100px);">
-                {{ $slot }}
-            </main>
-        </section>
-    @endguest
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{{ asset('js/admin-dash.js?v=' . filemtime(public_path('js/admin-dash.js'))) }}"></script>
-    <!-- Custom Scripts -->
+@guest
+<livewire:hrlogin/>
+@else
+<body>
+    <div class="container-fluid " style="width: 100%; display: flex;flex-direction: column; height:100vh; ">
+        <div class="row">
+        <livewire:header />
+        </div>
+        <div class="row" style="display: flex; flex: 1 1 auto; overflow: hidden;">
+            <div class="column1">
+                <livewire:sidebar />
+            </div>
+            <div class="column2" >
+                    {{ $slot }}
+            </div>
+        </div>
+    </div>
+    @livewireScripts
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
     </script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script> -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="{{ asset('js/get-location.js') }}?v={{ time() }}"></script>
-    @livewireScripts
+    <script>
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-toggled');
+        }
+    </script>
 </body>
 
+@endguest
 </html>
