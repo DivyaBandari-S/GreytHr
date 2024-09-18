@@ -1180,7 +1180,7 @@ button.close-button {
 {
     width:65%;
 }
-@media screen and (min-width: 320px) and (max-width: 404px)  {
+@media screen and (min-width: 320px) and (max-width: 500px)  {
     .date-filters
     {
         row-gap: 1.5rem;
@@ -1770,6 +1770,7 @@ input[type="date"]::before {
 }
 /*Ending of submodule:who is in(Pranita Priyadarshi)*/
 /*Starting of submodule:employee swipes(Pranita Priyadarshi)*/
+
 .container-employee-swipes {
     display: flex;
     justify-content: space-between;
@@ -1995,6 +1996,20 @@ td {
 @media screen and (max-width: 768px) {
     .showHamburger {
         display: none !important;
+    }
+}
+@media screen and (min-width: 320px) and (max-width: 500px)  {
+    .employee-swipes-fields {
+    
+        flex-direction: column;
+    }
+    .dropdown-container1-employee-swipes-for-date-type
+    {
+        margin-left: 60px;
+    }
+    .dropdown-container1-employee-swipes-for-search-employee
+    {
+        margin-left: 75px;
     }
 }
 .search-text::placeholder {
