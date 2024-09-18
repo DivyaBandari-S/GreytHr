@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
 use App\Mail\PasswordChanged;
+use App\Models\EmpPersonalInfo;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class EmpLogin extends Component
@@ -126,25 +128,6 @@ class EmpLogin extends Component
             } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
                 session(['post_login' => true]);
                 return redirect('/');
-            } elseif (Auth::guard('hr')->attempt(['hr_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/home-dashboard');
-            } elseif (Auth::guard('hr')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/home-dashboard');
-            } elseif (Auth::guard('finance')->attempt(['fi_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/financePage');
-            } elseif (Auth::guard('finance')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/financePage');
-            } elseif (Auth::guard('it')->attempt(['it_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/ithomepage');
-            }
-            //  elseif (Auth::guard('admins')->attempt(['ad_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-            //     return redirect('/adminPage');
-            // }
-            // elseif (Auth::guard('admins')->attempt(['admin_emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-            //     return redirect('/adminPage');
-            // }
-            elseif (Auth::guard('it')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
-                return redirect('/ithomepage');
             } else {
                 $this->error = "Invalid ID or Password. Please try again.";
             }
@@ -214,8 +197,6 @@ class EmpLogin extends Component
 
     public function verifyEmailAndDOB()
     {
-
-
         $this->validate(
             [
                 'email' => ['nullable', 'email', 'required_without:company_email'],
@@ -227,52 +208,13 @@ class EmpLogin extends Component
         try {
             // Custom validation rule to ensure either email or company_email is present
 
-
-            // Determine which email field is used
-            $email = $this->email ?? $this->company_email;
-
-            if (!$email) {
+            if (!$this->email) {
                 throw new \Exception('Either email or company email must be provided.');
             }
-
-            // Implement your logic to verify email and DOB here.
-            // Example: Check if the email and DOB match a user's stored values in your database.
-            // $user = EmployeeDetails::where(function ($query) use ($email) {
-            //     $query->where('email', $email)
-            //         ->orWhere('company_email', $email);
-            // })->where('date_of_birth', $this->dob)->first();
-
-            $userInEmployeeDetails = EmployeeDetails::where(function ($query) use ($email) {
-                $query->where('email', $email)
-                    ->orWhere('company_email', $email);
-            })->where('date_of_birth', $this->dob)->first();
-
-            // Search for the user in Finance table
-            $userInFinance = Finance::where(function ($query) use ($email) {
-                $query->where('email', $email)
-                    ->orWhere('company_email', $email);
-            })->where('date_of_birth', $this->dob)->first();
-
-            // Search for the user in HR table
-            $userInHR = HR::where(function ($query) use ($email) {
-                $query->where('email', $email)
-                    ->orWhere('company_email', $email);
-            })->where('date_of_birth', $this->dob)->first();
-
-            // Search for the user in IT table
-            $userInIT = IT::where(function ($query) use ($email) {
-                $query->where('email', $email)
-                    ->orWhere('company_email', $email);
-            })->where('date_of_birth', $this->dob)->first();
-
-            // Search for the user in Admin table
-            $userInAdmin = Admin::where(function ($query) use ($email) {
-                $query->where('email', $email)
-                    ->orWhere('company_email', $email);
-            })->where('date_of_birth', $this->dob)->first();
-            // Combine the results of all queries
-            $user = $userInEmployeeDetails ?? $userInFinance ?? $userInHR ?? $userInIT ?? $userInAdmin;
-            if ($user) {
+            $userInEmployeeDetails = EmpPersonalInfo::where('email', $this->email)
+                ->where('date_of_birth', $this->dob)
+                ->first();
+            if ($userInEmployeeDetails) {
                 $this->verified = true;
                 if ($this->verified) {
                     $this->verified = false;
@@ -345,38 +287,9 @@ class EmpLogin extends Component
                     $query->where('email', $email)
                         ->orWhere('company_email', $email);
                 })->first();
-
-                // Search for the user in Finance table
-                $userInFinance = Finance::where(function ($query) use ($email) {
-                    $query->where('email', $email)
-                        ->orWhere('company_email', $email);
-                })->first();
-
-                // Search for the user in HR table
-                $userInHR = HR::where(function ($query) use ($email) {
-                    $query->where('email', $email)
-                        ->orWhere('company_email', $email);
-                })->first();
-
-                // Search for the user in IT table
-                $userInIT = IT::where(function ($query) use ($email) {
-                    $query->where('email', $email)
-                        ->orWhere('company_email', $email);
-                })->first();
-
-                // Search for the user in Admin table
-                $userInAdmin = Admin::where(function ($query) use ($email) {
-                    $query->where('email', $email)
-                        ->orWhere('company_email', $email);
-                })->first();
-
-                // Combine the results of all queries
-                $user = $userInEmployeeDetails ?? $userInFinance ?? $userInHR ?? $userInIT ?? $userInAdmin;
-
-
-                if ($user) {
+                if ($userInEmployeeDetails) {
                     // Update the user's password in the database
-                    $user->update(['password' => bcrypt($this->newPassword)]);
+                    $userInEmployeeDetails->update(['password' => bcrypt($this->newPassword)]);
                     $this->passwordChangedModal = true;
 
                     // Reset form fields and state after successful password update
