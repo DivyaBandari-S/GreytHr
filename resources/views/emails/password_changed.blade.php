@@ -52,7 +52,7 @@
             initiate this change, please contact our support team immediately.</p>
         <p>Thank you for using our service!</p>
         <div class="email-footer">
-            <p>&copy; {{ date('Y') }} {{ $companyName }}. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} {{ $companyName }} Pvt.Ltd All rights reserved.</p>
         </div>
     </div>
 </body>
