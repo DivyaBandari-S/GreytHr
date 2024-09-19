@@ -12,6 +12,7 @@
             background-color: #f4f4f4;
             padding: 20px;
         }
+
         .email-container {
             background-color: #fff;
             padding: 20px;
@@ -32,26 +33,30 @@
 
         .logo {
             max-width: 100px;
+            /* Adjust as needed */
             height: auto;
         }
 
-        .info-table {
-            margin-top: 20px;
+        table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        .info-table td {
-            padding: 8px 0;
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
         }
 
-        .info-table td:first-child {
-            font-weight: 600;
-            width: 150px;
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
         }
 
-        .info-table td:last-child {
-            color: #555;
+        th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -61,32 +66,39 @@
         <div class="email-header">
             {{-- Company Logo --}}
             <img src="{{ $logoUrl }}" alt="Company Logo" class="logo">
-            <h1>Your password has been changed</h1>
+            <h1>Your password has been changed.</h1>
         </div>
         <p>Hello {{ $user->first_name }} {{ $user->last_name }},</p>
         <p>This is a notification to inform you that your password has been successfully changed. If you did not
             initiate this change, please contact our support team immediately.</p>
-
-        {{-- Additional Info Table --}}
-        <table class="info-table">
+        <p><strong>Details:</strong></p>
+        <table>
             <tr>
-                <td>IP Address:</td>
+                <th>IP Address</th>
                 <td>{{ $ipAddress }}</td>
             </tr>
             <tr>
-                <td>Location:</td>
-                <td>{{ $location['city'] }}, {{ $location['country'] }}</td>
+                <th>Location</th>
+                <td>{{ $location['country'] ?? 'Unknown' }} ({{ $location['city'] ?? 'Unknown' }})</td>
             </tr>
             <tr>
-                <td>Browser:</td>
+                <th>Browser</th>
                 <td>{{ $browser }}</td>
             </tr>
+            <tr>
+                <th>Device</th>
+                <td>{{ $device }}</td>
+            </tr>
+            <tr>
+                <th>OS</th>
+                <td>{{ $os }} {{ $osVersion ? '(' . $osVersion . ')' : '' }}</td>
+            </tr>
         </table>
-
         <p>Thank you for using our service!</p>
         <div class="email-footer">
-            <p>&copy; {{ date('Y') }} {{ $companyName }} Pvt. Ltd. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} {{ $companyName }} Pvt.Ltd All rights reserved.</p>
         </div>
     </div>
 </body>
+
 </html>

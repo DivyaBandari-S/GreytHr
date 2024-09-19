@@ -106,14 +106,14 @@
         </div>
 
         @if ($currentSection == 'Employee Family Details')
-            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+        <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header d-flex align-items-center" >
+                            <h5
                                 class="modal-title"><b>{{ $currentSection }}</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
-                                wire:click="close" style="background-color: white; height:10px;width:10px;">
+                            <button type="button" class="btn-close " data-dismiss="modal" aria-label="Close"
+                                wire:click="close" >
                             </button>
                         </div>
                         @livewire('family-report')
@@ -126,12 +126,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5
                                 class="modal-title"><b>{{ $currentSection }}</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="close"
-                                style="background-color: white; height:10px;width:10px;">
+                                >
                             </button>
                         </div>
                         @livewire('attendance-muster-report')
@@ -143,12 +143,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5
                                 class="modal-title"><b>{{ $currentSection }}</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="closeAbsentReport"
-                                style="background-color: white; height:10px;width:10px;">
+                                >
                             </button>
                         </div>
                         @livewire('absent-report')
@@ -161,12 +161,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5
                                 class="modal-title"><b>{{ $currentSection }}</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="closeShiftSummaryReport"
-                                style="background-color: white; height:10px;width:10px;">
+                                >
                             </button>
                         </div>
                         @livewire('shift-summary-report')
@@ -181,12 +181,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5 
                                 class="modal-title"><b>{{ $currentSection }}</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="close"
-                                style="background-color: white; height:10px;width:10px;">
+                                >
                             </button>
                         </div>
                         @livewire('attendance-regularisation-report')
@@ -202,8 +202,9 @@
                             <h5 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                                aria-label="Close" wire:click="close">
+                            <button type="button" class="btn-close" data-dismiss="modal"
+                                aria-label="Close" wire:click="close"
+                                >
                             </button>
                         </div>
                         <div class="modal-body">
@@ -267,12 +268,13 @@
                                 </div>
                             </div>
 
-                        </div>
-                        <div class="modal-footer d-flex justify-content-center">
-                            <button type="submit" class="submit-btn"
-                                wire:click="downloadLeaveAvailedReportInExcel">Run</button>
-                            <button type="button" class="cancel-btn" wire:click='resetFields'
-                                style="border:1px solid rgb(2,17,79);">Clear</button>
+
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn" wire:click="downloadLeaveAvailedReportInExcel">Run</button>
+                                <button type="button" class="cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2,17,79);">Clear</button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -338,12 +340,10 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer d-flex justify-content-center">
-                            <button type="submit" class="submit-btn"
-                                wire:click="downloadNegativeLeaveBalanceReport">Run</button>
-                            <button type="button" class="cancel-btn" wire:click='resetFields'
-                                style="border:1px solid rgb(2,17,79);">Clear</button>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn" wire:click="downloadNegativeLeaveBalanceReport">Run</button>
+                                <button type="button" class="cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2,17,79);">Clear</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -416,12 +416,12 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer d-flex justify-content-center">
-                            <button type="submit" class="submit-btn"
-                                wire:click="dayWiseLeaveTransactionReport">Run</button>
-                            <button type="button" class="cancel-btn" wire:click='resetFields'
-                                style="border:1px solid rgb(2,17,79);">Clear</button>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn" wire:click="dayWiseLeaveTransactionReport">Run</button>
+                                <button type="button" class="cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2,17,79);">Clear</button>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -522,12 +522,10 @@
                                     @endif
                                 </table>
                             </div>
-                        </div>
-                        <div class="modal-footer d-flex justify-content-center">
-                            <button type="submit" class="submit-btn"
-                                wire:click="leaveBalanceAsOnADayReport">Run</button>
-                            <button type="button" class="cancel-btn" wire:click='resetFields'
-                                style="border:1px solid rgb(2,17,79);">Clear</button>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn" wire:click="leaveBalanceAsOnADayReport">Run</button>
+                                <button type="button" class="cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2,17,79);">Clear</button>
+                            </div>
                         </div>
 
                     </div>
@@ -618,12 +616,12 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer d-flex justify-content-center">
-                            <button type="submit" class="submit-btn"
-                                wire:click="downloadLeaveTransactionReport">Run</button>
-                            <button type="button" class="cancel-btn" wire:click='resetFields'
-                                style="border:1px solid rgb(2,17,79);">Clear</button>
+
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn" wire:click="downloadLeaveTransactionReport">Run</button>
+                                <button type="button" class="cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2,17,79);">Clear</button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
