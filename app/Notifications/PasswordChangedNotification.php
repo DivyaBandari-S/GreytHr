@@ -46,14 +46,16 @@ class PasswordChangedNotification extends Notification
 
         // Detect device info
         $agent = new Agent();
+        $device = 'Unknown Device';
+        $os = $agent->platform(); // OS for desktop, tablet, or mobile
+        $osVersion = $agent->version($os); // OS version
+
         if ($agent->isDesktop()) {
             $device = 'Desktop';
         } elseif ($agent->isTablet()) {
             $device = 'Tablet';
         } elseif ($agent->isMobile()) {
             $device = 'Mobile';
-        } else {
-            $device = 'Unknown Device';
         }
 
         return (new MailMessage)
@@ -65,6 +67,8 @@ class PasswordChangedNotification extends Notification
                 'location' => $location,
                 'browser' => $browser,
                 'device' => $device,
+                'os' => $os,
+                'osVersion' => $osVersion, // Include OS version
                 'logoUrl' => asset('images/hr_new_white.png'),
             ]);
     }
@@ -77,6 +81,7 @@ class PasswordChangedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+
             // Optionally include other info if needed
         ];
     }
