@@ -6719,6 +6719,10 @@ peoples module styles started */
 .tab-position-emp-everyone {
     left: 83px;
 }
+
+.people-employee-detail-container{
+    margin-left: 20px;
+}
 /* peoples module styles ended */
 
 /* task module styles started */
@@ -8330,6 +8334,10 @@ peoples module styles started */
     .approved-leave {
         display: flex;
         flex-direction: column;
+    }
+    .people-employee-detail-container {
+        margin-top: 10px; /* Margin for mobile devices */
+        margin-left: 0; /* Optionally remove left margin for mobile */
     }
 }
 @media screen and (max-width: 460px) {
