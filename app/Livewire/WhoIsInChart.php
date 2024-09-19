@@ -71,6 +71,7 @@ class WhoIsInChart extends Component
         $this->shiftsforAttendance = EmployeeDetails::select('shift_type', 'shift_start_time', 'shift_end_time')
                         ->distinct()
                         ->get();
+        $this->from_date=$this->currentDate;               
                  
 
 
