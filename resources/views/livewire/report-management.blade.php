@@ -1,48 +1,5 @@
 <div class="row p-0 m-0 mt-3 p-2">
     <style>
-        .search-bar {
-            display: flex;
-            padding: 0;
-            justify-content: start;
-            width: 250px;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            overflow: hidden;
-            background: #fff;
-        }
-
-        .search-bar input[type="search"] {
-            flex: 1;
-            padding: 5px;
-            border: none;
-            outline: none;
-            font-size: 14px;
-            background: transparent;
-        }
-
-        /* Styling for the search icon */
-        .search-bar::after {
-            content: "\f002";
-            /* Unicode for the search icon (font-awesome) */
-            font-family: FontAwesome;
-            /* Use an icon font library like FontAwesome */
-            font-size: 16px;
-            padding: 5px;
-            color: #999;
-            /* Icon color */
-            cursor: pointer;
-        }
-
-        .search-bar input[type="search"]::placeholder {
-            color: #999;
-            /* Placeholder color */
-        }
-
-        .search-bar input[type="search"]::-webkit-search-cancel-button {
-            display: none;
-            /* Hide cancel button on Chrome */
-        }
 
         .people-input-group-container {
             margin-top: 10px;
@@ -173,14 +130,14 @@
         </div>
 
         @if ($currentSection == 'Employee Family Details')
-            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+        <div wire:ignore.self class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header d-flex align-items-center" >
+                            <h5
                                 class="modal-title"><b>{{ $currentSection }}</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
-                                wire:click="close" style="background-color: white; height:10px;width:10px;">
+                            <button type="button" class="btn-close " data-dismiss="modal" aria-label="Close"
+                                wire:click="close" >
                             </button>
                         </div>
                         @livewire('family-report')
@@ -193,12 +150,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5
                                 class="modal-title"><b>{{ $currentSection }}</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="close"
-                                style="background-color: white; height:10px;width:10px;">
+                                >
                             </button>
                         </div>
                         @livewire('attendance-muster-report')
@@ -210,12 +167,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5
                                 class="modal-title"><b>{{ $currentSection }}</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="closeAbsentReport"
-                                style="background-color: white; height:10px;width:10px;">
+                                >
                             </button>
                         </div>
                         @livewire('absent-report')
@@ -228,12 +185,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5
                                 class="modal-title"><b>{{ $currentSection }}</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="closeShiftSummaryReport"
-                                style="background-color: white; height:10px;width:10px;">
+                                >
                             </button>
                         </div>
                         @livewire('shift-summary-report')
@@ -248,12 +205,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5 
                                 class="modal-title"><b>{{ $currentSection }}</b></h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="close"
-                                style="background-color: white; height:10px;width:10px;">
+                                >
                             </button>
                         </div>
                         @livewire('attendance-regularisation-report')
@@ -265,14 +222,14 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5
                                 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="close"
-                                style="background-color: white; height:10px;width:10px;">
+                                >
                             </button>
                         </div>
                         <div class="modal-body" style="max-height:300px;overflow-y:auto;">
@@ -397,12 +354,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5 
                                 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="close"
                                 style="background-color: white; height:10px;width:10px;">
                             </button>
@@ -516,12 +473,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5 
                                 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="close"
                                 style="background-color: white; height:10px;width:10px;">
                             </button>
@@ -646,12 +603,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5 
                                 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="close"
                                 style="background-color: white; height:10px;width:10px;">
                             </button>
@@ -755,12 +712,12 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px">
-                            <h5 style="padding: 5px; color: white; font-size: 15px;margin-top:-8px;"
+                        <div class="modal-header" >
+                            <h5 
                                 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                            <button type="button" class="btn-close" data-dismiss="modal"
                                 aria-label="Close" wire:click="close"
                                 style="background-color: white; height:10px;width:10px;">
                             </button>
