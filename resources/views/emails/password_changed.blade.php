@@ -12,6 +12,7 @@
             background-color: #f4f4f4;
             padding: 20px;
         }
+
         .email-container {
             background-color: #fff;
             padding: 20px;
@@ -81,6 +82,10 @@
                 <td>Browser:</td>
                 <td>{{ $browser }}</td>
             </tr>
+            <tr>
+                <td>Device:</td>
+                <td>{{ $device }}</td>
+            </tr>
         </table>
 
         <p>Thank you for using our service!</p>
@@ -89,4 +94,5 @@
         </div>
     </div>
 </body>
+
 </html>

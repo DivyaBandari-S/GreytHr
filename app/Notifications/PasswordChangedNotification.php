@@ -8,14 +8,13 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Request;
 use Torann\GeoIP\Facades\GeoIP;
+use Jenssegers\Agent\Agent;
+
 class PasswordChangedNotification extends Notification
 {
     use Queueable;
 
     protected $companyName;
-    protected $ipAddress;
-    protected $location;
-    protected $browser;
 
     /**
      * Create a new notification instance.
@@ -23,9 +22,6 @@ class PasswordChangedNotification extends Notification
     public function __construct($companyName)
     {
         $this->companyName = $companyName;
-        $this->ipAddress = Request::ip(); // Get the user's IP address
-        $this->location = GeoIP::getLocation($this->ipAddress); // Get location based on IP
-        $this->browser = Request::header('User-Agent'); // Get the User-Agent (browser) information
     }
 
     /**
@@ -43,15 +39,33 @@ class PasswordChangedNotification extends Notification
      */
     public function toMail($notifiable)
     {
+        // Gather additional information
+        $ipAddress = Request::ip(); // Get the user's IP address
+        $location = GeoIP::getLocation($ipAddress); // Get location based on IP
+        $browser = Request::header('User-Agent'); // Get the User-Agent (browser) information
+
+        // Detect device info
+        $agent = new Agent();
+        if ($agent->isDesktop()) {
+            $device = 'Desktop';
+        } elseif ($agent->isTablet()) {
+            $device = 'Tablet';
+        } elseif ($agent->isMobile()) {
+            $device = 'Mobile';
+        } else {
+            $device = 'Unknown Device';
+        }
+
         return (new MailMessage)
             ->subject('Your Password Has Been Changed')
             ->view('emails.password_changed', [
                 'user' => $notifiable,
                 'companyName' => $this->companyName,
+                'ipAddress' => $ipAddress,
+                'location' => $location,
+                'browser' => $browser,
+                'device' => $device,
                 'logoUrl' => asset('images/hr_new_white.png'),
-                'ipAddress' => $this->ipAddress,
-                'location' => $this->location,
-                'browser' => $this->browser,
             ]);
     }
 
@@ -63,7 +77,7 @@ class PasswordChangedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            // Optionally include other info if needed
         ];
     }
 }
