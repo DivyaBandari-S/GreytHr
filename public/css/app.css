@@ -850,23 +850,6 @@ button.close-button {
     color: white !important;
 }
 
-@media (min-width: 768px) {
-    .button-dl {
-        font-size: 0.8rem;
-    }
-}
-
-@media (min-width: 992px) {
-    .button-dl {
-        font-size: 0.8rem;
-    }
-}
-
-@media (min-width: 1200px) {
-    .button-dl {
-        font-size: 0.8rem;
-    }
-}
 
 .custom-form {
     background-color: white;
@@ -876,17 +859,7 @@ button.close-button {
     margin-bottom: 15px;
 }
 
-@media (max-width: 575.98px) {
-    .tab,
-    .jump-to,
-    .button-dl {
-        font-size: 0.7rem;
-    }
 
-    .custom-form {
-        padding: 15px;
-    }
-}
 
 .table-start {
     font-size: 0.8rem;
@@ -1138,31 +1111,7 @@ button.close-button {
     display: block;
 }
 
-@media only screen and (max-width: 768px) {
-    .displayNone {
-        display: none !important;
-    }
 
-    .displayBlock {
-        display: block !important;
-    }
-    .employee-list {
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-    .employee-item {
-        display: inline-block;
-        min-width: 120px; /* Adjust width as needed */
-        margin-bottom: 7px;
-    }
-
-    .employee-item .text-container {
-        white-space: nowrap; /* Prevent text from wrapping to the next line */
-        overflow: hidden; /* Hide overflowed text */
-        text-overflow: ellipsis; /* Add ellipsis (...) */
-        max-width: 100px; /* Set a maximum width for the container */
-    }
-}
 /* end of app.blade */
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
@@ -1175,54 +1124,7 @@ button.close-button {
 {
     width:65%;
 }
-@media screen and (min-width: 320px) and (max-width: 500px)  {
-    .date-filters
-    {
-        row-gap: 1.5rem;
-    }
-    #from-date
-    {
-        max-width: 60%;
-    }
-    #to-date
-    {
-        max-width: 60%;
 
-    }
-    .mobile-gap
-    {
-        gap: 1.5rem !important;
-    }
-    .toDatefield
-    {
-        margin-left:12px;
-    }
-    .accordion-title {
-        display: flex;
-        max-width: 100%;
-        overflow-x: auto;
-        flex-direction: row;
-        align-items: center;
-        border-radius: 5px;
-        gap: 20px;
-    }
-    .accordion-heading {
-        max-width: 100%;
-        overflow-x: auto;
-    }
-    .accordion {
-        width: 100%;
-        top: auto;
-        right: auto;
-        margin-top: 20px;
-    }
-    .col
-    {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-    }
-}
 /*Ending of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 .container-for-adding-regularisation-entries {
@@ -1237,14 +1139,7 @@ button.close-button {
     border: 1px solid #ccc;
     display: block;
 }
-@media screen and (max-height: 320px) {
-    .container-for-adding-regularisation-entries {
-        width: 100%;
-        display: block;
-        height: 195px;
-        margin-top: 15px;
-    }
-}
+
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
@@ -1971,25 +1866,7 @@ td {
     color: #000;
 }
 
-@media screen and (max-width: 768px) {
-    .showHamburger {
-        display: none !important;
-    }
-}
-@media screen and (min-width: 320px) and (max-width: 500px)  {
-    .employee-swipes-fields {
 
-        flex-direction: column;
-    }
-    .dropdown-container1-employee-swipes-for-date-type
-    {
-        margin-left: 60px;
-    }
-    .dropdown-container1-employee-swipes-for-search-employee
-    {
-        margin-left: 75px;
-    }
-}
 .search-text::placeholder {
     font-size: 14px; /* Adjust the font size as needed */
     color: var(--label-color); /* Placeholder text color */
@@ -2060,29 +1937,6 @@ td {
     border-radius: 4px;
     height: 30px;
     font-size: var(--normal-font-size);
-}
-@media screen and (max-height: 320px) {
-    .content-who-is-in {
-        display: flex;
-        flex-direction: column;
-    }
-    .container-box-for-employee-information-who-is-in {
-        margin-left: 15px;
-    }
-
-    .green-and-white-section-for-employee-swipes {
-        margin-top: 130px;
-        margin-left: 10px;
-    }
-    .employee-swipes-fields {
-        flex-direction: column;
-    }
-    .dropdown-container1-employee-swipes-for-date-type {
-        margin-left: 70px;
-    }
-    .dropdown-container1-employee-swipes-for-search-employee {
-        margin-left: 90px;
-    }
 }
 
 /*ending of attendance submodule:employee swipes(Pranita Priyadarshi)*/
@@ -2196,12 +2050,7 @@ td {
 .Attendance-attendance-muster .table tbody tr td:last-child {
     border-right: none;
 }
-@media screen and(max-height:320px) {
-    .Attendance {
-        margin-left: 248px;
-        margin-top: -853px;
-    }
-}
+
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
 
 /* start of feeds(Archana) */
@@ -2881,13 +2730,7 @@ input[type="radio"] {
     width: fit-content;
     z-index: 1;
 }
-@media (max-width: 767px) {
-    .myEmojiDiv {
-        position: absolute;
-        width: 100%;
-        z-index: 1;
-    }
-}
+
 
 /* start of leave-page styles  (Divya)*/
 /* General button styles */
@@ -3082,27 +2925,6 @@ input[type="radio"] {
     border-bottom-right-radius: 5px;
 }
 
-@media (max-width: 460px) {
-    .custom-nav-link {
-        padding: 8px 20px !important;
-    }
-    .custom-nav-tabs {
-        margin-top: 20px !important;
-    }
-    .containerWidth {
-        width: 100% !important;
-        margin: 0 auto;
-    }
-    .container-for-adding-regularisation-entries {
-        width: 100%;
-    }
-    .form-control {
-        width: 100%;
-    }
-    .dropdown {
-        width: 30%;
-    }
-}
 
 .applyingFor {
     color: var(--main-heading-color);
@@ -3683,12 +3505,6 @@ input[type="radio"] {
     font-size: 18px;
 }
 
-@media screen and (max-width: 768px) {
-    .LeaveCancelTable {
-        table-layout: auto;
-    }
-}
-
 /* end of leave apply */
 
 /* //leave-history styles */
@@ -3902,79 +3718,7 @@ input[type="radio"] {
     border-bottom-right-radius: 5px;
 }
 
-@media screen and (max-width: 1060px) {
-    .detail-container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    .heading {
-        flex: 1;
-        padding: 10px;
-        width: 100%;
-    }
 
-    .side-container {
-        flex: 1;
-        padding: 10px;
-        height: auto;
-        width: 100%;
-    }
-}
-@media screen and (max-width: 760px) {
-    .view-details-container {
-        display: flex;
-        width: 100%;
-        flex-direction: column;
-    }
-    .approved-leave {
-        display: flex;
-        flex-direction: column;
-    }
-}
-@media screen and (max-width: 460px) {
-    .leavePageContent {
-        padding: 0;
-        margin: 0;
-    }
-    .view-container {
-        width: 100%;
-    }
-    .reviewCountShow {
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-    }
-    .accordion-heading {
-        max-width: 100%;
-        overflow-x: auto;
-    }
-    .accordion-head {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-    .accordion-title {
-        display: flex;
-        max-width: 100%;
-        overflow-x: auto;
-        flex-direction: row;
-        align-items: center;
-        border-radius: 5px;
-        gap: 20px;
-    }
-    .approvedLeaveDetails {
-        max-width: 100%;
-        overflow-x: auto;
-        gap: 20px;
-    }
-    .container-for-adding-regularisation-entries {
-        width: 100%;
-        display: block;
-        height: 195px;
-        margin-top: 15px;
-    }
-}
 /* //end of leave-history styles */
 
 /* start of view-pending details */
@@ -5191,35 +4935,6 @@ select .yearSelect {
     font-size: var(--normal-font-size); /* Adjust the font size as needed */
     color: var(--label-color);
 }
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 460px) {
-    .sidebar-cal {
-        padding-top: 15px;
-    }
-    .sidebar-cal a {
-        font-size: 18px;
-    }
-    .search-container-who-is-in{
-        margin-top: 10px;
-    }
-}
-@media (max-width: 763px) {
-    .accordion {
-        width: 100%;
-        top: auto;
-        right: auto;
-        margin-top: 20px;
-    }
-    .container5-who-is-in-absent{
-        width: 100%;
-        margin: 0;
-    }
-}
-@media (max-width: 920px) {
-    .content-who-is-in{
-        flex-direction: column;
-    }
-}
 
 /* end of leave -calendar */
 
@@ -5849,16 +5564,6 @@ select .yearSelect {
 }
 .breadcrumb-item a {
     color: grey;
-}
-@media only screen and (max-width: 600px) {
-    .info-container {
-        width: 80%;
-    }
-}
-@media only screen and (max-width: 400px) {
-    .info-container {
-        width: 95%;
-    }
 }
 
 /*end leave details,sick,causal,probation */
@@ -6755,17 +6460,7 @@ select .yearSelect {
     width: -webkit-fill-available;
     font-size: 16px;
 }
-@media screen and (max-width: 767px) {
-    .title-page {
-        text-overflow: ellipsis;
 
-        white-space: nowrap;
-
-        overflow: hidden;
-
-        width: calc(100vw - 15em);
-    }
-}
 
 /*
 peoples module styles started */
@@ -6868,12 +6563,7 @@ peoples module styles started */
     margin-top: 0px;
 }
 
-@media (max-width: 767px) {
-    .people-selectedperson-container {
-        margin-top: 10px;
-        height: 490px;
-    }
-}
+
 
 .people-selectedperson-detail-container {
     background: #e0e0e0;
@@ -6960,20 +6650,7 @@ peoples module styles started */
     height: 200px;
     width: 200px;
 }
-@media (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
-    .people-employee-detail-container {
-        margin-left: 35px;
-    }
-    .people-left-side-container {
-        flex: 0 0 41.66667%;
-        max-width: 41.66667%;
-    }
 
-    .people-selectedperson-container {
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-}
 .people-tab-container {
     width: 316px;
     position: relative;
@@ -7072,11 +6749,7 @@ peoples module styles started */
     margin-left: -20px;
 }
 
-@media (max-width: 548px) {
-    .task-date-range-picker {
-        margin-left: 0px;
-    }
-}
+
 
 .task-first-container {
     margin-top: 15px;
@@ -8313,11 +7986,7 @@ peoples module styles started */
     text-overflow: ellipsis;
     max-width: 60px;
 }
-@media (max-width: 991px) {
-    .settings-birthday-value {
-        max-width: 150px;
-    }
-}
+
 .setting-department-value {
     flex: 1;
     margin-left: 5px;
@@ -8466,4 +8135,376 @@ peoples module styles started */
 }
 .avtHoverClass:hover {
     z-index: 300;
+}
+
+
+/* ///media queries */
+@media (min-width: 768px) {
+    .button-dl {
+        font-size: 0.8rem;
+    }
+    .custom-nav-tabs .custom-item{
+        border: 1px solid #ccc !important;
+    }
+    .custom-nav-link.active{
+        border-radius: 0 !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .button-dl {
+        font-size: 0.8rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .button-dl {
+        font-size: 0.8rem;
+    }
+}
+@media (max-width: 575.98px) {
+    .tab,
+    .jump-to,
+    .button-dl {
+        font-size: 0.7rem;
+    }
+
+    .custom-form {
+        padding: 15px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .displayNone {
+        display: none !important;
+    }
+
+    .displayBlock {
+        display: block !important;
+    }
+    .employee-list {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .employee-item {
+        display: inline-block;
+        min-width: 120px; /* Adjust width as needed */
+        margin-bottom: 7px;
+    }
+
+    .employee-item .text-container {
+        white-space: nowrap; /* Prevent text from wrapping to the next line */
+        overflow: hidden; /* Hide overflowed text */
+        text-overflow: ellipsis; /* Add ellipsis (...) */
+        max-width: 100px; /* Set a maximum width for the container */
+    }
+}
+@media screen and (min-width: 320px) and (max-width: 500px)  {
+    .date-filters
+    {
+        row-gap: 1.5rem;
+    }
+    #from-date
+    {
+        max-width: 60%;
+    }
+    #to-date
+    {
+        max-width: 60%;
+
+    }
+    .mobile-gap
+    {
+        gap: 1.5rem !important;
+    }
+    .toDatefield
+    {
+        margin-left:12px;
+    }
+    .accordion-title {
+        display: flex;
+        max-width: 100%;
+        overflow-x: auto;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 5px;
+        gap: 20px;
+    }
+    .accordion-heading {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+    .accordion {
+        width: 100%;
+        top: auto;
+        right: auto;
+        margin-top: 20px;
+    }
+    .col
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+}
+@media screen and (max-height: 320px) {
+    .container-for-adding-regularisation-entries {
+        width: 100%;
+        display: block;
+        height: 195px;
+        margin-top: 15px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .showHamburger {
+        display: none !important;
+    }
+}
+@media screen and (min-width: 320px) and (max-width: 500px)  {
+    .employee-swipes-fields {
+
+        flex-direction: column;
+    }
+    .dropdown-container1-employee-swipes-for-date-type
+    {
+        margin-left: 60px;
+    }
+    .dropdown-container1-employee-swipes-for-search-employee
+    {
+        margin-left: 75px;
+    }
+}
+@media screen and (max-height: 320px) {
+    .content-who-is-in {
+        display: flex;
+        flex-direction: column;
+    }
+    .container-box-for-employee-information-who-is-in {
+        margin-left: 15px;
+    }
+
+    .green-and-white-section-for-employee-swipes {
+        margin-top: 130px;
+        margin-left: 10px;
+    }
+    .employee-swipes-fields {
+        flex-direction: column;
+    }
+    .dropdown-container1-employee-swipes-for-date-type {
+        margin-left: 70px;
+    }
+    .dropdown-container1-employee-swipes-for-search-employee {
+        margin-left: 90px;
+    }
+}
+@media screen and(max-height:320px) {
+    .Attendance {
+        margin-left: 248px;
+        margin-top: -853px;
+    }
+}
+@media (max-width: 767px) {
+    .myEmojiDiv {
+        position: absolute;
+        width: 100%;
+        z-index: 1;
+    }
+}
+@media screen and (max-width: 768px) {
+    .LeaveCancelTable {
+        table-layout: auto;
+    }
+}
+@media screen and (max-width: 1060px) {
+    .detail-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .heading {
+        flex: 1;
+        padding: 10px;
+        width: 100%;
+    }
+
+    .side-container {
+        flex: 1;
+        padding: 10px;
+        height: auto;
+        width: 100%;
+    }
+}
+@media screen and (max-width: 760px) {
+    .view-details-container {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+    }
+    .approved-leave {
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media screen and (max-width: 460px) {
+    .leavePageContent {
+        padding: 0;
+        margin: 0;
+    }
+    .view-container {
+        width: 100%;
+    }
+    .reviewCountShow {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+    }
+    .accordion-heading {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+    .accordion-head {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .accordion-title {
+        display: flex;
+        max-width: 100%;
+        overflow-x: auto;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 5px;
+        gap: 20px;
+    }
+    .approvedLeaveDetails {
+        max-width: 100%;
+        overflow-x: auto;
+        gap: 20px;
+    }
+    .container-for-adding-regularisation-entries {
+        width: 100%;
+        display: block;
+        height: 195px;
+        margin-top: 15px;
+    }
+    .custom-nav-link {
+        padding: 8px 20px !important;
+    }
+    .custom-nav-tabs {
+        margin-top: 20px !important;
+    }
+    .containerWidth {
+        width: 100% !important;
+        margin: 0 auto;
+    }
+    .container-for-adding-regularisation-entries {
+        width: 100%;
+    }
+    .form-control {
+        width: 100%;
+    }
+    .dropdown {
+        width: 30%;
+    }
+    .custom-nav-tabs .custom-item{
+        border: 1px solid #ccc !important;
+    }
+    .custom-nav-link.active{
+        border-radius: 0 !important;
+    }
+}
+
+@media screen and (max-height: 460px) {
+    .sidebar-cal {
+        padding-top: 15px;
+    }
+    .sidebar-cal a {
+        font-size: 18px;
+    }
+    .search-container-who-is-in{
+        margin-top: 10px;
+    }
+}
+@media (max-width: 763px) {
+    .accordion {
+        width: 100%;
+        top: auto;
+        right: auto;
+        margin-top: 20px;
+    }
+    .container5-who-is-in-absent{
+        width: 100%;
+        margin: 0;
+    }
+}
+@media (max-width: 920px) {
+    .content-who-is-in{
+        flex-direction: column;
+    }
+}
+@media only screen and (max-width: 600px) {
+    .info-container {
+        width: 80%;
+    }
+}
+@media only screen and (max-width: 400px) {
+    .info-container {
+        width: 95%;
+    }
+}
+@media screen and (max-width: 767px) {
+    .title-page {
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        width: calc(100vw - 15em);
+    }
+}
+@media (max-width: 767px) {
+    .people-selectedperson-container {
+        margin-top: 10px;
+        height: 490px;
+    }
+}
+@media (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+    .people-employee-detail-container {
+        margin-left: 35px;
+    }
+    .people-left-side-container {
+        flex: 0 0 41.66667%;
+        max-width: 41.66667%;
+    }
+
+    .people-selectedperson-container {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+@media (max-width: 548px) {
+    .task-date-range-picker {
+        margin-left: 0px;
+    }
+}
+@media (max-width: 991px) {
+    .settings-birthday-value {
+        max-width: 150px;
+    }
+    .custom-nav-tabs .custom-item{
+        border: 1px solid #ccc !important;
+    }
+    .custom-nav-link.active{
+        border-radius: 0 !important;
+    }
+}
+@media (max-width: 346px) {
+    .custom-nav-tabs .custom-item{
+        border: 1px solid #ccc !important;
+    }
+    .custom-nav-tabs{
+       flex-direction: column;
+       width: 100%;
+    }
 }
