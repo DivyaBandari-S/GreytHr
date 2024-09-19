@@ -247,7 +247,7 @@
                 @endphp
 
 
-                <div class="row people-first-person-container">
+                <div class="row">
 
                     <div class="col-3">
                         @if (!empty($firstStarredPerson->profile) && $firstStarredPerson->profile !== 'null')
@@ -548,7 +548,7 @@
                         ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                         ->first();
                 @endphp
-                <div class="row people-first-person-container">
+                <div class="row">
 
                     <div class="col-3">
                         @if (!empty($firstPerson->image) && $firstPerson->image !== 'null')
@@ -843,7 +843,7 @@
                         ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                         ->first();
                 @endphp
-                <div class="row people-first-person-container">
+                <div class="row">
 
                     <div class="col-3">
                         @if (!empty($firstPerson->image) && $firstPerson->image !== 'null')
