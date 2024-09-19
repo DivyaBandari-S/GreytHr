@@ -122,7 +122,7 @@
          @endif
          @elseif($activeSection === 'pendingButton')
          @if ($showAlert)
-         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.20s="hideAlert" style="right: 25%;top:-12%;" id="success-alert">
+         <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.2s="hideAlert" style="right: 25%;top:-11%;" id="success-alert">
             {{ session('cancelMessage') }}
             <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close" wire:click="hideAlert">
                <span>X</span>

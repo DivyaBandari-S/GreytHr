@@ -1,6 +1,6 @@
 <div class="position-relative">
     @if(session()->has('message'))
-    <div class="alert alert-success w-50 position-absolute m-auto p-2 " style="right: 25%;top:-17%;" id="success-alert" wire:poll.20s="hideSuccessAlert">
+    <div class="alert alert-success w-50 position-absolute m-auto p-2 " style="right: 25%;top:-17%;" id="success-alert" wire:poll.5s="hideSuccessAlert">
         {{ session('message') }}
         <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
             <span>X</span>
@@ -407,7 +407,7 @@
                         @foreach($visibleEmployees as $recipient)
                         <li class="employee-item">
                             <div class="px-2 py-1 d-flex justify-content-between align-items-center rounded-pill gap-3" style=" border: 2px solid #adb7c1;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
-                                <span class="text-container normalTextValue font-weight-normal">
+                                <span class="text-container selecetdCcName font-weight-normal">
                                     {{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}
                                 </span>
                                 <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer; color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
@@ -439,7 +439,7 @@
                                         @foreach($hiddenEmployees as $recipient)
                                         <li class="employee-item" >
                                             <div class="px-2 py-1 d-flex justify-content-between align-items-center rounded-pill gap-3" style=" border: 2px solid #adb7c1; " title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
-                                                <span class="text-container normalTextValue font-weight-normal">
+                                                <span class="text-container selecetdCcName font-weight-normal">
                                                     {{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}
                                                 </span>
                                                 <i class="fas fa-times-circle cancel-icon d-flex align-items-center justify-content-end" style="cursor: pointer; color:#adb7c1;" wire:click="removeFromCcTo('{{ $recipient['emp_id'] }}')"></i>
