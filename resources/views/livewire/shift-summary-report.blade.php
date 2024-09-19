@@ -36,8 +36,8 @@
             @endforeach
         </table>
         <div class="mt-2" style="background-color: rgb(2, 17, 79); display: flex;justify-content: center; padding: 10px; gap: 15px;">
-                           
-                            <button type="button" class="submit-btn" style="background-color: white; color: rgb(2, 17, 79);"
+
+                            <button type="button" class="cancel-btn"
                                 wire:click="downloadShiftSummaryReportInExcel">Run</button>
                             <button type="button" data-dismiss="modal" class="cancel-btn1"
                                 wire:click='resetFields'>Clear</button>
