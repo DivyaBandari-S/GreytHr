@@ -12,7 +12,6 @@
             background-color: #f4f4f4;
             padding: 20px;
         }
-
         .email-container {
             background-color: #fff;
             padding: 20px;
@@ -90,5 +89,4 @@
         </div>
     </div>
 </body>
-
 </html>

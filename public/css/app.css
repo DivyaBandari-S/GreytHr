@@ -146,7 +146,7 @@
 /* Ending of letter request module (Kumar Asapu)*/
 
 /* Starting of home module (Kumar Asapu,Archana Goud,Divya Bandari,Pranita Priyadarshi & Siva)*/
-.showTimer{
+.showTimer {
     padding: 5px 15px;
     border: 1px solid rgb(2, 17, 79);
     border-radius: 5px;
@@ -220,7 +220,7 @@
     font-weight: 500;
     font-size: var(--normal-font-size);
 }
-.normalTextValueSubheading{
+.normalTextValueSubheading {
     color: var(--label-color);
     font-weight: 500;
     font-size: var(--sub-headings-font-size);
@@ -558,11 +558,13 @@ body {
     padding: 7px 12px;
     font-size: var(--normal-font-size);
     border: none;
-
 }
 .submit-btn:hover {
     background-color: #272d48;
     color: #fff;
+}
+.btn-success{
+    font-size: var(--normal-font-size);
 }
 .cancel-btn {
     background-color: #fff;
@@ -850,42 +852,12 @@ button.close-button {
     color: white !important;
 }
 
-@media (min-width: 768px) {
-    .button-dl {
-        font-size: 0.8rem;
-    }
-}
-
-@media (min-width: 992px) {
-    .button-dl {
-        font-size: 0.8rem;
-    }
-}
-
-@media (min-width: 1200px) {
-    .button-dl {
-        font-size: 0.8rem;
-    }
-}
-
 .custom-form {
     background-color: white;
     border-radius: 5px;
     padding: 20px;
     height: auto;
     margin-bottom: 15px;
-}
-
-@media (max-width: 575.98px) {
-    .tab,
-    .jump-to,
-    .button-dl {
-        font-size: 0.7rem;
-    }
-
-    .custom-form {
-        padding: 15px;
-    }
 }
 
 .table-start {
@@ -1138,91 +1110,17 @@ button.close-button {
     display: block;
 }
 
-@media only screen and (max-width: 768px) {
-    .displayNone {
-        display: none !important;
-    }
-
-    .displayBlock {
-        display: block !important;
-    }
-    .employee-list {
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-    .employee-item {
-        display: inline-block;
-        min-width: 120px; /* Adjust width as needed */
-        margin-bottom: 7px;
-    }
-
-    .employee-item .text-container {
-        white-space: nowrap; /* Prevent text from wrapping to the next line */
-        overflow: hidden; /* Hide overflowed text */
-        text-overflow: ellipsis; /* Add ellipsis (...) */
-        max-width: 100px; /* Set a maximum width for the container */
-    }
-}
 /* end of app.blade */
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
-.fromDatefield input
-{
-    width:60%;
+.fromDatefield input {
+    width: 60%;
 }
-.toDatefield input
-{
-    width:65%;
+.toDatefield input {
+    width: 65%;
 }
-@media screen and (min-width: 320px) and (max-width: 500px)  {
-    .date-filters
-    {
-        row-gap: 1.5rem;
-    }
-    #from-date
-    {
-        max-width: 60%;
-    }
-    #to-date
-    {
-        max-width: 60%;
 
-    }
-    .mobile-gap
-    {
-        gap: 1.5rem !important;
-    }
-    .toDatefield
-    {
-        margin-left:12px;
-    }
-    .accordion-title {
-        display: flex;
-        max-width: 100%;
-        overflow-x: auto;
-        flex-direction: row;
-        align-items: center;
-        border-radius: 5px;
-        gap: 20px;
-    }
-    .accordion-heading {
-        max-width: 100%;
-        overflow-x: auto;
-    }
-    .accordion {
-        width: 100%;
-        top: auto;
-        right: auto;
-        margin-top: 20px;
-    }
-    .col
-    {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-    }
-}
 /*Ending of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 .container-for-adding-regularisation-entries {
@@ -1236,14 +1134,6 @@ button.close-button {
     /* float: right; */
     border: 1px solid #ccc;
     display: block;
-}
-@media screen and (max-height: 320px) {
-    .container-for-adding-regularisation-entries {
-        width: 100%;
-        display: block;
-        height: 195px;
-        margin-top: 15px;
-    }
 }
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
@@ -1308,6 +1198,7 @@ button.close-button {
     width: 40px;
     /* Reduced width */
     height: 20px;
+    margin-top: -5px;
     /* Reduced height */
 }
 .switch-who-is-in input {
@@ -1344,8 +1235,8 @@ button.close-button {
     transition: 0.4s;
 }
 input:checked + .slider {
-    background-color: #2196f3;
-    border: 1px solid #2196f3;
+    background-color: rgb(2, 17, 79);
+    border: 1px solid rgb(2, 17, 79);
 }
 
 input:focus + .slider {
@@ -1353,9 +1244,9 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
     background-color: white;
 }
 
@@ -1971,25 +1862,6 @@ td {
     color: #000;
 }
 
-@media screen and (max-width: 768px) {
-    .showHamburger {
-        display: none !important;
-    }
-}
-@media screen and (min-width: 320px) and (max-width: 500px)  {
-    .employee-swipes-fields {
-
-        flex-direction: column;
-    }
-    .dropdown-container1-employee-swipes-for-date-type
-    {
-        margin-left: 60px;
-    }
-    .dropdown-container1-employee-swipes-for-search-employee
-    {
-        margin-left: 75px;
-    }
-}
 .search-text::placeholder {
     font-size: 14px; /* Adjust the font size as needed */
     color: var(--label-color); /* Placeholder text color */
@@ -2060,29 +1932,6 @@ td {
     border-radius: 4px;
     height: 30px;
     font-size: var(--normal-font-size);
-}
-@media screen and (max-height: 320px) {
-    .content-who-is-in {
-        display: flex;
-        flex-direction: column;
-    }
-    .container-box-for-employee-information-who-is-in {
-        margin-left: 15px;
-    }
-
-    .green-and-white-section-for-employee-swipes {
-        margin-top: 130px;
-        margin-left: 10px;
-    }
-    .employee-swipes-fields {
-        flex-direction: column;
-    }
-    .dropdown-container1-employee-swipes-for-date-type {
-        margin-left: 70px;
-    }
-    .dropdown-container1-employee-swipes-for-search-employee {
-        margin-left: 90px;
-    }
 }
 
 /*ending of attendance submodule:employee swipes(Pranita Priyadarshi)*/
@@ -2196,12 +2045,7 @@ td {
 .Attendance-attendance-muster .table tbody tr td:last-child {
     border-right: none;
 }
-@media screen and(max-height:320px) {
-    .Attendance {
-        margin-left: 248px;
-        margin-top: -853px;
-    }
-}
+
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
 
 /* start of feeds(Archana) */
@@ -2215,18 +2059,19 @@ td {
     margin-bottom: 32px;
     transition: opacity 0.2s;
 }
-.emoji-list{
+.emoji-list {
     display: none;
-    background:white;
-    border-radius:5px;
-    border:1px solid silver;
-    max-height:170px;width:220px;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid silver;
+    max-height: 170px;
+    width: 220px;
     overflow-y: auto;
 }
 
-.emoji-option{
+.emoji-option {
     font-size: 14px;
-    cursor:pointer
+    cursor: pointer;
 }
 
 .hidden {
@@ -2241,7 +2086,7 @@ td {
 .custom-height-30 {
     height: 30px;
 }
-.custom-radio-label{
+.custom-radio-label {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -2253,35 +2098,34 @@ td {
     border: 1px solid silver;
     height: fit-content;
 }
-.custom-dropdown{
-    margin-top:20px;
-    display:block
+.custom-dropdown {
+    margin-top: 20px;
+    display: block;
 }
-.eventsSection{
+.eventsSection {
     display: flex;
-     flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-.feeds-main-content{
-    height:75vh ;
-     max-height:75vh;
-     overflow-y: auto;
-     scroll-behavior: smooth;
+.feeds-main-content {
+    height: 75vh;
+    max-height: 75vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
 }
-.cards{
+.cards {
     padding: 15px;
     background-color: white;
     border-radius: 5px;
-    border: 1px solid #CFCACA;
-     color: #3b4452;
-      margin-top: 5px
+    border: 1px solid #cfcaca;
+    color: #3b4452;
+    margin-top: 5px;
 }
-.feeds-left-menu{
-
+.feeds-left-menu {
     font-weight: 500;
-    color:#47515b;
-    cursor:pointer;
+    color: #47515b;
+    cursor: pointer;
     font-size: 0.8rem;
 }
 
@@ -2294,17 +2138,17 @@ td {
     padding-left: 10px;
     overflow: hidden;
     height: 60px;
-    margin-left:30px
+    margin-left: 30px;
 }
-.form-select{
+/* .form-select {
     border: 1px solid #ccc;
-     border-radius: 4px;
-     padding: 5px;
-     font-size: 0.75rem;
-      color: #3b4452;
-      margin-top: 5px;
-      height: 30px;
-}
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 0.75rem;
+    color: #3b4452;
+    margin-top: 5px;
+    height: 30px;
+} */
 .addcomment {
     position: absolute;
     bottom: 15px; /* Move up by increasing this value */
@@ -2407,7 +2251,7 @@ td {
     color: #778899;
     font-weight: 600;
 }
-.text-feed{
+.text-feed {
     font-size: 13px;
     color: #3b4452;
     font-weight: 600;
@@ -2441,7 +2285,6 @@ td {
     right: -60px;
     border-radius: 4px;
     border: 1px solid #ddd;
-
 }
 
 .custom-feed .custom-feed-item {
@@ -2451,10 +2294,10 @@ td {
     color: #3b4452;
 }
 
-.Feeds-Dropdown{
+.Feeds-Dropdown {
     display: none;
-    overflow-y:auto;
-    max-height:120px;
+    overflow-y: auto;
+    max-height: 120px;
     overflow-x: hidden;
 }
 .custom-list {
@@ -2468,15 +2311,15 @@ td {
     max-height: 200px;
     overflow-x: hidden;
 }
-.cus-button{
+.cus-button {
     display: flex;
     justify-content: space-between;
     width: 100%;
     padding: 0.5rem;
-    overflow-y:auto;
-    max-height:fit-content;
+    overflow-y: auto;
+    max-height: fit-content;
     cursor: pointer;
-    overflow-x: hidden
+    overflow-x: hidden;
 }
 
 .font-semibold {
@@ -2493,7 +2336,6 @@ td {
     /* Font size */
     font-size: 12px;
     color: #47515b;
-
 }
 
 .font-normal {
@@ -2693,8 +2535,8 @@ td {
     display: block;
     padding: 5px 10px;
     font-size: 11px;
-     transition: background-color 0.3s ease;
-     color:#3b4452;
+    transition: background-color 0.3s ease;
+    color: #3b4452;
 }
 
 /* Define CSS for the menu items on hover */
@@ -2730,7 +2572,6 @@ input[type="radio"] {
 /* Define the blue background color for the checked state */
 .input[type="radio"]:checked + .custom-radio-button {
     background-color: blue;
-
 }
 
 .feather {
@@ -2767,7 +2608,8 @@ input[type="radio"] {
 }
 
 .activities,
-.posts,.post-requests {
+.posts,
+.post-requests {
     height: 30px; /* Fixed height */
     display: flex;
     align-items: center;
@@ -2777,23 +2619,27 @@ input[type="radio"] {
     width: 100%;
     border-radius: 5px;
 }
-.post-button{
+.post-button {
     background-color: rgb(2, 17, 79);
-     color: white;
-     height:30px;
-     margin-left: 20px;
+    color: white;
+    height: 30px;
+    margin-left: 20px;
     border-radius: 5px;
-    width:70px;
-    font-size:12px;
+    width: 70px;
+    font-size: 12px;
     border: 1px solid silver;
 }
 .activities:hover,
-.posts:hover ,.post-requests:hover{
+.posts:hover,
+.post-requests:hover {
     background-color: #edf3ff;
     cursor: pointer;
 }
-.custom-radio-content{
-    color: #778899; font-size: 12px; font-weight: 500; margin-left: 10px;
+.custom-radio-content {
+    color: #778899;
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 10px;
 }
 
 .medium-header {
@@ -2803,20 +2649,20 @@ input[type="radio"] {
     line-height: 1.25rem;
     color: var(--e-color-emoji-text);
     margin-top: 5px;
-    color:#3b4452;
+    color: #3b4452;
 
     margin-left: 20px;
-
 }
-.group-events{
-    color: #677A8E;
-     font-size: 13px;
-     font-weight: 100px;
-     text-align: center;
+.group-events {
+    color: #677a8e;
+    font-size: 13px;
+    font-weight: 100px;
+    text-align: center;
 }
 /* CSS for radio-wrapper */
-.alert-success{
-    max-width: 500px; margin: auto;
+.alert-success {
+    max-width: 500px;
+    margin: auto;
 }
 .drive-in {
     color: #3b4452;
@@ -2825,7 +2671,7 @@ input[type="radio"] {
     margin-top: 5px;
     justify-content: center; /* Centers items vertically */
     margin-left: 10px;
-     /* Full viewport height to center vertically */
+    /* Full viewport height to center vertically */
 }
 .radio-wrapper {
     display: inline-block;
@@ -2833,10 +2679,11 @@ input[type="radio"] {
     /* Adjust margin as needed */
     cursor: pointer;
 }
-.btn-post{
-    background-color: #F1ECFC;
-    border:1px solid purple;
-    border-radius:5px;width:130px
+.btn-post {
+    background-color: #f1ecfc;
+    border: 1px solid purple;
+    border-radius: 5px;
+    width: 130px;
 }
 
 /* CSS for labels */
@@ -2880,13 +2727,6 @@ input[type="radio"] {
     position: absolute;
     width: fit-content;
     z-index: 1;
-}
-@media (max-width: 767px) {
-    .myEmojiDiv {
-        position: absolute;
-        width: 100%;
-        z-index: 1;
-    }
 }
 
 /* start of leave-page styles  (Divya)*/
@@ -3001,10 +2841,10 @@ input[type="radio"] {
     background-color: #b0d8df;
     border-radius: 10px;
     transition: transform 0.3s ease-in-out;
-  }
+}
 
-  .hover-card::before {
-    content: '';
+.hover-card::before {
+    content: "";
     position: absolute;
     top: 0;
     left: -98.5%;
@@ -3012,18 +2852,18 @@ input[type="radio"] {
     height: 100%;
     background-color: #02114f; /* Your hover background color */
     transition: left 0.5s ease-in-out;
-  }
+}
 
-  .hover-card:hover::before {
+.hover-card:hover::before {
     left: 0;
-  }
+}
 
-  .card-content {
+.card-content {
     position: relative;
     z-index: 1;
     /* padding: 20px; */
     /* text-align: center; */
-  }
+}
 
 .alert-success {
     font-size: var(--normal-font-size);
@@ -3080,28 +2920,6 @@ input[type="radio"] {
 .reviewClosedButtons {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-}
-
-@media (max-width: 460px) {
-    .custom-nav-link {
-        padding: 8px 20px !important;
-    }
-    .custom-nav-tabs {
-        margin-top: 20px !important;
-    }
-    .containerWidth {
-        width: 100% !important;
-        margin: 0 auto;
-    }
-    .container-for-adding-regularisation-entries {
-        width: 100%;
-    }
-    .form-control {
-        width: 100%;
-    }
-    .dropdown {
-        width: 30%;
-    }
 }
 
 .applyingFor {
@@ -3683,12 +3501,6 @@ input[type="radio"] {
     font-size: 18px;
 }
 
-@media screen and (max-width: 768px) {
-    .LeaveCancelTable {
-        table-layout: auto;
-    }
-}
-
 /* end of leave apply */
 
 /* //leave-history styles */
@@ -3902,79 +3714,6 @@ input[type="radio"] {
     border-bottom-right-radius: 5px;
 }
 
-@media screen and (max-width: 1060px) {
-    .detail-container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    .heading {
-        flex: 1;
-        padding: 10px;
-        width: 100%;
-    }
-
-    .side-container {
-        flex: 1;
-        padding: 10px;
-        height: auto;
-        width: 100%;
-    }
-}
-@media screen and (max-width: 760px) {
-    .view-details-container {
-        display: flex;
-        width: 100%;
-        flex-direction: column;
-    }
-    .approved-leave {
-        display: flex;
-        flex-direction: column;
-    }
-}
-@media screen and (max-width: 460px) {
-    .leavePageContent {
-        padding: 0;
-        margin: 0;
-    }
-    .view-container {
-        width: 100%;
-    }
-    .reviewCountShow {
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-    }
-    .accordion-heading {
-        max-width: 100%;
-        overflow-x: auto;
-    }
-    .accordion-head {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-    .accordion-title {
-        display: flex;
-        max-width: 100%;
-        overflow-x: auto;
-        flex-direction: row;
-        align-items: center;
-        border-radius: 5px;
-        gap: 20px;
-    }
-    .approvedLeaveDetails {
-        max-width: 100%;
-        overflow-x: auto;
-        gap: 20px;
-    }
-    .container-for-adding-regularisation-entries {
-        width: 100%;
-        display: block;
-        height: 195px;
-        margin-top: 15px;
-    }
-}
 /* //end of leave-history styles */
 
 /* start of view-pending details */
@@ -4732,7 +4471,7 @@ select .yearSelect {
     padding: 0;
     margin: 0;
 }
-.filterDropdown{
+.filterDropdown {
     font-size: var(--normal-font-size);
     color: var(--main-heading-color);
     padding: 5px;
@@ -4797,14 +4536,28 @@ select .yearSelect {
 
 .circle-pale-yellow {
     background-color: #ffeb3b;
-    vertical-align: middle; display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+    vertical-align: middle;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
 }
-.isToday{
-    background-color: rgb(2,17,79); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;
+.isToday {
+    background-color: rgb(2, 17, 79);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
 }
 .circle-pale-pink {
     background-color: #d29be1;
-    vertical-align: middle; display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+    vertical-align: middle;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
 }
 .active .leave-container {
     border-color: #3a9efd;
@@ -5190,35 +4943,6 @@ select .yearSelect {
 ::placeholder {
     font-size: var(--normal-font-size); /* Adjust the font size as needed */
     color: var(--label-color);
-}
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 460px) {
-    .sidebar-cal {
-        padding-top: 15px;
-    }
-    .sidebar-cal a {
-        font-size: 18px;
-    }
-    .search-container-who-is-in{
-        margin-top: 10px;
-    }
-}
-@media (max-width: 763px) {
-    .accordion {
-        width: 100%;
-        top: auto;
-        right: auto;
-        margin-top: 20px;
-    }
-    .container5-who-is-in-absent{
-        width: 100%;
-        margin: 0;
-    }
-}
-@media (max-width: 920px) {
-    .content-who-is-in{
-        flex-direction: column;
-    }
 }
 
 /* end of leave -calendar */
@@ -5849,16 +5573,6 @@ select .yearSelect {
 }
 .breadcrumb-item a {
     color: grey;
-}
-@media only screen and (max-width: 600px) {
-    .info-container {
-        width: 80%;
-    }
-}
-@media only screen and (max-width: 400px) {
-    .info-container {
-        width: 95%;
-    }
 }
 
 /*end leave details,sick,causal,probation */
@@ -6755,17 +6469,6 @@ select .yearSelect {
     width: -webkit-fill-available;
     font-size: 16px;
 }
-@media screen and (max-width: 767px) {
-    .title-page {
-        text-overflow: ellipsis;
-
-        white-space: nowrap;
-
-        overflow: hidden;
-
-        width: calc(100vw - 15em);
-    }
-}
 
 /*
 peoples module styles started */
@@ -6868,13 +6571,6 @@ peoples module styles started */
     margin-top: 0px;
 }
 
-@media (max-width: 767px) {
-    .people-selectedperson-container {
-        margin-top: 10px;
-        height: 490px;
-    }
-}
-
 .people-selectedperson-detail-container {
     background: #e0e0e0;
     padding: 10px;
@@ -6960,20 +6656,7 @@ peoples module styles started */
     height: 200px;
     width: 200px;
 }
-@media (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
-    .people-employee-detail-container {
-        margin-left: 35px;
-    }
-    .people-left-side-container {
-        flex: 0 0 41.66667%;
-        max-width: 41.66667%;
-    }
 
-    .people-selectedperson-container {
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-}
 .people-tab-container {
     width: 316px;
     position: relative;
@@ -7035,6 +6718,10 @@ peoples module styles started */
 .tab-position-emp-everyone {
     left: 83px;
 }
+
+.people-employee-detail-container{
+    margin-left: 20px;
+}
 /* peoples module styles ended */
 
 /* task module styles started */
@@ -7070,12 +6757,6 @@ peoples module styles started */
 .task-date-range-picker {
     width: 245px;
     margin-left: -20px;
-}
-
-@media (max-width: 548px) {
-    .task-date-range-picker {
-        margin-left: 0px;
-    }
 }
 
 .task-first-container {
@@ -7804,14 +7485,16 @@ peoples module styles started */
     margin-bottom: 10px;
 }
 .task-modal-search-container {
-    width: 300px;
+    width: 270px;
     padding-left: 10px;
 }
 .task-modal-close-assignee {
     font-size: 20px;
-    margin-top: 5px;
     color: #fff;
     cursor: pointer;
+    background-color: rgb(2, 17, 79);
+    padding: 6px 10px;
+    border-radius: 5px;
 }
 .task-modal-no-assignee {
     text-align: center;
@@ -7979,14 +7662,16 @@ peoples module styles started */
     margin-bottom: 10px;
 }
 .task-follower-search-container {
-    width: 300px;
+    width: 270px;
     padding-left: 10px;
 }
 .task-follower-close-icon {
     font-size: 20px;
-    margin-top: 5px;
     color: #fff;
     cursor: pointer;
+    background-color: rgb(2, 17, 79);
+    padding: 6px 10px;
+    border-radius: 5px;
 }
 .task-no-follower {
     text-align: center;
@@ -8140,13 +7825,6 @@ peoples module styles started */
 
 .task-custom-select-width {
     width: 150px;
-
-    font-size: var(--normal-font-size);
-
-    padding: 7px;
-}
-.task-custom-select-width {
-    width: 150px;
     font-size: var(--normal-font-size);
     padding: 7px;
 }
@@ -8239,6 +7917,7 @@ peoples module styles started */
     color: white;
     font-size: 30px;
     cursor: pointer;
+    margin-bottom: 10px;
 }
 .setting-password-flash-msg {
     font-size: var(--normal-font-size);
@@ -8313,11 +7992,7 @@ peoples module styles started */
     text-overflow: ellipsis;
     max-width: 60px;
 }
-@media (max-width: 991px) {
-    .settings-birthday-value {
-        max-width: 150px;
-    }
-}
+
 .setting-department-value {
     flex: 1;
     margin-left: 5px;
@@ -8467,3 +8142,369 @@ peoples module styles started */
 .avtHoverClass:hover {
     z-index: 300;
 }
+
+/* ///media queries */
+@media (min-width: 768px) {
+    .button-dl {
+        font-size: 0.8rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .button-dl {
+        font-size: 0.8rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .button-dl {
+        font-size: 0.8rem;
+    }
+}
+@media (max-width: 575.98px) {
+    .tab,
+    .jump-to,
+    .button-dl {
+        font-size: 0.7rem;
+    }
+
+    .custom-form {
+        padding: 15px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .displayNone {
+        display: none !important;
+    }
+
+    .displayBlock {
+        display: block !important;
+    }
+    .employee-list {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .employee-item {
+        display: inline-block;
+        min-width: 120px; /* Adjust width as needed */
+        margin-bottom: 7px;
+    }
+
+    .employee-item .text-container {
+        white-space: nowrap; /* Prevent text from wrapping to the next line */
+        overflow: hidden; /* Hide overflowed text */
+        text-overflow: ellipsis; /* Add ellipsis (...) */
+        max-width: 100px; /* Set a maximum width for the container */
+    }
+}
+@media screen and (min-width: 320px) and (max-width: 500px) {
+    .date-filters {
+        row-gap: 1.5rem;
+    }
+    #from-date {
+        max-width: 60%;
+    }
+    #to-date {
+        max-width: 60%;
+    }
+    .mobile-gap {
+        gap: 1.5rem !important;
+    }
+    .toDatefield {
+        margin-left: 12px;
+    }
+    .accordion-title {
+        display: flex;
+        max-width: 100%;
+        overflow-x: auto;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 5px;
+        gap: 20px;
+    }
+    .accordion-heading {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+    .accordion {
+        width: 100%;
+        top: auto;
+        right: auto;
+        margin-top: 20px;
+    }
+    .col {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+}
+@media screen and (max-height: 320px) {
+    .container-for-adding-regularisation-entries {
+        width: 100%;
+        display: block;
+        height: 195px;
+        margin-top: 15px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .showHamburger {
+        display: none !important;
+    }
+}
+@media screen and (min-width: 320px) and (max-width: 500px) {
+    .employee-swipes-fields {
+        flex-direction: column;
+    }
+    .dropdown-container1-employee-swipes-for-date-type {
+        margin-left: 60px;
+    }
+    .dropdown-container1-employee-swipes-for-search-employee {
+        margin-left: 75px;
+    }
+}
+@media screen and (max-height: 320px) {
+    .content-who-is-in {
+        display: flex;
+        flex-direction: column;
+    }
+    .container-box-for-employee-information-who-is-in {
+        margin-left: 15px;
+    }
+
+    .green-and-white-section-for-employee-swipes {
+        margin-top: 130px;
+        margin-left: 10px;
+    }
+    .employee-swipes-fields {
+        flex-direction: column;
+    }
+    .dropdown-container1-employee-swipes-for-date-type {
+        margin-left: 70px;
+    }
+    .dropdown-container1-employee-swipes-for-search-employee {
+        margin-left: 90px;
+    }
+}
+@media screen and(max-height:320px) {
+    .Attendance {
+        margin-left: 248px;
+        margin-top: -853px;
+    }
+}
+@media (max-width: 767px) {
+    .myEmojiDiv {
+        position: absolute;
+        width: 100%;
+        z-index: 1;
+    }
+}
+@media screen and (max-width: 768px) {
+    .LeaveCancelTable {
+        table-layout: auto;
+    }
+}
+@media screen and (max-width: 1060px) {
+    .detail-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .heading {
+        flex: 1;
+        padding: 10px;
+        width: 100%;
+    }
+
+    .side-container {
+        flex: 1;
+        padding: 10px;
+        height: auto;
+        width: 100%;
+    }
+}
+@media screen and (max-width: 760px) {
+    .view-details-container {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+    }
+    .approved-leave {
+        display: flex;
+        flex-direction: column;
+    }
+    .people-employee-detail-container {
+        margin-top: 10px; /* Margin for mobile devices */
+        margin-left: 0; /* Optionally remove left margin for mobile */
+    }
+}
+@media screen and (max-width: 460px) {
+    .leavePageContent {
+        padding: 0;
+        margin: 0;
+    }
+    .view-container {
+        width: 100%;
+    }
+    .reviewCountShow {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+    }
+    .accordion-heading {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+    .accordion-head {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .accordion-title {
+        display: flex;
+        max-width: 100%;
+        overflow-x: auto;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 5px;
+        gap: 20px;
+    }
+    .approvedLeaveDetails {
+        max-width: 100%;
+        overflow-x: auto;
+        gap: 20px;
+    }
+    .container-for-adding-regularisation-entries {
+        width: 100%;
+        display: block;
+        height: 195px;
+        margin-top: 15px;
+    }
+    .custom-nav-link {
+        padding: 8px 20px !important;
+    }
+    .custom-nav-tabs {
+        margin-top: 20px !important;
+    }
+    .containerWidth {
+        width: 100% !important;
+        margin: 0 auto;
+    }
+    .container-for-adding-regularisation-entries {
+        width: 100%;
+    }
+    .form-control {
+        width: 100%;
+    }
+    .dropdown {
+        width: 30%;
+    }
+    .custom-nav-tabs .custom-item {
+        border: 1px solid #ccc !important;
+    }
+}
+
+@media screen and (max-height: 460px) {
+    .sidebar-cal {
+        padding-top: 15px;
+    }
+    .sidebar-cal a {
+        font-size: 18px;
+    }
+    .search-container-who-is-in {
+        margin-top: 10px;
+    }
+}
+@media (max-width: 763px) {
+    .accordion {
+        width: 100%;
+        top: auto;
+        right: auto;
+        margin-top: 20px;
+    }
+    .container5-who-is-in-absent {
+        width: 100%;
+        margin: 0;
+    }
+}
+@media (max-width: 920px) {
+    .content-who-is-in {
+        flex-direction: column;
+    }
+}
+@media only screen and (max-width: 600px) {
+    .info-container {
+        width: 80%;
+    }
+}
+@media only screen and (max-width: 400px) {
+    .info-container {
+        width: 95%;
+    }
+}
+@media screen and (max-width: 767px) {
+    .title-page {
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        width: calc(100vw - 15em);
+    }
+}
+@media (max-width: 767px) {
+    .people-selectedperson-container {
+        margin-top: 10px;
+        height: 490px;
+    }
+}
+@media (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+    .people-employee-detail-container {
+        margin-left: 35px;
+    }
+    .people-left-side-container {
+        flex: 0 0 41.66667%;
+        max-width: 41.66667%;
+    }
+
+    .people-selectedperson-container {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+@media (max-width: 548px) {
+    .task-date-range-picker {
+        margin-left: 0px;
+    }
+}
+@media (max-width: 991px) {
+    .settings-birthday-value {
+        max-width: 150px;
+    }
+
+}
+@media (max-width: 768px) {
+    .settings-birthday-value,
+    .setting-department-value,
+    .setting-location-value,
+    .setting-designation-value {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        max-width: none;
+    }
+}
+@media (max-width: 346px) {
+    .custom-nav-tabs .custom-item {
+        border: 1px solid #ccc !important;
+    }
+    .custom-nav-link.active {
+        border-radius: 0 !important;
+    }
+    .custom-nav-tabs {
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
