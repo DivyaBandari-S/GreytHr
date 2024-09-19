@@ -357,13 +357,12 @@ class Settings extends Component
 
             // Update the password
             $this->employeeDetails->password = Hash::make($this->newPassword);
-            $this->employeeDetails->save();
+            // $this->employeeDetails->save();
             // Send password change notification
             $this->employeeDetails->notify(new \App\Notifications\PasswordChangedNotification($this->companyName));
             session()->flash('password', 'Your Password changed successfully.');
             $this->resetForm();
             $this->showDialog = false;
-            // $this->passwordChanged = true;
         } catch (\Exception $e) {
             Log::error('Error in changePassword method: ' . $e->getMessage());
         } finally {
@@ -406,7 +405,6 @@ class Settings extends Component
                 DB::raw("CONCAT_WS(', ', city,state_name,country,postal_code) as location"),
                 'created_at'
             ]);
-        // dd($this->loginHistory);
     }
 
 

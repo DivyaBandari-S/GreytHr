@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
 use App\Mail\PasswordChanged;
+use App\Models\Company;
 use App\Models\EmpPersonalInfo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -39,6 +40,7 @@ class EmpLogin extends Component
     public $email;
     public $company_email;
     public $dob;
+    public $companyName;
     public $newPassword;
     public $newPassword_confirmation;
     public $verified = false;
@@ -256,74 +258,68 @@ class EmpLogin extends Component
         $this->showSuccessModal = false;
     }
 
+
     public function createNewPassword()
     {
-        $this->validate(
-            [
-                'newPassword' => ['required', 'min:8', 'max:50',],
-                'newPassword_confirmation' => ['required', 'same:newPassword'],
-            ]
-        );
+        // Validate the new password and its confirmation
+        $this->validate([
+            'newPassword' => ['required', 'min:8', 'max:50'],
+            'newPassword_confirmation' => ['required', 'same:newPassword'],
+        ]);
 
         try {
-            // Validate the new password and its confirmation
-
-            // Determine which email field is used
-            $email = $this->email ?? $this->company_email;
-
-            if (!$email) {
-                throw new \Exception('Either email or company email must be provided.');
+            // Check if email is provided
+            if (!$this->email) {
+                throw new \Exception('Email must be provided.');
             }
 
-            // Check if the passwords match
-            if ($this->newPassword === $this->newPassword_confirmation) {
-                // Find the user by either email or company email
-                // $user = EmployeeDetails::where(function ($query) use ($email) {
-                //     $query->where('email', $email)
-                //           ->orWhere('company_email', $email);
-                // })->first();
+            // Fetch employee details using email and date of birth
+            $userInEmployeeDetails = ($employee = EmpPersonalInfo::where('email', $this->email)
+                ->where('date_of_birth', $this->dob)
+                ->first())
+                ? EmployeeDetails::where('emp_id', $employee->emp_id)->first()
+                : null;
 
-                $userInEmployeeDetails = EmployeeDetails::where(function ($query) use ($email) {
-                    $query->where('email', $email)
-                        ->orWhere('company_email', $email);
-                })->first();
-                if ($userInEmployeeDetails) {
-                    // Update the user's password in the database
-                    $userInEmployeeDetails->update(['password' => bcrypt($this->newPassword)]);
-                    $this->passwordChangedModal = true;
+            if ($userInEmployeeDetails) {
+                // Get company ID and fetch company details
+                $companyId = $userInEmployeeDetails->company_id;
+                $company = Company::where('company_id', $companyId)->first();
+                $this->companyName = $company->company_name ?? 'Unknown Company';
 
-                    // Reset form fields and state after successful password update
-                    $this->reset(['newPassword', 'newPassword_confirmation', 'verified']);
-                    //$this->passwordChangedModal = false;
-                    $this->showDialog = false;
-                } else {
-                    // User not found, show an error message
-                    $this->addError('newPassword', 'User not found.');
-                    $this->passwordChangedModal = false;
-                }
+                // Update the user's password
+                $userInEmployeeDetails->update(['password' => bcrypt($this->newPassword)]);
+
+                // Notify the user of password change
+                $userInEmployeeDetails->notify(new \App\Notifications\PasswordChangedNotification($this->companyName));
+
+                // Set modal and reset fields after success
+                $this->passwordChangedModal = true;
+                $this->reset(['newPassword', 'newPassword_confirmation', 'verified']);
+                $this->showDialog = false;
             } else {
-                // Passwords do not match, show an error message
-                $this->addError('newPassword', 'Passwords do not match.');
+                // Handle user not found
+                $this->addError('newPassword', 'User not found.');
                 $this->passwordChangedModal = false;
             }
         } catch (ValidationException $e) {
-            // Handle validation errors
-            // $this->passwordChangedModal = false;
+            // Log validation errors
+            Log::error('Validation error: ' . $e->getMessage());
             $this->pass_change_error = 'There was a problem with your input. Please check and try again.';
         } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database errors
-            // $this->passwordChangedModal = false;
+            // Log database errors
+            Log::error('Database error: ' . $e->getMessage());
             $this->pass_change_error = 'We are experiencing technical difficulties. Please try again later.';
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
-            // Handle server errors
-            // $this->passwordChangedModal = false;
+            // Log server (HTTP) errors
+            Log::error('HTTP error: ' . $e->getMessage());
             $this->pass_change_error = 'There is a server error. Please try again later.';
         } catch (\Exception $e) {
-            // Handle general errors
-            //$this->passwordChangedModal = false;
+            // Log general errors
+            Log::error('Password change error: ' . $e->getMessage());
             $this->pass_change_error = 'An unexpected error occurred. Please try again.';
         }
     }
+
 
     public function hideAlert()
     {
