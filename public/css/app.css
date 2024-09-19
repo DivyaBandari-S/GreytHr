@@ -563,6 +563,9 @@ body {
     background-color: #272d48;
     color: #fff;
 }
+.btn-success{
+    font-size: var(--normal-font-size);
+}
 .cancel-btn {
     background-color: #fff;
     color: rgb(2, 17, 79);
@@ -1195,6 +1198,7 @@ button.close-button {
     width: 40px;
     /* Reduced width */
     height: 20px;
+    margin-top: -5px;
     /* Reduced height */
 }
 .switch-who-is-in input {
@@ -1231,8 +1235,8 @@ button.close-button {
     transition: 0.4s;
 }
 input:checked + .slider {
-    background-color: #2196f3;
-    border: 1px solid #2196f3;
+    background-color: rgb(2, 17, 79);
+    border: 1px solid rgb(2, 17, 79);
 }
 
 input:focus + .slider {
@@ -1240,9 +1244,9 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
     background-color: white;
 }
 
@@ -8144,9 +8148,6 @@ peoples module styles started */
     .button-dl {
         font-size: 0.8rem;
     }
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
-    }
 }
 
 @media (min-width: 992px) {
@@ -8480,9 +8481,6 @@ peoples module styles started */
 @media (max-width: 991px) {
     .settings-birthday-value {
         max-width: 150px;
-    }
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
     }
 
 }

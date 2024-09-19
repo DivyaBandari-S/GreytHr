@@ -1555,7 +1555,7 @@ color: #fff;
                                 <div class="form-group col-md-3 col-sm-6 start-date-for-attend-period">
                                     <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
                                         Date</label>
-                                    <input type="date" class="form-control" id="fromDate" wire:model="from_date" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
+                                    <input type="date" class="form-control" id="fromDate" wire:model="start_date_for_insights" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                                 <div class="form-group col-md-3 col-sm-6">
                                     <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To
@@ -1563,7 +1563,7 @@ color: #fff;
                                     <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                             </div>
-                            <p style="font-size:12px;margin-top:3px">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalDays}}</span></p>
+                            <p style="font-size:12px;margin-top:3px">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalWorkingDays}}</span></p>
 
                             <div class="table-responsive">
 
@@ -1583,13 +1583,64 @@ color: #fff;
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="insights-for-attendance-period-avg-working-hours">{{$avgWorkingHrsForModalTitle}}</td>
-                                            <td class="insights-for-attendance-period-avg-working-hours">{{$avgWorkingHrsForModalTitle}}</td>
+                                            <td class="insights-for-attendance-period-avg-working-hours">
+                                                      <section class="text-center">
+                                                               <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
+                                                                        <div>
+                                                                                    @if($avgWorkHoursPreviousMonth==0)
+                                                                                        <span class="text-success ng-star-inserted" style="font-size:10px;">
+                                                                                                    </span>
+                                                                                                    <span class="text-muted" style="font-size:10px;margin-left:0px;">
+                                                                                                    </span>
+                                                                                    
+                                                                                    @elseif($percentageinworkhrsforattendance>0)
+                                                                                                    <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
+                                                                                                    </span>
+                                                                                                    <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                                                                                    </span>
+                                                                                        @elseif($percentageinworkhrsforattendance<0)
+                                                                                            <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageinworkhrsforattendance)}}%
+                                                                                                </span>
+                                                                                                <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                                                                                </span> 
+                                                                                            @endif
+                                     
+                                                                                   </div>
+
+                                                     </section>
+                                            </td>
+                                            <td class="insights-for-attendance-period-avg-working-hours">
+
+                                            <section class="text-center">
+                                                               <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
+                                                                        <div>
+                                                                                    @if($avgWorkHoursPreviousMonth==0)
+                                                                                        <span class="text-success ng-star-inserted" style="font-size:10px;">
+                                                                                                    </span>
+                                                                                                    <span class="text-muted" style="font-size:10px;margin-left:0px;">
+                                                                                                    </span>
+                                                                                    
+                                                                                    @elseif($percentageinworkhrsforattendance>0)
+                                                                                                    <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
+                                                                                                    </span>
+                                                                                                    <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                                                                                    </span>
+                                                                                        @elseif($percentageinworkhrsforattendance<0)
+                                                                                            <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageinworkhrsforattendance)}}%
+                                                                                                </span>
+                                                                                                <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
+                                                                                                </span> 
+                                                                                            @endif
+                                     
+                                                                                   </div>
+
+                                                     </section>
+                                            </td>
                                             <td class="insights-for-attendance-period">0</td>
-                                            <td class="insights-for-attendance-period">{{$avgLateIn}}</td>
-                                            <td class="insights-for-attendance-period">{{$avgEarlyOut}}</td>
-                                            <td class="insights-for-attendance-period">{{$leaveTaken}}</td>
-                                            <td class="insights-for-attendance-period">{{$countofAbsent}}</td>
+                                            <td class="insights-for-attendance-period">{{$totalLateInSwipes}}</td>
+                                            <td class="insights-for-attendance-period">fghj</td>
+                                            <td class="insights-for-attendance-period">{{$totalnumberofLeaves}}</td>
+                                            <td class="insights-for-attendance-period">45678</td>
                                             <td class="insights-for-attendance-period">-</td>
                                         </tr>
                                     </tbody>
