@@ -160,10 +160,10 @@
                             </div>
                             <div class="setting-password-submit-container">
                                 <button class="submit-btn" type="submit" wire:loading.attr="disabled"
-                                    wire:loading.class="btn-loading">
-                                    Save Password
-                                    <span class="spinner-container" wire:loading>
-                                        <i class="fa fa-spinner fa-spin"></i>
+                                    wire:loading.class="btn-loading" aria-disabled="true">
+                                    <span wire:loading.remove>Save Password</span>
+                                    <span wire:loading>
+                                        <i class="fa fa-spinner fa-spin"></i> Saving...
                                     </span>
                                 </button>
                             </div>
@@ -172,6 +172,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal-backdrop fade show blurred-backdrop"></div>
 
 
