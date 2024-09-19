@@ -56,38 +56,62 @@ class ProfileInfo extends Component
     {
         $this->validateOnly($propertyName);
     }
-    public function mount(){
+    public function mount()
+    {
         $this->updateProfile();
     }
+
     public function updateProfile()
+
     {
+
         try {
+
             $this->isUploading = true;
+
             Log::info('Upload started.');
+
             $empId = Auth::guard('emp')->user()->emp_id;
+
             $employee = EmployeeDetails::where('emp_id', $empId)->first();
 
+
+
             // Validation rules
+
             $this->validate([
+
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:1024',
+
             ]);
+
             // Proceed with file processing
+
             if ($this->image) {
+
                 $imagePath = file_get_contents($this->image->getRealPath());
+
                 $employee->image = $imagePath;
+
                 $employee->save();
+
                 $this->showSuccessMessage = true;
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation exceptions
-            session()->flash('error', 'Validation : ' . $e->getMessage());
+            session()->flash('error', 'The uploaded file must be an image' );
             $this->showAlert = true;
         } catch (\Exception $e) {
+
             Log::error('Error in updateProfile method: ' . $e->getMessage());
+
             session()->flash('error', 'An error occurred while updating the profile. Please try again later.');
+
             $this->showAlert = true;
         } finally {
+
             $this->isUploading = false; // Reset uploading state
+
             $this->showAlert = true;
         }
     }
