@@ -21,6 +21,7 @@ use App\Models\RegularisationDates;
 use Livewire\Component;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Torann\GeoIP\Facades\GeoIP;
 
@@ -59,7 +60,7 @@ class Attendance extends Component
     public $currentWeekday;
 
 
-    public $totalDays;
+    public $totalWorkingDays;
     public $calendar;
     public $selectedDate;
     public $shortFallHrs;
@@ -160,6 +161,10 @@ class Attendance extends Component
 
     public $avgWorkHoursPreviousMonth;
     public $averageworkhours;
+
+    public $totalLateInSwipes=0;
+    public $totalnumberofLeaves=0;
+    public $start_date_for_insights;
     public $averageWorkHrsForCurrentMonth = null;
     public $averageFormattedTimeForCurrentMonth;
     public $holidayCountForInsightsPeriod;
@@ -486,9 +491,9 @@ class Attendance extends Component
 
             $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type', 'shift_start_time', 'shift_end_time')->first();
             $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
-
-            $this->to_date = now()->toDateString();
-
+            $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $this->to_date = Carbon::now()->toDateString();
+            $this->updateModalTitle();
             $this->calculateAvgWorkingHrs($this->from_date, $this->to_date, $this->employee->emp_id);
             $fromDate = Carbon::createFromFormat('Y-m-d', $this->from_date);
             $toDate = Carbon::createFromFormat('Y-m-d', $this->to_date);
@@ -554,8 +559,8 @@ class Attendance extends Component
             }
 
 
-            $this->updateModalTitle();
-            $this->calculateTotalDays();
+            
+            // $this->calculateTotalDays();
             $this->previousMonth = Carbon::now()->subMonth()->format('F');
 
             $swipeRecords = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
@@ -691,7 +696,7 @@ class Attendance extends Component
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
-
+     
             return LeaveRequest::where('emp_id', $employeeId)
                 ->where('status', 'approved')
                 ->where(function ($query) use ($date) {
@@ -709,13 +714,20 @@ class Attendance extends Component
     {
         $countofleaves = 0;
         $currentDate = $startDate->copy();
-
+        $flag=false;
 
         while ($currentDate->lt($endDate)) {
-            if ($this->isEmployeeLeaveOnDate($currentDate, $employeeId)) {
+            $flag=LeaveRequest::where('emp_id', $employeeId)
+            ->where('status', 'approved')
+            ->where(function ($query) use ($currentDate) {
+                $query->whereDate('from_date', '<=', $currentDate)
+                    ->whereDate('to_date', '>=', $currentDate);
+            })->exists();
+            if ($flag==true) {
                 $countofleaves++;
             }
             $currentDate->addDay();
+            $flag=false;
         }
 
         return $countofleaves;
@@ -939,7 +951,7 @@ class Attendance extends Component
     {
         try {
             // Additional logic if needed when from_date is updated
-            $this->from_date = $value;
+            $this->start_date_for_insights = $value;
             $this->updateModalTitle();
         } catch (\Exception $e) {
             Log::error('Error in updatedFromDate method: ' . $e->getMessage());
@@ -962,40 +974,33 @@ class Attendance extends Component
     {
         $this->legend = !$this->legend;
     }
-    private function calculateNumberofHolidays($startDate, $endDate)
-    {
-        $holidayCount = 0;
-        $currentDate = $startDate->copy();
-        while ($currentDate->lt($endDate)) {
-            $holidayexists = HolidayCalendar::where('date', Carbon::parse($currentDate)->format('Y-m-d'))->exists();
-            if ($holidayexists == true) {
-                $holidayCount++;
-            }
-            $currentDate->addDay();
-            $holidayexists = false;
-        }
-        return $holidayCount;
-    }
+    
 
     private function updateModalTitle()
     {
         try {
             // Format the dates and update the modal title
-            $formattedFromDate = Carbon::parse($this->from_date)->format('Y-m-d');
+            $formattedFromDate = Carbon::parse($this->start_date_for_insights)->format('Y-m-d');
             $formattedToDate = Carbon::parse($this->to_date)->format('Y-m-d');
-            $fromDatetemp = Carbon::parse($this->from_date);
+            $fromDatetemp = Carbon::parse($this->start_date_for_insights);
             $toDatetemp = Carbon::parse($this->to_date);
-            $formattedFromDateForModalTitle = Carbon::parse($this->from_date)->format('d M');
+            $formattedFromDateForModalTitle = Carbon::parse($this->start_date_for_insights)->format('d M');
             $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
             $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
+            $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
+            
+            $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
+            $this->totalLateInSwipes = $this->calculatetotalLateInSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
+            
+            // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
             $this->totalmodalDays = $fromDatetemp->diffInDays($toDatetemp);
             $this->holidayCountForInsightsPeriod = 0;
             $this->count = $this->calculateWorkingDaysForModalTitle($fromDatetemp, $toDatetemp, auth()->guard('emp')->user()->emp_id);
             $this->weekendDays = $this->calculateNumberofWeekends($fromDatetemp, $toDatetemp);
             $this->holidayCountForInsightsPeriod = $this->calculateNumberofHolidays($fromDatetemp, $toDatetemp);
             $this->countofAbsent = $this->totalmodalDays - $this->count - $this->weekendDays - $this->holidayCountForInsightsPeriod;
-            $this->leaveTaken = $this->caluclateNumberofLeaves($fromDatetemp, $toDatetemp, auth()->guard('emp')->user()->emp_id);
-
+            
+            
             $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where('in_or_out', 'IN')
                 ->whereBetween('created_at', [$formattedFromDate, $formattedToDate])
@@ -1041,6 +1046,48 @@ class Attendance extends Component
             session()->flash('error', 'An error occurred while updating the modal title. Please try again later.');
         }
     }
+    private function calculatetotalLateInSwipes($startDate, $endDate)
+{
+    
+    $startDate = Carbon::parse($startDate);
+    $endDate = Carbon::parse($endDate);
+    $lateSwipeCount = 0;
+
+    // Iterate through the date range
+    while ($startDate->lt($endDate)) {
+        $tempStartDate=$startDate->toDateString();
+        // Check if the date is not a holiday
+        $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
+        $isweekend=$startDate->isWeekend();
+        $isOnLeave=$this->isEmployeeLeaveOnDate($tempStartDate,auth()->guard('emp')->user()->emp_id);
+        if (!$isHoliday&&!$isweekend&&!$isOnLeave) {
+            // Check if there's a swipe record for the date where 'IN' and swipe_time is greater than 10:00 AM
+           
+
+            $lateSwipeExists = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->whereDate('created_at', $tempStartDate)
+                ->where('in_or_out', 'IN')
+                ->where('swipe_time', '>', '10:00:00')
+                ->exists();
+               
+
+                
+                  
+                
+
+            Log::info($lateSwipeExists.' '.$tempStartDate);  
+
+            if ($lateSwipeExists) {
+                $lateSwipeCount++;
+            }
+        }
+
+        // Move to the next day
+        $startDate->addDay();
+    }
+
+    return $lateSwipeCount;
+}
     private function calculateAvgWorkingHrs($employeeId)
     {
         $currentDate = Carbon::now()->startOfMonth();
@@ -1093,96 +1140,87 @@ class Attendance extends Component
 
         $this->toggleButton = !$this->toggleButton;
     }
+    private function countHolidaysBetweenDates($startDate,$endDate)
+    {
+        $holidayCount = HolidayCalendar::whereBetween('date', [$startDate, $endDate])->get();
+
+        
+        return $holidayCount;
+    }
+    private function countWeekendsBetweenDates($startDate, $endDate)
+    {
+                $weekendCount = 0;
+
+                // Iterate through the date range
+                $currentDate = $startDate->copy();
+                while ($currentDate->lte($endDate)) {
+                    // Check if the current day is a Saturday (6) or Sunday (7)
+                    if ($currentDate->isSaturday() || $currentDate->isSunday()) {
+                        $weekendCount++;
+                    }
+                    // Move to the next day
+                    $currentDate->addDay();
+                }
+
+                return $weekendCount;
+    }
+    private function calculateTotalWorkingDays($startDate,$endDate)
+    {
+        $workingDays = 0;
+     
+        // Iterate through the date range
+        while ($startDate->lt($endDate)) {
+            // Check if the day is not Saturday (6) or Sunday (7)
+            if (!$startDate->isWeekend()) {
+                $workingDays++;
+            }
+            // Move to the next day
+            $startDate->addDay();
+        }
+
+        return $workingDays;
+    }
+    private function calculateTotalNumberOfLeaves($startDate, $endDate)
+    {
+     
+        $leaveCount = 0;
+      
+        // Iterate through the date range
+        while ($startDate->lt($endDate)) {
+            // Check if employee is on leave on this date
+            $tempStartDate=$startDate->toDateString();
+            $isOnLeave = LeaveRequest::where('emp_id',auth()->guard('emp')->user()->emp_id)
+            ->where('status', 'approved')
+            ->where(function ($query) use ($tempStartDate) {
+                $query->whereDate('from_date', '<=', $tempStartDate)
+                    ->whereDate('to_date', '>=', $tempStartDate);
+            })->exists();
+    
+            if ($isOnLeave) {
+                $leaveCount++;
+            }
+    
+            // Move to the next day
+            $startDate->addDay();
+        }
+    
+        return $leaveCount;
+    }
+
     public function calculateTotalDays()
     {
         try {
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $startDate = Carbon::parse($this->from_date);
+          
+            $startDate = Carbon::parse($this->start_date_for_insights);
             $endDate = Carbon::parse($this->to_date);
             $originalEndDate = $endDate->copy();
-
-            if ($endDate->isToday()) {
-                // Exclude today's date
-                $endDate->subDay();
-            }
-
-            $totalDays = $this->calculateWorkingDays($startDate, $endDate, $employeeId);
-
-            $swipeRecords = SwipeRecord::where('emp_id', $employeeId)
-                ->whereBetween('created_at', [$startDate, $originalEndDate])
-                ->get();
-
-            // Group the swipe records by the date part only
-            $groupedDates = $swipeRecords->groupBy(function ($record) {
-                return Carbon::parse($record->created_at)->format('Y-m-d');
-            });
-
-            $totalLateIn = 0;
-            $totalEarlyOut = 0;
-            $totalValidDays = 0;
-            $signInTotalTime = 0;
-            $signOutTotalTime = 0;
-            $averageSwipeInTime = [];
-            $averageSwipeOutTime = [];
-
-            foreach ($swipeRecords as $records) {
-                if ($records->in_or_out === 'IN') {
-                    // Calculate sign-in time
-                    $signInTime = Carbon::parse($records->swipe_time);
-                    $averageSwipeInTime[] = $signInTime;
-
-                    // Calculate total late-In
-                    $inTime = Carbon::parse($records->swipe_time);
-                    $expectedInTime = Carbon::parse('10:00:00');
-                    if ($inTime->gt($expectedInTime)) {
-                        $totalLateIn++;
-                    }
-                } elseif ($records->in_or_out === 'OUT') {
-                    // Calculate sign-out time
-                    $signOutTime = Carbon::parse($records->swipe_time);
-                    $averageSwipeOutTime[] = $signOutTime;
-
-                    $outTime = Carbon::parse($records->swipe_time);
-                    $expectedOutTime = Carbon::parse('19:00:00');
-                    if ($outTime->lt($expectedOutTime)) {
-                        $totalEarlyOut++;
-                    }
-                }
-                $totalValidDays++;
-            }
-
-            // Calculate the total time for swipe-in
-            foreach ($averageSwipeInTime as $time) {
-                $signInTotalTime += $time->timestamp;
-            }
-
-            // Calculate the total time for swipe-out
-            foreach ($averageSwipeOutTime as $time) {
-                $signOutTotalTime += $time->timestamp;
-            }
-
-            // Calculate average swipe-in time if there are valid days
-            if (count($averageSwipeInTime) > 0) {
-                $avgSwipeInTimestamp = $signInTotalTime / count($averageSwipeInTime);
-                // Create Carbon instance representing the average swipe-in time
-                $averageSwipeInTime = Carbon::createFromTimestamp($avgSwipeInTimestamp);
-                // Format the resulting time
-                $this->avgSwipeInTime = $averageSwipeInTime->format('H:i');
-            }
-
-            // Calculate average swipe-out time if there are valid days
-            if (count($averageSwipeOutTime) > 0) {
-                $avgSwipeOutTimestamp = $signOutTotalTime / count($averageSwipeOutTime);
-                // Create Carbon instance representing the average swipe-out time
-                $averageSwipeOutTime = Carbon::createFromTimestamp($avgSwipeOutTimestamp);
-                // Format the resulting time
-                $this->avgSwipeOutTime = $averageSwipeOutTime->format('H:i');
-            }
-
-            // Calculate total(LateIn,EarlyOut)
-            $this->avgLateIn = $totalLateIn;
-            $this->avgEarlyOut = $totalEarlyOut;
-            $this->totalDays = $totalDays;
+            $this->updateModalTitle();
+            
+            
+            
+            
+          
+          
         } catch (\Exception $e) {
             Log::error('Error in calculateTotalDays method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while calculating total days. Please try again later.');
@@ -1596,7 +1634,7 @@ class Attendance extends Component
             }
 
             $swipe_records = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->get();
-            $swipe_records_count = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->count();
+            $this->swipe_records_count = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->count();
             $this->swiperecordsfortoggleButton = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->get();
             $swipe_records1 = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->orderBy('created_at', 'desc')->get();
 
@@ -1604,7 +1642,7 @@ class Attendance extends Component
             return view('livewire.attendance', [
                 'Holiday' => $this->holiday,
                 'Swiperecords' => $swipe_records,
-                'SwiperecordsCount' => $swipe_records_count,
+                'SwiperecordsCount' => $this->swipe_records_count,
                 'Swiperecords1' => $swipe_records1,
                 'data' => $data,
                 'CurrentDateTwoRecord' => $this->currentDate2record,
@@ -1614,7 +1652,7 @@ class Attendance extends Component
                 'avgEarlyOut' => $this->avgEarlyOut,
                 'avgSignOutTime' => $this->avgSwipeOutTime,
                 'modalTitle' => $this->modalTitle,
-                'totalDays' => $this->totalDays
+                
             ]);
         } catch (\Exception $e) {
             Log::error('Error in render method: ' . $e->getMessage());
