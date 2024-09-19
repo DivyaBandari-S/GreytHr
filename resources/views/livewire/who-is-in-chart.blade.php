@@ -22,7 +22,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header" style=" height: 50px">
-        <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Shift</b></h5>
+        <h5 style="padding: 5px; color: #fff; font-size: 15px;" class="modal-title"><b>Shift</b></h5>
         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeShiftSelector" style="background-color: white; height:10px;width:10px;">
         </button>
       </div>
@@ -99,7 +99,6 @@
 @endif
 <div class="cont m-0 p-0 " style="display:flex; justify-content: end;">
   <div class="search-container-who-is-in">
-
     <div class="form-group-who-is-in">
       <div class="search-input-who-is-in" style="margin-top:50px;">
         <input wire:model="search" type="text" placeholder="Search Employee" class="search-text"style="font-size: 12px;">
