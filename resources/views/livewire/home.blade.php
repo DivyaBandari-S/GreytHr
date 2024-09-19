@@ -1,13 +1,13 @@
 <div class="position-relative">
     <div class="msg-container">
         @if ($showAlert)
-        <div id="alert-container" class="d-flex justify-content-center alert-container mb-3" wire:poll.1s="hideAlert">
-            <!-- wire:poll.5s="hideAlert" -->
-            <p class="alert alert-success successContainer" role="alert">
-                {{ session('success') }} 😀
-                <span class="closeMsg ml-5" wire:click='hideAlert'>x</span>
-            </p>
-        </div>
+            <div id="alert-container" class="d-flex justify-content-center alert-container mb-3" wire:poll.1s="hideAlert">
+                <!-- wire:poll.5s="hideAlert" -->
+                <p class="alert alert-success successContainer" role="alert">
+                    {{ session('success') }} 😀
+                    <span class="closeMsg ml-5" wire:click='hideAlert'>x</span>
+                </p>
+            </div>
         @endif
     </div>
     <div class="content">
@@ -17,7 +17,7 @@
                     <div class="card-content row p-0 m-0">
                         <div class="col-md-6 p-0 ps-3 pt-4">
                             @if ($this->greetingText)
-                            <p class="morning-city">{{ $greetingText }}</p>
+                                <p class="morning-city">{{ $greetingText }}</p>
                             @endif
                             <p class="morning-city">Welcome<br>
                                 {{ ucwords(strtolower($loginEmployee->first_name)) }}
@@ -25,7 +25,8 @@
                             </p>
                             <div class="locationGlobe row m-0 p-0 pt-5">
                                 <div class="col-1 p-0">
-                                    <i class="fa-solid fa-location-dot" id="openMapIcon" style="color: red;cursor: pointer; font-size: 14px;"></i>
+                                    <i class="fa-solid fa-location-dot" id="openMapIcon"
+                                        style="color: red;cursor: pointer; font-size: 14px;"></i>
                                 </div>
                                 <div class="col-11 p-0">
                                     <p>Medahalli, Bangaluru, Karnataka - 560079</p>
@@ -40,8 +41,8 @@
 
                                     <div class="morning-weather-image">
                                         @if ($weatherCode == 0)
-                                        <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                            alt="Clear sky" />
+                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
+                                                alt="Clear sky" />
                                         @elseif(in_array($weatherCode, [1, 2]))
                                         <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
                                             alt="Partly Cloudy" />
@@ -50,13 +51,13 @@
                                         @elseif(in_array($weatherCode, [51, 53, 55, 61, 63, 65, 80, 81, 82]))
                                         <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg" alt="Rainy" />
                                         @elseif(in_array($weatherCode, [95, 96, 99]))
-                                        <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                            alt="Thunderstorm" />
+                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
+                                                alt="Thunderstorm" />
                                         @elseif(in_array($weatherCode, [71, 73, 75, 77, 85, 86]))
                                         <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg" alt="Snow" />
                                         @elseif(in_array($weatherCode, [45, 48]))
-                                        <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                            alt="Fog" />
+                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
+                                                alt="Fog" />
                                         @elseif(in_array($weatherCode, [56, 57, 66, 67]))
                                         <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
                                             alt="Freezing Rain" />
@@ -282,84 +283,84 @@
                         $leaveRequests = $data['leaveRequests'];
                         $count = $data['count'];
 
-                        // Use the first leave request to get employee details
-                        $firstLeaveRequest = $leaveRequests[0];
-                        if ($firstLeaveRequest && $firstLeaveRequest->employee) {
-                        $firstName = ucwords(strtolower($firstLeaveRequest->employee->first_name));
-                        $lastName = ucwords(strtolower($firstLeaveRequest->employee->last_name));
-                        $initials =
-                        strtoupper(substr($firstName, 0, 1)) .
-                        strtoupper(substr($lastName, 0, 1));
-                        } else {
-                        $firstName = 'Unknown';
-                        $lastName = '';
-                        $initials = '?';
-                        }
-                        @endphp
-                        <a href="/employees-review">
-                            <div
-                                class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
-                                <div class="thisCircle d-flex align-items-center justify-content-center"
-                                    style="border: 2px solid {{ getRandomColor() }}"
-                                    data-toggle="tooltip" data-placement="top"
-                                    title="{{ $firstName }} {{ $lastName }}">
-                                    <span>{{ $initials }}</span>
-                                </div>
-                                @if ($count > 1)
-                                <span
-                                    class="badge badge-pill badge-info position-absolute translate-middle badge-count">
-                                    {{ $count }}
-                                </span>
+                                        // Use the first leave request to get employee details
+                                        $firstLeaveRequest = $leaveRequests[0];
+                                        if ($firstLeaveRequest && $firstLeaveRequest->employee) {
+                                            $firstName = ucwords(strtolower($firstLeaveRequest->employee->first_name));
+                                            $lastName = ucwords(strtolower($firstLeaveRequest->employee->last_name));
+                                            $initials =
+                                                strtoupper(substr($firstName, 0, 1)) .
+                                                strtoupper(substr($lastName, 0, 1));
+                                        } else {
+                                            $firstName = 'Unknown';
+                                            $lastName = '';
+                                            $initials = '?';
+                                        }
+                                    @endphp
+                                    <a href="/employees-review">
+                                        <div
+                                            class="circle-container d-flex flex-column mr-3 payslip-small-desc text-center position-relative">
+                                            <div class="thisCircle d-flex align-items-center justify-content-center"
+                                                style="border: 2px solid {{ getRandomColor() }}"
+                                                data-toggle="tooltip" data-placement="top"
+                                                title="{{ $firstName }} {{ $lastName }}">
+                                                <span>{{ $initials }}</span>
+                                            </div>
+                                            @if ($count > 1)
+                                                <span
+                                                    class="badge badge-pill badge-info position-absolute translate-middle badge-count">
+                                                    {{ $count }}
+                                                </span>
+                                            @endif
+                                            <span class="leaveText">Leave</span>
+                                        </div>
+                                    </a>
+                                @endforeach
+
+                                @if ($totalRequests > 3)
+                                    <div
+                                        class="remainContent d-flex flex-column justify-content-center align-items-center">
+                                        <a href="#" wire:click="reviewLeaveAndAttendance">
+                                            <span>+{{ $totalRequests - 3 }}</span>
+                                            <p class="mb-0" style="margin-top:-5px;">More</p>
+                                        </a>
+                                    </div>
                                 @endif
-                                <span class="leaveText">Leave</span>
+                            </div>
+                        @else
+                            <div class="d-flex flex-column justify-content-center align-items-center">
+                                <p class="payslip-small-desc mb-2 homeText">
+                                    Hurrah! You've nothing to review.
+                                </p>
+                            </div>
+                        @endif
+                        <a href="/employees-review">
+                            <div class="payslip-go-corner">
+                                <div class="payslip-go-arrow">→</div>
                             </div>
                         </a>
-                        @endforeach
-
-                        @if ($totalRequests > 3)
-                        <div
-                            class="remainContent d-flex flex-column justify-content-center align-items-center">
-                            <a href="#" wire:click="reviewLeaveAndAttendance">
-                                <span>+{{ $totalRequests - 3 }}</span>
-                                <p class="mb-0" style="margin-top:-5px;">More</p>
-                            </a>
-                        </div>
-                        @endif
                     </div>
-                    @else
-                    <div class="d-flex flex-column justify-content-center align-items-center">
-                        <p class="payslip-small-desc mb-2 homeText">
-                            Hurrah! You've nothing to review.
-                        </p>
-                    </div>
-                    @endif
-                    <a href="/employees-review">
-                        <div class="payslip-go-corner">
-                            <div class="payslip-go-arrow">→</div>
-                        </div>
-                    </a>
-                </div>
-                @if ($showReviewLeaveAndAttendance)
-                <div class="modal d-block" tabindex="-1" role="dialog">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">
-                                    <b>Review</b>
-                                </h5>
-                                <button type="button" class="btn-close btn-primary" aria-label="Close"
-                                    wire:click="closereviewLeaveAndAttendance">
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <h6 class="normalTextValue">Leave Requests</h6>
-                                <div class="d-flex flex-row gap-2">
-                                    @if ($totalRequests > 3)
-                                    <div class="d-flex flex-row">
-                                        @foreach ($requestsToHide as $empId => $data)
-                                        @php
-                                        $leaveRequests = $data['leaveRequests'];
-                                        $count = $data['count'];
+                    @if ($showReviewLeaveAndAttendance)
+                        <div class="modal d-block" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <b>Review</b>
+                                        </h5>
+                                        <button type="button" class="btn-close btn-primary" aria-label="Close"
+                                            wire:click="closereviewLeaveAndAttendance">
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6 class="normalTextValue">Leave Requests</h6>
+                                        <div class="d-flex flex-row gap-2">
+                                            @if ($totalRequests > 3)
+                                                <div class="d-flex flex-row">
+                                                    @foreach ($requestsToHide as $empId => $data)
+                                                        @php
+                                                            $leaveRequests = $data['leaveRequests'];
+                                                            $count = $data['count'];
 
                                         // Use the first leave request to get employee details
                                         $firstLeaveRequest = $leaveRequests[0];
@@ -419,51 +420,53 @@
                             <?php
                                         }
                             ?>
-                            @endfor
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="cancel-btn"
+                                            style="border:1px solid rgb(2,17,79);" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);"
-                                data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-backdrop fade show blurred-backdrop"></div>
-            @endif
-            @endif
-            <div class="payslip-card mb-4" style="height: 195px;">
-                <p class="payslip-card-title mb-0">Upcoming Holidays</p>
-                @if ($calendarData->isEmpty())
-                <p class="payslip-small-desc mt-3">Uh oh! No holidays to show.</p>
-                @else
-                @php
-                $count = 0;
-                @endphp
-
-                <div class="row m-0">
-                    <div class="col-12 p-0">
-                        @foreach ($calendarData as $entry)
-                        @if (!empty($entry->festivals))
-                        <div>
-                            <p class="payslip-small-desc mt-3">
-                                <span class="payslip-small-desc fw-500">{{ date('d M', strtotime($entry->date)) }}
-                                    <span class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
-                                <br>
-                                <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
-                            </p>
-                        </div>
+                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                    @endif
+                @endif
+                <div class="payslip-card mb-4" style="height: 195px;">
+                    <p class="payslip-card-title mb-0">Upcoming Holidays</p>
+                    @if ($calendarData->isEmpty())
+                        <p class="payslip-small-desc mt-3">Uh oh! No holidays to show.</p>
+                    @else
                         @php
-                        $count++;
+                            $count = 0;
                         @endphp
-                        @endif
 
-                        @if ($count >= 2)
-                        @break
-                        @endif
-                        @endforeach
+                        <div class="row m-0">
+                            <div class="col-12 p-0">
+                                @foreach ($calendarData as $entry)
+                                    @if (!empty($entry->festivals))
+                                        <div>
+                                            <p class="payslip-small-desc mt-3">
+                                                <span
+                                                    class="payslip-small-desc fw-500">{{ date('d M', strtotime($entry->date)) }}
+                                                    <span
+                                                        class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
+                                                <br>
+                                                <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
+                                            </p>
+                                        </div>
+                                        @php
+                                            $count++;
+                                        @endphp
+                                    @endif
+
+                                    @if ($count >= 2)
+                                    @break
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
-                </div>
                 @endif
                 <a href="/holiday-calendar">
                     <div class="payslip-go-corner">
@@ -800,103 +803,103 @@
         </div>
         @endif
 
-        <div class="payslip-card mb-4">
-            <div>
-                <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">
-                    <h5 class="payslip-card-title">Task Overview</h5>
-                    <div>
-                        <select class="form-select custom-select-width"
-                            wire:change="$set('filterPeriod', $event.target.value)">
-                            <option value="this_month" selected>This month</option>
-                            <option value="last_month">Last month</option>
-                            <option value="this_year">This year</option>
-                        </select>
+            <div class="payslip-card mb-4">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">
+                        <h5 class="payslip-card-title">Task Overview</h5>
+                        <div>
+                            <select class="form-select custom-select-width"
+                                wire:change="$set('filterPeriod', $event.target.value)">
+                                <option value="this_month" selected>This month</option>
+                                <option value="last_month">Last month</option>
+                                <option value="this_year">This year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row text-center mt-3">
+                        <div class="col-4">
+                            <h3 class="mb-1 track-text">{{ $TaskAssignedToCount }}</h3>
+                            <p class="mb-0 track-text">Tasks Assigned</p>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="mb-1 track-text">{{ $TasksCompletedCount }}</h3>
+                            <p class="mb-0 track-text">Tasks Completed</p>
+                        </div>
+                        <div class="col-4">
+                            <h3 class="mb-1 track-text">{{ $TasksInProgressCount }}</h3>
+                            <p class="mb-0 track-text">Tasks In Progress</p>
+                        </div>
                     </div>
                 </div>
-                <div class="row text-center mt-3">
-                    <div class="col-4">
-                        <h3 class="mb-1 track-text">{{ $TaskAssignedToCount }}</h3>
-                        <p class="mb-0 track-text">Tasks Assigned</p>
+                <a href="/tasks">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
                     </div>
-                    <div class="col-4">
-                        <h3 class="mb-1 track-text">{{ $TasksCompletedCount }}</h3>
-                        <p class="mb-0 track-text">Tasks Completed</p>
-                    </div>
-                    <div class="col-4">
-                        <h3 class="mb-1 track-text">{{ $TasksInProgressCount }}</h3>
-                        <p class="mb-0 track-text">Tasks In Progress</p>
-                    </div>
-                </div>
+                </a>
             </div>
-            <a href="/tasks">
+            <div class="payslip-card mb-4">
+                <p class="payslip-card-title">Quick Access</p>
+                <div class="m-0 row">
+                    <div class="quick col-md-7 px-3 py-0 ps-0">
+                        <a href="/reimbursement" class="quick-link">Reimbursement</a>
+                        <a href="/itstatement" class="quick-link">IT Statement</a>
+                        <a href="#" class="quick-link">YTD Reports</a>
+                        <a href="#" class="quick-link">Loan Statement</a>
+                    </div>
+                    <div class="col-md-5 quickAccessNoData">
+                        <img src="images/quick_access.png" style="padding-top: 2em; width: 6em">
+                        <p class="pt-4">Use quick access to view important salary details.</p>
+                    </div>
+                </div>
                 <div class="payslip-go-corner">
                     <div class="payslip-go-arrow">→</div>
                 </div>
-            </a>
-        </div>
-        <div class="payslip-card mb-4">
-            <p class="payslip-card-title">Quick Access</p>
-            <div class="m-0 row">
-                <div class="quick col-md-7 px-3 py-0 ps-0">
-                    <a href="/reimbursement" class="quick-link">Reimbursement</a>
-                    <a href="/itstatement" class="quick-link">IT Statement</a>
-                    <a href="#" class="quick-link">YTD Reports</a>
-                    <a href="#" class="quick-link">Loan Statement</a>
-                </div>
-                <div class="col-md-5 quickAccessNoData">
-                    <img src="images/quick_access.png" style="padding-top: 2em; width: 6em">
-                    <p class="pt-4">Use quick access to view important salary details.</p>
-                </div>
             </div>
-            <div class="payslip-go-corner">
-                <div class="payslip-go-arrow">→</div>
-            </div>
-        </div>
 
-    </div>
-    @if ($showAlertDialog)
-    <div class="modal d-block" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <b>Swipes</b>
-                    </h5>
-                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="close">
-                    </button>
-                </div>
-                <div class="modal-body" style="max-height:300px;overflow-y:auto">
-                    <div class="row">
-                        <div class="col normalTextValue">Date :
-                            <span class="normalText">{{ $currentDate }}</span>
+        </div>
+        @if ($showAlertDialog)
+            <div class="modal d-block" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <b>Swipes</b>
+                            </h5>
+                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                                aria-label="Close" wire:click="close">
+                            </button>
                         </div>
-                        <div class="col normalTextValue">Shift
-                            Time : <span class="normalText">10:00 to 19:00</span></div>
-                    </div>
-                    <table class="swipes-table mt-2 border w-100">
-                        <tr>
-                            <th>
-                                Swipe Time</th>
-                            <th>
-                                Sign-In / Sign-Out</th>
-                        </tr>
-                        @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
-                        @foreach ($swipeDetails as $swipe)
-                        <tr>
-                            <td>
-                                {{ $swipe->swipe_time }}
-                            </td>
-                            <td>
-                                {{ $swipe->in_or_out }}
-                            </td>
-                        </tr>
-                        @endforeach
-                        @else
-                        <tr>
-                            <td class="homeText" colspan="2">No swipe records found for today.</td>
-                        </tr>
-                        @endif
+                        <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                            <div class="row">
+                                <div class="col normalTextValue">Date :
+                                    <span class="normalText">{{ $currentDate }}</span>
+                                </div>
+                                <div class="col normalTextValue">Shift
+                                    Time : <span class="normalText">10:00 to 19:00</span></div>
+                            </div>
+                            <table class="swipes-table mt-2 border w-100">
+                                <tr>
+                                    <th>
+                                        Swipe Time</th>
+                                    <th>
+                                        Sign-In / Sign-Out</th>
+                                </tr>
+                                @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
+                                    @foreach ($swipeDetails as $swipe)
+                                        <tr>
+                                            <td>
+                                                {{ $swipe->swipe_time }}
+                                            </td>
+                                            <td>
+                                                {{ $swipe->in_or_out }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td class="homeText" colspan="2">No swipe records found for today.</td>
+                                    </tr>
+                                @endif
 
                     </table>
                 </div>
