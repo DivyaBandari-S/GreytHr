@@ -45,6 +45,7 @@ class LeaveCancelPage extends Component
     public $showCasualLeaveProbation;
     public $empManagerDetails, $selectedManagerDetails;
     public $showAlert = false;
+    public $selectedLeaveType = null;
     protected $rules = [
         'leave_cancel_reason' => 'required',
     ];
@@ -320,7 +321,7 @@ class LeaveCancelPage extends Component
                 'applying_to' => json_encode($applyingToDetails),
                 'cc_to' => json_encode($ccToDetails),
             ]);
-
+            $this->cancel();
             session()->flash('message', 'Applied request for leave cancel successfully.');
             $this->showAlert = true;
         } catch (\Exception $e) {
@@ -465,6 +466,11 @@ class LeaveCancelPage extends Component
         $this->selectedCCEmployees = [];
         $this->leave_cancel_reason = null;
         $this->applying_to = null;
+        $this->selectedLeaveType = null;
+    }
+    public function getFilteredManagers()
+    {
+        $this->render(); // Re-render to apply the search filter
     }
     public function render()
     {

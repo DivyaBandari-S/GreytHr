@@ -364,7 +364,7 @@
                         <div class="accordion-head rounded m-0">
                             <!-- Display leave details here based on $leaveRequest -->
                             <div class="col accordion-content">
-                                <div class="accordion-profile d-flex align-items-center justify-content-center gap-3 m-auto" >
+                                <div class="accordion-profile d-flex align-items-center justify-content-center gap-2 m-auto" >
                                     @if(isset($leaveRequest['approvedLeaveRequest']->image) && $leaveRequest['approvedLeaveRequest']->image !== 'null')
                                     <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['approvedLeaveRequest']->image)}}" style="border-radius: 50%;">
                                     @else
@@ -378,7 +378,7 @@
                                     @endif
                                     <div>
                                         @if(isset($leaveRequest['approvedLeaveRequest']->first_name))
-                                        <p class="mb-0 normalText m-auto text-start">
+                                        <p class="mb-0 d-flex flex-column m-auto text-start">
                                             <span class="employeeName" title="{{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->first_name)) }} {{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->last_name)) }}">
                                                 {{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->first_name)) }}
                                                 {{ ucwords(strtolower($leaveRequest['approvedLeaveRequest']->last_name)) }}
