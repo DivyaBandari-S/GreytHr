@@ -146,7 +146,7 @@
 /* Ending of letter request module (Kumar Asapu)*/
 
 /* Starting of home module (Kumar Asapu,Archana Goud,Divya Bandari,Pranita Priyadarshi & Siva)*/
-.showTimer{
+.showTimer {
     padding: 5px 15px;
     border: 1px solid rgb(2, 17, 79);
     border-radius: 5px;
@@ -220,7 +220,7 @@
     font-weight: 500;
     font-size: var(--normal-font-size);
 }
-.normalTextValueSubheading{
+.normalTextValueSubheading {
     color: var(--label-color);
     font-weight: 500;
     font-size: var(--sub-headings-font-size);
@@ -558,7 +558,6 @@ body {
     padding: 7px 12px;
     font-size: var(--normal-font-size);
     border: none;
-
 }
 .submit-btn:hover {
     background-color: #272d48;
@@ -850,7 +849,6 @@ button.close-button {
     color: white !important;
 }
 
-
 .custom-form {
     background-color: white;
     border-radius: 5px;
@@ -858,8 +856,6 @@ button.close-button {
     height: auto;
     margin-bottom: 15px;
 }
-
-
 
 .table-start {
     font-size: 0.8rem;
@@ -1111,18 +1107,15 @@ button.close-button {
     display: block;
 }
 
-
 /* end of app.blade */
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
-.fromDatefield input
-{
-    width:60%;
+.fromDatefield input {
+    width: 60%;
 }
-.toDatefield input
-{
-    width:65%;
+.toDatefield input {
+    width: 65%;
 }
 
 /*Ending of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
@@ -1139,7 +1132,6 @@ button.close-button {
     border: 1px solid #ccc;
     display: block;
 }
-
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
@@ -1866,7 +1858,6 @@ td {
     color: #000;
 }
 
-
 .search-text::placeholder {
     font-size: 14px; /* Adjust the font size as needed */
     color: var(--label-color); /* Placeholder text color */
@@ -2064,18 +2055,19 @@ td {
     margin-bottom: 32px;
     transition: opacity 0.2s;
 }
-.emoji-list{
+.emoji-list {
     display: none;
-    background:white;
-    border-radius:5px;
-    border:1px solid silver;
-    max-height:170px;width:220px;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid silver;
+    max-height: 170px;
+    width: 220px;
     overflow-y: auto;
 }
 
-.emoji-option{
+.emoji-option {
     font-size: 14px;
-    cursor:pointer
+    cursor: pointer;
 }
 
 .hidden {
@@ -2090,7 +2082,7 @@ td {
 .custom-height-30 {
     height: 30px;
 }
-.custom-radio-label{
+.custom-radio-label {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -2102,35 +2094,34 @@ td {
     border: 1px solid silver;
     height: fit-content;
 }
-.custom-dropdown{
-    margin-top:20px;
-    display:block
+.custom-dropdown {
+    margin-top: 20px;
+    display: block;
 }
-.eventsSection{
+.eventsSection {
     display: flex;
-     flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-.feeds-main-content{
-    height:75vh ;
-     max-height:75vh;
-     overflow-y: auto;
-     scroll-behavior: smooth;
+.feeds-main-content {
+    height: 75vh;
+    max-height: 75vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
 }
-.cards{
+.cards {
     padding: 15px;
     background-color: white;
     border-radius: 5px;
-    border: 1px solid #CFCACA;
-     color: #3b4452;
-      margin-top: 5px
+    border: 1px solid #cfcaca;
+    color: #3b4452;
+    margin-top: 5px;
 }
-.feeds-left-menu{
-
+.feeds-left-menu {
     font-weight: 500;
-    color:#47515b;
-    cursor:pointer;
+    color: #47515b;
+    cursor: pointer;
     font-size: 0.8rem;
 }
 
@@ -2143,17 +2134,17 @@ td {
     padding-left: 10px;
     overflow: hidden;
     height: 60px;
-    margin-left:30px
+    margin-left: 30px;
 }
-.form-select{
+/* .form-select {
     border: 1px solid #ccc;
-     border-radius: 4px;
-     padding: 5px;
-     font-size: 0.75rem;
-      color: #3b4452;
-      margin-top: 5px;
-      height: 30px;
-}
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 0.75rem;
+    color: #3b4452;
+    margin-top: 5px;
+    height: 30px;
+} */
 .addcomment {
     position: absolute;
     bottom: 15px; /* Move up by increasing this value */
@@ -2256,7 +2247,7 @@ td {
     color: #778899;
     font-weight: 600;
 }
-.text-feed{
+.text-feed {
     font-size: 13px;
     color: #3b4452;
     font-weight: 600;
@@ -2290,7 +2281,6 @@ td {
     right: -60px;
     border-radius: 4px;
     border: 1px solid #ddd;
-
 }
 
 .custom-feed .custom-feed-item {
@@ -2300,10 +2290,10 @@ td {
     color: #3b4452;
 }
 
-.Feeds-Dropdown{
+.Feeds-Dropdown {
     display: none;
-    overflow-y:auto;
-    max-height:120px;
+    overflow-y: auto;
+    max-height: 120px;
     overflow-x: hidden;
 }
 .custom-list {
@@ -2317,15 +2307,15 @@ td {
     max-height: 200px;
     overflow-x: hidden;
 }
-.cus-button{
+.cus-button {
     display: flex;
     justify-content: space-between;
     width: 100%;
     padding: 0.5rem;
-    overflow-y:auto;
-    max-height:fit-content;
+    overflow-y: auto;
+    max-height: fit-content;
     cursor: pointer;
-    overflow-x: hidden
+    overflow-x: hidden;
 }
 
 .font-semibold {
@@ -2342,7 +2332,6 @@ td {
     /* Font size */
     font-size: 12px;
     color: #47515b;
-
 }
 
 .font-normal {
@@ -2542,8 +2531,8 @@ td {
     display: block;
     padding: 5px 10px;
     font-size: 11px;
-     transition: background-color 0.3s ease;
-     color:#3b4452;
+    transition: background-color 0.3s ease;
+    color: #3b4452;
 }
 
 /* Define CSS for the menu items on hover */
@@ -2579,7 +2568,6 @@ input[type="radio"] {
 /* Define the blue background color for the checked state */
 .input[type="radio"]:checked + .custom-radio-button {
     background-color: blue;
-
 }
 
 .feather {
@@ -2616,7 +2604,8 @@ input[type="radio"] {
 }
 
 .activities,
-.posts,.post-requests {
+.posts,
+.post-requests {
     height: 30px; /* Fixed height */
     display: flex;
     align-items: center;
@@ -2626,23 +2615,27 @@ input[type="radio"] {
     width: 100%;
     border-radius: 5px;
 }
-.post-button{
+.post-button {
     background-color: rgb(2, 17, 79);
-     color: white;
-     height:30px;
-     margin-left: 20px;
+    color: white;
+    height: 30px;
+    margin-left: 20px;
     border-radius: 5px;
-    width:70px;
-    font-size:12px;
+    width: 70px;
+    font-size: 12px;
     border: 1px solid silver;
 }
 .activities:hover,
-.posts:hover ,.post-requests:hover{
+.posts:hover,
+.post-requests:hover {
     background-color: #edf3ff;
     cursor: pointer;
 }
-.custom-radio-content{
-    color: #778899; font-size: 12px; font-weight: 500; margin-left: 10px;
+.custom-radio-content {
+    color: #778899;
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 10px;
 }
 
 .medium-header {
@@ -2652,20 +2645,20 @@ input[type="radio"] {
     line-height: 1.25rem;
     color: var(--e-color-emoji-text);
     margin-top: 5px;
-    color:#3b4452;
+    color: #3b4452;
 
     margin-left: 20px;
-
 }
-.group-events{
-    color: #677A8E;
-     font-size: 13px;
-     font-weight: 100px;
-     text-align: center;
+.group-events {
+    color: #677a8e;
+    font-size: 13px;
+    font-weight: 100px;
+    text-align: center;
 }
 /* CSS for radio-wrapper */
-.alert-success{
-    max-width: 500px; margin: auto;
+.alert-success {
+    max-width: 500px;
+    margin: auto;
 }
 .drive-in {
     color: #3b4452;
@@ -2674,7 +2667,7 @@ input[type="radio"] {
     margin-top: 5px;
     justify-content: center; /* Centers items vertically */
     margin-left: 10px;
-     /* Full viewport height to center vertically */
+    /* Full viewport height to center vertically */
 }
 .radio-wrapper {
     display: inline-block;
@@ -2682,10 +2675,11 @@ input[type="radio"] {
     /* Adjust margin as needed */
     cursor: pointer;
 }
-.btn-post{
-    background-color: #F1ECFC;
-    border:1px solid purple;
-    border-radius:5px;width:130px
+.btn-post {
+    background-color: #f1ecfc;
+    border: 1px solid purple;
+    border-radius: 5px;
+    width: 130px;
 }
 
 /* CSS for labels */
@@ -2730,7 +2724,6 @@ input[type="radio"] {
     width: fit-content;
     z-index: 1;
 }
-
 
 /* start of leave-page styles  (Divya)*/
 /* General button styles */
@@ -2844,10 +2837,10 @@ input[type="radio"] {
     background-color: #b0d8df;
     border-radius: 10px;
     transition: transform 0.3s ease-in-out;
-  }
+}
 
-  .hover-card::before {
-    content: '';
+.hover-card::before {
+    content: "";
     position: absolute;
     top: 0;
     left: -98.5%;
@@ -2855,18 +2848,18 @@ input[type="radio"] {
     height: 100%;
     background-color: #02114f; /* Your hover background color */
     transition: left 0.5s ease-in-out;
-  }
+}
 
-  .hover-card:hover::before {
+.hover-card:hover::before {
     left: 0;
-  }
+}
 
-  .card-content {
+.card-content {
     position: relative;
     z-index: 1;
     /* padding: 20px; */
     /* text-align: center; */
-  }
+}
 
 .alert-success {
     font-size: var(--normal-font-size);
@@ -2924,7 +2917,6 @@ input[type="radio"] {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-
 
 .applyingFor {
     color: var(--main-heading-color);
@@ -3718,7 +3710,6 @@ input[type="radio"] {
     border-bottom-right-radius: 5px;
 }
 
-
 /* //end of leave-history styles */
 
 /* start of view-pending details */
@@ -4476,7 +4467,7 @@ select .yearSelect {
     padding: 0;
     margin: 0;
 }
-.filterDropdown{
+.filterDropdown {
     font-size: var(--normal-font-size);
     color: var(--main-heading-color);
     padding: 5px;
@@ -4541,14 +4532,28 @@ select .yearSelect {
 
 .circle-pale-yellow {
     background-color: #ffeb3b;
-    vertical-align: middle; display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+    vertical-align: middle;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
 }
-.isToday{
-    background-color: rgb(2,17,79); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;
+.isToday {
+    background-color: rgb(2, 17, 79);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
 }
 .circle-pale-pink {
     background-color: #d29be1;
-    vertical-align: middle; display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+    vertical-align: middle;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
 }
 .active .leave-container {
     border-color: #3a9efd;
@@ -6461,7 +6466,6 @@ select .yearSelect {
     font-size: 16px;
 }
 
-
 /*
 peoples module styles started */
 
@@ -6562,8 +6566,6 @@ peoples module styles started */
     height: 450px;
     margin-top: 0px;
 }
-
-
 
 .people-selectedperson-detail-container {
     background: #e0e0e0;
@@ -6748,8 +6750,6 @@ peoples module styles started */
     width: 245px;
     margin-left: -20px;
 }
-
-
 
 .task-first-container {
     margin-top: 15px;
@@ -7818,11 +7818,6 @@ peoples module styles started */
 
     padding: 7px;
 }
-.task-custom-select-width {
-    width: 150px;
-    font-size: var(--normal-font-size);
-    padding: 7px;
-}
 
 /* task module styles ended */
 
@@ -8137,17 +8132,13 @@ peoples module styles started */
     z-index: 300;
 }
 
-
 /* ///media queries */
 @media (min-width: 768px) {
     .button-dl {
         font-size: 0.8rem;
     }
-    .custom-nav-tabs .custom-item{
+    .custom-nav-tabs .custom-item {
         border: 1px solid #ccc !important;
-    }
-    .custom-nav-link.active{
-        border-radius: 0 !important;
     }
 }
 
@@ -8199,27 +8190,21 @@ peoples module styles started */
         max-width: 100px; /* Set a maximum width for the container */
     }
 }
-@media screen and (min-width: 320px) and (max-width: 500px)  {
-    .date-filters
-    {
+@media screen and (min-width: 320px) and (max-width: 500px) {
+    .date-filters {
         row-gap: 1.5rem;
     }
-    #from-date
-    {
+    #from-date {
         max-width: 60%;
     }
-    #to-date
-    {
+    #to-date {
         max-width: 60%;
-
     }
-    .mobile-gap
-    {
+    .mobile-gap {
         gap: 1.5rem !important;
     }
-    .toDatefield
-    {
-        margin-left:12px;
+    .toDatefield {
+        margin-left: 12px;
     }
     .accordion-title {
         display: flex;
@@ -8240,8 +8225,7 @@ peoples module styles started */
         right: auto;
         margin-top: 20px;
     }
-    .col
-    {
+    .col {
         display: flex;
         flex-direction: column;
         align-items: start;
@@ -8260,17 +8244,14 @@ peoples module styles started */
         display: none !important;
     }
 }
-@media screen and (min-width: 320px) and (max-width: 500px)  {
+@media screen and (min-width: 320px) and (max-width: 500px) {
     .employee-swipes-fields {
-
         flex-direction: column;
     }
-    .dropdown-container1-employee-swipes-for-date-type
-    {
+    .dropdown-container1-employee-swipes-for-date-type {
         margin-left: 60px;
     }
-    .dropdown-container1-employee-swipes-for-search-employee
-    {
+    .dropdown-container1-employee-swipes-for-search-employee {
         margin-left: 75px;
     }
 }
@@ -8406,11 +8387,8 @@ peoples module styles started */
     .dropdown {
         width: 30%;
     }
-    .custom-nav-tabs .custom-item{
+    .custom-nav-tabs .custom-item {
         border: 1px solid #ccc !important;
-    }
-    .custom-nav-link.active{
-        border-radius: 0 !important;
     }
 }
 
@@ -8421,7 +8399,7 @@ peoples module styles started */
     .sidebar-cal a {
         font-size: 18px;
     }
-    .search-container-who-is-in{
+    .search-container-who-is-in {
         margin-top: 10px;
     }
 }
@@ -8432,13 +8410,13 @@ peoples module styles started */
         right: auto;
         margin-top: 20px;
     }
-    .container5-who-is-in-absent{
+    .container5-who-is-in-absent {
         width: 100%;
         margin: 0;
     }
 }
 @media (max-width: 920px) {
-    .content-who-is-in{
+    .content-who-is-in {
         flex-direction: column;
     }
 }
@@ -8492,19 +8470,31 @@ peoples module styles started */
     .settings-birthday-value {
         max-width: 150px;
     }
-    .custom-nav-tabs .custom-item{
+    .custom-nav-tabs .custom-item {
         border: 1px solid #ccc !important;
     }
-    .custom-nav-link.active{
-        border-radius: 0 !important;
+
+}
+@media (max-width: 768px) {
+    .settings-birthday-value,
+    .setting-department-value,
+    .setting-location-value,
+    .setting-designation-value {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        max-width: none;
     }
 }
 @media (max-width: 346px) {
-    .custom-nav-tabs .custom-item{
+    .custom-nav-tabs .custom-item {
         border: 1px solid #ccc !important;
     }
-    .custom-nav-tabs{
-       flex-direction: column;
-       width: 100%;
+    .custom-nav-link.active {
+        border-radius: 0 !important;
+    }
+    .custom-nav-tabs {
+        flex-direction: column;
+        width: 100%;
     }
 }
