@@ -64,6 +64,9 @@ class WhoIsInChart extends Component
     public $openAccordionForLeave=null;
     public $shiftsforAttendance;
     public $search = '';
+
+    // Pass this from your controller or set it within Livewire
+   
     public $results = [];
     public function mount()
     {
@@ -81,6 +84,7 @@ class WhoIsInChart extends Component
     {
         $this->toggleButton = !$this->toggleButton;   
     }
+   
     public function toggleAccordionForAbsent($index)
     {
         // Toggle the open state for the clicked accordion
