@@ -21,7 +21,7 @@
 <div class="modal" tabindex="-1" role="dialog" style="display: block;">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header" style="background-color: #eef7fa; height: 50px">
+      <div class="modal-header" style=" height: 50px">
         <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Shift</b></h5>
         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeShiftSelector" style="background-color: white; height:10px;width:10px;">
         </button>
@@ -87,7 +87,7 @@
 
         </div>
         <!-- Collapsible Content -->
-        <div class="text-center" style="margin-top: 70px;">
+        <div class="text-center" style="margin-top: 30px;">
           <button type="button" class="btn save-selectshift-button-who-is-in">Save</button>
         </div>
 
@@ -117,8 +117,8 @@
 <div class="mx-1 p-0">
   <div class="container-box-for-employee-information-who-is-in">
     <!-- Your content goes here -->
-    <div style="margin-top:5px;display:flex;align-items:center; text-align:center;justify-content:center;padding:0;">
-      <p style="text-align:center;font-size:14px;">Employees Information for <span style="font-weight: 500; ">{{\Carbon\Carbon::parse($currentDate)->format('jS F Y')}}</span></p>
+    <div style="display:flex;align-items:center; text-align:center;justify-content:center;padding:0;">
+      <p style="text-align:center;font-size:14px;padding: 10px 0px;margin-bottom:0px;">Employees Information for <span style="font-weight: 500; ">{{\Carbon\Carbon::parse($currentDate)->format('jS F Y')}}</span></p>
     </div>
 
     <div class="content-who-is-in">
@@ -256,7 +256,7 @@
           
           <thead>
             <tr>
-              <th style="padding-right:53px;">Employee</th>
+              <th>Employee</th>
               <th>Late By</th>
               <th></th>
             </tr>
@@ -267,7 +267,7 @@
 
             @php
             $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-            $lateArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I');
+            $lateArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I:%S');
             $isLateBy10AM = $swipeTime->format('H:i') > $s1->shift_start_time;
             @endphp
 
@@ -373,7 +373,7 @@
             @foreach($Swipes as $index=>$s1)
             @php
             $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-            $earlyArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I');
+            $earlyArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I:%S');
             $isEarlyBy10AM = $swipeTime->format('H:i') <= $s1->shift_start_time ; 
             @endphp 
             @if($isEarlyBy10AM) 

@@ -171,6 +171,7 @@ class Attendance extends Component
     public $weekendDays = 0;
     public $daysWithRecords = 0;
 
+    public $totalnumberofAbsents=0;
     public $percentageinworkhrsforattendance;
     public $leaveTaken = 0;
     public $totalHoursWorked = 0;
@@ -974,7 +975,24 @@ class Attendance extends Component
     {
         $this->legend = !$this->legend;
     }
-    
+    private function calculateTotalNumberOfAbsents($startDate,$endDate)
+    {
+        $AbsentDays = 0;
+     
+        // Iterate through the date range
+        while ($startDate->lt($endDate)) {
+            // Check if the day is not Saturday (6) or Sunday (7)
+             $tempStartDate=$startDate->toDateString();
+             if(!$this->isEmployeePresentOnDate($tempStartDate))
+             {
+                $AbsentDays++;
+             }
+            // Move to the next day
+            $startDate->addDay();
+        }
+
+        return $AbsentDays;        
+    }
 
     private function updateModalTitle()
     {
@@ -990,6 +1008,7 @@ class Attendance extends Component
             $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
             
             $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
+            $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             $this->totalLateInSwipes = $this->calculatetotalLateInSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             
             // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
@@ -1060,7 +1079,8 @@ class Attendance extends Component
         $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
         $isweekend=$startDate->isWeekend();
         $isOnLeave=$this->isEmployeeLeaveOnDate($tempStartDate,auth()->guard('emp')->user()->emp_id);
-        if (!$isHoliday&&!$isweekend&&!$isOnLeave) {
+        $isPresent=$this->isEmployeePresentOnDate($tempStartDate);
+        if (!$isHoliday&&!$isweekend&&!$isOnLeave&&$isPresent) {
             // Check if there's a swipe record for the date where 'IN' and swipe_time is greater than 10:00 AM
            
 

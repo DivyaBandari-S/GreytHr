@@ -1329,6 +1329,7 @@ button.close-button {
     width: 40px;
     /* Reduced width */
     height: 20px;
+    margin-top: -5px;
     /* Reduced height */
 }
 .switch-who-is-in input {
@@ -1365,8 +1366,8 @@ button.close-button {
     transition: 0.4s;
 }
 input:checked + .slider {
-    background-color: #2196f3;
-    border: 1px solid #2196f3;
+    background-color: rgb(2, 17, 79);
+    border: 1px solid rgb(2, 17, 79);
 }
 
 input:focus + .slider {
