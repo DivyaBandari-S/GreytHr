@@ -889,8 +889,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h6 class="modal-title">Apply For Resignation</h6>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
-                                wire:click="closeModal" style="background-color: white; height:10px;width:10px;">
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                                wire:click="closeModal" >
                             </button>
                         </div>
 

@@ -46,13 +46,13 @@
         <div class="modal d-block" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header d-flex justify-content-between setting-history-modal-header">
+                    <div class="modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Login
                             History</h6>
-                        <button type="button" class="close setting-history-modal-close" data-dismiss="modal"
+                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
                             aria-label="Close" wire:click="close">
-                            <span aria-hidden="true">&times;</span>
                         </button>
+                     
 
                     </div>
                     <div class="modal-body">
@@ -99,12 +99,11 @@
         <div class="modal d-block" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header d-flex justify-content-between setting-password-modal-header">
+                    <div class="modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Change Password</h6>
-                        <button type="button" class="close setting-password-modal-close" data-dismiss="modal"
-                            aria-label="Close" wire:click="remove">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                        aria-label="Close" wire:click="remove">
+                    </button>
                     </div>
                     <form wire:submit.prevent="changePassword">
                         @if ($error)

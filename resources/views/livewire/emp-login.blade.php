@@ -184,7 +184,7 @@
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                    <div class="d-flex justify-content-center">
+                                    <div class="d-flex justify-content-center mt-2">
                                         <button type="submit" class="btn btn-success">Reset Password</button>
                                     </div>
 
@@ -257,9 +257,8 @@
                             <h5 style="padding: 10px; color: white; font-size: 15px;" class="modal-title">
                                 <b>Verification successful!</b>
                             </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
                                 wire:click="closeSuccessModal">
-                                <span aria-hidden="true" style="color: white;">x</span>
                             </button>
                         </div>
                         <div class="modal-body" style="background-color: #f0f0f0;">
@@ -283,18 +282,17 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" style="background-color: rgb(9, 45, 206);">
+                        <div class="modal-header" >
                             <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
                                 <b>Success Message</b>
                             </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
                                 wire:click="closePasswordChangedModal">
-                                <span aria-hidden="true" style="color: white;">x</span>
                             </button>
                         </div>
-                        <div class="modal-body" style="background-color: #f0f0f0; padding: 20px;">
+                        <div class="modal-bodyd-flex align-items-center justify-content-center" style="background-color: #f0f0f0; padding: 20px;">
                             <p>Password Changes Successfully...</p>
-                            <button type="button" class="btn btn-danger"
+                            <button type="button" class="cancel-btn"
                                 wire:click="closePasswordChangedModal">Close</button>
                         </div>
                     </div>

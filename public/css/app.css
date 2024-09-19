@@ -57,6 +57,7 @@
 }
 .modal-title {
     color: #fff;
+    font-weight: 600;
     font-size: var(--sub-headings-font-size);
 }
 .modal-header {
@@ -264,8 +265,9 @@
 }
 .btn-close {
     background-color: white;
-    height: 10px;
-    width: 10px;
+    height: 7px;
+    font-size: var(--normal-font-size);
+    width: 7px;
 }
 .smallTextMin {
     font-size: 10px;
@@ -562,6 +564,9 @@ body {
 .submit-btn:hover {
     background-color: #272d48;
     color: #fff;
+}
+.btn-success{
+    font-size: var(--normal-font-size);
 }
 .cancel-btn {
     background-color: #fff;
@@ -6716,6 +6721,10 @@ peoples module styles started */
 .tab-position-emp-everyone {
     left: 83px;
 }
+
+.people-employee-detail-container{
+    margin-left: 20px;
+}
 /* peoples module styles ended */
 
 /* task module styles started */
@@ -8142,9 +8151,6 @@ peoples module styles started */
     .button-dl {
         font-size: 0.8rem;
     }
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
-    }
 }
 
 @media (min-width: 992px) {
@@ -8152,6 +8158,7 @@ peoples module styles started */
         font-size: 0.8rem;
     }
 }
+
 
 @media (min-width: 1200px) {
     .button-dl {
@@ -8330,6 +8337,10 @@ peoples module styles started */
         display: flex;
         flex-direction: column;
     }
+    .people-employee-detail-container {
+        margin-top: 10px; /* Margin for mobile devices */
+        margin-left: 0; /* Optionally remove left margin for mobile */
+    }
 }
 @media screen and (max-width: 460px) {
     .leavePageContent {
@@ -8475,9 +8486,6 @@ peoples module styles started */
     .settings-birthday-value {
         max-width: 150px;
     }
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
-    }
 
 }
 @media (max-width: 768px) {
@@ -8501,5 +8509,13 @@ peoples module styles started */
     .custom-nav-tabs {
         flex-direction: column;
         width: 100%;
+    }
+}
+@media (max-width: 992px) {
+    .custom-nav-tabs .custom-item {
+        border: 1px solid #ccc !important;
+    }
+    .custom-nav-link.active {
+        border-radius: 0 !important;
     }
 }

@@ -99,7 +99,6 @@
 @endif
 <div class="cont m-0 p-0 " style="display:flex; justify-content: end;">
   <div class="search-container-who-is-in">
-
     <div class="form-group-who-is-in">
       <div class="search-input-who-is-in" style="margin-top:50px;">
         <input wire:model="search" type="text" placeholder="Search Employee" class="search-text"style="font-size: 12px;">
