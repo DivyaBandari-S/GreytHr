@@ -36,12 +36,13 @@
                     <div class="row p-3 gx-0" style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
                         <div style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px;margin-bottom: 20px;">
                             PROFILE</div>
-                        @if (session()->has('error'))
-                        <div class="alert alert-danger" wire:poll.20s="hideAlert">
-                            {{ session('error') }}
-                        </div>
-                        @endif
-                        <div class="col-12 col-md-4">
+
+                        <div class="col-12 col-md-4 position-relative">
+                            @if (session()->has('error'))
+                            <div class="alert alert-danger position-absolute" wire:poll.3s="hideAlert" style="top:-25%;">
+                                {{ session('error') }}
+                            </div>
+                            @endif
                             @if(!empty($employeeDetails->image) && $employeeDetails->image !== 'null')
                             <div class="employee-profile-image-container" style="margin-left: 15px;">
                                 <img height="80" src="{{ $employeeDetails->image_url }}" class="employee-profile-image">
@@ -68,9 +69,10 @@
                                 <span class="text-danger">{{ $errors->first('image') }}</span><br>
                                 @endif
                                 <div class="d-flex align-items-center gap-2 " style="margin-left: 15px;">
-                                    <button class="submit-btn px-2 py-1" wire:click="updateProfile" >
+                                    <button class="submit-btn px-2 py-1" wire:click="updateProfile">
                                         <span style="font-size: 10px;">
-                                            @if($isUploading)
+
+                                            @if($isUploading == true)
                                             Uploading...
                                             @else
                                             Update
@@ -740,7 +742,7 @@
                                     CURRENT POSITION </div>
                             </div>
                             <div class="col-6 col-md-6">
-                                <div style="margin-top: 2%; font-size: 11px; color: blue; margin-left: 25px" wire:click="showPopupModal">
+                                <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px" wire:click="showPopupModal">
                                     Resign
                                 </div>
                             </div>
