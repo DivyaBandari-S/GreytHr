@@ -57,6 +57,7 @@
 }
 .modal-title {
     color: #fff;
+    font-weight: 600;
     font-size: var(--sub-headings-font-size);
 }
 .modal-header {
@@ -8156,6 +8157,7 @@ peoples module styles started */
     }
 }
 
+
 @media (min-width: 1200px) {
     .button-dl {
         font-size: 0.8rem;
@@ -8507,4 +8509,11 @@ peoples module styles started */
         width: 100%;
     }
 }
-
+@media (max-width: 992px) {
+    .custom-nav-tabs .custom-item {
+        border: 1px solid #ccc !important;
+    }
+    .custom-nav-link.active {
+        border-radius: 0 !important;
+    }
+}

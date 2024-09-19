@@ -119,7 +119,7 @@ li {
 }
 #sidebar .side-menu > li > a:hover {
 	background: var(--grey);
-	color: var(--dark) !important;
+	/* color: var(--dark) !important; */
 }
 #sidebar .side-menu > li > a.active .icon-right {
 	transform: rotateZ(90deg);
