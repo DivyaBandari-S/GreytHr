@@ -563,6 +563,9 @@ body {
     background-color: #272d48;
     color: #fff;
 }
+.btn-success{
+    font-size: var(--normal-font-size);
+}
 .cancel-btn {
     background-color: #fff;
     color: rgb(2, 17, 79);
@@ -8140,9 +8143,6 @@ peoples module styles started */
     .button-dl {
         font-size: 0.8rem;
     }
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
-    }
 }
 
 @media (min-width: 992px) {
@@ -8472,9 +8472,6 @@ peoples module styles started */
 @media (max-width: 991px) {
     .settings-birthday-value {
         max-width: 150px;
-    }
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
     }
 
 }
