@@ -282,10 +282,18 @@
                                             Download Files
                                         </a>
                                         @elseif(!empty($files) && count($files) == 1)
-                                        <a href="#" wire:click.prevent="showViewFile"
-                                            class="anchorTagDetails">
+                                        @foreach($files as $file)
+                                        @php
+                                            $base64File = trim($file['data'] ?? '');
+                                            $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
+                                            $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
+                                        @endphp
+                                
+                                        <a href="data:{{ $mimeType }};base64,{{ $base64File }}"
+                                           download="{{ $originalName }}" class="anchorTagDetails">
                                             Download File
                                         </a>
+                                    @endforeach
                                         @endif
 
 
