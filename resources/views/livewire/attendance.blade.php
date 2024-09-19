@@ -1638,9 +1638,9 @@ color: #fff;
                                             </td>
                                             <td class="insights-for-attendance-period">0</td>
                                             <td class="insights-for-attendance-period">{{$totalLateInSwipes}}</td>
-                                            <td class="insights-for-attendance-period">fghj</td>
+                                            <td class="insights-for-attendance-period">{{$totalnumberofEarlyOut}}</td>
                                             <td class="insights-for-attendance-period">{{$totalnumberofLeaves}}</td>
-                                            <td class="insights-for-attendance-period">45678</td>
+                                            <td class="insights-for-attendance-period">{{$totalnumberofAbsents}}</td>
                                             <td class="insights-for-attendance-period">-</td>
                                         </tr>
                                     </tbody>
