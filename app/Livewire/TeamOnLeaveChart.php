@@ -95,16 +95,16 @@ class TeamOnLeaveChart extends Component
                             $employeeLeaveDays[$employeeId][$day] = 0;
                         }
 
-                        $totalLeaveForDay = (int)$employeeLeaveDays[$employeeId][$day] + (int)$currentDayCount;
-                        // Cap the leave to 1 day max per employee on the same day
-                        if ($totalLeaveForDay > 1) {
-                            $currentDayCount = 1 - $employeeLeaveDays[$employeeId][$day];
-                        }
+                    $employeeLeaveDays[$employeeId][$day] = (float) $employeeLeaveDays[$employeeId][$day];
+                    $currentDayCount = (float) $currentDayCount;
+                    // Calculate the total leave for the day and cap it at 1
+                    $totalLeaveForDay = $employeeLeaveDays[$employeeId][$day] + $currentDayCount;
 
-                        // Initialize the employee's leave count for the day if it's not set
-                        if (!isset($employeeLeaveDays[$employeeId][$day])) {
-                            $employeeLeaveDays[$employeeId][$day] = 0; // Ensure it's initialized as an integer
-                        }
+
+                    // Cap the leave to 1 day max per employee on the same day
+                    if ($totalLeaveForDay > 1) {
+                        $currentDayCount = 1 - $employeeLeaveDays[$employeeId][$day];
+                    }
 
                         // Update the employee's leave count for the day
                         $employeeLeaveDays[$employeeId][$day] += (int)$currentDayCount; // Cast to int
