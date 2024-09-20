@@ -1099,7 +1099,8 @@ class Attendance extends Component
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
         $lateSwipeCount = 0;
-    
+     
+
         Log::info('Start Date: ' . $startDate->toDateString() . ', End Date: ' . $endDate->toDateString());
     
         // Iterate through the date range
@@ -1126,7 +1127,13 @@ class Attendance extends Component
                     ->where('in_or_out', 'IN')
                     ->where('swipe_time', '>', '10:00:00')
                     ->exists();
-                
+                    $lateSwipes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                    ->whereDate('created_at', $tempStartDate)
+                    ->where('in_or_out', 'IN')
+                    ->where('swipe_time', '>', '10:00:00')
+                    ->pluck('swipe_time');
+                    
+
                 // Log the late swipe check
                 Log::info("Late Swipe Exists: " . ($lateSwipeExists ? 'Yes' : 'No') . " on Date: $tempStartDate");
     
@@ -1136,7 +1143,7 @@ class Attendance extends Component
                     Log::info("Late Swipe Count Incremented: $lateSwipeCount");
                 }
             }
-    
+           
             // Move to the next day
             $startDate->addDay();
         }
@@ -1152,7 +1159,7 @@ class Attendance extends Component
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
         $EarlyOutCount = 0;
-    
+       
         Log::info('Start Date: ' . $startDate->toDateString() . ', End Date: ' . $endDate->toDateString());
     
         // Iterate through the date range
@@ -1179,45 +1186,25 @@ class Attendance extends Component
                     ->where('in_or_out', 'OUT')
                     ->where('swipe_time', '<', '19:00:00')
                     ->exists();
-                    $EarlyOut = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                    $earlyOutSwipeTime = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
                     ->whereDate('created_at', $tempStartDate)
                     ->where('in_or_out', 'OUT')
                     ->where('swipe_time', '<', '19:00:00')
-                    ->first();
-                    Log::info("Early Out Exists: " . ($EarlyOutExists ? 'Yes' : 'No') . " on Date: $tempStartDate at time $EarlyOut->swipe_time");
-    
+                    ->pluck('swipe_time');    
+                    
+                    Log::info("Early Out Exists: " . ($EarlyOutExists ? 'Yes' : 'No') . " on Date: $tempStartDate ");
+                   
                     // Increment late swipe count if a late swipe is found
                     if ($EarlyOutExists) {
                         $EarlyOutCount++;
                         Log::info("Early Out Count Incremented: $EarlyOutExists");
                     }
-                if(!$EarlyOutExists)
-                {  
-                    $EarlyOutExists1 = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->whereDate('created_at', $tempStartDate)
-                    ->where('in_or_out', 'IN')
-                    ->where('swipe_time', '<', '19:00:00')
-                    ->exists();
-                    $EarlyOut1 = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->whereDate('created_at', $tempStartDate)
-                    ->where('in_or_out', 'IN')
-                    ->where('swipe_time', '<', '19:00:00')
-                    ->first();
-                    Log::info("Early Out Exists: " . ($EarlyOutExists1 ? 'Yes' : 'No') . " on Date: $tempStartDate at time $EarlyOut1->swipe_time");
-    
-                    // Increment late swipe count if a late swipe is found
-                    if ($EarlyOutExists1) {
-                        $EarlyOutCount++;
-                        Log::info("Early Out Count Incremented: $EarlyOutExists1");
-                    }
-                    
-
-                }
+                
                 
                 // Log the late swipe check
                
             }
-    
+            
             // Move to the next day
             $startDate->addDay();
         }

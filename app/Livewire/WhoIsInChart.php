@@ -53,10 +53,13 @@ class WhoIsInChart extends Component
     public $openshiftselector = false;
     public $from_date;
 
+    public $selectedShift=null;
     public $employees4;
 
     public $openAccordionForAbsent=null;
 
+   public $shiftSelected=null;
+  
     public $openAccordionForLate=null;
 
     public $openAccordionForEarly=null;
@@ -84,6 +87,31 @@ class WhoIsInChart extends Component
     {
         $this->toggleButton = !$this->toggleButton;   
     }
+    
+    public function updatedSelectedShift($value)
+{
+    // This method will be called whenever the selected radio button changes
+    // $value will contain the value of the selected shift ('GS', 'AS', or 'ES')
+    Log::info('Selected Shift: ' . $value);
+
+    // You can handle the selected value here
+    if ($value === 'GS') {
+        $this->selectedShift='GS';
+    } elseif ($value === 'AS') {
+        // Handle afternoon shift (AS)
+        $this->selectedShift='AS';
+    } elseif ($value === 'ES') {
+        // Handle evening shift (ES)
+        $this->selectedShift='ES';
+    }
+}
+public function checkshift()
+{
+    $this->selectedShift=$this->selectedShift;
+    $this->openshiftselector=false;
+}
+    
+  
    
     public function toggleAccordionForAbsent($index)
     {
@@ -381,6 +409,7 @@ class WhoIsInChart extends Component
     {
         try {
             $this->isdatepickerclicked = 1;
+            $this->selectedShift=null;
             $this->currentDate = $this->from_date;
         } catch (\Exception $e) {
             Log::error('Error updating date: ' . $e->getMessage());
@@ -425,35 +454,69 @@ class WhoIsInChart extends Component
         } else {
             $currentDate = $this->from_date;
         }
+     if(empty($this->selectedShift))
+     {
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-    ->leftjoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id') // Joining with emp_personal_infos
-    ->where('leave_applications.status', 'approved')
-    ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-    ->whereDate('from_date', '<=', $currentDate)
-    ->whereDate('to_date', '>=', $currentDate)
-    ->get([
-        'leave_applications.*', // To get leave date and leave type
-        'employee_details.*', 
-        'emp_personal_infos.mobile_number'
-    ]) 
-    ->map(function ($leaveRequest) {
-        // Calculating the number of leave days
-        $fromDate = Carbon::parse($leaveRequest->from_date);
-        $toDate = Carbon::parse($leaveRequest->to_date);
-        $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
-
-        // Generating all dates between from_date and to_date
-        $leave_dates = [];
-        for ($date = $fromDate->copy(); $date->lte($toDate); $date->addDay()) {
-            $leave_dates[] = $date->format('Y-m-d');
-        }
-
-        // Set the leave_dates attribute using setAttribute
-        $leaveRequest->setAttribute('leave_dates', $leave_dates);
-
-        return $leaveRequest;
-    });
-
+        ->leftjoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id') // Joining with emp_personal_infos
+        ->where('leave_applications.status', 'approved')
+        ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+        ->whereDate('from_date', '<=', $currentDate)
+        ->whereDate('to_date', '>=', $currentDate)
+        ->get([
+            'leave_applications.*', // To get leave date and leave type
+            'employee_details.*', 
+            'emp_personal_infos.mobile_number'
+        ]) 
+        ->map(function ($leaveRequest) {
+            // Calculating the number of leave days
+            $fromDate = Carbon::parse($leaveRequest->from_date);
+            $toDate = Carbon::parse($leaveRequest->to_date);
+            $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
+    
+            // Generating all dates between from_date and to_date
+            $leave_dates = [];
+            for ($date = $fromDate->copy(); $date->lte($toDate); $date->addDay()) {
+                $leave_dates[] = $date->format('Y-m-d');
+            }
+    
+            // Set the leave_dates attribute using setAttribute
+            $leaveRequest->setAttribute('leave_dates', $leave_dates);
+    
+            return $leaveRequest;
+        });
+     }
+     else
+     {
+        $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+        ->leftjoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id') // Joining with emp_personal_infos
+        ->where('leave_applications.status', 'approved')
+        ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+        ->whereDate('from_date', '<=', $currentDate)
+        ->whereDate('to_date', '>=', $currentDate)
+        ->where('employee_details.shift_type',$this->selectedShift)
+        ->get([
+            'leave_applications.*', // To get leave date and leave type
+            'employee_details.*', 
+            'emp_personal_infos.mobile_number'
+        ]) 
+        ->map(function ($leaveRequest) {
+            // Calculating the number of leave days
+            $fromDate = Carbon::parse($leaveRequest->from_date);
+            $toDate = Carbon::parse($leaveRequest->to_date);
+            $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
+    
+            // Generating all dates between from_date and to_date
+            $leave_dates = [];
+            for ($date = $fromDate->copy(); $date->lte($toDate); $date->addDay()) {
+                $leave_dates[] = $date->format('Y-m-d');
+            }
+    
+            // Set the leave_dates attribute using setAttribute
+            $leaveRequest->setAttribute('leave_dates', $leave_dates);
+    
+            return $leaveRequest;
+        });
+     }
 
 
 
@@ -471,7 +534,21 @@ class WhoIsInChart extends Component
         'emp_personal_infos.mobile_number'  // Include fields from emp_personal_infos
     )
     ->count();
-
+    $countOfAbsentEmployees = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
+    ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Use leftJoin here
+    ->select(
+        'employee_details.*',
+        'emp_personal_infos.mobile_number' // Selecting the mobile number from emp_personal_infos, will be null if no match
+    )
+    ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
+        $query->select('emp_id')
+            ->from('swipe_records')
+            ->where('manager_id', $loggedInEmpId)
+            ->whereDate('created_at', $currentDate);
+    })
+    ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+    ->where('employee_details.employee_status', 'active')
+    ->count();
             // dd($approvedLeaveRequests1);
 
             // $approvedLeaveRequests1List = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
@@ -481,37 +558,79 @@ class WhoIsInChart extends Component
             // ->whereDate('to_date', '>=', '2024-09-04')
             // ->get();
             // dd($approvedLeaveRequests1List);
-
-            $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-            ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Use leftJoin here
-            ->select(
-                'employee_details.*',
-                'emp_personal_infos.mobile_number' // Selecting the mobile number from emp_personal_infos, will be null if no match
-            )
-            ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
-                $query->select('emp_id')
-                    ->from('swipe_records')
-                    ->where('manager_id', $loggedInEmpId)
-                    ->whereDate('created_at', $currentDate);
-            })
-            ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
-            ->where('employee_details.employee_status', 'active')
-            ->get();
+            if(empty($this->selectedShift))
+            {
+                $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
+                ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Use leftJoin here
+                ->select(
+                    'employee_details.*',
+                    'emp_personal_infos.mobile_number' // Selecting the mobile number from emp_personal_infos, will be null if no match
+                )
+                ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
+                    $query->select('emp_id')
+                        ->from('swipe_records')
+                        ->where('manager_id', $loggedInEmpId)
+                        ->whereDate('created_at', $currentDate);
+                })
+                ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                ->where('employee_details.employee_status', 'active')
+                ->get();
+            }
+            else
+            {
+                $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
+                ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Use leftJoin here
+                ->select(
+                    'employee_details.*',
+                    'emp_personal_infos.mobile_number' // Selecting the mobile number from emp_personal_infos, will be null if no match
+                )
+                ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
+                    $query->select('emp_id')
+                        ->from('swipe_records')
+                        ->where('manager_id', $loggedInEmpId)
+                        ->whereDate('created_at', $currentDate);
+                })
+                ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                ->where('employee_details.employee_status', 'active')
+                ->where('employee_details.shift_type',$this->selectedShift)
+                ->get();
+                
+            }
         
        
-            
-            $swipes = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
-                $query->selectRaw('MIN(swipe_records.id)')
-                    ->from('swipe_records')
-                    ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id'))
-                    ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id'))
-                    ->whereDate('swipe_records.created_at', $currentDate)
-                    ->groupBy('swipe_records.emp_id');
-            })
-            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->leftjoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
-            ->select('swipe_records.*', 'employee_details.*', 'emp_personal_infos.mobile_number')
-            ->get();
+            if(empty($this->selectedShift))
+            {
+                $swipes = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
+                    $query->selectRaw('MIN(swipe_records.id)')
+                        ->from('swipe_records')
+                        ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id'))
+                        ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                        ->whereDate('swipe_records.created_at', $currentDate)
+                        ->groupBy('swipe_records.emp_id');
+                })
+                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+                ->leftjoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
+                ->select('swipe_records.*', 'employee_details.*', 'emp_personal_infos.mobile_number')
+                ->get();
+            }
+            else
+            {
+                $swipes = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
+                    $query->selectRaw('MIN(swipe_records.id)')
+                        ->from('swipe_records')
+                        ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id'))
+                        ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                        ->whereDate('swipe_records.created_at', $currentDate)
+                        ->groupBy('swipe_records.emp_id');
+                })
+                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+                ->leftjoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
+                ->select('swipe_records.*', 'employee_details.*', 'emp_personal_infos.mobile_number','employee_details.shift_type')
+                ->where('employee_details.shift_type',$this->selectedShift)
+                ->get();
+
+            }
+
     
        
             $lateSwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
@@ -588,9 +707,10 @@ class WhoIsInChart extends Component
         $this->afternoonShiftEmployeesCount=EmployeeDetails::where('shift_type','AS')->count();
         $this->eveningShiftEmployeesCount=EmployeeDetails::where('shift_type','ES')->count();
         $swipes_count = $swipes2->count();
+        $countOfEmployees=
         $employeesCount = $employees1->count();
 
-        $calculateAbsent = ($employeesCount / $employees2) * 100;
+        $calculateAbsent = ($countOfAbsentEmployees / $employees2) * 100;
         $calculateApprovedLeaves = ($approvedLeaveRequests1 / $employees2) * 100;
         $nameFilter = $this->search;
         $swipes = $swipes->filter(function ($swipe) use ($nameFilter) {
@@ -616,6 +736,6 @@ class WhoIsInChart extends Component
         $this->notFound = $swipes->isEmpty();
         $this->notFound = $employees1->isEmpty();
         $this->notFound3 = $approvedLeaveRequests->isEmpty();
-        return view('livewire.who-is-in-chart', ['Swipes' => $swipes, 'ApprovedLeaveRequests' => $approvedLeaveRequests, 'ApprovedLeaveRequestsCount' => $approvedLeaveRequests1, 'Employees1' => $employees1, 'employeesCount1' => $employeesCount, 'Employess2' => $employees2, 'CalculateAbsentees' => $calculateAbsent, 'CalculateApprovedLeaves' => $calculateApprovedLeaves, 'TotalEmployees' => $employees2, 'currentdate' => $this->currentDate, 'Swipes1' => $swipes_count, 'EarlySwipesCount' => $earlySwipesCount, 'LateSwipesCount' => $lateSwipesCount]);
+        return view('livewire.who-is-in-chart', ['Swipes' => $swipes, 'ApprovedLeaveRequests' => $approvedLeaveRequests, 'ApprovedLeaveRequestsCount' => $approvedLeaveRequests1, 'Employees1' => $employees1, 'employeesCount1' => $countOfAbsentEmployees, 'Employess2' => $employees2, 'CalculateAbsentees' => $calculateAbsent, 'CalculateApprovedLeaves' => $calculateApprovedLeaves, 'TotalEmployees' => $employees2, 'currentdate' => $this->currentDate, 'Swipes1' => $swipes_count, 'EarlySwipesCount' => $earlySwipesCount, 'LateSwipesCount' => $lateSwipesCount]);
     }
 }
