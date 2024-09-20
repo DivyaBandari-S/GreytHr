@@ -24,111 +24,121 @@ class TeamOnLeaveChart extends Component
     public $employeesOnLeave;
     public $chartData;
     public $chartOptions;
-    public $employeeId,$fromDateFormatted,$toDateFormatted;
+    public $employeeId, $fromDateFormatted, $toDateFormatted;
     public $duration = 'this_month';
     public $search = '';
-    public $leaveTypeFilter ="";
+    public $leaveTypeFilter = "";
     public $leaveTypes = [];
 
     ///this method ill give data for barchart of leave applications of employees
     private function prepareChartData($leaveApplications)
-{
-    try {
-        $chartData = [
-            'labels' => [],
-            'datasets' => [],
-            'barThickness' => 1,
-        ];
+    {
+        try {
+            $chartData = [
+                'labels' => [],
+                'datasets' => [],
+                'barThickness' => 1,
+            ];
 
-        // Generate labels for the entire month
-        if($this->duration=='last_month'){
-            $lastMonth = Carbon::now()->subMonth();  // Get the last month
-            $currentMonth = $lastMonth->month;  // Set to last month (e.g., August if now is September)
-            $daysInMonth = $lastMonth->daysInMonth;
-            $this->fromDateFormatted = $lastMonth->startOfMonth()->format('d M, Y');  // First day of last month
-            $this->toDateFormatted = $lastMonth->endOfMonth()->format('d M, Y');
-        }else{
-            $currentMonth = Carbon::now()->month;  // Current month (e.g., September)
-            $daysInMonth = Carbon::now()->daysInMonth;
-            $this->fromDateFormatted = Carbon::now()->startOfMonth()->format('d M, Y');  // First day of the current month
-            $this->toDateFormatted = Carbon::now()->endOfMonth()->format('d M, Y');
-        }
-
-        $chartData['labels'] = array_map(function ($day) use ($currentMonth) {
-            return Carbon::create()->month($currentMonth)->day($day)->format('M d');
-        }, range(1, $daysInMonth));
-
-        // Extract unique leave types
-        $leaveTypes = $leaveApplications->pluck('leave_type')->unique();
-
-        // Initialize datasets for each leave type
-        foreach ($leaveTypes as $leaveType) {
-            $chartData['datasets'][$leaveType] = array_fill_keys($chartData['labels'], 0);
-        }
-
-        // Process each leave application
-        foreach ($leaveApplications as $leaveApplication) {
-            $fromDate = Carbon::parse($leaveApplication->from_date);
-            $toDate = Carbon::parse($leaveApplication->to_date);
-            $leaveType = $leaveApplication->leave_type;
-            $employeeId = $leaveApplication->employee_id;  // Ensure employee data is available
-
-            // Store the leave count for each employee on a specific day
-            $employeeLeaveDays = [];
-
-            // Accumulate leave days for each day in the range
-            while ($fromDate->lte($toDate)) {
-                // Ensure the date is within the current month
-                if ($fromDate->month == $currentMonth) {
-                    $day = $fromDate->format('M d');
-
-                    // Calculate the number of days for the current date
-                    $currentDayCount = $this->calculateNumberOfDays(
-                        $fromDate->toDateString(),
-                        $leaveApplication->from_session,
-                        $toDate->toDateString(),
-                        $leaveApplication->to_session
-                    );
-
-                    // Ensure that the total leave for any employee does not exceed 1 day per day
-                    if (!isset($employeeLeaveDays[$employeeId][$day])) {
-                        $employeeLeaveDays[$employeeId][$day] = 0;
-                    }
-
-                    $totalLeaveForDay = $employeeLeaveDays[$employeeId][$day] + $currentDayCount;
-
-                    // Cap the leave to 1 day max per employee on the same day
-                    if ($totalLeaveForDay > 1) {
-                        $currentDayCount = 1 - $employeeLeaveDays[$employeeId][$day];
-                    }
-
-                    // Update the employee's leave count for the day
-                    $employeeLeaveDays[$employeeId][$day] += $currentDayCount;
-
-                    // Accumulate leave days for the specific leave type
-                    $chartData['datasets'][$leaveType][$day] += $currentDayCount;
-                }
-
-                $fromDate->addDay();
+            // Generate labels for the entire month
+            if ($this->duration == 'last_month') {
+                $lastMonth = Carbon::now()->subMonth();  // Get the last month
+                $currentMonth = $lastMonth->month;  // Set to last month (e.g., August if now is September)
+                $daysInMonth = $lastMonth->daysInMonth;
+                $this->fromDateFormatted = $lastMonth->startOfMonth()->format('d M, Y');  // First day of last month
+                $this->toDateFormatted = $lastMonth->endOfMonth()->format('d M, Y');
+            } else {
+                $currentMonth = Carbon::now()->month;  // Current month (e.g., September)
+                $daysInMonth = Carbon::now()->daysInMonth;
+                $this->fromDateFormatted = Carbon::now()->startOfMonth()->format('d M, Y');  // First day of the current month
+                $this->toDateFormatted = Carbon::now()->endOfMonth()->format('d M, Y');
             }
-        }
 
-        // Ensure all dates are present for each leave type
-        foreach ($chartData['datasets'] as &$leaveTypeData) {
-            $leaveTypeData = array_replace(array_fill_keys($chartData['labels'], 0), $leaveTypeData);
-        }
+            $chartData['labels'] = array_map(function ($day) use ($currentMonth) {
+                return Carbon::create()->month($currentMonth)->day($day)->format('M d');
+            }, range(1, $daysInMonth));
 
-        return $chartData;
-    } catch (\Exception $e) {
-        Log::error('Error occurred in prepareChartData method: ' . $e->getMessage());
-        session()->flash('error', 'An error occurred while preparing chart data.');
-        return [
-            'labels' => [],
-            'datasets' => [],
-            'barThickness' => 10,
-        ];
+            // Extract unique leave types
+            $leaveTypes = $leaveApplications->pluck('leave_type')->unique();
+
+            // Initialize datasets for each leave type
+            foreach ($leaveTypes as $leaveType) {
+                $chartData['datasets'][$leaveType] = array_fill_keys($chartData['labels'], 0);
+            }
+
+            // Process each leave application
+            foreach ($leaveApplications as $leaveApplication) {
+                $fromDate = Carbon::parse($leaveApplication->from_date);
+                $toDate = Carbon::parse($leaveApplication->to_date);
+                $leaveType = $leaveApplication->leave_type;
+                $employeeId = $leaveApplication->employee_id;  // Ensure employee data is available
+
+                // Store the leave count for each employee on a specific day
+                $employeeLeaveDays = [];
+
+                // Accumulate leave days for each day in the range
+                while ($fromDate->lte($toDate)) {
+                    // Ensure the date is within the current month
+                    if ($fromDate->month == $currentMonth) {
+                        $day = $fromDate->format('M d');
+
+                        // Calculate the number of days for the current date
+                        $currentDayCount = $this->calculateNumberOfDays(
+                            $fromDate->toDateString(),
+                            $leaveApplication->from_session,
+                            $toDate->toDateString(),
+                            $leaveApplication->to_session
+                        );
+
+                        // Ensure that the total leave for any employee does not exceed 1 day per day
+                        if (!isset($employeeLeaveDays[$employeeId][$day])) {
+                            $employeeLeaveDays[$employeeId][$day] = 0;
+                        }
+
+                        $totalLeaveForDay = (int)$employeeLeaveDays[$employeeId][$day] + (int)$currentDayCount;
+                        // Cap the leave to 1 day max per employee on the same day
+                        if ($totalLeaveForDay > 1) {
+                            $currentDayCount = 1 - $employeeLeaveDays[$employeeId][$day];
+                        }
+
+                        // Initialize the employee's leave count for the day if it's not set
+                        if (!isset($employeeLeaveDays[$employeeId][$day])) {
+                            $employeeLeaveDays[$employeeId][$day] = 0; // Ensure it's initialized as an integer
+                        }
+
+                        // Update the employee's leave count for the day
+                        $employeeLeaveDays[$employeeId][$day] += (int)$currentDayCount; // Cast to int
+
+                        // Initialize the chart data for the leave type if it's not set
+                        if (!isset($chartData['datasets'][$leaveType][$day])) {
+                            $chartData['datasets'][$leaveType][$day] = 0; // Ensure it's initialized as an integer
+                        }
+
+                        // Accumulate leave days for the specific leave type
+                        $chartData['datasets'][$leaveType][$day] += (int)$currentDayCount; // Cast to int
+
+                    }
+
+                    $fromDate->addDay();
+                }
+            }
+
+            // Ensure all dates are present for each leave type
+            foreach ($chartData['datasets'] as &$leaveTypeData) {
+                $leaveTypeData = array_replace(array_fill_keys($chartData['labels'], 0), $leaveTypeData);
+            }
+
+            return $chartData;
+        } catch (\Exception $e) {
+            Log::error('Error occurred in prepareChartData method: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while preparing chart data.');
+            return [
+                'labels' => [],
+                'datasets' => [],
+                'barThickness' => 10,
+            ];
+        }
     }
-}
 
 
 
@@ -147,19 +157,18 @@ class TeamOnLeaveChart extends Component
                 ->orderBy('created_at', 'desc');
 
             // Apply the date filter based on the duration
-            if ($this->duration ==='today') {
+            if ($this->duration === 'today') {
                 $query->whereDate('from_date', '<=', Carbon::now()->today())
-                ->whereDate('to_date', '>=', Carbon::now()->today());
+                    ->whereDate('to_date', '>=', Carbon::now()->today());
             } else if ($this->duration === 'this_month') {
                 $query->where(function ($query) {
                     $query->whereMonth('from_date', Carbon::now()->month)
-                          ->orWhereMonth('to_date', Carbon::now()->month);
-            });
-
-        }else if($this->duration === 'last_month'){
+                        ->orWhereMonth('to_date', Carbon::now()->month);
+                });
+            } else if ($this->duration === 'last_month') {
                 $query->where(function ($query) {
                     $query->whereMonth('from_date', Carbon::now()->subMonth()->month)
-                          ->orWhereMonth('to_date', Carbon::now()->subMonth()->month);  // Ensure leaves overlapping into last month are included
+                        ->orWhereMonth('to_date', Carbon::now()->subMonth()->month);  // Ensure leaves overlapping into last month are included
                 });
             }
 
@@ -271,11 +280,11 @@ class TeamOnLeaveChart extends Component
                 ->distinct()
                 ->pluck('leave_type')
                 ->toArray();
-                // if ($this->duration === 'today') {
-                //     $leaveTypes->whereDate('from_date', Carbon::now()->today);
-                // } else if ($this->duration === 'this_month') {
-                //     $leaveTypes->whereMonth('from_date', Carbon::now()->month);
-                // }
+            // if ($this->duration === 'today') {
+            //     $leaveTypes->whereDate('from_date', Carbon::now()->today);
+            // } else if ($this->duration === 'this_month') {
+            //     $leaveTypes->whereMonth('from_date', Carbon::now()->month);
+            // }
 
             return $leaveTypes;
         } catch (\Exception $e) {
@@ -289,7 +298,6 @@ class TeamOnLeaveChart extends Component
     {
 
         return redirect()->to("/team-on-leave-chart?duration={$value}");
-
     }
     public function updateSearch($value)
     {
@@ -301,13 +309,13 @@ class TeamOnLeaveChart extends Component
 
         $this->leaveTypeFilter = $value;
 
-        $this->leaveApplications=$this->fetchTodayLeaveApplications();
+        $this->leaveApplications = $this->fetchTodayLeaveApplications();
     }
 
     public function mount()
     {
         try {
-            $this->duration=request()->query('duration')?request()->query('duration'):'this_month';
+            $this->duration = request()->query('duration') ? request()->query('duration') : 'this_month';
             $this->leaveApplications = $this->fetchTodayLeaveApplications();
             // dd( $this->leaveApplications);
 
@@ -316,7 +324,7 @@ class TeamOnLeaveChart extends Component
             }
 
             $chartData = $this->prepareChartData($this->leaveApplications);
-            $this->leaveTypes=$this->fetchLeaveTypes();
+            $this->leaveTypes = $this->fetchLeaveTypes();
 
             $this->chartData = [
                 'labels' => $chartData['labels'],
