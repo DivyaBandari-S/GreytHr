@@ -185,7 +185,13 @@
                                         @enderror
                                     </div>
                                     <div class="d-flex justify-content-center mt-2">
-                                        <button type="submit" class="btn btn-success">Reset Password</button>
+                                        <button type="submit" class="btn btn-success" wire:loading.attr="disabled"
+                                            wire:loading.class="btn-loading" aria-disabled="true">
+                                            <span wire:loading.remove>Reset Password</span>
+                                            <span wire:loading>
+                                                <i class="fa fa-spinner fa-spin"></i> Resetting...
+                                            </span>
+                                        </button>
                                     </div>
 
                                     <!-- Success or error message for password update -->
@@ -229,7 +235,13 @@
                                         @enderror
                                     </div>
                                     <div class="d-flex justify-content-center mt-2">
-                                        <button type="submit" class="submit-btn">Verify</button>
+                                        <button type="submit" class="submit-btn" wire:loading.attr="disabled"
+                                            wire:loading.class="btn-loading" aria-disabled="true">
+                                            <span wire:loading.remove>Verify</span>
+                                            <span wire:loading>
+                                                <i class="fa fa-spinner fa-spin"></i> Verifying...
+                                            </span>
+                                        </button>
                                     </div>
 
                                     <!-- Success or error message for email and DOB verification -->
@@ -265,7 +277,13 @@
                             <p style="padding: 30px 0px; text-align: center;">Do you want to Reset your password?</p>
                             <div class="d-flex justify-content-center">
                                 <button style="margin-bottom: 70px;" type="submit" class="btn btn-success"
-                                    wire:click="showPasswordChangeModal">Reset Password</button>
+                                    wire:click="showPasswordChangeModal" wire:loading.attr="disabled"
+                                    wire:loading.class="btn-loading" aria-disabled="true">
+                                    <span wire:loading.remove>Reset Password</span>
+                                    <span wire:loading>
+                                        <i class="fa fa-spinner fa-spin"></i> Processing...
+                                    </span>
+                                </button>
                             </div>
 
                             <!-- <button type="button" class="btn btn-secondary" wire:click="closeSuccessModal">Cancel</button> -->
@@ -282,7 +300,7 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" >
+                        <div class="modal-header">
                             <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title">
                                 <b>Success Message</b>
                             </h5>
@@ -290,10 +308,17 @@
                                 wire:click="closePasswordChangedModal">
                             </button>
                         </div>
-                        <div class="modal-bodyd-flex align-items-center justify-content-center" style="background-color: #f0f0f0; padding: 20px;">
+                        <div class="modal-bodyd-flex align-items-center justify-content-center"
+                            style="background-color: #f0f0f0; padding: 20px;">
                             <p>Password Changes Successfully...</p>
-                            <button type="button" class="cancel-btn"
-                                wire:click="closePasswordChangedModal">Close</button>
+                            <button type="button" class="cancel-btn" wire:click="closePasswordChangedModal"
+                                wire:loading.attr="disabled" wire:loading.class="btn-loading" aria-disabled="true">
+                                <span wire:loading.remove>Close</span>
+                                <span wire:loading>
+                                    <i class="fa fa-spinner fa-spin"></i> Closing...
+                                </span>
+                            </button>
+
                         </div>
                     </div>
                 </div>

@@ -727,6 +727,7 @@ class LeaveApplyPage extends Component
         $this->show_reporting = false;
         $this->showApplyingTo = true;
         $this->selectedCCEmployees = [];
+        $this->file_paths = null;
     }
 
     public $managerDetails, $fullName;

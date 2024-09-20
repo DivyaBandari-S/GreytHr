@@ -840,7 +840,7 @@
             <div class="payslip-card mb-4">
                 <p class="payslip-card-title">Quick Access</p>
                 <div class="m-0 row">
-                    <div class="quick col-md-7 px-3 py-0 ps-0">
+                    <div class="quick payslip-small-desc col-md-7 px-3 py-0 ps-0">
                         <a href="/reimbursement" class="quick-link">Reimbursement</a>
                         <a href="/itstatement" class="quick-link">IT Statement</a>
                         <a href="#" class="quick-link">YTD Reports</a>

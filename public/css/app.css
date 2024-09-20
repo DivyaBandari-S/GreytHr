@@ -58,7 +58,7 @@
 .modal-title {
     color: #fff;
     font-weight: 600;
-    font-size: var(--sub-headings-font-size);
+    font-size: var(--home-headings-font-size);
 }
 .modal-header {
     background-color: rgb(2, 17, 79);
@@ -2185,7 +2185,6 @@ td {
 .search-input {
     border: none;
     padding: 10px;
-    width: 200px;
     font-size: 16px;
     outline: none;
 }
@@ -2980,6 +2979,16 @@ input[type="radio"] {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.selecetdCcName {
+    color: var(--label-color);
+    font-size: var(--normal-font-size);
+    font-weight: 500;
+    text-transform: capitalize;
+    max-width: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .empIdStyle {
     color: var(--label-color);
@@ -3039,7 +3048,7 @@ input[type="radio"] {
 .accordion-content {
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
 }
 
 /* .content-leave {

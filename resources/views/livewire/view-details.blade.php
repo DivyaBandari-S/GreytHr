@@ -106,7 +106,7 @@
                         <div class="view-container m-0 p-0">
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
-                                    <span class="normalTextValue">From Date</span> <br>e
+                                    <span class="normalTextValue">From Date</span> <br>
                                     <span class="normalText fw-bold"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
@@ -391,10 +391,18 @@
                                             Download Files
                                         </a>
                                         @elseif(!empty($files) && count($files) == 1)
-                                        <a href="#" wire:click.prevent="showViewFile"
-                                            class="anchorTagDetails">
+                                        @foreach($files as $file)
+                                        @php
+                                            $base64File = trim($file['data'] ?? '');
+                                            $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
+                                            $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
+                                        @endphp
+                                
+                                        <a href="data:{{ $mimeType }};base64,{{ $base64File }}"
+                                           download="{{ $originalName }}" class="anchorTagDetails">
                                             Download File
                                         </a>
+                                    @endforeach
                                         @endif
                                         @endif
                                     </div>

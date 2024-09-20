@@ -110,10 +110,10 @@
                                 @else
                                 <span class="normalText">
                                     @if(isset($leaveRequest['leaveRequest']->from_date))
-                                    <div class="d-flex gap-2">
-                                        <span class="normalText fw-bold"> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span class="normalTextSmall">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
+                                    <div class="d-flex text-center gap-2">
+                                        <span class="normalText fw-600"> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span class="normalTextSmall">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
                                         <span>-</span>
-                                        <span class="normalText fw-bold"> {{ $leaveRequest['leaveRequest']->to_date->format('d M Y') }}<br><span class="normalTextSmall">{{$leaveRequest['leaveRequest']->to_session }}</span></span>
+                                        <span class="normalText fw-600"> {{ $leaveRequest['leaveRequest']->to_date->format('d M Y') }}<br><span class="normalTextSmall">{{$leaveRequest['leaveRequest']->to_session }}</span></span>
                                     </div>
                                     @else
                                     <span> Date Not Available</span>
