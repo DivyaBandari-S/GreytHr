@@ -44,7 +44,7 @@
         <div class="wide-short-container-who-is-in">
           <div style="display:flex;align-items:center;justify-content:space-between">
             <label class="checkbox-label-who-is-in">
-              <input type="checkbox">
+              <input type="radio" wire:model="selectedShift" value="GS">
               10:00 Am to 07:00 Pm(GS)
             </label>
             <span class="total-employee-count-who-is-in">{{$dayShiftEmployeesCount}} employee(s)</span>
@@ -59,7 +59,7 @@
         <div class="wide-short-container-who-is-in">
           <div style="display:flex;align-items:center;justify-content:space-between">
             <label class="checkbox-label-who-is-in">
-              <input type="checkbox">
+            <input type="radio" wire:model="selectedShift" value="AS">
               02:00 Pm to 11:00 Pm(AS)
             </label>
             <span class="total-employee-count-who-is-in">{{$afternoonShiftEmployeesCount}} employee(s)</span>
@@ -74,7 +74,7 @@
         <div class="wide-short-container-who-is-in">
           <div style="display:flex;align-items:center;justify-content:space-between">
             <label class="checkbox-label-who-is-in">
-              <input type="checkbox">
+            <input type="radio" wire:model="selectedShift" value="ES">
               05:00 Pm to 01:00 Am(ES)
             </label>
             <span class="total-employee-count-who-is-in">{{$eveningShiftEmployeesCount}} employee(s)</span>
@@ -88,7 +88,7 @@
         </div>
         <!-- Collapsible Content -->
         <div class="text-center" style="margin-top: 30px;">
-          <button type="button" class="btn save-selectshift-button-who-is-in">Save</button>
+          <button type="button" class="btn save-selectshift-button-who-is-in"wire:click="checkshift">Save</button>
         </div>
 
       </div>
