@@ -95,7 +95,11 @@ class TeamOnLeaveChart extends Component
                         $employeeLeaveDays[$employeeId][$day] = 0;
                     }
 
+                    $employeeLeaveDays[$employeeId][$day] = (float) $employeeLeaveDays[$employeeId][$day];
+                    $currentDayCount = (float) $currentDayCount;
+                    // Calculate the total leave for the day and cap it at 1
                     $totalLeaveForDay = $employeeLeaveDays[$employeeId][$day] + $currentDayCount;
+
 
                     // Cap the leave to 1 day max per employee on the same day
                     if ($totalLeaveForDay > 1) {
