@@ -7,7 +7,6 @@
     <div class="modal-body">
         <div class="row d-flex align-items-center m-0 p-0">
             <div class="col-md-6">
-                <span class="normalTextValue">Select All</span>
             </div>
             <div class="col-md-6">
                 <div class="search-container p-2" style="position: relative;">
