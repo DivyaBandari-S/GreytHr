@@ -1,20 +1,14 @@
 <div class="row p-0 m-0 mt-3 p-2">
     <style>
 
-        .people-input-group-container {
-            margin-top: 10px;
-            width: 240px;
-        }
-
-        .people-search-input {
+        .report-search-input {
             font-size: 0.75rem !important;
             border-radius: 5px 0 0 5px;
-            cursor: pointer;
             height: 32px;
         }
 
 
-        .people-search-btn {
+        .report-search-btn {
             height: 32px;
             width: 40px;
             position: relative;
@@ -24,32 +18,14 @@
             border: none;
         }
 
-        .people-search-icon {
+        .report-search-icon {
             position: absolute;
             top: 9px;
             left: 11px;
         }
 
-        .date-container {
-            display: flex;
-            align-items: center;
-            /* Vertically centers items */
-            gap: 10px;
-            /* Adjust gap as needed */
-        }
-
-        .date-container label {
-            margin-right: 10px;
-            /* Adjust space between label and input */
-            font-size: 0.85rem;
-            /* Adjust font size as needed */
-            color: var(--label-color);
-            /* Ensure color matches the rest of your form */
-        }
-
-        .date-container input {
-            flex: 1;
-            /* Allows the input to grow and fill available space */
+        .report-select-all-text{
+            font-size: var(--normal-font-size);
         }
     </style>
     <div class="col-md-3">
@@ -222,9 +198,8 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" >
-                            <h5
-                                class="modal-title">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
                             <button type="button" class="btn-close" data-dismiss="modal"
@@ -232,120 +207,75 @@
                                 >
                             </button>
                         </div>
-                        <div class="modal-body" style="max-height:300px;overflow-y:auto;">
-
-
-                            <div class="date-filters" style="padding: 15px;">
-                                <!-- From Date -->
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="from-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">From <span
-                                                style="color: var(--requiredAlert);">*</span></label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <input type="date" id="from-date" wire:model="fromDate"
-                                            wire:change="updateFromDate" wire:model.lazy="fromDate"
-                                            style="font-size: 0.785rem; color: var(--label-color); margin-right: 10px;width:45%">
-                                        @error('fromDate')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="from-date">From <span
+                                            style="color: var(--requiredAlert);">*</span></label>
+                                    <input type="date" class="form-control placeholder-small"
+                                        wire:model="fromDate" wire:change="updateFromDate"
+                                        wire:model.lazy="fromDate">
+                                    @error('fromDate')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                <!-- To Date -->
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date" style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">To
-                                            <span style="color: var(--requiredAlert);">*</span></label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <input type="date" id="to-date" wire:model="toDate"
-                                            wire:change="updateToDate" wire:model.lazy="toDate"
-                                            style="font-size: 0.785rem; color: var(--label-color);width:45%">
-                                        @error('toDate')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">To <span
+                                            style="color: var(--requiredAlert);">*</span></label>
+                                    <input type="date" class="form-control placeholder-small" wire:model="toDate"
+                                        wire:change="updateToDate" wire:model.lazy="toDate">
+                                    @error('toDate')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Leave
+                                        Type</label>
+                                    <select id="leaveType" wire:model="leaveType" wire:change="updateLeaveType"
+                                        wire:model.lazy="leaveType" class="form-select placeholder-small">
+                                        <option value="all">All Leaves</option>
+                                        <option value="lop">Loss Of Pay</option>
+                                        <option value="casual_leave">Casual Leave</option>
+                                        <option value="earned_leave">Earned Leave</option>
+                                        <option value="sick">Sick Leave</option>
+                                        <option value="petarnity">Paternity Leave</option>
+                                        <option value="maternity">Maternity Leave</option>
+                                        <option value="casual_leave_probation">Casul Leave Probation</option>
+                                        <option value="marriage_leave">Marriage Leave</option>
 
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date" style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Leave
-                                            Type </label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="leaveType" wire:model="leaveType" wire:change="updateLeaveType"
-                                            wire:model.lazy="leaveType"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="all">All Leaves</option>
-                                            <option value="lop">Loss Of Pay</option>
-                                            <option value="casual_leave">Casual Leave</option>
-                                            <option value="earned_leave">Earned Leave</option>
-                                            <option value="sick">Sick Leave</option>
-                                            <option value="petarnity">Paternity Leave</option>
-                                            <option value="maternity">Maternity Leave</option>
-                                            <option value="casual_leave_probation">Casul Leave Probation</option>
-                                            <option value="marriage_leave">Marriage Leave</option>
-
-                                            <!-- Add other leave types as needed -->
-                                        </select>
-                                      
-                                    </div>
+                                        <!-- Add other leave types as needed -->
+                                    </select>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Employee
-                                            Type </label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="employeeType" wire:model="employeeType"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="active" selected>Current Employees</option>
-                                            <option value="past">Past Employees</option>
-
-                                            <!-- Add other employee types as needed -->
-                                        </select>
-                                      
-                                    </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Employee
+                                        Type</label>
+                                    <select id="employeeType" wire:model="employeeType"
+                                        class="form-select placeholder-small">
+                                        <option value="active" selected>Current Employees</option>
+                                        <option value="past">Past Employees</option>
+                                    </select>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date" style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Sort
-                                            Order</label>
-                                    </div>
-                                    <div class="col-8">
-                                        <select name="sortBy" wire:model="sortBy" wire:change="updateSortBy"
-                                            id="sortBySelect"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-
-                                            <option value="newest_first" selected>Employee Number (Newest First)
-                                            </option>
-                                            <option value="oldest_first">Employee Number (Oldest First)
-                                            </option>
-                                        </select>
-                                    </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Sort
+                                        Order</label>
+                                    <select name="sortBy" wire:model="sortBy" wire:change="updateSortBy"
+                                        id="sortBySelect" class="form-select placeholder-small">
+                                        <option value="newest_first" selected>Employee Number (Newest First)
+                                        </option>
+                                        <option value="oldest_first">Employee Number (Oldest First)
+                                        </option>
+                                    </select>
                                 </div>
+                            </div>
 
 
                             </div>
-                           <div class="mt-2" style="background-color: rgb(2, 17, 79); display: flex;justify-content: center; padding: 10px; gap: 15px;">
-                                <button type="button" class="cancel-btn"
-                                    wire:click="downloadLeaveAvailedReportInExcel">Run</button>
-                                <button type="button" data-dismiss="modal" 
-                                class="cancel-btn1"
-                                    wire:click='resetFields'>Clear</button>
-
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn" wire:click="downloadLeaveAvailedReportInExcel">Run</button>
+                                <button type="button" class="cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2,17,79);">Clear</button>
                             </div>
 
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
@@ -354,117 +284,67 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" >
-                            <h5 
-                                class="modal-title">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
-                            <button type="button" class="btn-close" data-dismiss="modal"
-                                aria-label="Close" wire:click="close"
-                                style="background-color: white; height:10px;width:10px;">
+                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                                aria-label="Close" wire:click="close">
                             </button>
                         </div>
-                        <div class="modal-body" style="max-height:300px;overflow-y:auto;">
-
-
-                            <div class="date-filters" style="padding: 15px;">
-
-                                <!-- Date Select -->
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Date<span
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Date <span
                                             style="color: var(--requiredAlert);">*</span></label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <input type="date" id="to-date" wire:model="toDate"
-                                            wire:change="updateToDate" 
-                                            style="font-size: 0.785rem; color: var(--label-color);width:45%">
-                                        @error('toDate')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                    <input type="date" class="form-control placeholder-small" wire:model="toDate"
+                                        wire:change="updateToDate">
+                                    @error('toDate')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Leave Type</label>
+                                    <select id="leaveType" wire:model="leaveType"
+                                        class="form-select placeholder-small">
+                                        <option value="all">All Leaves</option>
+                                        <option value="lop">Loss Of Pay</option>
+                                        <option value="casual_leave">Casual Leave</option>
+                                        <option value="sick">Sick Leave</option>
+                                        <option value="petarnity">Petarnity Leave</option>
+                                        <option value="maternity">Maternity Leave</option>
+                                        <option value="casual_leave_probation">Casul Leave Probation</option>
+                                        <option value="marriage_leave">Marriage Leave</option>
 
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date" style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Leave
-                                            Type</label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="leaveType" wire:model="leaveType"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="all">All Leaves</option>
-                                            <option value="lop">Loss Of Pay</option>
-                                            <option value="casual_leave">Casual Leave</option>
-                                            <option value="sick">Sick Leave</option>
-                                            <option value="petarnity">Petarnity Leave</option>
-                                            <option value="maternity">Maternity Leave</option>
-                                            <option value="casual_leave_probation">Casul Leave Probation</option>
-                                            <option value="marriage_leave">Marriage Leave</option>
-
-                                            <!-- Add other leave types as needed -->
-                                        </select>
-
-                                    </div>
+                                        <!-- Add other leave types as needed -->
+                                    </select>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Employee
-                                            Type</label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="employeeType" wire:model="employeeType"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="active" selected>Current Employees</option>
-                                            <option value="past">Past Employees</option>
-
-                                            <!-- Add other employee types as needed -->
-                                        </select>
-                                        @error('employeeType')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Employee
+                                        Type</label>
+                                    <select id="employeeType" wire:model="employeeType"
+                                        class="form-select placeholder-small">
+                                        <option value="active" selected>Current Employees</option>
+                                        <option value="past">Past Employees</option>
+                                    </select>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date" style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Sort
-                                            Order</label>
-                                    </div>
-                                    <div class="col-8">
-                                        <select name="sortBy" wire:model="sortBy" wire:change="updateSortBy"
-                                            id="sortBySelect"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-
-                                            <option value="newest_first" selected>Employee Number (Newest First)
-                                            </option>
-                                            <option value="oldest_first">Employee Number (Oldest First)</option>
-                                        </select>
-                                    </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Sort
+                                        Order</label>
+                                    <select name="sortBy" wire:model="sortBy" wire:change="updateSortBy"
+                                        id="sortBySelect" class="form-select placeholder-small">
+                                        <option value="newest_first" selected>Employee Number (Newest First)
+                                        </option>
+                                        <option value="oldest_first">Employee Number (Oldest First)
+                                        </option>
+                                    </select>
                                 </div>
-
-
                             </div>
-
-
-                            
-<div class="mt-2" style="background-color: rgb(2, 17, 79); display: flex;justify-content: center; padding: 10px; gap: 15px;">
-                                <button type="button" class="cancel-btn"
-                                    wire:click="downloadNegativeLeaveBalanceReport">Run</button>
-                                <button type="button" data-dismiss="modal" class="cancel-btn1"
-                                    wire:click='resetFields'>Clear</button>
-
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn" wire:click="downloadNegativeLeaveBalanceReport">Run</button>
+                                <button type="button" class="cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2,17,79);">Clear</button>
                             </div>
-
-                            
-
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -473,128 +353,76 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" >
-                            <h5 
-                                class="modal-title">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
-                            <button type="button" class="btn-close" data-dismiss="modal"
-                                aria-label="Close" wire:click="close"
-                                style="background-color: white; height:10px;width:10px;">
+                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                                aria-label="Close" wire:click="close">
                             </button>
                         </div>
 
-                        <div class="modal-body" style="max-height:300px;overflow-y:auto;">
-
-
-                            <div class="date-filters" style="padding: 15px;">
-                                <!-- From Date -->
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="from-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">From<span
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="from-date">From <span
                                             style="color: var(--requiredAlert);">*</span></label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <input type="date" id="from-date" wire:model="fromDate"
-                                            wire:change="updateFromDate" wire:model.lazy="fromDate"
-                                            style="font-size: 0.785rem; color: var(--label-color); margin-right: 10px;width:45%">
-                                        @error('fromDate')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                    <input type="date" class="form-control placeholder-small"
+                                        wire:model="fromDate" wire:change="updateFromDate"
+                                        wire:model.lazy="fromDate">
+                                    @error('fromDate')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                <!-- To Date -->
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">To<span
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">To <span
                                             style="color: var(--requiredAlert);">*</span></label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <input type="date" id="to-date" wire:model="toDate"
-                                            wire:change="updateToDate" wire:model.lazy="toDate"
-                                            style="font-size: 0.785rem; color: var(--label-color);width:45%">
-                                        @error('toDate')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                    <input type="date" class="form-control placeholder-small" wire:model="toDate"
+                                        wire:change="updateToDate" wire:model.lazy="toDate">
+                                    @error('toDate')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Transaction
+                                        Type</label>
+                                    <select id="transactionType" wire:model="transactionType"
+                                        wire:change="updateTransactionType($event.target.value)"
+                                        wire:model.lazy="transactionType" class="form-select placeholder-small">
+                                        <option value="all">All </option>
+                                        <option value="approved">Availed</option>
 
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Transaction
-                                            Type</label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="transactionType" wire:model="transactionType"
-                                            wire:change="updateTransactionType($event.target.value)"
-                                            wire:model.lazy="transactionType"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="all">All </option>
-                                            <option value="approved">Availed</option>
-                                            <!-- Add other leave types as needed -->
-                                        </select>
-                                      
-                                    </div>
+                                        <!-- Add other leave types as needed -->
+                                    </select>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Employee
-                                            Type</label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="employeeType" wire:model="employeeType"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="active" selected>Current Employees</option>
-                                            <option value="past">Past Employees</option>
-
-                                            <!-- Add other employee types as needed -->
-                                        </select>
-                                      
-                                    </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Employee
+                                        Type</label>
+                                    <select id="employeeType" wire:model="employeeType"
+                                        class="form-select placeholder-small">
+                                        <option value="active" selected>Current Employees</option>
+                                        <option value="past">Past Employees</option>
+                                    </select>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date" style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Sort
-                                            Order</label>
-                                    </div>
-                                    <div class="col-8">
-                                        <select name="sortBy" wire:model="sortBy" wire:change="updateSortBy"
-                                            id="sortBySelect"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="newest_first" selected>Employee Number (Newest First)
-                                            </option>
-                                            <option value="oldest_first">Employee Number (oldest First)
-                                            </option>
-
-                                        </select>
-                                    </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Sort
+                                        Order</label>
+                                    <select name="sortBy" wire:model="sortBy" wire:change="updateSortBy"
+                                        id="sortBySelect" class="form-select placeholder-small">
+                                        <option value="newest_first" selected>Employee Number (Newest First)
+                                        </option>
+                                        <option value="oldest_first">Employee Number (Oldest First)
+                                        </option>
+                                    </select>
                                 </div>
-
-
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn" wire:click="dayWiseLeaveTransactionReport">Run</button>
+                                <button type="button" class="cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2,17,79);">Clear</button>
                             </div>
 
-
-                           
-                           <div class="mt-2" style="background-color: rgb(2, 17, 79); display: flex;justify-content: center; padding: 10px; gap: 15px;">
-                                <button type="button" class="cancel-btn"
-                                    wire:click="dayWiseLeaveTransactionReport">Run</button>
-                                <button type="button" data-dismiss="modal" class="cancel-btn1"
-                                    wire:click='resetFields'>Clear</button>
-
-                            </div>
 
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
@@ -603,60 +431,60 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" >
-                            <h5 
-                                class="modal-title">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
-                            <button type="button" class="btn-close" data-dismiss="modal"
-                                aria-label="Close" wire:click="close"
-                                style="background-color: white; height:10px;width:10px;">
+                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                                aria-label="Close" wire:click="close">
                             </button>
                         </div>
 
                         <div class="modal-body">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Date <span
+                                            style="color: var(--requiredAlert);">*</span></label>
+                                    <input type="date" class="form-control placeholder-small"
+                                    wire:model="toDate" wire:change="updateToDate"
+                                    wire:model.lazy="toDate">
+                                    @error('toDate')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
 
-                            <div class="date-filters mt-2">
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="date-container">
-                                            <label class="required-field label-style">Date<span
-                                                style="color: var(--requiredAlert);">*</span></label>
-                                            <div>
-                                                <input type="date" wire:model="toDate" wire:change="updateToDate"
-                                                    wire:model.lazy="toDate"
-                                                    class="form-control input-placeholder-small" id="to-date"
-                                                    name="toDate" style="color: var(--label-color); width: 190px;">
-                                                @error('toDate')
-                                                    <span class="error"
-                                                        style="color: var(--requiredAlert); font-size:0.7rem; margin-right: 90px;">
-                                                        {{ $message }}
-                                                    </span>
-                                                @enderror
-                                            </div>
-
+                            <div class="row mt-2">
+                                {{-- <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="selectAll" wire:model="selectAll" wire:click="toggleSelectAll">
+                                        <label class="form-check-label report-select-all-text" for="selectAll">
+                                            Select All
+                                        </label>
+                                    </div>
+                                </div> --}}
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input wire:model="search" wire:change="searchfilterleave" type="text"
+                                            class="form-control report-search-input" placeholder="Search..."
+                                            aria-label="Search" aria-describedby="basic-addon1">
+                                        <div class="input-group-append">
+                                            <button wire:change="searchfilterleave" class="report-search-btn"
+                                                type="button">
+                                                <i class="fa fa-search report-search-icon"></i>
+                                            </button>
                                         </div>
+                                    </div>
+                                </div>
 
-                                    </div>
-                                </div>
-                                <div class="input-group people-input-group-container">
-                                    <input wire:model="search" wire:change="searchfilterleave" type="text"
-                                        class="form-control people-search-input" placeholder="Search..."
-                                        aria-label="Search" aria-describedby="basic-addon1">
-                                    <div class="input-group-append">
-                                        <button wire:change="searchfilterleave" class="people-search-btn"
-                                            type="button">
-                                            <i class="fa fa-search people-search-icon"></i>
-                                        </button>
-                                    </div>
-                                </div>
+                               
                             </div>
                             @if (session('error'))
                                 <div class="alert alert-danger mt-2">
                                     {{ session('error') }}
                                 </div>
                             @endif
-                            <div style="overflow-y: auto; max-height: 200px; margin-top: 15px;">
+                            <div style="overflow-y: auto; max-height: 200px; ">
                                 <table class="swipes-table mt-2 border"
                                     style="width: 100%; max-height: 400px; overflow-y: auto;">
                                     <tr style="background-color: #f6fbfc;">
@@ -694,13 +522,9 @@
                                     @endif
                                 </table>
                             </div>
-
-                           <div class="mt-2" style="background-color: rgb(2, 17, 79); display: flex;justify-content: center; padding: 10px; gap: 15px;">
-                                <button type="button" class="cancel-btn"
-                                    wire:click="leaveBalanceAsOnADayReport">Run</button>
-                                <button type="button" data-dismiss="modal" class="cancel-btn1"
-                                    wire:click='resetFields'>Clear</button>
-
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn" wire:click="leaveBalanceAsOnADayReport">Run</button>
+                                <button type="button" class="cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2,17,79);">Clear</button>
                             </div>
                         </div>
 
@@ -712,155 +536,93 @@
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header" >
-                            <h5 
-                                class="modal-title">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
                                 <b>{{ $currentSection }}</b>
                             </h5>
-                            <button type="button" class="btn-close" data-dismiss="modal"
-                                aria-label="Close" wire:click="close"
-                                style="background-color: white; height:10px;width:10px;">
+                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                                aria-label="Close" wire:click="close">
                             </button>
                         </div>
-
-
-                        <div class="modal-body" style="max-height:300px;overflow-y:auto;">
-
-
-                            <div class="date-filters" style="padding: 15px;">
-                                <!-- From Date -->
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="from-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">From<span
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="from-date">From <span
                                             style="color: var(--requiredAlert);">*</span></label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <input type="date" id="from-date" wire:model="fromDate"
-                                            wire:change="updateFromDate" wire:model.lazy="fromDate"
-                                            style="font-size: 0.785rem; color: var(--label-color); margin-right: 10px;width:45%">
-                                        @error('fromDate')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                    <input type="date" class="form-control placeholder-small"
+                                        wire:model="fromDate" wire:change="updateFromDate"
+                                        wire:model.lazy="fromDate">
+                                    @error('fromDate')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                <!-- To Date -->
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">To<span
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">To <span
                                             style="color: var(--requiredAlert);">*</span></label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <input type="date" id="to-date" wire:model="toDate"
-                                            wire:change="updateToDate" wire:model.lazy="toDate"
-                                            style="font-size: 0.785rem; color: var(--label-color);width:45%">
-                                        @error('toDate')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                    <input type="date" class="form-control placeholder-small" wire:model="toDate"
+                                        wire:change="updateToDate" wire:model.lazy="toDate">
+                                    @error('toDate')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Leave
+                                        Type</label>
+                                    <select id="leaveType" wire:model="leaveType" wire:change="updateLeaveType"
+                                        wire:model.lazy="leaveType" class="form-select placeholder-small">
+                                        <option value="all">All Leaves</option>
+                                        <option value="lop">Loss Of Pay</option>
+                                        <option value="casual_leave">Casual Leave</option>
+                                        <option value="sick">Sick Leave</option>
+                                        <option value="petarnity">Petarnity Leave</option>
+                                        <option value="maternity">Maternity Leave</option>
+                                        <option value="casual_leave_probation">Casul Leave Probation</option>
+                                        <option value="marriage_leave">Marriage Leave</option>
 
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date" style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Leave
-                                            Type</label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="leaveType" wire:model="leaveType" wire:change="updateLeaveType"
-                                            wire:model.lazy="leaveType"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="all">All Leaves</option>
-                                            <option value="lop">Loss Of Pay</option>
-                                            <option value="casual_leave">Casual Leave</option>
-                                            <option value="sick">Sick Leave</option>
-                                            <option value="petarnity">Petarnity Leave</option>
-                                            <option value="maternity">Maternity Leave</option>
-                                            <option value="casual_leave_probation">Casul Leave Probation</option>
-                                            <option value="marriage_leave">Marriage Leave</option>
-
-                                            <!-- Add other leave types as needed -->
-                                        </select>
-                                        {{-- @error('leaveType') <span class="error"
-                                        style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span> @enderror --}}
-                                    </div>
+                                        <!-- Add other leave types as needed -->
+                                    </select>
                                 </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Leave
+                                        Transaction</label>
+                                    <select id="transactionType" wire:model="transactionType"
+                                        class="form-select placeholder-small">
+                                        <option value="all">All</option>
+                                        <option value="availed">Availed</option>
+                                        <option value="withdrawn">Withdrawn</option>
+                                        <option value="rejected">Rejected</option>
 
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date" style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Leave
-                                            Transaction
-                                        </label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="transactionType" wire:model="transactionType"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="all">All</option>
-                                            <option value="availed">Availed</option>
-                                            <option value="withdrawn">Withdrawn</option>
-                                            <option value="rejected">Rejected</option>
-                                        </select>
-                                        {{-- @error('transactionType') <span class="error"
-                                        style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span> @enderror --}}
-                                    </div>
+                                        <!-- Add other leave types as needed -->
+                                    </select>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date"
-                                            style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Employee
-                                            Type</label>
-                                    </div>
-                                    <div class="col-8" style="display: flex;flex-direction: column;">
-                                        <select id="employeeType"  wire:model="employeeType"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-                                            <option value="active" selected>Current Employees</option>
-                                            <option value="past">Past Employees</option>
-                                           
-
-                                            <!-- Add other employee types as needed -->
-                                        </select>
-                                        {{-- @error('employeeType')
-                                            <span class="error"
-                                                style="color: var(--requiredAlert);font-size:0.7rem;">{{ $message }}</span>
-                                        @enderror --}}
-                                    </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Employee
+                                        Type</label>
+                                    <select id="employeeType" wire:model="employeeType"
+                                        class="form-select placeholder-small">
+                                        <option value="active" selected>Current Employees</option>
+                                        <option value="past">Past Employees</option>
+                                    </select>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="to-date" style="font-size: 0.8rem; color: var(--main-heading-color); font-weight: 500px;">Sort
-                                            Order</label>
-                                    </div>
-                                    <div class="col-8">
-                                        <select name="sortBy" wire:model="sortBy" wire:change="updateSortBy"
-                                            id="sortBySelect"
-                                            style="font-size: 0.785rem; color: var(--label-color);width: 59%;height: 70%;">
-
-                                            <option value="newest_first" selected>Employee Number (Newest First)
-                                            </option>
-                                            <option value="oldest_first">Employee Number (Oldest First)</option>
-                                        </select>
-                                    </div>
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="to-date">Sort
+                                        Order</label>
+                                    <select name="sortBy" wire:model="sortBy" wire:change="updateSortBy"
+                                        id="sortBySelect" class="form-select placeholder-small">
+                                        <option value="newest_first" selected>Employee Number (Newest First)
+                                        </option>
+                                        <option value="oldest_first">Employee Number (Oldest First)
+                                        </option>
+                                    </select>
                                 </div>
-
-
                             </div>
 
-
-                          
-                            <div class="mt-2" style="background-color: rgb(2, 17, 79); display: flex;justify-content: center; padding: 10px; gap: 15px;">
-                                <button type="button" class="cancel-btn"
-                                    wire:click="downloadLeaveTransactionReport">Run</button>
-                                <button type="button" data-dismiss="modal" class="cancel-btn1"
-                                    wire:click='resetFields'>Clear</button>
-
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn" wire:click="downloadLeaveTransactionReport">Run</button>
+                                <button type="button" class="cancel-btn" wire:click="resetFields" style="border:1px solid rgb(2,17,79);">Clear</button>
                             </div>
 
                         </div>
-
                     </div>
                 </div>
             </div>
