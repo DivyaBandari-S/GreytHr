@@ -1,48 +1,51 @@
 <div>
-@if (session('error'))
+    @if (session('error'))
     <div class="alert alert-danger">
         {{ session('error') }}
     </div>
-@endif    
+    @endif
     @if($showAttendanceMusterReportDialog==true)
-    <div class="modal-body" style="max-height:300px;overflow-y:auto">
+    <div>
+        <div class="modal-body">
+            <div class="date-filters mb-2 d-flex mt-2 gap-2">
+                <div class="form-group col-md-6">
+                    <label for="from-date">From Date:</label>
+                    <input type="date" class="form-control" id="from-date" wire:model="fromDate" wire:change="updatefromDate">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="to-date">To Date:</label>
+                    <input type="date" class="form-control" id="to-date" wire:model="toDate" wire:change="updatetoDate">
+                </div>
+            </div>
+            <div class="table-responsive" style="height:200px;max-height:200px;overflow-y:auto;">
 
-        <div class="date-filters mt-2">
-            <label for="from-date" style="font-size: 11px; color: #778899;">From Date:</label>
-            <input type="date" id="from-date" wire:model="fromDate" wire:change="updatefromDate" style="font-size: 11px; color: #778899; margin-right: 10px;">
+                <table class="swipes-table mt-2 border" style="width: 100%;">
+                    <tr style="background-color: #f6fbfc;">
+                        <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name</th>
+                        <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Number</th>
+                    </tr>
+                    @foreach ($employees as $emp)
 
-            <label for="to-date" style="font-size: 11px; color: #778899;">To Date:</label>
-            <input type="date" id="to-date" wire:model="toDate" wire:change="updatetoDate" style="font-size: 11px; color: #778899;">
+                    <tr style="border:1px solid #ccc;">
+
+                        <td style="width:50%;font-size: 10px; color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">
+
+                            <input type="checkbox" wire:model="selectedEmployees" wire:click="$emit('employeeSelected', {{$emp->emp_id}})" name="employee_checkbox[]" value="{{$emp->emp_id}}">
+
+                            {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}
+                        </td>
+                        <td style="width:50%;font-size: 10px; color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 32px;white-space:nowrap;">{{$emp->emp_id}}</td>
+                    </tr>
+                    @endforeach
+                </table>
+            </div>
         </div>
-
-        <table class="swipes-table mt-2 border" style="width: 100%;">
-            <tr style="background-color: #f6fbfc;">
-                <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name</th>
-                <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Number</th>
-
-            </tr>
-            @foreach ($employees as $emp)
-           
-            <tr style="border:1px solid #ccc;">
-
-                <td style="width:50%;font-size: 10px; color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">
-
-                    <input type="checkbox" wire:model="selectedEmployees" wire:click="$emit('employeeSelected', {{$emp->emp_id}})" name="employee_checkbox[]" value="{{$emp->emp_id}}">
-
-                    {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}
-                </td>
-                <td style="width:50%;font-size: 10px; color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 32px;white-space:nowrap;">{{$emp->emp_id}}</td>
-            </tr>
-            @endforeach
-        </table>
-        <div class="mt-2" style="background-color: rgb(2, 17, 79); display: flex;justify-content: center; padding: 10px; gap: 15px;">
-                           
-                            <button type="button" class="cancel-btn" 
-                                wire:click="downloadAttendanceMusterReportInExcel">Run</button>
-                            <button type="button" data-dismiss="modal" class="cancel-btn1"
-                                wire:click='resetFields'>Clear</button>
-
-                        </div>
+        <div class="modal-footer d-flex justify-content-center">
+            <button type="button" class="submit-btn"
+                wire:click="downloadAttendanceMusterReportInExcel">Run</button>
+            <button type="button" data-dismiss="modal" class="cancel-btn1"
+                wire:click='resetFields'>Clear</button>
+        </div>
     </div>
     @endif
 
