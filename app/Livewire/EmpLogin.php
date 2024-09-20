@@ -213,7 +213,7 @@ class EmpLogin extends Component
             if (!$this->email) {
                 throw new \Exception('Either email or company email must be provided.');
             }
-            $userInEmployeeDetails = EmpPersonalInfo::where('email', $this->email)
+            $userInEmployeeDetails = EmpPersonalInfo::where('emp_id', EmployeeDetails::where('email', $this->email)->value('emp_id'))
                 ->where('date_of_birth', $this->dob)
                 ->first();
             if ($userInEmployeeDetails) {
@@ -274,12 +274,13 @@ class EmpLogin extends Component
             }
 
             // Fetch employee details using email and date of birth
-            $userInEmployeeDetails = ($employee = EmpPersonalInfo::where('email', $this->email)
+            $userInEmployeeDetails = EmpPersonalInfo::where('emp_id', EmployeeDetails::where('email', $this->email)->value('emp_id'))
                 ->where('date_of_birth', $this->dob)
-                ->first())
-                ? EmployeeDetails::where('emp_id', $employee->emp_id)->first()
+                ->first()
+                ? EmployeeDetails::where('emp_id', EmployeeDetails::where('email', $this->email)->value('emp_id'))->first()
                 : null;
 
+                   
             if ($userInEmployeeDetails) {
                 // Get company ID and fetch company details
                 $companyId = $userInEmployeeDetails->company_id;
