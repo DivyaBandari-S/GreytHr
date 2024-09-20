@@ -31,11 +31,8 @@
                         {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}
                     </td>
                     <td style="width:50%;font-size: 10px;color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 32px">{{$emp->emp_id}}</td>
-
                 </tr>
                 @endforeach
-
-
             </table>
         </div>
     </div>
@@ -46,6 +43,5 @@
         <button type="button" data-dismiss="modal"
             class="cancel-btn1"
             wire:click='resetFields'>Clear</button>
-
     </div>
 </div>
