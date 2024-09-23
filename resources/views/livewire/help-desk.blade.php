@@ -103,7 +103,6 @@
                                         <option value="Employee Information">Employee Information</option>
                                         <option value="Hardware Maintenance">Hardware Maintenance</option>
                                         <option value="Incident Report">Incident Report</option>
-                                        <option value="Laptop Request">Laptop Request</option>
                                         <option value="Privilege Access Request">Privilege Access Request</option>
                                         <option value="Security Access Request">Security Access Request</option>
                                         <option value="Technical Support">Technical Support</option>
