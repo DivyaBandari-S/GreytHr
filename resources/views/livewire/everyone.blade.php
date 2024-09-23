@@ -95,7 +95,7 @@
                                         <select wire:model.lazy="category" class="form-select" id="category">
                                             <option value="">Select Category</option>
                                             <option value="Appreciations">Appreciations</option>
-                                            <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
+                                        
                                             <option value="Companynews">Company News</option>
                                             <option value="Events">Events</option>
                                             <option value="Everyone">Everyone</option>
@@ -387,8 +387,9 @@
                     <div class="col-md-12">
 
                         <div id="eventsSection" class="eventsSection">
+                       
                             @if($posts->isEmpty())
-                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png" alt="Empty Image" style="width: 300px; height: auto; display: block;">
+                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png" alt="Empty Image" style="width: 300px; height: auto; display: block;margin-top:-90px">
                             <p class="text-feed">It feels empty here!</p>
                             <p class="text-xs">Your feed is still in making as there's no post to show.</p>
                             <button style="background-color:rgb(2, 17, 79); width:110px; height:30px; border:1px solid grey; border-radius:5px; color:white;" wire:click="addFeeds">Create Post</button>
@@ -402,7 +403,7 @@
 
                         @else
 
-                        @foreach($posts->where('status', 'Closed') as $post)
+                        @foreach($posts as $post)
                         <div class="col-12 col-md-8" style="margin-top: 10px;">
                             <!-- Upcoming Birthdays List -->
                             <div class="cards">
@@ -499,8 +500,8 @@
 
 
 
-                        @endif
-
+               
+@endif
 
 
 
