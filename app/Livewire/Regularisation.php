@@ -119,7 +119,6 @@ class Regularisation extends Component
             $this->todayYear=now()->year;
             $this->todayMonth=now()->month;
             $this->todayDay = now()->day;
-       
             $this->getDaysInMonth($this->year, $this->month);
             $this->monthinFormat = now()->format('F');
             $this->holidays = HolidayCalendar::where('month', $this->monthinFormat)
@@ -292,10 +291,6 @@ class Regularisation extends Component
             }
         }
          
-    }
-    public function submitShiftsForcheck()
-    {
-        dd($this->shift_times);
     }
     private function isEmployeeRegularisedOnDate($date)
     {

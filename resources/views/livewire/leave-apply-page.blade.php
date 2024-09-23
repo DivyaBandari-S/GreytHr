@@ -38,9 +38,10 @@
                         <div class="custom-select-wrapper mb-2" style="width: 65%;">
                             <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leave_type">
                                 <option value="default">Select Type</option>
-                                <option value="Casual Leave">Casual Leave</option>
                                 @if($showCasualLeaveProbation == true)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
+                                @else
+                                <option value="Casual Leave">Casual Leave</option>
                                 @endif
                                 @if($showCasualLeaveProbationYear == true)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
