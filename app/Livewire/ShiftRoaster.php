@@ -17,7 +17,7 @@ class ShiftRoaster extends Component
     public $holiday;
     public $notFound;
 
-    public $selectedMonth='June';
+    public $selectedMonth;
     public $attendanceMonth;
 
     public $currentMonth;
@@ -55,22 +55,7 @@ class ShiftRoaster extends Component
         $this->previousMonth = now()->subMonth(1)->format('F'); // Previous month
         $this->nextMonth = now()->addMonth(1)->format('F'); // Next month
         $this->currentYear = $currentDate->year;
-        $this->previousYear = $currentDate->copy()->subYear()->year;
-        $this->nextYear = $currentDate->copy()->addYear()->year;
-        $previousYearDate = $currentDate->copy()->setYear($this->previousYear);
-        $this->previousMonthWithPreviousYear = $previousYearDate->copy()->subMonth(1)->format('F'); // Previous month in the previous year
-        $this->currentMonthWithPreviousYear = $previousYearDate->copy()->format('F'); // Current month in the previous year
-        $this->nextMonthWithPreviousYear = $previousYearDate->copy()->addMonth(1)->format('F'); 
-        $this->selectedMonth=$this->currentMonthForDropdown;
-        
-        $this->previousMonthWithPreviousYear = now()->subMonth(1)->setYear($this->previousYear)->format('F'); // Previous month for 2023
-        $this->currentMonthWithPreviousYear=now()->setYear($this->previousYear)->format('F');
-        $this->nextMonthWithPreviousYear = now()->addMonth(1)->setYear($this->previousYear)->format('F');
-        $this->previousMonthWithNextYear = now()->subMonth(1)->setYear($this->nextYear)->format('F'); // Previous month for 2023
-        $this->nextMonthWithNextYear = now()->addMonth(1)->setYear($this->nextYear)->format('F');
-        $this->currentMonthWithNextYear=now()->setYear($this->nextYear)->format('F');
-        $this->previousMonthWithCurrentYear = now()->subMonth(1)->setYear($this->currentYear)->format('F'); // Previous month for 2023
-        $this->nextMonthWithCurrentYear = now()->addMonth(1)->setYear($this->currentYear)->format('F');
+        $this->selectedMonth=now()->format('F');
         
     }
     
@@ -82,6 +67,7 @@ class ShiftRoaster extends Component
         if (count($selected) === 2) {
             $this->attendanceMonth = $selected[0];  // The month part
             $this->attendanceYear = $selected[1];   // The year part
+            
         }
     
         // Debug output to check if both month and year are updated correctly
