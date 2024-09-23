@@ -398,9 +398,9 @@
                        wire:model="selectedMonth" 
                        wire:change="updateselectedMonth">
                          <!-- For Previous Year (2023) -->
-                         <option value="{{ $previousMonthWithPreviousYear }} {{ $previousYear }}">{{ $previousMonthWithPreviousYear }} {{ $previousYear }}</option>
-                         <option value="{{ $currentMonthWithPreviousYear }} {{ $previousYear }}">{{ $currentMonthWithPreviousYear }} {{ $previousYear }}</option>
-                         <option value="{{ $nextMonthWithPreviousYear }} {{ $previousYear }}">{{ $nextMonthWithPreviousYear }} {{ $previousYear }}</option>
+                         <option value="{{ $previousMonth }}">{{ $previousMonth }} {{ $currentYear }}</option>
+                         <option value="{{ $currentMonthForDropdown }}">{{ $currentMonthForDropdown }} {{ $currentYear }}</option>
+                         <option value="{{ $nextMonth }}">{{ $nextMonth }} {{ $currentYear }}</option>
 
     
                  </select>
