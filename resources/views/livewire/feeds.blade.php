@@ -92,15 +92,15 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;margin-top:-5px"></button>
                                     </div>
                                     @endif
-                                    <form wire:submit.prevent="submit" enctype="multipart/form-data">
+                                    <form wire:submit.prevent="submit" enctype="multipart/form-data" >
                                         <div class="modal-body" style="padding: 20px;">
                                             <!-- Category Selection -->
                                             <div class="form-group mb-15">
-                                                <label for="category">You are posting in:</label>
-                                                <select wire:model.lazy="category" class="form-select" id="category">
+                                                <label for="category" style="font-size: 12px;">You are posting in:</label>
+                                                <select wire:model.lazy="category" class="form-select" id="category" style="font-size: 12px;">
                                                     <option value="">Select Category</option>
                                                     <option value="Appreciations">Appreciations</option>
-                                                    <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
+                                                 
                                                     <option value="Companynews">Company News</option>
                                                     <option value="Events">Events</option>
                                                     <option value="Everyone">Everyone</option>
@@ -561,7 +561,7 @@
                                                         </div>
                                                         <div class="emoji-row">
                                                             <span class="emoji-option"  wire:click="addEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
-                                                            <span class="emoji-option"  wire:click="addEmoji('&#128537')">😙</span>
+                                                            <span class="emoji-option"  wire:click="addEmoji('&#128537','{{ $data['employee']->emp_id }}')">😙</span>
                                                             <span class="emoji-option"  wire:click="addEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
                                                             <span class="emoji-option"  wire:click="addEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
                                                             <span class="emoji-option"  wire:click="addEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
@@ -1342,6 +1342,7 @@
                                             <span class="emoji-option" wire:click="selectEmoji('&#128556','{{ $data['employee']->emp_id }}')">😬</span>
                                             <span class="emoji-option" wire:click="selectEmoji('&#128557','{{ $data['employee']->emp_id }}')">😭</span>
                                             <span class="emoji-option" wire:click="selectEmoji('&#128558','{{ $data['employee']->emp_id }}')">😮</span>
+                                            <span class="emoji-option" wire:click="addEmoji('&#128559','{{ $data['employee']->emp_id }}')">😯</span>
                                         </div>
                                         <div class="emoji-row">
                                             <span class="emoji-option" wire:click="selectEmoji('&#128560','{{ $data['employee']->emp_id }}')">😰</span>

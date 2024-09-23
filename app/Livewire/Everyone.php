@@ -77,7 +77,53 @@ class Everyone extends Component
         $this->isManager = DB::table('employee_details')
             ->where('manager_id', $employeeId)
             ->exists();
-    }
+       
+                // Fetch posts for the manager and their employees
+          
+                    if ($this->isManager) {
+                    // For managers: get their posts and their team's posts
+                    $this->posts = Post::where('status', 'Closed')
+                        ->where(function ($query) use ($employeeId) {
+                            $query->where('manager_id', $employeeId) // Manager's own posts
+                                  ->orWhereIn('emp_id', function ($subQuery) use ($employeeId) {
+                                      $subQuery->select('emp_id')
+                                                ->from('employee_details')
+                                                ->where('manager_id', $employeeId); // Team members' posts
+                                  });
+                        })
+                        ->orderBy('updated_at', 'desc')
+                        ->get();
+                } else {
+                    // For employees: get their posts and their manager's posts
+                    $this->posts = Post::where('status', 'Closed')
+                    ->where(function ($query) use ($employeeId) {
+                        $query->where('emp_id', $employeeId) // Employee's own posts
+                              ->orWhere('manager_id', function($subQuery) use ($employeeId) {
+                                  $subQuery->select('manager_id')
+                                            ->from('employee_details')
+                                            ->where('emp_id', $employeeId); // Get the employee's manager's ID
+                              })
+                              ->orWhereIn('emp_id', function($subQuery) use ($employeeId) {
+                                  // Get all employees under the same manager
+                                  $subQuery->select('emp_id')
+                                            ->from('employee_details')
+                                            ->where('manager_id', function($innerQuery) use ($employeeId) {
+                                                $innerQuery->select('manager_id')
+                                                            ->from('employee_details')
+                                                            ->where('emp_id', $employeeId);
+                                            });
+                              });
+                    })
+                    ->orderBy('updated_at', 'desc')
+                    ->get();
+                
+                }
+            
+        
+    
+                // Debugging to check the retrieved posts
+               
+            }
     private function getEmpCompanyLogoUrl()
     {
         // Get the current authenticated employee's company ID
