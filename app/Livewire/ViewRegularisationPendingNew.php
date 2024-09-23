@@ -48,17 +48,17 @@ class ViewRegularisationPendingNew extends Component
         ->with('employee')
         ->orderBy('created_at', 'desc')
         ->get();
-        
+
         foreach ($this->regularisations as $regularisation) {
             $this->regularised_date = Carbon::parse($regularisation->created_at)->toDateString();
 
             $daysDifference = Carbon::parse($this->regularised_date)->diffInDays(Carbon::now());
 
-            if ($daysDifference > 3) {           
-                
+            if ($daysDifference > 3) {
+
                 $this->sendMail($regularisation->id);
-               
-               
+
+
             }
 
 
@@ -77,7 +77,7 @@ class ViewRegularisationPendingNew extends Component
         'sender_id'=>$employee->emp_id,
         'sender_name' => $this->user->first_name." ".$this->user->last_name."(".$this->user->emp_id.")"
     ];
-    
+
 
     // Send email to manager
     Mail::to($this->managerEmail)->send(new ManagerNotificationMail($details));
