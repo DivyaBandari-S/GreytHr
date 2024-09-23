@@ -33,6 +33,7 @@ class Post extends Model
     /**
      * Relationship to get the employee details.
      */
+   
     public function employeeDetails()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');

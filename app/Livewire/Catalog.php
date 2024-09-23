@@ -163,7 +163,7 @@ class Catalog extends Component
         $this->LapRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
-        $this->category = 'New Laptop';
+        $this->category = 'Laptop Request';
     }
     
     public function DistributionRequest()
@@ -261,8 +261,14 @@ class Catalog extends Component
 
     public function closeItRequestaccess()
     {
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
+       
+       
         $this->ItRequestaceessDialog = false;
+
+        $this->resetErrorBag(); // Reset validation errors if any
+        $this->resetValidation();
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
+       
     }
 
     public function closeAddRequestaccess()
@@ -324,7 +330,7 @@ class Catalog extends Component
     
     public function closeMMSRequestaccess()
     {
-     
+
         $this->MmsRequestaceessDialog = false;
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation(); // Reset validation state
@@ -728,12 +734,13 @@ class Catalog extends Component
    
     public function closecatalog()
     {
+        $this->showModal = false;
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation(); // Reset validation state
         $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeopleNames','image','selectedPeople', 
         'selectedPeople' ,]);
       
-        $this->showModal = false;
+    
 
  
       
