@@ -165,6 +165,8 @@ class Attendance extends Component
 
     public $totalLateInSwipes=0;
     public $totalnumberofLeaves=0;
+
+    public $timeDifferenceInMinutesForCalendar=0;
     public $start_date_for_insights;
     public $averageWorkHrsForCurrentMonth = null;
     public $averageFormattedTimeForCurrentMonth;
@@ -511,12 +513,13 @@ class Attendance extends Component
             $this->city = $location['city'];
             $this->postal_code = $location['postal_code'];
             $firstDateOfPreviousMonth = Carbon::now()->subMonth()->startOfMonth();
-
+            
             // Get the current date of the current month
             $currentDateOfCurrentMonth = Carbon::now()->endOfDay();
             $this->year = now()->year;
             $this->month = now()->month;
             $this->generateCalendar();
+            
             $startOfMonth = '2024-08-01';
             $endOfMonth = '2024-08-31';
 
@@ -560,7 +563,7 @@ class Attendance extends Component
                 }
             }
 
-
+            
             
             // $this->calculateTotalDays();
             $this->previousMonth = Carbon::now()->subMonth()->format('F');
@@ -685,6 +688,9 @@ class Attendance extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
+           
+
+           
             return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->exists();
         } catch (\Exception $e) {
             Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
@@ -858,11 +864,13 @@ class Attendance extends Component
                                     break;
                             }
                         } else {
+                        
                             // Employee is not on leave, check for absence or presence
                             $isAbsent = !$this->isEmployeePresentOnDate($date);
 
                             // Set the status based on presence
                             $status = $isAbsent ? 'A' : 'P';
+                          
                         }
                         // Set the status based on presence
                         $week[] = [
@@ -924,7 +932,7 @@ class Attendance extends Component
     public function dateClicked($date1)
     {
         try {
-
+           
             $date1 = trim($date1);
 
             $this->selectedDate = $this->year . '-' . $this->month . '-' . str_pad($date1, 2, '0', STR_PAD_LEFT);
@@ -1736,9 +1744,9 @@ class Attendance extends Component
                         $lastOutTime->addDay();
                     }
 
-                    $timeDifferenceInMinutes = $lastOutTime->diffInMinutes($firstInTime);
-                    $this->hours = floor($timeDifferenceInMinutes / 60);
-                    $minutes = $timeDifferenceInMinutes % 60;
+                    $this->timeDifferenceInMinutesForCalendar = $lastOutTime->diffInMinutes($firstInTime);
+                    $this->hours = floor($this->timeDifferenceInMinutesForCalendar / 60);
+                    $minutes = $this->timeDifferenceInMinutesForCalendar % 60;
                     $this->minutesFormatted = str_pad($minutes, 2, '0', STR_PAD_LEFT);
                 } elseif (!isset($this->currentDate2record[1]) && isset($this->currentDate2record[0])) {
                     $this->first_in_time = substr($this->currentDate2record[0]['swipe_time'], 0, 5);

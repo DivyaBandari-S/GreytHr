@@ -20,9 +20,72 @@ class ShiftRoaster extends Component
     public $selectedMonth='June';
     public $attendanceMonth;
 
+    public $currentMonth;
+
+    public $previousMonth;
+
+    public $nextMonth;
+
+    public $currentMonthForDropdown;
+    public $currentYear;
+
+    public $previousYear;
+
+    public $nextYear;
+
+    public $previousMonthWithPreviousYear;
+
+    public $nextMonthWithPreviousYear;
+
+    public $previousMonthWithNextYear;
+
+    public $nextMonthWithNextYear;
+
+    public $attendanceYear;
+    public $previousMonthWithCurrentYear;
+
+    public $currentMonthWithPreviousYear;
+    public $nextMonthWithCurrentYear;
+
+    public $currentMonthWithNextYear;
+    public function mount()
+    {
+        $currentDate = now();
+        $this->currentMonthForDropdown = now()->format('F'); // Current month (e.g., September)
+        $this->previousMonth = now()->subMonth(1)->format('F'); // Previous month
+        $this->nextMonth = now()->addMonth(1)->format('F'); // Next month
+        $this->currentYear = $currentDate->year;
+        $this->previousYear = $currentDate->copy()->subYear()->year;
+        $this->nextYear = $currentDate->copy()->addYear()->year;
+        $previousYearDate = $currentDate->copy()->setYear($this->previousYear);
+        $this->previousMonthWithPreviousYear = $previousYearDate->copy()->subMonth(1)->format('F'); // Previous month in the previous year
+        $this->currentMonthWithPreviousYear = $previousYearDate->copy()->format('F'); // Current month in the previous year
+        $this->nextMonthWithPreviousYear = $previousYearDate->copy()->addMonth(1)->format('F'); 
+        $this->selectedMonth=$this->currentMonthForDropdown;
+        
+        $this->previousMonthWithPreviousYear = now()->subMonth(1)->setYear($this->previousYear)->format('F'); // Previous month for 2023
+        $this->currentMonthWithPreviousYear=now()->setYear($this->previousYear)->format('F');
+        $this->nextMonthWithPreviousYear = now()->addMonth(1)->setYear($this->previousYear)->format('F');
+        $this->previousMonthWithNextYear = now()->subMonth(1)->setYear($this->nextYear)->format('F'); // Previous month for 2023
+        $this->nextMonthWithNextYear = now()->addMonth(1)->setYear($this->nextYear)->format('F');
+        $this->currentMonthWithNextYear=now()->setYear($this->nextYear)->format('F');
+        $this->previousMonthWithCurrentYear = now()->subMonth(1)->setYear($this->currentYear)->format('F'); // Previous month for 2023
+        $this->nextMonthWithCurrentYear = now()->addMonth(1)->setYear($this->currentYear)->format('F');
+        
+    }
+    
     public function updateselectedMonth()
     {
-        $this->attendanceMonth = $this->selectedMonth; 
+        $selected = explode(' ', $this->selectedMonth);
+    
+        // Update attendanceMonth and attendanceYear
+        if (count($selected) === 2) {
+            $this->attendanceMonth = $selected[0];  // The month part
+            $this->attendanceYear = $selected[1];   // The year part
+        }
+    
+        // Debug output to check if both month and year are updated correctly
+   
     }
     public function searchfilter()
     {
@@ -79,7 +142,7 @@ class ShiftRoaster extends Component
 
        }
        foreach ($employees as $employee) {
-        $rowData = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name']];
+        $rowData = [$employee['emp_id'], ucwords(strtolower($employee['first_name'])) . ' ' . ucwords(strtolower($employee['last_name']))];
         
         
         $dateCount=0;

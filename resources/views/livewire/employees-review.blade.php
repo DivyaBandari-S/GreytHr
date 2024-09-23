@@ -222,7 +222,10 @@
                             <div class="col accordion-content">
                                 @if($arrl->status=='approved')
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">{{$arrl->status}}</span>
-                                @elseif($arrl->status=='rejected') <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$arrl->status}}</span>
+                                @elseif($arrl->status=='rejected') 
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$arrl->status}}</span>
+                                @elseif($arrl->approver_remarks=='Forwarded to HR'&&$arrl->status=='pending')
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:yellow;text-transform:uppercase;">FORWARDED</span>
 
                                 @endif
                             </div>
