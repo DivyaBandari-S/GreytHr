@@ -20,6 +20,10 @@ class AbsentReport extends Component
     public $employees;
     public $fromDate;
     public $toDate;
+
+    public $search;
+
+    public $searching=0;
     public $loggedInEmpId;
 
     public $currentDate;
@@ -48,6 +52,10 @@ class AbsentReport extends Component
     public function updatetoDate()
     {
         $this->toDate = $this->toDate;
+    }
+    public function searchfilter()
+    {
+        $this->searching=1;
     }
     public function employeeSelected($empId)
     {

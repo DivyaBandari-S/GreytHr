@@ -95,7 +95,7 @@
                                         <select wire:model.lazy="category" class="form-select" id="category">
                                             <option value="">Select Category</option>
                                             <option value="Appreciations">Appreciations</option>
-                                            <option value="Buy/Sell/Rent">Buy/Sell/Rent</option>
+                                         
                                             <option value="Companynews">Company News</option>
                                             <option value="Events">Events</option>
                                             <option value="Everyone">Everyone</option>
@@ -159,7 +159,7 @@
     <!-- Additional row -->
     <div class="row mt-2 d-flex">
 
-        <div class="col feeds-custom-menu bg-white p-3">
+        <div class="col-md-3 feeds-custom-menu bg-white p-3">
 
             <p class="feeds-left-menu">Filters</p>
             <hr style="width: 100%;border-bottom: 1px solid grey;">

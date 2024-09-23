@@ -597,9 +597,14 @@ public function loadaddComments()
         $storedEmojis = collect();
         $emojis = collect();
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $isManager = DB::table('employee_details')
-            ->where('manager_id', $employeeId)
-            ->exists();
+        $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+        // $isManager = DB::table('employee_details')
+      //     ->where('manager_id', $employeeId)
+      //     ->exists();
+      $isManager = DB::table('employee_details')
+      ->where('manager_id', $employeeId)  // Assuming $employeeId is the manager's ID
+      ->get();
      
         // Check if 'emp' guard is authenticated
         if (auth()->guard('emp')->check()) {

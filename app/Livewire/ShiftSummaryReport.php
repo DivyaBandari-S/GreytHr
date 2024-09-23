@@ -149,7 +149,7 @@ class ShiftSummaryReport extends Component
            }
           else
           {
-            $employees1 = EmployeeDetails::whereIn('emp_id', $this->shiftSummary)->select('emp_id', 'first_name', 'last_name','shift_type')->get();
+            $employees1 = EmployeeDetails::whereIn('emp_id', $this->shiftSummary)->select('emp_id', 'first_name', 'last_name','shift_type','shift_start_time','shift_end_time')->get();
             $datesAndWeeknames = $this->getDatesAndWeeknames();
             foreach ($datesAndWeeknames as $daw) {
                 if ($daw['weekname'] == 'Sat' || $daw['weekname'] == 'Sun') {
@@ -166,7 +166,19 @@ class ShiftSummaryReport extends Component
              ];
              foreach ($employees1 as $s1) {
                     
-                    $data[] = [$s1['emp_id'], $s1['first_name'] . ' ' . $s1['last_name'], $this->totalDayCount, $this->workingDayCount, $this->offDayCount, $this->workingDayCount];
+
+                if($s1['shift_type']=='ES')
+                {
+                    $data[] = [$s1['emp_id'], $s1['first_name'] . ' ' . $s1['last_name'], $this->totalDayCount, $this->workingDayCount, $this->offDayCount,Carbon::parse($s1['shift_start_time'])->format('H:i a') . ' to ' . Carbon::parse($s1['shift_end_time'])->format('H:i a') ];
+                }
+                elseif($s1['shift_type']=='AS')
+                {
+                    $data[] = [$s1['emp_id'], $s1['first_name'] . ' ' . $s1['last_name'], $this->totalDayCount, $this->workingDayCount, $this->offDayCount, Carbon::parse($s1['shift_start_time'])->format('H:i a') . ' to ' . Carbon::parse($s1['shift_end_time'])->format('H:i a')];
+                }
+                elseif($s1['shift_type']=='GS')
+                {
+                    $data[] = [$s1['emp_id'], $s1['first_name'] . ' ' . $s1['last_name'], $this->totalDayCount, $this->workingDayCount, $this->offDayCount, Carbon::parse($s1['shift_start_time'])->format('H:i a') . ' to ' . Carbon::parse($s1['shift_end_time'])->format('H:i a')];
+                }
              }
 
              $filePath = storage_path('app/shift_summary_report.xlsx');

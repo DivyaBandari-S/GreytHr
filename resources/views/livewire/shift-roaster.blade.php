@@ -353,6 +353,8 @@
         .dropdown-for-shift-roster-download-and-dropdown
         {
             font-size: 12px;
+            height:30px;
+            margin-top:10px;
         }
 
         .emptyday {
@@ -387,15 +389,21 @@
 
         </div>
 
-        <div class="shift-roster-download-and-dropdown col-md-4 d-flex justify-content-end gap-2">
-            <button class="submit-btn py-0" wire:click="downloadExcel" style="padding:4px 10px;">
+        <div class="shift-roster-download-and-dropdown col-md-4 d-flex justify-content-end"style="float:right;">
+            <button class="submit-btn py-0" wire:click="downloadExcel"style="margin:11px;">
                 <i class="fa fa-download" aria-hidden="true"></i>
             </button>
-            <select class="dropdown-for-shift-roster-download-and-dropdown bg-white rounded border" style="width:30%;" name="year" wire:model="selectedMonth" wire:change="updateselectedMonth">
-                <option value="May">May 2024</option>
-                <option value="June">Jun 2024</option>
-                <option value="July">Jul 2024</option>
-            </select>
+                 <select class="dropdown-for-shift-roster-download-and-dropdown bg-white rounded border" 
+                       style="width:50%;" name="year" 
+                       wire:model="selectedMonth" 
+                       wire:change="updateselectedMonth">
+                         <!-- For Previous Year (2023) -->
+                         <option value="{{ $previousMonth }}">{{ $previousMonth }} {{ $currentYear }}</option>
+                         <option value="{{ $currentMonthForDropdown }}">{{ $currentMonthForDropdown }} {{ $currentYear }}</option>
+                         <option value="{{ $nextMonth }}">{{ $nextMonth }} {{ $currentYear }}</option>
+
+    
+                 </select>
         </div>
 
 </div>
@@ -424,7 +432,8 @@
 
                 @if(($Employees))
                 <tr>
-                    <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"data-toggle="tooltip" data-placement="top"
+                    title="{{ ucwords(strtolower($emp->first_name)) }} {{ ucwords(strtolower($emp->last_name)) }}({{ $emp->emp_id }})">
                         {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}<span class="text-muted">(#{{$emp->emp_id}})</span><br /><span class="text-muted" style="font-size:11px;">{{ucwords(strtolower($emp->job_role)),}}{{ucwords(strtolower($emp->job_location))}}</span>
                     </td>
 

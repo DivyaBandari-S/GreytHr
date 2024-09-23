@@ -1250,6 +1250,11 @@ border: 1px solid #778899;
             </footer>
 
         </div>
+        @elseif($year==$todayYear&&$month==$todayMonth&&$todayDay>25)
+        <div class="apply-box">
+            <img src="{{ asset('images/Attendance-Period-Locked.png') }}" style="margin-top:50px;" height="250" width="250">
+           
+        </div>
         @elseif($year<=$todayYear&&$todayMonth-$month>1)
         <div class="apply-box">
             <img src="{{ asset('images/Attendance-Period-Locked.png') }}" style="margin-top:50px;" height="250" width="250">

@@ -19,6 +19,8 @@ class AttendanceMusterReport extends Component
     public $formattedInTime;
 
     public $formattedOutTime;
+
+    public $search;
     public $fromDate;
 
     public $toDate;
@@ -30,6 +32,10 @@ class AttendanceMusterReport extends Component
     public $formattedWorkHrsMinutes;
     public  $holiday = false;
     public $loggedInEmpId;
+
+    public $notFound;
+
+    public $searching = 0;
     public $selectedEmployees = [];
 
     protected $listeners = ['employeeSelected'];
@@ -48,6 +54,13 @@ class AttendanceMusterReport extends Component
     {
         $this->toDate = $this->toDate;
     }
+    public function searchfilter()
+    {
+        $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+        $this->searching = 1;
+     
+            
+    }
 
     public function employeeSelected($empId)
     {
@@ -62,6 +75,7 @@ class AttendanceMusterReport extends Component
         $this->fromDate='';
         $this->toDate='';
         $this->selectedEmployees=[];
+        $this->search='';
     }
     public function timeToMinutes($time)
     {
@@ -305,6 +319,29 @@ class AttendanceMusterReport extends Component
     public function render()
     {
         $this->employees = EmployeeDetails::where('manager_id', $this->loggedInEmpId)->get();
-        return view('livewire.attendance-muster-report');
+        if($this->searching==1)
+        {
+            $nameFilter = $this->search; // Assuming $this->search contains the name filter
+            $filteredEmployees = $this->employees->filter(function ($employee) use ($nameFilter) {
+                return stripos($employee->first_name, $nameFilter) !== false ||
+                    stripos($employee->last_name, $nameFilter) !== false ||
+                    stripos($employee->emp_id, $nameFilter) !== false||
+                    stripos($employee->job_title, $nameFilter) !== false||
+                    stripos($employee->city, $nameFilter) !== false||
+                    stripos($employee->state, $nameFilter) !== false;
+            });
+
+            if ($filteredEmployees->isEmpty()) {
+                $this->notFound = true; // Set a flag indicating that the name was not found
+            } else {
+                $this->notFound = false;
+            }
+        }
+        else
+        {
+            $filteredEmployees=$this->employees;
+        }
+
+        return view('livewire.attendance-muster-report',['Employees'=>$filteredEmployees]);
     }
 }
