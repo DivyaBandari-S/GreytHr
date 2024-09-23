@@ -1140,23 +1140,7 @@ button.close-button {
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
-.arrow-btn {
-    color: var(--label-color);
-    height: 22px;
-    width: 22px;
-    display: flex;
-    margin-right: 10px;
-    cursor: pointers;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    border: 1px solid #dcdcdc;
-    margin-right: 10px;
-}
-.cancel-btn:hover {
-    background-color: rgb(2, 17, 79);
-    color: white;
-}
+
 .toggle-box-container-who-is-in {
     float: right;
     display: flex;
@@ -3088,6 +3072,16 @@ input[type="radio"] {
     border-radius: 50%;
     border: 1px solid #dcdcdc;
     margin-right: 10px;
+}
+.arrow-btn .fa {
+    transition: transform 0.3s ease; /* Smooth rotation */
+}
+
+.arrow-btn .rotate {
+    transform: rotate(180deg); /* Rotate the icon */
+}
+.arrow-btn.active .fa {
+    color: rgb(2, 17, 79); /* Change to your desired active color */
 }
 
 .side {
