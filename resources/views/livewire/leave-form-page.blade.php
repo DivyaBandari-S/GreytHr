@@ -473,5 +473,5 @@
          element.classList.add('active'); // Add active class
          arrowIcon.classList.add('rotate'); // Add rotation class
       }
-   }l
+   }
 </script>
