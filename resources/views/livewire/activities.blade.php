@@ -159,12 +159,10 @@
     <!-- Additional row -->
     <div class="row mt-2 d-flex">
 
-        <div class="col feeds-custom-menu bg-white p-3">
+        <div class="col-md-3 feeds-custom-menu bg-white p-3">
 
             <p class="feeds-left-menu">Filters</p>
             <hr style="width: 100%;border-bottom: 1px solid grey;">
-
-
             <p class="feeds-left-menu">Activities</p>
             <div class="activities">
                 <label class="custom-radio-label">
