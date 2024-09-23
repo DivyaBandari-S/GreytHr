@@ -10,11 +10,13 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\LeaveRequest;
 use App\Models\SwipeRecord;
 use App\Models\Chating;
+use App\Notifications\ResetPasswordLink;
 use Carbon\Carbon;
+use Illuminate\Auth\Notifications\ResetPassword;
 
 class EmployeeDetails extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
     protected $primaryKey = 'emp_id';
     public $incrementing = false;
     protected $table = 'employee_details';
@@ -121,5 +123,10 @@ class EmployeeDetails extends Authenticatable
     public function getHireDateAttribute($value)
     {
         return $value ? Carbon::parse($value) : null;
+    }
+    public function sendPasswordResetNotification($token)
+    {
+        // Your own implementation.
+        $this->notify(new ResetPasswordLink($token));
     }
 }

@@ -100,6 +100,7 @@ use App\Livewire\ImageUpload;
 use App\Livewire\ItDashboardPage;
 use App\Livewire\LeaveBalancesChart;
 use App\Livewire\OrganisationChart;
+use App\Livewire\PasswordResetComponent;
 use App\Livewire\ReportManagement;
 use App\Livewire\ReviewPendingRegularisation;
 use App\Livewire\ShiftRoaster;
@@ -562,3 +563,5 @@ Route::get('/up', function () {
     Artisan::call('up');
     return 'Application is now live!';
 });
+
+Route::get('/password/reset/{token}', PasswordResetComponent::class)->name('password.reset');

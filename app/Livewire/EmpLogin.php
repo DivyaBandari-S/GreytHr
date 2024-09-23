@@ -31,8 +31,11 @@ use Illuminate\Database\QueryException;
 use App\Mail\PasswordChanged;
 use App\Models\Company;
 use App\Models\EmpPersonalInfo;
+use App\Notifications\ResetPasswordLink;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
+
 
 class EmpLogin extends Component
 {
@@ -216,6 +219,10 @@ class EmpLogin extends Component
             $userInEmployeeDetails = EmpPersonalInfo::where('emp_id', EmployeeDetails::where('email', $this->email)->value('emp_id'))
                 ->where('date_of_birth', $this->dob)
                 ->first();
+            $user = EmployeeDetails::where('email', $this->email)->first();
+            // $token = Password::getRepository()->create($user);
+            $token = Password::createToken($user);
+            $user->notify(new ResetPasswordLink($token));
             if ($userInEmployeeDetails) {
                 $this->verified = true;
                 if ($this->verified) {
@@ -280,7 +287,7 @@ class EmpLogin extends Component
                 ? EmployeeDetails::where('emp_id', EmployeeDetails::where('email', $this->email)->value('emp_id'))->first()
                 : null;
 
-                   
+
             if ($userInEmployeeDetails) {
                 // Get company ID and fetch company details
                 $companyId = $userInEmployeeDetails->company_id;
