@@ -130,7 +130,7 @@
         .table-container
         {
             width: auto;
-            height:200px;
+            height:auto;
             background-color: #fff;
             margin-left:10px;
             border-radius: 5px;
@@ -230,6 +230,7 @@
                                         <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                             Rejected by
                                         </span>
+                                    
                                     @endif
 
 
@@ -242,6 +243,7 @@
                                         <span style="color: #333; font-weight: 500;font-size:12px;">
                                         {{ucwords(strtolower($regularisationrequest->rejected_by))}}
                                         </span>
+                                         
                                     @endif    
 
 
@@ -430,9 +432,9 @@
 
 
         @foreach($regularisationEntries as $r1)
-        <tbody class="regularisationEntries"style="height:40%;">
+        <tbody class="regularisationEntries"style="">
 
-                <td style="width:30%;font-size:12px;padding: 8px;">10:00 am to 07:00 pm</td>
+                <td style="width:30%;font-size:12px;padding: 8px;white-space:nowrap;">10:00 am to 07:00 pm</td>
                 <td style="width:20%;font-size:12px;padding: 8px;">
 
                        @if(empty($r1['from']))

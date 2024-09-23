@@ -30,6 +30,8 @@ class AttendanceMusterReport extends Component
     public $formattedWorkHrsMinutes;
     public  $holiday = false;
     public $loggedInEmpId;
+
+    public $searching = 0;
     public $selectedEmployees = [];
 
     protected $listeners = ['employeeSelected'];
@@ -47,6 +49,13 @@ class AttendanceMusterReport extends Component
     public function updatetoDate()
     {
         $this->toDate = $this->toDate;
+    }
+    public function searchfilter()
+    {
+        $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+        $this->searching = 1;
+     
+            
     }
 
     public function employeeSelected($empId)
