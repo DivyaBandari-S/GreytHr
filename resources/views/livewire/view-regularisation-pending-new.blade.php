@@ -7,6 +7,14 @@
 
     </style>
     <div>
+    <div>
+    @if (session()->has('message'))
+        <div class="alert alert-success">{{ session('message') }}</div>
+    @endif
+
+    
+</div>
+    
     <div class="row m-0 p-0 mt-3">
                     <div class="search-container d-flex align-items-end justify-content-end p-1">
                         <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput"

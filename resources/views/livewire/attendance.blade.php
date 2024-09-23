@@ -1775,9 +1775,14 @@ color: #fff;
                                                 @elseif($day['status'] == 'L')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">L</span>
                                                 @elseif($day['status'] == 'A')
+                                                  
                                                 <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
+                    
+
                                                 @elseif($day['status'] == 'P')
-                                                <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px">P</span>
+                                                   
+                                                   <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px">P</span>
+                                                   
                                                 @endif
 
 
@@ -1788,7 +1793,7 @@ color: #fff;
                                                 $Regularised=true;
                                                 @endphp
                                                 <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
-                                                   fdghj
+                                                    <div class="down-arrow-reg"></div>
                                                 </span>
                                                 @endif
                                                 @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))

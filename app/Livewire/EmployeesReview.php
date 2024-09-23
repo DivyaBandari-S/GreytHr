@@ -330,7 +330,13 @@ class EmployeesReview extends Component
         if ($this->searching == 1) {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
 
-                ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
+            ->where(function($query) {
+                $query->whereIn('regularisation_dates.status', ['approved', 'rejected'])
+                      ->orWhere(function($query) {
+                          $query->where('regularisation_dates.status', 'pending')
+                                ->where('regularisation_dates.approver_remarks', 'Forwarded to HR');
+                      });
+            })
 
                 ->orderByDesc('regularisation_dates.id')
 
@@ -351,7 +357,8 @@ class EmployeesReview extends Component
         } else {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
 
-                ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
+           ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
+                      
 
 
 

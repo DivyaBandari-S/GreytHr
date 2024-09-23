@@ -1754,7 +1754,7 @@ td {
     position: relative;
 }
 .shift-roster-download-and-dropdown-for-attendance-muster {
-    margin-left: 370px;
+   margin-left:375px;
 }
 .green-section-employee-swipes p {
     font-size: 11px;
@@ -2048,7 +2048,11 @@ td {
 .Attendance-attendance-muster .table tbody tr td:last-child {
     border-right: none;
 }
-
+@media screen and (min-width: 320px) and (max-width: 500px) {
+    .shift-roster-download-and-dropdown-for-attendance-muster {
+        margin-left: 10px; 
+    }
+}
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
 
 /* start of feeds(Archana) */
