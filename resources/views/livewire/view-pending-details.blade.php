@@ -101,7 +101,7 @@
                                 @elseif($numberOfDays == 0.5)
                                 <span class="normalText">
                                     @if(isset($leaveRequest['leaveRequest']->from_date))
-                                    <span class="normalText fw-bold"> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span class="normalTextSmall">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
+                                    <span class="normalText "> {{ $leaveRequest['leaveRequest']->from_date->format('d M Y') }}<br><span class="normalTextSmall">{{$leaveRequest['leaveRequest']->from_session }}</span></span>
                                     @else
                                     <span>Date Not Available</span>
                                     @endif
