@@ -676,7 +676,7 @@ public function historyButton()
             $pendingRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
                 ->where('status', 'pending')
                 ->where('is_withdraw', 0)
-                ->orderByDesc('id')
+                ->orderByDesc('updated_at')
                 ->get();
            
             $this->pendingRegularisations = $pendingRegularisations->filter(function ($regularisation) {
@@ -686,7 +686,7 @@ public function historyButton()
     
             $historyRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
                 ->whereIn('status', ['pending', 'approved', 'rejected'])
-                ->orderByDesc('id')
+                ->orderByDesc('updated_at')
                 ->get();            
             $this->historyRegularisations = $historyRegularisations->filter(function ($regularisation) {
                 return $regularisation->regularisation_entries !== "[]";
