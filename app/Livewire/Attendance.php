@@ -53,6 +53,8 @@ class Attendance extends Component
     public $totalnumberofEarlyOut=0;
     public $percentageOfWorkHrs;
     public $percentageOfWorkHours;
+
+    public $averageWorkHoursForModalTitle=0;
     public $CurrentDate;
     public $avgSignOutTime;
 
@@ -1055,9 +1057,13 @@ class Attendance extends Component
             $this->averageLastOutTime=$outsights['averageLastOutTime'];
             $this->avergageFirstInTime=$insights['averageFirstInTime'];
             // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
-        
+            $lastOutTime = Carbon::createFromFormat('H:i:s', $this->averageLastOutTime);
+            $firstInTime = Carbon::createFromFormat('H:i:s', $this->avergageFirstInTime);
+            $timeDifferenceInMinutes = $lastOutTime->diffInMinutes($firstInTime);
+            $timeDifferenceInHours = $lastOutTime->diffInHours($firstInTime);
          
-            
+            $timeDifferenceFormatted = gmdate('H:i', $lastOutTime->diffInSeconds($firstInTime));
+            $this->averageWorkHoursForModalTitle=$timeDifferenceFormatted;
             
             $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where('in_or_out', 'IN')
