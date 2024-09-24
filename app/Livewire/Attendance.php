@@ -174,6 +174,9 @@ class Attendance extends Component
     public $weekendDays = 0;
     public $daysWithRecords = 0;
 
+    public $avergageFirstInTime=0;
+
+    public $averageLastOutTime=0;
     public $totalnumberofAbsents=0;
     public $percentageinworkhrsforattendance;
     public $leaveTaken = 0;
@@ -1042,11 +1045,15 @@ class Attendance extends Component
             $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
             $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
             $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
-            $this->totalLateInSwipes = $this->calculatetotalLateInSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
+            $insights=$this->calculatetotalLateInSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
+            $outsights=$this->calculatetotalEarlyOutSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
+            $this->totalLateInSwipes = $insights['lateSwipeCount'];
+
             $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));           
-            $this->totalnumberofEarlyOut=$this->calculatetotalEarlyOutSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
-            
+            $this->totalnumberofEarlyOut=$outsights['EarlyOutCount'];
+            $this->averageLastOutTime=$outsights['averageLastOutTime'];
+            $this->avergageFirstInTime=$insights['averageFirstInTime'];
             // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
         
          
@@ -1097,13 +1104,16 @@ class Attendance extends Component
             session()->flash('error', 'An error occurred while updating the modal title. Please try again later.');
         }
     }
+    
     private function calculatetotalLateInSwipes($startDate, $endDate)
     {
         // Parse start and end dates using Carbon
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
         $lateSwipeCount = 0;
-     
+        $firstInCount=0;
+        $totalFirstInSeconds = 0;
+        
 
         Log::info('Start Date: ' . $startDate->toDateString() . ', End Date: ' . $endDate->toDateString());
     
@@ -1129,7 +1139,7 @@ class Attendance extends Component
             // If not a holiday, weekend, or leave day, and the employee is present
             if (!$isHoliday && !$isweekend && !$isOnLeave && !empty($isPresent)) {
                 // Check for late swipes
-                 
+                 $firstInCount++;
                  try {
                     $swipeTime = Carbon::createFromFormat('H:i:s', $isPresent->swipe_time);
                     $limitTime = Carbon::createFromTime(10, 0, 0);
@@ -1137,7 +1147,7 @@ class Attendance extends Component
                     $swipeTime = Carbon::createFromFormat('H:i', $isPresent->swipe_time);
                     $limitTime = Carbon::createFromTime(10, 0);
                 }
-                    
+                $totalFirstInSeconds += $swipeTime->diffInSeconds(Carbon::createFromTime(0, 0, 0));
                  if ($swipeTime->greaterThan($limitTime)) {
                     $lateSwipeExists=true;
                 } else {
@@ -1152,6 +1162,7 @@ class Attendance extends Component
                     $lateSwipeCount++;
                     Log::info("Late Swipe Count Incremented: $lateSwipeCount");
                 }
+                Log::info(message: "First In Count Incremented: $firstInCount");
             }
            
             // Move to the next day
@@ -1160,8 +1171,22 @@ class Attendance extends Component
     
         // Log the final late swipe count
         Log::info("Total Late Swipes: $lateSwipeCount");
+        if ($firstInCount > 0) {
+            $averageFirstInSeconds = $totalFirstInSeconds / $firstInCount;
+            $averageFirstInTime = Carbon::createFromTime(0, 0, 0)->addSeconds($averageFirstInSeconds);
+        } else {
+            $averageFirstInTime = null;  // No valid first in records
+        }
     
-        return $lateSwipeCount;
+        // Log results
+        Log::info("Total First In Count: $firstInCount, Late Swipe Count: $lateSwipeCount");
+        Log::info("Average First In Time: " . ($averageFirstInTime ? $averageFirstInTime->format('H:i:s') : 'N/A'));
+    
+        return [
+            'averageFirstInTime' => $averageFirstInTime ? $averageFirstInTime->format('H:i:s') : 'N/A',
+            'lateSwipeCount' => $lateSwipeCount,
+           
+        ];
     }
     private function calculatetotalEarlyOutSwipes($startDate, $endDate)
     {
@@ -1169,8 +1194,8 @@ class Attendance extends Component
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
         $earlyOutCount = 0;
-     
- 
+        $lastOutCount=0;
+        $totalLastOutSeconds=0;
         Log::info('Start Date: ' . $startDate->toDateString() . ', End Date: ' . $endDate->toDateString());
    
         // Iterate through the date range
@@ -1198,6 +1223,7 @@ class Attendance extends Component
             // If not a holiday, weekend, or leave day, and the employee is present
             if (!$isHoliday && !$isweekend && !$isOnLeave && !empty($isPresent)) {
                 // Check for late swipes
+                $lastOutCount++;
                 try {
                     $swipeTime = Carbon::createFromFormat('H:i:s', $isPresent->swipe_time);
                     $limitTime = Carbon::createFromTime(19, 0, 0);
@@ -1205,7 +1231,7 @@ class Attendance extends Component
                     $swipeTime = Carbon::createFromFormat('H:i', $isPresent->swipe_time);
                     $limitTime = Carbon::createFromTime(19, 0);
                 }
-                    
+                $totalLastOutSeconds += $swipeTime->diffInSeconds(Carbon::createFromTime(0, 0, 0));
                  if ($swipeTime->lessThan($limitTime)) {
                     $earlyOutExists=true;
                 } else {
@@ -1226,8 +1252,19 @@ class Attendance extends Component
            
             // Move to the next day
             $startDate->addDay();
+           
         }
-        return $earlyOutCount;
+        if ($lastOutCount > 0) {
+            $averageLastOutSeconds = $totalLastOutSeconds / $lastOutCount;
+            $averageLastOutTime = Carbon::createFromTime(0, 0, 0)->addSeconds($averageLastOutSeconds);
+        } else {
+            $averageLastOutTime = null;  // No valid first in records
+        }
+        return [
+            'averageLastOutTime' => $averageLastOutTime ? $averageLastOutTime->format('H:i:s') : 'N/A',
+            'EarlyOutCount' => $earlyOutCount,
+           
+        ];
     }
     private function calculateAvgWorkingHrs($employeeId)
     {
