@@ -189,6 +189,7 @@ class LeaveApplyPage extends Component
     {
         try {
             $this->showCcRecipents = !$this->showCcRecipents;
+            $this->searchCCRecipients();
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in closeCcRecipientsContainer method: ' . $e->getMessage());

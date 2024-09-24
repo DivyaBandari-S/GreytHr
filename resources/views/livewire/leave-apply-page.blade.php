@@ -513,7 +513,7 @@
                         @endforeach
                         @else
                         <div class="mb-0 normalTextValue">
-                            No data found
+                            No  found
                         </div>
                         @endif
                     </div>
