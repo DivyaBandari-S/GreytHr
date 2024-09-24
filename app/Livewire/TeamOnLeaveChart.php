@@ -29,6 +29,7 @@ class TeamOnLeaveChart extends Component
     public $search = '';
     public $leaveTypeFilter = "";
     public $leaveTypes = [];
+    public $todaysDate;
 
     ///this method ill give data for barchart of leave applications of employees
     private function prepareChartData($leaveApplications)
@@ -315,6 +316,7 @@ class TeamOnLeaveChart extends Component
     public function mount()
     {
         try {
+            $this->todaysDate = Carbon::now()->format('d M, Y');
             $this->duration = request()->query('duration') ? request()->query('duration') : 'this_month';
             $this->leaveApplications = $this->fetchTodayLeaveApplications();
             // dd( $this->leaveApplications);
